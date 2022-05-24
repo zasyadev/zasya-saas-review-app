@@ -5,9 +5,30 @@ import { Row, Col, Form, Input, Button, Checkbox, message, Spin } from "antd";
 function RegisterPage() {
   const [registerForm] = Form.useForm();
 
-  const handleSubmit = (values) => {
-    console.log(values, "values");
-  };
+  const [loading, setLoading] = useState(false);
+
+  async function handleSubmit(values) {
+    setLoading(true);
+    values["role"] = 3;
+    values["status"] = 1;
+    await fetch("/api/user", {
+      method: "POST",
+      body: JSON.stringify(values),
+      // headers: {
+      //   "Content-Type": "application/json",
+      // },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status === 200) {
+          message.success(data.message, 3);
+          registerForm.resetFields();
+          // setRegisterToggle(false);
+        }
+        setLoading(false);
+      })
+      .catch((err) => console.log(err));
+  }
   return (
     <section className="h-screen">
       <div className="px-6 h-full text-gray-800">

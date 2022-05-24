@@ -3,29 +3,34 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
+    "dev": "next dev   ",
+    "build": "next build ",
+    "start": "next start  ",
     "lint": "next lint"
   },
   "dependencies": {
     "@prisma/client": "^3.13.0",
     "antd": "^4.19.5",
+    "autoprefixer": "^10.4.7",
     "bcrypt": "^5.0.1",
     "moment": "^2.29.3",
     "next": "12.1.5",
     "next-auth": "^3.29.3",
+    "node-sass": "^7.0.1",
+    "postcss": "^8.4.14",
     "react": "18.0.0",
     "react-dom": "18.0.0",
-    "react-html-parser": "^2.0.2"
+    "react-html-parser": "^2.0.2",
+    "tailwindcss": "^3.0.24"
   },
   "devDependencies": {
-    "autoprefixer": "^10.4.4",
     "eslint": "8.13.0",
     "eslint-config-next": "12.1.5",
-    "postcss": "^8.4.12",
     "postcss-preset-env": "^7.6.0",
     "prisma": "^3.13.0",
-    "tailwindcss": "^3.0.24"
+    "tailwindcss": "^2.1.4",
+    "autoprefixer": "^10.2.5",
+    "postcss": "^8.2.13",
+    "postcss-cli": "^8.3.1"
   }
 }

@@ -1,13 +1,30 @@
 import Link from "next/link";
 import React, { useState } from "react";
-import { Row, Col, Form, Input, Button, Checkbox, message, Spin } from "antd";
+import { Row, Col, Form, Input, Button, message, Spin } from "antd";
+import { signIn } from "next-auth/client";
+import { useRouter } from "next/router";
 
 function LoginPage() {
+  const router = useRouter();
   const [loginForm] = Form.useForm();
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (values) => {
-    console.log(values, "values");
-  };
+  async function handleSubmit(values) {
+    setLoading(true);
+    const result = await signIn("credentials", {
+      redirect: false,
+      email: values.email,
+      password: values.password,
+    });
+
+    if (result.error) {
+      message.error(result.error, 3);
+
+      setLoading(false);
+      return;
+    }
+    router.replace("/dashboard");
+  }
   return (
     <section className="h-screen">
       <div className="px-6 h-full text-gray-800">
@@ -51,7 +68,6 @@ function LoginPage() {
                   <input
                     type="checkbox"
                     className="form-check-input appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-green-500 checked:border-green-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
-                    id="exampleCheck2"
                   />
                   <label
                     className="form-check-label inline-block text-gray-800"

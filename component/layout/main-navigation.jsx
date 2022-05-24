@@ -1,7 +1,14 @@
 import Link from "next/link";
 import React, { useState } from "react";
+import { signOut } from "next-auth/client";
 
 function MainNavigation({ user }) {
+  const logoutHandler = () => {
+    signOut({
+      redirect: false,
+      callbackUrl: "/auth/login",
+    });
+  };
   return (
     <>
       <nav className="bg-white shadow-lg">
@@ -43,17 +50,30 @@ function MainNavigation({ user }) {
                 </a>
               </div>
             </div>
-            <div class="hidden md:flex items-center space-x-3 ">
-              <Link href="/auth/login">
-                <p class="py-2 px-2 font-medium text-gray-500 rounded hover:bg-green-500 hover:text-white transition duration-300 cursor-pointer">
-                  Log In
-                </p>
-              </Link>
-              <Link href="/auth/register">
-                <p class="py-2 px-2 font-medium text-white bg-green-500 rounded hover:bg-green-400 transition duration-300 cursor-pointer">
-                  Sign Up
-                </p>
-              </Link>
+            <div className="hidden md:flex items-center space-x-3 ">
+              {user?.id ? (
+                <Link href="/auth/login">
+                  <p
+                    className="py-2 px-2 font-medium text-gray-500 rounded hover:bg-green-500 hover:text-white transition duration-300 cursor-pointer"
+                    onClick={logoutHandler}
+                  >
+                    Log Out
+                  </p>
+                </Link>
+              ) : (
+                <>
+                  <Link href="/auth/login">
+                    <p className="py-2 px-2 font-medium text-gray-500 rounded hover:bg-green-500 hover:text-white transition duration-300 cursor-pointer">
+                      Log In
+                    </p>
+                  </Link>
+                  <Link href="/auth/register">
+                    <p className="py-2 px-2 font-medium text-white bg-green-500 rounded hover:bg-green-400 transition duration-300 cursor-pointer">
+                      Sign Up
+                    </p>
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         </div>

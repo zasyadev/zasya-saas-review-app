@@ -1,0 +1,64 @@
+@import "./variableStyles.scss";
+
+.dashboard-sider {
+  flex-direction: column;
+  list-style-type: none;
+  display: flex;
+  min-width: 100%;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  .ant-menu-submenu {
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+    .ant-menu-submenu-title {
+      font-weight: 300;
+      box-shadow: rgba(0, 0, 0, 0.06);
+      color: #000;
+      font-weight: 300;
+      font-size: 0.875rem;
+      line-height: 1.25rem;
+      padding-top: 0.75rem;
+      padding-bottom: 0.75rem;
+      padding-left: 1rem;
+      padding-right: 1rem;
+
+      border-radius: 0.5rem;
+      grid-gap: 1rem;
+      gap: 1rem;
+      align-items: center;
+      display: flex;
+    }
+  }
+  .ant-menu-submenu-active {
+    .ant-menu-submenu-title {
+      background-color: #0288d1;
+      color: #fff;
+    }
+  }
+  .ant-menu-item {
+    font-weight: 300;
+    box-shadow: rgba(0, 0, 0, 0.06);
+    color: #000;
+    font-weight: 300;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    margin-bottom: 1rem !important;
+    border-radius: 0.5rem;
+    grid-gap: 1rem;
+    gap: 1rem;
+    align-items: center;
+    display: flex;
+  }
+  .ant-menu-item-active {
+    background-color: #0288d1;
+    color: #fff !important;
+  }
+}
+.ant-form input[type="checkbox"]:focus {
+  outline: 0;
+}

@@ -1,0 +1,51 @@
+//  ********* Media Queries For Desktop  ************
+
+$for-desktop: 1200px;
+
+@mixin desktop {
+  @media screen and (max-width: #{ $for-desktop }) {
+    @content;
+  }
+}
+
+//  ********* Media Queries For Tab  ************
+
+$tab: 991px;
+
+@mixin tab {
+  @media screen and (max-width: #{ $tab }) {
+    @content;
+  }
+}
+
+//  ********* Media Queries For Mobile  ************
+
+$mobile: 767px;
+
+@mixin mobile {
+  @media screen and (max-width: #{ $mobile }) {
+    @content;
+  }
+}
+
+$smmobile: 567px;
+
+@mixin smmobile {
+  @media screen and (max-width: #{ $smmobile }) {
+    @content;
+  }
+}
+
+$xsmobile: 350px;
+
+@mixin xsmobile {
+  @media screen and (max-width: #{ $xsmobile }) {
+    @content;
+  }
+}
+
+@mixin print {
+  @media print {
+    @content;
+  }
+}
