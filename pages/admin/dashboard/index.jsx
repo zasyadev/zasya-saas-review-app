@@ -1,13 +1,13 @@
-import React from "react";
-import SiderLayout from "../../component/layout/SiderLayout";
-import Layout from "../../component/layout/Layout";
+import React, { useState } from "react";
 import { getSession } from "next-auth/client";
+import DashBoard from "../../../component/DashBoard/DashBoard";
+import AdminLayout from "../../../component/layout/AdminLayout";
 
 function dashboard({ user }) {
   return (
-    // <Layout user={user}>
-    <SiderLayout />
-    // </Layout>
+    <AdminLayout user={user}>
+      <DashBoard />
+    </AdminLayout>
   );
 }
 
@@ -19,7 +19,7 @@ export async function getServerSideProps(context) {
   if (!session) {
     return {
       redirect: {
-        destination: "/auth/login",
+        destination: "/",
         permanent: false,
       },
     };

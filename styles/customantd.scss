@@ -62,3 +62,39 @@
 .ant-form input[type="checkbox"]:focus {
   outline: 0;
 }
+.ant-modal-header {
+  background: linear-gradient(to right, #a855f7 0%, #7e22ce 100%);
+  border-radius: 10px;
+  width: 95%;
+  position: absolute;
+  left: 12px;
+  top: -25px;
+  .ant-modal-title {
+    color: #fff;
+  }
+}
+.ant-modal-content {
+  border-radius: 10px;
+  padding-top: 15px;
+  .ant-modal-close {
+    position: absolute;
+    top: -27px;
+    right: 7px;
+    color: #fff;
+  }
+}
+.ant-modal-footer {
+  .ant-btn-primary {
+    border-color: #7f23cf;
+    background-color: #7f23cf;
+  }
+  .ant-btn-primary:hover {
+    color: #000;
+    border-color: #7f23cf;
+    background-color: #fff;
+  }
+  .ant-btn-default {
+    border-color: #7f23cf;
+    color: #7f23cf;
+  }
+}
