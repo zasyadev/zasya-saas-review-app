@@ -3,6 +3,7 @@ import {
   MailOutlined,
   SettingOutlined,
   AppstoreOutlined,
+  UserOutlined,
 } from "@ant-design/icons";
 import { Menu, Layout } from "antd";
 import { useRouter } from "next/router";
@@ -32,8 +33,9 @@ function SiderLayout({ collapsed }) {
     ]),
     getItem("Team", "team", <AppstoreOutlined />, [
       getItem("Groups", "/admin/team/groups"),
-      getItem("Members", "8"),
+      getItem("Members", "/admin/team/members"),
     ]),
+    getItem("Users", "/admin/user", <UserOutlined />),
   ];
 
   const onClickSideTab = (e) => {

@@ -17,10 +17,7 @@ export async function getServerSideProps(context) {
 
   if (!session) {
     return {
-      redirect: {
-        destination: "/auth/login",
-        permanent: false,
-      },
+      props: {},
     };
   }
   const { user } = session;

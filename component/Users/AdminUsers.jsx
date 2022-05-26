@@ -15,11 +15,11 @@ import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 
 const { Content } = Layout;
 
-function Team({ user }) {
+function AdminUsers({ user }) {
   const [form] = Form.useForm();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [groupsList, setGroupsList] = useState([]);
+  const [userList, setUserList] = useState([]);
   const [editMode, setEditMode] = useState(false);
   const [upadteData, setUpdateData] = useState({});
 
@@ -29,16 +29,14 @@ function Team({ user }) {
 
   async function onFinish(values) {
     let obj = {
-      name: values.name,
-      category: values.category,
-      status: values.status,
-      user_id: user.id,
+      ...values,
+      role: 3,
     };
-    editMode ? updatingGroup(obj) : addingGroup(obj);
+    editMode ? updateUserData(obj) : createUserData(obj);
   }
 
-  async function addingGroup(obj) {
-    await fetch("/api/team/groups", {
+  async function createUserData(obj) {
+    await fetch("/api/user", {
       method: "POST",
       body: JSON.stringify(obj),
       // headers: {
@@ -49,7 +47,7 @@ function Team({ user }) {
       .then((response) => {
         if (response.status === 200) {
           message.success(response.message, 3);
-          fetchGroupsData();
+          fetchUserData();
           form.resetFields();
           setIsModalVisible(false);
         } else {
@@ -58,10 +56,10 @@ function Team({ user }) {
       })
       .catch((err) => console.log(err));
   }
-  async function updatingGroup(obj) {
+  async function updateUserData(obj) {
     if (upadteData.id) {
       obj.id = upadteData.id;
-      await fetch("/api/team/groups", {
+      await fetch("/api/user/adminuser", {
         method: "PUT",
         body: JSON.stringify(obj),
         // headers: {
@@ -72,7 +70,7 @@ function Team({ user }) {
         .then((response) => {
           if (response.status === 200) {
             message.success(response.message, 3);
-            fetchGroupsData();
+            fetchUserData();
             form.resetFields();
             setIsModalVisible(false);
             setEditMode(false);
@@ -83,14 +81,11 @@ function Team({ user }) {
         .catch((err) => console.log(err));
     }
   }
-  async function deleteGroup(id) {
-    if (id) {
-      let obj = {
-        id: id,
-      };
-      await fetch("/api/team/groups", {
+  async function deleteGroup(data) {
+    if (data.id) {
+      await fetch("/api/user/adminuser", {
         method: "DELETE",
-        body: JSON.stringify(obj),
+        body: JSON.stringify(data),
         // headers: {
         //   "Content-Type": "application/json",
         // },
@@ -99,7 +94,7 @@ function Team({ user }) {
         .then((response) => {
           if (response.status === 200) {
             message.success(response.message, 3);
-            fetchGroupsData();
+            fetchUserData();
           } else {
             message.error(response.message, 3);
           }
@@ -108,22 +103,22 @@ function Team({ user }) {
     }
   }
 
-  async function fetchGroupsData() {
+  async function fetchUserData() {
     setLoading(true);
-    setGroupsList([]);
-    await fetch("/api/team/groups", {
+    setUserList([]);
+    await fetch("/api/user/adminuser", {
       method: "GET",
     })
       .then((response) => response.json())
       .then((response) => {
         if (response.status === 200) {
-          setGroupsList(response.data);
+          setUserList(response.data);
         }
         setLoading(false);
       })
       .catch((err) => {
         console.log(err);
-        setGroupsList([]);
+        setUserList([]);
       });
   }
 
@@ -137,16 +132,18 @@ function Team({ user }) {
       range: "${label} must be between ${min} and ${max}",
     },
   };
-  const onUpdate = (group) => {
+  async function onUpdate(item) {
     setEditMode(true);
-    setUpdateData(group);
+    setUpdateData(item);
     setIsModalVisible(true);
     form.setFieldsValue({
-      name: group.name,
-      category: group.category,
-      status: group.status,
+      first_name: item.first_name,
+      last_name: item.last_name,
+      email: item.email,
+      // password: await hashedPassword(item.password),
+      status: item.status,
     });
-  };
+  }
   const onCancel = () => {
     setIsModalVisible(false);
     setEditMode(false);
@@ -154,7 +151,7 @@ function Team({ user }) {
   };
 
   useEffect(() => {
-    fetchGroupsData();
+    fetchUserData();
   }, []);
 
   return (
@@ -167,9 +164,7 @@ function Team({ user }) {
             <div className="grid grid-cols-1 px-4 mb-16">
               <div className="w-full bg-white rounded-xl overflow-hdden shadow-md p-4 undefined">
                 <div className="grid sm:flex bg-gradient-to-tr from-purple-500 to-purple-700 -mt-10 mb-4 rounded-xl text-white  items-center w-full h-40 sm:h-24 py-4 px-8 justify-between shadow-lg-purple undefined">
-                  <h2 className="text-white text-2xl font-bold">
-                    Team Groups{" "}
-                  </h2>
+                  <h2 className="text-white text-2xl font-bold">Users List </h2>
                   <span
                     className="text-center  rounded-full border-2 px-4 py-2 cursor-pointer hover:bg-white hover:text-purple-500 hover:border-2 hover:border-purple-500 "
                     onClick={showModal}
@@ -183,10 +178,13 @@ function Team({ user }) {
                       <thead>
                         <tr>
                           <th className="px-2 text-purple-500 align-middle border-b border-solid border-gray-200 py-3 text-sm whitespace-nowrap font-semibold text-left">
-                            Group Name
+                            Name
                           </th>
                           <th className="px-2 text-purple-500 align-middle border-b border-solid border-gray-200 py-3 text-sm whitespace-nowrap font-semibold text-left">
-                            Category
+                            Email
+                          </th>
+                          <th className="px-2 text-purple-500 align-middle border-b border-solid border-gray-200 py-3 text-sm whitespace-nowrap font-semibold text-left">
+                            Role
                           </th>
                           <th className="px-2 text-purple-500 align-middle border-b border-solid border-gray-200 py-3 text-sm whitespace-nowrap font-semibold text-left">
                             Status
@@ -209,15 +207,18 @@ function Team({ user }) {
                               />
                             </th>
                           </tr>
-                        ) : groupsList.length > 0 ? (
-                          groupsList.map((item, idx) => {
+                        ) : userList.length > 0 ? (
+                          userList.map((item, idx) => {
                             return (
-                              <tr key={idx + "group"}>
+                              <tr key={idx + "user"}>
                                 <th className="border-b border-gray-200 align-middle font-normal text-sm whitespace-nowrap px-2 py-4 text-left">
-                                  {item.name}
+                                  {item.first_name} {item.last_name}
                                 </th>
                                 <th className="border-b border-gray-200 align-middle font-normal text-sm whitespace-nowrap px-2 py-4 text-left">
-                                  {item.category}
+                                  {item.email}
+                                </th>
+                                <th className="border-b border-gray-200 align-middle font-normal text-sm whitespace-nowrap px-2 py-4 text-left">
+                                  {item.role_id}
                                 </th>
                                 <th className="border-b border-gray-200 align-middle font-normal text-sm whitespace-nowrap px-2 py-4 text-left">
                                   {item.status ? "Active" : "InActive"}
@@ -232,7 +233,7 @@ function Team({ user }) {
                                     </span>
                                     <span
                                       className="text-red-500 text-lg mx-2"
-                                      onClick={() => deleteGroup(item.id)}
+                                      onClick={() => deleteGroup(item)}
                                     >
                                       <DeleteOutlined />
                                     </span>
@@ -247,7 +248,7 @@ function Team({ user }) {
                               colSpan={3}
                               className="border-b text-center border-gray-200 align-middle font-semibold text-sm whitespace-nowrap px-2 py-4 "
                             >
-                              No Groups Found
+                              No Users Found
                             </th>
                           </tr>
                         )}
@@ -261,7 +262,7 @@ function Team({ user }) {
         </div>
       </div>
       <Modal
-        title={`${editMode ? "Update" : "Add"}  Team Group`}
+        title={`${editMode ? "Update" : "Add"}  Users`}
         visible={isModalVisible}
         onOk={form.submit}
         onCancel={() => onCancel()}
@@ -285,8 +286,8 @@ function Team({ user }) {
           <Row gutter={16}>
             <Col md={12} xs={24}>
               <Form.Item
-                name="name"
-                label="Name"
+                name="first_name"
+                label="First Name"
                 rules={[
                   {
                     required: true,
@@ -298,8 +299,8 @@ function Team({ user }) {
             </Col>
             <Col md={12} xs={24}>
               <Form.Item
-                name="category"
-                label="Category"
+                name="last_name"
+                label="Last Name"
                 rules={[
                   {
                     required: true,
@@ -309,6 +310,38 @@ function Team({ user }) {
                 <Input />
               </Form.Item>
             </Col>
+            <Col md={12} xs={24}>
+              <Form.Item
+                name="email"
+                label="Email"
+                rules={[
+                  {
+                    required: true,
+                  },
+                  {
+                    type: "email",
+                  },
+                ]}
+              >
+                <Input />
+              </Form.Item>
+            </Col>
+            {!editMode && (
+              <Col md={12} xs={24}>
+                <Form.Item
+                  name="password"
+                  label="Password"
+                  rules={[
+                    {
+                      required: true,
+                    },
+                  ]}
+                >
+                  <Input />
+                </Form.Item>
+              </Col>
+            )}
+
             <Col md={12} xs={24}>
               <Form.Item
                 name="status"
@@ -320,8 +353,8 @@ function Team({ user }) {
                 ]}
               >
                 <Radio.Group>
-                  <Radio value={true}>Active</Radio>
-                  <Radio value={false}>Inactive</Radio>
+                  <Radio value={1}>Active</Radio>
+                  <Radio value={0}>Inactive</Radio>
                 </Radio.Group>
               </Form.Item>
             </Col>
@@ -332,4 +365,4 @@ function Team({ user }) {
   );
 }
 
-export default Team;
+export default AdminUsers;

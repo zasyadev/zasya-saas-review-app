@@ -12,19 +12,20 @@ datasource db {
 }
 
 model User {
-  id          String    @id @default(uuid())
-  email       String    @unique()
-  password    String
-  first_name  String?
-  last_name   String?
-  address     String?   @db.LongText
-  pin_code    String?
-  mobile      String?
-  status      Int
-  role        Role      @relation(fields: [role_id], references: [id])
-  role_id     Int
-  createdDate DateTime? @default(now())
-  Groups      Groups[]
+  id              String           @id @default(uuid())
+  email           String           @unique()
+  password        String
+  first_name      String?
+  last_name       String?
+  address         String?          @db.LongText
+  pin_code        String?
+  mobile          String?
+  status          Int
+  role            Role             @relation(fields: [role_id], references: [id])
+  role_id         Int
+  createdDate     DateTime?        @default(now())
+  Groups          Groups[]
+  GroupsEmployees GroupsEmployees?
 }
 
 model Role {
@@ -36,12 +37,24 @@ model Role {
 }
 
 model Groups {
+  id              Int               @id @default(autoincrement())
+  name            String?
+  category        String?
+  status          Boolean
+  user            User              @relation(fields: [user_id], references: [id])
+  user_id         String
+  created_date    DateTime          @default(now())
+  modified_date   DateTime          @default(now())
+  GroupsEmployees GroupsEmployees[]
+}
+
+model GroupsEmployees {
   id            Int      @id @default(autoincrement())
-  name          String?
-  category      String?
-  status        Boolean
-  user          User     @relation(fields: [user_id], references: [id])
-  user_id       String
+  group         Groups   @relation(fields: [group_id], references: [id])
+  group_id      Int
+  employee      User     @relation(fields: [employee_id], references: [id])
+  employee_id   String   @unique
+  is_manager    Boolean
   created_date  DateTime @default(now())
   modified_date DateTime @default(now())
 }

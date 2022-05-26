@@ -4,24 +4,26 @@ import {
   Layout,
   Modal,
   Form,
-  Input,
   Row,
   Col,
   Radio,
   Skeleton,
-  message,
+  Select,
 } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import { openNotificationBox } from "../../helpers/notification";
 
 const { Content } = Layout;
 
-function Team({ user }) {
+function TeamMembers({ user }) {
   const [form] = Form.useForm();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [groupsList, setGroupsList] = useState([]);
+  const [membersList, setMembersList] = useState([]);
   const [editMode, setEditMode] = useState(false);
   const [upadteData, setUpdateData] = useState({});
+  const [groupsList, setGroupsList] = useState([]);
+  const [userList, setUserList] = useState([]);
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -29,16 +31,13 @@ function Team({ user }) {
 
   async function onFinish(values) {
     let obj = {
-      name: values.name,
-      category: values.category,
-      status: values.status,
-      user_id: user.id,
+      ...values,
     };
     editMode ? updatingGroup(obj) : addingGroup(obj);
   }
 
   async function addingGroup(obj) {
-    await fetch("/api/team/groups", {
+    await fetch("/api/team/members", {
       method: "POST",
       body: JSON.stringify(obj),
       // headers: {
@@ -48,12 +47,12 @@ function Team({ user }) {
       .then((response) => response.json())
       .then((response) => {
         if (response.status === 200) {
-          message.success(response.message, 3);
-          fetchGroupsData();
+          openNotificationBox("success", response.message, 3);
+          fetchMembersData();
           form.resetFields();
           setIsModalVisible(false);
         } else {
-          message.error(response.message, 3);
+          openNotificationBox("error", response.message, 3);
         }
       })
       .catch((err) => console.log(err));
@@ -61,7 +60,7 @@ function Team({ user }) {
   async function updatingGroup(obj) {
     if (upadteData.id) {
       obj.id = upadteData.id;
-      await fetch("/api/team/groups", {
+      await fetch("/api/team/members", {
         method: "PUT",
         body: JSON.stringify(obj),
         // headers: {
@@ -71,13 +70,13 @@ function Team({ user }) {
         .then((response) => response.json())
         .then((response) => {
           if (response.status === 200) {
-            message.success(response.message, 3);
-            fetchGroupsData();
+            openNotificationBox("success", response.message, 3);
+            fetchMembersData();
             form.resetFields();
             setIsModalVisible(false);
             setEditMode(false);
           } else {
-            message.error(response.message, 3);
+            openNotificationBox("error", response.message, 3);
           }
         })
         .catch((err) => console.log(err));
@@ -88,7 +87,7 @@ function Team({ user }) {
       let obj = {
         id: id,
       };
-      await fetch("/api/team/groups", {
+      await fetch("/api/team/members", {
         method: "DELETE",
         body: JSON.stringify(obj),
         // headers: {
@@ -98,32 +97,32 @@ function Team({ user }) {
         .then((response) => response.json())
         .then((response) => {
           if (response.status === 200) {
-            message.success(response.message, 3);
-            fetchGroupsData();
+            openNotificationBox("success", response.message, 3);
+            fetchMembersData();
           } else {
-            message.error(response.message, 3);
+            openNotificationBox("error", response.message, 3);
           }
         })
         .catch((err) => console.log(err));
     }
   }
 
-  async function fetchGroupsData() {
+  async function fetchMembersData() {
     setLoading(true);
-    setGroupsList([]);
-    await fetch("/api/team/groups", {
+    setMembersList([]);
+    await fetch("/api/team/members", {
       method: "GET",
     })
       .then((response) => response.json())
       .then((response) => {
         if (response.status === 200) {
-          setGroupsList(response.data);
+          setMembersList(response.data);
         }
         setLoading(false);
       })
       .catch((err) => {
         console.log(err);
-        setGroupsList([]);
+        setMembersList([]);
       });
   }
 
@@ -137,14 +136,14 @@ function Team({ user }) {
       range: "${label} must be between ${min} and ${max}",
     },
   };
-  const onUpdate = (group) => {
+  const onUpdate = (data) => {
     setEditMode(true);
-    setUpdateData(group);
+    setUpdateData(data);
     setIsModalVisible(true);
     form.setFieldsValue({
-      name: group.name,
-      category: group.category,
-      status: group.status,
+      group_id: data.group_id,
+      employee_id: data.employee_id,
+      is_manager: data.is_manager,
     });
   };
   const onCancel = () => {
@@ -152,9 +151,49 @@ function Team({ user }) {
     setEditMode(false);
     form.resetFields();
   };
+  async function fetchGroupData() {
+    // setLoading(true);
+    setGroupsList([]);
+    await fetch("/api/team/groups", {
+      method: "GET",
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        if (response.status === 200) {
+          let data = response.data.filter((item) => item.status);
+          setGroupsList(data);
+        }
+        // setLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setGroupsList([]);
+      });
+  }
+  async function fetchUserData() {
+    // setLoading(true);
+    setUserList([]);
+    await fetch("/api/user/adminuser", {
+      method: "GET",
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        if (response.status === 200) {
+          let data = response.data.filter((item) => item.status);
+          setUserList(data);
+        }
+        // setLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setUserList([]);
+      });
+  }
 
   useEffect(() => {
-    fetchGroupsData();
+    fetchMembersData();
+    fetchGroupData();
+    fetchUserData();
   }, []);
 
   return (
@@ -168,7 +207,7 @@ function Team({ user }) {
               <div className="w-full bg-white rounded-xl overflow-hdden shadow-md p-4 undefined">
                 <div className="grid sm:flex bg-gradient-to-tr from-purple-500 to-purple-700 -mt-10 mb-4 rounded-xl text-white  items-center w-full h-40 sm:h-24 py-4 px-8 justify-between shadow-lg-purple undefined">
                   <h2 className="text-white text-2xl font-bold">
-                    Team Groups{" "}
+                    Team Members{" "}
                   </h2>
                   <span
                     className="text-center  rounded-full border-2 px-4 py-2 cursor-pointer hover:bg-white hover:text-purple-500 hover:border-2 hover:border-purple-500 "
@@ -186,10 +225,10 @@ function Team({ user }) {
                             Group Name
                           </th>
                           <th className="px-2 text-purple-500 align-middle border-b border-solid border-gray-200 py-3 text-sm whitespace-nowrap font-semibold text-left">
-                            Category
+                            Member Name
                           </th>
                           <th className="px-2 text-purple-500 align-middle border-b border-solid border-gray-200 py-3 text-sm whitespace-nowrap font-semibold text-left">
-                            Status
+                            Manager
                           </th>
                           <th className="px-2 text-purple-500 align-middle border-b border-solid border-gray-200 py-3 text-sm whitespace-nowrap font-semibold text-left">
                             Action
@@ -209,18 +248,18 @@ function Team({ user }) {
                               />
                             </th>
                           </tr>
-                        ) : groupsList.length > 0 ? (
-                          groupsList.map((item, idx) => {
+                        ) : membersList.length > 0 ? (
+                          membersList.map((item, idx) => {
                             return (
                               <tr key={idx + "group"}>
                                 <th className="border-b border-gray-200 align-middle font-normal text-sm whitespace-nowrap px-2 py-4 text-left">
-                                  {item.name}
+                                  {item?.group?.name}
                                 </th>
                                 <th className="border-b border-gray-200 align-middle font-normal text-sm whitespace-nowrap px-2 py-4 text-left">
-                                  {item.category}
+                                  {item?.employee?.first_name}
                                 </th>
                                 <th className="border-b border-gray-200 align-middle font-normal text-sm whitespace-nowrap px-2 py-4 text-left">
-                                  {item.status ? "Active" : "InActive"}
+                                  {item.is_manager ? "Yes" : "No"}
                                 </th>
                                 <th className="border-b underline border-gray-200 align-middle font-normal text-sm whitespace-nowrap px-2 py-4 text-left cursor-pointer">
                                   <p>
@@ -247,7 +286,7 @@ function Team({ user }) {
                               colSpan={3}
                               className="border-b text-center border-gray-200 align-middle font-semibold text-sm whitespace-nowrap px-2 py-4 "
                             >
-                              No Groups Found
+                              No Members Found
                             </th>
                           </tr>
                         )}
@@ -261,7 +300,7 @@ function Team({ user }) {
         </div>
       </div>
       <Modal
-        title={`${editMode ? "Update" : "Add"}  Team Group`}
+        title={`${editMode ? "Update" : "Add"}  Team Members`}
         visible={isModalVisible}
         onOk={form.submit}
         onCancel={() => onCancel()}
@@ -285,34 +324,62 @@ function Team({ user }) {
           <Row gutter={16}>
             <Col md={12} xs={24}>
               <Form.Item
-                name="name"
-                label="Name"
+                name="group_id"
+                label="Group Name"
                 rules={[
                   {
                     required: true,
                   },
                 ]}
               >
-                <Input />
+                <Select
+                  placeholder="Select Groups"
+                  showSearch
+                  filterOption={(input, option) =>
+                    option.children
+                      .toLowerCase()
+                      .indexOf(input.toLowerCase()) >= 0
+                  }
+                >
+                  {groupsList.map((data, index) => (
+                    <Select.Option key={index} value={data.id}>
+                      {data.name}
+                    </Select.Option>
+                  ))}
+                </Select>
               </Form.Item>
             </Col>
             <Col md={12} xs={24}>
               <Form.Item
-                name="category"
-                label="Category"
+                name="employee_id"
+                label="Employee Name"
                 rules={[
                   {
                     required: true,
                   },
                 ]}
               >
-                <Input />
+                <Select
+                  placeholder="Select Groups"
+                  showSearch
+                  filterOption={(input, option) =>
+                    option.children
+                      .toLowerCase()
+                      .indexOf(input.toLowerCase()) >= 0
+                  }
+                >
+                  {userList.map((data, index) => (
+                    <Select.Option key={index} value={data.id}>
+                      {data.first_name}
+                    </Select.Option>
+                  ))}
+                </Select>
               </Form.Item>
             </Col>
             <Col md={12} xs={24}>
               <Form.Item
-                name="status"
-                label="Status"
+                name="is_manager"
+                label="Is Manager"
                 rules={[
                   {
                     required: true,
@@ -320,8 +387,8 @@ function Team({ user }) {
                 ]}
               >
                 <Radio.Group>
-                  <Radio value={true}>Active</Radio>
-                  <Radio value={false}>Inactive</Radio>
+                  <Radio value={true}>Yes</Radio>
+                  <Radio value={false}>No</Radio>
                 </Radio.Group>
               </Form.Item>
             </Col>
@@ -332,4 +399,4 @@ function Team({ user }) {
   );
 }
 
-export default Team;
+export default TeamMembers;

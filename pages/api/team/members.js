@@ -8,42 +8,59 @@ export default async (req, res) => {
       const resData = JSON.parse(req.body);
 
       let userobj = {
-        name: resData.name,
-        category: resData.category,
-        status: resData.status,
-        user: { connect: { id: resData.user_id } },
+        group: { connect: { id: resData.group_id } },
+        employee: { connect: { id: resData.employee_id } },
+        is_manager: resData.is_manager,
       };
 
-      const savedData = await prisma.groups.create({
+      const savedData = await prisma.groupsEmployees.create({
         data: userobj,
       });
 
       prisma.$disconnect();
 
       return res.status(201).json({
-        message: "Group Saved Successfully",
+        message: "Members Saved Successfully",
         data: savedData,
         status: 200,
       });
     } catch (error) {
+      if (error.code === "P2014") {
+        return res
+          .status(409)
+          .json({ error: error, message: "Duplicate Employee" });
+      }
       return res
         .status(500)
         .json({ error: error, message: "Internal Server Error" });
     }
   } else if (req.method === "GET") {
     try {
-      const data = await prisma.groups.findMany();
+      const data = await prisma.groupsEmployees.findMany({
+        include: {
+          employee: {
+            select: {
+              first_name: true,
+              email: true,
+              status: true,
+              last_name: true,
+            },
+          },
+          group: true,
+        },
+      });
 
       if (data) {
         return res.status(200).json({
           status: 200,
           data: data,
-          message: "All Groups Retrieved",
+          message: "All Members Retrieved",
         });
       }
 
       return res.status(404).json({ status: 404, message: "No Record Found" });
     } catch (error) {
+      console.log(error, "data");
       return res
         .status(500)
         .json({ error: error, message: "Internal Server Error" });
@@ -52,20 +69,19 @@ export default async (req, res) => {
     try {
       const resData = JSON.parse(req.body);
 
-      const data = await prisma.groups.update({
+      const data = await prisma.groupsEmployees.update({
         where: { id: resData.id },
         data: {
-          name: resData.name,
-          category: resData.category,
-          status: resData.status,
-          user: { connect: { id: resData.user_id } },
+          group_id: resData.group_id,
+          employee_id: resData.employee_id,
+          is_manager: resData.is_manager,
         },
       });
 
       prisma.$disconnect();
 
       return res.status(200).json({
-        message: "Groups Updated Successfully.",
+        message: "Members Updated Successfully.",
         status: 200,
         data: data,
       });
@@ -78,14 +94,14 @@ export default async (req, res) => {
     const reqBody = JSON.parse(req.body);
 
     if (reqBody.id) {
-      const deletaData = await prisma.groups.delete({
+      const deletaData = await prisma.groupsEmployees.delete({
         where: { id: reqBody.id },
       });
       prisma.$disconnect();
       if (deletaData) {
         return res.status(200).json({
           status: 200,
-          message: "Group Deleted Successfully.",
+          message: "Members Deleted Successfully.",
         });
       }
       return res.status(400).json({
