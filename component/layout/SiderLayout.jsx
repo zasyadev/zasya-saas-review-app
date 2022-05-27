@@ -4,6 +4,7 @@ import {
   SettingOutlined,
   AppstoreOutlined,
   UserOutlined,
+  FormOutlined,
 } from "@ant-design/icons";
 import { Menu, Layout } from "antd";
 import { useRouter } from "next/router";
@@ -36,6 +37,7 @@ function SiderLayout({ collapsed }) {
       getItem("Members", "/admin/team/members"),
     ]),
     getItem("Users", "/admin/user", <UserOutlined />),
+    getItem("Form", "/admin/form", <FormOutlined />),
   ];
 
   const onClickSideTab = (e) => {
