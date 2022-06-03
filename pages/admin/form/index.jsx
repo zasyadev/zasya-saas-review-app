@@ -3,11 +3,13 @@ import { getSession } from "next-auth/client";
 import AdminLayout from "../../../component/layout/AdminLayout";
 import AdminUsers from "../../../component/Users/AdminUsers";
 import FormComponent from "../../../component/Form/FormComponent";
+import FormLayout from "../../../component/Form/FormLayout";
 
 function formPage({ user }) {
   return (
     <AdminLayout user={user}>
-      <FormComponent user={user} />
+      {/* <FormComponent user={user} /> */}
+      <FormLayout user={user} />
     </AdminLayout>
   );
 }

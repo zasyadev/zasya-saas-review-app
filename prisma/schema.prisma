@@ -26,6 +26,7 @@ model User {
   createdDate     DateTime?        @default(now())
   Groups          Groups[]
   GroupsEmployees GroupsEmployees?
+  FormTable       FormTable[]
 }
 
 model Role {
@@ -55,6 +56,16 @@ model GroupsEmployees {
   employee      User     @relation(fields: [employee_id], references: [id])
   employee_id   String   @unique
   is_manager    Boolean
+  created_date  DateTime @default(now())
+  modified_date DateTime @default(now())
+}
+
+model FormTable {
+  id            Int      @id @default(autoincrement())
+  user          User     @relation(fields: [user_id], references: [id])
+  user_id       String
+  form_data     Json?
+  status        Boolean
   created_date  DateTime @default(now())
   modified_date DateTime @default(now())
 }
