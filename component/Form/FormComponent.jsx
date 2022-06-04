@@ -115,6 +115,7 @@ function FormComponent({
           description: formDes,
           questions: questions,
         },
+        form_title: formTitle,
         status: true,
       };
       editMode ? updateFormData(obj, id) : addNewForm(obj);

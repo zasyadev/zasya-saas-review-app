@@ -75,6 +75,7 @@ const QuestionComponent = ({
                 <MenuItem value={"input"}>Input Box</MenuItem>
                 <MenuItem value={"checkbox"}>CheckBox</MenuItem>
                 <MenuItem value={"textarea"}>TextArea</MenuItem>
+                <MenuItem value={"scale"}>Linear Scale</MenuItem>
                 {/* <MenuItem value={"selectbox"}>Selectbox</MenuItem> */}
               </Select>
               {/* <Select

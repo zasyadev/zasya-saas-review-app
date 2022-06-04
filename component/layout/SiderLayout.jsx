@@ -26,18 +26,19 @@ function SiderLayout({ collapsed }) {
 
   const items = [
     getItem("DashBoard", "/admin/dashboard", <MailOutlined />),
-    getItem("Activity", "sub1", <SettingOutlined />, [
-      getItem("Submenu", "sub3", null, [
-        getItem("Option 7", "7"),
-        getItem("Option 8", "8"),
-      ]),
-    ]),
+    // getItem("Activity", "sub1", <SettingOutlined />, [
+    //   getItem("Submenu", "sub3", null, [
+    //     getItem("Option 7", "7"),
+    //     getItem("Option 8", "8"),
+    //   ]),
+    // ]),
     getItem("Team", "team", <AppstoreOutlined />, [
       getItem("Groups", "/admin/team/groups"),
       getItem("Members", "/admin/team/members"),
     ]),
     getItem("Users", "/admin/user", <UserOutlined />),
     getItem("Form", "/admin/form", <FormOutlined />),
+    getItem("Form Manage", "/admin/form/management", <SettingOutlined />),
   ];
 
   const onClickSideTab = (e) => {

@@ -23,7 +23,8 @@ function FormLayout({ user }) {
       .then((response) => response.json())
       .then((response) => {
         if (response.status === 200) {
-          setFormList(response.data);
+          let data = response.data.filter((item) => item.status);
+          setFormList(data);
         }
         // setLoading(false);
       })
