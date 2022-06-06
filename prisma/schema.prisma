@@ -27,8 +27,8 @@ model User {
   Groups          Groups[]
   GroupsEmployees GroupsEmployees?
   FormTable       FormTable[]
-  taskBy          FormAssign? @relation("taskBy")
-  taskTo          FormAssign? @relation("taskTo")
+  taskBy          FormAssign[]     @relation("taskBy")
+  taskTo          FormAssign[]     @relation("taskTo")
 }
 
 model Role {
@@ -63,26 +63,26 @@ model GroupsEmployees {
 }
 
 model FormTable {
-  id            Int      @id @default(autoincrement())
-  user          User     @relation(fields: [user_id], references: [id])
+  id            Int          @id @default(autoincrement())
+  user          User         @relation(fields: [user_id], references: [id])
   user_id       String
   form_title    String?
   form_data     Json?
   status        Boolean
-  created_date  DateTime @default(now())
-  modified_date DateTime @default(now())
+  created_date  DateTime     @default(now())
+  modified_date DateTime     @default(now())
   FormAssign    FormAssign[]
 }
 
 model FormAssign {
-  id                Int         @id @default(autoincrement())
-  assigned_by       User        @relation("taskBy",fields: [assigned_by_id], references: [id])
-  assigned_by_id    String
-  assigned_to       User        @relation("taskTo",fields: [assigned_to_id], references: [id])
-  assigned_to_id    String
-  form              FormTable   @relation(fields: [form_id], references: [id])
-  form_id           Int
-  status            Boolean
-  created_date      DateTime    @default(now())
-  modified_date     DateTime    @default(now())
+  id             Int       @id @default(autoincrement())
+  assigned_by    User      @relation("taskBy", fields: [assigned_by_id], references: [id])
+  assigned_by_id String
+  assigned_to    User      @relation("taskTo", fields: [assigned_to_id], references: [id])
+  assigned_to_id String
+  form           FormTable @relation(fields: [form_id], references: [id])
+  form_id        Int
+  status         Boolean
+  created_date   DateTime  @default(now())
+  modified_date  DateTime  @default(now())
 }

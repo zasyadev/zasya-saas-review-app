@@ -13,7 +13,7 @@ export default async (req, res) => {
         form: { connect: { id: resData.form_id } },
         status: resData.status,
       };
-      //
+
       const savedData = await prisma.formAssign.create({
         data: dataObj,
       });
@@ -53,20 +53,20 @@ export default async (req, res) => {
   } else if (req.method === "PUT") {
     try {
       const resData = JSON.parse(req.body);
-      return;
 
       const data = await prisma.formAssign.update({
         where: { id: resData.id },
         data: {
-          user: { connect: { id: resData.user_id } },
-          form_data: resData.form_data,
+          assigned_by_id: resData.assigned_by_id,
+          assigned_to_id: resData.assigned_to_id,
+          form_id: resData.form_id,
           status: resData.status,
         },
       });
       prisma.$disconnect();
 
       return res.status(200).json({
-        message: "Form Updated Successfully.",
+        message: "Assign Updated Successfully.",
         status: 200,
         data: data,
       });
@@ -86,7 +86,7 @@ export default async (req, res) => {
       if (deletaData) {
         return res.status(200).json({
           status: 200,
-          message: "Form Deleted Successfully.",
+          message: "Form Assign Deleted Successfully.",
         });
       }
       return res.status(400).json({

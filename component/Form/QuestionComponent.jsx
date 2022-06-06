@@ -8,10 +8,11 @@ import Select from "@material-ui/core/Select";
 import TextField from "@material-ui/core/TextField";
 import { Col, Row } from "antd";
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
 import CloseIcon from "../../assets/images/close-line.svg";
 import DeleteIcon from "../../assets/images/delete.svg";
 import EyeIcon from "../../assets/images/eye.svg";
+import RadioGroup from "@material-ui/core/RadioGroup";
 
 const QuestionComponent = ({
   type,
@@ -27,7 +28,13 @@ const QuestionComponent = ({
   handleQuestionValue,
   handleOptionValue,
   removeOption,
+  lowerLabel,
+  higherLabel,
+  handleScaleOptionValue,
 }) => {
+  const range = (min, max) =>
+    [...Array(max - min + 1).keys()].map((i) => i + min);
+
   return open ? (
     <div
       className=" border-l-8 rounded-l-md border-cyan-500 shadow-lg mt-8"
@@ -38,13 +45,6 @@ const QuestionComponent = ({
           <Row gutter={[8]} className="w-full">
             <Col md={16} xs={16}>
               <div className="flex justify-between w-full">
-                {/* <Input
-                  placeholder={questionText + " " + Number(idx + 1)}
-                  defaultValue={questionText}
-                  onChange={(e) => {
-                    handleQuestionValue(e.target.value, idx);
-                  }}
-                /> */}
                 <Typography style={{ marginTop: "20px" }}>
                   {idx + 1}.
                 </Typography>
@@ -62,9 +62,6 @@ const QuestionComponent = ({
               </div>
             </Col>
             <Col md={8} xs={8}>
-              {/* <InputLabel id="demo-simple-select-standard-label">
-                Type
-              </InputLabel> */}
               <Select
                 value={type}
                 onChange={(e) => defineType(e.target.value, idx)}
@@ -76,18 +73,7 @@ const QuestionComponent = ({
                 <MenuItem value={"checkbox"}>CheckBox</MenuItem>
                 <MenuItem value={"textarea"}>TextArea</MenuItem>
                 <MenuItem value={"scale"}>Linear Scale</MenuItem>
-                {/* <MenuItem value={"selectbox"}>Selectbox</MenuItem> */}
               </Select>
-              {/* <Select
-                placeholder="Select Type"
-                value={type}
-                onChange={(e) => formTypeonChange(e)}
-              >
-                <Select.Option value={"input"}>Input Box</Select.Option>
-                <Select.Option value={"checkbox"}>CheckBox</Select.Option>
-                <Select.Option value={"textarea"}>TextArea</Select.Option>
-                <Select.Option value={"selectbox"}>Selectbox</Select.Option>
-              </Select> */}
             </Col>
           </Row>
 
@@ -144,7 +130,6 @@ const QuestionComponent = ({
                           }}
                           style={{
                             textTransform: "none",
-                            marginLeft: "-5px",
                           }}
                         >
                           Add Option
@@ -166,12 +151,62 @@ const QuestionComponent = ({
                 disabled
               />
             )}
-            {/* 
-            {type === "selectbox" && (
-              <Select className="w-1/2">
-                <Select.Option placeholder="Options">Options</Select.Option>
-              </Select>
-            )}  */}
+            {type === "scale" && (
+              <>
+                <div className="flex items-center">
+                  <Select
+                    value={lowerLabel ?? 0}
+                    onChange={(e) => {
+                      handleScaleOptionValue(e.target.value, idx, "lowerLabel");
+                    }}
+                  >
+                    <MenuItem value={0}>0</MenuItem>
+                    <MenuItem value={1}>1</MenuItem>
+                  </Select>
+
+                  <p className="mx-4">To </p>
+
+                  <Select
+                    value={higherLabel ?? 5}
+                    onChange={(e) => {
+                      handleScaleOptionValue(e.target.value, idx, "highLabel");
+                    }}
+                  >
+                    <MenuItem value={5}>5</MenuItem>
+                    <MenuItem value={10}>10</MenuItem>
+                  </Select>
+                </div>
+                {options.length > 1 && (
+                  <>
+                    {" "}
+                    <div className="flex flex-row  items-center py-2">
+                      <p className="mr-4">{lowerLabel ?? 0}</p>
+                      <TextField
+                        placeholder="Scale Text"
+                        multiline={true}
+                        className="w-1/2"
+                        onChange={(e) => {
+                          handleOptionValue(e.target.value, idx, 0);
+                        }}
+                        value={options[0].optionText}
+                      />
+                    </div>
+                    <div className="flex flex-row  items-center py-2">
+                      <p className="mr-4">{higherLabel ?? 5}</p>
+                      <TextField
+                        placeholder="Scale Text"
+                        multiline={true}
+                        className="w-1/2"
+                        onChange={(e) => {
+                          handleOptionValue(e.target.value, idx, 1);
+                        }}
+                        value={options[1].optionText}
+                      />
+                    </div>
+                  </>
+                )}
+              </>
+            )}
           </div>
           <div className="mt-4 w-full border-t-2 px-4 py-2">
             <p className="text-right mt-1">
@@ -228,6 +263,27 @@ const QuestionComponent = ({
             disabled
           />
         ) : null}
+
+        {type === "scale" && options?.length > 1 && (
+          <div className="flex items-baseline w-full justify-around">
+            <p>{options[0]?.optionText}</p>
+            <RadioGroup name="scale" className="mx-3 flex justify-center" row>
+              {higherLabel &&
+                lowerLabel > -1 &&
+                range.length > 0 &&
+                range(lowerLabel, higherLabel).map((rg, index) => (
+                  <FormControlLabel
+                    value={rg}
+                    control={<Radio />}
+                    label={rg}
+                    labelPlacement="top"
+                    key={index + "range"}
+                  />
+                ))}
+            </RadioGroup>
+            <p>{options[1]?.optionText}</p>
+          </div>
+        )}
       </div>
       {/* <div>
         <div className="w-full flex flex-col items-start ml-4 pt-4 pb-5 ">

@@ -22,6 +22,7 @@ function FormManagement({ user }) {
   const [loading, setLoading] = useState(false);
   const [userList, setUserList] = useState([]);
   const [formList, setFormList] = useState([]);
+  const [updateData, setUpdateData] = useState({});
   const [formAssignList, setFormAssignList] = useState([]);
 
   const showModal = () => {
@@ -66,27 +67,29 @@ function FormManagement({ user }) {
       .catch((err) => console.log(err));
   }
   async function updateFormAssign(obj) {
-    return;
-    await fetch("/api/user", {
-      method: "PUT",
-      body: JSON.stringify(obj),
-      // headers: {
-      //   "Content-Type": "application/json",
-      // },
-    })
-      .then((response) => response.json())
-      .then((response) => {
-        if (response.status === 200) {
-          message.success(response.message, 3);
-          fetchFormAssignList();
-          form.resetFields();
-          setIsModalVisible(false);
-          setEditMode(false);
-        } else {
-          message.error(response.message, 3);
-        }
+    if (updateData.id) {
+      obj.id = updateData.id;
+      await fetch("/api/form/manage", {
+        method: "PUT",
+        body: JSON.stringify(obj),
+        // headers: {
+        //   "Content-Type": "application/json",
+        // },
       })
-      .catch((err) => console.log(err));
+        .then((response) => response.json())
+        .then((response) => {
+          if (response.status === 200) {
+            openNotificationBox("success", response.message, 3);
+            fetchFormAssignList();
+            form.resetFields();
+            setIsModalVisible(false);
+            setEditMode(false);
+          } else {
+            openNotificationBox("error", response.message, 3);
+          }
+        })
+        .catch((err) => console.log(err));
+    }
   }
 
   async function fetchFormAssignList() {
@@ -140,6 +143,42 @@ function FormManagement({ user }) {
         console.log(err);
         setFormList([]);
       });
+  }
+
+  const onUpdate = (data) => {
+    setEditMode(true);
+    setUpdateData(data);
+    setIsModalVisible(true);
+    form.setFieldsValue({
+      assigned_to_id: data.assigned_to_id,
+      form_id: data.form_id,
+      status: data.status,
+    });
+  };
+
+  async function onDelete(id) {
+    if (id) {
+      let obj = {
+        id: id,
+      };
+      await fetch("/api/form/manage", {
+        method: "DELETE",
+        body: JSON.stringify(obj),
+        // headers: {
+        //   "Content-Type": "application/json",
+        // },
+      })
+        .then((response) => response.json())
+        .then((response) => {
+          if (response.status === 200) {
+            openNotificationBox("success", response.message, 3);
+            fetchFormAssignList();
+          } else {
+            openNotificationBox("error", response.message, 3);
+          }
+        })
+        .catch((err) => console.log(err));
+    }
   }
 
   useEffect(() => {
@@ -226,13 +265,13 @@ function FormManagement({ user }) {
                                 <p>
                                   <span
                                     className="text-yellow-500 text-lg mx-2"
-                                    //   onClick={() => onUpdate(item)}
+                                    onClick={() => onUpdate(item)}
                                   >
                                     <EditOutlined />
                                   </span>
                                   <span
                                     className="text-red-500 text-lg mx-2"
-                                    //   onClick={() => deleteGroup(item)}
+                                    onClick={() => onDelete(item.id)}
                                   >
                                     <DeleteOutlined />
                                   </span>

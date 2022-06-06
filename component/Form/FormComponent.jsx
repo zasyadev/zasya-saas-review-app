@@ -19,6 +19,15 @@ function FormComponent({
     open: true,
     type: "checkbox",
   };
+  const defaultScaleQuestion = {
+    questionText: "Question",
+    options: [{ optionText: "low" }, { optionText: "high" }],
+    lowerLabel: 0,
+    higherLabel: 5,
+    open: true,
+    type: "scale",
+  };
+
   const [questions, setQuestions] = useState([defaultQuestionConfig]);
   const [formTitle, setFormTitle] = useState("");
   const [formDes, setFormDes] = useState("");
@@ -33,7 +42,18 @@ function FormComponent({
   }
   function defineType(type, index) {
     setQuestions((prev) =>
-      prev.map((item, i) => (i === index ? { ...item, type } : item))
+      prev.map((item, i) =>
+        i === index
+          ? type === "scale"
+            ? {
+                ...defaultScaleQuestion,
+              }
+            : {
+                ...defaultQuestionConfig,
+                type: type,
+              }
+          : item
+      )
     );
   }
 
@@ -92,6 +112,24 @@ function FormComponent({
       )
     );
   }
+  function handleScaleOptionValue(text, idx, type) {
+    setQuestions((prev) =>
+      prev.map((item, i) =>
+        i === idx
+          ? type === "lowerLabel"
+            ? {
+                ...item,
+                lowerLabel: text,
+              }
+            : {
+                ...item,
+                higherLabel: text,
+              }
+          : item
+      )
+    );
+  }
+
   function removeOption(idx, j) {
     setQuestions((prev) =>
       prev.map((item, i) =>
@@ -173,6 +211,7 @@ function FormComponent({
       setFormDes(editFormData?.form_data?.description);
     }
   }, []);
+
   return (
     <div className="w-4/6 mx-auto">
       <div className="  border-t-8 rounded-t-md border-cyan-500 shadow-lg mt-4">
@@ -216,6 +255,7 @@ function FormComponent({
             handleQuestionValue={handleQuestionValue}
             handleOptionValue={handleOptionValue}
             removeOption={removeOption}
+            handleScaleOptionValue={handleScaleOptionValue}
           />
         ))}
 
