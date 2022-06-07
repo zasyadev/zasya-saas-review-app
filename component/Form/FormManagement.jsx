@@ -286,7 +286,7 @@ function FormManagement({ user }) {
                             colSpan={3}
                             className="border-b text-center border-gray-200 align-middle font-semibold text-sm whitespace-nowrap px-2 py-4 "
                           >
-                            No Users Found
+                            No Data Found
                           </th>
                         </tr>
                       )}

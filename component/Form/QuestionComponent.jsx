@@ -232,6 +232,7 @@ const QuestionComponent = ({
     <div
       className="shadow-lg mt-8  px-2 cursor-pointer"
       onClick={() => handleExpand(idx)}
+      key={idx + "close"}
     >
       <div className="flex flex-col items-start ml-4 py-5">
         <Typography variant="subtitle1" className="ml-0">

@@ -38,7 +38,10 @@ function SiderLayout({ collapsed }) {
     ]),
     getItem("Users", "/admin/user", <UserOutlined />),
     getItem("Form", "/admin/form", <FormOutlined />),
-    getItem("Form Manage", "/admin/form/management", <SettingOutlined />),
+    getItem("Form Manage", "management", <SettingOutlined />, [
+      getItem("Form Assign", "/admin/form/management"),
+      getItem("Form View", "/admin/form/formview"),
+    ]),
   ];
 
   const onClickSideTab = (e) => {
