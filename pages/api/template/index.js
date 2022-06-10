@@ -7,50 +7,25 @@ export default async (req, res) => {
     try {
       const resData = JSON.parse(req.body);
 
-      const transactionData = await prisma.$transaction(async (transaction) => {
-        const questionData = resData.questions.map((item) => {
-          const optionData = item.options.map((opitem) => {
-            return {
-              optionText: opitem.optionText,
-            };
-          });
+      const templateData = await prisma.templateTable.create({
+        data: {
+          user: { connect: { id: resData.user_id } },
 
-          return {
-            questionText: item.questionText,
-            type: item.type,
-            open: item.open,
-            options: { create: optionData },
-          };
-        });
-
-        const formdata = await transaction.formTable.create({
-          data: {
-            user: { connect: { id: resData.user_id } },
-            form_data: resData.form_data,
-            form_title: resData.form_title,
-            form_description: resData.form_description,
-            status: resData.status,
-            questions: {
-              create: questionData,
-            },
-          },
-        });
-
-        return { formdata };
+          form_title: resData.form_title,
+          form_description: resData.form_description,
+          form_data: resData.form_data,
+          status: resData.status,
+          // questions: {
+          //   create: questionData,
+          // },
+        },
       });
 
-      if (!transactionData.formdata || !transactionData) {
-        prisma.$disconnect();
-        return res.status(500).json({
-          status: 500,
-          message: "Internal Server Error!",
-          data: {},
-        });
-      }
       prisma.$disconnect();
+
       return res.status(201).json({
-        message: "Form Saved Sucessfully.",
-        data: transactionData.formdata,
+        message: "Saved  Successfully",
+        data: templateData,
         status: 200,
       });
     } catch (error) {
@@ -60,19 +35,13 @@ export default async (req, res) => {
     }
   } else if (req.method === "GET") {
     try {
-      const data = await prisma.formTable.findMany({
-        include: {
-          questions: {
-            include: { options: true },
-          },
-        },
-      });
+      const data = await prisma.templateTable.findMany();
 
       if (data) {
         return res.status(200).json({
           status: 200,
           data: data,
-          message: "All Forms Retrieved",
+          message: "All Templates Retrieved",
         });
       }
 
@@ -102,7 +71,7 @@ export default async (req, res) => {
             options: { create: optionData },
           };
         });
-        const formdata = await transaction.formTable.update({
+        const formdata = await transaction.templateTable.update({
           where: { id: resData.id },
           data: {
             user: { connect: { id: resData.user_id } },
@@ -142,7 +111,7 @@ export default async (req, res) => {
     const reqBody = JSON.parse(req.body);
 
     if (reqBody.id) {
-      const deletaData = await prisma.formTable.update({
+      const deletaData = await prisma.templateTable.update({
         where: { id: reqBody.id },
         data: {
           status: false,

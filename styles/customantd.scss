@@ -58,6 +58,9 @@
     background-color: #0288d1;
     color: #fff !important;
   }
+  .ant-menu-item-active {
+    color: #000 !important ;
+  }
 }
 .ant-form input[type="checkbox"]:focus {
   outline: 0;

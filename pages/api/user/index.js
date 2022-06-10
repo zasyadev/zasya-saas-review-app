@@ -17,6 +17,7 @@ export default async (req, res) => {
         address: "",
         pin_code: "",
         mobile: "",
+        company_name: userData.company_name,
         status: userData.status,
         role: { connect: { id: userData.role } },
       };

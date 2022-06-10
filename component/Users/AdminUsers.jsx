@@ -312,6 +312,19 @@ function AdminUsers({ user }) {
             </Col>
             <Col md={12} xs={24}>
               <Form.Item
+                name="company_name"
+                label="Company Name"
+                rules={[
+                  {
+                    required: true,
+                  },
+                ]}
+              >
+                <Input />
+              </Form.Item>
+            </Col>
+            <Col md={12} xs={24}>
+              <Form.Item
                 name="email"
                 label="Email"
                 rules={[

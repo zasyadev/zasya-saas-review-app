@@ -98,6 +98,7 @@ function FormComponent({
       )
     );
   }
+
   function handleOptionValue(text, idx, j) {
     setQuestions((prev) =>
       prev.map((item, i) =>
@@ -154,7 +155,9 @@ function FormComponent({
           questions: questions,
         },
         form_title: formTitle,
+        form_description: formDes,
         status: true,
+        questions: questions,
       };
       editMode ? updateFormData(obj, id) : addNewForm(obj);
     }
@@ -162,7 +165,7 @@ function FormComponent({
   async function updateFormData(obj, id) {
     if (id) {
       obj.id = id;
-      await fetch("/api/form", {
+      await fetch("/api/template", {
         method: "PUT",
         body: JSON.stringify(obj),
       })
@@ -184,7 +187,7 @@ function FormComponent({
   }
 
   async function addNewForm(obj) {
-    await fetch("/api/form", {
+    await fetch("/api/template", {
       method: "POST",
       body: JSON.stringify(obj),
     })
@@ -206,9 +209,9 @@ function FormComponent({
 
   useEffect(() => {
     if (editMode) {
-      setQuestions(editFormData?.form_data?.questions);
-      setFormTitle(editFormData?.form_data?.title);
-      setFormDes(editFormData?.form_data?.description);
+      setQuestions(editFormData?.questions);
+      setFormTitle(editFormData?.form_title);
+      setFormDes(editFormData?.form_description);
     }
   }, []);
 
@@ -246,6 +249,7 @@ function FormComponent({
         questions?.map((question, idx) => (
           <QuestionComponent
             {...question}
+            editMode={editMode}
             idx={idx}
             removeElement={removeElement}
             defineType={defineType}

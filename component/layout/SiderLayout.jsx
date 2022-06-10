@@ -32,15 +32,16 @@ function SiderLayout({ collapsed }) {
     //     getItem("Option 8", "8"),
     //   ]),
     // ]),
+    getItem("Reviews", "/admin/review/management", <FormOutlined />),
     getItem("Team", "team", <AppstoreOutlined />, [
       getItem("Groups", "/admin/team/groups"),
       getItem("Members", "/admin/team/members"),
     ]),
-    getItem("Users", "/admin/user", <UserOutlined />),
-    getItem("Form", "/admin/form", <FormOutlined />),
-    getItem("Form Manage", "management", <SettingOutlined />, [
-      getItem("Form Assign", "/admin/form/management"),
-      getItem("Form View", "/admin/form/formview"),
+
+    getItem("Settings", "setting", <SettingOutlined />, [
+      getItem("Templates", "/admin/template"),
+      getItem("Users", "/admin/user"),
+      getItem("Template View", "/admin/form/formview"),
     ]),
   ];
 

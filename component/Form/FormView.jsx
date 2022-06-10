@@ -2,13 +2,15 @@ import { EyeOutlined } from "@ant-design/icons";
 import { TextField } from "@material-ui/core";
 import { Modal, Skeleton } from "antd";
 import React, { useEffect, useState } from "react";
-import QuestionComponent from "./QuestionComponent";
+import { openNotificationBox } from "../../helpers/notification";
+import QuestionViewComponent from "./QuestionViewComponent";
 
 function FormView({ user }) {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const [updateData, setUpdateData] = useState({});
   const [formAssignList, setFormAssignList] = useState([]);
+  const [formValues, setFormValues] = useState([]);
 
   const showModal = (item) => {
     setIsModalVisible(true);
@@ -41,9 +43,45 @@ function FormView({ user }) {
     fetchFormAssignList();
   }, []);
 
-  function handleExpand(idx) {
-    console.log(idx, "idx");
-  }
+  const handleSubmit = async () => {
+    // let array = formValues.map((item) => {
+    //   return { ...item, user_id: user.id, form_id: updateData.id };
+    // });
+    if (user.id && updateData.id) {
+      let obj = {
+        user_id: user.id,
+        template_id: updateData.id,
+        answers: formValues,
+      };
+
+      await fetch("/api/form/answer", {
+        method: "POST",
+        body: JSON.stringify(obj),
+      })
+        .then((response) => response.json())
+        .then((response) => {
+          if (response.status === 200) {
+            console.log(response);
+            openNotificationBox("success", response.message, 3);
+          } else {
+            openNotificationBox("error", response.message, 3);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  };
+
+  const handleAnswerChange = (quesId, value) => {
+    setFormValues((prev) =>
+      prev.find((item) => item.questionId === quesId)
+        ? prev.map((item) =>
+            item.questionId === quesId ? { ...item, answer: value } : item
+          )
+        : [...prev, { questionId: quesId, answer: value }]
+    );
+  };
 
   return (
     <div>
@@ -112,7 +150,7 @@ function FormView({ user }) {
                                 {item.assigned_to.last_name}
                               </th>
                               <th className="border-b border-gray-200 align-middle font-normal text-sm whitespace-nowrap px-2 py-4 text-left">
-                                {item.form.form_title}
+                                {item.template.form_title}
                               </th>
                               <th className="border-b border-gray-200 align-middle font-normal text-sm whitespace-nowrap px-2 py-4 text-left">
                                 {item.status ? "Active" : "InActive"}
@@ -151,7 +189,7 @@ function FormView({ user }) {
       <Modal
         title="View Forms"
         visible={isModalVisible}
-        onOk={() => onCancel()}
+        onOk={() => handleSubmit()}
         onCancel={() => onCancel()}
         // footer={[
         //   <div>
@@ -178,7 +216,7 @@ function FormView({ user }) {
                     // onChange={(e) => {
                     //   setFormTitle(e.target.value);
                     // }}
-                    value={updateData?.form?.form_data?.title}
+                    value={updateData?.template?.form_title}
                     inputProps={{ style: { fontSize: 40, paddingTop: 10 } }}
                     disabled={true}
                   />
@@ -189,7 +227,7 @@ function FormView({ user }) {
                     // onChange={(e) => {
                     //   setFormDes(e.target.value);
                     // }}
-                    value={updateData?.form?.form_data?.description}
+                    value={updateData?.form?.form_description}
                     disabled={true}
                   />
                 </div>
@@ -197,13 +235,13 @@ function FormView({ user }) {
             </div>
           </div>
 
-          {updateData?.form?.form_data?.questions.length > 0 &&
-            updateData?.form?.form_data?.questions?.map((question, idx) => (
-              <QuestionComponent
+          {updateData?.template?.questions.length > 0 &&
+            updateData?.template?.questions?.map((question, idx) => (
+              <QuestionViewComponent
                 {...question}
                 idx={idx}
                 open={false}
-                handleExpand={handleExpand}
+                handleAnswerChange={handleAnswerChange}
               />
             ))}
         </div>
