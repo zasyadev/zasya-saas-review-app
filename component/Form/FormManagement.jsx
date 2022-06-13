@@ -193,10 +193,9 @@ function FormManagement({ user }) {
 
   return (
     <div>
-      <div className="bg-gradient-to-r from-cyan-500 to-blue-500 px-3 md:px-8 h-40" />
-
-      <div className="px-3 md:px-8 h-auto -mt-24">
-        <div className="container mx-auto max-w-full">
+      <div className="bg-gradient-to-r from-cyan-500 to-blue-500 px-3 md:px-8 h-80" />
+      <div className="px-3 md:px-8 h-auto mt-24">
+        <div className="container mx-auto max-w-full ">
           <div className="grid grid-cols-1 px-4 mb-16">
             <div className="w-full bg-white rounded-xl overflow-hdden shadow-md p-4 ">
               <div className="grid sm:flex bg-gradient-to-tr from-purple-500 to-purple-700 -mt-10 mb-4 rounded-xl text-white  items-center w-full h-40 sm:h-24 py-4 px-8 justify-between shadow-lg-purple ">
@@ -304,14 +303,14 @@ function FormManagement({ user }) {
         onOk={form.submit}
         onCancel={() => onCancel()}
         footer={[
-          <div>
+          <>
             <Button key="add" type="default" onClick={() => onCancel()}>
               Cancel
             </Button>
             <Button key="add" type="primary" onClick={form.submit}>
               {editMode ? "Update" : "Add"}
             </Button>
-          </div>,
+          </>,
         ]}
       >
         <Form
