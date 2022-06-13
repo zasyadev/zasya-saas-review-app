@@ -6,6 +6,7 @@ export default async (req, res) => {
   if (req.method === "POST") {
     try {
       const resData = JSON.parse(req.body);
+
       const transactionData = await prisma.$transaction(async (transaction) => {
         const answerData = resData.answers.map((item) => {
           return {
@@ -14,11 +15,11 @@ export default async (req, res) => {
           };
         });
 
-        const formdata = await transaction.templateAnswers.create({
+        const formdata = await transaction.reviewAnswers.create({
           data: {
             user: { connect: { id: resData.user_id } },
-            template: { connect: { id: resData.template_id } },
-            QuestionAnswers: {
+            form: { connect: { id: resData.form_id } },
+            AttemptedAnswers: {
               create: answerData,
             },
           },

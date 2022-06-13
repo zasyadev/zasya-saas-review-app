@@ -91,7 +91,28 @@ function RegisterPage() {
                 </Form.Item>
               </div>
               <div className="mb-6">
-                <Form.Item name="confirm_password">
+                <Form.Item
+                  name="confirm_password"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please confirm your password!",
+                    },
+                    ({ getFieldValue }) => ({
+                      validator(_, value) {
+                        console.log(value, "sdfsdjkhfjksh");
+                        if (!value || getFieldValue("password") === value) {
+                          return Promise.resolve();
+                        }
+                        return Promise.reject(
+                          new Error(
+                            "The two passwords that you entered do not match!"
+                          )
+                        );
+                      },
+                    }),
+                  ]}
+                >
                   <Input
                     type="password"
                     className="form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-green-500 focus:outline-none"

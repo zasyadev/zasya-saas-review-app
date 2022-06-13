@@ -6,7 +6,6 @@ export default async (req, res) => {
   if (req.method === "POST") {
     try {
       const resData = JSON.parse(req.body);
-
       const templateData = await prisma.templateTable.findUnique({
         where: { id: resData.template_id },
       });
@@ -29,10 +28,10 @@ export default async (req, res) => {
 
         const formdata = await transaction.formTable.create({
           data: {
-            user: { connect: { id: resData.user_id } },
-            form_data: templateData.form_data,
+            user: { connect: { id: resData.assigned_by_id } },
             form_title: templateData.form_title,
             form_description: templateData.form_description,
+            form_data: templateData.form_data,
             status: templateData.status,
             questions: {
               create: questionData,
@@ -40,18 +39,13 @@ export default async (req, res) => {
           },
         });
 
-        console.log(formdata, "formdata");
-
         return { formdata };
       });
-
-      console.log(transactionData, "templateData");
-      return;
 
       let dataObj = {
         assigned_by: { connect: { id: resData.assigned_by_id } },
         assigned_to: { connect: { id: resData.assigned_to_id } },
-        template: { connect: { id: resData.template_id } },
+        form: { connect: { id: transactionData.formdata.id } },
         status: resData.status ?? "pending",
         frequency: resData.frequency,
         review_type: resData.review_type,
@@ -69,7 +63,6 @@ export default async (req, res) => {
         status: 200,
       });
     } catch (error) {
-      console.log(error);
       return res
         .status(500)
         .json({ error: error, message: "Internal Server Error" });
@@ -77,7 +70,7 @@ export default async (req, res) => {
   } else if (req.method === "GET") {
     try {
       const data = await prisma.reviewAssign.findMany({
-        include: { assigned_by: true, assigned_to: true, template: true },
+        include: { assigned_by: true, assigned_to: true, form: true },
       });
 
       if (data) {
@@ -97,6 +90,7 @@ export default async (req, res) => {
   } else if (req.method === "PUT") {
     try {
       const resData = JSON.parse(req.body);
+      return;
 
       const data = await prisma.reviewAssign.update({
         where: { id: resData.id },

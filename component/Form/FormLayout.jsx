@@ -71,7 +71,7 @@ function FormLayout({ user }) {
         <div className="px-3 md:px-8 h-auto -mt-24">
           <div className="container mx-auto max-w-full">
             <div className="grid grid-cols-1 px-4 mb-16">
-              <div className="w-full bg-white rounded-xl overflow-hdden shadow-md p-4 undefined">
+              <div className="w-full bg-white rounded-xl overflow-hdden shadow-md p-4 ">
                 {formDetailShow ? (
                   <FormComponent
                     user={user}
@@ -84,7 +84,7 @@ function FormLayout({ user }) {
                   />
                 ) : (
                   <div className="">
-                    <div className="grid sm:flex bg-gradient-to-tr from-purple-500 to-purple-700 -mt-10 mb-4 rounded-xl text-white  items-center w-full h-40 sm:h-24 py-4 px-8 justify-between shadow-lg-purple undefined">
+                    <div className="grid sm:flex bg-gradient-to-tr from-purple-500 to-purple-700 -mt-10 mb-4 rounded-xl text-white  items-center w-full h-40 sm:h-24 py-4 px-8 justify-between shadow-lg-purple ">
                       <h2 className="text-white text-2xl font-bold">
                         Form Lists{" "}
                       </h2>

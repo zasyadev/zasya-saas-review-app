@@ -33,9 +33,8 @@ model User {
   taskReviewBy    ReviewAssign[]   @relation("taskReviewBy")
   taskReviewTo    ReviewAssign[]   @relation("taskReviewTo")
   UserAnswers     UserAnswers[]
-
-  TemplateAnswers TemplateAnswers[]
   TemplateTable   TemplateTable[]
+  ReviewAnswers   ReviewAnswers[]
 }
 
 model Role {
@@ -81,10 +80,10 @@ model FormTable {
   modified_date    DateTime     @default(now())
   FormAssign       FormAssign[]
 
-  questions       FormQuestion[]    @relation("questions")
-  UserAnswers     UserAnswers[]
-  ReviewAssign    ReviewAssign[]
-  TemplateAnswers TemplateAnswers[]
+  questions     FormQuestion[]  @relation("questions")
+  UserAnswers   UserAnswers[]
+  ReviewAssign  ReviewAssign[]
+  ReviewAnswers ReviewAnswers[]
 }
 
 model FormAssign {
@@ -110,9 +109,10 @@ model FormQuestion {
   created_date  DateTime  @default(now())
   modified_date DateTime  @default(now())
 
-  options         QuestionOption[]  @relation("options")
-  UserAnswers     UserAnswers[]
-  QuestionAnswers QuestionAnswers[]
+  options     QuestionOption[] @relation("options")
+  UserAnswers UserAnswers[]
+
+  AttemptedAnswers AttemptedAnswers[]
 }
 
 model QuestionOption {
@@ -147,8 +147,8 @@ model ReviewAssign {
   assigned_by_id String
   assigned_to    User      @relation("taskReviewTo", fields: [assigned_to_id], references: [id])
   assigned_to_id String
-  template       FormTable @relation(fields: [template_id], references: [id])
-  template_id    Int
+  form           FormTable @relation(fields: [form_id], references: [id])
+  form_id        Int
   status         String
   frequency      String
   review_type    String
@@ -157,29 +157,30 @@ model ReviewAssign {
 
 }
 
-model TemplateAnswers {
+model ReviewAnswers {
   id            Int       @id @default(autoincrement())
   user          User      @relation(fields: [user_id], references: [id])
   user_id       String
-  template      FormTable @relation(fields: [template_id], references: [id], onDelete: Cascade)
-  template_id   Int
+  form          FormTable @relation(fields: [form_id], references: [id], onDelete: Cascade)
+  form_id       Int
   created_date  DateTime  @default(now())
   modified_date DateTime  @default(now())
   deleted       Boolean?  @default(false)
 
-  QuestionAnswers QuestionAnswers[]
+
+  AttemptedAnswers AttemptedAnswers[]
 }
 
-model QuestionAnswers {
-  id            Int             @id @default(autoincrement())
-  template      TemplateAnswers @relation(fields: [template_id], references: [id], onDelete: Cascade)
-  template_id   Int
-  question      FormQuestion    @relation(fields: [question_id], references: [id], onDelete: Cascade)
+model AttemptedAnswers {
+  id            Int           @id @default(autoincrement())
+  review        ReviewAnswers @relation(fields: [review_id], references: [id], onDelete: Cascade)
+  review_id     Int
+  question      FormQuestion  @relation(fields: [question_id], references: [id], onDelete: Cascade)
   question_id   Int
   option        String?
-  created_date  DateTime        @default(now())
-  modified_date DateTime        @default(now())
-  deleted       Boolean?        @default(false)
+  created_date  DateTime      @default(now())
+  modified_date DateTime      @default(now())
+  deleted       Boolean?      @default(false)
 
 }
 

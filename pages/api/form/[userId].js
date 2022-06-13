@@ -12,7 +12,7 @@ export default async (req, res) => {
         include: {
           assigned_by: true,
           assigned_to: true,
-          template: {
+          form: {
             include: {
               questions: {
                 include: { options: true },

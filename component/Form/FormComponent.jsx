@@ -210,8 +210,8 @@ function FormComponent({
   useEffect(() => {
     if (editMode) {
       setQuestions(editFormData?.questions);
-      setFormTitle(editFormData?.form_title);
-      setFormDes(editFormData?.form_description);
+      setFormTitle(editFormData?.title);
+      setFormDes(editFormData?.description);
     }
   }, []);
 

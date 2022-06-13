@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import { openNotificationBox } from "../../helpers/notification";
 import QuestionViewComponent from "./QuestionViewComponent";
 
-function FormView({ user }) {
+function FormView({ user, setReviewAssign }) {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const [updateData, setUpdateData] = useState({});
@@ -50,7 +50,7 @@ function FormView({ user }) {
     if (user.id && updateData.id) {
       let obj = {
         user_id: user.id,
-        template_id: updateData.id,
+        form_id: updateData.id,
         answers: formValues,
       };
 
@@ -90,19 +90,19 @@ function FormView({ user }) {
       <div className="px-3 md:px-8 h-auto -mt-24">
         <div className="container mx-auto max-w-full">
           <div className="grid grid-cols-1 px-4 mb-16">
-            <div className="w-full bg-white rounded-xl overflow-hdden shadow-md p-4 undefined">
-              <div className="grid sm:flex bg-gradient-to-tr from-purple-500 to-purple-700 -mt-10 mb-4 rounded-xl text-white  items-center w-full h-40 sm:h-24 py-4 px-8 justify-between shadow-lg-purple undefined">
+            <div className="w-full bg-white rounded-xl overflow-hdden shadow-md p-4 ">
+              <div className="grid sm:flex bg-gradient-to-tr from-purple-500 to-purple-700 -mt-10 mb-4 rounded-xl text-white  items-center w-full h-40 sm:h-24 py-4 px-8 justify-between shadow-lg-purple ">
                 <h2 className="text-white text-2xl font-bold">
-                  View Assigned Forms{" "}
+                  View Assigned Reviews{" "}
                 </h2>
-                {/* <span
+                <span
                   className="text-center  rounded-full border-2 px-4 py-2 cursor-pointer hover:bg-white hover:text-purple-500 hover:border-2 hover:border-purple-500 "
-                  onClick={showModal}
+                  onClick={() => setReviewAssign(false)}
                 >
-                  Create
-                </span> */}
+                  Cancel
+                </span>
               </div>
-              <div className="p-4 undefined">
+              <div className="p-4 ">
                 <div className="overflow-x-auto">
                   <table className="items-center w-full bg-transparent border-collapse">
                     <thead>
@@ -150,7 +150,7 @@ function FormView({ user }) {
                                 {item.assigned_to.last_name}
                               </th>
                               <th className="border-b border-gray-200 align-middle font-normal text-sm whitespace-nowrap px-2 py-4 text-left">
-                                {item.template.form_title}
+                                {item.form.form_title}
                               </th>
                               <th className="border-b border-gray-200 align-middle font-normal text-sm whitespace-nowrap px-2 py-4 text-left">
                                 {item.status ? "Active" : "InActive"}
@@ -187,7 +187,7 @@ function FormView({ user }) {
         </div>
       </div>
       <Modal
-        title="View Forms"
+        title="View Review Template"
         visible={isModalVisible}
         onOk={() => handleSubmit()}
         onCancel={() => onCancel()}
@@ -216,7 +216,7 @@ function FormView({ user }) {
                     // onChange={(e) => {
                     //   setFormTitle(e.target.value);
                     // }}
-                    value={updateData?.template?.form_title}
+                    value={updateData?.form?.form_title}
                     inputProps={{ style: { fontSize: 40, paddingTop: 10 } }}
                     disabled={true}
                   />
@@ -235,8 +235,8 @@ function FormView({ user }) {
             </div>
           </div>
 
-          {updateData?.template?.questions.length > 0 &&
-            updateData?.template?.questions?.map((question, idx) => (
+          {updateData?.form?.questions.length > 0 &&
+            updateData?.form?.questions?.map((question, idx) => (
               <QuestionViewComponent
                 {...question}
                 idx={idx}

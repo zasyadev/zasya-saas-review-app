@@ -41,7 +41,8 @@ function SiderLayout({ collapsed }) {
     getItem("Settings", "setting", <SettingOutlined />, [
       getItem("Templates", "/admin/template"),
       getItem("Users", "/admin/user"),
-      getItem("Template View", "/admin/form/formview"),
+      // getItem("Template View", "/admin/form/formview"),
+      getItem("Profile", "/admin/profile"),
     ]),
   ];
 

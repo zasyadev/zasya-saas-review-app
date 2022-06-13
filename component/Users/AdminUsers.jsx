@@ -140,6 +140,7 @@ function AdminUsers({ user }) {
       first_name: item.first_name,
       last_name: item.last_name,
       email: item.email,
+      company_name: item.company_name,
       // password: await hashedPassword(item.password),
       status: item.status,
     });
@@ -155,15 +156,15 @@ function AdminUsers({ user }) {
   }, []);
 
   return (
-    <Content className="h-screen">
-      <div>
+    <>
+      <div className="h-screen">
         <div className="bg-gradient-to-r from-cyan-500 to-blue-500 px-3 md:px-8 h-40" />
 
         <div className="px-3 md:px-8 h-auto -mt-24">
           <div className="container mx-auto max-w-full">
             <div className="grid grid-cols-1 px-4 mb-16">
-              <div className="w-full bg-white rounded-xl overflow-hdden shadow-md p-4 undefined">
-                <div className="grid sm:flex bg-gradient-to-tr from-purple-500 to-purple-700 -mt-10 mb-4 rounded-xl text-white  items-center w-full h-40 sm:h-24 py-4 px-8 justify-between shadow-lg-purple undefined">
+              <div className="w-full bg-white rounded-xl overflow-hdden shadow-md p-4 ">
+                <div className="grid sm:flex bg-gradient-to-tr from-purple-500 to-purple-700 -mt-10 mb-4 rounded-xl text-white  items-center w-full h-40 sm:h-24 py-4 px-8 justify-between shadow-lg-purple ">
                   <h2 className="text-white text-2xl font-bold">Users List </h2>
                   <span
                     className="text-center  rounded-full border-2 px-4 py-2 cursor-pointer hover:bg-white hover:text-purple-500 hover:border-2 hover:border-purple-500 "
@@ -172,7 +173,7 @@ function AdminUsers({ user }) {
                     Create
                   </span>
                 </div>
-                <div className="p-4 undefined">
+                <div className="p-4 ">
                   <div className="overflow-x-auto">
                     <table className="items-center w-full bg-transparent border-collapse">
                       <thead>
@@ -374,7 +375,7 @@ function AdminUsers({ user }) {
           </Row>
         </Form>
       </Modal>
-    </Content>
+    </>
   );
 }
 

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Button, Modal, Form, Row, Col, Skeleton, Select } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { openNotificationBox } from "../../helpers/notification";
+import FormView from "../Form/FormView";
 
 function ReviewManagement({ user }) {
   const [form] = Form.useForm();
@@ -12,6 +13,7 @@ function ReviewManagement({ user }) {
   const [formList, setFormList] = useState([]);
   const [updateData, setUpdateData] = useState({});
   const [reviewAssignList, setReviewAssignList] = useState([]);
+  const [reviewAssign, setReviewAssign] = useState(false);
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -183,26 +185,40 @@ function ReviewManagement({ user }) {
     required: "${label} is required!",
   };
 
-  return (
+  const onViewReviwed = () => {
+    setReviewAssign(true);
+  };
+
+  return reviewAssign ? (
+    <FormView user={user} setReviewAssign={setReviewAssign} />
+  ) : (
     <div>
       <div className="bg-gradient-to-r from-cyan-500 to-blue-500 px-3 md:px-8 h-40" />
 
       <div className="px-3 md:px-8 h-auto -mt-24">
         <div className="container mx-auto max-w-full">
           <div className="grid grid-cols-1 px-4 mb-16">
-            <div className="w-full bg-white rounded-xl overflow-hdden shadow-md p-4 undefined">
-              <div className="grid sm:flex bg-gradient-to-tr from-purple-500 to-purple-700 -mt-10 mb-4 rounded-xl text-white  items-center w-full h-40 sm:h-24 py-4 px-8 justify-between shadow-lg-purple undefined">
+            <div className="w-full bg-white rounded-xl overflow-hdden shadow-md p-4 ">
+              <div className="grid sm:flex bg-gradient-to-tr from-purple-500 to-purple-700 -mt-10 mb-4 rounded-xl text-white  items-center w-full h-40 sm:h-24 py-4 px-8 justify-between shadow-lg-purple ">
                 <h2 className="text-white text-2xl font-bold">
                   Review Assign{" "}
                 </h2>
-                <span
-                  className="text-center  rounded-full border-2 px-4 py-2 cursor-pointer hover:bg-white hover:text-purple-500 hover:border-2 hover:border-purple-500 "
-                  onClick={showModal}
-                >
-                  Create
-                </span>
+                <div>
+                  <span
+                    className="text-center  rounded-full border-2 px-4 py-2 cursor-pointer hover:bg-white hover:text-purple-500 hover:border-2 hover:border-purple-500 mr-2"
+                    onClick={() => onViewReviwed()}
+                  >
+                    View
+                  </span>
+                  <span
+                    className="text-center  rounded-full border-2 px-4 py-2 cursor-pointer hover:bg-white hover:text-purple-500 hover:border-2 hover:border-purple-500 "
+                    onClick={showModal}
+                  >
+                    Create
+                  </span>
+                </div>
               </div>
-              <div className="p-4 undefined">
+              <div className="p-4 ">
                 <div className="overflow-x-auto">
                   <table className="items-center w-full bg-transparent border-collapse">
                     <thead>
@@ -253,7 +269,7 @@ function ReviewManagement({ user }) {
                                 {item.assigned_to.last_name}
                               </th>
                               <th className="border-b border-gray-200 align-middle font-normal text-sm whitespace-nowrap px-2 py-4 text-left">
-                                {item.template.form_title}
+                                {item.form.form_title}
                               </th>
                               <th className="border-b border-gray-200 align-middle font-normal text-sm whitespace-nowrap px-2 py-4 text-left">
                                 {item.frequency}

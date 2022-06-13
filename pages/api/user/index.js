@@ -41,7 +41,8 @@ export default async (req, res) => {
   } else if (req.method === "PUT") {
     try {
       const reqBody = JSON.parse(req.body);
-
+      console.log(reqBody, "dsfsihfi");
+      return;
       const user = await prisma.user.findUnique({
         where: { email: reqBody.email },
       });
@@ -55,7 +56,7 @@ export default async (req, res) => {
       const updateData = await prisma.user.update({
         where: { email: reqBody.email },
         data: {
-          status: 1,
+          password: await hashedPassword(reqBody.password),
         },
       });
 
