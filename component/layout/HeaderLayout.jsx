@@ -4,7 +4,9 @@ import {
   MenuUnfoldOutlined,
   LogoutOutlined,
 } from "@ant-design/icons";
-import { Layout } from "antd";
+import Image from "next/image";
+import User from "../../assets/images/User.png";
+import { Button, Layout } from "antd";
 import { signOut } from "next-auth/client";
 import { useRouter } from "next/router";
 
@@ -26,21 +28,37 @@ function HeaderLayout({ setCollapsed, collapsed, pageName }) {
       }}
     >
       <div className="px-4 flex justify-between">
-        <span
-          onClick={() => setCollapsed(!collapsed)}
-          className=" cursor-pointer text-white"
-        >
-          {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-          <span className="uppercase text-white text-sm tracking-wider mt-3 px-4">
-            {pageName}
+        <div>
+          <span
+            onClick={() => setCollapsed(!collapsed)}
+            className=" cursor-pointer text-white"
+          >
+            {collapsed ? (
+              <MenuUnfoldOutlined style={{ fontSize: "20px" }} />
+            ) : (
+              <MenuFoldOutlined style={{ fontSize: "20px" }} />
+            )}
+            <span className="uppercase text-white text-sm tracking-wider mt-3 px-4">
+              {pageName}
+            </span>
           </span>
-        </span>
-        <span
-          onClick={() => logoutHandler()}
-          className=" cursor-pointer uppercase text-white text-sm tracking-wider mt-3 px-4"
-        >
-          <LogoutOutlined />
-        </span>
+        </div>
+        <div className="flex items-center justify-between">
+          <Image src={User} alt="user" width={40} height={35} />
+
+          <Button
+            className="text-white text-center justify-center ml-4 "
+            onClick={() => logoutHandler()}
+          >
+            Logout
+            {/* <span
+              onClick={() => logoutHandler()}
+              className=" cursor-pointer text-white text-sm tracking-wider   "
+            >
+              <LogoutOutlined />
+            </span> */}
+          </Button>
+        </div>
       </div>
     </Header>
   );
