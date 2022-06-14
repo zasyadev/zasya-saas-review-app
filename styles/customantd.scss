@@ -19,8 +19,8 @@
       line-height: 1.25rem;
       padding-top: 0.75rem;
       padding-bottom: 0.75rem;
-      padding-left: 1rem;
-      padding-right: 1rem;
+      padding-left: 0.5rem;
+      padding-right: 0.5rem;
       border-radius: 0.5rem;
       grid-gap: 1rem;
       gap: 1rem;
@@ -28,16 +28,24 @@
       display: flex;
     }
   }
-  .ant-menu-sub {
-    background: #fff;
-  }
-
   .ant-menu-submenu-active {
     .ant-menu-submenu-title {
       background-color: #0288d1;
       color: #fff;
+      .ant-menu-submenu-arrow {
+        color: #fff;
+      }
     }
   }
+
+  .ant-menu-sub {
+    background: #fff;
+  }
+
+  .sidebar-icon {
+    font-size: 18px;
+  }
+
   .ant-menu-item {
     font-weight: 300;
     box-shadow: rgba(0, 0, 0, 0.06);
@@ -51,10 +59,14 @@
     padding-right: 1rem;
     border-radius: 0.5rem;
     grid-gap: 1rem;
-    gap: 1rem;
+    // gap: 1rem;
     align-items: center;
     display: flex;
   }
+  .anticon + span {
+    margin-left: 0px;
+  }
+
   .ant-menu-item-active {
     background: linear-gradient(to right, #03a5f0 0%, #038dd6 100%) !important;
     color: #fff !important;

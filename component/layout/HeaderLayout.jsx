@@ -28,19 +28,19 @@ function HeaderLayout({ setCollapsed, collapsed, pageName }) {
       }}
     >
       <div className="px-4 flex justify-between">
-        <div>
+        <div className="">
           <span
             onClick={() => setCollapsed(!collapsed)}
-            className=" cursor-pointer text-white"
+            className=" cursor-pointer text-white text-lg"
           >
             {collapsed ? (
-              <MenuUnfoldOutlined style={{ fontSize: "20px" }} />
+              <MenuUnfoldOutlined className="sidebar-icon" />
             ) : (
-              <MenuFoldOutlined style={{ fontSize: "20px" }} />
+              <MenuFoldOutlined className="sidebar-icon" />
             )}
-            <span className="uppercase text-white text-sm tracking-wider mt-3 px-4">
+            {/* <span className="uppercase text-white text-sm tracking-wider mt-3 px-4">
               {pageName}
-            </span>
+            </span> */}
           </span>
         </div>
         <div className="flex items-center justify-between">

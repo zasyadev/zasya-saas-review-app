@@ -9,6 +9,7 @@ import {
 import { Menu, Layout } from "antd";
 import { useRouter } from "next/router";
 import Head from "next/head";
+import { Footer } from "antd/lib/layout/layout";
 
 const { Sider } = Layout;
 function getItem(label, key, icon, children, type) {
@@ -28,7 +29,7 @@ function SiderLayout({ collapsed }) {
     getItem(
       "DashBoard",
       "/admin/dashboard",
-      <MailOutlined style={{ fontSize: "18px" }} />
+      <MailOutlined className="sidebar-icon" />
     ),
     // getItem("Activity", "sub1", <SettingOutlined />, [
     //   getItem("Submenu", "sub3", null, [
@@ -39,9 +40,9 @@ function SiderLayout({ collapsed }) {
     getItem(
       "Reviews",
       "/admin/review/management",
-      <FormOutlined style={{ fontSize: "18px" }} />
+      <FormOutlined className="sidebar-icon" />
     ),
-    getItem("Team", "team", <AppstoreOutlined style={{ fontSize: "18px" }} />, [
+    getItem("Team", "team", <AppstoreOutlined className="sidebar-icon" />, [
       getItem("Groups", "/admin/team/groups"),
       getItem("Members", "/admin/team/members"),
     ]),
@@ -49,11 +50,11 @@ function SiderLayout({ collapsed }) {
     getItem(
       "Settings",
       "setting",
-      <SettingOutlined style={{ fontSize: "18px" }} />,
+      <SettingOutlined className="sidebar-icon" />,
       [
         getItem("Templates", "/admin/template"),
         getItem("Users", "/admin/user"),
-        getItem("Profile", "/admin/profile"),
+        getItem("Template View ", "/admin/form/formview"),
       ]
     ),
   ];
@@ -66,8 +67,7 @@ function SiderLayout({ collapsed }) {
       trigger={null}
       collapsible
       collapsed={collapsed}
-      className="  bg-white"
-      width={250}
+      className="bg-white h-screen"
     >
       <Head>
         <title>Review App</title>
@@ -75,24 +75,23 @@ function SiderLayout({ collapsed }) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div className="h-screen fixed top-0 md:left-0  overflow-y-auto flex-row flex-nowrap overflow-hidden shadow-xl bg-white z-10 py-4 px-6 transition-all duration-300">
-        <div className="flex-col items-stretch min-h-full flex-nowrap px-0 relative">
-          <a className="mt-3 text-center w-full inline-block">
-            <h1 className="text-gray-900 first-line: text-xl font-serif font-bold leading-normal mt-0 mb-2">
-              Review App
-            </h1>
-          </a>
 
-          <div className=" flex flex-col py-4 px-6">
-            <hr className=" min-w-full" />
-            <Menu
-              onClick={onClickSideTab}
-              mode="inline"
-              defaultSelectedKeys={router?.pathname}
-              className="dashboard-sider border-0 gap-2 text-sm font-light rounded-lg bg-gradient-to-tr from-light-blue-500 to-light-blue-700 text-white shadow-md "
-              items={items}
-            />
-          </div>
+      <div className="flex-col items-stretch min-h-full flex-nowrap px-0 relative">
+        <a className="mt-3 text-center w-full inline-block">
+          <h1 className="text-gray-900 first-line: text-xl font-serif font-bold leading-normal mt-0 mb-2">
+            Review App
+          </h1>
+        </a>
+
+        <div className=" flex flex-col py-4 px-2">
+          <hr className=" min-w-full" />
+          <Menu
+            onClick={onClickSideTab}
+            mode="inline"
+            defaultSelectedKeys={router?.pathname}
+            className="dashboard-sider border-0 gap-2 text-sm font-light rounded-lg bg-gradient-to-tr from-light-blue-500 to-light-blue-700 text-white shadow-md "
+            items={items}
+          />
         </div>
       </div>
     </Sider>
