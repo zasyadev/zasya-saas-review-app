@@ -2,10 +2,10 @@ import React from "react";
 
 function DashBoard() {
   return (
-    <div>
-      <div className="px-3 md:px-8 mt-14">
+    <>
+      <div className="screen px-3 md:px-8 mt-14">
         <div className="container mx-auto max-w-full">
-          <div className="grid grid-cols-1 lg:grid-cols-3 mb-4">
+          <div className="grid grid-cols-1 lg:grid-cols-3 mb-4 ">
             <div className="px-4 mb-10">
               <div className="w-full bg-white rounded-xl overflow-hdden shadow-md p-4 ">
                 <div className="flex flex-wrap border-b border-gray-200 ">
@@ -78,7 +78,7 @@ function DashBoard() {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

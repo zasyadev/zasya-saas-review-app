@@ -298,12 +298,12 @@ function ReviewManagement({ user }) {
                         })
                       ) : (
                         <tr>
-                          <th
-                            colSpan={3}
+                          <td
+                            colSpan={6}
                             className="border-b text-center border-gray-200 align-middle font-semibold text-sm whitespace-nowrap px-2 py-4 "
                           >
                             No Data Found
-                          </th>
+                          </td>
                         </tr>
                       )}
                     </tbody>
@@ -320,14 +320,14 @@ function ReviewManagement({ user }) {
         onOk={form.submit}
         onCancel={() => onCancel()}
         footer={[
-          <div>
+          <>
             <Button key="add" type="default" onClick={() => onCancel()}>
               Cancel
             </Button>
             <Button key="add" type="primary" onClick={form.submit}>
               {editMode ? "Update" : "Add"}
             </Button>
-          </div>,
+          </>,
         ]}
       >
         <Form

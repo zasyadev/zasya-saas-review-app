@@ -4,6 +4,7 @@ import { Layout } from "antd";
 import Head from "next/head";
 import SiderLayout from "./SiderLayout";
 import HeaderLayout from "./HeaderLayout";
+import { Content, Footer } from "antd/lib/layout/layout";
 
 function AdminLayout(props) {
   const [collapsed, setCollapsed] = useState(false);
@@ -18,9 +19,17 @@ function AdminLayout(props) {
       <Layout>
         <SiderLayout collapsed={collapsed} />
         <Layout>
-          <HeaderLayout setCollapsed={setCollapsed} collapsed={collapsed} />
-
-          {props.children}
+          <Content>
+            <HeaderLayout setCollapsed={setCollapsed} collapsed={collapsed} />
+            {props.children}
+          </Content>
+          <Footer
+            style={{
+              textAlign: "center",
+            }}
+          >
+            Review App ©2021 Created by Zasya Solution
+          </Footer>
         </Layout>
       </Layout>
     </Fragment>
