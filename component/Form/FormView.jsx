@@ -61,8 +61,8 @@ function FormView({ user, setReviewAssign }) {
         .then((response) => response.json())
         .then((response) => {
           if (response.status === 200) {
-            console.log(response);
             openNotificationBox("success", response.message, 3);
+            setIsModalVisible(false);
           } else {
             openNotificationBox("error", response.message, 3);
           }
@@ -127,7 +127,7 @@ function FormView({ user, setReviewAssign }) {
                     <tbody>
                       {loading ? (
                         <tr>
-                          <th colSpan={4}>
+                          <th colSpan={5}>
                             <Skeleton
                               title={false}
                               active={true}
@@ -171,7 +171,7 @@ function FormView({ user, setReviewAssign }) {
                       ) : (
                         <tr>
                           <th
-                            colSpan={3}
+                            colSpan={5}
                             className="border-b text-center border-gray-200 align-middle font-semibold text-sm whitespace-nowrap px-2 py-4 "
                           >
                             No Data Found

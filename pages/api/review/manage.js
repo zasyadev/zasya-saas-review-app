@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import { mailService } from "../../../lib/emailservice";
 
 const prisma = new PrismaClient();
 
@@ -13,9 +14,19 @@ export default async (req, res) => {
       const transactionData = await prisma.$transaction(async (transaction) => {
         const questionData = templateData.form_data.questions.map((item) => {
           const optionData = item.options.map((opitem) => {
-            return {
-              optionText: opitem.optionText,
-            };
+            if (item.type === "scale") {
+              return {
+                optionText: opitem.optionText,
+                lowerLabel: item.lowerLabel.toString(),
+                higherLabel: item.higherLabel.toString(),
+              };
+            } else {
+              return {
+                optionText: opitem.optionText,
+                lowerLabel: "",
+                higherLabel: "",
+              };
+            }
           });
 
           return {
@@ -55,10 +66,29 @@ export default async (req, res) => {
         data: dataObj,
       });
 
+      const assignedToData = await prisma.user.findUnique({
+        where: { id: savedData.assigned_to_id },
+      });
+      const assignedFromData = await prisma.user.findUnique({
+        where: { id: savedData.assigned_by_id },
+      });
+
       prisma.$disconnect();
 
+      const mailData = {
+        from: process.env.SMTP_USER,
+        to: assignedToData.email,
+        subject: `New review assigned by ${assignedFromData.first_name}`,
+        html: `${assignedFromData.first_name} has assigned you new review , please click here to help them now.`,
+      };
+
+      await mailService.sendMail(mailData, function (err, info) {
+        if (err) console.log("failed");
+        else console.log("successfull");
+      });
+
       return res.status(201).json({
-        message: "Assigned Successfully",
+        message: "Review Assigned Successfully",
         data: savedData,
         status: 200,
       });
@@ -126,7 +156,7 @@ export default async (req, res) => {
       if (deletaData) {
         return res.status(200).json({
           status: 200,
-          message: "Form Assign Deleted Successfully.",
+          message: " Assignec Review Deleted Successfully.",
         });
       }
       return res.status(400).json({

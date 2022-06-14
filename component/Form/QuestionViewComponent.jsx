@@ -61,18 +61,23 @@ const QuestionViewComponent = ({
               row
               onChange={(e) => handleAnswerChange(id, e.target.value)}
             >
-              {higherLabel &&
-                lowerLabel > -1 &&
+              {Number(options[0]?.higherLabel) &&
+                Number(options[0]?.lowerLabel) > -1 &&
                 range.length > 0 &&
-                range(lowerLabel, higherLabel).map((rg, index) => (
-                  <FormControlLabel
-                    value={rg.toString()}
-                    control={<Radio />}
-                    label={rg}
-                    labelPlacement="top"
-                    key={index + "range"}
-                  />
-                ))}
+                range(
+                  Number(options[0]?.lowerLabel),
+                  Number(options[0]?.higherLabel)
+                ).map((rg, index) => {
+                  return (
+                    <FormControlLabel
+                      value={rg.toString()}
+                      control={<Radio />}
+                      label={rg}
+                      labelPlacement="top"
+                      key={index + "range"}
+                    />
+                  );
+                })}
             </RadioGroup>
             <p>{options[1]?.optionText}</p>
           </div>

@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import { mailService } from "../../../lib/emailservice";
 
 const prisma = new PrismaClient();
 
@@ -27,6 +28,28 @@ export default async (req, res) => {
         return { formdata };
       });
 
+      const assignedByFromData = await prisma.formTable.findUnique({
+        where: { id: transactionData.formdata.form_id },
+      });
+      const assignedByUser = await prisma.user.findUnique({
+        where: { id: assignedByFromData.user_id },
+      });
+      const assignedUser = await prisma.user.findUnique({
+        where: { id: transactionData.formdata.user_id },
+      });
+
+      const mailData = {
+        from: process.env.SMTP_USER,
+        to: assignedByUser.email,
+        subject: ` ${assignedUser.first_name} has filled your review`,
+        html: ` ${assignedUser.first_name} has just filled your review , click here to see their response now .`,
+      };
+
+      await mailService.sendMail(mailData, function (err, info) {
+        if (err) console.log("failed");
+        else console.log("successfull");
+      });
+
       if (!transactionData.formdata || !transactionData) {
         prisma.$disconnect();
         return res.status(500).json({
@@ -35,7 +58,7 @@ export default async (req, res) => {
           data: {},
         });
       }
-      prisma.$disconnect();
+
       return res.status(201).json({
         message: "Review Saved Sucessfully.",
         data: transactionData.formdata,

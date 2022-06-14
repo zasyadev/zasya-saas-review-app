@@ -11,7 +11,7 @@ function RegisterPage() {
 
   async function handleSubmit(values) {
     setLoading(true);
-    values["role"] = 3;
+    values["role"] = 2;
     values["status"] = 1;
     await fetch("/api/user", {
       method: "POST",
@@ -100,7 +100,6 @@ function RegisterPage() {
                     },
                     ({ getFieldValue }) => ({
                       validator(_, value) {
-                        console.log(value, "sdfsdjkhfjksh");
                         if (!value || getFieldValue("password") === value) {
                           return Promise.resolve();
                         }

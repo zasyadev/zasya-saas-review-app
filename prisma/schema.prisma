@@ -119,7 +119,9 @@ model QuestionOption {
   id          Int          @id @default(autoincrement())
   question    FormQuestion @relation("options", fields: [question_id], references: [id], onDelete: Cascade)
   question_id Int
-  optionText  String
+  optionText  String?
+  lowerLabel  String?
+  higherLabel String?
 
   created_date  DateTime @default(now())
   modified_date DateTime @default(now())
@@ -178,6 +180,8 @@ model AttemptedAnswers {
   question      FormQuestion  @relation(fields: [question_id], references: [id], onDelete: Cascade)
   question_id   Int
   option        String?
+  lowerLabel    String?
+  higherLabel   String?
   created_date  DateTime      @default(now())
   modified_date DateTime      @default(now())
   deleted       Boolean?      @default(false)

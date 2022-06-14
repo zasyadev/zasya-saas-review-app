@@ -87,9 +87,8 @@ function ReviewManagement({ user }) {
   async function fetchReviewAssignList() {
     setLoading(true);
     setReviewAssignList([]);
-    await fetch("/api/review/manage", {
-      method: "GET",
-    })
+
+    await fetch("/api/review/" + user.id, { method: "GET" })
       .then((response) => response.json())
       .then((response) => {
         if (response.status === 200) {
@@ -246,7 +245,7 @@ function ReviewManagement({ user }) {
                     <tbody>
                       {loading ? (
                         <tr>
-                          <th colSpan={4}>
+                          <th colSpan={6}>
                             <Skeleton
                               title={false}
                               active={true}
@@ -299,7 +298,7 @@ function ReviewManagement({ user }) {
                       ) : (
                         <tr>
                           <th
-                            colSpan={3}
+                            colSpan={6}
                             className="border-b text-center border-gray-200 align-middle font-semibold text-sm whitespace-nowrap px-2 py-4 "
                           >
                             No Data Found

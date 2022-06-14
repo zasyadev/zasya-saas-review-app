@@ -32,12 +32,19 @@ export default async (req, res) => {
     }
   } else if (req.method === "GET") {
     try {
-      const data = await prisma.user.findMany();
+      let userData = await prisma.user.findMany({ include: { role: true } });
 
-      if (data) {
+      userData = userData.filter((item) => {
+        if (item.role_id) {
+          delete item.password;
+          return true;
+        } else return false;
+      });
+
+      if (userData) {
         return res.status(200).json({
           status: 200,
-          data: data,
+          data: userData,
           message: "All Users Retrieved",
         });
       }
