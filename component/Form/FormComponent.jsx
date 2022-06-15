@@ -285,7 +285,7 @@ function FormComponent({
             saveFormField();
           }}
         >
-          <span className="MuiButton-label">Save Form</span>
+          <span className="MuiButton-label">Save Template</span>
         </Button>
         <Button
           className=" px-4 py-3 h-full rounded bg-cyan-500 text-white "

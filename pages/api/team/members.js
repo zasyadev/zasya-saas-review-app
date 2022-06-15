@@ -7,21 +7,30 @@ export default async (req, res) => {
     try {
       const resData = JSON.parse(req.body);
 
-      let userobj = {
-        group: { connect: { id: resData.group_id } },
-        employee: { connect: { id: resData.employee_id } },
-        is_manager: resData.is_manager,
+      // let userobj = {
+      //   group: { connect: { id: resData.group_id } },
+      //   employee: { connect: { id: resData.employee_id } },
+      //   is_manager: resData.is_manager,
+      // };
+
+      let tagsobj = {
+        user: { connect: { id: resData.employee_id } },
+        tags: resData.tags,
       };
 
-      const savedData = await prisma.groupsEmployees.create({
-        data: userobj,
+      // const savedData = await prisma.groupsEmployees.create({
+      //   data: userobj,
+      // });
+
+      const savedTagsData = await prisma.tagsEmployees.create({
+        data: tagsobj,
       });
 
       prisma.$disconnect();
 
       return res.status(201).json({
         message: "Members Saved Successfully",
-        data: savedData,
+        data: savedTagsData,
         status: 200,
       });
     } catch (error) {
@@ -29,16 +38,21 @@ export default async (req, res) => {
         return res
           .status(409)
           .json({ error: error, message: "Duplicate Employee" });
+      } else if (error.code === "P2002") {
+        return res
+          .status(410)
+          .json({ error: error, message: "Duplicate Employee" });
+      } else {
+        return res
+          .status(500)
+          .json({ error: error, message: "Internal Server Error" });
       }
-      return res
-        .status(500)
-        .json({ error: error, message: "Internal Server Error" });
     }
   } else if (req.method === "GET") {
     try {
-      const data = await prisma.groupsEmployees.findMany({
+      const data = await prisma.tagsEmployees.findMany({
         include: {
-          employee: {
+          user: {
             select: {
               first_name: true,
               email: true,
@@ -46,7 +60,7 @@ export default async (req, res) => {
               last_name: true,
             },
           },
-          group: true,
+          // group: true,
         },
       });
 
@@ -60,7 +74,6 @@ export default async (req, res) => {
 
       return res.status(404).json({ status: 404, message: "No Record Found" });
     } catch (error) {
-      console.log(error, "data");
       return res
         .status(500)
         .json({ error: error, message: "Internal Server Error" });
@@ -69,12 +82,12 @@ export default async (req, res) => {
     try {
       const resData = JSON.parse(req.body);
 
-      const data = await prisma.groupsEmployees.update({
+      const data = await prisma.tagsEmployees.update({
         where: { id: resData.id },
         data: {
-          group_id: resData.group_id,
-          employee_id: resData.employee_id,
-          is_manager: resData.is_manager,
+          user_id: resData.employee_id,
+
+          tags: resData.tags,
         },
       });
 
@@ -94,7 +107,7 @@ export default async (req, res) => {
     const reqBody = JSON.parse(req.body);
 
     if (reqBody.id) {
-      const deletaData = await prisma.groupsEmployees.delete({
+      const deletaData = await prisma.tagsEmployees.delete({
         where: { id: reqBody.id },
       });
       prisma.$disconnect();

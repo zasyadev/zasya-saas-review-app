@@ -33,6 +33,7 @@ function TeamMembers({ user }) {
     let obj = {
       ...values,
     };
+
     editMode ? updatingGroup(obj) : addingGroup(obj);
   }
 
@@ -141,9 +142,8 @@ function TeamMembers({ user }) {
     setUpdateData(data);
     setIsModalVisible(true);
     form.setFieldsValue({
-      group_id: data.group_id,
-      employee_id: data.employee_id,
-      is_manager: data.is_manager,
+      employee_id: data.user_id,
+      tags: data.tags,
     });
   };
   const onCancel = () => {
@@ -218,14 +218,14 @@ function TeamMembers({ user }) {
                   <table className="items-center w-full bg-transparent border-collapse">
                     <thead>
                       <tr>
-                        <th className="px-2 text-purple-500 align-middle border-b border-solid border-gray-200 py-3 text-sm whitespace-nowrap font-semibold text-left">
+                        {/* <th className="px-2 text-purple-500 align-middle border-b border-solid border-gray-200 py-3 text-sm whitespace-nowrap font-semibold text-left">
                           Group Name
-                        </th>
+                        </th> */}
                         <th className="px-2 text-purple-500 align-middle border-b border-solid border-gray-200 py-3 text-sm whitespace-nowrap font-semibold text-left">
                           Member Name
                         </th>
                         <th className="px-2 text-purple-500 align-middle border-b border-solid border-gray-200 py-3 text-sm whitespace-nowrap font-semibold text-left">
-                          Manager
+                          Tags
                         </th>
                         <th className="px-2 text-purple-500 align-middle border-b border-solid border-gray-200 py-3 text-sm whitespace-nowrap font-semibold text-left">
                           Action
@@ -250,13 +250,22 @@ function TeamMembers({ user }) {
                           return (
                             <tr key={idx + "group"}>
                               <th className="border-b border-gray-200 align-middle font-normal text-sm whitespace-nowrap px-2 py-4 text-left">
-                                {item?.group?.name}
+                                {item?.user?.first_name}
                               </th>
+
                               <th className="border-b border-gray-200 align-middle font-normal text-sm whitespace-nowrap px-2 py-4 text-left">
-                                {item?.employee?.first_name}
-                              </th>
-                              <th className="border-b border-gray-200 align-middle font-normal text-sm whitespace-nowrap px-2 py-4 text-left">
-                                {item.is_manager ? "Yes" : "No"}
+                                {item.tags.length > 0
+                                  ? item.tags.map((tag, i) => {
+                                      return (
+                                        <span
+                                          key={i + idx + "tag"}
+                                          className="mx-2"
+                                        >
+                                          {tag}
+                                        </span>
+                                      );
+                                    })
+                                  : "No Tags Added"}
                               </th>
                               <th className="border-b underline border-gray-200 align-middle font-normal text-sm whitespace-nowrap px-2 py-4 text-left cursor-pointer">
                                 <p>
@@ -318,7 +327,7 @@ function TeamMembers({ user }) {
           validateMessages={validateMessages}
         >
           <Row gutter={16}>
-            <Col md={12} xs={24}>
+            {/* <Col md={12} xs={24}>
               <Form.Item
                 name="group_id"
                 label="Group Name"
@@ -344,11 +353,12 @@ function TeamMembers({ user }) {
                   ))}
                 </Select>
               </Form.Item>
-            </Col>
+            </Col> */}
+
             <Col md={12} xs={24}>
               <Form.Item
                 name="employee_id"
-                label="Employee Name"
+                label="Members Name"
                 rules={[
                   {
                     required: true,
@@ -374,6 +384,29 @@ function TeamMembers({ user }) {
             </Col>
             <Col md={12} xs={24}>
               <Form.Item
+                name="tags"
+                label="Tag Name"
+                rules={[
+                  {
+                    required: true,
+                  },
+                ]}
+              >
+                <Select mode="tags">
+                  <Select.Option key={"developer"} value={"Developer"}>
+                    Developer
+                  </Select.Option>
+                  <Select.Option key={"QA"} value={"QA"}>
+                    QA
+                  </Select.Option>
+                  <Select.Option key={"Testing"} value={"Testing"}>
+                    Testing
+                  </Select.Option>
+                </Select>
+              </Form.Item>
+            </Col>
+            {/* <Col md={12} xs={24}>
+              <Form.Item
                 name="is_manager"
                 label="Is Manager"
                 rules={[
@@ -387,7 +420,7 @@ function TeamMembers({ user }) {
                   <Radio value={false}>No</Radio>
                 </Radio.Group>
               </Form.Item>
-            </Col>
+            </Col> */}
           </Row>
         </Form>
       </Modal>

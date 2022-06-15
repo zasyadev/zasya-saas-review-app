@@ -35,6 +35,7 @@ model User {
   UserAnswers     UserAnswers[]
   TemplateTable   TemplateTable[]
   ReviewAnswers   ReviewAnswers[]
+  TagsEmployees   TagsEmployees[]
 }
 
 model Role {
@@ -198,4 +199,13 @@ model TemplateTable {
   status           Boolean
   created_date     DateTime @default(now())
   modified_date    DateTime @default(now())
+}
+
+model TagsEmployees {
+  id            Int      @id @default(autoincrement())
+  user          User     @relation(fields: [user_id], references: [id])
+  user_id       String   @unique
+  tags          Json?
+  created_date  DateTime @default(now())
+  modified_date DateTime @default(now())
 }

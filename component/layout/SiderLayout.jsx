@@ -42,10 +42,15 @@ function SiderLayout({ collapsed }) {
       "/admin/review/management",
       <FormOutlined className="sidebar-icon" />
     ),
-    getItem("Team", "team", <AppstoreOutlined className="sidebar-icon" />, [
-      getItem("Groups", "/admin/team/groups"),
-      getItem("Members", "/admin/team/members"),
-    ]),
+    // getItem("Team", "team", <AppstoreOutlined className="sidebar-icon" />, [
+    //   getItem("Groups", "/admin/team/groups"),
+    //   getItem("Members", "/admin/team/members"),
+    // ]),
+    getItem(
+      "Team",
+      "/admin/team/members",
+      <AppstoreOutlined className="sidebar-icon" />
+    ),
 
     getItem(
       "Settings",
@@ -54,7 +59,7 @@ function SiderLayout({ collapsed }) {
       [
         getItem("Templates", "/admin/template"),
         getItem("Users", "/admin/user"),
-        getItem("Template View ", "/admin/form/formview"),
+        getItem("Profile ", "/admin/profile"),
       ]
     ),
   ];
