@@ -13,8 +13,6 @@ import {
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { openNotificationBox } from "../../helpers/notification";
 
-const { Content } = Layout;
-
 function TeamMembers({ user }) {
   const [form] = Form.useForm();
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -204,8 +202,10 @@ function TeamMembers({ user }) {
         <div className="container mx-auto max-w-full">
           <div className="grid grid-cols-1 px-4 mb-16">
             <div className="w-full bg-white rounded-xl overflow-hdden shadow-md p-4 ">
-              <div className="grid sm:flex bg-gradient-to-tr from-purple-500 to-purple-700 -mt-10 mb-4 rounded-xl text-white  items-center w-full h-40 sm:h-24 py-4 px-8 justify-between shadow-lg-purple ">
-                <h2 className="text-white text-2xl font-bold">Team Members </h2>
+              <div className="grid sm:flex bg-gradient-to-tr from-purple-500 to-purple-700 -mt-10 mb-4 rounded-xl text-white  items-center w-full h-40 sm:h-24 py-4 px-6 md:px-8 justify-between shadow-lg-purple ">
+                <h2 className="text-white text-2xl font-bold ">
+                  Team Members{" "}
+                </h2>
                 <span
                   className="text-center  rounded-full border-2 px-4 py-2 cursor-pointer hover:bg-white hover:text-purple-500 hover:border-2 hover:border-purple-500 "
                   onClick={showModal}
@@ -280,7 +280,7 @@ function TeamMembers({ user }) {
                       ) : (
                         <tr>
                           <th
-                            colSpan={3}
+                            colSpan={4}
                             className="border-b text-center border-gray-200 align-middle font-semibold text-sm whitespace-nowrap px-2 py-4 "
                           >
                             No Members Found

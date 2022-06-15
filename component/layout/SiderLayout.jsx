@@ -9,7 +9,6 @@ import {
 import { Menu, Layout } from "antd";
 import { useRouter } from "next/router";
 import Head from "next/head";
-import { Footer } from "antd/lib/layout/layout";
 
 const { Sider } = Layout;
 function getItem(label, key, icon, children, type) {
@@ -67,7 +66,7 @@ function SiderLayout({ collapsed }) {
       trigger={null}
       collapsible
       collapsed={collapsed}
-      className="bg-white h-screen"
+      className="bg-white min-h-screen"
     >
       <Head>
         <title>Review App</title>

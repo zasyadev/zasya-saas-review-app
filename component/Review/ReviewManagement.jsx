@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Button, Modal, Form, Row, Col, Skeleton, Select } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { openNotificationBox } from "../../helpers/notification";
+import { Table } from "antd";
 import FormView from "../Form/FormView";
 
 function ReviewManagement({ user }) {
@@ -188,18 +189,62 @@ function ReviewManagement({ user }) {
     setReviewAssign(true);
   };
 
+  const columns = [
+    {
+      title: "Assign By",
+      dataIndex: "assigned_by",
+      render: (assigned_by) => assigned_by.first_name + assigned_by.last_name,
+    },
+    {
+      title: "Assign To",
+      dataIndex: "assigned_to",
+      render: (assigned_to) => assigned_to.first_name + assigned_to.last_name,
+    },
+    {
+      title: "Template Title",
+      dataIndex: "form",
+      render: (form) => form.form_title,
+    },
+    {
+      title: "Frequency",
+      dataIndex: "frequency",
+    },
+    {
+      title: "Status",
+      dataIndex: "status",
+    },
+    {
+      title: "Action",
+      key: "action",
+      render: (_, record) => (
+        <p>
+          {/* <span
+            className="text-yellow-500 text-lg mx-2"
+            onClick={() => onUpdate(record)}
+          >
+            <EditOutlined />
+          </span> */}
+          <span
+            className="text-red-500 text-lg mx-2"
+            onClick={() => onDelete(record.id)}
+          >
+            <DeleteOutlined />
+          </span>
+        </p>
+      ),
+    },
+  ];
   return reviewAssign ? (
     <FormView user={user} setReviewAssign={setReviewAssign} />
   ) : (
     <div>
       <div className="bg-gradient-to-r from-cyan-500 to-blue-500 px-3 md:px-8 h-40" />
-
       <div className="px-3 md:px-8 h-auto -mt-24">
         <div className="container mx-auto max-w-full">
           <div className="grid grid-cols-1 px-4 mb-16">
             <div className="w-full bg-white rounded-xl overflow-hdden shadow-md p-4 ">
-              <div className="grid sm:flex bg-gradient-to-tr from-purple-500 to-purple-700 -mt-10 mb-4 rounded-xl text-white  items-center w-full h-40 sm:h-24 py-4 px-8 justify-between shadow-lg-purple ">
-                <h2 className="text-white text-2xl font-bold">
+              <div className="grid sm:flex bg-gradient-to-tr from-purple-500 to-purple-700 -mt-10 mb-4 rounded-xl text-white  items-center w-full h-40 sm:h-24 py-4 px-4 md:px-8 justify-between shadow-lg-purple ">
+                <h2 className="text-white text-2xl font-bold md:text-3xl">
                   Review Assign{" "}
                 </h2>
                 <div>
@@ -219,7 +264,24 @@ function ReviewManagement({ user }) {
               </div>
               <div className="p-4 ">
                 <div className="overflow-x-auto">
-                  <table className="items-center w-full bg-transparent border-collapse">
+                  {loading ? (
+                    <Skeleton
+                      title={false}
+                      active={true}
+                      width={[200]}
+                      className="mt-4"
+                      rows={3}
+                    />
+                  ) : (
+                    <Table
+                      dataSource={reviewAssignList}
+                      columns={columns}
+                      className="custom-table"
+                      pagination={false}
+                    />
+                  )}
+
+                  {/* <table className="items-center w-full bg-transparent border-collapse">
                     <thead>
                       <tr>
                         <th className="px-2 text-purple-500 align-middle border-b border-solid border-gray-200 py-3 text-sm whitespace-nowrap font-semibold text-left">
@@ -232,7 +294,7 @@ function ReviewManagement({ user }) {
                           Template Title
                         </th>
                         <th className="px-2 text-purple-500 align-middle border-b border-solid border-gray-200 py-3 text-sm whitespace-nowrap font-semibold text-left">
-                          Frequency
+                          Frequency   Status   Action
                         </th>
                         <th className="px-2 text-purple-500 align-middle border-b border-solid border-gray-200 py-3 text-sm whitespace-nowrap font-semibold text-left">
                           Status
@@ -306,7 +368,7 @@ function ReviewManagement({ user }) {
                         </tr>
                       )}
                     </tbody>
-                  </table>
+                  </table> */}
                 </div>
               </div>
             </div>
