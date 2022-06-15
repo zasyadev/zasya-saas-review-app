@@ -4,6 +4,7 @@ import { Modal, Skeleton } from "antd";
 import React, { useEffect, useState } from "react";
 import { openNotificationBox } from "../../helpers/notification";
 import QuestionViewComponent from "./QuestionViewComponent";
+import { Table } from "antd";
 
 function FormView({ user, setReviewAssign }) {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -82,6 +83,47 @@ function FormView({ user, setReviewAssign }) {
         : [...prev, { questionId: quesId, answer: value }]
     );
   };
+  const columns = [
+    {
+      title: "Assign By",
+      dataIndex: "assigned_by",
+      render: (assigned_by) => assigned_by.first_name + assigned_by.last_name,
+    },
+    {
+      title: "Assign To",
+      dataIndex: "assigned_to",
+      render: (assigned_to) => assigned_to.first_name + assigned_to.last_name,
+    },
+    {
+      title: "Template Title",
+      dataIndex: "form",
+      render: (form) => form.form_title,
+    },
+    {
+      title: "Frequency",
+      dataIndex: "frequency",
+    },
+    {
+      title: "Status",
+      dataIndex: "status",
+      render: (status) => (status ? "Active" : "InActive"),
+    },
+
+    {
+      title: "Action",
+      key: "action",
+      render: (_, record) => (
+        <p>
+          <span
+            className="text-yellow-500 text-lg mx-2"
+            onClick={() => showModal(record)}
+          >
+            <EyeOutlined />
+          </span>
+        </p>
+      ),
+    },
+  ];
 
   return (
     <div>
@@ -104,7 +146,24 @@ function FormView({ user, setReviewAssign }) {
               </div>
               <div className="p-4 ">
                 <div className="overflow-x-auto">
-                  <table className="items-center w-full bg-transparent border-collapse">
+                  {loading ? (
+                    <Skeleton
+                      title={false}
+                      active={true}
+                      width={[200]}
+                      className="mt-4"
+                      rows={3}
+                    />
+                  ) : (
+                    <Table
+                      dataSource={formAssignList}
+                      columns={columns}
+                      className="custom-table"
+                      pagination={false}
+                    />
+                  )}
+
+                  {/* <table className="items-center w-full bg-transparent border-collapse">
                     <thead>
                       <tr>
                         <th className="px-2 text-purple-500 align-middle border-b border-solid border-gray-200 py-3 text-sm whitespace-nowrap font-semibold text-left">
@@ -179,7 +238,7 @@ function FormView({ user, setReviewAssign }) {
                         </tr>
                       )}
                     </tbody>
-                  </table>
+                  </table> */}
                 </div>
               </div>
             </div>

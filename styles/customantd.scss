@@ -124,3 +124,17 @@
     width: 97%;
   }
 }
+
+.custom-table {
+  .ant-table-thead {
+    .ant-table-cell {
+      color: #b055f7;
+      // border-color: none;
+      background-color: #fff;
+      font-style: none;
+    }
+    .ant-table-cell::before {
+      background-color: #fff !important;
+    }
+  }
+}

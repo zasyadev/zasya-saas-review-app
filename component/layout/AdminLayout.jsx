@@ -1,13 +1,21 @@
 import { Fragment } from "react";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Layout } from "antd";
 import Head from "next/head";
 import SiderLayout from "./SiderLayout";
 import HeaderLayout from "./HeaderLayout";
 import { Content, Footer } from "antd/lib/layout/layout";
+import { Grid } from "antd";
 
 function AdminLayout(props) {
   const [collapsed, setCollapsed] = useState(false);
+  const { useBreakpoint } = Grid;
+  const { md } = useBreakpoint();
+  // useEffect(() => {
+  //   if (md) setCollapsed(false);
+  //   else setCollapsed(true);
+  // }, [md]);
+
   return (
     <Fragment>
       <Head>
@@ -23,11 +31,7 @@ function AdminLayout(props) {
             <HeaderLayout setCollapsed={setCollapsed} collapsed={collapsed} />
             {props.children}
           </Content>
-          <Footer
-            style={{
-              textAlign: "center",
-            }}
-          >
+          <Footer className="text-center bg-gray-200">
             Review App ©2021 Created by Zasya Solution
           </Footer>
         </Layout>
