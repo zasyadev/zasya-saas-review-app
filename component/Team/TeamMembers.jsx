@@ -13,6 +13,7 @@ import {
 } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { openNotificationBox } from "../../helpers/notification";
+import { Table } from "antd";
 
 function TeamMembers({ user }) {
   const [form] = Form.useForm();
@@ -87,7 +88,7 @@ function TeamMembers({ user }) {
         .catch((err) => console.log(err));
     }
   }
-  async function deleteGroup(id) {
+  async function onDelete(id) {
     if (id) {
       let obj = {
         id: id,
@@ -200,6 +201,46 @@ function TeamMembers({ user }) {
     // fetchUserData();
   }, []);
 
+  const columns = [
+    {
+      title: "Member Name",
+      dataIndex: "user",
+      render: (user) => user.first_name + " " + user.last_name,
+    },
+    {
+      title: "Tags",
+      dataIndex: "tags",
+      render: (tags) =>
+        tags.map((item) => {
+          return (
+            <>
+              <span className="mx-2">{item}</span>
+            </>
+          );
+        }),
+    },
+    {
+      title: "Action",
+      key: "action",
+      render: (_, record) => (
+        <p>
+          <span
+            className="text-yellow-500 text-lg mx-2"
+            onClick={() => onUpdate(record)}
+          >
+            <EditOutlined />
+          </span>
+          <span
+            className="text-red-500 text-lg mx-2"
+            onClick={() => onDelete(record.id)}
+          >
+            <DeleteOutlined />
+          </span>
+        </p>
+      ),
+    },
+  ];
+
   return (
     <>
       <div className="bg-gradient-to-r from-cyan-500 to-blue-500 px-3 md:px-8 h-40" />
@@ -221,12 +262,29 @@ function TeamMembers({ user }) {
               </div>
               <div className="p-4 ">
                 <div className="overflow-x-auto">
-                  <table className="items-center w-full bg-transparent border-collapse">
+                  {
+                    loading ? (
+                      <Skeleton
+                        title={false}
+                        active={true}
+                        width={[200]}
+                        className="mt-4"
+                        rows={3}
+                      />
+                    ) : (
+                      <Table
+                        dataSource={membersList}
+                        columns={columns}
+                        className="custom-table"
+                        pagination={false}
+                      />
+                    )
+                    /* <table className="items-center w-full bg-transparent border-collapse">
                     <thead>
                       <tr>
-                        {/* <th className="px-2 text-purple-500 align-middle border-b border-solid border-gray-200 py-3 text-sm whitespace-nowrap font-semibold text-left">
+                        <th className="px-2 text-purple-500 align-middle border-b border-solid border-gray-200 py-3 text-sm whitespace-nowrap font-semibold text-left">
                           Group Name
-                        </th> */}
+                        </th>
                         <th className="px-2 text-purple-500 align-middle border-b border-solid border-gray-200 py-3 text-sm whitespace-nowrap font-semibold text-left">
                           Member Name
                         </th>
@@ -303,7 +361,8 @@ function TeamMembers({ user }) {
                         </tr>
                       )}
                     </tbody>
-                  </table>
+                  </table> */
+                  }
                 </div>
               </div>
             </div>
