@@ -57,7 +57,7 @@ function SiderLayout({ collapsed, setCollapsed }) {
       <SettingOutlined className="sidebar-icon" />,
       [
         getItem("Templates", "/admin/template"),
-        getItem("Users", "/admin/user"),
+        // getItem("Users", "/admin/user"),
         getItem("Profile ", "/admin/profile"),
       ]
     ),

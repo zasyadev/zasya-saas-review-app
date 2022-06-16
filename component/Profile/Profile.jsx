@@ -1,11 +1,32 @@
 import React, { useState } from "react";
-import { Modal, Form, Input, Button, Col, Row, Upload } from "antd";
+import { Modal, Form, Input, Button, Col, Row, Upload, message } from "antd";
 import Image from "next/image";
 import User from "../../assets/images/User.png";
 import { Avatar } from "@material-ui/core";
 import { UserOutlined } from "@ant-design/icons";
+import { openNotificationBox } from "../../helpers/notification";
+
+const otherprops = {
+  name: "file",
+
+  headers: {
+    authorization: "authorization-text",
+  },
+
+  onChange(info) {
+    if (info.file.status !== "uploading") {
+      console.log(info.file, info.fileList);
+    }
+
+    if (info.file.status === "done") {
+      message.success(`${info.file.name} file uploaded successfully`);
+    } else if (info.file.status === "error") {
+      message.error(`${info.file.name} file upload failed.`);
+    }
+  },
+};
 function Profile({ user }) {
-  const [form] = Form.useForm();
+  const [passwordForm] = Form.useForm();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [formMode, setFormMode] = useState({
     isEdit: false,
@@ -21,7 +42,7 @@ function Profile({ user }) {
 
   const handleEdit = () => {
     setFormMode({ isEdit: true });
-    form.resetFields();
+    passwordForm.resetFields();
     handleToggleModal();
   };
 
@@ -33,8 +54,33 @@ function Profile({ user }) {
       });
     }
 
-    form.resetFields();
+    passwordForm.resetFields();
   };
+
+  async function onChangePassword(values) {
+    let obj = {
+      old_password: values.old_password,
+      new_password: values.new_password,
+    };
+    await fetch("/api/user/password/" + user.id, {
+      method: "POST",
+      body: JSON.stringify(obj),
+      // headers: {
+      //   "Content-Type": "application/json",
+      // },
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        if (response.status === 200) {
+          openNotificationBox("error", response.message, 3);
+          passwordForm.resetFields();
+          setIsModalVisible(false);
+        } else {
+          openNotificationBox("error", response.message, 3);
+        }
+      })
+      .catch((err) => console.log(err));
+  }
 
   const validateMessages = {
     required: "${label} is required!",
@@ -66,6 +112,7 @@ function Profile({ user }) {
               <Row className="mx-6">
                 <Col lg={8} className="flex  items-center justify-center">
                   <Image src={User} alt="user" width={120} height={120} />
+
                   {/* <div className="flex flex-wrap items-center mb-3">
               {user.profile_img ? (
                 <Avatar
@@ -106,14 +153,18 @@ function Profile({ user }) {
               </div>
                    <Image src={User} alt="user" width={120} height={120} />
                   <div>Email: {}</div> */}
+
+                  <Upload {...otherprops} action={"/api/user/image"}>
+                    <Button>Click to Upload</Button>
+                  </Upload>
                 </Col>
 
                 <Col lg={15} className="mt-4">
                   <Form
-                    form={form}
+                    // form={form}
                     layout="vertical"
                     autoComplete="off"
-                    onFinish={onFinish}
+                    // onFinish={onFinish}
                     validateMessages={validateMessages}
                   >
                     <Row gutter={16}>
@@ -200,7 +251,7 @@ function Profile({ user }) {
             >
               Cancel
             </Button>
-            <Button key="add" type="primary" onClick={form.submit}>
+            <Button key="add" type="primary" onClick={passwordForm.submit}>
               {formMode.isEdit ? "Update" : "Change Password"}
             </Button>
           </>,
@@ -209,10 +260,10 @@ function Profile({ user }) {
       >
         <div>
           <Form
-            form={form}
+            form={passwordForm}
             layout="vertical"
             autoComplete="off"
-            onFinish={onFinish}
+            onFinish={onChangePassword}
           >
             {formMode.isEdit && (
               <>

@@ -14,7 +14,7 @@ datasource db {
 model User {
   id         String  @id @default(uuid())
   email      String  @unique()
-  password   String
+  password   String?
   first_name String?
   last_name  String?
   address    String? @db.LongText
@@ -37,7 +37,8 @@ model User {
   UserAnswers     UserAnswers[]
   TemplateTable   TemplateTable[]
   ReviewAnswers   ReviewAnswers[]
-  TagsEmployees   TagsEmployees[]
+  TagsEmployees   TagsEmployees?
+  UserImage       UserImage?
 }
 
 model Role {
@@ -218,4 +219,22 @@ model Organizations {
   created_date  DateTime @default(now())
   modified_date DateTime @default(now())
   User          User[]
+}
+
+model UserImage {
+  id            Int      @id @default(autoincrement())
+  user          User     @relation(fields: [user_id], references: [id])
+  user_id       String   @unique
+  image         String?
+  created_date  DateTime @default(now())
+  modified_date DateTime @default(now())
+
+}
+
+model PasswordReset {
+  id            Int      @id @default(autoincrement())
+  email         String?
+  token         String?
+  created_date  DateTime @default(now())
+  modified_date DateTime @default(now())
 }
