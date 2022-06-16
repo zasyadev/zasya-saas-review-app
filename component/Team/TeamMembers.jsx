@@ -9,6 +9,7 @@ import {
   Radio,
   Skeleton,
   Select,
+  Input,
 } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { openNotificationBox } from "../../helpers/notification";
@@ -20,8 +21,8 @@ function TeamMembers({ user }) {
   const [membersList, setMembersList] = useState([]);
   const [editMode, setEditMode] = useState(false);
   const [upadteData, setUpdateData] = useState({});
-  const [groupsList, setGroupsList] = useState([]);
-  const [userList, setUserList] = useState([]);
+  // const [groupsList, setGroupsList] = useState([]);
+  // const [userList, setUserList] = useState([]);
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -30,7 +31,12 @@ function TeamMembers({ user }) {
   async function onFinish(values) {
     let obj = {
       ...values,
+      organization_id: user.organization_id,
+      role: 4,
     };
+
+    // console.log(obj, "obj ");
+    // return;
 
     editMode ? updatingGroup(obj) : addingGroup(obj);
   }
@@ -109,13 +115,13 @@ function TeamMembers({ user }) {
   async function fetchMembersData() {
     setLoading(true);
     setMembersList([]);
-    await fetch("/api/team/members", {
+    await fetch("/api/team/" + user.organization_id, {
       method: "GET",
     })
       .then((response) => response.json())
       .then((response) => {
         if (response.status === 200) {
-          setMembersList(response.data);
+          // setMembersList(response.data);
         }
         setLoading(false);
       })
@@ -149,49 +155,49 @@ function TeamMembers({ user }) {
     setEditMode(false);
     form.resetFields();
   };
-  async function fetchGroupData() {
-    // setLoading(true);
-    setGroupsList([]);
-    await fetch("/api/team/groups", {
-      method: "GET",
-    })
-      .then((response) => response.json())
-      .then((response) => {
-        if (response.status === 200) {
-          let data = response.data.filter((item) => item.status);
-          setGroupsList(data);
-        }
-        // setLoading(false);
-      })
-      .catch((err) => {
-        console.log(err);
-        setGroupsList([]);
-      });
-  }
-  async function fetchUserData() {
-    // setLoading(true);
-    setUserList([]);
-    await fetch("/api/user/adminuser", {
-      method: "GET",
-    })
-      .then((response) => response.json())
-      .then((response) => {
-        if (response.status === 200) {
-          let data = response.data.filter((item) => item.status);
-          setUserList(data);
-        }
-        // setLoading(false);
-      })
-      .catch((err) => {
-        console.log(err);
-        setUserList([]);
-      });
-  }
+  // async function fetchGroupData() {
+  //   // setLoading(true);
+  //   setGroupsList([]);
+  //   await fetch("/api/team/groups", {
+  //     method: "GET",
+  //   })
+  //     .then((response) => response.json())
+  //     .then((response) => {
+  //       if (response.status === 200) {
+  //         let data = response.data.filter((item) => item.status);
+  //         setGroupsList(data);
+  //       }
+  //       // setLoading(false);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //       setGroupsList([]);
+  //     });
+  // }
+  // async function fetchUserData() {
+  //   // setLoading(true);
+  //   setUserList([]);
+  //   await fetch("/api/user/adminuser", {
+  //     method: "GET",
+  //   })
+  //     .then((response) => response.json())
+  //     .then((response) => {
+  //       if (response.status === 200) {
+  //         let data = response.data.filter((item) => item.status);
+  //         setUserList(data);
+  //       }
+  //       // setLoading(false);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //       setUserList([]);
+  //     });
+  // }
 
   useEffect(() => {
     fetchMembersData();
-    fetchGroupData();
-    fetchUserData();
+    // fetchGroupData();
+    // fetchUserData();
   }, []);
 
   return (
@@ -357,6 +363,49 @@ function TeamMembers({ user }) {
 
             <Col md={12} xs={24}>
               <Form.Item
+                name="first_name"
+                label="First Name"
+                rules={[
+                  {
+                    required: true,
+                  },
+                ]}
+              >
+                <Input />
+              </Form.Item>
+            </Col>
+            <Col md={12} xs={24}>
+              <Form.Item
+                name="last_name"
+                label="Last Name"
+                rules={[
+                  {
+                    required: true,
+                  },
+                ]}
+              >
+                <Input />
+              </Form.Item>
+            </Col>
+
+            <Col md={12} xs={24}>
+              <Form.Item
+                name="email"
+                label="Email"
+                rules={[
+                  {
+                    required: true,
+                  },
+                  {
+                    type: "email",
+                  },
+                ]}
+              >
+                <Input />
+              </Form.Item>
+            </Col>
+            {/* <Col md={12} xs={24}>
+              <Form.Item
                 name="employee_id"
                 label="Members Name"
                 rules={[
@@ -381,18 +430,18 @@ function TeamMembers({ user }) {
                   ))}
                 </Select>
               </Form.Item>
-            </Col>
+            </Col> */}
             <Col md={12} xs={24}>
               <Form.Item
                 name="tags"
-                label="Tag Name"
+                label="Tags Name"
                 rules={[
                   {
                     required: true,
                   },
                 ]}
               >
-                <Select mode="tags">
+                <Select mode="tags" placeholder="Tags">
                   <Select.Option key={"developer"} value={"Developer"}>
                     Developer
                   </Select.Option>
@@ -403,6 +452,22 @@ function TeamMembers({ user }) {
                     Testing
                   </Select.Option>
                 </Select>
+              </Form.Item>
+            </Col>
+            <Col md={12} xs={24}>
+              <Form.Item
+                name="status"
+                label="Status"
+                rules={[
+                  {
+                    required: true,
+                  },
+                ]}
+              >
+                <Radio.Group>
+                  <Radio value={1}>Active</Radio>
+                  <Radio value={0}>Inactive</Radio>
+                </Radio.Group>
               </Form.Item>
             </Col>
             {/* <Col md={12} xs={24}>

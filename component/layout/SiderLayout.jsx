@@ -21,7 +21,7 @@ function getItem(label, key, icon, children, type) {
   };
 }
 
-function SiderLayout({ collapsed }) {
+function SiderLayout({ collapsed, setCollapsed }) {
   const router = useRouter();
 
   const items = [
@@ -68,10 +68,12 @@ function SiderLayout({ collapsed }) {
   };
   return (
     <Sider
-      trigger={null}
+      // trigger={null}
       collapsible
       collapsed={collapsed}
       className="bg-white min-h-screen"
+      onCollapse={(value) => setCollapsed(value)}
+      // collapsedWidth={0}
     >
       <Head>
         <title>Review App</title>

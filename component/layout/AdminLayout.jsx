@@ -11,10 +11,10 @@ function AdminLayout(props) {
   const [collapsed, setCollapsed] = useState(false);
   const { useBreakpoint } = Grid;
   const { md } = useBreakpoint();
-  // useEffect(() => {
-  //   if (md) setCollapsed(false);
-  //   else setCollapsed(true);
-  // }, [md]);
+  useEffect(() => {
+    if (md) setCollapsed(false);
+    else setCollapsed(true);
+  }, [md]);
 
   return (
     <Fragment>
@@ -25,10 +25,10 @@ function AdminLayout(props) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Layout>
-        <SiderLayout collapsed={collapsed} />
+        <SiderLayout collapsed={collapsed} setCollapsed={setCollapsed} />
         <Layout>
           <Content>
-            <HeaderLayout setCollapsed={setCollapsed} collapsed={collapsed} />
+            <HeaderLayout />
             {props.children}
           </Content>
           <Footer className="text-center bg-gray-200">

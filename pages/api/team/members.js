@@ -1,4 +1,7 @@
 import { PrismaClient } from "@prisma/client";
+import { info } from "node-sass";
+import { hashedPassword, randomPassword } from "../../../lib/auth";
+import { mailService } from "../../../lib/emailservice";
 
 const prisma = new PrismaClient();
 
@@ -6,31 +9,61 @@ export default async (req, res) => {
   if (req.method === "POST") {
     try {
       const resData = JSON.parse(req.body);
-
+      const password = randomPassword(8);
       // let userobj = {
       //   group: { connect: { id: resData.group_id } },
       //   employee: { connect: { id: resData.employee_id } },
       //   is_manager: resData.is_manager,
       // };
 
-      let tagsobj = {
-        user: { connect: { id: resData.employee_id } },
-        tags: resData.tags,
+      const transactionData = await prisma.$transaction(async (transaction) => {
+        let userobj = {
+          email: resData.email,
+          password: await hashedPassword(password),
+          first_name: resData.first_name,
+          last_name: resData.last_name,
+          address: "",
+          pin_code: "",
+          mobile: "",
+          status: resData.status,
+          role: { connect: { id: resData.role } },
+          organization: { connect: { id: resData.organization_id } },
+        };
+
+        const userData = await transaction.user.create({
+          data: userobj,
+        });
+
+        if (userData.id) {
+          const savedTagsData = await transaction.tagsEmployees.create({
+            data: {
+              user: { connect: { id: userData.id } },
+              tags: resData.tags,
+            },
+          });
+        }
+        return {
+          userData,
+        };
+      });
+
+      const mailData = {
+        from: process.env.SMTP_USER,
+        to: transactionData.userData.email,
+        subject: `Successfully Registered on Zasya Review App`,
+        html: `You have successfull registered on Review App . Please Login in with Email ${transactionData.userData.email} and Password  <b>${password}</b>.`,
       };
 
-      // const savedData = await prisma.groupsEmployees.create({
-      //   data: userobj,
-      // });
-
-      const savedTagsData = await prisma.tagsEmployees.create({
-        data: tagsobj,
+      await mailService.sendMail(mailData, function (err, info) {
+        if (err) console.log("failed");
+        else console.log("successfull");
       });
 
       prisma.$disconnect();
 
       return res.status(201).json({
         message: "Members Saved Successfully",
-        data: savedTagsData,
+        data: transactionData.userData,
         status: 200,
       });
     } catch (error) {
@@ -49,6 +82,10 @@ export default async (req, res) => {
       }
     }
   } else if (req.method === "GET") {
+    const resData = JSON.parse(req.body);
+    console.log(resData);
+
+    return;
     try {
       const data = await prisma.tagsEmployees.findMany({
         include: {

@@ -9,29 +9,42 @@ export default async (req, res) => {
     try {
       const userData = JSON.parse(req.body);
 
-      let userobj = {
-        email: userData.email,
-        password: await hashedPassword(userData.password),
-        first_name: userData.first_name,
+      const transactionData = await prisma.$transaction(async (transaction) => {
+        const organization = await transaction.organizations.create({
+          data: {
+            company_name: userData.company_name,
+          },
+        });
 
-        last_name: userData.last_name,
-        address: "",
-        pin_code: "",
-        mobile: "",
-        company_name: userData.company_name,
-        status: userData.status,
-        role: { connect: { id: userData.role } },
-      };
+        if (organization.id) {
+          let userobj = {
+            email: userData.email,
+            password: await hashedPassword(userData.password),
+            first_name: userData.first_name,
 
-      const savedData = await prisma.user.create({
-        data: userobj,
+            last_name: userData.last_name,
+            address: "",
+            pin_code: "",
+            mobile: "",
+
+            status: userData.status,
+            role: { connect: { id: userData.role } },
+            organization: { connect: { id: organization.id } },
+          };
+
+          const savedData = await transaction.user.create({
+            data: userobj,
+          });
+
+          return {
+            savedData,
+          };
+        }
       });
-
       prisma.$disconnect();
-
       const mailData = {
         from: process.env.SMTP_USER,
-        to: savedData.email,
+        to: transactionData.savedData.email,
         subject: `Successfully Registered on Zasya Review App`,
         html: "You have successfull registered on Review App . Please Login in to continue with your Profile.",
       };
@@ -43,10 +56,11 @@ export default async (req, res) => {
 
       return res.status(201).json({
         message: "User Register Successfully",
-        data: savedData,
+        data: transactionData.savedData,
         status: 200,
       });
     } catch (error) {
+      console.log(error);
       return res
         .status(500)
         .json({ error: error, message: "Internal Server Error" });

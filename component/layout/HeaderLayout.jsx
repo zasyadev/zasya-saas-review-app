@@ -1,9 +1,9 @@
 import React from "react";
-import {
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
-  LogoutOutlined,
-} from "@ant-design/icons";
+// import {
+//   MenuFoldOutlined,
+//   MenuUnfoldOutlined,
+//   LogoutOutlined,
+// } from "@ant-design/icons";
 import Image from "next/image";
 import User from "../../assets/images/User.png";
 import { Button, Layout } from "antd";
@@ -12,7 +12,7 @@ import { useRouter } from "next/router";
 
 const { Header } = Layout;
 
-function HeaderLayout({ setCollapsed, collapsed, pageName }) {
+function HeaderLayout({ pageName }) {
   const router = useRouter();
   const logoutHandler = () => {
     signOut({
@@ -27,8 +27,8 @@ function HeaderLayout({ setCollapsed, collapsed, pageName }) {
         padding: 0,
       }}
     >
-      <div className="px-4 flex justify-between">
-        <div className="">
+      <div className="px-4 flex justify-end">
+        {/* <div className="">
           <span
             onClick={() => setCollapsed(!collapsed)}
             className=" cursor-pointer text-white text-lg"
@@ -38,12 +38,10 @@ function HeaderLayout({ setCollapsed, collapsed, pageName }) {
             ) : (
               <MenuFoldOutlined className="sidebar-icon" />
             )}
-            {/* <span className="uppercase text-white text-sm tracking-wider mt-3 px-4">
-              {pageName}
-            </span> */}
+          
           </span>
-        </div>
-        <div className="flex items-center justify-between">
+        </div> */}
+        <div className="flex items-center justify-between mt-3">
           <Image src={User} alt="user" width={40} height={35} />
 
           <Button
