@@ -87,12 +87,14 @@ function FormView({ user, setReviewAssign }) {
     {
       title: "Assign By",
       dataIndex: "assigned_by",
-      render: (assigned_by) => assigned_by.first_name + assigned_by.last_name,
+      render: (assigned_by) =>
+        assigned_by.first_name + " " + assigned_by.last_name,
     },
     {
       title: "Assign To",
       dataIndex: "assigned_to",
-      render: (assigned_to) => assigned_to.first_name + assigned_to.last_name,
+      render: (assigned_to) =>
+        assigned_to.first_name + " " + assigned_to.last_name,
     },
     {
       title: "Template Title",

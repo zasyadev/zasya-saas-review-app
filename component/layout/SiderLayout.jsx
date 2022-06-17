@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import {
   MailOutlined,
   SettingOutlined,
+  FileOutlined,
   AppstoreOutlined,
   UserOutlined,
   FormOutlined,
@@ -49,6 +50,11 @@ function SiderLayout({ collapsed, setCollapsed }) {
       "Team",
       "/admin/team/members",
       <AppstoreOutlined className="sidebar-icon" />
+    ),
+    getItem(
+      "Applaud",
+      "/admin/applaud",
+      <FileOutlined className="sidebar-icon" />
     ),
 
     getItem(

@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Button, Modal, Form, Row, Col, Skeleton, Select } from "antd";
+import { Button, Modal, Form, Row, Col, Skeleton, Select, Table } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { openNotificationBox } from "../../helpers/notification";
-import { Table } from "antd";
 import FormView from "../Form/FormView";
 
 function ReviewManagement({ user }) {
@@ -368,7 +367,7 @@ function ReviewManagement({ user }) {
                         </tr>
                       )}
                     </tbody>
-                  </table> */}
+               </table> */}
                 </div>
               </div>
             </div>

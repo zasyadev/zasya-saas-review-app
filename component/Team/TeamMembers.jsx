@@ -174,9 +174,11 @@ function TeamMembers({ user }) {
 
       render: (_, record) =>
         record?.TagsEmployees?.tags?.length > 0
-          ? record?.TagsEmployees?.tags.map((item) => {
-              return <span className="mx-2">{item}</span>;
-            })
+          ? record?.TagsEmployees?.tags.map((item, index) => (
+              <span className="mx-2" key={index + "tags"}>
+                {item}
+              </span>
+            ))
           : null,
     },
     {

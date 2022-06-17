@@ -28,7 +28,9 @@ export default async (req, res) => {
     }
   } else if (req.method === "GET") {
     try {
-      const data = await prisma.userApplaud.findMany();
+      const data = await prisma.userApplaud.findMany({
+        include: { user: true },
+      });
 
       if (data) {
         return res.status(200).json({
