@@ -30,8 +30,9 @@ export default async (req, res) => {
 
         const passwordResetData = await transaction.passwordReset.create({
           data: {
-            email: resData.email,
-            token: randomPassword(16),
+            email: { connect: { email: userData.email } },
+            // token: randomPassword(16),
+            token: await hashedPassword(resData.email),
           },
         });
 
@@ -52,8 +53,10 @@ export default async (req, res) => {
       const mailData = {
         from: process.env.SMTP_USER,
         to: transactionData.userData.email,
-        subject: `Successfully Registered on Zasya Review App`,
-        html: `You have been registered on Review App . Please Login in with Email ${transactionData.userData.email} and Password  <b>${password}</b> link ${process.env.NEXT_APP_URL}/resetpassword/${transactionData.passwordResetData.token}.`,
+        subject: `Invitation to collaborate on Review App`,
+        html: `
+        You have been invited to collaborate on Review app . Please <a href= ${process.env.NEXT_APP_URL}/resetpassword?passtoken=${transactionData.passwordResetData.token}>click here</a> to collaborate with them now .
+        `,
       };
 
       await mailService.sendMail(mailData, function (err, info) {

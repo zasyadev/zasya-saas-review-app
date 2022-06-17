@@ -39,6 +39,7 @@ model User {
   ReviewAnswers   ReviewAnswers[]
   TagsEmployees   TagsEmployees?
   UserImage       UserImage?
+  PasswordReset   PasswordReset?
 }
 
 model Role {
@@ -233,7 +234,8 @@ model UserImage {
 
 model PasswordReset {
   id            Int      @id @default(autoincrement())
-  email         String?
+  email         User     @relation(fields: [email_id], references: [email])
+  email_id      String   @unique
   token         String?
   created_date  DateTime @default(now())
   modified_date DateTime @default(now())

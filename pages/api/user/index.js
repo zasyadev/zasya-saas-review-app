@@ -60,7 +60,6 @@ export default async (req, res) => {
         status: 200,
       });
     } catch (error) {
-      console.log(error);
       return res
         .status(500)
         .json({ error: error, message: "Internal Server Error" });
@@ -68,7 +67,7 @@ export default async (req, res) => {
   } else if (req.method === "PUT") {
     try {
       const reqBody = JSON.parse(req.body);
-      console.log(reqBody, "dsfsihfi");
+
       return;
       const user = await prisma.user.findUnique({
         where: { email: reqBody.email },
