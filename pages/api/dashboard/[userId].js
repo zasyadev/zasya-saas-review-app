@@ -8,7 +8,7 @@ export default async (req, res) => {
   if (req.method === "GET") {
     if (userId) {
       const reviewCreated = await prisma.reviewAssign.findMany({
-        where: { assigned_to_id: userId },
+        where: { assigned_by_id: userId },
         include: {
           assigned_by: true,
           assigned_to: true,
@@ -24,7 +24,7 @@ export default async (req, res) => {
       const reviewAnswered = await prisma.reviewAnswers.findMany({
         where: { user_id: userId },
       });
-      const userData = await prisma.reviewAnswers.findMany();
+      const userData = await prisma.user.findMany();
 
       let data = {
         reviewCreated: reviewCreated.length,

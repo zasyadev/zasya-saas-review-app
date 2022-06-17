@@ -40,6 +40,7 @@ model User {
   TagsEmployees   TagsEmployees?
   UserImage       UserImage?
   PasswordReset   PasswordReset?
+  UserApplaud     UserApplaud[]
 }
 
 model Role {
@@ -237,6 +238,15 @@ model PasswordReset {
   email         User     @relation(fields: [email_id], references: [email])
   email_id      String   @unique
   token         String?
+  created_date  DateTime @default(now())
+  modified_date DateTime @default(now())
+}
+
+model UserApplaud {
+  id            Int      @id @default(autoincrement())
+  user          User     @relation(fields: [user_id], references: [id])
+  user_id       String
+  comment       String?  @db.LongText
   created_date  DateTime @default(now())
   modified_date DateTime @default(now())
 }
