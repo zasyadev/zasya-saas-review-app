@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from "react";
 import FormComponent from "../Form/FormComponent";
-import { Layout } from "antd";
-import DeleteIcon from "../../assets/images/delete.svg";
-import Image from "next/image";
+
+// import DeleteIcon from "../../assets/images/delete.svg";
+// import Image from "next/image";
 import { Popconfirm } from "antd";
 import { openNotificationBox } from "../../helpers/notification";
-
-const { Content } = Layout;
 
 function TemplateLayout({ user }) {
   const [formDetailShow, setFormDetailShow] = useState(false);
@@ -64,87 +62,86 @@ function TemplateLayout({ user }) {
   }, []);
 
   return (
-    <Content>
-      <div>
-        <div className="bg-gradient-to-r from-cyan-500 to-blue-500 px-3 md:px-8 h-40" />
+    <div>
+      <div className="bg-gradient-to-r from-cyan-500 to-blue-500 px-3 md:px-8 h-40" />
 
-        <div className="px-3 md:px-8 h-auto -mt-24">
-          <div className="container mx-auto max-w-full">
-            <div className="grid grid-cols-1 px-4 mb-16">
-              <div className="w-full bg-white rounded-xl overflow-hdden shadow-md p-4 ">
-                {formDetailShow ? (
-                  <FormComponent
-                    user={user}
-                    setFormDetailShow={setFormDetailShow}
-                    formList={formList}
-                    editFormData={editFormData}
-                    editMode={editMode}
-                    setEditMode={setEditMode}
-                    fetchFormList={fetchFormList}
-                  />
-                ) : (
-                  <div className="">
-                    <div className="grid sm:flex bg-gradient-to-tr from-purple-500 to-purple-700 -mt-10 mb-4 rounded-xl text-white  items-center w-full h-40 sm:h-24 py-4 px-8 justify-between shadow-lg-purple ">
-                      <h2 className="text-white text-2xl font-bold">
-                        Template Lists{" "}
-                      </h2>
-                      <span
-                        className="text-center  rounded-full border-2 px-4 py-2 cursor-pointer hover:bg-white hover:text-purple-500 hover:border-2 hover:border-purple-500 "
-                        onClick={() => {
-                          setFormDetailShow(true);
-                        }}
-                      >
-                        Add New
-                      </span>
-                    </div>
-                    <div className="p-4 mt-8">
-                      <div className="container mx-auto max-w-full">
-                        <div className="grid grid-cols-1 lg:grid-cols-3 mb-4">
-                          {formList.length > 0 ? (
-                            formList.map((form, idx) => {
-                              return (
-                                <div className="px-4" key={idx + "form"}>
-                                  <div className="w-full bg-white rounded-xl overflow-hdden shadow-md p-4 ">
-                                    <div
-                                      className="flex flex-wrap border-b border-gray-200  cursor-pointer"
-                                      onClick={() => {
-                                        setFormDetailShow(true);
-                                        setEditMode(true);
-                                        setEditFormData(form.form_data);
-                                      }}
-                                    >
-                                      <div className="bg-gradient-to-tr from-pink-500 to-pink-700 -mt-10 mb-4 rounded-xl text-white grid items-center w-full h-24 py-4 px-4 justify-center shadow-lg-pink ">
-                                        <span className="material-icons text-white text-3xl leading-none">
-                                          {form?.form_data?.title}
-                                        </span>
-                                      </div>
-                                    </div>
-                                    <div className="text-sm text-gray-700 pt-4 flex items-center  justify-end">
-                                      <Popconfirm
-                                        title="Are you sure to delete this Form?"
-                                        okText="Yes"
-                                        cancelText="No"
-                                        icon={false}
-                                        onConfirm={() => deleteForm(form.id)}
-                                      >
-                                        <span className="font-light whitespace-nowrap cursor-pointer">
-                                          Remove
-                                        </span>
-                                      </Popconfirm>
+      <div className="px-3 md:px-8 h-auto -mt-24">
+        <div className="container mx-auto max-w-full">
+          <div className="grid grid-cols-1 px-4 mb-16">
+            <div className="w-full bg-white rounded-xl overflow-hdden shadow-md p-4 ">
+              {formDetailShow ? (
+                <FormComponent
+                  user={user}
+                  setFormDetailShow={setFormDetailShow}
+                  formList={formList}
+                  editFormData={editFormData}
+                  editMode={editMode}
+                  setEditMode={setEditMode}
+                  fetchFormList={fetchFormList}
+                />
+              ) : (
+                <div className="">
+                  <div className="grid sm:flex bg-gradient-to-tr from-purple-500 to-purple-700 -mt-10 mb-4 rounded-xl text-white  items-center w-full h-40 sm:h-24 py-4 px-8 justify-between shadow-lg-purple ">
+                    <h2 className="text-white text-2xl font-bold">
+                      Template Lists{" "}
+                    </h2>
+                    <span
+                      className="text-center  rounded-full border-2 px-4 py-2 cursor-pointer hover:bg-white hover:text-purple-500 hover:border-2 hover:border-purple-500 "
+                      onClick={() => {
+                        setFormDetailShow(true);
+                      }}
+                    >
+                      Add New
+                    </span>
+                  </div>
+                  <div className="p-4 mt-8">
+                    <div className="container mx-auto max-w-full">
+                      <div className="grid grid-cols-1 lg:grid-cols-3 mb-4">
+                        {formList.length > 0 ? (
+                          formList.map((form, idx) => {
+                            return (
+                              <div className="px-4" key={idx + "form"}>
+                                <div className="w-full bg-white rounded-xl overflow-hdden shadow-md p-4 ">
+                                  <div
+                                    className="flex flex-wrap border-b border-gray-200  cursor-pointer"
+                                    onClick={() => {
+                                      setFormDetailShow(true);
+                                      setEditMode(true);
+                                      setEditFormData(form.form_data);
+                                    }}
+                                  >
+                                    <div className="bg-gradient-to-tr from-pink-500 to-pink-700 -mt-10 mb-4 rounded-xl text-white grid items-center w-full h-24 py-4 px-4 justify-center shadow-lg-pink ">
+                                      <span className="material-icons text-white text-3xl leading-none">
+                                        {form?.form_data?.title}
+                                      </span>
                                     </div>
                                   </div>
+                                  <div className="text-sm text-gray-700 pt-4 flex items-center  justify-end">
+                                    <Popconfirm
+                                      title="Are you sure to delete this Form?"
+                                      okText="Yes"
+                                      cancelText="No"
+                                      icon={false}
+                                      onConfirm={() => deleteForm(form.id)}
+                                    >
+                                      <span className="font-light whitespace-nowrap cursor-pointer">
+                                        Remove
+                                      </span>
+                                    </Popconfirm>
+                                  </div>
                                 </div>
-                              );
-                            })
-                          ) : (
-                            <p>No Forms Found</p>
-                          )}
-                        </div>
+                              </div>
+                            );
+                          })
+                        ) : (
+                          <p className="text-center">No Templates Found</p>
+                        )}
                       </div>
                     </div>
                   </div>
-                )}
-                {/* {formList.length > 0 ? (
+                </div>
+              )}
+              {/* {formList.length > 0 ? (
                           formList.map((form, idx) => {
                             return (
                               <div
@@ -186,12 +183,11 @@ function TemplateLayout({ user }) {
                         ) : (
                           <p>No Forms Found</p>
                         )} */}
-              </div>
             </div>
           </div>
         </div>
       </div>
-    </Content>
+    </div>
   );
 }
 

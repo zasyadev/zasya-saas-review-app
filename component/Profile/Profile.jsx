@@ -4,10 +4,28 @@ import Image from "next/image";
 import UserImage from "../../assets/images/User.png";
 import UploadButton from "./UploadButton";
 import { useEffect } from "react";
-import { useForm } from "rc-field-form";
 
+const otherprops = {
+  name: "file",
+
+  headers: {
+    authorization: "authorization-text",
+  },
+
+  onChange(info) {
+    if (info.file.status !== "uploading") {
+      console.log(info.file, info.fileList);
+    }
+
+    if (info.file.status === "done") {
+      message.success(`${info.file.name} file uploaded successfully`);
+    } else if (info.file.status === "error") {
+      message.error(`${info.file.name} file upload failed.`);
+    }
+  },
+};
 function Profile({ user }) {
-  const [form] = Form.useForm();
+  const [passwordForm] = Form.useForm();
   const [profileForm] = Form.useForm();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [userimageSrc, setuserImageSrc] = useState(false);
@@ -35,6 +53,48 @@ function Profile({ user }) {
     getFieldData();
   }, []);
 
+  const handleEdit = () => {
+    setFormMode({ isEdit: true });
+    passwordForm.resetFields();
+    handleToggleModal();
+  };
+
+  const handleShowModal = () => {
+    handleToggleModal();
+    if (formMode.isEdit) {
+      setFormMode({
+        isEdit: false,
+      });
+    }
+
+    passwordForm.resetFields();
+  };
+
+  async function onChangePassword(values) {
+    let obj = {
+      old_password: values.old_password,
+      new_password: values.new_password,
+    };
+    await fetch("/api/user/password/" + user.id, {
+      method: "POST",
+      body: JSON.stringify(obj),
+      // headers: {
+      //   "Content-Type": "application/json",
+      // },
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        if (response.status === 200) {
+          openNotificationBox("error", response.message, 3);
+          passwordForm.resetFields();
+          setIsModalVisible(false);
+        } else {
+          openNotificationBox("error", response.message, 3);
+        }
+      })
+      .catch((err) => console.log(err));
+  }
+
   return (
     <>
       <div className="bg-gradient-to-r from-cyan-500 to-blue-500 px-3 md:px-8 h-40" />
@@ -59,14 +119,26 @@ function Profile({ user }) {
               </div>
 
               <Row className="mx-6">
-                <Col
-                  lg={8}
-                  className="flex flex-col items-center justify-center"
-                >
-                  {/* <div className="mt-4 ">
-                    <span className="text-lg font-semibold">Email : </span>
-                    <span className="text-base ">{user.email}</span>
-                  </div>  */}
+                <Col lg={8} className="flex  items-center justify-center">
+                  <Image src={UserImage} alt="user" width={120} height={120} />
+
+                  {/* <div className="flex flex-wrap items-center mb-3">
+              {user.profile_img ? (
+                <Avatar
+                  className="mb-2  mr-5"
+                  size={avatarSize}
+                  src={`${Config.SERVER_BASE_URL}${user.profile_img}`}
+                />
+              ) : (
+                <Avatar
+                  className="mb-2 mr-5"
+                  size={avatarSize}
+                  icon={<UserOutlined />}
+                />
+              )}
+
+              <div className="img-upload mb-2">
+                <p className="font-medium mb-0">Upload your avatar</p>
 
                   <div className="flex flex-wrap items-center mb-3">
                     <Image
@@ -88,13 +160,11 @@ function Profile({ user }) {
                           Upload
                         </Button>
                       </Upload> */}
-                      <UploadButton
-                        onSuccess={(newUploadedfileName) => {
-                          setuserImageSrc("/" + newUploadedfileName);
-                        }}
-                      />
-                    </p>
-                  </div>
+                  <UploadButton
+                    onSuccess={(newUploadedfileName) => {
+                      setuserImageSrc("/" + newUploadedfileName);
+                    }}
+                  />
                 </Col>
 
                 <Col lg={15} className="mt-4">
@@ -141,11 +211,7 @@ function Profile({ user }) {
                             },
                           ]}
                         >
-                          <Input
-                            placeholder="Email"
-                            disabled={true}
-                            value={user.email}
-                          />
+                          <Input placeholder="Email" disabled={true} />
                         </Form.Item>
                       </Col>
                     </Row>
@@ -157,7 +223,6 @@ function Profile({ user }) {
                         Save
                       </Button>
                     </div>
-                    {console.log(profileForm, "profileForm")}
                   </Form>
                 </Col>
               </Row>
@@ -181,7 +246,7 @@ function Profile({ user }) {
       <Modal
         title="Change Password"
         visible={isModalVisible}
-        onOk={form.submit}
+        onOk={passwordForm.submit}
         onCancel={() => setIsModalVisible(false)}
         footer={[
           <>
@@ -192,7 +257,7 @@ function Profile({ user }) {
             >
               Cancel
             </Button>
-            <Button key="add" type="primary" onClick={form.submit}>
+            <Button key="add" type="primary" onClick={passwordForm.submit}>
               Change Password
             </Button>
           </>,
@@ -201,10 +266,10 @@ function Profile({ user }) {
       >
         <div>
           <Form
-            form={form}
+            form={passwordForm}
             layout="vertical"
             autoComplete="off"
-            onFinish={onFinish}
+            onFinish={onChangePassword}
           >
             <div className=" mx-2">
               <Form.Item

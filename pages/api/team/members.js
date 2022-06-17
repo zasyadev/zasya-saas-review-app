@@ -1,4 +1,6 @@
 import { PrismaClient } from "@prisma/client";
+import { hashedPassword, randomPassword } from "../../../lib/auth";
+import { mailService } from "../../../lib/emailservice";
 
 const prisma = new PrismaClient();
 
@@ -6,34 +8,68 @@ export default async (req, res) => {
   if (req.method === "POST") {
     try {
       const resData = JSON.parse(req.body);
+      const password = randomPassword(8);
 
-      // let userobj = {
-      //   group: { connect: { id: resData.group_id } },
-      //   employee: { connect: { id: resData.employee_id } },
-      //   is_manager: resData.is_manager,
-      // };
+      const transactionData = await prisma.$transaction(async (transaction) => {
+        let userobj = {
+          email: resData.email,
+          // password: await hashedPassword(password),
+          first_name: resData.first_name,
+          last_name: resData.last_name,
+          address: "",
+          pin_code: "",
+          mobile: "",
+          status: resData.status,
+          role: { connect: { id: resData.role } },
+          organization: { connect: { id: resData.organization_id } },
+        };
 
-      let tagsobj = {
-        user: { connect: { id: resData.employee_id } },
-        tags: resData.tags,
+        const userData = await transaction.user.create({
+          data: userobj,
+        });
+
+        const passwordResetData = await transaction.passwordReset.create({
+          data: {
+            email: resData.email,
+            token: randomPassword(16),
+          },
+        });
+
+        if (userData.id) {
+          const savedTagsData = await transaction.tagsEmployees.create({
+            data: {
+              user: { connect: { id: userData.id } },
+              tags: resData.tags,
+            },
+          });
+        }
+        return {
+          userData,
+          passwordResetData,
+        };
+      });
+
+      const mailData = {
+        from: process.env.SMTP_USER,
+        to: transactionData.userData.email,
+        subject: `Successfully Registered on Zasya Review App`,
+        html: `You have been registered on Review App . Please Login in with Email ${transactionData.userData.email} and Password  <b>${password}</b> link ${process.env.NEXT_APP_URL}/resetpassword/${transactionData.passwordResetData.token}.`,
       };
 
-      // const savedData = await prisma.groupsEmployees.create({
-      //   data: userobj,
-      // });
-
-      const savedTagsData = await prisma.tagsEmployees.create({
-        data: tagsobj,
+      await mailService.sendMail(mailData, function (err, info) {
+        if (err) console.log("failed");
+        else console.log("successfull");
       });
 
       prisma.$disconnect();
 
       return res.status(201).json({
         message: "Members Saved Successfully",
-        data: savedTagsData,
+        data: transactionData.userData,
         status: 200,
       });
     } catch (error) {
+      console.log(error);
       if (error.code === "P2014") {
         return res
           .status(409)
@@ -49,46 +85,32 @@ export default async (req, res) => {
       }
     }
   } else if (req.method === "GET") {
-    try {
-      const data = await prisma.tagsEmployees.findMany({
-        include: {
-          user: {
-            select: {
-              first_name: true,
-              email: true,
-              status: true,
-              last_name: true,
-            },
-          },
-          // group: true,
-        },
-      });
-
-      if (data) {
-        return res.status(200).json({
-          status: 200,
-          data: data,
-          message: "All Members Retrieved",
-        });
-      }
-
-      return res.status(404).json({ status: 404, message: "No Record Found" });
-    } catch (error) {
-      return res
-        .status(500)
-        .json({ error: error, message: "Internal Server Error" });
-    }
+    return;
   } else if (req.method === "PUT") {
     try {
       const resData = JSON.parse(req.body);
 
-      const data = await prisma.tagsEmployees.update({
-        where: { id: resData.id },
-        data: {
-          user_id: resData.employee_id,
+      const transactionData = await prisma.$transaction(async (transaction) => {
+        const userData = await transaction.user.update({
+          where: { email: resData.email },
+          data: {
+            first_name: resData.first_name,
+            last_name: resData.last_name,
+            address: "",
+            pin_code: "",
+            mobile: "",
+            status: resData.status,
+            TagsEmployees: {
+              update: {
+                tags: resData.tags,
+              },
+            },
+          },
+        });
 
-          tags: resData.tags,
-        },
+        return {
+          userData,
+        };
       });
 
       prisma.$disconnect();
@@ -96,7 +118,7 @@ export default async (req, res) => {
       return res.status(200).json({
         message: "Members Updated Successfully.",
         status: 200,
-        data: data,
+        data: transactionData.userData,
       });
     } catch (error) {
       return res
@@ -106,12 +128,18 @@ export default async (req, res) => {
   } else if (req.method === "DELETE") {
     const reqBody = JSON.parse(req.body);
 
-    if (reqBody.id) {
-      const deletaData = await prisma.tagsEmployees.delete({
-        where: { id: reqBody.id },
+    if (reqBody.email) {
+      const transactionData = await prisma.$transaction(async (transaction) => {
+        const deletaData = await transaction.user.update({
+          where: { email: reqBody.email },
+          data: { status: 0 },
+        });
+
+        return { deletaData };
       });
+
       prisma.$disconnect();
-      if (deletaData) {
+      if (transactionData.deletaData) {
         return res.status(200).json({
           status: 200,
           message: "Members Deleted Successfully.",

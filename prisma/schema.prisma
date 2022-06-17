@@ -12,18 +12,20 @@ datasource db {
 }
 
 model User {
-  id              String           @id @default(uuid())
-  email           String           @unique()
-  password        String
-  first_name      String?
-  last_name       String?
-  address         String?          @db.LongText
-  pin_code        String?
-  mobile          String?
-  company_name    String?
+  id         String  @id @default(uuid())
+  email      String  @unique()
+  password   String?
+  first_name String?
+  last_name  String?
+  address    String? @db.LongText
+  pin_code   String?
+  mobile     String?
+
   status          Int
   role            Role             @relation(fields: [role_id], references: [id])
   role_id         Int
+  organization    Organizations    @relation(fields: [organization_id], references: [id])
+  organization_id Int
   createdDate     DateTime?        @default(now())
   Groups          Groups[]
   GroupsEmployees GroupsEmployees?
@@ -35,7 +37,8 @@ model User {
   UserAnswers     UserAnswers[]
   TemplateTable   TemplateTable[]
   ReviewAnswers   ReviewAnswers[]
-  TagsEmployees   TagsEmployees[]
+  TagsEmployees   TagsEmployees?
+  UserImage       UserImage?
 }
 
 model Role {
@@ -206,6 +209,32 @@ model TagsEmployees {
   user          User     @relation(fields: [user_id], references: [id])
   user_id       String   @unique
   tags          Json?
+  created_date  DateTime @default(now())
+  modified_date DateTime @default(now())
+}
+
+model Organizations {
+  id            Int      @id @default(autoincrement())
+  company_name  String   @unique
+  created_date  DateTime @default(now())
+  modified_date DateTime @default(now())
+  User          User[]
+}
+
+model UserImage {
+  id            Int      @id @default(autoincrement())
+  user          User     @relation(fields: [user_id], references: [id])
+  user_id       String   @unique
+  image         String?
+  created_date  DateTime @default(now())
+  modified_date DateTime @default(now())
+
+}
+
+model PasswordReset {
+  id            Int      @id @default(autoincrement())
+  email         String?
+  token         String?
   created_date  DateTime @default(now())
   modified_date DateTime @default(now())
 }
