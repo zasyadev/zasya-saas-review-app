@@ -10,6 +10,8 @@ function Applaud({ user }) {
   const [membersList, setMembersList] = useState([]);
   const [applaudList, setApplaudList] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [editMode, setEditMode] = useState(false);
+  const [updateData, setUpdateData] = useState({});
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -75,17 +77,68 @@ function Applaud({ user }) {
       user_id: values.user_id,
       comment: values.comment,
     };
-
-    addApplaud(obj);
+    editMode ? updateApplaud(obj) : addApplaud(obj);
   };
+
   useEffect(() => {
     fetchMember();
     fetchApplaud();
   }, []);
 
-  const onDelete = (id) => {
-    setApplaudList().filter((_, item) => item.id !== id);
+  async function onDelete(id) {
+    if (id) {
+      let obj = {
+        id: id,
+      };
+      await fetch("/api/applaud", {
+        method: "DELETE",
+        body: JSON.stringify(obj),
+      })
+        .then((res) => res.json())
+        .then((res) => {
+          if (res.status === 200) {
+            openNotificationBox("success", res.message, 3);
+            fetchApplaud();
+          } else {
+            openNotificationBox("error", res.message, 3);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }
+
+  const onUpdate = (data) => {
+    setEditMode(true);
+    setUpdateData(data);
+    setIsModalVisible(true);
+    applaudform.setFieldsValue({
+      user_id: data.user_id,
+      comment: data.comment,
+    });
   };
+
+  async function updateApplaud(obj) {
+    if (updateData.id) obj.id = updateData.id;
+    await fetch("/api/applaud", {
+      method: "PUT",
+      body: JSON.stringify(obj),
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        if (response.status === 200) {
+          openNotificationBox("success", response.message, 3);
+          fetchApplaud();
+          applaudform.resetFields();
+          setIsModalVisible(false);
+          setEditMode(false);
+        } else {
+          openNotificationBox("error", response.message, 3);
+        }
+      })
+      .catch((err) => console.log(err));
+  }
 
   const columns = [
     {
@@ -165,7 +218,7 @@ function Applaud({ user }) {
           </div>
         </div>
         <Modal
-          title="Create Applaud"
+          title={editMode ? "Update" : "Create Applaud"}
           visible={isModalVisible}
           onOk={applaudform.submit}
           onCancel={() => onCancel()}
@@ -175,7 +228,7 @@ function Applaud({ user }) {
                 Cancel
               </Button>
               <Button key="add" type="primary" onClick={applaudform.submit}>
-                Submit
+                {editMode ? "Update" : "Add"}
               </Button>
             </>,
           ]}

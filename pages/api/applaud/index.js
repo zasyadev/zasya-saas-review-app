@@ -49,8 +49,22 @@ export default async (req, res) => {
   } else if (req.method === "PUT") {
     try {
       const reqBody = JSON.parse(req.body);
-      console.log(reqBody, "resData");
-      return;
+
+      const data = await prisma.userApplaud.update({
+        where: { id: reqBody.id },
+        data: {
+          user_id: reqBody.user_id,
+          comment: reqBody.comment,
+        },
+      });
+      prisma.$disconnect();
+      if (data) {
+        return res.status(201).json({
+          message: "Saved  Successfully",
+          data: data,
+          status: 200,
+        });
+      }
     } catch (error) {
       return res
         .status(500)
