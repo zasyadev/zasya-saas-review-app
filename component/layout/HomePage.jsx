@@ -4,7 +4,7 @@ import { Col, Row } from "antd";
 function HomePage() {
   return (
     <>
-      <div classNameNameNameName="grow-0 shrink-1 md:shrink-0 basis-auto xl:w-full lg:w-full md:w-full mb-12 md:mb-0">
+      <div className="grow-0 shrink-1 md:shrink-0 basis-auto xl:w-full lg:w-full md:w-full mb-12 md:mb-0">
         <div>
           <img
             src="https://mdbcdn.b-cdn.net/img/Photos/Slides/img%20(35).webp"
@@ -87,7 +87,7 @@ function HomePage() {
                 </p>
                 <p className="text-blue-gray-700 text-lg font-light leading-relaxed mt-6 mb-4">
                   {
-                    "  The kit comes with three pre-built pages to help you get started faster. You can change the text and images and you're good to go. Just make sure you enable them first via JavaScript."
+                    "The kit comes with three pre-built pages to help you get started faster. You can change the text and images and you're good to go. Just make sure you enable them first via JavaScript."
                   }
                 </p>
                 <a
