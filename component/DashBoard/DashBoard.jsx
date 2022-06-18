@@ -6,7 +6,14 @@ function DashBoard({ user }) {
   async function fetchDashboardData() {
     // setLoading(true);
     setDashboardData([]);
-    await fetch("/api/dashboard/" + user.id, { method: "GET" })
+    await fetch("/api/dashboard", {
+      method: "POST",
+      body: JSON.stringify({
+        userId: user.id,
+        orgId: user.organization_id,
+        role: user.role_id,
+      }),
+    })
       .then((response) => response.json())
       .then((response) => {
         if (response.status === 200) {
