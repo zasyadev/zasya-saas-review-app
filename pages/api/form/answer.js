@@ -16,11 +16,11 @@ export default async (req, res) => {
           };
         });
 
-        const formdata = await transaction.reviewAnswers.create({
+        const formdata = await transaction.reviewAssigneeAnswers.create({
           data: {
             user: { connect: { id: resData.user_id } },
             form: { connect: { id: resData.form_id } },
-            AttemptedAnswers: {
+            ReviewAssigneeAnswerOption: {
               create: answerData,
             },
           },
@@ -28,7 +28,7 @@ export default async (req, res) => {
         return { formdata };
       });
 
-      const assignedByFromData = await prisma.formTable.findUnique({
+      const assignedByFromData = await prisma.reviewAssignTemplate.findUnique({
         where: { id: transactionData.formdata.form_id },
       });
       const assignedByUser = await prisma.user.findUnique({

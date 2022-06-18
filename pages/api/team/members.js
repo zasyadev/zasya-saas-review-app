@@ -37,7 +37,7 @@ export default async (req, res) => {
         });
 
         if (userData.id) {
-          const savedTagsData = await transaction.tagsEmployees.create({
+          const savedTagsData = await transaction.userTags.create({
             data: {
               user: { connect: { id: userData.id } },
               tags: resData.tags,
@@ -103,7 +103,7 @@ export default async (req, res) => {
             pin_code: "",
             mobile: "",
             status: resData.status,
-            TagsEmployees: {
+            UserTags: {
               update: {
                 tags: resData.tags,
               },

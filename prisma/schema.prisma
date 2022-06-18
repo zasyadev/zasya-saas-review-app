@@ -24,23 +24,24 @@ model User {
   status          Int
   role            Role             @relation(fields: [role_id], references: [id])
   role_id         Int
-  organization    Organizations    @relation(fields: [organization_id], references: [id])
+  organization    UserOrganization    @relation(fields: [organization_id], references: [id])
   organization_id Int
   createdDate     DateTime?        @default(now())
   Groups          Groups[]
   GroupsEmployees GroupsEmployees?
-  FormTable       FormTable[]
-  taskBy          FormAssign[]     @relation("taskBy")
-  taskTo          FormAssign[]     @relation("taskTo")
-  taskReviewBy    ReviewAssign[]   @relation("taskReviewBy")
-  taskReviewTo    ReviewAssign[]   @relation("taskReviewTo")
-  UserAnswers     UserAnswers[]
-  TemplateTable   TemplateTable[]
-  ReviewAnswers   ReviewAnswers[]
-  TagsEmployees   TagsEmployees?
-  UserImage       UserImage?
-  PasswordReset   PasswordReset?
-  UserApplaud     UserApplaud[]
+  ReviewAssignTemplate       ReviewAssignTemplate[]
+
+  taskReviewBy ReviewAssignee[] @relation("taskReviewBy")
+  taskReviewTo ReviewAssignee[] @relation("taskReviewTo")
+
+  ReviewTemplate ReviewTemplate[]
+  ReviewAssigneeAnswers ReviewAssigneeAnswers[]
+  UserTags UserTags?
+  UserImage     UserImage?
+  PasswordReset PasswordReset?
+  UserApplaud   UserApplaud[]
+
+  @@map("users")
 }
 
 model Role {
@@ -49,6 +50,8 @@ model Role {
   created_date  DateTime @default(now())
   modified_date DateTime @default(now())
   User          User[]
+
+  @@map("users_role")
 }
 
 model Groups {
@@ -61,6 +64,8 @@ model Groups {
   created_date    DateTime          @default(now())
   modified_date   DateTime          @default(now())
   GroupsEmployees GroupsEmployees[]
+
+  @@map("users_groups")
 }
 
 model GroupsEmployees {
@@ -72,129 +77,11 @@ model GroupsEmployees {
   is_manager    Boolean
   created_date  DateTime @default(now())
   modified_date DateTime @default(now())
+
+  @@map("users_group_member")
 }
 
-model FormTable {
-  id               Int          @id @default(autoincrement())
-  user             User         @relation(fields: [user_id], references: [id])
-  user_id          String
-  form_title       String?
-  form_description String?
-  form_data        Json?
-  status           Boolean
-  created_date     DateTime     @default(now())
-  modified_date    DateTime     @default(now())
-  FormAssign       FormAssign[]
-
-  questions     FormQuestion[]  @relation("questions")
-  UserAnswers   UserAnswers[]
-  ReviewAssign  ReviewAssign[]
-  ReviewAnswers ReviewAnswers[]
-}
-
-model FormAssign {
-  id             Int       @id @default(autoincrement())
-  assigned_by    User      @relation("taskBy", fields: [assigned_by_id], references: [id])
-  assigned_by_id String
-  assigned_to    User      @relation("taskTo", fields: [assigned_to_id], references: [id])
-  assigned_to_id String
-  form           FormTable @relation(fields: [form_id], references: [id])
-  form_id        Int
-  status         Boolean
-  created_date   DateTime  @default(now())
-  modified_date  DateTime  @default(now())
-}
-
-model FormQuestion {
-  id            Int       @id @default(autoincrement())
-  form          FormTable @relation("questions", fields: [form_id], references: [id], onDelete: Cascade)
-  form_id       Int
-  questionText  String
-  type          String
-  open          Boolean
-  created_date  DateTime  @default(now())
-  modified_date DateTime  @default(now())
-
-  options     QuestionOption[] @relation("options")
-  UserAnswers UserAnswers[]
-
-  AttemptedAnswers AttemptedAnswers[]
-}
-
-model QuestionOption {
-  id          Int          @id @default(autoincrement())
-  question    FormQuestion @relation("options", fields: [question_id], references: [id], onDelete: Cascade)
-  question_id Int
-  optionText  String?
-  lowerLabel  String?
-  higherLabel String?
-
-  created_date  DateTime @default(now())
-  modified_date DateTime @default(now())
-
-}
-
-model UserAnswers {
-  id            Int          @id @default(autoincrement())
-  user          User         @relation(fields: [user_id], references: [id])
-  user_id       String
-  form          FormTable    @relation(fields: [form_id], references: [id], onDelete: Cascade)
-  form_id       Int
-  question      FormQuestion @relation(fields: [question_id], references: [id], onDelete: Cascade)
-  question_id   Int
-  option        String?
-  created_date  DateTime     @default(now())
-  modified_date DateTime     @default(now())
-
-
-}
-
-model ReviewAssign {
-  id             Int       @id @default(autoincrement())
-  assigned_by    User      @relation("taskReviewBy", fields: [assigned_by_id], references: [id])
-  assigned_by_id String
-  assigned_to    User      @relation("taskReviewTo", fields: [assigned_to_id], references: [id])
-  assigned_to_id String
-  form           FormTable @relation(fields: [form_id], references: [id])
-  form_id        Int
-  status         String
-  frequency      String
-  review_type    String
-  created_date   DateTime  @default(now())
-  modified_date  DateTime  @default(now())
-
-}
-
-model ReviewAnswers {
-  id            Int       @id @default(autoincrement())
-  user          User      @relation(fields: [user_id], references: [id])
-  user_id       String
-  form          FormTable @relation(fields: [form_id], references: [id], onDelete: Cascade)
-  form_id       Int
-  created_date  DateTime  @default(now())
-  modified_date DateTime  @default(now())
-  deleted       Boolean?  @default(false)
-
-
-  AttemptedAnswers AttemptedAnswers[]
-}
-
-model AttemptedAnswers {
-  id            Int           @id @default(autoincrement())
-  review        ReviewAnswers @relation(fields: [review_id], references: [id], onDelete: Cascade)
-  review_id     Int
-  question      FormQuestion  @relation(fields: [question_id], references: [id], onDelete: Cascade)
-  question_id   Int
-  option        String?
-  lowerLabel    String?
-  higherLabel   String?
-  created_date  DateTime      @default(now())
-  modified_date DateTime      @default(now())
-  deleted       Boolean?      @default(false)
-
-}
-
-model TemplateTable {
+model ReviewAssignTemplate {
   id               Int      @id @default(autoincrement())
   user             User     @relation(fields: [user_id], references: [id])
   user_id          String
@@ -204,23 +91,129 @@ model TemplateTable {
   status           Boolean
   created_date     DateTime @default(now())
   modified_date    DateTime @default(now())
+
+
+  questions ReviewQuestions[] @relation("questions")
+
+  ReviewAssignee  ReviewAssignee[]
+  ReviewAssigneeAnswers ReviewAssigneeAnswers[]
+
+  @@map("review_assign_template")
 }
 
-model TagsEmployees {
+model ReviewQuestions {
+  id            Int       @id @default(autoincrement())
+  form          ReviewAssignTemplate @relation("questions", fields: [form_id], references: [id], onDelete: Cascade)
+  form_id       Int
+  questionText  String
+  type          String
+  open          Boolean
+  created_date  DateTime  @default(now())
+  modified_date DateTime  @default(now())
+
+  options ReviewQuestionOption[] @relation("options")
+
+
+  ReviewAssigneeAnswerOption ReviewAssigneeAnswerOption[]
+
+  @@map("review_questions")
+}
+
+model ReviewQuestionOption {
+  id          Int          @id @default(autoincrement())
+  question    ReviewQuestions @relation("options", fields: [question_id], references: [id], onDelete: Cascade)
+  question_id Int
+  optionText  String?
+  lowerLabel  String?
+  higherLabel String?
+
+  created_date  DateTime @default(now())
+  modified_date DateTime @default(now())
+  @@map("review_question_option")
+}
+
+model ReviewAssignee {
+  id             Int       @id @default(autoincrement())
+  assigned_by    User      @relation("taskReviewBy", fields: [assigned_by_id], references: [id])
+  assigned_by_id String
+  assigned_to    User      @relation("taskReviewTo", fields: [assigned_to_id], references: [id])
+  assigned_to_id String
+  form           ReviewAssignTemplate @relation(fields: [form_id], references: [id])
+  form_id        Int
+  status         String
+  frequency      String
+  review_type    String
+  created_date   DateTime  @default(now())
+  modified_date  DateTime  @default(now())
+
+  @@map("review_assignee")
+}
+
+model ReviewAssigneeAnswers {
+  id            Int       @id @default(autoincrement())
+  user          User      @relation(fields: [user_id], references: [id])
+  user_id       String
+  form          ReviewAssignTemplate @relation(fields: [form_id], references: [id], onDelete: Cascade)
+  form_id       Int
+  created_date  DateTime  @default(now())
+  modified_date DateTime  @default(now())
+  deleted       Boolean?  @default(false)
+
+
+  ReviewAssigneeAnswerOption ReviewAssigneeAnswerOption[]
+
+  @@map("review_assignee_answers")
+}
+
+model ReviewAssigneeAnswerOption {
+  id            Int           @id @default(autoincrement())
+  review        ReviewAssigneeAnswers @relation(fields: [review_id], references: [id], onDelete: Cascade)
+  review_id     Int
+  question      ReviewQuestions  @relation(fields: [question_id], references: [id], onDelete: Cascade)
+  question_id   Int
+  option        String?
+  lowerLabel    String?
+  higherLabel   String?
+  created_date  DateTime      @default(now())
+  modified_date DateTime      @default(now())
+  deleted       Boolean?      @default(false)
+
+  @@map("review_assignee_answer_option")
+}
+
+model ReviewTemplate {
+  id               Int      @id @default(autoincrement())
+  user             User     @relation(fields: [user_id], references: [id])
+  user_id          String
+  form_title       String?
+  form_description String?
+  form_data        Json?
+  status           Boolean
+  created_date     DateTime @default(now())
+  modified_date    DateTime @default(now())
+
+  @@map("review_template")
+}
+
+model UserTags {
   id            Int      @id @default(autoincrement())
   user          User     @relation(fields: [user_id], references: [id])
   user_id       String   @unique
   tags          Json?
   created_date  DateTime @default(now())
   modified_date DateTime @default(now())
+
+  @@map("user_tags")
 }
 
-model Organizations {
+model UserOrganization {
   id            Int      @id @default(autoincrement())
   company_name  String   @unique
   created_date  DateTime @default(now())
   modified_date DateTime @default(now())
   User          User[]
+
+  @@map("user_organization")
 }
 
 model UserImage {
@@ -231,6 +224,7 @@ model UserImage {
   created_date  DateTime @default(now())
   modified_date DateTime @default(now())
 
+  @@map("user_image")
 }
 
 model PasswordReset {
@@ -240,6 +234,8 @@ model PasswordReset {
   token         String?
   created_date  DateTime @default(now())
   modified_date DateTime @default(now())
+
+  @@map("password_reset")
 }
 
 model UserApplaud {
@@ -249,4 +245,6 @@ model UserApplaud {
   comment       String?  @db.LongText
   created_date  DateTime @default(now())
   modified_date DateTime @default(now())
+
+  @@map("user_applaud")
 }

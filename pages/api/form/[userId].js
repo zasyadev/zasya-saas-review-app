@@ -7,7 +7,7 @@ export default async (req, res) => {
 
   if (req.method === "GET") {
     if (userId) {
-      const data = await prisma.reviewAssign.findMany({
+      const data = await prisma.reviewAssignee.findMany({
         where: { assigned_to_id: userId },
         include: {
           assigned_by: true,

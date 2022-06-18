@@ -7,7 +7,7 @@ export default async (req, res) => {
 
   if (req.method === "GET") {
     if (userId) {
-      const reviewCreated = await prisma.reviewAssign.findMany({
+      const reviewCreated = await prisma.reviewAssignee.findMany({
         where: { assigned_by_id: userId },
         include: {
           assigned_by: true,
@@ -21,7 +21,7 @@ export default async (req, res) => {
           },
         },
       });
-      const reviewAnswered = await prisma.reviewAnswers.findMany({
+      const reviewAnswered = await prisma.reviewAssigneeAnswers.findMany({
         where: { user_id: userId },
       });
       const userData = await prisma.user.findMany();

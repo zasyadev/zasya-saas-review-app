@@ -11,7 +11,7 @@ export default async (req, res) => {
           where: { organization_id: Number(organization_id) },
 
           include: {
-            TagsEmployees: true,
+            UserTags: true,
           },
         });
         const filterdata = data

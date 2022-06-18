@@ -10,7 +10,7 @@ export default async (req, res) => {
       const userData = JSON.parse(req.body);
 
       const transactionData = await prisma.$transaction(async (transaction) => {
-        const organization = await transaction.organizations.create({
+        const organization = await transaction.userOrganization.create({
           data: {
             company_name: userData.company_name,
           },

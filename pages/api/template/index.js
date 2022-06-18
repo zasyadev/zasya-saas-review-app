@@ -7,7 +7,7 @@ export default async (req, res) => {
     try {
       const resData = JSON.parse(req.body);
 
-      const templateData = await prisma.templateTable.create({
+      const templateData = await prisma.reviewTemplate.create({
         data: {
           user: { connect: { id: resData.user_id } },
 
@@ -35,7 +35,7 @@ export default async (req, res) => {
     }
   } else if (req.method === "GET") {
     try {
-      const data = await prisma.templateTable.findMany();
+      const data = await prisma.reviewTemplate.findMany();
 
       if (data) {
         return res.status(200).json({
@@ -71,7 +71,7 @@ export default async (req, res) => {
             options: { create: optionData },
           };
         });
-        const formdata = await transaction.templateTable.update({
+        const formdata = await transaction.reviewTemplate.update({
           where: { id: resData.id },
           data: {
             user: { connect: { id: resData.user_id } },
@@ -111,7 +111,7 @@ export default async (req, res) => {
     const reqBody = JSON.parse(req.body);
 
     if (reqBody.id) {
-      const deletaData = await prisma.templateTable.update({
+      const deletaData = await prisma.reviewTemplate.update({
         where: { id: reqBody.id },
         data: {
           status: false,

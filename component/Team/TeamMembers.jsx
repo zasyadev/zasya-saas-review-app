@@ -61,7 +61,7 @@ function TeamMembers({ user }) {
   }
   async function updatingMember(obj) {
     if (upadteData.id) {
-      (obj.tag_id = upadteData?.TagsEmployees?.id), 0;
+      (obj.tag_id = upadteData?.UserTags?.id), 0;
       await fetch("/api/team/members", {
         method: "PUT",
         body: JSON.stringify(obj),
@@ -146,7 +146,7 @@ function TeamMembers({ user }) {
       first_name: data.first_name,
       last_name: data.last_name,
       email: data.email,
-      tags: data.TagsEmployees.tags,
+      tags: data.UserTags.tags,
       status: data.status,
     });
   };
@@ -173,8 +173,8 @@ function TeamMembers({ user }) {
       title: "Tags",
 
       render: (_, record) =>
-        record?.TagsEmployees?.tags?.length > 0
-          ? record?.TagsEmployees?.tags.map((item, index) => (
+        record?.UserTags?.tags?.length > 0
+          ? record?.UserTags?.tags.map((item, index) => (
               <span className="mx-2" key={index + "tags"}>
                 {item}
               </span>

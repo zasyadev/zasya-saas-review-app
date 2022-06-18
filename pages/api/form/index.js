@@ -23,7 +23,7 @@ export default async (req, res) => {
           };
         });
 
-        const formdata = await transaction.formTable.create({
+        const formdata = await transaction.reviewAssignTemplate.create({
           data: {
             user: { connect: { id: resData.user_id } },
             form_data: resData.form_data,
@@ -60,7 +60,7 @@ export default async (req, res) => {
     }
   } else if (req.method === "GET") {
     try {
-      const data = await prisma.formTable.findMany({
+      const data = await prisma.reviewAssignTemplate.findMany({
         include: {
           questions: {
             include: { options: true },
@@ -102,7 +102,7 @@ export default async (req, res) => {
             options: { create: optionData },
           };
         });
-        const formdata = await transaction.formTable.update({
+        const formdata = await transaction.reviewAssignTemplate.update({
           where: { id: resData.id },
           data: {
             user: { connect: { id: resData.user_id } },
@@ -142,7 +142,7 @@ export default async (req, res) => {
     const reqBody = JSON.parse(req.body);
 
     if (reqBody.id) {
-      const deletaData = await prisma.formTable.update({
+      const deletaData = await prisma.reviewAssignTemplate.update({
         where: { id: reqBody.id },
         data: {
           status: false,

@@ -7,7 +7,7 @@ export default async (req, res) => {
   if (req.method === "POST") {
     try {
       const resData = JSON.parse(req.body);
-      const templateData = await prisma.templateTable.findUnique({
+      const templateData = await prisma.reviewTemplate.findUnique({
         where: { id: resData.template_id },
       });
 
@@ -37,7 +37,7 @@ export default async (req, res) => {
           };
         });
 
-        const formdata = await transaction.formTable.create({
+        const formdata = await transaction.reviewAssignTemplate.create({
           data: {
             user: { connect: { id: resData.assigned_by_id } },
             form_title: templateData.form_title,
@@ -62,7 +62,7 @@ export default async (req, res) => {
         review_type: resData.review_type,
       };
 
-      const savedData = await prisma.reviewAssign.create({
+      const savedData = await prisma.reviewAssignee.create({
         data: dataObj,
       });
 
@@ -99,7 +99,7 @@ export default async (req, res) => {
     }
   } else if (req.method === "GET") {
     try {
-      const data = await prisma.reviewAssign.findMany({
+      const data = await prisma.reviewAssignee.findMany({
         include: { assigned_by: true, assigned_to: true, form: true },
       });
 
@@ -122,7 +122,7 @@ export default async (req, res) => {
       const resData = JSON.parse(req.body);
       return;
 
-      const data = await prisma.reviewAssign.update({
+      const data = await prisma.reviewAssignee.update({
         where: { id: resData.id },
         data: {
           assigned_by_id: resData.assigned_by_id,
@@ -149,7 +149,7 @@ export default async (req, res) => {
     const reqBody = JSON.parse(req.body);
 
     if (reqBody.id) {
-      const deletaData = await prisma.reviewAssign.delete({
+      const deletaData = await prisma.reviewAssignee.delete({
         where: { id: reqBody.id },
       });
       prisma.$disconnect();
