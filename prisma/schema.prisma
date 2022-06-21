@@ -157,7 +157,7 @@ model ReviewAssigneeAnswers {
   form_id       Int
   created_date  DateTime  @default(now())
   modified_date DateTime  @default(now())
-  deleted       Boolean?  @default(false)
+  delete_date       DateTime?
 
 
   ReviewAssigneeAnswerOption ReviewAssigneeAnswerOption[]
@@ -176,7 +176,7 @@ model ReviewAssigneeAnswerOption {
   higherLabel   String?
   created_date  DateTime      @default(now())
   modified_date DateTime      @default(now())
-  deleted       Boolean?      @default(false)
+ delete_date       DateTime?
 
   @@map("review_assignee_answer_option")
 }

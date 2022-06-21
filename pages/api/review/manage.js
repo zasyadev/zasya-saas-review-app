@@ -3,6 +3,15 @@ import { mailService } from "../../../lib/emailservice";
 
 const prisma = new PrismaClient();
 
+const defaultScaleQuestion = {
+  questionText: "Rating",
+  options: [{ optionText: "low" }, { optionText: "high" }],
+  lowerLabel: 1,
+  higherLabel: 10,
+  open: false,
+  type: "scale",
+};
+
 export default async (req, res) => {
   if (req.method === "POST") {
     try {
@@ -10,6 +19,9 @@ export default async (req, res) => {
       const templateData = await prisma.reviewTemplate.findUnique({
         where: { id: resData.template_id },
       });
+      // if(resData.review_type==="feedback"){
+      //   templateData.form_data.questions.push(defaultScaleQuestion)
+      // }
 
       const transactionData = await prisma.$transaction(async (transaction) => {
         const questionData = templateData.form_data.questions.map((item) => {
