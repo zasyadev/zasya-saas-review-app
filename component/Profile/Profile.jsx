@@ -105,7 +105,7 @@ function Profile({ user }) {
               <div className="flex flex-wrap justify-center">
                 <div className="bg-gradient-to-tr from-purple-500 to-purple-700 -mt-10 mb-4 rounded-xl text-white grid items-center w-full h-24 py-4 px-8  shadow-lg-purple ">
                   <div className="w-full flex item-center  justify-between">
-                    <h2 className="text-white text-2xl">Details</h2>
+                    <h2 className="text-white text-2xl">Profile</h2>
                     <div className="">
                       <span
                         className="text-center  rounded-full border-2 ml-3 px-4 py-2 cursor-pointer hover:bg-white hover:text-purple-500 hover:border-2 hover:border-purple-500 "
@@ -118,11 +118,11 @@ function Profile({ user }) {
                 </div>
               </div>
 
-              <Row className="mx-6">
-                <Col lg={8} className="flex  items-center justify-center">
-                  <Image src={UserImage} alt="user" width={120} height={120} />
+              <Row className="mx-6 " justify="center">
+                {/* <Col lg={8} className="flex  items-center justify-center">
+                  <Image src={UserImage} alt="user" width={120} height={120} /> 
 
-                  {/* <div className="flex flex-wrap items-center mb-3">
+                  <div className="flex flex-wrap items-center mb-3">
               {user.profile_img ? (
                 <Avatar
                   className="mb-2  mr-5"
@@ -159,15 +159,15 @@ function Profile({ user }) {
                         <Button shape="round" className="text-center">
                           Upload
                         </Button>
-                      </Upload> */}
+                      </Upload> 
                   <UploadButton
                     onSuccess={(newUploadedfileName) => {
                       setuserImageSrc("/" + newUploadedfileName);
                     }}
                   />
-                </Col>
+                </Col> */}
 
-                <Col lg={15} className="mt-4">
+                <Col lg={12} className="mt-4 items-center">
                   <Form
                     form={profileForm}
                     layout="vertical"
@@ -175,7 +175,7 @@ function Profile({ user }) {
                     validateMessages={validateMessages}
                   >
                     <Row gutter={16}>
-                      <Col md={12} sm={24} xs={24}>
+                      <Col md={24} sm={24} xs={24}>
                         <Form.Item
                           label="First Name"
                           name="first_name"
@@ -188,7 +188,7 @@ function Profile({ user }) {
                           <Input placeholder="First Name" />
                         </Form.Item>
                       </Col>
-                      <Col md={12} sm={24} xs={24}>
+                      <Col md={24} sm={24} xs={24}>
                         <Form.Item
                           label="Last Name"
                           name="last_name"
@@ -201,7 +201,7 @@ function Profile({ user }) {
                           <Input placeholder="Last Name" />
                         </Form.Item>{" "}
                       </Col>
-                      <Col md={12} sm={24} xs={24}>
+                      <Col md={24} sm={24} xs={24}>
                         <Form.Item
                           label="Email"
                           name="email"

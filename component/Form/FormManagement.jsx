@@ -304,7 +304,7 @@ function FormManagement({ user }) {
         onCancel={() => onCancel()}
         footer={[
           <>
-            <Button key="add" type="default" onClick={() => onCancel()}>
+            <Button key="cancel" type="default" onClick={() => onCancel()}>
               Cancel
             </Button>
             <Button key="add" type="primary" onClick={form.submit}>

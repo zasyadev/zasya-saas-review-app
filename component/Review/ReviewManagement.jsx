@@ -192,12 +192,14 @@ function ReviewManagement({ user }) {
     {
       title: "Assign By",
       dataIndex: "assigned_by",
-      render: (assigned_by) => assigned_by.first_name + assigned_by.last_name,
+      render: (assigned_by) =>
+        assigned_by.first_name + " " + assigned_by.last_name,
     },
     {
       title: "Assign To",
       dataIndex: "assigned_to",
-      render: (assigned_to) => assigned_to.first_name + assigned_to.last_name,
+      render: (assigned_to) =>
+        assigned_to.first_name + " " + assigned_to.last_name,
     },
     {
       title: "Template Title",
@@ -381,7 +383,7 @@ function ReviewManagement({ user }) {
         onCancel={() => onCancel()}
         footer={[
           <>
-            <Button key="add" type="default" onClick={() => onCancel()}>
+            <Button key="cancel" type="default" onClick={() => onCancel()}>
               Cancel
             </Button>
             <Button key="add" type="primary" onClick={form.submit}>
