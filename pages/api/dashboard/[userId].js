@@ -7,11 +7,10 @@ export default async (req, res) => {
 
   if (req.method === "GET") {
     if (userId) {
-      const reviewCreated = await prisma.reviewAssignee.findMany({
+      const reviewCreated = await prisma.review.findMany({
         where: { assigned_by_id: userId },
         include: {
           assigned_by: true,
-          assigned_to: true,
           form: {
             include: {
               questions: {

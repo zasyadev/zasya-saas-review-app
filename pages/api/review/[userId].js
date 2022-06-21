@@ -8,9 +8,9 @@ export default async (req, res) => {
 
   if (req.method === "GET") {
     if (userId) {
-      const data = await prisma.reviewAssignee.findMany({
+      const data = await prisma.review.findMany({
         where: { assigned_by_id: userId },
-        include: { assigned_by: true, assigned_to: true, form: true },
+        include: { assigned_by: true, form: true, ReviewAssignee: true },
       });
 
       //   let montlyJob = scheduler.scheduleJob("*/5 * * * * *", function () {

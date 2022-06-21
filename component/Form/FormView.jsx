@@ -51,8 +51,9 @@ function FormView({ user, setReviewAssign }) {
     if (user.id && updateData.id) {
       let obj = {
         user_id: user.id,
-        form_id: updateData.id,
+        review_assignee_id: updateData.id,
         answers: formValues,
+        review_id: updateData.review.id,
       };
 
       await fetch("/api/form/answer", {
@@ -86,29 +87,30 @@ function FormView({ user, setReviewAssign }) {
   const columns = [
     {
       title: "Assign By",
-      dataIndex: "assigned_by",
-      render: (assigned_by) =>
-        assigned_by.first_name + " " + assigned_by.last_name,
+      dataIndex: "review",
+      render: (review) =>
+        review.assigned_by.first_name + " " + review.assigned_by.last_name,
     },
+    // {
+    //   title: "Assign To",
+    //   dataIndex: "assigned_to",
+    //   render: (assigned_to) =>
+    //     assigned_to.first_name + " " + assigned_to.last_name,
+    // },
     {
-      title: "Assign To",
-      dataIndex: "assigned_to",
-      render: (assigned_to) =>
-        assigned_to.first_name + " " + assigned_to.last_name,
-    },
-    {
-      title: "Template Title",
-      dataIndex: "form",
-      render: (form) => form.form_title,
+      title: "Review Name",
+      dataIndex: "review",
+      render: (review) => review.review_name,
     },
     {
       title: "Frequency",
-      dataIndex: "frequency",
+      dataIndex: "review",
+      render: (review) => review.frequency,
     },
     {
       title: "Status",
-      dataIndex: "status",
-      render: (status) => (status ? "Active" : "InActive"),
+      dataIndex: "review",
+      render: (review) => review.status,
     },
 
     {
@@ -277,7 +279,7 @@ function FormView({ user, setReviewAssign }) {
                     // onChange={(e) => {
                     //   setFormTitle(e.target.value);
                     // }}
-                    value={updateData?.form?.form_title}
+                    value={updateData?.review?.form?.form_title}
                     inputProps={{ style: { fontSize: 40, paddingTop: 10 } }}
                     disabled={true}
                   />
@@ -288,7 +290,7 @@ function FormView({ user, setReviewAssign }) {
                     // onChange={(e) => {
                     //   setFormDes(e.target.value);
                     // }}
-                    value={updateData?.form?.form_description}
+                    value={updateData?.review?.form?.form_description}
                     disabled={true}
                   />
                 </div>
@@ -296,8 +298,8 @@ function FormView({ user, setReviewAssign }) {
             </div>
           </div>
 
-          {updateData?.form?.questions.length > 0 &&
-            updateData?.form?.questions?.map((question, idx) => (
+          {updateData?.review?.form?.questions.length > 0 &&
+            updateData?.review?.form?.questions?.map((question, idx) => (
               <QuestionViewComponent
                 {...question}
                 idx={idx}

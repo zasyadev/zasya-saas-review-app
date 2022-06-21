@@ -16,6 +16,7 @@ export default async (req, res) => {
   if (req.method === "POST") {
     try {
       const resData = JSON.parse(req.body);
+
       const templateData = await prisma.reviewTemplate.findUnique({
         where: { id: resData.template_id },
       });
@@ -65,39 +66,49 @@ export default async (req, res) => {
         return { formdata };
       });
 
+      let assigneeData = resData.assigned_to_id.map((item) => {
+        return {
+          assigned_to_id: item,
+        };
+      });
+
       let dataObj = {
         assigned_by: { connect: { id: resData.assigned_by_id } },
-        assigned_to: { connect: { id: resData.assigned_to_id } },
+        review_name: resData.review_name,
         form: { connect: { id: transactionData.formdata.id } },
+
         status: resData.status ?? "pending",
         frequency: resData.frequency,
         review_type: resData.review_type,
+        ReviewAssignee: {
+          create: assigneeData,
+        },
       };
 
-      const savedData = await prisma.reviewAssignee.create({
+      const savedData = await prisma.review.create({
         data: dataObj,
       });
 
-      const assignedToData = await prisma.user.findUnique({
-        where: { id: savedData.assigned_to_id },
-      });
+      // const assignedToData = await prisma.user.findUnique({
+      //   where: { id: savedData.assigned_to_id },
+      // });
       const assignedFromData = await prisma.user.findUnique({
         where: { id: savedData.assigned_by_id },
       });
 
       prisma.$disconnect();
 
-      const mailData = {
-        from: process.env.SMTP_USER,
-        to: assignedToData.email,
-        subject: `New review assigned by ${assignedFromData.first_name}`,
-        html: `${assignedFromData.first_name} has assigned you new review , please click here to help them now.`,
-      };
+      // const mailData = {
+      //   from: process.env.SMTP_USER,
+      //   to: assignedToData.email,
+      //   subject: `New review assigned by ${assignedFromData.first_name}`,
+      //   html: `${assignedFromData.first_name} has assigned you new review , please click here to help them now.`,
+      // };
 
-      await mailService.sendMail(mailData, function (err, info) {
-        if (err) console.log("failed");
-        else console.log("successfull");
-      });
+      // await mailService.sendMail(mailData, function (err, info) {
+      //   if (err) console.log("failed");
+      //   else console.log("successfull");
+      // });
 
       return res.status(201).json({
         message: "Review Assigned Successfully",
@@ -111,8 +122,8 @@ export default async (req, res) => {
     }
   } else if (req.method === "GET") {
     try {
-      const data = await prisma.reviewAssignee.findMany({
-        include: { assigned_by: true, assigned_to: true, form: true },
+      const data = await prisma.review.findMany({
+        include: { assigned_by: true, form: true, ReviewAssignee: true },
       });
 
       if (data) {
@@ -134,7 +145,7 @@ export default async (req, res) => {
       const resData = JSON.parse(req.body);
       return;
 
-      const data = await prisma.reviewAssignee.update({
+      const data = await prisma.review.update({
         where: { id: resData.id },
         data: {
           assigned_by_id: resData.assigned_by_id,
@@ -159,22 +170,33 @@ export default async (req, res) => {
     }
   } else if (req.method === "DELETE") {
     const reqBody = JSON.parse(req.body);
-
-    if (reqBody.id) {
-      const deletaData = await prisma.reviewAssignee.delete({
-        where: { id: reqBody.id },
-      });
-      prisma.$disconnect();
-      if (deletaData) {
-        return res.status(200).json({
-          status: 200,
-          message: " Assignec Review Deleted Successfully.",
+    try {
+      if (reqBody.id) {
+        const deletaData = await prisma.review.delete({
+          where: { id: reqBody.id },
+          // data: {
+          //   ReviewAssignee: {
+          //     deleteMany: {},
+          //   },
+          // },
+        });
+        prisma.$disconnect();
+        if (deletaData) {
+          return res.status(200).json({
+            status: 200,
+            message: " Assign Review Deleted Successfully.",
+          });
+        }
+        return res.status(400).json({
+          status: 400,
+          message: "Failed To Delete Record.",
         });
       }
-      return res.status(400).json({
-        status: 400,
-        message: "Failed To Delete Record.",
-      });
+    } catch (error) {
+      console.log(error);
+      return res
+        .status(500)
+        .json({ error: error, message: "Internal Server Error" });
     }
   } else {
     return res.status(405).json({
