@@ -6,6 +6,7 @@ import SiderLayout from "./SiderLayout";
 import HeaderLayout from "./HeaderLayout";
 import { Content, Footer } from "antd/lib/layout/layout";
 import { Grid } from "antd";
+import Sider from "antd/lib/layout/Sider";
 
 function AdminLayout(props) {
   const [collapsed, setCollapsed] = useState(false);

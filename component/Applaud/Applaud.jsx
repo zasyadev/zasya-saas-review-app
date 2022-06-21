@@ -72,6 +72,29 @@ function Applaud({ user }) {
       .catch((err) => console.log(err));
   }
 
+  async function updateApplaud(obj) {
+    if (updateData.id) {
+      obj.id = updateData.id;
+    }
+    await fetch("/api/applaud", {
+      method: "PUT",
+      body: JSON.stringify(obj),
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        if (response.status === 200) {
+          openNotificationBox("success", response.message, 3);
+          fetchApplaud();
+          applaudform.resetFields();
+          setIsModalVisible(false);
+          setEditMode(false);
+        } else {
+          openNotificationBox("error", response.message, 3);
+        }
+      })
+      .catch((err) => console.log(err));
+  }
+
   const onFinish = (values) => {
     let obj = {
       user_id: values.user_id,
@@ -79,11 +102,6 @@ function Applaud({ user }) {
     };
     editMode ? updateApplaud(obj) : addApplaud(obj);
   };
-
-  useEffect(() => {
-    fetchMember();
-    fetchApplaud();
-  }, []);
 
   async function onDelete(id) {
     if (id) {
@@ -119,26 +137,10 @@ function Applaud({ user }) {
     });
   };
 
-  async function updateApplaud(obj) {
-    if (updateData.id) obj.id = updateData.id;
-    await fetch("/api/applaud", {
-      method: "PUT",
-      body: JSON.stringify(obj),
-    })
-      .then((response) => response.json())
-      .then((response) => {
-        if (response.status === 200) {
-          openNotificationBox("success", response.message, 3);
-          fetchApplaud();
-          applaudform.resetFields();
-          setIsModalVisible(false);
-          setEditMode(false);
-        } else {
-          openNotificationBox("error", response.message, 3);
-        }
-      })
-      .catch((err) => console.log(err));
-  }
+  useEffect(() => {
+    fetchMember();
+    fetchApplaud();
+  }, []);
 
   const columns = [
     {
@@ -157,13 +159,13 @@ function Applaud({ user }) {
       render: (_, record) => (
         <p>
           <span
-            className="text-yellow-500 text-lg mx-2"
+            className="text-yellow-500 text-lg mx-2 cursor-pointer"
             onClick={() => onUpdate(record)}
           >
             <EditOutlined />
           </span>
           <span
-            className="text-red-500 text-lg mx-2"
+            className="text-red-500 text-lg mx-2 cursor-pointer"
             onClick={() => onDelete(record.id)}
           >
             <DeleteOutlined />
@@ -224,7 +226,7 @@ function Applaud({ user }) {
           onCancel={() => onCancel()}
           footer={[
             <>
-              <Button key="add" type="default" onClick={() => onCancel()}>
+              <Button key="cancel" type="default" onClick={() => onCancel()}>
                 Cancel
               </Button>
               <Button key="add" type="primary" onClick={applaudform.submit}>
