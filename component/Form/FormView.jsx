@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import { openNotificationBox } from "../../helpers/notification";
 import QuestionViewComponent from "./QuestionViewComponent";
 import { Table } from "antd";
+import CustomTable from "../../helpers/CustomTable";
 
 function FormView({ user, setReviewAssign }) {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -129,8 +130,7 @@ function FormView({ user, setReviewAssign }) {
 
   return (
     <div>
-      <div className="bg-gradient-to-r from-cyan-500 to-blue-500 px-3 md:px-8 h-40" />
-
+      <div className=" px-3 md:px-8 h-40" />
       <div className="px-3 md:px-8 h-auto -mt-24">
         <div className="container mx-auto max-w-full">
           <div className="grid grid-cols-1 px-4 mb-16">
@@ -157,12 +157,7 @@ function FormView({ user, setReviewAssign }) {
                       rows={3}
                     />
                   ) : (
-                    <Table
-                      dataSource={formAssignList}
-                      columns={columns}
-                      className="custom-table"
-                      pagination={false}
-                    />
+                    <Table dataSource={formAssignList} columns={columns} />
                   )}
 
                   {/* <table className="items-center w-full bg-transparent border-collapse">

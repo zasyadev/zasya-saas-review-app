@@ -8,12 +8,15 @@
   list-style: none;
   margin: 0;
   padding: 0;
+  background-color: #090154;
   .ant-menu-submenu {
     border-radius: 0.5rem;
+    color: #fff;
+
     .ant-menu-submenu-title {
       font-weight: 300;
       box-shadow: rgba(0, 0, 0, 0.06);
-      color: #000;
+      color: #fff;
       font-weight: 500;
       font-size: 0.875rem;
       line-height: 1.25rem;
@@ -27,19 +30,20 @@
       align-items: center;
       display: flex;
     }
+    .ant-menu-submenu-arrow {
+      color: #fff !important;
+    }
   }
   .ant-menu-submenu-active {
     .ant-menu-submenu-title {
-      background-color: #0288d1;
+      background: linear-gradient(to right, #fb7185 0%, #fda4af 100%);
       color: #fff;
-      .ant-menu-submenu-arrow {
-        color: #fff;
-      }
     }
   }
 
   .ant-menu-sub {
-    background: #fff;
+    color: #fff;
+    background: #090154;
   }
 
   .sidebar-icon {
@@ -49,7 +53,6 @@
   .ant-menu-item {
     font-weight: 300;
     box-shadow: rgba(0, 0, 0, 0.06);
-    color: #000;
     font-weight: 500;
     font-size: 0.875rem;
     line-height: 1.25rem;
@@ -63,16 +66,19 @@
     align-items: center;
     display: flex;
   }
+  .ant-menu-item::after {
+    border-right: 3px solid #fd9ba8;
+  }
   .anticon + span {
     margin-left: 0px;
   }
 
   .ant-menu-item-active {
-    background: linear-gradient(to right, #03a5f0 0%, #038dd6 100%) !important;
+    background: linear-gradient(to right, #fb7185 0%, #fda4af 100%) !important;
     color: #fff !important;
   }
   .ant-menu-item-selected {
-    background: linear-gradient(to right, #03a5f0 0%, #038dd6 100%) !important;
+    background: linear-gradient(to right, #fb7185 0%, #fda4af 100%) !important;
     color: #fff !important;
   }
 }
@@ -128,10 +134,11 @@
 .custom-table {
   .ant-table-thead {
     .ant-table-cell {
-      color: #b055f7;
-      // border-color: none;
+      color: #090154;
       background-color: #fff;
       font-style: none;
+      font-size: medium;
+      font-weight: bold;
     }
     .ant-table-cell::before {
       background-color: #fff !important;
@@ -142,4 +149,19 @@
 .ant-layout-sider-trigger {
   color: #000 !important;
   background: #fff !important;
+}
+
+.sider {
+  color: #fff;
+  background-color: #090154;
+}
+
+.ant-layout-sider-trigger {
+  color: #fff !important;
+  background: #090154 !important;
+}
+
+.voilet {
+  background: #a5b4fc;
+  border-radius: 2px;
 }

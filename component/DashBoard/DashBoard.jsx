@@ -6,6 +6,7 @@ import ReviewIcon from "../../assets/Icon/reviewicon.png";
 import BarChart from "../../helpers/BarChart";
 import Dougnat from "../../helpers/Dougnat";
 import { LineChart } from "../../helpers/LineChart";
+import HeaderLayout from "../layout/HeaderLayout";
 
 function DashBoard({ user }) {
   const [dashBoardData, setDashboardData] = useState({});
