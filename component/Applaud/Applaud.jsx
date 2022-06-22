@@ -3,8 +3,9 @@ import TextArea from "antd/lib/input/TextArea";
 import React, { useState, useEffect } from "react";
 import { openNotificationBox } from "../../helpers/notification";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import CustomTable from "../../helpers/CustomTable";
 
-function Applaud({ user }) {
+function Applaud({ user, dataSource }) {
   const [applaudform] = Form.useForm();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [membersList, setMembersList] = useState([]);
@@ -145,7 +146,6 @@ function Applaud({ user }) {
   const columns = [
     {
       title: "Name",
-
       render: (_, record) => record.user.first_name,
     },
     {
@@ -157,20 +157,20 @@ function Applaud({ user }) {
       title: "Action",
       key: "action",
       render: (_, record) => (
-        <p>
-          <span
-            className="text-yellow-500 text-lg mx-2 cursor-pointer"
+        <div className="flex items-center ">
+          <button
+            className="text-white text-base bg-indigo-800 text-center px-3 rounded-md pb-2 mr-2  cursor-pointer"
             onClick={() => onUpdate(record)}
           >
             <EditOutlined />
-          </span>
-          <span
-            className="text-red-500 text-lg mx-2 cursor-pointer"
+          </button>
+          <button
+            className="text-white text-base bg-indigo-800 text-center px-3 rounded-md pb-2 mr-2  cursor-pointer"
             onClick={() => onDelete(record.id)}
           >
             <DeleteOutlined />
-          </span>
-        </p>
+          </button>
+        </div>
       ),
     },
   ];
@@ -178,24 +178,24 @@ function Applaud({ user }) {
   return (
     <>
       {" "}
-      <div className="bg-gradient-to-r from-cyan-500 to-blue-500 px-3 md:px-8 h-40" />
-      <div className="px-3 md:px-8 h-auto -mt-24">
-        <div className="container mx-auto max-w-full">
-          <div className="grid grid-cols-1 px-4 mb-16">
-            <div className="w-full bg-white rounded-xl overflow-hdden shadow-md p-4 ">
-              <div className="grid sm:flex bg-gradient-to-tr from-purple-500 to-purple-700 -mt-10 mb-4 rounded-xl text-white  items-center w-full h-40 sm:h-24 py-4 px-4 md:px-8 justify-between shadow-lg-purple ">
-                <h2 className="text-white text-2xl font-bold md:text-3xl">
-                  Applaud{" "}
-                </h2>
-                <div>
-                  <span
-                    className="text-center  rounded-full border-2 px-4 py-2 cursor-pointer hover:bg-white hover:text-purple-500 hover:border-2 hover:border-purple-500 "
-                    onClick={showModal}
-                  >
-                    Create
-                  </span>
-                </div>
+      <div className="px-3 md:px-8 h-auto ">
+        <div className=" px-3 md:px-8 h-40" />
+        <div className="container mx-auto max-w-full -mt-24">
+          <div className="grid grid-cols-1 px-4 mb-20">
+            <div className="grid sm:flex bg-gradient-to-tr from-purple-500 to-purple-700 -mt-10 mb-4 rounded-xl text-white  items-center w-full h-40 sm:h-24 py-4 px-4 md:px-8 justify-between shadow-lg-purple ">
+              <h2 className="text-white text-2xl font-bold md:text-3xl">
+                Applaud{" "}
+              </h2>
+              <div>
+                <span
+                  className="text-center  rounded-full border-2 px-4 py-2 cursor-pointer hover:bg-white hover:text-purple-500 hover:border-2 hover:border-purple-500 "
+                  onClick={showModal}
+                >
+                  Create
+                </span>
               </div>
+            </div>
+            <div className="w-full bg-white rounded-xl overflow-hdden shadow-md p-4 ">
               <div className="p-4 ">
                 <div className="overflow-x-auto">
                   {loading ? (
@@ -207,11 +207,11 @@ function Applaud({ user }) {
                       rows={3}
                     />
                   ) : (
-                    <Table
+                    <CustomTable
                       dataSource={applaudList}
                       columns={columns}
-                      className="custom-table"
                       pagination={false}
+                      className="custom-table"
                     />
                   )}
                 </div>

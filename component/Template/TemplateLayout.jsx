@@ -63,7 +63,7 @@ function TemplateLayout({ user }) {
 
   return (
     <div>
-      <div className="bg-gradient-to-r from-cyan-500 to-blue-500 px-3 md:px-8 h-40" />
+      <div className=" px-3 md:px-8 h-40" />
 
       <div className="px-3 md:px-8 h-auto -mt-24">
         <div className="container mx-auto max-w-full">
@@ -96,7 +96,7 @@ function TemplateLayout({ user }) {
                   </div>
                   <div className="p-4 mt-8">
                     <div className="container mx-auto max-w-full">
-                      <div className="grid grid-cols-1 lg:grid-cols-3 mb-4">
+                      <div className="grid grid-cols-1 lg:grid-cols-3 mb-4 items-center">
                         {formList.length > 0 ? (
                           formList.map((form, idx) => {
                             return (
@@ -134,7 +134,9 @@ function TemplateLayout({ user }) {
                             );
                           })
                         ) : (
-                          <p className="text-center">No Templates Found</p>
+                          <div className="grid  lg:grid-cols-1 text-center items-center">
+                            No Templates Found
+                          </div>
                         )}
                       </div>
                     </div>

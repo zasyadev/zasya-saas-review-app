@@ -13,6 +13,7 @@ import {
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { openNotificationBox } from "../../helpers/notification";
 import FormView from "../Form/FormView";
+import CustomTable from "../../helpers/CustomTable";
 
 function ReviewManagement({ user }) {
   const [form] = Form.useForm();
@@ -24,6 +25,7 @@ function ReviewManagement({ user }) {
   const [updateData, setUpdateData] = useState({});
   const [reviewAssignList, setReviewAssignList] = useState([]);
   const [reviewAssign, setReviewAssign] = useState(false);
+  const [review, setReview] = useState(false);
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -229,20 +231,20 @@ function ReviewManagement({ user }) {
       title: "Action",
       key: "action",
       render: (_, record) => (
-        <p>
+        <div>
           {/* <span
             className="text-yellow-500 text-lg mx-2"
             onClick={() => onUpdate(record)}
           >
             <EditOutlined />
           </span> */}
-          <span
-            className="text-red-500 text-lg mx-2"
+          <button
+            className="text-white text-base bg-indigo-800 text-center px-3 rounded-md pb-2"
             onClick={() => onDelete(record.id)}
           >
             <DeleteOutlined />
-          </span>
-        </p>
+          </button>
+        </div>
       ),
     },
   ];
@@ -250,30 +252,53 @@ function ReviewManagement({ user }) {
     <FormView user={user} setReviewAssign={setReviewAssign} />
   ) : (
     <div>
-      <div className="bg-gradient-to-r from-cyan-500 to-blue-500 px-3 md:px-8 h-40" />
+      <div className=" px-3 md:px-8 h-40" />
       <div className="px-3 md:px-8 h-auto -mt-24">
         <div className="container mx-auto max-w-full">
           <div className="grid grid-cols-1 px-4 mb-16">
-            <div className="w-full bg-white rounded-xl overflow-hdden shadow-md p-4 ">
-              <div className="grid sm:flex bg-gradient-to-tr from-purple-500 to-purple-700 -mt-10 mb-4 rounded-xl text-white  items-center w-full h-40 sm:h-24 py-4 px-4 md:px-8 justify-between shadow-lg-purple ">
-                <h2 className="text-white text-2xl font-bold md:text-3xl">
-                  Review Assign{" "}
-                </h2>
-                <div>
-                  <span
-                    className="text-center  rounded-full border-2 px-4 py-2 cursor-pointer hover:bg-white hover:text-purple-500 hover:border-2 hover:border-purple-500 mr-2"
-                    onClick={() => onViewReviwed()}
-                  >
-                    View
-                  </span>
-                  <span
-                    className="text-center  rounded-full border-2 px-4 py-2 cursor-pointer hover:bg-white hover:text-purple-500 hover:border-2 hover:border-purple-500 "
+            {/* <div className="grid sm:flex bg-gradient-to-tr from-purple-500 to-purple-700  mb-4 rounded-xl text-white  items-center w-full h-40 sm:h-24 py-4 px-4 md:px-8 justify-between shadow-lg-purple "> */}
+            {/* <h2 className="text-white text-2xl font-bold md:text-3xl">
+                Review Assign{" "}
+              </h2> */}
+            {/* <div>
+                <span
+                  className="text-center  rounded-full border-2 px-4 py-2 cursor-pointer hover:bg-white hover:text-purple-500 hover:border-2 hover:border-purple-500 mr-2"
+                  onClick={() => onViewReviwed()}
+                >
+                  View
+                </span>
+                <span
+                  className="text-center  rounded-full border-2 px-4 py-2 cursor-pointer hover:bg-white hover:text-purple-500 hover:border-2 hover:border-purple-500 "
+                  onClick={showModal}
+                >
+                  Create
+                </span>
+              </div> */}
+            {/* </div> */}
+            <div className="flex items-center justify-between mb-3">
+              <div>
+                <button
+                  className="bg-red-400 text-white text-sm py-3 text-center px-4 rounded-l-md"
+                  onClick={() => onViewReviwed()}
+                >
+                  Review Recived
+                </button>
+                <button className="bg-indigo-800 text-white text-sm py-3 text-center px-4 rounded-r-md">
+                  Review Created
+                </button>
+              </div>
+              <div>
+                <div className="flex items-end">
+                  <button
+                    className="bg-indigo-800 text-white text-sm py-3 text-center px-4 rounded-md"
                     onClick={showModal}
                   >
-                    Create
-                  </span>
+                    Create Review
+                  </button>
                 </div>
               </div>
+            </div>
+            <div className="w-full bg-white rounded-xl overflow-hdden shadow-md p-4 ">
               <div className="p-4 ">
                 <div className="overflow-x-auto">
                   {loading ? (
@@ -285,10 +310,9 @@ function ReviewManagement({ user }) {
                       rows={3}
                     />
                   ) : (
-                    <Table
+                    <CustomTable
                       dataSource={reviewAssignList}
                       columns={columns}
-                      className="custom-table"
                       pagination={false}
                     />
                   )}

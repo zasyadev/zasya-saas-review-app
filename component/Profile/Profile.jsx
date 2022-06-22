@@ -97,9 +97,9 @@ function Profile({ user }) {
 
   return (
     <>
-      <div className="bg-gradient-to-r from-cyan-500 to-blue-500 px-3 md:px-8 h-40" />
+      <div className=" px-3 md:px-8 h-40" />
       <div className="px-3 md:px-8 h-auto -mt-24">
-        <div className="grid grid-cols-1 xl:grid-cols-6 mt-8">
+        <div className="grid grid-cols-1 xl:grid-cols-6 mt-1">
           <div className="xl:col-start-1 xl:col-end-7 px-4 mb-16">
             <div className="w-full bg-white rounded-xl overflow-hdden shadow-md p-4 ">
               <div className="flex flex-wrap justify-center">

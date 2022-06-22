@@ -7,15 +7,79 @@ import HeaderLayout from "./HeaderLayout";
 import { Content, Footer } from "antd/lib/layout/layout";
 import { Grid } from "antd";
 import Sider from "antd/lib/layout/Sider";
+import {
+  DashboardOutlined,
+  SettingOutlined,
+  LikeOutlined,
+  AppstoreOutlined,
+  FileOutlined,
+  FormOutlined,
+} from "@ant-design/icons";
+
+function getItem(label, key, icon, children, type) {
+  return {
+    key,
+    icon,
+    children,
+    label,
+    type,
+  };
+}
 
 function AdminLayout(props) {
   const [collapsed, setCollapsed] = useState(false);
+  const [title, setTitle] = useState("");
   const { useBreakpoint } = Grid;
   const { md } = useBreakpoint();
   useEffect(() => {
     if (md) setCollapsed(false);
     else setCollapsed(true);
   }, [md]);
+
+  const items = [
+    getItem(
+      "DashBoard",
+      "/admin/dashboard",
+      <DashboardOutlined className="sidebar-icon" />
+    ),
+    // getItem("Activity", "sub1", <SettingOutlined />, [
+    //   getItem("Submenu", "sub3", null, [
+    //     getItem("Option 7", "7"),
+    //     getItem("Option 8", "8"),
+    //   ]),
+    // ]),
+    getItem(
+      "Reviews",
+      "/admin/review/management",
+      <FormOutlined className="sidebar-icon " />
+    ),
+    // getItem("Team", "team", <AppstoreOutlined className="sidebar-icon" />, [
+    //   getItem("Groups", "/admin/team/groups"),
+    //   getItem("Members", "/admin/team/members"),
+    // ]),
+    getItem(
+      "Team",
+      "/admin/team/members",
+      <AppstoreOutlined className="sidebar-icon " />
+    ),
+    getItem(
+      "Applaud",
+      "/admin/applaud",
+      <LikeOutlined className="sidebar-icon " />
+    ),
+
+    getItem(
+      "Settings",
+      "setting",
+      <SettingOutlined className="sidebar-icon " />,
+      [
+        // getItem("Templates", "/admin/template "),
+        // getItem("Users", "/admin/user"),
+        getItem("Templates", "/admin/template"),
+        getItem("Profile ", "/admin/profile "),
+      ]
+    ),
+  ];
 
   return (
     <Fragment>
@@ -26,13 +90,19 @@ function AdminLayout(props) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Layout>
-        <SiderLayout collapsed={collapsed} setCollapsed={setCollapsed} />
+        <SiderLayout
+          collapsed={collapsed}
+          setCollapsed={setCollapsed}
+          items={items}
+          setTitle={setTitle}
+        />
         <Layout>
-          <Content>
-            <HeaderLayout />
+          <Content className="bg-indigo-100">
+            {/* <HeaderLayout /> */}
+            <HeaderLayout title={title} />
             {props.children}
           </Content>
-          <Footer className="text-center bg-gray-200">
+          <Footer className="text-center bg-indigo-100">
             Review App ©2021 Created by Zasya Solution
           </Footer>
         </Layout>
