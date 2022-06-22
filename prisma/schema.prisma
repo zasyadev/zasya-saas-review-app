@@ -152,15 +152,16 @@ model Review {
 }
 
 model ReviewAssignee {
-  id             Int      @id @default(autoincrement())
-  review         Review   @relation(fields: [review_id], references: [id], onDelete: Cascade)
-  review_id      Int
-  assigned_to    User     @relation(fields: [assigned_to_id], references: [id], onDelete: Cascade)
-  assigned_to_id String
-  created_date   DateTime @default(now())
-  modified_date  DateTime @default(now())
-
+  id                    Int                     @id @default(autoincrement())
+  review                Review                  @relation(fields: [review_id], references: [id], onDelete: Cascade)
+  review_id             Int
+  assigned_to           User                    @relation(fields: [assigned_to_id], references: [id], onDelete: Cascade)
+  assigned_to_id        String
+  created_date          DateTime                @default(now())
+  modified_date         DateTime                @default(now())
+  status                String?
   ReviewAssigneeAnswers ReviewAssigneeAnswers[]
+
   @@map("review_assignee")
 }
 

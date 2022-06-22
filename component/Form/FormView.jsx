@@ -4,7 +4,6 @@ import { Modal, Skeleton } from "antd";
 import React, { useEffect, useState } from "react";
 import { openNotificationBox } from "../../helpers/notification";
 import QuestionViewComponent from "./QuestionViewComponent";
-import { Table } from "antd";
 import CustomTable from "../../helpers/CustomTable";
 
 function FormView({ user, setReviewAssign }) {

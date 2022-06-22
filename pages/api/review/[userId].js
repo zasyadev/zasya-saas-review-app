@@ -26,7 +26,7 @@ export default async (req, res) => {
       //   });
       //   console.log(montlyJob, "monthly job");
       //   scheduler.gracefulShutdown();
-
+      prisma.$disconnect();
       if (data) {
         return res.status(200).json({
           status: 200,

@@ -9,11 +9,14 @@ import {
   Select,
   Table,
   Input,
+  Collapse,
 } from "antd";
-import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import { DeleteOutlined } from "@ant-design/icons";
 import { openNotificationBox } from "../../helpers/notification";
 import FormView from "../Form/FormView";
 import CustomTable from "../../helpers/CustomTable";
+
+const { Panel } = Collapse;
 
 function ReviewManagement({ user }) {
   const [form] = Form.useForm();
@@ -25,6 +28,8 @@ function ReviewManagement({ user }) {
   const [updateData, setUpdateData] = useState({});
   const [reviewAssignList, setReviewAssignList] = useState([]);
   const [reviewAssign, setReviewAssign] = useState(false);
+  const [answerData, setAnswerData] = useState({});
+  const [answerDataStatus, setAnswerDataStatus] = useState(false);
   const [review, setReview] = useState(false);
 
   const showModal = () => {
@@ -203,10 +208,10 @@ function ReviewManagement({ user }) {
 
   const columns = [
     {
-      title: "Assign By",
-      dataIndex: "assigned_by",
-      render: (assigned_by) =>
-        assigned_by.first_name + " " + assigned_by.last_name,
+      title: "Assign To",
+      dataIndex: "assigned_to",
+      render: (assigned_to) =>
+        assigned_to.first_name + " " + assigned_to.last_name,
     },
     // {
     //   title: "Assign To",
@@ -214,30 +219,25 @@ function ReviewManagement({ user }) {
     //   render: (assigned_to) =>
     //     assigned_to.first_name + " " + assigned_to.last_name,
     // },
-    {
-      title: "Review Name",
-      dataIndex: "review_name",
-      // render: (form) => form.form_title,
-    },
-    {
-      title: "Frequency",
-      dataIndex: "frequency",
-    },
-    {
-      title: "Status",
-      dataIndex: "status",
-    },
+
     {
       title: "Action",
       key: "action",
       render: (_, record) => (
         <div>
-          {/* <span
-            className="text-yellow-500 text-lg mx-2"
-            onClick={() => onUpdate(record)}
-          >
-            <EditOutlined />
-          </span> */}
+          {record.status == "answered" ? (
+            <span
+              className="text-yellow-500 text-lg mx-2 cursor-pointer"
+              onClick={() => {
+                setAnswerDataStatus(true);
+                // setAnswerData(record);
+                fetchAnswer(record);
+              }}
+            >
+              View
+            </span>
+          ) : null}
+
           <button
             className="text-white text-base bg-indigo-800 text-center px-3 rounded-md pb-2"
             onClick={() => onDelete(record.id)}
@@ -248,33 +248,28 @@ function ReviewManagement({ user }) {
       ),
     },
   ];
+
+  const fetchAnswer = async (obj) => {
+    setAnswerData({});
+    await fetch("/api/review/answer/" + user.id, {
+      method: "POST",
+      body: JSON.stringify(obj),
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        if (response.status === 200) {
+          setAnswerData(response.data);
+        }
+      })
+      .catch((err) => console.log(err));
+  };
   return reviewAssign ? (
     <FormView user={user} setReviewAssign={setReviewAssign} />
   ) : (
     <div>
-      <div className=" px-3 md:px-8 h-40" />
-      <div className="px-3 md:px-8 h-auto -mt-24">
+      <div className="px-3 md:px-8 h-auto mt-5">
         <div className="container mx-auto max-w-full">
           <div className="grid grid-cols-1 px-4 mb-16">
-            {/* <div className="grid sm:flex bg-gradient-to-tr from-purple-500 to-purple-700  mb-4 rounded-xl text-white  items-center w-full h-40 sm:h-24 py-4 px-4 md:px-8 justify-between shadow-lg-purple "> */}
-            {/* <h2 className="text-white text-2xl font-bold md:text-3xl">
-                Review Assign{" "}
-              </h2> */}
-            {/* <div>
-                <span
-                  className="text-center  rounded-full border-2 px-4 py-2 cursor-pointer hover:bg-white hover:text-purple-500 hover:border-2 hover:border-purple-500 mr-2"
-                  onClick={() => onViewReviwed()}
-                >
-                  View
-                </span>
-                <span
-                  className="text-center  rounded-full border-2 px-4 py-2 cursor-pointer hover:bg-white hover:text-purple-500 hover:border-2 hover:border-purple-500 "
-                  onClick={showModal}
-                >
-                  Create
-                </span>
-              </div> */}
-            {/* </div> */}
             <div className="flex items-center justify-between mb-3">
               <div>
                 <button
@@ -298,9 +293,40 @@ function ReviewManagement({ user }) {
                 </div>
               </div>
             </div>
+
             <div className="w-full bg-white rounded-xl overflow-hdden shadow-md p-4 ">
               <div className="p-4 ">
-                <div className="overflow-x-auto">
+                {answerDataStatus
+                  ? answerData?.length > 0
+                    ? answerData.map((ans, idx) => {
+                        return (
+                          <div
+                            key={idx + "que"}
+                            className=" border-2  border-slate-100  bg-slate-100 mx-2 p-2 w-1/2"
+                          >
+                            {ans?.ReviewAssigneeAnswerOption?.length > 0
+                              ? ans?.ReviewAssigneeAnswerOption.map(
+                                  (item, i) => {
+                                    return (
+                                      <div
+                                        key={i + "ans"}
+                                        className=" m-1 bg-slate-200 p-2"
+                                      >
+                                        <p>
+                                          {item.question.questionText} :{"    "}{" "}
+                                          {item.option}
+                                        </p>
+                                      </div>
+                                    );
+                                  }
+                                )
+                              : null}
+                          </div>
+                        );
+                      })
+                    : null
+                  : null}
+                <div className="overflow-x-auto mt-3">
                   {loading ? (
                     <Skeleton
                       title={false}
@@ -310,101 +336,28 @@ function ReviewManagement({ user }) {
                       rows={3}
                     />
                   ) : (
-                    <CustomTable
-                      dataSource={reviewAssignList}
-                      columns={columns}
-                      pagination={false}
-                    />
-                  )}
+                    // <CustomTable
+                    //   dataSource={reviewAssignList}
+                    //   columns={columns}
+                    //   pagination={false}
+                    // />
 
-                  {/* <table className="items-center w-full bg-transparent border-collapse">
-                    <thead>
-                      <tr>
-                        <th className="px-2 text-purple-500 align-middle border-b border-solid border-gray-200 py-3 text-sm whitespace-nowrap font-semibold text-left">
-                          Assign By
-                        </th>
-                        <th className="px-2 text-purple-500 align-middle border-b border-solid border-gray-200 py-3 text-sm whitespace-nowrap font-semibold text-left">
-                          Assign To
-                        </th>
-                        <th className="px-2 text-purple-500 align-middle border-b border-solid border-gray-200 py-3 text-sm whitespace-nowrap font-semibold text-left">
-                          Template Title
-                        </th>
-                        <th className="px-2 text-purple-500 align-middle border-b border-solid border-gray-200 py-3 text-sm whitespace-nowrap font-semibold text-left">
-                          Frequency   Status   Action
-                        </th>
-                        <th className="px-2 text-purple-500 align-middle border-b border-solid border-gray-200 py-3 text-sm whitespace-nowrap font-semibold text-left">
-                          Status
-                        </th>
-                        <th className="px-2 text-purple-500 align-middle border-b border-solid border-gray-200 py-3 text-sm whitespace-nowrap font-semibold text-left">
-                          Action
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {loading ? (
-                        <tr>
-                          <th colSpan={6}>
-                            <Skeleton
-                              title={false}
-                              active={true}
-                              width={[200]}
-                              className="mt-4"
-                              rows={3}
-                            />
-                          </th>
-                        </tr>
-                      ) : reviewAssignList.length > 0 ? (
-                        reviewAssignList.map((item, idx) => {
-                          return (
-                            <tr key={idx + "user"}>
-                              <th className="border-b border-gray-200 align-middle font-normal text-sm whitespace-nowrap px-2 py-4 text-left">
-                                {item.assigned_by.first_name}{" "}
-                                {item.assigned_by.last_name}
-                              </th>
-                              <th className="border-b border-gray-200 align-middle font-normal text-sm whitespace-nowrap px-2 py-4 text-left">
-                                {item.assigned_to.first_name}{" "}
-                                {item.assigned_to.last_name}
-                              </th>
-                              <th className="border-b border-gray-200 align-middle font-normal text-sm whitespace-nowrap px-2 py-4 text-left">
-                                {item.form.form_title}
-                              </th>
-                              <th className="border-b border-gray-200 align-middle font-normal text-sm whitespace-nowrap px-2 py-4 text-left">
-                                {item.frequency}
-                              </th>
-                              <th className="border-b border-gray-200 align-middle font-normal text-sm whitespace-nowrap px-2 py-4 text-left">
-                                {item.status}
-                              </th>
-                              <th className="border-b underline border-gray-200 align-middle font-normal text-sm whitespace-nowrap px-2 py-4 text-left cursor-pointer">
-                                <p>
-                                  <span
-                                    className="text-yellow-500 text-lg mx-2"
-                                    onClick={() => onUpdate(item)}
-                                  >
-                                    <EditOutlined />
-                                  </span>
-                                  <span
-                                    className="text-red-500 text-lg mx-2"
-                                    onClick={() => onDelete(item.id)}
-                                  >
-                                    <DeleteOutlined />
-                                  </span>
-                                </p>
-                              </th>
-                            </tr>
-                          );
-                        })
-                      ) : (
-                        <tr>
-                          <td
-                            colSpan={6}
-                            className="border-b text-center border-gray-200 align-middle font-semibold text-sm whitespace-nowrap px-2 py-4 "
-                          >
-                            No Data Found
-                          </td>
-                        </tr>
-                      )}
-                    </tbody>
-               </table> */}
+                    <Collapse accordion>
+                      {reviewAssignList.length > 0
+                        ? reviewAssignList.map((rev, idx) => {
+                            return (
+                              <Panel header={rev.review_name} key={idx + "rev"}>
+                                <CustomTable
+                                  dataSource={rev.ReviewAssignee}
+                                  columns={columns}
+                                  pagination={false}
+                                />
+                              </Panel>
+                            );
+                          })
+                        : null}
+                    </Collapse>
+                  )}
                 </div>
               </div>
             </div>
@@ -458,15 +411,7 @@ function ReviewManagement({ user }) {
                   },
                 ]}
               >
-                <Select
-                  placeholder="Select Type"
-                  // showSearch
-                  // filterOption={(input, option) =>
-                  //   option.children
-                  //     .toLowerCase()
-                  //     .indexOf(input.toLowerCase()) >= 0
-                  // }
-                >
+                <Select placeholder="Select Type">
                   <Select.Option value="feedback">Feedback</Select.Option>
                   <Select.Option value="other">Other</Select.Option>
                 </Select>
@@ -544,23 +489,6 @@ function ReviewManagement({ user }) {
                 </Select>
               </Form.Item>
             </Col>
-
-            {/* <Col md={12} xs={24}>
-              <Form.Item
-                name="status"
-                label="Status"
-                rules={[
-                  {
-                    required: true,
-                  },
-                ]}
-              >
-                <Radio.Group>
-                  <Radio value={true}>Active</Radio>
-                  <Radio value={false}>Inactive</Radio>
-                </Radio.Group>
-              </Form.Item>
-            </Col> */}
           </Row>
         </Form>
       </Modal>

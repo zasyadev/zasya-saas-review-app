@@ -48,6 +48,20 @@ export default async (req, res) => {
         subject: ` ${assignedUser.first_name} has filled your review`,
         html: ` ${assignedUser.first_name} has just filled your review , click here to see their response now .`,
       };
+      const assigneeData = await prisma.reviewAssignee.findFirst({
+        where: {
+          review_id: resData.review_id,
+          assigned_to_id: resData.user_id,
+        },
+      });
+      const UpdateAssignee = await prisma.reviewAssignee.update({
+        where: {
+          id: assigneeData.id,
+        },
+        data: {
+          status: "answered",
+        },
+      });
 
       await mailService.sendMail(mailData, function (err, info) {
         if (err) console.log("failed");
@@ -69,7 +83,6 @@ export default async (req, res) => {
         status: 200,
       });
     } catch (error) {
-      console.log(error);
       return res
         .status(500)
         .json({ error: error, message: "Internal Server Error" });

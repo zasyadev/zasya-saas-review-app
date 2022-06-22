@@ -20,7 +20,7 @@ export default async (req, res) => {
             delete item.password;
             return item;
           });
-
+        prisma.$disconnect();
         if (filterdata) {
           return res.status(200).json({
             status: 200,

@@ -30,7 +30,7 @@ export default async (req, res) => {
         reviewAnswered: reviewAnswered.length,
         userData: userData.length,
       };
-
+      prisma.$disconnect();
       if (data) {
         return res.status(200).json({
           status: 200,

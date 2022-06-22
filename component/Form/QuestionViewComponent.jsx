@@ -36,7 +36,7 @@ const QuestionViewComponent = ({
                   <FormControlLabel
                     control={<Radio className="mr-2" />}
                     label={op.optionText}
-                    value={op.id.toString()}
+                    value={op.optionText}
                   />
                 ))}
               </RadioGroup>

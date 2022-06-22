@@ -24,6 +24,7 @@ export default async (req, res) => {
               password: await hashedPassword(reqData.new_password),
             },
           });
+          prisma.$disconnect();
           if (updateData) {
             return res.status(200).json({
               status: 200,
