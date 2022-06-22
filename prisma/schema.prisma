@@ -21,26 +21,26 @@ model User {
   pin_code   String?
   mobile     String?
 
-  status          Int
-  role            Role             @relation(fields: [role_id], references: [id])
-  role_id         Int
-  organization    UserOrganization    @relation(fields: [organization_id], references: [id])
-  organization_id Int
-  createdDate     DateTime?        @default(now())
-  Groups          Groups[]
-  GroupsEmployees GroupsEmployees?
-  ReviewAssignTemplate       ReviewAssignTemplate[]
+  status               Int
+  role                 Role                   @relation(fields: [role_id], references: [id])
+  role_id              Int
+  organization         UserOrganization       @relation(fields: [organization_id], references: [id])
+  organization_id      Int
+  createdDate          DateTime?              @default(now())
+  Groups               Groups[]
+  GroupsEmployees      GroupsEmployees?
+  ReviewAssignTemplate ReviewAssignTemplate[]
 
-  taskReviewBy ReviewAssignee[] @relation("taskReviewBy")
-  taskReviewTo ReviewAssignee[] @relation("taskReviewTo")
+  taskReviewBy Review[] @relation("taskReviewBy")
 
-  ReviewTemplate ReviewTemplate[]
+  ReviewTemplate        ReviewTemplate[]
   ReviewAssigneeAnswers ReviewAssigneeAnswers[]
-  UserTags UserTags?
-  UserImage     UserImage?
-  PasswordReset PasswordReset?
-  UserApplaud   UserApplaud[]
+  UserTags              UserTags?
+  UserImage             UserImage?
+  PasswordReset         PasswordReset?
+  UserApplaud           UserApplaud[]
 
+  ReviewAssignee ReviewAssignee[]
   @@map("users")
 }
 
@@ -95,21 +95,21 @@ model ReviewAssignTemplate {
 
   questions ReviewQuestions[] @relation("questions")
 
-  ReviewAssignee  ReviewAssignee[]
+  Review                Review[]
   ReviewAssigneeAnswers ReviewAssigneeAnswers[]
 
   @@map("review_assign_template")
 }
 
 model ReviewQuestions {
-  id            Int       @id @default(autoincrement())
+  id            Int                  @id @default(autoincrement())
   form          ReviewAssignTemplate @relation("questions", fields: [form_id], references: [id], onDelete: Cascade)
   form_id       Int
   questionText  String
   type          String
   open          Boolean
-  created_date  DateTime  @default(now())
-  modified_date DateTime  @default(now())
+  created_date  DateTime             @default(now())
+  modified_date DateTime             @default(now())
 
   options ReviewQuestionOption[] @relation("options")
 
@@ -120,7 +120,7 @@ model ReviewQuestions {
 }
 
 model ReviewQuestionOption {
-  id          Int          @id @default(autoincrement())
+  id          Int             @id @default(autoincrement())
   question    ReviewQuestions @relation("options", fields: [question_id], references: [id], onDelete: Cascade)
   question_id Int
   optionText  String?
@@ -132,51 +132,70 @@ model ReviewQuestionOption {
   @@map("review_question_option")
 }
 
-model ReviewAssignee {
-  id             Int       @id @default(autoincrement())
-  assigned_by    User      @relation("taskReviewBy", fields: [assigned_by_id], references: [id])
+model Review {
+  id             Int                  @id @default(autoincrement())
+  assigned_by    User                 @relation("taskReviewBy", fields: [assigned_by_id], references: [id])
   assigned_by_id String
-  assigned_to    User      @relation("taskReviewTo", fields: [assigned_to_id], references: [id])
-  assigned_to_id String
+  review_name    String
   form           ReviewAssignTemplate @relation(fields: [form_id], references: [id])
   form_id        Int
   status         String
   frequency      String
   review_type    String
-  created_date   DateTime  @default(now())
-  modified_date  DateTime  @default(now())
+  created_date   DateTime             @default(now())
+  modified_date  DateTime             @default(now())
 
+
+  ReviewAssignee        ReviewAssignee[]
+  ReviewAssigneeAnswers ReviewAssigneeAnswers[]
+  @@map("review")
+}
+
+model ReviewAssignee {
+  id             Int      @id @default(autoincrement())
+  review         Review   @relation(fields: [review_id], references: [id], onDelete: Cascade)
+  review_id      Int
+  assigned_to    User     @relation(fields: [assigned_to_id], references: [id], onDelete: Cascade)
+  assigned_to_id String
+  created_date   DateTime @default(now())
+  modified_date  DateTime @default(now())
+
+  ReviewAssigneeAnswers ReviewAssigneeAnswers[]
   @@map("review_assignee")
 }
 
 model ReviewAssigneeAnswers {
-  id            Int       @id @default(autoincrement())
-  user          User      @relation(fields: [user_id], references: [id])
-  user_id       String
-  form          ReviewAssignTemplate @relation(fields: [form_id], references: [id], onDelete: Cascade)
-  form_id       Int
-  created_date  DateTime  @default(now())
-  modified_date DateTime  @default(now())
-  delete_date       DateTime?
+  id                 Int            @id @default(autoincrement())
+  user               User           @relation(fields: [user_id], references: [id])
+  user_id            String
+  review             Review         @relation(fields: [review_id], references: [id], onDelete: Cascade)
+  review_id          Int
+  review_assignee    ReviewAssignee @relation(fields: [review_assignee_id], references: [id], onDelete: Cascade)
+  review_assignee_id Int
+  created_date       DateTime       @default(now())
+  modified_date      DateTime       @default(now())
+  delete_date        DateTime?
 
 
   ReviewAssigneeAnswerOption ReviewAssigneeAnswerOption[]
 
+  ReviewAssignTemplate   ReviewAssignTemplate? @relation(fields: [reviewAssignTemplateId], references: [id])
+  reviewAssignTemplateId Int?
   @@map("review_assignee_answers")
 }
 
 model ReviewAssigneeAnswerOption {
-  id            Int           @id @default(autoincrement())
+  id            Int                   @id @default(autoincrement())
   review        ReviewAssigneeAnswers @relation(fields: [review_id], references: [id], onDelete: Cascade)
   review_id     Int
-  question      ReviewQuestions  @relation(fields: [question_id], references: [id], onDelete: Cascade)
+  question      ReviewQuestions       @relation(fields: [question_id], references: [id], onDelete: Cascade)
   question_id   Int
   option        String?
   lowerLabel    String?
   higherLabel   String?
-  created_date  DateTime      @default(now())
-  modified_date DateTime      @default(now())
- delete_date       DateTime?
+  created_date  DateTime              @default(now())
+  modified_date DateTime              @default(now())
+  delete_date   DateTime?
 
   @@map("review_assignee_answer_option")
 }

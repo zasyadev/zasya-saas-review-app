@@ -8,6 +8,9 @@ export default async (req, res) => {
     try {
       const resData = JSON.parse(req.body);
 
+      // console.log(resData, "resData");
+      // return;
+
       const transactionData = await prisma.$transaction(async (transaction) => {
         const answerData = resData.answers.map((item) => {
           return {
@@ -19,7 +22,8 @@ export default async (req, res) => {
         const formdata = await transaction.reviewAssigneeAnswers.create({
           data: {
             user: { connect: { id: resData.user_id } },
-            form: { connect: { id: resData.form_id } },
+            review: { connect: { id: resData.review_id } },
+            review_assignee: { connect: { id: resData.review_assignee_id } },
             ReviewAssigneeAnswerOption: {
               create: answerData,
             },
@@ -28,14 +32,14 @@ export default async (req, res) => {
         return { formdata };
       });
 
-      const assignedByFromData = await prisma.reviewAssignTemplate.findUnique({
-        where: { id: transactionData.formdata.form_id },
+      const assignedByFromData = await prisma.review.findFirst({
+        where: { id: transactionData.review_id },
       });
-      const assignedByUser = await prisma.user.findUnique({
-        where: { id: assignedByFromData.user_id },
+      const assignedByUser = await prisma.user.findFirst({
+        where: { id: assignedByFromData.assigned_by_id },
       });
-      const assignedUser = await prisma.user.findUnique({
-        where: { id: transactionData.formdata.user_id },
+      const assignedUser = await prisma.user.findFirst({
+        where: { id: transactionData.user_id },
       });
 
       const mailData = {
@@ -65,6 +69,7 @@ export default async (req, res) => {
         status: 200,
       });
     } catch (error) {
+      console.log(error);
       return res
         .status(500)
         .json({ error: error, message: "Internal Server Error" });

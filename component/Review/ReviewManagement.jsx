@@ -1,5 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { Button, Modal, Form, Row, Col, Skeleton, Select, Table } from "antd";
+import {
+  Button,
+  Modal,
+  Form,
+  Row,
+  Col,
+  Skeleton,
+  Select,
+  Table,
+  Input,
+} from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { openNotificationBox } from "../../helpers/notification";
 import FormView from "../Form/FormView";
@@ -30,16 +40,17 @@ function ReviewManagement({ user }) {
   async function onFinish(values) {
     let obj = {
       assigned_by_id: user.id,
-      assigned_to_id: values.assigned_to_id,
+      assigned_to_id: [values.assigned_to_id],
       template_id: values.template_id,
       review_type: values.review_type,
+      review_name: values.review_name,
       // status: values.status,
       frequency: values.frequency,
     };
-    editMode ? updateFormAssign(obj) : addFormAssign(obj);
+    editMode ? updateReviewAssign(obj) : addReviewAssign(obj);
   }
 
-  async function addFormAssign(obj) {
+  async function addReviewAssign(obj) {
     await fetch("/api/review/manage", {
       method: "POST",
       body: JSON.stringify(obj),
@@ -60,7 +71,7 @@ function ReviewManagement({ user }) {
       })
       .catch((err) => console.log(err));
   }
-  async function updateFormAssign(obj) {
+  async function updateReviewAssign(obj) {
     if (updateData.id) {
       obj.id = updateData.id;
       await fetch("/api/review/manage", {
@@ -197,16 +208,16 @@ function ReviewManagement({ user }) {
       render: (assigned_by) =>
         assigned_by.first_name + " " + assigned_by.last_name,
     },
+    // {
+    //   title: "Assign To",
+    //   dataIndex: "assigned_to",
+    //   render: (assigned_to) =>
+    //     assigned_to.first_name + " " + assigned_to.last_name,
+    // },
     {
-      title: "Assign To",
-      dataIndex: "assigned_to",
-      render: (assigned_to) =>
-        assigned_to.first_name + " " + assigned_to.last_name,
-    },
-    {
-      title: "Template Title",
-      dataIndex: "form",
-      render: (form) => form.form_title,
+      title: "Review Name",
+      dataIndex: "review_name",
+      // render: (form) => form.form_title,
     },
     {
       title: "Frequency",
@@ -423,6 +434,20 @@ function ReviewManagement({ user }) {
           validateMessages={validateMessages}
         >
           <Row gutter={16}>
+            <Col md={12} xs={24}>
+              <Form.Item
+                name="review_name"
+                label="Review Name"
+                rules={[
+                  {
+                    required: true,
+                  },
+                ]}
+              >
+                <Input />
+              </Form.Item>
+            </Col>
+
             <Col md={12} xs={24}>
               <Form.Item
                 name="review_type"
