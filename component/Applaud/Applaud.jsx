@@ -179,10 +179,10 @@ function Applaud({ user, dataSource }) {
     <>
       {" "}
       <div className="px-3 md:px-8 h-auto ">
-        <div className=" px-3 md:px-8 h-40" />
-        <div className="container mx-auto max-w-full -mt-24">
-          <div className="grid grid-cols-1 px-4 mb-20">
-            <div className="grid sm:flex bg-gradient-to-tr from-purple-500 to-purple-700 -mt-10 mb-4 rounded-xl text-white  items-center w-full h-40 sm:h-24 py-4 px-4 md:px-8 justify-between shadow-lg-purple ">
+        <div className=" px-3 md:px-8 my-6" />
+        <div className="container mx-auto max-w-full ">
+          <div className="grid grid-cols-1 px-4 mb-16">
+            {/* <div className="grid sm:flex bg-gradient-to-tr from-purple-500 to-purple-700 -mt-10 mb-4 rounded-xl text-white  items-center w-full h-40 sm:h-24 py-4 px-4 md:px-8 justify-between shadow-lg-purple ">
               <h2 className="text-white text-2xl font-bold md:text-3xl">
                 Applaud{" "}
               </h2>
@@ -193,6 +193,16 @@ function Applaud({ user, dataSource }) {
                 >
                   Create
                 </span>
+              </div>
+            </div> */}
+            <div className="flex justify-end">
+              <div className="my-4 ">
+                <button
+                  className="bg-indigo-800 text-white text-sm py-3 text-center px-4 rounded-md"
+                  onClick={showModal}
+                >
+                  Create Review
+                </button>
               </div>
             </div>
             <div className="w-full bg-white rounded-xl overflow-hdden shadow-md p-4 ">

@@ -10,7 +10,15 @@ export default async (req, res) => {
     if (userId) {
       const data = await prisma.review.findMany({
         where: { assigned_by_id: userId },
-        include: { assigned_by: true, form: true, ReviewAssignee: true },
+        include: {
+          assigned_by: true,
+          form: true,
+          ReviewAssignee: {
+            include: {
+              assigned_to: true,
+            },
+          },
+        },
       });
 
       //   let montlyJob = scheduler.scheduleJob("*/5 * * * * *", function () {

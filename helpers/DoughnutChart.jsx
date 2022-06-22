@@ -51,7 +51,7 @@ const doughnutdata = {
   ],
 };
 
-export default function Dougnat() {
+export function DoughnutChart() {
   return (
     <>
       <div className=" mx-1 ">
