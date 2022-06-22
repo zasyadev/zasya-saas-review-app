@@ -4,9 +4,15 @@ import Image from "next/image";
 import threeUser from "../../assets/Icon/threeusers.png";
 import ReviewIcon from "../../assets/Icon/reviewicon.png";
 import BarChart from "../../helpers/BarChart";
-import Dougnat from "../../helpers/Dougnat";
+// import Doughnut from "../../helpers/Doughnut";
 import { LineChart } from "../../helpers/LineChart";
-import HeaderLayout from "../layout/HeaderLayout";
+import dynamic from "next/dynamic";
+// import HeaderLayout from "../layout/HeaderLayout";
+// import SiderRight from "../SiderRight/siderRight";
+
+const SiderRight = dynamic(import("../SiderRight/SiderRight"), {
+  ssr: false,
+});
 
 function DashBoard({ user }) {
   const [dashBoardData, setDashboardData] = useState({});
@@ -143,14 +149,8 @@ function DashBoard({ user }) {
             </div>
           </div>
         </Col>
-        <Col
-          sm={24}
-          md={24}
-          lg={7}
-          className="mx-1 flex flex-col flex-wrap items-center justify-evenly w-full bg-white rounded-xl overflow-hidden shadow-md my-3  "
-        >
-          <Dougnat />
-          <LineChart />
+        <Col sm={24} md={24} lg={7} className="mt-6">
+          <SiderRight />
         </Col>
       </Row>
     </>

@@ -132,22 +132,38 @@ function FormView({ user, setReviewAssign }) {
 
   return (
     <div>
-      <div className=" px-3 md:px-8 h-40" />
-      <div className="px-3 md:px-8 h-auto -mt-24">
+      <div className=" px-3 md:px-8 " />
+      <div className="px-3 md:px-8 h-auto my-6">
         <div className="container mx-auto max-w-full">
           <div className="grid grid-cols-1 px-4 mb-16">
-            <div className="w-full bg-white rounded-xl overflow-hdden shadow-md p-4 ">
-              <div className="grid sm:flex bg-gradient-to-tr from-purple-500 to-purple-700 -mt-10 mb-4 rounded-xl text-white  items-center w-full h-40 sm:h-24 py-4 px-8 justify-between shadow-lg-purple ">
-                <h2 className="text-white text-2xl font-bold">
-                  View Assigned Reviews{" "}
-                </h2>
-                <span
-                  className="text-center  rounded-full border-2 px-4 py-2 cursor-pointer hover:bg-white hover:text-purple-500 hover:border-2 hover:border-purple-500 "
+            {/* <div className="grid sm:flex bg-gradient-to-tr from-purple-500 to-purple-700 -mt-10 mb-4 rounded-xl text-white  items-center w-full h-40 sm:h-24 py-4 px-8 justify-between shadow-lg-purple ">
+              <h2 className="text-white text-2xl font-bold">
+                View Assigned Reviews{" "}
+              </h2>
+              <span
+                className="text-center  rounded-full border-2 px-4 py-2 cursor-pointer hover:bg-white hover:text-purple-500 hover:border-2 hover:border-purple-500 "
+                onClick={() => setReviewAssign(false)}
+              >
+                Cancel
+              </span>
+            </div> */}
+            <div className="flex items-center justify-between mb-3">
+              <div>
+                <button
+                  className="bg-red-400 text-white text-sm py-3 text-center px-4 rounded-l-md"
+                  onClick={() => setReviewAssign(true)}
+                >
+                  Review Recived
+                </button>
+                <button
+                  className="bg-indigo-800 text-white text-sm py-3 text-center px-4 rounded-r-md"
                   onClick={() => setReviewAssign(false)}
                 >
-                  Cancel
-                </span>
+                  Review Created
+                </button>
               </div>
+            </div>
+            <div className="w-full bg-white rounded-xl overflow-hdden shadow-md p-4 ">
               <div className="p-4 ">
                 <div className="overflow-x-auto">
                   {loading ? (
@@ -159,7 +175,10 @@ function FormView({ user, setReviewAssign }) {
                       rows={3}
                     />
                   ) : (
-                    <Table dataSource={formAssignList} columns={columns} />
+                    <CustomTable
+                      dataSource={formAssignList}
+                      columns={columns}
+                    />
                   )}
 
                   {/* <table className="items-center w-full bg-transparent border-collapse">
