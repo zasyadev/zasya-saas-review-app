@@ -1,22 +1,15 @@
 import React, { useState, useEffect } from "react";
-import {
-  Button,
-  Modal,
-  Form,
-  Row,
-  Col,
-  Skeleton,
-  Select,
-  Table,
-  Input,
-  Collapse,
-} from "antd";
+import { Button, Modal, Form, Row, Col, Skeleton, Select, Input } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 import { openNotificationBox } from "../../helpers/notification";
 import FormView from "../Form/FormView";
 import CustomTable from "../../helpers/CustomTable";
+// import dynamic from "next/dynamic";
+import { ReviewAssigneeList } from "./ReviewAssigneelist";
 
-const { Panel } = Collapse;
+// const ReviewAssigneeList = dynamic(import("./ReviewAssigneelist"), {
+//   ssr: false,
+// });
 
 function ReviewManagement({ user }) {
   const [form] = Form.useForm();
@@ -28,9 +21,8 @@ function ReviewManagement({ user }) {
   const [updateData, setUpdateData] = useState({});
   const [reviewAssignList, setReviewAssignList] = useState([]);
   const [reviewAssign, setReviewAssign] = useState(false);
-  const [answerData, setAnswerData] = useState({});
-  const [answerDataStatus, setAnswerDataStatus] = useState(false);
-  const [review, setReview] = useState(false);
+  const [reviewAssignee, setReviewAssignee] = useState(false);
+  const [reviewAssigneeData, setReviewAssigneeData] = useState({});
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -202,54 +194,13 @@ function ReviewManagement({ user }) {
     required: "${label} is required!",
   };
 
-  const onViewReviwed = () => {
-    setReviewAssign(true);
-  };
-
-  // const columns = [
-  //   {
-  //     title: "Assign To",
-  //     dataIndex: "assigned_to",
-  //     render: (assigned_to) =>
-  //       assigned_to.first_name + " " + assigned_to.last_name,
-  //   },
-
-  //   {
-  //     title: "Action",
-  //     key: "action",
-  //     render: (_, record) => (
-  //       <div>
-  //         {record.status == "answered" ? (
-  //           <span
-  //             className="text-yellow-500 text-lg mx-2 cursor-pointer"
-  //             onClick={() => {
-  //               setAnswerDataStatus(true);
-  //               // setAnswerData(record);
-  //               fetchAnswer(record);
-  //             }}
-  //           >
-  //             View
-  //           </span>
-  //         ) : null}
-
-  //         <button
-  //           className="text-white text-base bg-indigo-800 text-center px-3 rounded-md pb-2"
-  //           onClick={() => onDelete(record.id)}
-  //         >
-  //           <DeleteOutlined />
-  //         </button>
-  //       </div>
-  //     ),
-  //   },
-  // ];
-
   const columns = [
-    {
-      title: "Assign By",
-      dataIndex: "assigned_by",
-      render: (assigned_by) =>
-        assigned_by.first_name + " " + assigned_by.last_name,
-    },
+    // {
+    //   title: "Assign By",
+    //   dataIndex: "assigned_by",
+    //   render: (assigned_by) =>
+    //     assigned_by.first_name + " " + assigned_by.last_name,
+    // },
     // {
     //   title: "Assign To",
     //   dataIndex: "assigned_to",
@@ -258,8 +209,17 @@ function ReviewManagement({ user }) {
     // },
     {
       title: "Review Name",
-      dataIndex: "review_name",
-      // render: (form) => form.form_title,
+
+      render: (_, record) => (
+        <p
+          onClick={() => {
+            setReviewAssignee(true);
+            setReviewAssigneeData(record);
+          }}
+        >
+          {record.review_name}
+        </p>
+      ),
     },
     {
       title: "Frequency",
@@ -291,20 +251,6 @@ function ReviewManagement({ user }) {
     },
   ];
 
-  const fetchAnswer = async (obj) => {
-    setAnswerData({});
-    await fetch("/api/review/answer/" + user.id, {
-      method: "POST",
-      body: JSON.stringify(obj),
-    })
-      .then((response) => response.json())
-      .then((response) => {
-        if (response.status === 200) {
-          setAnswerData(response.data);
-        }
-      })
-      .catch((err) => console.log(err));
-  };
   return reviewAssign ? (
     <FormView
       user={user}
@@ -315,106 +261,68 @@ function ReviewManagement({ user }) {
     <div>
       <div className="px-3 md:px-8 h-auto mt-5">
         <div className="container mx-auto max-w-full">
-          <div className="grid grid-cols-1 px-4 mb-16">
-            <div className="flex items-center justify-between mb-3">
-              <div>
-                <button
-                  className={`${
-                    reviewAssign ? "bg-red-400" : "bg-indigo-800"
-                  } " text-white text-sm py-3 text-center px-4 rounded-l-md `}
-                  onClick={() => setReviewAssign(true)}
-                >
-                  Review Recived
-                </button>
-                <button
-                  className={`${
-                    reviewAssign ? "bg-indigo-800" : "bg-red-400"
-                  } " text-white text-sm py-3 text-center px-4 rounded-r-md `}
-                  onClick={() => setReviewAssign(false)}
-                >
-                  Review Created
-                </button>
-              </div>
-              <div>
-                <div className="flex items-end">
+          {reviewAssignee ? (
+            <ReviewAssigneeList
+              data={reviewAssigneeData}
+              setReviewAssignee={setReviewAssignee}
+              user={user}
+            />
+          ) : (
+            <div className="grid grid-cols-1 px-4 mb-16">
+              <div className="flex items-center justify-between mb-3">
+                <div>
                   <button
-                    className="bg-indigo-800 text-white text-sm py-3 text-center px-4 rounded-md"
-                    onClick={showModal}
+                    className={`${
+                      reviewAssign ? "bg-red-400" : "bg-indigo-800"
+                    } " text-white text-sm py-3 text-center px-4 rounded-l-md `}
+                    onClick={() => setReviewAssign(true)}
                   >
-                    Create Review
+                    Review Recived
+                  </button>
+                  <button
+                    className={`${
+                      reviewAssign ? "bg-indigo-800" : "bg-red-400"
+                    } " text-white text-sm py-3 text-center px-4 rounded-r-md `}
+                    onClick={() => setReviewAssign(false)}
+                  >
+                    Review Created
                   </button>
                 </div>
+                <div>
+                  <div className="flex items-end">
+                    <button
+                      className="bg-indigo-800 text-white text-sm py-3 text-center px-4 rounded-md"
+                      onClick={showModal}
+                    >
+                      Create Review
+                    </button>
+                  </div>
+                </div>
               </div>
-            </div>
 
-            <div className="w-full bg-white rounded-xl overflow-hdden shadow-md p-4 ">
-              <div className="p-4 ">
-                {answerDataStatus
-                  ? answerData?.length > 0
-                    ? answerData.map((ans, idx) => {
-                        return (
-                          <div
-                            key={idx + "que"}
-                            className=" border-2  border-slate-100  bg-slate-100 mx-2 p-2 w-1/2"
-                          >
-                            {ans?.ReviewAssigneeAnswerOption?.length > 0
-                              ? ans?.ReviewAssigneeAnswerOption.map(
-                                  (item, i) => {
-                                    return (
-                                      <div
-                                        key={i + "ans"}
-                                        className=" m-1 bg-slate-200 p-2"
-                                      >
-                                        <p>
-                                          {item.question.questionText} :{"    "}{" "}
-                                          {item.option}
-                                        </p>
-                                      </div>
-                                    );
-                                  }
-                                )
-                              : null}
-                          </div>
-                        );
-                      })
-                    : null
-                  : null}
-                <div className="overflow-x-auto mt-3">
-                  {loading ? (
-                    <Skeleton
-                      title={false}
-                      active={true}
-                      width={[200]}
-                      className="mt-4"
-                      rows={3}
-                    />
-                  ) : (
-                    <CustomTable
-                      dataSource={reviewAssignList}
-                      columns={columns}
-                      pagination={false}
-                    />
-
-                    // <Collapse accordion>
-                    //   {reviewAssignList.length > 0
-                    //     ? reviewAssignList.map((rev, idx) => {
-                    //         return (
-                    //           <Panel header={rev.review_name} key={idx + "rev"}>
-                    //             <CustomTable
-                    //               dataSource={rev.ReviewAssignee}
-                    //               columns={columns}
-                    //               pagination={false}
-                    //             />
-                    //           </Panel>
-                    //         );
-                    //       })
-                    //     : null}
-                    // </Collapse>
-                  )}
+              <div className="w-full bg-white rounded-xl overflow-hdden shadow-md p-4 ">
+                <div className="">
+                  <div className="overflow-x-auto">
+                    {loading ? (
+                      <Skeleton
+                        title={false}
+                        active={true}
+                        width={[200]}
+                        className="mt-4"
+                        rows={3}
+                      />
+                    ) : (
+                      <CustomTable
+                        dataSource={reviewAssignList}
+                        columns={columns}
+                        pagination={false}
+                      />
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
       <Modal
