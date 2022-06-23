@@ -53,7 +53,7 @@ function DashBoard({ user }) {
               <div className="grid grid-cols-1 md:grid-cols-3 mb-4 ">
                 <div className="px-4  mb-10">
                   <div className="w-full bg-white rounded-xl overflow-hdden shadow-md p-4 ">
-                    <div className="flex flex-wrap border-b border-gray-200 ">
+                    <div className="flex flex-wrap  border-gray-200 ">
                       <div className="bg-gradient-to-tr from-pink-500 to-pink-700  mb-4 rounded-xl text-white grid items-center w-10 h-10 py-1 px-1 justify-center shadow-lg-pink ">
                         <Image
                           src={ReviewIcon}
@@ -63,7 +63,7 @@ function DashBoard({ user }) {
                         />
                       </div>
                       <div className="pl-3 max-w-full flex-grow flex-1 mb-2 text-right ">
-                        <div className="text-gray-500 font-medium tracking-wide text-base mb-1">
+                        <div className="text-gray-500 font-medium tracking-wide text-sm  mb-1">
                           Review Created
                         </div>
                         <span className="text-xl text-gray-900 ">
@@ -81,7 +81,7 @@ function DashBoard({ user }) {
                 </div>
                 <div className="px-4 mb-10">
                   <div className="w-full bg-white rounded-xl overflow-hdden shadow-md p-4 ">
-                    <div className="flex flex-wrap border-b border-gray-200 ">
+                    <div className="flex flex-wrap  border-gray-200 ">
                       <div className="bg-gradient-to-tr from-orange-500 to-orange-700  mb-4 rounded-xl text-white grid items-center w-10 h-10 py-1 px-1 justify-center shadow-lg-orange ">
                         <Image
                           src={ReviewIcon}
@@ -91,7 +91,7 @@ function DashBoard({ user }) {
                         />
                       </div>
                       <div className="w-full pl-3 max-w-full flex-grow flex-1 mb-2 text-right ">
-                        <h5 className="text-gray-500 font-medium tracking-wide text-base mb-1 ">
+                        <h5 className="text-gray-500 font-medium tracking-wide text-sm mb-1 ">
                           Review Answered
                         </h5>
                         <span className="text-xl text-gray-900">
@@ -104,7 +104,7 @@ function DashBoard({ user }) {
 
                 <div className="px-4 mb-10">
                   <div className="w-full bg-white rounded-xl overflow-hdden shadow-md p-4 ">
-                    <div className="flex flex-wrap border-b border-gray-200 ">
+                    <div className="flex flex-wrap  border-gray-200 ">
                       <div className="bg-gradient-to-tr from-purple-500 to-purple-700  mb-4 rounded-xl text-white grid items-center w-10 h-10 py-1 px-1 justify-center shadow-lg-purple ">
                         <Image
                           src={threeUser}
@@ -114,7 +114,7 @@ function DashBoard({ user }) {
                         />
                       </div>
                       <div className="w-full pl-3 max-w-full flex-grow flex-1 mb-2 text-right ">
-                        <h5 className="text-gray-500 font-medium tracking-wide text-base mb-1 ">
+                        <h5 className="text-gray-500 font-medium tracking-wide text-sm mb-1 ">
                           Users
                         </h5>
                         <span className="text-xl text-gray-900">
@@ -149,7 +149,7 @@ function DashBoard({ user }) {
             </div>
           </div>
         </Col>
-        <Col sm={24} md={24} lg={7} className="mt-6">
+        <Col sm={24} md={24} lg={7} className="mt-6 h-full">
           <SiderRight />
         </Col>
       </Row>

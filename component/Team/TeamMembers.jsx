@@ -15,6 +15,7 @@ import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { openNotificationBox } from "../../helpers/notification";
 import { Table } from "antd";
 import CustomTable from "../../helpers/CustomTable";
+import SiderRight from "../SiderRight/SiderRight";
 
 function TeamMembers({ user }) {
   const [form] = Form.useForm();
@@ -188,13 +189,13 @@ function TeamMembers({ user }) {
       render: (_, record) => (
         <div>
           <button
-            className="text-white text-base bg-indigo-800 text-center px-3 rounded-md pb-2 mr-2 "
+            className="text-white text-base bg-indigo-800 text-center px-3 rounded-md pb-2 mr-2 my-2 "
             onClick={() => onUpdate(record)}
           >
             <EditOutlined />
           </button>
           <button
-            className="text-white text-base bg-indigo-800 text-center px-3 rounded-md pb-2"
+            className="text-white text-base bg-indigo-800 text-center px-3 rounded-md pb-2 my-2"
             onClick={() => onDelete(record.email)}
           >
             <DeleteOutlined />
@@ -206,12 +207,14 @@ function TeamMembers({ user }) {
 
   return (
     <>
-      <div className=" px-3 md:px-8 " />
+      <Row>
+        <Col sm={24} md={24} lg={16}>
+          <div className=" px-3 md:px-8 " />
 
-      <div className="px-3 md:px-8 h-auto my-6 ">
-        <div className="container mx-auto max-w-full">
-          <div className="grid grid-cols-1 px-4 mb-16">
-            {/* <div className="grid sm:flex bg-gradient-to-tr from-purple-500 to-purple-700 -mt-10 mb-4 rounded-xl text-white  items-center w-full h-40 sm:h-24 py-4 px-6 md:px-8 justify-between shadow-lg-purple ">
+          <div className="px-3 md:px-8 h-auto my-6 ">
+            <div className="container mx-auto max-w-full">
+              <div className="grid grid-cols-1 px-4 mb-16">
+                {/* <div className="grid sm:flex bg-gradient-to-tr from-purple-500 to-purple-700 -mt-10 mb-4 rounded-xl text-white  items-center w-full h-40 sm:h-24 py-4 px-6 md:px-8 justify-between shadow-lg-purple ">
               <h2 className="text-white text-2xl font-bold ">Team Members </h2>
               <span
                 className="text-center  rounded-full border-2 px-4 py-2 cursor-pointer hover:bg-white hover:text-purple-500 hover:border-2 hover:border-purple-500 "
@@ -221,42 +224,47 @@ function TeamMembers({ user }) {
               </span>
             </div> */}
 
-            <div className="flex justify-end">
-              <div className="my-4 ">
-                <button
-                  className="bg-indigo-800 text-white text-sm py-3 text-center px-4 rounded-md"
-                  onClick={showModal}
-                >
-                  Create Review
-                </button>
-              </div>
-            </div>
+                <div className="flex justify-end">
+                  <div className="my-4 ">
+                    <button
+                      className="bg-indigo-800 text-white text-sm py-3 text-center px-4 rounded-md"
+                      onClick={showModal}
+                    >
+                      Create Review
+                    </button>
+                  </div>
+                </div>
 
-            <div className="w-full bg-white rounded-xl overflow-hdden shadow-md p-4 ">
-              <div className="p-4 ">
-                <div className="overflow-x-auto">
-                  {loading ? (
-                    <Skeleton
-                      title={false}
-                      active={true}
-                      width={[200]}
-                      className="mt-4"
-                      rows={3}
-                    />
-                  ) : (
-                    <CustomTable
-                      dataSource={membersList}
-                      columns={columns}
-                      className="custom-table"
-                      pagination={false}
-                    />
-                  )}
+                <div className="w-full bg-white rounded-xl overflow-hdden shadow-md p-4 ">
+                  <div className="p-4 ">
+                    <div className="overflow-x-auto">
+                      {loading ? (
+                        <Skeleton
+                          title={false}
+                          active={true}
+                          width={[200]}
+                          className="mt-4"
+                          rows={3}
+                        />
+                      ) : (
+                        <CustomTable
+                          dataSource={membersList}
+                          columns={columns}
+                          className="custom-table"
+                          pagination={false}
+                        />
+                      )}
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </div>
+        </Col>
+        <Col sm={24} md={24} lg={7} className="mt-6 ">
+          <SiderRight />
+        </Col>
+      </Row>
       <Modal
         title={`${editMode ? "Update" : "Add"}  Team Members`}
         visible={isModalVisible}

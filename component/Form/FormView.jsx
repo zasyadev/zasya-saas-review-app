@@ -149,13 +149,17 @@ function FormView({ user, setReviewAssign }) {
             <div className="flex items-center justify-between mb-3">
               <div>
                 <button
-                  className="bg-red-400 text-white text-sm py-3 text-center px-4 rounded-l-md"
+                  className={`${
+                    reviewAssign ? "bg-red-400" : "bg-indigo-800"
+                  } " text-white text-sm py-3 text-center px-4 rounded-l-md `}
                   onClick={() => setReviewAssign(true)}
                 >
                   Review Recived
                 </button>
                 <button
-                  className="bg-indigo-800 text-white text-sm py-3 text-center px-4 rounded-r-md"
+                  className={`${
+                    reviewAssign ? "bg-indigo-800" : "bg-red-400"
+                  } " text-white text-sm py-3 text-center px-4 rounded-r-md `}
                   onClick={() => setReviewAssign(false)}
                 >
                   Review Created
