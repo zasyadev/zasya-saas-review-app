@@ -6,7 +6,7 @@ import { openNotificationBox } from "../../helpers/notification";
 import QuestionViewComponent from "./QuestionViewComponent";
 import CustomTable from "../../helpers/CustomTable";
 
-function FormView({ user, setReviewAssign }) {
+function FormView({ user, setReviewAssign, reviewAssign }) {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const [updateData, setUpdateData] = useState({});
@@ -131,8 +131,7 @@ function FormView({ user, setReviewAssign }) {
 
   return (
     <div>
-      <div className=" px-3 md:px-8 " />
-      <div className="px-3 md:px-8 h-auto my-6">
+      <div className="px-3 md:px-8 h-auto mt-5">
         <div className="container mx-auto max-w-full">
           <div className="grid grid-cols-1 px-4 mb-16">
             {/* <div className="grid sm:flex bg-gradient-to-tr from-purple-500 to-purple-700 -mt-10 mb-4 rounded-xl text-white  items-center w-full h-40 sm:h-24 py-4 px-8 justify-between shadow-lg-purple ">

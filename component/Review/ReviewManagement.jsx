@@ -206,12 +206,49 @@ function ReviewManagement({ user }) {
     setReviewAssign(true);
   };
 
+  // const columns = [
+  //   {
+  //     title: "Assign To",
+  //     dataIndex: "assigned_to",
+  //     render: (assigned_to) =>
+  //       assigned_to.first_name + " " + assigned_to.last_name,
+  //   },
+
+  //   {
+  //     title: "Action",
+  //     key: "action",
+  //     render: (_, record) => (
+  //       <div>
+  //         {record.status == "answered" ? (
+  //           <span
+  //             className="text-yellow-500 text-lg mx-2 cursor-pointer"
+  //             onClick={() => {
+  //               setAnswerDataStatus(true);
+  //               // setAnswerData(record);
+  //               fetchAnswer(record);
+  //             }}
+  //           >
+  //             View
+  //           </span>
+  //         ) : null}
+
+  //         <button
+  //           className="text-white text-base bg-indigo-800 text-center px-3 rounded-md pb-2"
+  //           onClick={() => onDelete(record.id)}
+  //         >
+  //           <DeleteOutlined />
+  //         </button>
+  //       </div>
+  //     ),
+  //   },
+  // ];
+
   const columns = [
     {
-      title: "Assign To",
-      dataIndex: "assigned_to",
-      render: (assigned_to) =>
-        assigned_to.first_name + " " + assigned_to.last_name,
+      title: "Assign By",
+      dataIndex: "assigned_by",
+      render: (assigned_by) =>
+        assigned_by.first_name + " " + assigned_by.last_name,
     },
     // {
     //   title: "Assign To",
@@ -219,32 +256,37 @@ function ReviewManagement({ user }) {
     //   render: (assigned_to) =>
     //     assigned_to.first_name + " " + assigned_to.last_name,
     // },
-
+    {
+      title: "Review Name",
+      dataIndex: "review_name",
+      // render: (form) => form.form_title,
+    },
+    {
+      title: "Frequency",
+      dataIndex: "frequency",
+    },
+    {
+      title: "Status",
+      dataIndex: "status",
+    },
     {
       title: "Action",
       key: "action",
       render: (_, record) => (
-        <div>
-          {record.status == "answered" ? (
-            <span
-              className="text-yellow-500 text-lg mx-2 cursor-pointer"
-              onClick={() => {
-                setAnswerDataStatus(true);
-                // setAnswerData(record);
-                fetchAnswer(record);
-              }}
-            >
-              View
-            </span>
-          ) : null}
-
-          <button
-            className="text-white text-base bg-indigo-800 text-center px-3 rounded-md pb-2"
+        <p>
+          {/* <span
+            className="text-yellow-500 text-lg mx-2"
+            onClick={() => onUpdate(record)}
+          >
+            <EditOutlined />
+          </span> */}
+          <span
+            className="text-red-500 text-lg mx-2"
             onClick={() => onDelete(record.id)}
           >
             <DeleteOutlined />
-          </button>
-        </div>
+          </span>
+        </p>
       ),
     },
   ];
@@ -264,7 +306,11 @@ function ReviewManagement({ user }) {
       .catch((err) => console.log(err));
   };
   return reviewAssign ? (
-    <FormView user={user} setReviewAssign={setReviewAssign} />
+    <FormView
+      user={user}
+      setReviewAssign={setReviewAssign}
+      reviewAssign={reviewAssign}
+    />
   ) : (
     <div>
       <div className="px-3 md:px-8 h-auto mt-5">
@@ -273,12 +319,19 @@ function ReviewManagement({ user }) {
             <div className="flex items-center justify-between mb-3">
               <div>
                 <button
-                  className="bg-red-400 text-white text-sm py-3 text-center px-4 rounded-l-md"
-                  onClick={() => onViewReviwed()}
+                  className={`${
+                    reviewAssign ? "bg-red-400" : "bg-indigo-800"
+                  } " text-white text-sm py-3 text-center px-4 rounded-l-md `}
+                  onClick={() => setReviewAssign(true)}
                 >
                   Review Recived
                 </button>
-                <button className="bg-indigo-800 text-white text-sm py-3 text-center px-4 rounded-r-md">
+                <button
+                  className={`${
+                    reviewAssign ? "bg-indigo-800" : "bg-red-400"
+                  } " text-white text-sm py-3 text-center px-4 rounded-r-md `}
+                  onClick={() => setReviewAssign(false)}
+                >
                   Review Created
                 </button>
               </div>
@@ -336,27 +389,27 @@ function ReviewManagement({ user }) {
                       rows={3}
                     />
                   ) : (
-                    // <CustomTable
-                    //   dataSource={reviewAssignList}
-                    //   columns={columns}
-                    //   pagination={false}
-                    // />
+                    <CustomTable
+                      dataSource={reviewAssignList}
+                      columns={columns}
+                      pagination={false}
+                    />
 
-                    <Collapse accordion>
-                      {reviewAssignList.length > 0
-                        ? reviewAssignList.map((rev, idx) => {
-                            return (
-                              <Panel header={rev.review_name} key={idx + "rev"}>
-                                <CustomTable
-                                  dataSource={rev.ReviewAssignee}
-                                  columns={columns}
-                                  pagination={false}
-                                />
-                              </Panel>
-                            );
-                          })
-                        : null}
-                    </Collapse>
+                    // <Collapse accordion>
+                    //   {reviewAssignList.length > 0
+                    //     ? reviewAssignList.map((rev, idx) => {
+                    //         return (
+                    //           <Panel header={rev.review_name} key={idx + "rev"}>
+                    //             <CustomTable
+                    //               dataSource={rev.ReviewAssignee}
+                    //               columns={columns}
+                    //               pagination={false}
+                    //             />
+                    //           </Panel>
+                    //         );
+                    //       })
+                    //     : null}
+                    // </Collapse>
                   )}
                 </div>
               </div>
