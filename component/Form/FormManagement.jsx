@@ -37,7 +37,7 @@ function FormManagement({ user }) {
 
   async function onFinish(values) {
     let obj = {
-      assigned_by_id: user.id,
+      created_by: user.id,
       assigned_to_id: values.assigned_to_id,
       form_id: values.form_id,
       status: values.status,
@@ -247,8 +247,8 @@ function FormManagement({ user }) {
                           return (
                             <tr key={idx + "user"}>
                               <th className="border-b border-gray-200 align-middle font-normal text-sm whitespace-nowrap px-2 py-4 text-left">
-                                {item.assigned_by.first_name}{" "}
-                                {item.assigned_by.last_name}
+                                {item.created.first_name}{" "}
+                                {item.created.last_name}
                               </th>
                               <th className="border-b border-gray-200 align-middle font-normal text-sm whitespace-nowrap px-2 py-4 text-left">
                                 {item.assigned_to.first_name}{" "}

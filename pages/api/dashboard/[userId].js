@@ -8,9 +8,9 @@ export default async (req, res) => {
   if (req.method === "GET") {
     if (userId) {
       const reviewCreated = await prisma.review.findMany({
-        where: { assigned_by_id: userId },
+        where: { created_by: userId },
         include: {
-          assigned_by: true,
+          created: true,
           form: {
             include: {
               questions: {

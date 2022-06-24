@@ -52,7 +52,7 @@ export default async (req, res) => {
 
         const formdata = await transaction.reviewAssignTemplate.create({
           data: {
-            user: { connect: { id: resData.assigned_by_id } },
+            user: { connect: { id: resData.created_by } },
             form_title: templateData.form_title,
             form_description: templateData.form_description,
             form_data: templateData.form_data,
@@ -73,13 +73,16 @@ export default async (req, res) => {
       });
 
       let dataObj = {
-        assigned_by: { connect: { id: resData.assigned_by_id } },
+        created: { connect: { id: resData.created_by } },
         review_name: resData.review_name,
         form: { connect: { id: transactionData.formdata.id } },
 
-        status: resData.status ?? "pending",
+        status: resData.status,
         frequency: resData.frequency,
         review_type: resData.review_type,
+        organization: { connect: { id: resData.organization_id } },
+        role: { connect: { id: resData.role_id } },
+
         ReviewAssignee: {
           create: assigneeData,
         },
@@ -89,26 +92,29 @@ export default async (req, res) => {
         data: dataObj,
       });
 
-      // const assignedToData = await prisma.user.findUnique({
-      //   where: { id: savedData.assigned_to_id },
-      // });
+      const assignedToData = await prisma.user.findMany({
+        where: { id: { in: resData.assigned_to_id } },
+      });
+
       const assignedFromData = await prisma.user.findUnique({
-        where: { id: savedData.assigned_by_id },
+        where: { id: savedData.created_by },
       });
 
       prisma.$disconnect();
 
-      // const mailData = {
-      //   from: process.env.SMTP_USER,
-      //   to: assignedToData.email,
-      //   subject: `New review assigned by ${assignedFromData.first_name}`,
-      //   html: `${assignedFromData.first_name} has assigned you new review , please click here to help them now.`,
-      // };
+      assignedToData.forEach(async (user) => {
+        const mailData = {
+          from: process.env.SMTP_USER,
+          to: user.email,
+          subject: `New review assigned by ${assignedFromData.first_name}`,
+          html: `${assignedFromData.first_name} has assigned you new review , please click here to help them now.`,
+        };
 
-      // await mailService.sendMail(mailData, function (err, info) {
-      //   if (err) console.log("failed");
-      //   else console.log("successfull");
-      // });
+        await mailService.sendMail(mailData, function (err, info) {
+          if (err) console.log("failed");
+          else console.log("successfull");
+        });
+      });
 
       return res.status(201).json({
         message: "Review Assigned Successfully",
@@ -123,7 +129,7 @@ export default async (req, res) => {
   } else if (req.method === "GET") {
     try {
       const data = await prisma.review.findMany({
-        include: { assigned_by: true, form: true, ReviewAssignee: true },
+        include: { created: true, form: true, ReviewAssignee: true },
       });
 
       if (data) {
@@ -148,7 +154,7 @@ export default async (req, res) => {
       const data = await prisma.review.update({
         where: { id: resData.id },
         data: {
-          assigned_by_id: resData.assigned_by_id,
+          created_by: resData.created_by,
           assigned_to_id: resData.assigned_to_id,
           template_id: resData.template_id,
           status: resData.status ?? "pending",

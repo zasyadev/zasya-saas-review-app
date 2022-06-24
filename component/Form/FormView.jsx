@@ -89,7 +89,7 @@ function FormView({ user, setReviewAssign, reviewAssign }) {
       title: "Assign By",
       dataIndex: "review",
       render: (review) =>
-        review.assigned_by.first_name + " " + review.assigned_by.last_name,
+        review.created.first_name + " " + review.created.last_name,
     },
     // {
     //   title: "Assign To",
@@ -109,8 +109,8 @@ function FormView({ user, setReviewAssign, reviewAssign }) {
     },
     {
       title: "Status",
-      dataIndex: "review",
-      render: (review) => review.status,
+      dataIndex: "status",
+      render: (status) => (status ? "Answered" : "Pending"),
     },
 
     {
@@ -182,83 +182,6 @@ function FormView({ user, setReviewAssign, reviewAssign }) {
                       columns={columns}
                     />
                   )}
-
-                  {/* <table className="items-center w-full bg-transparent border-collapse">
-                    <thead>
-                      <tr>
-                        <th className="px-2 text-purple-500 align-middle border-b border-solid border-gray-200 py-3 text-sm whitespace-nowrap font-semibold text-left">
-                          Assign By
-                        </th>
-                        <th className="px-2 text-purple-500 align-middle border-b border-solid border-gray-200 py-3 text-sm whitespace-nowrap font-semibold text-left">
-                          Assign To
-                        </th>
-                        <th className="px-2 text-purple-500 align-middle border-b border-solid border-gray-200 py-3 text-sm whitespace-nowrap font-semibold text-left">
-                          Form Title
-                        </th>
-                        <th className="px-2 text-purple-500 align-middle border-b border-solid border-gray-200 py-3 text-sm whitespace-nowrap font-semibold text-left">
-                          Status
-                        </th>
-                        <th className="px-2 text-purple-500 align-middle border-b border-solid border-gray-200 py-3 text-sm whitespace-nowrap font-semibold text-left">
-                          Action
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {loading ? (
-                        <tr>
-                          <th colSpan={5}>
-                            <Skeleton
-                              title={false}
-                              active={true}
-                              width={[200]}
-                              className="mt-4"
-                              rows={3}
-                            />
-                          </th>
-                        </tr>
-                      ) : formAssignList.length > 0 ? (
-                        formAssignList.map((item, idx) => {
-                          return (
-                            <tr key={idx + "user"}>
-                              <th className="border-b border-gray-200 align-middle font-normal text-sm whitespace-nowrap px-2 py-4 text-left">
-                                {item.assigned_by.first_name}{" "}
-                                {item.assigned_by.last_name}
-                              </th>
-                              <th className="border-b border-gray-200 align-middle font-normal text-sm whitespace-nowrap px-2 py-4 text-left">
-                                {item.assigned_to.first_name}{" "}
-                                {item.assigned_to.last_name}
-                              </th>
-                              <th className="border-b border-gray-200 align-middle font-normal text-sm whitespace-nowrap px-2 py-4 text-left">
-                                {item.form.form_title}
-                              </th>
-                              <th className="border-b border-gray-200 align-middle font-normal text-sm whitespace-nowrap px-2 py-4 text-left">
-                                {item.status ? "Active" : "InActive"}
-                              </th>
-                              <th className="border-b underline border-gray-200 align-middle font-normal text-sm whitespace-nowrap px-2 py-4 text-left cursor-pointer">
-                                <p>
-                                  <span
-                                    className="text-yellow-500 text-lg mx-2"
-                                    onClick={() => showModal(item)}
-                                  >
-                                    <EyeOutlined />
-                                  </span>
-                                </p>
-                              </th>
-                            </tr>
-                          );
-                        })
-                      ) : (
-                        <tr>
-                          <th
-                            colSpan={5}
-                            className="border-b text-center border-gray-200 align-middle font-semibold text-sm whitespace-nowrap px-2 py-4 "
-                          >
-                            No Data Found
-                          </th>
-                        </tr>
-                      )}
-                    </tbody>
-                  </table> */}
                 </div>
               </div>
             </div>

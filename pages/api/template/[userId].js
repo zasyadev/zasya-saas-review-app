@@ -7,29 +7,15 @@ export default async (req, res) => {
   try {
     if (req.method === "GET") {
       if (userId) {
-        const data = await prisma.reviewAssignee.findMany({
-          where: { assigned_to_id: userId },
-          include: {
-            review: {
-              include: {
-                created: true,
-                form: {
-                  include: {
-                    questions: {
-                      include: { options: true },
-                    },
-                  },
-                },
-              },
-            },
-          },
+        const data = await prisma.reviewTemplate.findMany({
+          where: { user_id: userId },
         });
         prisma.$disconnect();
         if (data) {
           return res.status(200).json({
             status: 200,
             data: data,
-            message: "Assign Details Retrieved",
+            message: "Templates Retrieved",
           });
         }
 
@@ -43,7 +29,6 @@ export default async (req, res) => {
       });
     }
   } catch (error) {
-    console.log(error);
     return res.status(500).json({
       message: "INTERNAL SERVER ERROR",
     });

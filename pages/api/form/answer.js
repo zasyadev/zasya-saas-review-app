@@ -36,7 +36,7 @@ export default async (req, res) => {
         where: { id: transactionData.review_id },
       });
       const assignedByUser = await prisma.user.findFirst({
-        where: { id: assignedByFromData.assigned_by_id },
+        where: { id: assignedByFromData.created_by },
       });
       const assignedUser = await prisma.user.findFirst({
         where: { id: transactionData.user_id },
@@ -90,7 +90,7 @@ export default async (req, res) => {
   } else if (req.method === "GET") {
     try {
       const data = await prisma.formAssign.findMany({
-        include: { assigned_by: true, assigned_to: true, form: true },
+        include: { created: true, assigned_to: true, form: true },
       });
 
       if (data) {
@@ -114,7 +114,7 @@ export default async (req, res) => {
       const data = await prisma.formAssign.update({
         where: { id: resData.id },
         data: {
-          assigned_by_id: resData.assigned_by_id,
+          created_by: resData.created_by,
           assigned_to_id: resData.assigned_to_id,
           form_id: resData.form_id,
           status: resData.status,

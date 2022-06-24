@@ -51,6 +51,7 @@ model Role {
   modified_date DateTime @default(now())
   User          User[]
 
+  Review Review[]
   @@map("users_role")
 }
 
@@ -133,17 +134,23 @@ model ReviewQuestionOption {
 }
 
 model Review {
-  id             Int                  @id @default(autoincrement())
-  assigned_by    User                 @relation("taskReviewBy", fields: [assigned_by_id], references: [id])
-  assigned_by_id String
-  review_name    String
-  form           ReviewAssignTemplate @relation(fields: [form_id], references: [id])
-  form_id        Int
-  status         String
-  frequency      String
-  review_type    String
-  created_date   DateTime             @default(now())
-  modified_date  DateTime             @default(now())
+  id              Int                  @id @default(autoincrement())
+  created         User                 @relation("taskReviewBy", fields: [created_by], references: [id])
+  created_by      String
+  review_name     String
+  form            ReviewAssignTemplate @relation(fields: [form_id], references: [id])
+  form_id         Int
+  status          String
+  frequency       String
+  review_type     String
+  organization    UserOrganization?    @relation(fields: [organization_id], references: [id])
+  organization_id Int?
+  role            Role?                @relation(fields: [role_id], references: [id])
+  role_id         Int?
+  parent_id       String?
+  is_published    String?
+  created_date    DateTime             @default(now())
+  modified_date   DateTime             @default(now())
 
 
   ReviewAssignee        ReviewAssignee[]
@@ -233,6 +240,7 @@ model UserOrganization {
   modified_date DateTime @default(now())
   User          User[]
 
+  Review Review[]
   @@map("user_organization")
 }
 

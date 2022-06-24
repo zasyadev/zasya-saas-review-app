@@ -169,3 +169,17 @@
 .rightsidebar-icon {
   font-size: 34px;
 }
+.review-collapse {
+  .ant-collapse-item {
+    .ant-collapse-header,
+    .ant-collapse-arrow {
+      font-size: 15px;
+      font-weight: 600;
+    }
+    .ant-collapse-content-active {
+      .ant-collapse-content-box {
+        padding: 0 10px 5px;
+      }
+    }
+  }
+}

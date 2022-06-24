@@ -208,9 +208,7 @@ function TeamMembers({ user }) {
   return (
     <>
       <Row>
-        <Col sm={24} md={24} lg={16}>
-          <div className=" px-3 md:px-8 " />
-
+        <Col sm={24} md={24} lg={24}>
           <div className="px-3 md:px-8 h-auto my-6 ">
             <div className="container mx-auto max-w-full">
               <div className="grid grid-cols-1 px-4 mb-16">
@@ -261,9 +259,9 @@ function TeamMembers({ user }) {
             </div>
           </div>
         </Col>
-        <Col sm={24} md={24} lg={7} className="mt-6 ">
+        {/* <Col sm={24} md={24} lg={7} className="mt-6 ">
           <SiderRight />
-        </Col>
+        </Col> */}
       </Row>
       <Modal
         title={`${editMode ? "Update" : "Add"}  Team Members`}

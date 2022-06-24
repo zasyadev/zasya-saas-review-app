@@ -159,6 +159,7 @@ function FormComponent({
         status: true,
         questions: questions,
       };
+
       editMode ? updateFormData(obj, id) : addNewForm(obj);
     }
   }
@@ -209,9 +210,9 @@ function FormComponent({
 
   useEffect(() => {
     if (editMode) {
-      setQuestions(editFormData?.questions);
-      setFormTitle(editFormData?.title);
-      setFormDes(editFormData?.description);
+      setQuestions(editFormData?.form_data?.questions);
+      setFormTitle(editFormData?.form_data?.title);
+      setFormDes(editFormData?.form_data?.description);
     }
   }, []);
 

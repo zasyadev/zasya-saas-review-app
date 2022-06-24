@@ -15,7 +15,7 @@ function TemplateLayout({ user }) {
   async function fetchFormList() {
     // setLoading(true);
     setFormList([]);
-    await fetch("/api/template", {
+    await fetch("/api/template/" + user.id, {
       method: "GET",
     })
       .then((response) => response.json())
@@ -107,7 +107,7 @@ function TemplateLayout({ user }) {
                                     onClick={() => {
                                       setFormDetailShow(true);
                                       setEditMode(true);
-                                      setEditFormData(form.form_data);
+                                      setEditFormData(form);
                                     }}
                                   >
                                     <div className="bg-gradient-to-tr from-pink-500 to-pink-700 -mt-10 mb-4 rounded-xl text-white grid items-center w-full h-24 py-4 px-4 justify-center shadow-lg-pink ">

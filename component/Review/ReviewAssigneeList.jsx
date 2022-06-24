@@ -2,13 +2,15 @@ import React, { useState, useEffect } from "react";
 import CustomTable from "../../helpers/CustomTable";
 // import { DeleteOutlined } from "@ant-design/icons";
 import moment from "moment";
-import { Modal, Collapse } from "antd";
+import { Modal, Collapse, Skeleton } from "antd";
+import AnswerViewComponent from "./AnswerViewComponent";
 
 export function ReviewAssigneeList({ data, setReviewAssignee, user }) {
   const { Panel } = Collapse;
   const datePattern = "DD-MM-YYYY";
   const [answerData, setAnswerData] = useState({});
   const [answerDataModel, setAnswerDataModel] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const [dataSource, setDataSource] = useState([]);
 
@@ -70,6 +72,7 @@ export function ReviewAssigneeList({ data, setReviewAssignee, user }) {
 
   const fetchAnswer = async (obj) => {
     setAnswerData({});
+    setLoading(true);
     await fetch("/api/review/answer/" + user.id, {
       method: "POST",
       body: JSON.stringify(obj),
@@ -79,6 +82,7 @@ export function ReviewAssigneeList({ data, setReviewAssignee, user }) {
         if (response.status === 200) {
           setAnswerData(response.data);
         }
+        setLoading(false);
       })
       .catch((err) => console.log(err));
   };
@@ -118,40 +122,26 @@ export function ReviewAssigneeList({ data, setReviewAssignee, user }) {
           </div>
 
           <div className="overflow-x-auto">
-            {/* {loading ? (
-                    <Skeleton
-                      title={false}
-                      active={true}
-                      width={[200]}
-                      className="mt-4"
-                      rows={3}
-                    />
-                  ) : ( */}
-            <Collapse accordion>
-              {Object.entries(dataSource).map(([key, value]) => {
-                return (
-                  <>
-                    {/* <h3 className="font-semibold text-lg">
-                    {moment(key, "YYYY-MM-DD").format(datePattern)}
-                  </h3> */}
-                    <Panel
-                      header={moment(key, "YYYY-MM-DD").format(datePattern)}
-                      key={key}
-                    >
-                      <CustomTable dataSource={value} columns={columns} />
-                    </Panel>
-                    {/* <CustomTable dataSource={value} columns={columns} /> */}
-                  </>
-                );
-              })}
+            <Collapse
+              accordion
+              defaultActiveKey={["1"]}
+              className="review-collapse"
+            >
+              {Object.entries(dataSource)
+                .reverse()
+                .map(([key, value], idx) => {
+                  return (
+                    <>
+                      <Panel
+                        header={moment(key, "YYYY-MM-DD").format(datePattern)}
+                        key={1 + idx}
+                      >
+                        <CustomTable dataSource={value} columns={columns} />
+                      </Panel>
+                    </>
+                  );
+                })}
             </Collapse>
-            {/* {data.ReviewAssignee.length > 0 ? (
-              <CustomTable dataSource={data.ReviewAssignee} columns={columns} />
-            ) : (
-              <p>No Record Found</p>
-            )} */}
-
-            {/* )} */}
           </div>
         </div>
       </div>
@@ -164,32 +154,43 @@ export function ReviewAssigneeList({ data, setReviewAssignee, user }) {
         footer={null}
       >
         <div>
-          {answerData?.length > 0
-            ? answerData.map((ans, idx) => {
-                return (
-                  <div
-                    key={idx + "que"}
-                    className=" border-2  border-slate-100  bg-slate-100 mx-2 p-2 "
-                  >
-                    {ans?.ReviewAssigneeAnswerOption?.length > 0
-                      ? ans?.ReviewAssigneeAnswerOption.map((item, i) => {
-                          return (
-                            <div
-                              key={i + "ans"}
-                              className=" m-1 bg-slate-200 p-2"
-                            >
-                              <p>
-                                {item.question.questionText} :{"    "}{" "}
-                                {item.option}
-                              </p>
-                            </div>
-                          );
-                        })
-                      : null}
-                  </div>
-                );
-              })
-            : null}
+          {loading ? (
+            <Skeleton
+              title={false}
+              active={true}
+              width={[200]}
+              className="mt-4"
+              rows={3}
+            />
+          ) : answerData?.length > 0 ? (
+            answerData.map((ans, idx) => {
+              return (
+                <div key={idx + "que"}>
+                  {ans?.ReviewAssigneeAnswerOption?.length > 0
+                    ? ans?.ReviewAssigneeAnswerOption.map((item, i) => {
+                        return (
+                          <AnswerViewComponent
+                            questionText={item.question.questionText}
+                            option={item.option}
+                            type={item.question.type}
+                            idx={i}
+                          />
+                          // <div
+                          //   key={i + "ans"}
+                          //   className=" m-1 bg-slate-200 p-2"
+                          // >
+                          //   <p>
+                          //     {item.question.questionText} :{"    "}{" "}
+                          //     {item.option}
+                          //   </p>
+                          // </div>
+                        );
+                      })
+                    : null}
+                </div>
+              );
+            })
+          ) : null}
         </div>
       </Modal>
     </div>

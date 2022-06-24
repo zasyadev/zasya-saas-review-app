@@ -54,52 +54,29 @@ export default async (req, res) => {
   } else if (req.method === "PUT") {
     try {
       const resData = JSON.parse(req.body);
-      console.log(resData, "resData");
-      return;
-      const transactionData = await prisma.$transaction(async (transaction) => {
-        const questionData = resData.questions.map((item) => {
-          const optionData = item.options.map((opitem) => {
-            return {
-              optionText: opitem.optionText,
-            };
-          });
+      // console.log(resData, "resData");
+      // return;
 
-          return {
-            questionText: item.questionText,
-            type: item.type,
-            open: item.open,
-            options: { create: optionData },
-          };
-        });
-        const formdata = await transaction.reviewTemplate.update({
-          where: { id: resData.id },
-          data: {
-            user: { connect: { id: resData.user_id } },
-            form_data: resData.form_data,
-            form_title: resData.form_title,
-            form_description: resData.form_description,
-            status: resData.status,
-            questions: {
-              create: questionData,
-            },
-          },
-        });
+      const templateData = await prisma.reviewTemplate.update({
+        where: { id: resData.id },
+        data: {
+          user: { connect: { id: resData.user_id } },
 
-        return { formdata };
+          form_title: resData.form_title,
+          form_description: resData.form_description,
+          form_data: resData.form_data,
+          status: resData.status,
+          // questions: {
+          //   create: questionData,
+          // },
+        },
       });
 
-      if (!transactionData.formdata || !transactionData) {
-        prisma.$disconnect();
-        return res.status(500).json({
-          status: 500,
-          message: "Internal Server Error!",
-          data: {},
-        });
-      }
       prisma.$disconnect();
+
       return res.status(201).json({
-        message: "Form Updated Sucessfully.",
-        data: transactionData.formdata,
+        message: "Updated   Successfully",
+        data: templateData,
         status: 200,
       });
     } catch (error) {

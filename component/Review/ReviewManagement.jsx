@@ -4,12 +4,7 @@ import { DeleteOutlined } from "@ant-design/icons";
 import { openNotificationBox } from "../../helpers/notification";
 import FormView from "../Form/FormView";
 import CustomTable from "../../helpers/CustomTable";
-// import dynamic from "next/dynamic";
 import { ReviewAssigneeList } from "./ReviewAssigneelist";
-
-// const ReviewAssigneeList = dynamic(import("./ReviewAssigneelist"), {
-//   ssr: false,
-// });
 
 function ReviewManagement({ user }) {
   const [form] = Form.useForm();
@@ -36,13 +31,15 @@ function ReviewManagement({ user }) {
 
   async function onFinish(values) {
     let obj = {
-      assigned_by_id: user.id,
+      created_by: user.id,
       assigned_to_id: [values.assigned_to_id],
       template_id: values.template_id,
       review_type: values.review_type,
       review_name: values.review_name,
-      // status: values.status,
+      status: values.status,
       frequency: values.frequency,
+      role_id: user.role_id,
+      organization_id: user.organization_id,
     };
     editMode ? updateReviewAssign(obj) : addReviewAssign(obj);
   }
@@ -130,7 +127,7 @@ function ReviewManagement({ user }) {
   }
   async function fetchTemplateData() {
     setFormList([]);
-    await fetch("/api/template", {
+    await fetch("/api/template/" + user.id, {
       method: "GET",
     })
       .then((response) => response.json())
@@ -197,9 +194,9 @@ function ReviewManagement({ user }) {
   const columns = [
     // {
     //   title: "Assign By",
-    //   dataIndex: "assigned_by",
-    //   render: (assigned_by) =>
-    //     assigned_by.first_name + " " + assigned_by.last_name,
+    //   dataIndex: "created",
+    //   render: (created) =>
+    //     created.first_name + " " + created.last_name,
     // },
     // {
     //   title: "Assign To",
@@ -216,6 +213,7 @@ function ReviewManagement({ user }) {
             setReviewAssignee(true);
             setReviewAssigneeData(record);
           }}
+          className="cursor-pointer underline"
         >
           {record.review_name}
         </p>
@@ -226,8 +224,8 @@ function ReviewManagement({ user }) {
       dataIndex: "frequency",
     },
     {
-      title: "Status",
-      dataIndex: "status",
+      title: "Type",
+      dataIndex: "review_type",
     },
     {
       title: "Action",
@@ -447,6 +445,23 @@ function ReviewManagement({ user }) {
                   <Select.Option value="daily">Daily</Select.Option>
                   <Select.Option value="weekly">Weekly</Select.Option>
                   <Select.Option value="monthly">Monthly</Select.Option>
+                </Select>
+              </Form.Item>
+            </Col>
+
+            <Col md={12} xs={24}>
+              <Form.Item
+                name="status"
+                label="Status"
+                rules={[
+                  {
+                    required: true,
+                  },
+                ]}
+              >
+                <Select placeholder="Select Status">
+                  <Select.Option value="published">Published</Select.Option>
+                  <Select.Option value="draft">Draft</Select.Option>
                 </Select>
               </Form.Item>
             </Col>
