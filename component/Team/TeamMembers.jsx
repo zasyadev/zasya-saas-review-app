@@ -15,7 +15,7 @@ import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { openNotificationBox } from "../../helpers/notification";
 import { Table } from "antd";
 import CustomTable from "../../helpers/CustomTable";
-import SiderRight from "../SiderRight/SiderRight";
+// import SiderRight from "../SiderRight/SiderRight";
 
 function TeamMembers({ user }) {
   const [form] = Form.useForm();

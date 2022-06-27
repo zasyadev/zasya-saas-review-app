@@ -138,7 +138,7 @@ model Review {
   created         User                 @relation("taskReviewBy", fields: [created_by], references: [id])
   created_by      String
   review_name     String
-  form            ReviewAssignTemplate @relation(fields: [form_id], references: [id])
+  form            ReviewAssignTemplate @relation(fields: [form_id], references: [id],onDelete: Cascade)
   form_id         Int
   status          String
   frequency       String
@@ -161,7 +161,7 @@ model Review {
 model ReviewAssignee {
   id                    Int                     @id @default(autoincrement())
   review                Review                  @relation(fields: [review_id], references: [id], onDelete: Cascade)
-  review_id             Int
+  review_id             Int                     @unique
   assigned_to           User                    @relation(fields: [assigned_to_id], references: [id], onDelete: Cascade)
   assigned_to_id        String
   created_date          DateTime                @default(now())
@@ -218,7 +218,7 @@ model ReviewTemplate {
   status           Boolean
   created_date     DateTime @default(now())
   modified_date    DateTime @default(now())
-
+  delete_date      DateTime?
   @@map("review_template")
 }
 

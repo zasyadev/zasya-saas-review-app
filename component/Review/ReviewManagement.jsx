@@ -1,5 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { Button, Modal, Form, Row, Col, Skeleton, Select, Input } from "antd";
+import {
+  Button,
+  Modal,
+  Form,
+  Row,
+  Col,
+  Skeleton,
+  Select,
+  Input,
+  Radio,
+} from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 import { openNotificationBox } from "../../helpers/notification";
 import FormView from "../Form/FormView";
@@ -16,6 +26,7 @@ function ReviewManagement({ user }) {
   const [updateData, setUpdateData] = useState({});
   const [reviewAssignList, setReviewAssignList] = useState([]);
   const [reviewAssign, setReviewAssign] = useState(false);
+  const [memberDetails, setMemberDetails] = useState(true);
   const [reviewAssignee, setReviewAssignee] = useState(false);
   const [reviewAssigneeData, setReviewAssigneeData] = useState({});
 
@@ -30,18 +41,20 @@ function ReviewManagement({ user }) {
   };
 
   async function onFinish(values) {
-    let obj = {
-      created_by: user.id,
-      assigned_to_id: [values.assigned_to_id],
-      template_id: values.template_id,
-      review_type: values.review_type,
-      review_name: values.review_name,
-      status: values.status,
-      frequency: values.frequency,
-      role_id: user.role_id,
-      organization_id: user.organization_id,
-    };
-    editMode ? updateReviewAssign(obj) : addReviewAssign(obj);
+    editMode
+      ? updateReviewAssign(updateData, values)
+      : addReviewAssign({
+          created_by: user.id,
+          assigned_to_id: [values.assigned_to_id],
+          template_id: values.template_id,
+          review_type: values.review_type,
+          review_name: values.review_name,
+          status: values.status ?? "pending",
+          frequency: values.frequency,
+          role_id: user.role_id,
+          organization_id: user.organization_id,
+          is_published: values.is_published,
+        });
   }
 
   async function addReviewAssign(obj) {
@@ -65,12 +78,14 @@ function ReviewManagement({ user }) {
       })
       .catch((err) => console.log(err));
   }
-  async function updateReviewAssign(obj) {
-    if (updateData.id) {
-      obj.id = updateData.id;
+  async function updateReviewAssign(data, values) {
+    if (data.id) {
+      data.assigned_to_id = [values.assigned_to_id];
+      data.review_assigned_by = user.id;
+      data.is_published = "published";
       await fetch("/api/review/manage", {
         method: "PUT",
-        body: JSON.stringify(obj),
+        body: JSON.stringify(data),
         // headers: {
         //   "Content-Type": "application/json",
         // },
@@ -147,13 +162,15 @@ function ReviewManagement({ user }) {
     setEditMode(true);
     setUpdateData(data);
     setIsModalVisible(true);
-    form.setFieldsValue({
-      assigned_to_id: data.assigned_to_id,
-      template_id: data.template_id,
-      status: data.status,
-      review_type: data.review_type,
-      frequency: data.frequency,
-    });
+    // form.setFieldsValue({
+    //   is_published: data.is_published,
+    //   review_type: data.review_type,
+    //   review_name: data.review_name,
+    //   review_type: data.review_type,
+    //   template_id: data.template_id,
+    //   frequency: data.frequency,
+
+    // });
   };
 
   async function onDelete(id) {
@@ -192,18 +209,6 @@ function ReviewManagement({ user }) {
   };
 
   const columns = [
-    // {
-    //   title: "Assign By",
-    //   dataIndex: "created",
-    //   render: (created) =>
-    //     created.first_name + " " + created.last_name,
-    // },
-    // {
-    //   title: "Assign To",
-    //   dataIndex: "assigned_to",
-    //   render: (assigned_to) =>
-    //     assigned_to.first_name + " " + assigned_to.last_name,
-    // },
     {
       title: "Review Name",
 
@@ -228,26 +233,44 @@ function ReviewManagement({ user }) {
       dataIndex: "review_type",
     },
     {
+      title: "Status",
+      dataIndex: "is_published",
+    },
+    {
       title: "Action",
       key: "action",
       render: (_, record) => (
         <p>
-          {/* <span
-            className="text-yellow-500 text-lg mx-2"
-            onClick={() => onUpdate(record)}
-          >
-            <EditOutlined />
-          </span> */}
-          <span
-            className="text-red-500 text-lg mx-2"
-            onClick={() => onDelete(record.id)}
-          >
-            <DeleteOutlined />
-          </span>
+          {record.is_published === "draft" && (
+            <span
+              className="text-yellow-500 text-lg mx-2 cursor-pointer"
+              onClick={() => onUpdate(record)}
+            >
+              Assign
+            </span>
+          )}
+
+          {record.created_by === user.id && (
+            <span
+              className="text-red-500 text-lg mx-2 cursor-pointer"
+              onClick={() => onDelete(record.id)}
+            >
+              {/* <DeleteOutlined /> */}
+              Delete
+            </span>
+          )}
         </p>
       ),
     },
   ];
+
+  const onChangeStatus = (e) => {
+    if (e.target.value === "published") {
+      setMemberDetails(true);
+    } else {
+      setMemberDetails(false);
+    }
+  };
 
   return reviewAssign ? (
     <FormView
@@ -324,7 +347,7 @@ function ReviewManagement({ user }) {
         </div>
       </div>
       <Modal
-        title={`${editMode ? "Update Assigned " : "Assign"}  Reviews`}
+        title={`${editMode ? "Update " : "Assign"}  Review`}
         visible={isModalVisible}
         onOk={form.submit}
         onCancel={() => onCancel()}
@@ -345,127 +368,165 @@ function ReviewManagement({ user }) {
           onFinish={onFinish}
           validateMessages={validateMessages}
         >
-          <Row gutter={16}>
-            <Col md={12} xs={24}>
-              <Form.Item
-                name="review_name"
-                label="Review Name"
-                rules={[
-                  {
-                    required: true,
-                  },
-                ]}
-              >
-                <Input />
-              </Form.Item>
-            </Col>
-
-            <Col md={12} xs={24}>
-              <Form.Item
-                name="review_type"
-                label="Review Type"
-                rules={[
-                  {
-                    required: true,
-                  },
-                ]}
-              >
-                <Select placeholder="Select Type">
-                  <Select.Option value="feedback">Feedback</Select.Option>
-                  <Select.Option value="other">Other</Select.Option>
-                </Select>
-              </Form.Item>
-            </Col>
-            <Col md={12} xs={24}>
-              <Form.Item
-                name="assigned_to_id"
-                label="Employee Name"
-                rules={[
-                  {
-                    required: true,
-                  },
-                ]}
-              >
-                <Select
-                  placeholder="Select Member"
-                  showSearch
-                  filterOption={(input, option) =>
-                    option.children
-                      .toLowerCase()
-                      .indexOf(input.toLowerCase()) >= 0
-                  }
+          {editMode ? (
+            <Row gutter={16}>
+              <Col md={24} xs={24}>
+                <Form.Item
+                  name="assigned_to_id"
+                  label="Employee Name"
+                  rules={[
+                    {
+                      required: true,
+                    },
+                  ]}
                 >
-                  {userList.map((data, index) => (
-                    <Select.Option key={index} value={data.id}>
-                      {data.first_name}
-                    </Select.Option>
-                  ))}
-                </Select>
-              </Form.Item>
-            </Col>
-            <Col md={12} xs={24}>
-              <Form.Item
-                name="template_id"
-                label="Template"
-                rules={[
-                  {
-                    required: true,
-                  },
-                ]}
-              >
-                <Select
-                  placeholder="Select Template"
-                  showSearch
-                  filterOption={(input, option) =>
-                    option.children
-                      .toLowerCase()
-                      .indexOf(input.toLowerCase()) >= 0
-                  }
+                  <Select
+                    placeholder="Select Member"
+                    showSearch
+                    filterOption={(input, option) =>
+                      option.children
+                        .toLowerCase()
+                        .indexOf(input.toLowerCase()) >= 0
+                    }
+                  >
+                    {userList.map((data, index) => (
+                      <Select.Option key={index} value={data.id}>
+                        {data.first_name}
+                      </Select.Option>
+                    ))}
+                  </Select>
+                </Form.Item>
+              </Col>
+            </Row>
+          ) : (
+            <Row gutter={16}>
+              <Col md={12} xs={24}>
+                <Form.Item
+                  name="is_published"
+                  label="Status"
+                  rules={[
+                    {
+                      required: true,
+                    },
+                  ]}
                 >
-                  {formList.map((data, index) => (
-                    <Select.Option key={index} value={data.id}>
-                      {data.form_title}
-                    </Select.Option>
-                  ))}
-                </Select>
-              </Form.Item>
-            </Col>
+                  <Radio.Group
+                    placeholder="Select Status"
+                    onChange={onChangeStatus}
+                  >
+                    <Radio value="published">Published</Radio>
+                    <Radio value="draft">Draft</Radio>
+                  </Radio.Group>
+                </Form.Item>
+              </Col>
 
-            <Col md={12} xs={24}>
-              <Form.Item
-                name="frequency"
-                label="Frequency"
-                rules={[
-                  {
-                    required: true,
-                  },
-                ]}
-              >
-                <Select placeholder="Select Frequency">
-                  <Select.Option value="daily">Daily</Select.Option>
-                  <Select.Option value="weekly">Weekly</Select.Option>
-                  <Select.Option value="monthly">Monthly</Select.Option>
-                </Select>
-              </Form.Item>
-            </Col>
+              <Col md={12} xs={24}>
+                <Form.Item
+                  name="review_type"
+                  label="Review Type"
+                  rules={[
+                    {
+                      required: true,
+                    },
+                  ]}
+                >
+                  <Radio.Group placeholder="Select Type">
+                    <Radio value="feedback">Feedback</Radio>
+                    <Radio value="other">Other</Radio>
+                  </Radio.Group>
+                </Form.Item>
+              </Col>
 
-            <Col md={12} xs={24}>
-              <Form.Item
-                name="status"
-                label="Status"
-                rules={[
-                  {
-                    required: true,
-                  },
-                ]}
-              >
-                <Select placeholder="Select Status">
-                  <Select.Option value="published">Published</Select.Option>
-                  <Select.Option value="draft">Draft</Select.Option>
-                </Select>
-              </Form.Item>
-            </Col>
-          </Row>
+              <Col md={12} xs={24}>
+                <Form.Item
+                  name="review_name"
+                  label="Review Name"
+                  rules={[
+                    {
+                      required: true,
+                    },
+                  ]}
+                >
+                  <Input />
+                </Form.Item>
+              </Col>
+              {memberDetails && (
+                <Col md={12} xs={24}>
+                  <Form.Item
+                    name="assigned_to_id"
+                    label="Employee Name"
+                    rules={[
+                      {
+                        required: true,
+                      },
+                    ]}
+                  >
+                    <Select
+                      placeholder="Select Member"
+                      showSearch
+                      filterOption={(input, option) =>
+                        option.children
+                          .toLowerCase()
+                          .indexOf(input.toLowerCase()) >= 0
+                      }
+                    >
+                      {userList.map((data, index) => (
+                        <Select.Option key={index} value={data.id}>
+                          {data.first_name}
+                        </Select.Option>
+                      ))}
+                    </Select>
+                  </Form.Item>
+                </Col>
+              )}
+
+              <Col md={12} xs={24}>
+                <Form.Item
+                  name="template_id"
+                  label="Template"
+                  rules={[
+                    {
+                      required: true,
+                    },
+                  ]}
+                >
+                  <Select
+                    placeholder="Select Template"
+                    showSearch
+                    filterOption={(input, option) =>
+                      option.children
+                        .toLowerCase()
+                        .indexOf(input.toLowerCase()) >= 0
+                    }
+                  >
+                    {formList.map((data, index) => (
+                      <Select.Option key={index} value={data.id}>
+                        {data.form_title}
+                      </Select.Option>
+                    ))}
+                  </Select>
+                </Form.Item>
+              </Col>
+
+              <Col md={12} xs={24}>
+                <Form.Item
+                  name="frequency"
+                  label="Frequency"
+                  rules={[
+                    {
+                      required: true,
+                    },
+                  ]}
+                >
+                  <Select placeholder="Select Frequency">
+                    <Select.Option value="daily">Daily</Select.Option>
+                    <Select.Option value="weekly">Weekly</Select.Option>
+                    <Select.Option value="monthly">Monthly</Select.Option>
+                  </Select>
+                </Form.Item>
+              </Col>
+            </Row>
+          )}
         </Form>
       </Modal>
     </div>

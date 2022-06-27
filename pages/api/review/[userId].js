@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-const scheduler = require("node-schedule");
+// const scheduler = require("node-schedule");
 
 const prisma = new PrismaClient();
 
@@ -8,8 +8,23 @@ export default async (req, res) => {
 
   if (req.method === "GET") {
     if (userId) {
-      const data = await prisma.review.findMany({
-        where: { created_by: userId },
+      const userData = await prisma.user.findUnique({
+        where: { id: userId },
+      });
+
+      let data = await prisma.review.findMany({
+        where: {
+          OR: [
+            {
+              created_by: userId,
+            },
+            {
+              organization_id: userData.organization_id,
+
+              is_published: "draft",
+            },
+          ],
+        },
         include: {
           created: true,
           form: true,
@@ -21,11 +36,6 @@ export default async (req, res) => {
         },
       });
 
-      //   let montlyJob = scheduler.scheduleJob("*/5 * * * * *", function () {
-      //     console.log("I run the first day of the month");
-      //   });
-      //   console.log(montlyJob, "monthly job");
-      //   scheduler.gracefulShutdown();
       prisma.$disconnect();
       if (data) {
         return res.status(200).json({

@@ -20,9 +20,9 @@ export default async (req, res) => {
       const templateData = await prisma.reviewTemplate.findUnique({
         where: { id: resData.template_id },
       });
-      // if(resData.review_type==="feedback"){
-      //   templateData.form_data.questions.push(defaultScaleQuestion)
-      // }
+      if (resData.review_type === "feedback") {
+        templateData.form_data.questions.push(defaultScaleQuestion);
+      }
 
       const transactionData = await prisma.$transaction(async (transaction) => {
         const questionData = templateData.form_data.questions.map((item) => {
@@ -63,62 +63,71 @@ export default async (req, res) => {
           },
         });
 
-        return { formdata };
-      });
+        let assigneeData = resData.assigned_to_id.map((item) => {
+          return {
+            assigned_to_id: item,
+          };
+        });
 
-      let assigneeData = resData.assigned_to_id.map((item) => {
-        return {
-          assigned_to_id: item,
+        let dataObj = {
+          created: { connect: { id: resData.created_by } },
+          review_name: resData.review_name,
+          form: { connect: { id: formdata.id } },
+
+          status: resData.status,
+          frequency: resData.frequency,
+          review_type: resData.review_type,
+          organization: { connect: { id: resData.organization_id } },
+          role: { connect: { id: resData.role_id } },
+          parent_id: resData.created_by,
+          is_published: resData.is_published,
+          // ReviewAssignee: {
+          //   create: assigneeData,
+          // },
         };
+
+        if (dataObj.is_published === "published") {
+          dataObj.ReviewAssignee = {
+            create: assigneeData,
+          };
+        }
+
+        const savedData = await transaction.review.create({
+          data: dataObj,
+        });
+
+        return { savedData };
       });
 
-      let dataObj = {
-        created: { connect: { id: resData.created_by } },
-        review_name: resData.review_name,
-        form: { connect: { id: transactionData.formdata.id } },
+      if (transactionData.savedData.is_published === "published") {
+        const assignedToData = await prisma.user.findMany({
+          where: { id: { in: resData.assigned_to_id } },
+        });
 
-        status: resData.status,
-        frequency: resData.frequency,
-        review_type: resData.review_type,
-        organization: { connect: { id: resData.organization_id } },
-        role: { connect: { id: resData.role_id } },
+        const assignedFromData = await prisma.user.findUnique({
+          where: { id: transactionData.savedData.created_by },
+        });
 
-        ReviewAssignee: {
-          create: assigneeData,
-        },
-      };
+        assignedToData.forEach(async (user) => {
+          const mailData = {
+            from: process.env.SMTP_USER,
+            to: user.email,
+            subject: `New review assigned by ${assignedFromData.first_name}`,
+            html: `${assignedFromData.first_name} has assigned you new review , please click here to help them now.`,
+          };
 
-      const savedData = await prisma.review.create({
-        data: dataObj,
-      });
-
-      const assignedToData = await prisma.user.findMany({
-        where: { id: { in: resData.assigned_to_id } },
-      });
-
-      const assignedFromData = await prisma.user.findUnique({
-        where: { id: savedData.created_by },
-      });
+          await mailService.sendMail(mailData, function (err, info) {
+            if (err) console.log("failed");
+            else console.log("successfull");
+          });
+        });
+      }
 
       prisma.$disconnect();
 
-      assignedToData.forEach(async (user) => {
-        const mailData = {
-          from: process.env.SMTP_USER,
-          to: user.email,
-          subject: `New review assigned by ${assignedFromData.first_name}`,
-          html: `${assignedFromData.first_name} has assigned you new review , please click here to help them now.`,
-        };
-
-        await mailService.sendMail(mailData, function (err, info) {
-          if (err) console.log("failed");
-          else console.log("successfull");
-        });
-      });
-
       return res.status(201).json({
         message: "Review Assigned Successfully",
-        data: savedData,
+        data: transactionData.savedData,
         status: 200,
       });
     } catch (error) {
@@ -149,17 +158,21 @@ export default async (req, res) => {
   } else if (req.method === "PUT") {
     try {
       const resData = JSON.parse(req.body);
-      return;
+
+      let assigneeData = resData.assigned_to_id.map((item) => {
+        return {
+          assigned_to_id: item,
+        };
+      });
 
       const data = await prisma.review.update({
         where: { id: resData.id },
         data: {
-          created_by: resData.created_by,
-          assigned_to_id: resData.assigned_to_id,
-          template_id: resData.template_id,
-          status: resData.status ?? "pending",
-          frequency: resData.frequency,
-          review_type: resData.review_type,
+          created_by: resData.review_assigned_by,
+          is_published: resData.is_published,
+          ReviewAssignee: {
+            create: assigneeData,
+          },
         },
       });
       prisma.$disconnect();
@@ -199,7 +212,6 @@ export default async (req, res) => {
         });
       }
     } catch (error) {
-      console.log(error);
       return res
         .status(500)
         .json({ error: error, message: "Internal Server Error" });

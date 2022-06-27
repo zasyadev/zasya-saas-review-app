@@ -5,7 +5,7 @@ import Layout from "../../component/layout/Layout";
 // import loginImage from "../../assets/images/login-image.png";
 // import { LoadingSpinner } from "../../component/Loader/LoadingSpinner";
 
-function resetPassword() {
+function ResetPassword() {
   const router = useRouter();
   const params = router.query;
 
@@ -124,4 +124,4 @@ function resetPassword() {
   );
 }
 
-export default resetPassword;
+export default ResetPassword;

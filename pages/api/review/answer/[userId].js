@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-const scheduler = require("node-schedule");
+// const scheduler = require("node-schedule");
 
 const prisma = new PrismaClient();
 
@@ -37,7 +37,6 @@ export default async (req, res) => {
           .json({ status: 404, message: "No Record Found" });
       }
     } catch (error) {
-      console.log(error);
       return res.status(500).json({
         status: 500,
         message: "Internal Server Error",
