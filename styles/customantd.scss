@@ -86,39 +86,36 @@
   outline: 0;
 }
 .ant-modal-header {
-  background: linear-gradient(to right, #a855f7 0%, #7e22ce 100%);
-  border-radius: 10px;
-  width: 95%;
-  position: absolute;
-  left: 12px;
-  top: -25px;
+  background: #090154;
+  width: 100% !important;
+  // border-top-left-radius: 8px;
+  // border-top-right-radius: 8px;
+  // position: absolute;
   .ant-modal-title {
     color: #fff;
   }
 }
 .ant-modal-content {
-  border-radius: 10px;
-  padding-top: 15px;
+  // border-radius: 10px;
+  // padding-top: 15px;
   .ant-modal-close {
-    position: absolute;
-    top: -27px;
-    right: 7px;
     color: #fff;
   }
 }
 .ant-modal-footer {
   .ant-btn-primary {
-    border-color: #7f23cf;
-    background-color: #7f23cf;
+    // border-color: #7f23cf;
+    background-color: #090154;
   }
   .ant-btn-primary:hover {
-    color: #000;
-    border-color: #7f23cf;
-    background-color: #fff;
+    // color: #fff;
+    // border-color: #7f23cf;
+    // background-color: #fff;
   }
   .ant-btn-default {
-    border-color: #7f23cf;
-    color: #7f23cf;
+    // border-color: #7f23cf;
+    color: #fff;
+    background-color: #f87171;
   }
 }
 .ant-checkbox-wrapper {
@@ -181,5 +178,26 @@
         padding: 0 10px 5px;
       }
     }
+  }
+}
+.template-wrapper {
+  .input-box {
+    border-bottom: 1px solid black;
+  }
+  .question-select-box {
+    .ant-select-selector {
+      background-color: #f3f4f6 !important;
+      height: 3.2rem !important;
+      display: flex !important;
+      align-items: center !important;
+      width: 100% !important;
+    }
+  }
+}
+
+.review-collapse {
+  background-color: #090154;
+  .ant-collapse-header {
+    color: #fff !important;
   }
 }

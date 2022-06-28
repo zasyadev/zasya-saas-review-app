@@ -63,37 +63,40 @@ function TemplateLayout({ user }) {
 
   return (
     <div>
-      <div className=" px-3 md:px-8 h-40" />
-
-      <div className="px-3 md:px-8 h-auto -mt-24">
+      <div className="px-3 md:px-8 h-auto ">
         <div className="container mx-auto max-w-full">
           <div className="grid grid-cols-1 px-4 mb-16">
-            <div className="w-full bg-white rounded-xl overflow-hdden shadow-md p-4 ">
-              {formDetailShow ? (
-                <FormComponent
-                  user={user}
-                  setFormDetailShow={setFormDetailShow}
-                  formList={formList}
-                  editFormData={editFormData}
-                  editMode={editMode}
-                  setEditMode={setEditMode}
-                  fetchFormList={fetchFormList}
-                />
-              ) : (
-                <div className="">
-                  <div className="grid sm:flex bg-gradient-to-tr from-purple-500 to-purple-700 -mt-10 mb-4 rounded-xl text-white  items-center w-full h-40 sm:h-24 py-4 px-8 justify-between shadow-lg-purple ">
-                    <h2 className="text-white text-2xl font-bold">
-                      Template Lists{" "}
-                    </h2>
-                    <span
-                      className="text-center  rounded-full border-2 px-4 py-2 cursor-pointer hover:bg-white hover:text-purple-500 hover:border-2 hover:border-purple-500 "
-                      onClick={() => {
-                        setFormDetailShow(true);
-                      }}
-                    >
-                      Add New
-                    </span>
+            {/* <div className="w-full bg-white rounded-xl overflow-hdden shadow-md p-4 "> */}
+            {formDetailShow ? (
+              <FormComponent
+                user={user}
+                setFormDetailShow={setFormDetailShow}
+                formList={formList}
+                editFormData={editFormData}
+                editMode={editMode}
+                setEditMode={setEditMode}
+                fetchFormList={fetchFormList}
+              />
+            ) : (
+              <>
+                <div className="grid sm:flex  items-center w-full h-40 sm:h-24  justify-between">
+                  <h2 className="text-black text-2xl font-bold">
+                    Template Lists{" "}
+                  </h2>
+                  <div className="flex justify-end">
+                    <div className="my-4 ">
+                      <button
+                        className="bg-indigo-800 text-white text-sm py-3 text-center px-4 rounded-md"
+                        onClick={() => {
+                          setFormDetailShow(true);
+                        }}
+                      >
+                        Add New
+                      </button>
+                    </div>
                   </div>
+                </div>
+                <div className="w-full bg-white rounded-xl shadow-md p-4 ">
                   <div className="p-4 mt-8">
                     <div className="container mx-auto max-w-full">
                       <div className="grid grid-cols-1 lg:grid-cols-3 mb-4 items-center">
@@ -142,8 +145,9 @@ function TemplateLayout({ user }) {
                     </div>
                   </div>
                 </div>
-              )}
-              {/* {formList.length > 0 ? (
+              </>
+            )}
+            {/* {formList.length > 0 ? (
                           formList.map((form, idx) => {
                             return (
                               <div
@@ -185,7 +189,7 @@ function TemplateLayout({ user }) {
                         ) : (
                           <p>No Forms Found</p>
                         )} */}
-            </div>
+            {/* </div> */}
           </div>
         </div>
       </div>

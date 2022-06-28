@@ -97,28 +97,26 @@ function Profile({ user }) {
 
   return (
     <>
-      <div className=" px-3 md:px-8 h-40" />
-      <div className="px-3 md:px-8 h-auto -mt-24">
+      <div className="px-3 md:px-8 h-auto">
         <div className="grid grid-cols-1 xl:grid-cols-6 mt-1">
-          <div className="xl:col-start-1 xl:col-end-7 px-4 mb-16">
-            <div className="w-full bg-white rounded-xl overflow-hdden shadow-md p-4 ">
-              <div className="flex flex-wrap justify-center">
-                <div className="bg-gradient-to-tr from-purple-500 to-purple-700 -mt-10 mb-4 rounded-xl text-white grid items-center w-full h-24 py-4 px-8  shadow-lg-purple ">
-                  <div className="w-full flex item-center  justify-between">
-                    <h2 className="text-white text-2xl">Profile</h2>
-                    <div className="">
-                      <span
-                        className="text-center  rounded-full border-2 ml-3 px-4 py-2 cursor-pointer hover:bg-white hover:text-purple-500 hover:border-2 hover:border-purple-500 "
-                        onClick={showModal}
-                      >
-                        Change Setting
-                      </span>
-                    </div>
+          <div className="xl:col-start-1 xl:col-end-7 px-4 ">
+            <div className="rounded-xl text-white grid items-center w-full shadow-lg-purple my-3">
+              <div className="w-full flex item-center justify-between">
+                <h2 className="text-black text-2xl">Profile</h2>
+                <div className="flex justify-end ">
+                  <div>
+                    <button
+                      className="bg-indigo-800 text-white text-sm py-3 text-center px-4 rounded-md"
+                      onClick={showModal}
+                    >
+                      Change Setting
+                    </button>
                   </div>
                 </div>
               </div>
-
-              <Row className="mx-6 " justify="center">
+            </div>
+            <div className="w-full bg-white rounded-xl  shadow-md p-4 ">
+              <Row justify="center">
                 {/* <Col lg={8} className="flex  items-center justify-center">
                   <Image src={UserImage} alt="user" width={120} height={120} /> 
 
@@ -185,7 +183,10 @@ function Profile({ user }) {
                             },
                           ]}
                         >
-                          <Input placeholder="First Name" />
+                          <Input
+                            placeholder="First Name"
+                            className="bg-gray-100 h-12"
+                          />
                         </Form.Item>
                       </Col>
                       <Col md={24} sm={24} xs={24}>
@@ -198,7 +199,10 @@ function Profile({ user }) {
                             },
                           ]}
                         >
-                          <Input placeholder="Last Name" />
+                          <Input
+                            placeholder="Last Name"
+                            className="bg-gray-100 h-12"
+                          />
                         </Form.Item>{" "}
                       </Col>
                       <Col md={24} sm={24} xs={24}>
@@ -211,16 +215,20 @@ function Profile({ user }) {
                             },
                           ]}
                         >
-                          <Input placeholder="Email" disabled={true} />
+                          <Input
+                            placeholder="Email"
+                            disabled={true}
+                            className="bg-gray-100 h-12"
+                          />
                         </Form.Item>
                       </Col>
                     </Row>
                     <div className="text-center">
                       <Button
-                        className="text-center rounded-full border-2  mt-4 ml-3  cursor-pointer hover:bg-white hover:text-purple-500 hover:border-2 hover:border-purple-500 "
+                        className=" cursor-pointer bg-indigo-800 text-white text-base  text-center rounded-md h-full w-32"
                         htmlType="submit"
                       >
-                        Save
+                        Submit
                       </Button>
                     </div>
                   </Form>
@@ -231,13 +239,13 @@ function Profile({ user }) {
                   <p className="text-blue-gray-700 text-lg font-light leading-relaxed mt-6 mb-4"></p>
                 </div>
               </div>
-              <div className="p-4 ">
+              {/* <div className="p-4 ">
                 <div className="w-full flex justify-center -mt-8">
                   <a href="#pablo" className="mt-5">
                     <button className="false flex items-center justify-center gap-1 font-bold outline-none uppercase tracking-wider focus:outline-none focus:shadow-none transition-all duration-300 rounded-lg py-2.5 px-6 text-xs leading-normal bg-transparent text-purple-500 hover:text-purple-700 hover:bg-purple-50 active:bg-purple-100 "></button>
                   </a>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

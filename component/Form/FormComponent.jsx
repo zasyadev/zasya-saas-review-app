@@ -1,5 +1,5 @@
 import { TextField } from "@material-ui/core";
-import { Button } from "antd";
+import { Button, Input } from "antd";
 import React, { useState, useEffect } from "react";
 import { openNotificationBox } from "../../helpers/notification";
 import QuestionComponent from "./QuestionComponent";
@@ -218,86 +218,108 @@ function FormComponent({
 
   return (
     <div className="w-4/6 mx-auto">
-      <div className="  border-t-8 rounded-t-md border-cyan-500 shadow-lg mt-4">
-        <div>
-          <div className="w-full flex flex-col items-start px-4 pt-4 pb-5 ">
-            <div>
-              <TextField
-                fullWidth={true}
-                placeholder="Form Tittle"
-                multiline={true}
-                onChange={(e) => {
-                  setFormTitle(e.target.value);
-                }}
-                value={formTitle}
-                inputProps={{ style: { fontSize: 40, paddingTop: 10 } }}
-              />
-              <TextField
-                fullWidth={true}
-                placeholder="Description"
-                multiline={true}
-                onChange={(e) => {
-                  setFormDes(e.target.value);
-                }}
-                value={formDes}
-              />
-            </div>
+      <div className="w-full bg-white rounded-xl shadow-md p-4 mt-4 template-wrapper">
+        <div className="  rounded-t-md  mt-1">
+          <div className="w-full flex flex-col items-start  pt-2 pb-5 ">
+            <Input
+              placeholder="Form Title"
+              value={formTitle}
+              onChange={(e) => {
+                setFormTitle(e.target.value);
+              }}
+              className="input-box text-2xl "
+              bordered={false}
+            />
+            <Input
+              placeholder="Description"
+              value={formDes}
+              onChange={(e) => {
+                setFormDes(e.target.value);
+              }}
+              className="input-box text-base mt-4 "
+              bordered={false}
+            />
+            {/* <TextField
+              fullWidth={true}
+              placeholder="Form Tittle"
+              multiline={true}
+              onChange={(e) => {
+                setFormTitle(e.target.value);
+              }}
+              value={formTitle}
+              inputProps={{
+                style: { fontSize: 40, paddingTop: 10 },
+              }}
+            /> */}
+            {/* <TextField
+              fullWidth={true}
+              placeholder="Description"
+              multiline={true}
+              onChange={(e) => {
+                setFormDes(e.target.value);
+              }}
+              value={formDes}
+            /> */}
           </div>
         </div>
-      </div>
+        {console.log(questions)}
 
-      {questions?.length > 0 &&
-        questions?.map((question, idx) => (
-          <QuestionComponent
-            {...question}
-            editMode={editMode}
-            idx={idx}
-            removeElement={removeElement}
-            defineType={defineType}
-            showAsQuestion={showAsQuestion}
-            handleExpand={handleExpand}
-            addOption={addOption}
-            handleQuestionValue={handleQuestionValue}
-            handleOptionValue={handleOptionValue}
-            removeOption={removeOption}
-            handleScaleOptionValue={handleScaleOptionValue}
-          />
-        ))}
+        {questions?.length > 0 &&
+          questions?.map((question, idx) => (
+            <>
+              <QuestionComponent
+                {...question}
+                editMode={editMode}
+                idx={idx}
+                removeElement={removeElement}
+                defineType={defineType}
+                showAsQuestion={showAsQuestion}
+                handleExpand={handleExpand}
+                addOption={addOption}
+                handleQuestionValue={handleQuestionValue}
+                handleOptionValue={handleOptionValue}
+                removeOption={removeOption}
+                handleScaleOptionValue={handleScaleOptionValue}
+              />
+            </>
+          ))}
 
-      <div className="flex justify-center my-4">
-        <Button
-          className=" px-4 py-3 h-full rounded bg-cyan-500 text-white"
-          type="button"
-          onClick={() => {
-            addMoreQuestionField();
-          }}
-        >
-          <span className="MuiButton-label">
-            Add Question
-            <span className="MuiButton-endIcon MuiButton-iconSizeMedium">
-              +
+        <div className="flex justify-end items-end my-4">
+          <Button
+            // className=" px-4 py-3 h-full rounded bg-cyan-500 text-white"
+            className="bg-indigo-800 text-white text-sm py-3 px-4 rounded h-full"
+            type="button"
+            onClick={() => {
+              addMoreQuestionField();
+            }}
+          >
+            <span className="MuiButton-label">
+              Add Question
+              <span className="MuiButton-endIcon MuiButton-iconSizeMedium">
+                +
+              </span>
             </span>
-          </span>
-        </Button>
-        <Button
-          className=" px-4 py-3 h-full rounded bg-cyan-500 text-white mx-4"
-          type="button"
-          onClick={() => {
-            saveFormField();
-          }}
-        >
-          <span className="MuiButton-label">Save Template</span>
-        </Button>
-        <Button
-          className=" px-4 py-3 h-full rounded bg-cyan-500 text-white "
-          type="button"
-          onClick={() => {
-            setFormDetailShow(false);
-            setEditMode(false);
-          }}
-        >
-          <span className="MuiButton-label">Cancel</span>
-        </Button>
+          </Button>
+          <Button
+            className=" px-4 py-3 h-full rounded bg-red-400 text-white mx-4 "
+            type="button"
+            onClick={() => {
+              setFormDetailShow(false);
+              setEditMode(false);
+            }}
+          >
+            <span className="MuiButton-label">Cancel</span>
+          </Button>
+          <Button
+            className=" px-4 py-3 h-full rounded bg-indigo-800 text-white "
+            type="button"
+            onClick={() => {
+              saveFormField();
+            }}
+          >
+            <span className="MuiButton-label">Save Template</span>
+          </Button>
+        </div>
       </div>
     </div>
   );

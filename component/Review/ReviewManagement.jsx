@@ -10,7 +10,7 @@ import {
   Input,
   Radio,
 } from "antd";
-import { DeleteOutlined } from "@ant-design/icons";
+import { DeleteOutlined, UserSwitchOutlined } from "@ant-design/icons";
 import { openNotificationBox } from "../../helpers/notification";
 import FormView from "../Form/FormView";
 import CustomTable from "../../helpers/CustomTable";
@@ -243,10 +243,11 @@ function ReviewManagement({ user }) {
         <p>
           {record.is_published === "draft" && (
             <span
-              className="text-yellow-500 text-lg mx-2 cursor-pointer"
+              className="text-yellow-500 text-xl mx-2 cursor-pointer"
               onClick={() => onUpdate(record)}
+              title="Assign"
             >
-              Assign
+              <UserSwitchOutlined />
             </span>
           )}
 
@@ -254,9 +255,10 @@ function ReviewManagement({ user }) {
             <span
               className="text-red-500 text-lg mx-2 cursor-pointer"
               onClick={() => onDelete(record.id)}
+              title="Delete"
             >
-              {/* <DeleteOutlined /> */}
-              Delete
+              <DeleteOutlined />
+              {/* Delete */}
             </span>
           )}
         </p>

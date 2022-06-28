@@ -228,7 +228,7 @@ function TeamMembers({ user }) {
                       className="bg-indigo-800 text-white text-sm py-3 text-center px-4 rounded-md"
                       onClick={showModal}
                     >
-                      Create Review
+                      Create Team
                     </button>
                   </div>
                 </div>
@@ -286,7 +286,7 @@ function TeamMembers({ user }) {
           validateMessages={validateMessages}
         >
           <Row gutter={16}>
-            <Col md={12} xs={24}>
+            <Col md={12} xs={24} lg={24}>
               <Form.Item
                 name="first_name"
                 label="First Name"
@@ -299,7 +299,7 @@ function TeamMembers({ user }) {
                 <Input />
               </Form.Item>
             </Col>
-            <Col md={12} xs={24}>
+            <Col md={12} xs={24} lg={24}>
               <Form.Item
                 name="last_name"
                 label="Last Name"
@@ -313,7 +313,7 @@ function TeamMembers({ user }) {
               </Form.Item>
             </Col>
 
-            <Col md={12} xs={24}>
+            <Col md={12} xs={24} lg={24}>
               <Form.Item
                 name="email"
                 label="Email"
@@ -330,7 +330,7 @@ function TeamMembers({ user }) {
               </Form.Item>
             </Col>
 
-            <Col md={12} xs={24}>
+            <Col md={12} xs={24} lg={24}>
               <Form.Item
                 name="tags"
                 label="Tags Name"
