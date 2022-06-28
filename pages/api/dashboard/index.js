@@ -39,11 +39,15 @@ export default async (req, res) => {
       const userData = await prisma.user.findMany({
         where: { organization_id: reqBody.orgId },
       });
+      const applaudData = await prisma.userApplaud.findMany({
+        where: { user_id: reqBody.userId },
+      });
 
       let data = {
         reviewCreated: reviewCreated.length,
         reviewAnswered: reviewAnswered.length,
         userData: userData.length,
+        applaudData: applaudData,
       };
 
       if (data) {

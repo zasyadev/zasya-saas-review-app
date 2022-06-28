@@ -150,7 +150,7 @@ function DashBoard({ user }) {
           </div>
         </Col>
         <Col sm={24} md={24} lg={7} className="mt-6 h-full">
-          <SiderRight />
+          <SiderRight data={dashBoardData} />
         </Col>
       </Row>
     </>

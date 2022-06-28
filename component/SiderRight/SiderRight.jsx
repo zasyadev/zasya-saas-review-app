@@ -6,8 +6,7 @@ import { DoughnutChart } from "../../helpers/DoughnutChart";
 
 // import dynamic from "next/dynamic";
 
-function SiderRight() {
-  "";
+function SiderRight({ data }) {
   return (
     <>
       <Row
@@ -29,7 +28,9 @@ function SiderRight() {
             </div>
             <div>
               {" "}
-              <p className="text-xl font-semibold my-2">20</p>
+              <p className="text-xl font-semibold my-2">
+                {data?.applaudData?.length ?? 0}
+              </p>
             </div>
           </div>
         </Col>
