@@ -1,4 +1,4 @@
-import { prisma, PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import NextAuth from "next-auth";
 import Providers from "next-auth/providers";
 import { compareHashedPassword } from "../../../lib/auth";
@@ -41,6 +41,7 @@ export default NextAuth({
         prismaClient.$disconnect();
         if (user) {
           delete user.password;
+
           return user;
         } else {
           return null;
@@ -55,6 +56,7 @@ export default NextAuth({
       //  ...so we set "user" param of "token" to object from "authorize"...
       //  ...and return it...
       user && (token.user = user);
+
       return Promise.resolve(token); // ...here
     },
     session: async (session, user, sessionToken) => {

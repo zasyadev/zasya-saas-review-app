@@ -1,16 +1,19 @@
-import { Button, Col, Form, Modal, Row, Select, Table, Skeleton } from "antd";
+import { Button, Col, Form, Modal, Row, Select, Skeleton } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import React, { useState, useEffect } from "react";
 import { openNotificationBox } from "../../helpers/notification";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import CustomTable from "../../helpers/CustomTable";
-import SiderRight from "../SiderRight/SiderRight";
+import moment from "moment";
 
-function Applaud({ user, dataSource }) {
+function Applaud({ user }) {
   const [applaudform] = Form.useForm();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [membersList, setMembersList] = useState([]);
   const [applaudList, setApplaudList] = useState([]);
+  const [receivedApplaudList, setReceivedApplaudList] = useState([]);
+  const [receivedApplaudListVisible, setReceivedApplaudListVisible] =
+    useState(false);
   const [loading, setLoading] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [updateData, setUpdateData] = useState({});
@@ -35,7 +38,8 @@ function Applaud({ user, dataSource }) {
       .then((res) => res.json())
       .then((res) => {
         if (res.status === 200) {
-          setMembersList(res.data);
+          let data = res.data.filter((item) => item.id != user.id);
+          setMembersList(data);
         }
       })
       .catch((err) => {
@@ -44,10 +48,12 @@ function Applaud({ user, dataSource }) {
       });
   }
   async function fetchApplaud() {
-    await fetch("/api/applaud", { method: "GET" })
+    setLoading(true);
+    await fetch("/api/applaud/" + user.id, { method: "GET" })
       .then((res) => res.json())
       .then((res) => {
         setApplaudList(res.data);
+        setLoading(false);
       })
       .catch((err) => {
         console.log(err);
@@ -101,6 +107,7 @@ function Applaud({ user, dataSource }) {
     let obj = {
       user_id: values.user_id,
       comment: values.comment,
+      created_by: user.id,
     };
     editMode ? updateApplaud(obj) : addApplaud(obj);
   };
@@ -142,7 +149,25 @@ function Applaud({ user, dataSource }) {
   useEffect(() => {
     fetchMember();
     fetchApplaud();
+    fetchReceivedApplaud();
   }, []);
+
+  const fetchReceivedApplaud = async () => {
+    setReceivedApplaudList([]);
+    await fetch("/api/applaud/" + user.id, {
+      method: "POST",
+      body: JSON.stringify({
+        user: user.id,
+      }),
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        setReceivedApplaudList(res.data);
+      })
+      .catch((err) => {
+        setReceivedApplaudList([]);
+      });
+  };
 
   const columns = [
     {
@@ -178,66 +203,115 @@ function Applaud({ user, dataSource }) {
 
   return (
     <div>
-      <Row className="py-3">
-        <Col sm={24} md={24} lg={17}>
-          <div className="px-1  h-auto ">
-            <div className="container mx-auto max-w-full ">
-              <div className="grid grid-cols-1 px-2  mb-16">
-                {/* <div className="grid sm:flex bg-gradient-to-tr from-purple-500 to-purple-700 -mt-10 mb-4 rounded-xl text-white  items-center w-full h-40 sm:h-24 py-4 px-4 md:px-8 justify-between shadow-lg-purple ">
-              <h2 className="text-white text-2xl font-bold md:text-3xl">
-                Applaud{" "}
-              </h2>
-              <div>
-                <span
-                  className="text-center  rounded-full border-2 px-4 py-2 cursor-pointer hover:bg-white hover:text-purple-500 hover:border-2 hover:border-purple-500 "
-                  onClick={showModal}
-                >
-                  Create
-                </span>
-              </div>
-            </div> */}
-                <div className="flex justify-end ">
-                  <div className=" ">
+      {receivedApplaudListVisible ? (
+        <Row className="py-3 " justify="center">
+          <Col sm={24} md={18} lg={18}>
+            <div className="px-1  h-auto ">
+              <div className="container mx-auto max-w-full ">
+                <div className="grid grid-cols-1 px-2  mb-16">
+                  <div className="flex justify-end ">
                     <button
                       className="bg-indigo-800 text-white text-sm py-3 text-center px-4 rounded-md"
-                      onClick={showModal}
+                      onClick={() => setReceivedApplaudListVisible(false)}
                     >
-                      Create Review
+                      Back
                     </button>
                   </div>
-                </div>
-                <div className="w-full bg-white rounded-xl overflow-hdden shadow-md my-3">
-                  <div className="p-4 ">
-                    <div className="overflow-x-auto">
-                      {loading ? (
-                        <Skeleton
-                          title={false}
-                          active={true}
-                          width={[200]}
-                          className="mt-4"
-                          rows={3}
-                        />
-                      ) : (
-                        <CustomTable
-                          dataSource={applaudList}
-                          columns={columns}
-                          pagination={false}
-                          className="custom-table"
-                        />
-                      )}
+                  <div className="w-full bg-white rounded-xl overflow-hdden shadow-md my-3">
+                    <div className="p-4 ">
+                      <div className="overflow-x-auto">
+                        {receivedApplaudList.length > 0 ? (
+                          receivedApplaudList.map((item, idx) => {
+                            return (
+                              <div
+                                className="py-4  border-b-2"
+                                key={"applaud" + idx}
+                              >
+                                <p className="mb-1">
+                                  <span className="font-bold uppercase">
+                                    {item.created.first_name}
+                                  </span>{" "}
+                                  has Applauded you on{" "}
+                                  <span className="font-bold">
+                                    {moment(item.created_date).format(
+                                      "DD-MM-YYYY"
+                                    )}
+                                  </span>
+                                  .
+                                </p>
+                                <p>
+                                  {" "}
+                                  <span className="font-bold">
+                                    Comment :
+                                  </span>{" "}
+                                  {item.comment}
+                                </p>
+                              </div>
+                            );
+                          })
+                        ) : (
+                          <p>No Applauds received.</p>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        </Col>
-        <Col sm={24} md={24} lg={7}>
-          <div className="px-3">
-            <SiderRight />
-          </div>
-        </Col>
-      </Row>
+          </Col>
+        </Row>
+      ) : (
+        <Row className="py-3">
+          <Col sm={24} md={24} lg={24}>
+            <div className="px-1  h-auto ">
+              <div className="container mx-auto max-w-full ">
+                <div className="grid grid-cols-1 px-2  mb-16">
+                  <div className="flex justify-between ">
+                    <div className=" ">
+                      <button
+                        className="bg-indigo-800 text-white text-sm py-3 text-center px-4 rounded-md"
+                        onClick={() => setReceivedApplaudListVisible(true)}
+                      >
+                        Received Applauds
+                      </button>
+                    </div>
+                    <div className=" ">
+                      <button
+                        className="bg-indigo-800 text-white text-sm py-3 text-center px-4 rounded-md"
+                        onClick={showModal}
+                      >
+                        Create Applaud
+                      </button>
+                    </div>
+                  </div>
+                  <div className="w-full bg-white rounded-xl overflow-hdden shadow-md my-3">
+                    <div className="p-4 ">
+                      <div className="overflow-x-auto">
+                        {loading ? (
+                          <Skeleton
+                            title={false}
+                            active={true}
+                            width={[200]}
+                            className="mt-4"
+                            rows={3}
+                          />
+                        ) : (
+                          <CustomTable
+                            dataSource={applaudList}
+                            columns={columns}
+                            pagination={false}
+                            className="custom-table"
+                          />
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Col>
+        </Row>
+      )}
 
       <Modal
         title={editMode ? "Update" : "Create Applaud"}

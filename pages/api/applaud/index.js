@@ -11,6 +11,7 @@ export default async (req, res) => {
         data: {
           user: { connect: { id: reqBody.user_id } },
           comment: reqBody.comment,
+          created: { connect: { id: reqBody.created_by } },
         },
       });
 
@@ -29,7 +30,7 @@ export default async (req, res) => {
   } else if (req.method === "GET") {
     try {
       const data = await prisma.userApplaud.findMany({
-        include: { user: true },
+        include: { user: true, created: true },
       });
 
       if (data) {
@@ -55,6 +56,7 @@ export default async (req, res) => {
         data: {
           user_id: reqBody.user_id,
           comment: reqBody.comment,
+          created_by: reqBody.created_by,
         },
       });
       prisma.$disconnect();

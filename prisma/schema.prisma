@@ -38,7 +38,8 @@ model User {
   UserTags              UserTags?
   UserImage             UserImage?
   PasswordReset         PasswordReset?
-  UserApplaud           UserApplaud[]
+  userCreated           UserApplaud[]           @relation("userCreated")
+  userFeild             UserApplaud[]           @relation("userFeild")
 
   ReviewAssignee ReviewAssignee[]
   @@map("users")
@@ -138,7 +139,7 @@ model Review {
   created         User                 @relation("taskReviewBy", fields: [created_by], references: [id])
   created_by      String
   review_name     String
-  form            ReviewAssignTemplate @relation(fields: [form_id], references: [id],onDelete: Cascade)
+  form            ReviewAssignTemplate @relation(fields: [form_id], references: [id], onDelete: Cascade)
   form_id         Int
   status          String
   frequency       String
@@ -209,16 +210,17 @@ model ReviewAssigneeAnswerOption {
 }
 
 model ReviewTemplate {
-  id               Int      @id @default(autoincrement())
-  user             User     @relation(fields: [user_id], references: [id])
+  id               Int       @id @default(autoincrement())
+  user             User      @relation(fields: [user_id], references: [id])
   user_id          String
   form_title       String?
   form_description String?
   form_data        Json?
   status           Boolean
-  created_date     DateTime @default(now())
-  modified_date    DateTime @default(now())
+  created_date     DateTime  @default(now())
+  modified_date    DateTime  @default(now())
   delete_date      DateTime?
+
   @@map("review_template")
 }
 
@@ -268,9 +270,11 @@ model PasswordReset {
 
 model UserApplaud {
   id            Int      @id @default(autoincrement())
-  user          User     @relation(fields: [user_id], references: [id])
+  user          User     @relation("userFeild", fields: [user_id], references: [id])
   user_id       String
   comment       String?  @db.LongText
+  created       User     @relation("userCreated", fields: [created_by], references: [id])
+  created_by    String
   created_date  DateTime @default(now())
   modified_date DateTime @default(now())
 
