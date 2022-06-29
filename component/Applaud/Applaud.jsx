@@ -185,13 +185,13 @@ function Applaud({ user }) {
       render: (_, record) => (
         <div className="flex items-center ">
           <button
-            className="text-white text-base bg-indigo-800 text-center px-3 rounded-md pb-2 mr-2  cursor-pointer"
+            className="text-white text-base primary-bg-btn text-center px-3 rounded-md pb-2 mr-2  cursor-pointer"
             onClick={() => onUpdate(record)}
           >
             <EditOutlined />
           </button>
           <button
-            className="text-white text-base bg-indigo-800 text-center px-3 rounded-md pb-2 mr-2  cursor-pointer"
+            className="text-white text-base primary-bg-btn text-center px-3 rounded-md pb-2 mr-2  cursor-pointer"
             onClick={() => onDelete(record.id)}
           >
             <DeleteOutlined />
@@ -211,7 +211,7 @@ function Applaud({ user }) {
                 <div className="grid grid-cols-1 px-2  mb-16">
                   <div className="flex justify-end ">
                     <button
-                      className="bg-indigo-800 text-white text-sm py-3 text-center px-4 rounded-md"
+                      className="primary-bg-btn text-white text-sm py-3 text-center px-4 rounded-md"
                       onClick={() => setReceivedApplaudListVisible(false)}
                     >
                       Back
@@ -269,7 +269,7 @@ function Applaud({ user }) {
                   <div className="flex justify-between ">
                     <div className=" ">
                       <button
-                        className="bg-indigo-800 text-white text-sm py-3 text-center px-4 rounded-md"
+                        className="primary-bg-btn text-white text-sm py-3 text-center px-4 rounded-md"
                         onClick={() => setReceivedApplaudListVisible(true)}
                       >
                         Received Applauds
@@ -277,7 +277,7 @@ function Applaud({ user }) {
                     </div>
                     <div className=" ">
                       <button
-                        className="bg-indigo-800 text-white text-sm py-3 text-center px-4 rounded-md"
+                        className="primary-bg-btn text-white text-sm py-3 text-center px-4 rounded-md"
                         onClick={showModal}
                       >
                         Create Applaud

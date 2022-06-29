@@ -50,6 +50,7 @@ const QuestionComponent = ({
               onChange={(e) => {
                 handleQuestionValue(e.target.value, idx);
               }}
+              value={questionText}
             />
           </Col>
           <Col md={8} xs={8} lg={24}>
@@ -95,6 +96,7 @@ const QuestionComponent = ({
                       onChange={(e) => {
                         handleOptionValue(e.target.value, idx, j);
                       }}
+                      value={op.optionText}
                     />
                     {/* <TextField
                       fullWidth={true}

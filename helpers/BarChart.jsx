@@ -54,7 +54,7 @@ const data = {
     {
       label: "Dataset 1",
       data: [45, 10, 45, 26, 48, 68, 48, 48, 32, 47, 18, 56, 82],
-      backgroundColor: "#3a4870",
+      backgroundColor: "#0f123f",
     },
   ],
 };

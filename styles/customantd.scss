@@ -8,7 +8,7 @@
   list-style: none;
   margin: 0;
   padding: 0;
-  background-color: #090154;
+  background-color: #0f123f;
   .ant-menu-submenu {
     border-radius: 0.5rem;
     color: #fff;
@@ -36,14 +36,14 @@
   }
   .ant-menu-submenu-active {
     .ant-menu-submenu-title {
-      background: linear-gradient(to right, #fb7185 0%, #fda4af 100%);
+      background: linear-gradient(to right, #ff7473 0%, #fda4af 100%);
       color: #fff;
     }
   }
 
   .ant-menu-sub {
     color: #fff;
-    background: #090154;
+    background: #0f123f;
   }
 
   .sidebar-icon {
@@ -67,18 +67,18 @@
     display: flex;
   }
   .ant-menu-item::after {
-    border-right: 3px solid #fd9ba8;
+    border-right: 3px solid #fda4af;
   }
   .anticon + span {
     margin-left: 0px;
   }
 
   .ant-menu-item-active {
-    background: linear-gradient(to right, #fb7185 0%, #fda4af 100%) !important;
+    background: linear-gradient(to right, #ff6968 0%, #ffa3a3 100%) !important;
     color: #fff !important;
   }
   .ant-menu-item-selected {
-    background: linear-gradient(to right, #fb7185 0%, #fda4af 100%) !important;
+    background: linear-gradient(to right, #ff6968 0%, #ffa3a3 100%) !important;
     color: #fff !important;
   }
 }
@@ -86,7 +86,7 @@
   outline: 0;
 }
 .ant-modal-header {
-  background: #090154;
+  background: #0f123f;
   width: 100% !important;
   // border-top-left-radius: 8px;
   // border-top-right-radius: 8px;
@@ -105,7 +105,7 @@
 .ant-modal-footer {
   .ant-btn-primary {
     // border-color: #7f23cf;
-    background-color: #090154;
+    background-color: #0f123f;
   }
   .ant-btn-primary:hover {
     // color: #fff;
@@ -115,7 +115,7 @@
   .ant-btn-default {
     // border-color: #7f23cf;
     color: #fff;
-    background-color: #f87171;
+    background-color: #ff7473;
   }
 }
 .ant-checkbox-wrapper {
@@ -131,7 +131,7 @@
 .custom-table {
   .ant-table-thead {
     .ant-table-cell {
-      color: #090154;
+      color: #0f123f;
       background-color: #fff;
       font-style: none;
       font-size: medium;
@@ -150,12 +150,12 @@
 
 .sider {
   color: #fff;
-  background-color: #090154;
+  background-color: #0f123f;
 }
 
 .ant-layout-sider-trigger {
   color: #fff !important;
-  background: #090154 !important;
+  background: #0f123f !important;
 }
 
 .voilet {
@@ -195,9 +195,26 @@
   }
 }
 
-.review-collapse {
-  background-color: #090154;
+.ant-collapse-item-active {
   .ant-collapse-header {
+    background-color: #0f123f;
     color: #fff !important;
+  }
+}
+.review-font-color {
+  color: #0f123f;
+}
+
+.primary-bg-btn {
+  background-color: #0f123f;
+}
+
+.toggle-btn-bg {
+  background-color: #ff7473;
+}
+
+.modal-answer-wrapper {
+  .ant-modal-body {
+    padding: 0;
   }
 }

@@ -32,13 +32,17 @@ export function ReviewAssigneeList({ data, setReviewAssignee, user }) {
     {
       title: "Assign To",
       dataIndex: "assigned_to",
+      key: "assigned_to",
       render: (assigned_to) =>
         assigned_to.first_name + " " + assigned_to.last_name,
     },
     {
       title: "Status",
       dataIndex: "status",
-      render: (status) => <p>{status ? "Filled" : "Pending"}</p>,
+      key: "status",
+      render: (status) => {
+        <p>{status ? "Filled" : "Pending"}</p>;
+      },
     },
 
     {
@@ -89,81 +93,79 @@ export function ReviewAssigneeList({ data, setReviewAssignee, user }) {
 
   return (
     <>
+      <div className="flex items-end justify-end  my-3">
+        <div className="flex ">
+          <button
+            className="primary-bg-btn text-white text-sm py-3 text-center px-4 rounded-md "
+            onClick={() => setReviewAssignee(false)}
+          >
+            Back
+          </button>
+        </div>
+      </div>
       <Row gutter={[16, 16]}>
         <Col sm={18} md={18} lg={18}>
-          {/* <div className="grid grid-cols-1 px-4 mb-16"> */}
-          <div className="w-full bg-white rounded-xl overflow-hdden shadow-md p-4 ">
-            <div className="">
-              <div className="overflow-x-auto">
-                <Collapse
-                  accordion
-                  defaultActiveKey={["1"]}
-                  className="review-collapse"
-                  expandIconPosition="right"
-                >
-                  {Object.entries(dataSource)
-                    .reverse()
-                    .map(([key, value], idx) => {
-                      return (
-                        <>
-                          <Panel
-                            header={moment(key, "YYYY-MM-DD").format(
-                              datePattern
-                            )}
-                            key={1 + idx}
-                          >
-                            <CustomTable dataSource={value} columns={columns} />
-                          </Panel>
-                        </>
-                      );
-                    })}
-                </Collapse>
-              </div>
-            </div>
+          <div className="overflow-x-auto">
+            <Collapse
+              accordion
+              defaultActiveKey={["1"]}
+              className="review-collapse"
+              expandIconPosition="right"
+            >
+              {Object.entries(dataSource)
+                .reverse()
+                .map(([key, value], idx) => {
+                  return (
+                    <>
+                      <Panel
+                        header={moment(key, "YYYY-MM-DD").format(datePattern)}
+                        key={1 + idx}
+                      >
+                        <CustomTable dataSource={value} columns={columns} />
+                      </Panel>
+                    </>
+                  );
+                })}
+            </Collapse>
           </div>
         </Col>
         <Col
           sm={24}
           md={24}
           lg={6}
-          className=" bg-white rounded-xl shadow-md py-2"
+          className=" bg-white rounded-xl shadow-md py-2 h-30"
         >
-          <Row justify="center">
-            <Col lg={8}></Col>
-            <Col lg={16}>
-              <div className="flex  flex-col items-center justify-between">
-                <p className="font-medium text-sm mr-4">
+          <Row>
+            <Col>
+              <div className="flex  flex-col items-start justify-between text mx-3 my-3">
+                <div className="review-font-color font-semibold text-sm mr-4 leading-3">
                   Review Name :{" "}
-                  <span className="font-semibold text-sm">
+                  <span className=" review-font-color font-semibold text-sm">
                     {data.review_name}
                   </span>{" "}
-                </p>
-                <p className="font-medium text-sm mr-4">
+                </div>
+                <div className="review-font-color font-semibold text-sm mr-4 leading-3">
                   Frequency :
-                  <span className="font-semibold text-sm">
+                  <span className="review-font-color font-semibold text-sm">
                     {data.frequency}
                   </span>
-                </p>
-                <p className="font-medium text-sm">
+                </div>
+                <div className="review-font-color font-semibold text-sm">
                   Review Type :
-                  <span className="font-semibold text-sm">
+                  <span className="review-font-color font-semibold text-sm">
                     {data.review_type}
                   </span>
-                </p>
+                </div>
               </div>
             </Col>
-
-            {/* <button
-                className={`bg-indigo-800
-                     text-white text-sm py-3 text-center px-4 rounded-md `}
-                onClick={() => setReviewAssignee(false)}
-              >
-                Back
-              </button> */}
           </Row>
-          <div className="flex justify-between">
-            <div className="text-lime-600 text-sm">Review genrated:50</div>
-            <div className="text-red-700 text-sm">Review pending:20</div>
+          <div className="flex justify-between items-center my-4 ">
+            <div className="text-lime-600 text-sm font-semibold px-2">
+              Review genrated:50
+            </div>
+            <div className="text-red-700 text-sm font-semibold px-2">
+              Review pending:20
+            </div>
           </div>
         </Col>
       </Row>
@@ -173,6 +175,7 @@ export function ReviewAssigneeList({ data, setReviewAssignee, user }) {
         //    onOk={handleOk}
         onCancel={() => setAnswerDataModel(false)}
         footer={null}
+        wrapClassName="modal-answer-wrapper"
       >
         <div>
           {loading ? (

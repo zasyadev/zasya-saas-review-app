@@ -36,7 +36,7 @@ function HeaderLayout({ title, pageName }) {
             <Image src={User} alt="user" width={38} height={38} />
 
             <Button
-              className="text-black bg-white text-center justify-center ml-4 rounded-md  "
+              className="text-white primary-bg-btn text-center justify-center ml-4 rounded-md  "
               onClick={() => logoutHandler()}
             >
               Logout

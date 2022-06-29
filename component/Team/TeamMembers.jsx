@@ -225,7 +225,7 @@ function TeamMembers({ user }) {
                 <div className="flex justify-end">
                   <div className="my-4 ">
                     <button
-                      className="bg-indigo-800 text-white text-sm py-3 text-center px-4 rounded-md"
+                      className="primary-bg-btn text-white text-sm py-3 text-center px-4 rounded-md"
                       onClick={showModal}
                     >
                       Create Team

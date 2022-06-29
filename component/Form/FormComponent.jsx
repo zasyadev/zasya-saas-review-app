@@ -287,7 +287,7 @@ function FormComponent({
         <div className="flex justify-end items-end my-4">
           <Button
             // className=" px-4 py-3 h-full rounded bg-cyan-500 text-white"
-            className="bg-indigo-800 text-white text-sm py-3 px-4 rounded h-full"
+            className="primary-bg-btn text-white text-sm py-3 px-4 rounded h-full"
             type="button"
             onClick={() => {
               addMoreQuestionField();
@@ -301,7 +301,7 @@ function FormComponent({
             </span>
           </Button>
           <Button
-            className=" px-4 py-3 h-full rounded bg-red-400 text-white mx-4 "
+            className=" px-4 py-3 h-full rounded toggle-btn-bg text-white mx-4 "
             type="button"
             onClick={() => {
               setFormDetailShow(false);
@@ -311,7 +311,7 @@ function FormComponent({
             <span className="MuiButton-label">Cancel</span>
           </Button>
           <Button
-            className=" px-4 py-3 h-full rounded bg-indigo-800 text-white "
+            className=" px-4 py-3 h-full rounded primary-bg-btn text-white "
             type="button"
             onClick={() => {
               saveFormField();

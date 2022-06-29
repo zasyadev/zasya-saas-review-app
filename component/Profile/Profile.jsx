@@ -106,7 +106,7 @@ function Profile({ user }) {
                 <div className="flex justify-end ">
                   <div>
                     <button
-                      className="bg-indigo-800 text-white text-sm py-3 text-center px-4 rounded-md"
+                      className="primary-bg-btn text-white text-sm py-3 text-center px-4 rounded-md"
                       onClick={showModal}
                     >
                       Change Setting
@@ -225,7 +225,7 @@ function Profile({ user }) {
                     </Row>
                     <div className="text-center">
                       <Button
-                        className=" cursor-pointer bg-indigo-800 text-white text-base  text-center rounded-md h-full w-32"
+                        className=" cursor-pointer primary-bg-btn text-white text-base  text-center rounded-md h-full w-32"
                         htmlType="submit"
                       >
                         Submit

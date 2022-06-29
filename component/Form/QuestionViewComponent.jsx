@@ -22,6 +22,7 @@ const QuestionViewComponent = ({
     <div className="shadow-lg mt-8  px-2 cursor-pointer" key={idx + "close"}>
       <div className="flex flex-col items-start ml-4 py-5">
         <Typography variant="subtitle1" className="ml-0">
+          {console.log(questionText, "fghfhfg")}
           {idx + 1}. {questionText}
         </Typography>
 
@@ -33,11 +34,13 @@ const QuestionViewComponent = ({
                 onChange={(e) => handleAnswerChange(id, e.target.value)}
               >
                 {options?.map((op, j) => (
-                  <FormControlLabel
-                    control={<Radio className="mr-2" />}
-                    label={op.optionText}
-                    value={op.optionText}
-                  />
+                  <>
+                    <FormControlLabel
+                      control={<Radio className="mr-2" />}
+                      label={op.optionText}
+                      value={op.optionText}
+                    />
+                  </>
                 ))}
               </RadioGroup>
             </div>

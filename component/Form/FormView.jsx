@@ -88,6 +88,7 @@ function FormView({ user, setReviewAssign, reviewAssign }) {
     {
       title: "Assign By",
       dataIndex: "review",
+      key: "Assign_By",
       render: (review) =>
         review.created.first_name + " " + review.created.last_name,
     },
@@ -100,17 +101,25 @@ function FormView({ user, setReviewAssign, reviewAssign }) {
     {
       title: "Review Name",
       dataIndex: "review",
+      key: "review",
       render: (review) => review.review_name,
     },
     {
       title: "Frequency",
       dataIndex: "review",
+      key: "review",
       render: (review) => review.frequency,
     },
     {
       title: "Status",
+      key: "status",
       dataIndex: "status",
-      render: (status) => (status ? "Answered" : "Pending"),
+      render: (status) =>
+        status ? (
+          <p className="text-green-600">Answered</p>
+        ) : (
+          <p className="text-red-600">Pending</p>
+        ),
     },
 
     {
@@ -239,12 +248,15 @@ function FormView({ user, setReviewAssign, reviewAssign }) {
 
           {updateData?.review?.form?.questions.length > 0 &&
             updateData?.review?.form?.questions?.map((question, idx) => (
-              <QuestionViewComponent
-                {...question}
-                idx={idx}
-                open={false}
-                handleAnswerChange={handleAnswerChange}
-              />
+              <>
+                {console.log(question)}
+                <QuestionViewComponent
+                  {...question}
+                  idx={idx}
+                  open={false}
+                  handleAnswerChange={handleAnswerChange}
+                />
+              </>
             ))}
         </div>
       </Modal>

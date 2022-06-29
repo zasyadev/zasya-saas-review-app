@@ -15,8 +15,8 @@ const CustomTable = ({
       {...props}
       columns={columns}
       dataSource={dataSource}
-      rowKey={(record) => record.contact_group_id}
-      rowClassName={(record, index) => (index % 2 === 0 ? "" : "voilet")}
+      // rowKey={(record, index) => (record?.id ? record.id : index)}
+      rowClassName={(_, index) => (index % 2 === 0 ? "" : "voilet")}
       pagination={false}
     />
   );

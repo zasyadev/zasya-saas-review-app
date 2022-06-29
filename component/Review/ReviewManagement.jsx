@@ -211,7 +211,7 @@ function ReviewManagement({ user }) {
   const columns = [
     {
       title: "Review Name",
-
+      key: "review_name",
       render: (_, record) => (
         <p
           onClick={() => {
@@ -226,14 +226,17 @@ function ReviewManagement({ user }) {
     },
     {
       title: "Frequency",
+      key: "frequency ",
       dataIndex: "frequency",
     },
     {
       title: "Type",
+      key: "review_type ",
       dataIndex: "review_type",
     },
     {
       title: "Status",
+      key: "is_published ",
       dataIndex: "is_published",
     },
     {
@@ -296,7 +299,7 @@ function ReviewManagement({ user }) {
                 <div>
                   <button
                     className={`${
-                      reviewAssign ? "bg-red-400" : "bg-indigo-800"
+                      reviewAssign ? "toggle-btn-bg" : "primary-bg-btn"
                     } " text-white text-sm py-3 text-center px-4 rounded-l-md `}
                     onClick={() => setReviewAssign(true)}
                   >
@@ -304,7 +307,7 @@ function ReviewManagement({ user }) {
                   </button>
                   <button
                     className={`${
-                      reviewAssign ? "bg-indigo-800" : "bg-red-400"
+                      reviewAssign ? "primary-bg-btn" : "toggle-btn-bg"
                     } " text-white text-sm py-3 text-center px-4 rounded-r-md `}
                     onClick={() => setReviewAssign(false)}
                   >
@@ -314,7 +317,7 @@ function ReviewManagement({ user }) {
                 <div>
                   <div className="flex items-end">
                     <button
-                      className="bg-indigo-800 text-white text-sm py-3 text-center px-4 rounded-md"
+                      className="primary-bg-btn text-white text-sm py-3 text-center px-4 rounded-md"
                       onClick={showModal}
                     >
                       Create Review
