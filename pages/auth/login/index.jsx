@@ -4,9 +4,9 @@ import Layout from "../../../component/layout/Layout";
 
 function Login() {
   return (
-    <Layout>
-      <LoginPage />
-    </Layout>
+    // <Layout>
+    <LoginPage />
+    // </Layout>
   );
 }
 

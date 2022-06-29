@@ -4,9 +4,8 @@ import Layout from "../../../component/layout/Layout";
 
 function Register() {
   return (
-    <Layout>
-      <RegisterPage />
-    </Layout>
+    // <Layout>
+    <RegisterPage />
   );
 }
 

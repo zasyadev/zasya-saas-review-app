@@ -5,8 +5,31 @@
 @import "tailwindcss/utilities";
 
 @import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;1,300&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700&display=swap");
 
 html,
 body {
-  font-family: "Open Sans", sans-serif;
+  font-family: "Montserrat", sans-serif;
+}
+.primary-color-blue {
+  color: #0f123f;
+}
+.primary-border-color-blue {
+  border-color: #0f123f;
+}
+
+.login-image-wrapper {
+  background-image: url("../assets/images/banner-bg-shape.png");
+  background-color: #0f123f;
+}
+.login-heading {
+  font-weight: 700;
+  font-size: 38px;
+  text-align: center;
+  color: #0f123f;
+  text-transform: uppercase;
+  margin: 28px 0;
+}
+.btn-blue {
+  background-color: #0f123f;
 }
