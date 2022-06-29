@@ -2,7 +2,7 @@ import { Button, Col, Form, Modal, Row, Select, Skeleton } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import React, { useState, useEffect } from "react";
 import { openNotificationBox } from "../../helpers/notification";
-import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
+// import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import CustomTable from "../../helpers/CustomTable";
 import moment from "moment";
 
@@ -179,139 +179,141 @@ function Applaud({ user }) {
       dataIndex: "comment",
     },
 
-    {
-      title: "Action",
-      key: "action",
-      render: (_, record) => (
-        <div className="flex items-center ">
-          <button
-            className="text-white text-base primary-bg-btn text-center px-3 rounded-md pb-2 mr-2  cursor-pointer"
-            onClick={() => onUpdate(record)}
-          >
-            <EditOutlined />
-          </button>
-          <button
-            className="text-white text-base primary-bg-btn text-center px-3 rounded-md pb-2 mr-2  cursor-pointer"
-            onClick={() => onDelete(record.id)}
-          >
-            <DeleteOutlined />
-          </button>
-        </div>
-      ),
-    },
+    // {
+    //   title: "Action",
+    //   key: "action",
+    //   render: (_, record) => (
+    //     <div className="flex items-center ">
+    //       <button
+    //         className="text-white text-base primary-bg-btn text-center px-3 rounded-md pb-2 mr-2  cursor-pointer"
+    //         onClick={() => onUpdate(record)}
+    //       >
+    //         <EditOutlined />
+    //       </button>
+    //       <button
+    //         className="text-white text-base primary-bg-btn text-center px-3 rounded-md pb-2 mr-2  cursor-pointer"
+    //         onClick={() => onDelete(record.id)}
+    //       >
+    //         <DeleteOutlined />
+    //       </button>
+    //     </div>
+    //   ),
+    // },
   ];
 
   return (
     <div>
-      {receivedApplaudListVisible ? (
-        <Row className="py-3 " justify="center">
-          <Col sm={24} md={18} lg={18}>
-            <div className="px-1  h-auto ">
-              <div className="container mx-auto max-w-full ">
-                <div className="grid grid-cols-1 px-2  mb-16">
-                  <div className="flex justify-end ">
+      <Row className="py-3">
+        <Col sm={24} md={12}>
+          <div className="px-1  h-auto mt-11">
+            <div className="container mx-auto max-w-full ">
+              <div className="grid grid-cols-1 px-2  mb-16">
+                {/* <div className="flex justify-end ">
+                  <button
+                    className="primary-bg-btn text-white text-sm py-3 text-center px-4 rounded-md"
+                    onClick={() => setReceivedApplaudListVisible(false)}
+                  >
+                    Back
+                  </button>
+                </div> */}
+                <div className="w-full bg-white rounded-xl overflow-hdden shadow-md my-3">
+                  <div className="p-4 ">
+                    <div className="overflow-x-auto">
+                      <p className="font-semibold text-lg primary-color-blue">
+                        Received Applaud
+                      </p>
+                      {receivedApplaudList.length > 0 ? (
+                        receivedApplaudList.map((item, idx) => {
+                          return (
+                            <div
+                              className="py-4  border-b-2"
+                              key={"applaud" + idx}
+                            >
+                              <p className="mb-1">
+                                <span className="font-bold uppercase">
+                                  {item.created.first_name}
+                                </span>{" "}
+                                has Applauded you on{" "}
+                                <span className="font-bold">
+                                  {moment(item.created_date).format(
+                                    "DD-MM-YYYY"
+                                  )}
+                                </span>
+                                .
+                              </p>
+                              <p>
+                                {" "}
+                                <span className="font-bold">
+                                  Comment :
+                                </span>{" "}
+                                {item.comment}
+                              </p>
+                            </div>
+                          );
+                        })
+                      ) : (
+                        <p className="text-center">No Applauds received.</p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Col>
+        <Col sm={24} md={12}>
+          <div className="px-1  h-auto ">
+            <div className="container mx-auto max-w-full ">
+              <div className="grid grid-cols-1 px-2  mb-16">
+                <div className="flex justify-end ">
+                  {/* <div className=" ">
                     <button
                       className="primary-bg-btn text-white text-sm py-3 text-center px-4 rounded-md"
-                      onClick={() => setReceivedApplaudListVisible(false)}
+                      onClick={() => setReceivedApplaudListVisible(true)}
                     >
-                      Back
+                      Received Applauds
+                    </button>
+                  </div> */}
+                  <div className=" ">
+                    <button
+                      className="primary-bg-btn text-white text-sm py-3 text-center px-4 rounded-md"
+                      onClick={showModal}
+                    >
+                      Create Applaud
                     </button>
                   </div>
-                  <div className="w-full bg-white rounded-xl overflow-hdden shadow-md my-3">
-                    <div className="p-4 ">
-                      <div className="overflow-x-auto">
-                        {receivedApplaudList.length > 0 ? (
-                          receivedApplaudList.map((item, idx) => {
-                            return (
-                              <div
-                                className="py-4  border-b-2"
-                                key={"applaud" + idx}
-                              >
-                                <p className="mb-1">
-                                  <span className="font-bold uppercase">
-                                    {item.created.first_name}
-                                  </span>{" "}
-                                  has Applauded you on{" "}
-                                  <span className="font-bold">
-                                    {moment(item.created_date).format(
-                                      "DD-MM-YYYY"
-                                    )}
-                                  </span>
-                                  .
-                                </p>
-                                <p>
-                                  {" "}
-                                  <span className="font-bold">
-                                    Comment :
-                                  </span>{" "}
-                                  {item.comment}
-                                </p>
-                              </div>
-                            );
-                          })
-                        ) : (
-                          <p>No Applauds received.</p>
-                        )}
-                      </div>
+                </div>
+                <div className="w-full bg-white rounded-xl overflow-hdden shadow-md my-3">
+                  <div className="p-4 ">
+                    <div className="overflow-x-auto">
+                      <p className="font-semibold text-lg primary-color-blue">
+                        Created Applaud
+                      </p>
+                      {loading ? (
+                        <Skeleton
+                          title={false}
+                          active={true}
+                          width={[200]}
+                          className="mt-4"
+                          rows={3}
+                        />
+                      ) : (
+                        <CustomTable
+                          dataSource={applaudList}
+                          columns={columns}
+                          pagination={false}
+                          className="custom-table"
+                        />
+                      )}
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </Col>
-        </Row>
-      ) : (
-        <Row className="py-3">
-          <Col sm={24} md={24} lg={24}>
-            <div className="px-1  h-auto ">
-              <div className="container mx-auto max-w-full ">
-                <div className="grid grid-cols-1 px-2  mb-16">
-                  <div className="flex justify-between ">
-                    <div className=" ">
-                      <button
-                        className="primary-bg-btn text-white text-sm py-3 text-center px-4 rounded-md"
-                        onClick={() => setReceivedApplaudListVisible(true)}
-                      >
-                        Received Applauds
-                      </button>
-                    </div>
-                    <div className=" ">
-                      <button
-                        className="primary-bg-btn text-white text-sm py-3 text-center px-4 rounded-md"
-                        onClick={showModal}
-                      >
-                        Create Applaud
-                      </button>
-                    </div>
-                  </div>
-                  <div className="w-full bg-white rounded-xl overflow-hdden shadow-md my-3">
-                    <div className="p-4 ">
-                      <div className="overflow-x-auto">
-                        {loading ? (
-                          <Skeleton
-                            title={false}
-                            active={true}
-                            width={[200]}
-                            className="mt-4"
-                            rows={3}
-                          />
-                        ) : (
-                          <CustomTable
-                            dataSource={applaudList}
-                            columns={columns}
-                            pagination={false}
-                            className="custom-table"
-                          />
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </Col>
-        </Row>
-      )}
+          </div>
+        </Col>
+      </Row>
+      {/* )} */}
 
       <Modal
         title={editMode ? "Update" : "Create Applaud"}

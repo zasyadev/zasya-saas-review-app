@@ -40,7 +40,8 @@ function RegisterPage() {
         <section className="">
           <div className=" text-gray-800">
             <div className="flex  md:justify-between justify-center items-center flex-wrap h-full g-6">
-              <div className="xl:ml-20 xl:w-5/12 lg:w-5/12 md:w-8/12 mb-12 md:mb-0">
+              <div className="md:w-1/2 w-full mb-12 md:mb-0 px-8 md:px-20 relative flex flex-col justify-center h-screen">
+                <div className="login-top-image"></div>
                 <h2 className="login-heading">Register New account</h2>
                 <Form
                   form={registerForm}
@@ -143,8 +144,9 @@ function RegisterPage() {
                     </p>
                   </div>
                 </Form>
+                <div className="login-bottom-image"></div>
               </div>
-              <div className="grow-0 shrink-1 md:shrink-0 basis-auto xl:w-6/12 lg:w-6/12 md:w-9/12 mb-12 md:mb-0 h-screen">
+              <div className="md:w-1/2 w-full mb-12 md:mb-0 h-screen">
                 <div className="login-image-wrapper h-full flex justify-center items-center">
                   <Image src={loginImage} alt="login" />
                 </div>

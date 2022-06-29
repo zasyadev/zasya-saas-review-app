@@ -11,16 +11,16 @@ function SiderRight({ data }) {
   return (
     <>
       <Row
-        className=" bg-white rounded-xl shadow-md py-2"
+        className=" bg-white rounded-xl shadow-md py-8 px-4"
         justify="space-around"
       >
-        <Col sm={12} md={12} lg={12}>
+        <Col sm={12} md={12} lg={12} className="border-r border-slate-200">
           <div className=" flex flex-col items-center justify-center">
             <div>
               <ApplaudIcon />
             </div>
             <div>
-              <p className="text-xl font-semibold my-2">
+              <p className="text-xl font-extrabold my-2">
                 {data?.applaudData?.length ?? 0}
               </p>
             </div>
@@ -32,7 +32,7 @@ function SiderRight({ data }) {
               <StarIcon />
             </div>
             <div>
-              <p className="text-xl font-semibold my-2">18.5</p>
+              <p className="text-xl font-extrabold my-2">18.5</p>
             </div>
           </div>
         </Col>
