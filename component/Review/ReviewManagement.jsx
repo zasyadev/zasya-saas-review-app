@@ -14,7 +14,7 @@ import { DeleteOutlined, UserSwitchOutlined } from "@ant-design/icons";
 import { openNotificationBox } from "../../helpers/notification";
 import FormView from "../Form/FormView";
 import CustomTable from "../../helpers/CustomTable";
-import { ReviewAssigneeList } from "./ReviewAssigneelist";
+import ReviewAssigneeList from "./ReviewAssigneelist";
 
 function ReviewManagement({ user }) {
   const [form] = Form.useForm();
