@@ -2,7 +2,7 @@ import { Form, Input, message } from "antd";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useState } from "react";
-import loginImage from "../../assets/images/login-image.png";
+import loginImage from "../../assets/images/login_img.png";
 import { LoadingSpinner } from "../Loader/LoadingSpinner";
 
 function RegisterPage() {
@@ -37,13 +37,11 @@ function RegisterPage() {
       {loading ? (
         <LoadingSpinner />
       ) : (
-        <section className="my-5">
-          <div className="px-6 h-full text-gray-800">
-            <div className="flex xl:justify-center lg:justify-between justify-center items-center flex-wrap h-full g-6">
-              <div className="grow-0 shrink-1 md:shrink-0 basis-auto xl:w-6/12 lg:w-6/12 md:w-9/12 mb-12 md:mb-0">
-                <Image src={loginImage} alt="login" />
-              </div>
+        <section className="">
+          <div className=" text-gray-800">
+            <div className="flex  md:justify-between justify-center items-center flex-wrap h-full g-6">
               <div className="xl:ml-20 xl:w-5/12 lg:w-5/12 md:w-8/12 mb-12 md:mb-0">
+                <h2 className="login-heading">Register New account</h2>
                 <Form
                   form={registerForm}
                   layout="vertical"
@@ -54,7 +52,7 @@ function RegisterPage() {
                     <Form.Item name="first_name">
                       <Input
                         type="text"
-                        className="form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-green-500 focus:outline-none"
+                        className="form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white  focus:outline-none"
                         placeholder="First Name"
                       />
                     </Form.Item>
@@ -63,7 +61,7 @@ function RegisterPage() {
                     <Form.Item name="last_name">
                       <Input
                         type="text"
-                        className="form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-green-500 focus:outline-none"
+                        className="form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white  focus:outline-none"
                         placeholder="Last Name"
                       />
                     </Form.Item>
@@ -72,7 +70,7 @@ function RegisterPage() {
                     <Form.Item name="company_name">
                       <Input
                         type="text"
-                        className="form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-green-500 focus:outline-none"
+                        className="form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white  focus:outline-none"
                         placeholder="Company Name"
                       />
                     </Form.Item>
@@ -81,7 +79,7 @@ function RegisterPage() {
                     <Form.Item name="email">
                       <Input
                         type="text"
-                        className="form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-green-500 focus:outline-none"
+                        className="form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:outline-none"
                         placeholder="Email address"
                       />
                     </Form.Item>
@@ -90,7 +88,7 @@ function RegisterPage() {
                     <Form.Item name="password">
                       <Input
                         type="password"
-                        className="form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-green-500 focus:outline-none"
+                        className="form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white  focus:outline-none"
                         placeholder="Password"
                       />
                     </Form.Item>
@@ -120,28 +118,36 @@ function RegisterPage() {
                     >
                       <Input
                         type="password"
-                        className="form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-green-500 focus:outline-none"
+                        className="form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white  focus:outline-none"
                         placeholder="Confirm Password"
                       />
                     </Form.Item>
                   </div>
 
-                  <div className=" md:flex justify-between text-center lg:text-left">
+                  <div className=" md:block justify-between text-center lg:text-left mb-2">
                     <button
                       type="submit"
-                      className="inline-block px-7 py-3 bg-green-500 text-white font-medium text-sm leading-snug uppercase rounded shadow-md hover:bg-green-600 hover:shadow-lg focus:bg-green-600 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-green-700 active:shadow-lg transition duration-150 ease-in-out"
+                      className="inline-block px-7 py-3  text-white font-medium text-sm leading-snug uppercase rounded shadow-md  hover:shadow-lg  focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out w-full btn-blue"
                     >
                       Register
                     </button>
+                  </div>
+
+                  <div className=" md:flex justify-end text-center lg:text-left">
                     <p className="text-sm font-semibold mt-2 pt-1 mb-0">
                       <Link href="/auth/login">
-                        <span className="text-green-600 hover:text-green-700 focus:text-green-700 transition duration-200 ease-in-out cursor-pointer">
+                        <span className="primary-color-blue  font-semibold transition duration-200 ease-in-out cursor-pointer">
                           Back to Login
                         </span>
                       </Link>
                     </p>
                   </div>
                 </Form>
+              </div>
+              <div className="grow-0 shrink-1 md:shrink-0 basis-auto xl:w-6/12 lg:w-6/12 md:w-9/12 mb-12 md:mb-0 h-screen">
+                <div className="login-image-wrapper h-full flex justify-center items-center">
+                  <Image src={loginImage} alt="login" />
+                </div>
               </div>
             </div>
           </div>

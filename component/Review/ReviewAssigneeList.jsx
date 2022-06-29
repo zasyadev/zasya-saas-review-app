@@ -5,7 +5,7 @@ import moment from "moment";
 import { Modal, Collapse, Skeleton, Row, Col } from "antd";
 import AnswerViewComponent from "./AnswerViewComponent";
 
-export function ReviewAssigneeList({ data, setReviewAssignee, user }) {
+function ReviewAssigneeList({ data, setReviewAssignee, user }) {
   const { Panel } = Collapse;
   const datePattern = "DD-MM-YYYY";
   const [answerData, setAnswerData] = useState({});
@@ -222,3 +222,5 @@ export function ReviewAssigneeList({ data, setReviewAssignee, user }) {
     </>
   );
 }
+
+export default ReviewAssigneeList;
