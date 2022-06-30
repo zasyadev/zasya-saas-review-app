@@ -37,16 +37,11 @@ function SiderRight({ data }) {
           </div>
         </Col>
       </Row>
-<<<<<<< HEAD
       <Row>
         <div className="w-full bg-white rounded-xl shadow-md px-4 py-4 mt-8 ">
           <p className="text-lg font-bold mb-4 primary-color-blue">
             Feedback given to me
           </p>
-=======
-      <Row className="mx-2">
-        <div className="w-full bg-white rounded-xl shadow-md px-4 py-6 mt-8 ">
->>>>>>> 495e89778e273d2e1a84d7a6d8b96f8051a90be5
           <LineChart />
         </div>
       </Row>
