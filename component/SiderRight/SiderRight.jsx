@@ -11,7 +11,7 @@ function SiderRight({ data }) {
   return (
     <>
       <Row
-        className=" bg-white rounded-xl shadow-md py-2"
+        className=" bg-white rounded-xl shadow-md py-2 mx-2"
         justify="space-around"
       >
         <Col sm={12} md={12} lg={12}>
@@ -37,7 +37,7 @@ function SiderRight({ data }) {
           </div>
         </Col>
       </Row>
-      <Row>
+      <Row className="mx-2">
         <div className="w-full bg-white rounded-xl shadow-md px-4 py-6 mt-8 ">
           <LineChart />
         </div>

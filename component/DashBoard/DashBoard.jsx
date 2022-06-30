@@ -130,7 +130,7 @@ function DashBoard({ user }) {
                   <BarChart />
                 </div>
               </div>
-              <Row className="mt-6 mx-5" gutter={16}>
+              <Row className="mt-6 mx-5" gutter={[16, 16]}>
                 <Col md={12} lg={12}>
                   <div className="w-full bg-white rounded-xl overflow-hidden shadow-md p-4 ">
                     <h2 className="text-xl mt-1 font-semibold">
@@ -149,7 +149,7 @@ function DashBoard({ user }) {
             </div>
           </div>
         </Col>
-        <Col sm={24} md={24} lg={7} className="mt-6 h-full">
+        <Col sm={24} md={24} lg={7} className="mt-6 h-full ">
           <SiderRight data={dashBoardData} />
         </Col>
       </Row>

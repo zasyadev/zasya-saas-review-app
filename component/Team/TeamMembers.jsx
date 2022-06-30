@@ -223,7 +223,7 @@ function TeamMembers({ user }) {
             </div> */}
 
                 <div className="flex justify-end">
-                  <div className="my-4 ">
+                  <div className="mb-2 ">
                     <button
                       className="primary-bg-btn text-white text-sm py-3 text-center px-4 rounded-md"
                       onClick={showModal}

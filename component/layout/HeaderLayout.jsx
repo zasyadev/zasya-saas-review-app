@@ -21,32 +21,24 @@ function HeaderLayout({ title, pageName }) {
     router.replace("/");
   };
   return (
-    <Header
-      className="bg-indigo-100 border-2 border-b-black "
-      style={{
-        padding: 0,
-      }}
-    >
+    <Header className="bg-indigo-100 border-2 border-b-black p-0">
       <Row>
-        <Col lg={16}>
-          <div className="text-lg font-bold mx-6 mt-3">{title} </div>
+        <Col md={18} xs={12}>
+          <div className=" font-bold mx-3 md:mx-6 mt-3 text-lg">{title} </div>
         </Col>
-        <Col lg={8}>
-          <div className="flex items-end justify-end mt-4 mx-3">
-            <Image src={User} alt="user" width={38} height={38} />
-
-            <Button
-              className="text-white primary-bg-btn text-center justify-center ml-4 rounded-md  "
-              onClick={() => logoutHandler()}
-            >
-              Logout
-              {/* <span
+        <Col md={6} xs={12}>
+          <div className="flex  justify-end  ">
+            <div className="mx-4 mt-3 hidden md:block">
+              <Image src={User} alt="user" width={38} height={38} />
+            </div>
+            <div className=" mx-2 md:mx-4 ">
+              <button
+                className="primary-bg-btn text-white text-sm py-2 text-center  px-2 md:px-4 rounded-md "
                 onClick={() => logoutHandler()}
-                className=" cursor-pointer text-white text-sm tracking-wider   "
               >
-                 <LogoutOutlined /> 
-              </span> */}
-            </Button>
+                Logout
+              </button>
+            </div>
           </div>
         </Col>
       </Row>
