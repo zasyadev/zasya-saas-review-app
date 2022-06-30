@@ -125,7 +125,7 @@ function ReviewManagement({ user }) {
 
   async function fetchUserData() {
     setUserList([]);
-    await fetch("/api/user/adminuser", {
+    await fetch("/api/user/oraganizationId/" + user.organization_id, {
       method: "GET",
     })
       .then((response) => response.json())

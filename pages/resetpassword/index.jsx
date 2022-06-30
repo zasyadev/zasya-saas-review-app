@@ -55,7 +55,7 @@ function ResetPassword() {
             <div className="md:w-1/2 w-full mb-12 md:mb-0 px-8 md:px-24 relative flex flex-col justify-center h-screen">
               <div className="login-top-image"></div>
 
-              <h2 className="login-heading ">Reset Password</h2>
+              <h2 className="login-heading">Reset Password</h2>
               <Form
                 form={resetForm}
                 layout="vertical"

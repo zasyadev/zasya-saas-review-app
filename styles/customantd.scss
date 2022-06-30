@@ -339,3 +339,14 @@
 .bg-color-grey {
   background-color: #f5f5f5;
 }
+.ant-collapse {
+  border-radius: 0.75rem !important;
+  border: 0;
+  .ant-collapse-header {
+    border-radius: 0.75rem !important;
+  }
+  .ant-collapse-content {
+    border-top: 0;
+    border-radius: 0.75rem !important;
+  }
+}
