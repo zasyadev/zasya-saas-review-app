@@ -21,7 +21,7 @@ function HeaderLayout({ title, pageName }) {
     router.replace("/");
   };
   return (
-    <Header className="bg-indigo-100 border-2 border-b-neutral-300 p-0">
+    <Header className="bg-color-grey border-b border-b-neutral-300 p-0">
       <Row>
         <Col md={18} xs={12}>
           <div className=" font-bold mx-3 md:mx-6 mt-3 text-lg">{title} </div>

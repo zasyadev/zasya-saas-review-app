@@ -208,8 +208,8 @@ function TeamMembers({ user }) {
   return (
     <>
       <Row>
-        <Col sm={24} md={24} lg={24}>
-          <div className="px-3 md:px-8 h-auto my-6 ">
+        <Col sm={24} md={24}>
+          <div className="px-3 md:px-8 h-auto mt-5">
             <div className="container mx-auto max-w-full">
               <div className="grid grid-cols-1 px-4 mb-16">
                 {/* <div className="grid sm:flex bg-gradient-to-tr from-purple-500 to-purple-700 -mt-10 mb-4 rounded-xl text-white  items-center w-full h-40 sm:h-24 py-4 px-6 md:px-8 justify-between shadow-lg-purple ">
@@ -223,7 +223,7 @@ function TeamMembers({ user }) {
             </div> */}
 
                 <div className="flex justify-end">
-                  <div className="mb-2 ">
+                  <div className="my-2 ">
                     <button
                       className="primary-bg-btn text-white text-sm py-3 text-center px-4 rounded-md"
                       onClick={showModal}

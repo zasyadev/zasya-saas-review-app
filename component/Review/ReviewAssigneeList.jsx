@@ -96,7 +96,7 @@ function ReviewAssigneeList({ data, setReviewAssignee, user }) {
 
   return (
     <>
-      <div className="flex items-end justify-end  my-3">
+      <div className="flex items-end justify-end my-3">
         <div className="flex ">
           <button
             className="primary-bg-btn text-white text-sm py-3 text-center px-4 rounded-md "
@@ -106,7 +106,7 @@ function ReviewAssigneeList({ data, setReviewAssignee, user }) {
           </button>
         </div>
       </div>
-      <Row gutter={[16, 16]}>
+      <Row gutter={[32, 16]}>
         <Col sm={24} md={16} lg={16}>
           <div className="overflow-x-auto">
             <Collapse
