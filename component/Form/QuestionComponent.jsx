@@ -195,7 +195,6 @@ const QuestionComponent = ({
                     <p className="mr-4">{lowerLabel ?? 0}</p>
                     <Input
                       placeholder="Scale Text"
-                      disabled
                       className="input-box  text-base  w-1/2"
                       bordered={false}
                       onChange={(e) => {
@@ -217,7 +216,6 @@ const QuestionComponent = ({
                     <p className="mr-4">{higherLabel ?? 5}</p>
                     <Input
                       placeholder="Scale Text"
-                      disabled
                       className="input-box text-base w-1/2"
                       bordered={false}
                       onChange={(e) => {

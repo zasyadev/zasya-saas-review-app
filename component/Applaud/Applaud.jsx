@@ -203,11 +203,22 @@ function Applaud({ user }) {
 
   return (
     <div>
-      <Row className="py-3">
-        <Col sm={24} md={12}>
-          <div className="px-1  h-auto mt-11">
-            <div className="container mx-auto max-w-full ">
-              <div className="grid grid-cols-1 px-2  mb-16">
+      <div className="px-3 md:px-8 h-auto mt-5">
+        <div className="container mx-auto max-w-full">
+          <div className="flex justify-end">
+            <div className="my-3 mx-3 ">
+              <button
+                className="primary-bg-btn text-white text-sm py-3 text-center px-4 rounded-md"
+                onClick={showModal}
+              >
+                Create Applaud
+              </button>
+            </div>
+          </div>
+
+          <Row>
+            <Col xs={24} md={12}>
+              <div className="grid grid-cols-1 px-2 w-full">
                 {/* <div className="flex justify-end ">
                   <button
                     className="primary-bg-btn text-white text-sm py-3 text-center px-4 rounded-md"
@@ -216,7 +227,7 @@ function Applaud({ user }) {
                     Back
                   </button>
                 </div> */}
-                <div className="w-full bg-white rounded-xl overflow-hdden shadow-md my-3">
+                <div className=" bg-white rounded-xl overflow-hdden shadow-md my-3">
                   <div className="p-4 ">
                     <div className="overflow-x-auto">
                       <p className="font-semibold text-lg primary-color-blue">
@@ -258,15 +269,13 @@ function Applaud({ user }) {
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
-        </Col>
-        <Col sm={24} md={12}>
-          <div className="px-1  h-auto ">
-            <div className="container mx-auto max-w-full ">
-              <div className="grid grid-cols-1 px-2  mb-16">
-                <div className="flex justify-end ">
-                  {/* <div className=" ">
+            </Col>
+            <Col xs={24} md={12}>
+              <div className="px-1  h-auto ">
+                <div className="container mx-auto max-w-full ">
+                  <div className="grid grid-cols-1 px-2  mb-16">
+                    <div className="flex justify-end ">
+                      {/* <div className=" ">
                     <button
                       className="primary-bg-btn text-white text-sm py-3 text-center px-4 rounded-md"
                       onClick={() => setReceivedApplaudListVisible(true)}
@@ -274,114 +283,108 @@ function Applaud({ user }) {
                       Received Applauds
                     </button>
                   </div> */}
-                  <div className=" ">
-                    <button
-                      className="primary-bg-btn text-white text-sm py-3 text-center px-4 rounded-md"
-                      onClick={showModal}
-                    >
-                      Create Applaud
-                    </button>
-                  </div>
-                </div>
-                <div className="w-full bg-white rounded-xl overflow-hdden shadow-md my-3">
-                  <div className="p-4 ">
-                    <div className="overflow-x-auto">
-                      <p className="font-semibold text-lg primary-color-blue">
-                        Created Applaud
-                      </p>
-                      {loading ? (
-                        <Skeleton
-                          title={false}
-                          active={true}
-                          width={[200]}
-                          className="mt-4"
-                          rows={3}
-                        />
-                      ) : (
-                        <CustomTable
-                          dataSource={applaudList}
-                          columns={columns}
-                          pagination={false}
-                          className="custom-table"
-                        />
-                      )}
+                    </div>
+                    <div className="w-full bg-white rounded-xl overflow-hdden shadow-md my-3">
+                      <div className="p-4 ">
+                        <div className="overflow-x-auto">
+                          <p className="font-semibold text-lg primary-color-blue">
+                            Created Applaud
+                          </p>
+                          {loading ? (
+                            <Skeleton
+                              title={false}
+                              active={true}
+                              width={[200]}
+                              className="mt-4"
+                              rows={3}
+                            />
+                          ) : (
+                            <CustomTable
+                              dataSource={applaudList}
+                              columns={columns}
+                              pagination={false}
+                              className="custom-table"
+                            />
+                          )}
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
-        </Col>
-      </Row>
-      {/* )} */}
-
-      <Modal
-        title={editMode ? "Update" : "Create Applaud"}
-        visible={isModalVisible}
-        onOk={applaudform.submit}
-        onCancel={() => onCancel()}
-        footer={[
-          <>
-            <Button key="cancel" type="default" onClick={() => onCancel()}>
-              Cancel
-            </Button>
-            <Button key="add" type="primary" onClick={applaudform.submit}>
-              {editMode ? "Update" : "Add"}
-            </Button>
-          </>,
-        ]}
-      >
-        <Form
-          layout="vertical"
-          form={applaudform}
-          onFinish={onFinish}
-          validateMessages={validateMessages}
-        >
-          <Row gutter={16}>
-            <Col md={24} xs={24}>
-              <Form.Item
-                name="user_id"
-                label="Member Name"
-                rules={[
-                  {
-                    required: true,
-                  },
-                ]}
-              >
-                <Select
-                  placeholder="Select Member"
-                  showSearch
-                  filterOption={(input, option) =>
-                    option.children
-                      .toLowerCase()
-                      .indexOf(input.toLowerCase()) >= 0
-                  }
-                >
-                  {membersList.map((data, index) => (
-                    <Select.Option key={index} value={data.id}>
-                      {data.first_name}
-                    </Select.Option>
-                  ))}
-                </Select>
-              </Form.Item>
-            </Col>
-
-            <Col md={24} xs={24}>
-              <Form.Item
-                name="comment"
-                label="Comment"
-                rules={[
-                  {
-                    required: true,
-                  },
-                ]}
-              >
-                <TextArea />
-              </Form.Item>
             </Col>
           </Row>
-        </Form>
-      </Modal>
+          {/* )} */}
+
+          <Modal
+            title={editMode ? "Update" : "Create Applaud"}
+            visible={isModalVisible}
+            onOk={applaudform.submit}
+            onCancel={() => onCancel()}
+            footer={[
+              <>
+                <Button key="cancel" type="default" onClick={() => onCancel()}>
+                  Cancel
+                </Button>
+                <Button key="add" type="primary" onClick={applaudform.submit}>
+                  {editMode ? "Update" : "Add"}
+                </Button>
+              </>,
+            ]}
+          >
+            <Form
+              layout="vertical"
+              form={applaudform}
+              onFinish={onFinish}
+              validateMessages={validateMessages}
+            >
+              <Row gutter={16}>
+                <Col md={24} xs={24}>
+                  <Form.Item
+                    name="user_id"
+                    label="Member Name"
+                    rules={[
+                      {
+                        required: true,
+                      },
+                    ]}
+                  >
+                    <Select
+                      placeholder="Select Member"
+                      showSearch
+                      filterOption={(input, option) =>
+                        option.children
+                          .toLowerCase()
+                          .indexOf(input.toLowerCase()) >= 0
+                      }
+                    >
+                      {membersList.map((data, index) => (
+                        <Select.Option key={index} value={data.id}>
+                          {data.first_name}
+                        </Select.Option>
+                      ))}
+                    </Select>
+                  </Form.Item>
+                </Col>
+
+                <Col md={24} xs={24}>
+                  <Form.Item
+                    name="comment"
+                    label="Comment"
+                    rules={[
+                      {
+                        required: true,
+                      },
+                    ]}
+                  >
+                    <TextArea />
+                  </Form.Item>
+                </Col>
+              </Row>
+            </Form>
+          </Modal>
+        </div>
+      </div>
     </div>
   );
 }

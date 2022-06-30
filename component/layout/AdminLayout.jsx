@@ -97,12 +97,12 @@ function AdminLayout(props) {
           setTitle={setTitle}
         />
         <Layout>
-          <Content className="bg-indigo-100">
+          <Content className="bg-color-grey">
             {/* <HeaderLayout /> */}
             <HeaderLayout title={title} />
             {props.children}
           </Content>
-          <Footer className="text-center bg-indigo-100">
+          <Footer className="text-center bg-color-grey">
             Review App ©2021 Created by Zasya Solution
           </Footer>
         </Layout>
