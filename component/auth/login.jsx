@@ -5,6 +5,8 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import loginImage from "../../assets/images/login_img.png";
+import loginTopImage from "../../assets/images/login-top-design.png";
+import loginBottomImage from "../../assets/images/login-bottom-design.png";
 import { LoadingSpinner } from "../Loader/LoadingSpinner";
 
 function LoginPage() {
@@ -36,7 +38,8 @@ function LoginPage() {
         <section className="h-screen">
           <div className="text-gray-800">
             <div className="flex  md:justify-between justify-center items-center flex-wrap h-full g-6">
-              <div className="xl:ml-20 xl:w-5/12 lg:w-5/12 md:w-8/12 mb-12 md:mb-0">
+              <div className="md:w-1/2 w-full mb-12 md:mb-0 px-8 md:px-20 relative flex flex-col justify-center h-screen">
+                <div className="login-top-image"></div>
                 <h2 className="login-heading">Login to your account</h2>
                 <Form
                   form={loginForm}
@@ -86,8 +89,9 @@ function LoginPage() {
                     </Link>
                   </div>
                 </Form>
+                <div className="login-bottom-image"></div>
               </div>
-              <div className="grow-0 shrink-1 md:shrink-0 basis-auto xl:w-6/12 lg:w-6/12 md:w-9/12 mb-12 md:mb-0 h-screen">
+              <div className="md:w-1/2 w-full mb-12 md:mb-0 h-screen">
                 <div className="login-image-wrapper h-full flex justify-center items-center">
                   <Image src={loginImage} alt="login" />
                 </div>

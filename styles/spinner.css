@@ -4,7 +4,7 @@
   animation: spinner 1.5s linear infinite;
 }
 .loaderimg {
-  background-image: url("../assets/images/bg.jpg");
+  background-image: url("../assets/images/banner-bg-shape.png");
 }
 @-webkit-keyframes spinner {
   0% {

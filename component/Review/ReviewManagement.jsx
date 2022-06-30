@@ -215,7 +215,7 @@ function ReviewManagement({ user }) {
       render: (_, record) => (
         <p
           onClick={() => {
-            setReviewAssignee(true);
+            record.is_published != "draft" ? setReviewAssignee(true) : null;
             setReviewAssigneeData(record);
           }}
           className="cursor-pointer underline"

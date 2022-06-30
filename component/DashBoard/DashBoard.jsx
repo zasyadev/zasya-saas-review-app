@@ -4,11 +4,8 @@ import Image from "next/image";
 import threeUser from "../../assets/Icon/threeusers.png";
 import ReviewIcon from "../../assets/Icon/reviewicon.png";
 import BarChart from "../../helpers/BarChart";
-// import Doughnut from "../../helpers/Doughnut";
-import { LineChart } from "../../helpers/LineChart";
+import { SmallApplaudIcon } from "../../assets/Icon/icons";
 import dynamic from "next/dynamic";
-// import HeaderLayout from "../layout/HeaderLayout";
-// import SiderRight from "../SiderRight/siderRight";
 
 const SiderRight = dynamic(import("../SiderRight/SiderRight"), {
   ssr: false,
@@ -32,10 +29,8 @@ function DashBoard({ user }) {
         if (response.status === 200) {
           setDashboardData(response.data);
         }
-        // setLoading(false);
       })
       .catch((err) => {
-        // console.log(err);
         setDashboardData([]);
       });
   }
@@ -46,43 +41,32 @@ function DashBoard({ user }) {
 
   return (
     <>
-      <Row>
-        <Col sm={24} md={24} lg={16}>
-          <div className="screen px-3 md:px-8 mt-14">
+      <Row className="pr-4">
+        <Col sm={24} md={24} lg={17}>
+          <div className="screen px-3 md:px-8 mt-6">
             <div className="container mx-auto max-w-full">
-              <div className="grid grid-cols-1 md:grid-cols-3 mb-4 ">
-                <div className="px-4  mb-10">
-                  <div className="w-full bg-white rounded-xl overflow-hdden shadow-md p-4 ">
+              <div className="grid grid-cols-1 md:grid-cols-3 mb-4 gap-4">
+                <div className=" mb-10 grd-bg-pink rounded-xl">
+                  <div className="w-full  rounded-xl overflow-hdden shadow-md px-4 py-5">
                     <div className="flex flex-wrap  border-gray-200 ">
-                      <div className="bg-gradient-to-tr from-pink-500 to-pink-700  mb-4 rounded-xl text-white grid items-center w-10 h-10 py-1 px-1 justify-center shadow-lg-pink ">
-                        <Image
-                          src={ReviewIcon}
-                          alt="logo"
-                          width={20}
-                          height={20}
-                        />
+                      <div className="bg-white  mb-4 text-black grid items-center w-10 h-10 py-1 px-1 justify-center shadow-lg-pink rounded-full">
+                        <SmallApplaudIcon />
                       </div>
-                      <div className="pl-3 max-w-full flex-grow flex-1 mb-2 text-right ">
-                        <div className="text-gray-500 font-medium tracking-wide text-sm  mb-1">
+                      <div className="pl-3 max-w-full flex-grow flex-1 mb-2 ">
+                        <div className="text-white font-semibold tracking-wide text-sm  mb-1">
                           Review Created
                         </div>
-                        <span className="text-xl text-gray-900 ">
+                        <span className="text-xl text-white ">
                           {dashBoardData.reviewCreated ?? 0}
                         </span>
                       </div>
                     </div>
-                    {/* <div className="text-sm text-gray-700 pt-4 flex items-center  justify-between">
-                     <span className="text-green-500 ml-1 mr-2">3.48</span>
-                    <span className="font-light whitespace-nowrap">
-                    Since last month
-                    </span>
-                    </div> */}
                   </div>
                 </div>
-                <div className="px-4 mb-10">
-                  <div className="w-full bg-white rounded-xl overflow-hdden shadow-md p-4 ">
+                <div className=" mb-10">
+                  <div className="w-full bg-white rounded-xl overflow-hdden shadow-md px-4 py-5 ">
                     <div className="flex flex-wrap  border-gray-200 ">
-                      <div className="bg-gradient-to-tr from-orange-500 to-orange-700  mb-4 rounded-xl text-white grid items-center w-10 h-10 py-1 px-1 justify-center shadow-lg-orange ">
+                      <div className="grd-bg-pink  mb-4 rounded-full text-white grid items-center w-10 h-10 py-1 px-1 justify-center shadow-lg-orange ">
                         <Image
                           src={ReviewIcon}
                           alt="logo"
@@ -90,8 +74,8 @@ function DashBoard({ user }) {
                           height={20}
                         />
                       </div>
-                      <div className="w-full pl-3 max-w-full flex-grow flex-1 mb-2 text-right ">
-                        <h5 className="text-gray-500 font-medium tracking-wide text-sm mb-1 ">
+                      <div className="w-full pl-3 max-w-full flex-grow flex-1 mb-2  ">
+                        <h5 className="text-gray-500 font-semibold tracking-wide text-sm mb-1 ">
                           Review Answered
                         </h5>
                         <span className="text-xl text-gray-900">
@@ -102,10 +86,10 @@ function DashBoard({ user }) {
                   </div>
                 </div>
 
-                <div className="px-4 mb-10">
-                  <div className="w-full bg-white rounded-xl overflow-hdden shadow-md p-4 ">
+                <div className=" mb-10">
+                  <div className="w-full bg-white rounded-xl overflow-hdden shadow-md px-4 py-5">
                     <div className="flex flex-wrap  border-gray-200 ">
-                      <div className="bg-gradient-to-tr from-purple-500 to-purple-700  mb-4 rounded-xl text-white grid items-center w-10 h-10 py-1 px-1 justify-center shadow-lg-purple ">
+                      <div className="grd-bg-pink  mb-4 rounded-full text-white grid items-center w-10 h-10 py-1 px-1 justify-center shadow-lg-purple ">
                         <Image
                           src={threeUser}
                           alt="icon"
@@ -113,8 +97,8 @@ function DashBoard({ user }) {
                           height={20}
                         />
                       </div>
-                      <div className="w-full pl-3 max-w-full flex-grow flex-1 mb-2 text-right ">
-                        <h5 className="text-gray-500 font-medium tracking-wide text-sm mb-1 ">
+                      <div className="w-full pl-3 max-w-full flex-grow flex-1 mb-2  ">
+                        <h5 className="text-gray-500 font-semibold tracking-wide text-sm mb-1 ">
                           Users
                         </h5>
                         <span className="text-xl text-gray-900">
