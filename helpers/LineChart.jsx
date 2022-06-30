@@ -55,7 +55,7 @@ const LineChart = () => {
       options={defaultState.options}
       series={defaultState.series}
       type="area"
-      height={160}
+      height={250}
     />
   );
 };
