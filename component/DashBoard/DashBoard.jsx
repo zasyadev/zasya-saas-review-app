@@ -50,11 +50,11 @@ function DashBoard({ user }) {
         <Col sm={24} md={24} lg={17}>
           <div className="screen px-3 md:px-8 mt-6">
             <div className="container mx-auto max-w-full">
-              <div className="grid grid-cols-1 md:grid-cols-3 mb-4 gap-4">
-                <div className=" mb-10 grd-bg-pink rounded-xl">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="grd-bg-pink rounded-xl ">
                   <div className="w-full  rounded-xl overflow-hdden shadow-md px-4 py-5">
-                    <div className="flex flex-wrap  border-gray-200 ">
-                      <div className="bg-white  mb-4 text-black grid items-center w-10 h-10 py-1 px-1 justify-center shadow-lg-pink rounded-full">
+                    <div className="flex flex-wrap items-center   ">
+                      <div className="bg-white   text-black grid items-center w-10 h-10 py-1 px-1 justify-center shadow-lg-pink rounded-full">
                         <SmallApplaudIcon />
                       </div>
                       <div className="pl-3 max-w-full flex-grow flex-1 mb-2 ">
@@ -115,11 +115,11 @@ function DashBoard({ user }) {
                 </div>
               </div>
               <div>
-                <div className="w-full bg-white rounded-xl overflow-hidden shadow-md p-4 ">
+                <div className="w-full bg-white rounded-xl overflow-hidden shadow-md p-4 my-3 ">
                   <BarChart />
                 </div>
               </div>
-              <Row className="mt-6 mx-5" gutter={16}>
+              <Row className="mt-6 mx-5" gutter={[16, 16]}>
                 <Col md={12} lg={12}>
                   <div className="w-full bg-white rounded-xl overflow-hidden shadow-md p-4 ">
                     <h2 className="text-xl mt-1 font-semibold">
@@ -138,7 +138,7 @@ function DashBoard({ user }) {
             </div>
           </div>
         </Col>
-        <Col sm={24} md={24} lg={7} className="mt-6 h-full">
+        <Col sm={24} md={24} lg={7} className="mt-6 h-full ">
           <SiderRight data={dashBoardData} />
         </Col>
       </Row>

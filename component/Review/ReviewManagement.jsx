@@ -306,12 +306,12 @@ function ReviewManagement({ user }) {
             />
           ) : (
             <div className="grid grid-cols-1 px-4 mb-16">
-              <div className="flex items-center justify-between mb-3">
-                <div>
+              <div className=" md:flex items-center justify-between mb-3  ">
+                <div className="">
                   <button
                     className={`${
                       reviewAssign ? "toggle-btn-bg" : "primary-bg-btn"
-                    } " text-white text-sm py-3 text-center px-4 rounded-l-md `}
+                    } " text-white text-sm py-3 text-center px-4   md:rounded-r-none md:rounded-l-md  rounded-md  w-full md:w-fit mt-2`}
                     onClick={() => setReviewAssign(true)}
                   >
                     Review Recived
@@ -319,16 +319,16 @@ function ReviewManagement({ user }) {
                   <button
                     className={`${
                       reviewAssign ? "primary-bg-btn" : "toggle-btn-bg"
-                    } " text-white text-sm py-3 text-center px-4 rounded-r-md `}
+                    } " text-white text-sm py-3 text-center px-4  md:rounded-l-none md:rounded-r-md  rounded-md w-full md:w-fit mt-2`}
                     onClick={() => setReviewAssign(false)}
                   >
                     Review Created
                   </button>
                 </div>
                 <div>
-                  <div className="flex items-end">
+                  <div className="md:flex items-end mt-2 ">
                     <button
-                      className="primary-bg-btn text-white text-sm py-3 text-center px-4 rounded-md"
+                      className="primary-bg-btn text-white text-sm py-3 text-center px-4 rounded-md w-full "
                       onClick={showModal}
                     >
                       Create Review

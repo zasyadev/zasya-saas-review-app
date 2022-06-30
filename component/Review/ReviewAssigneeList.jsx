@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import CustomTable from "../../helpers/CustomTable";
-// import { DeleteOutlined } from "@ant-design/icons";
+import { EyeOutlined } from "@ant-design/icons";
 import moment from "moment";
 import { Modal, Collapse, Skeleton, Row, Col } from "antd";
 import AnswerViewComponent from "./AnswerViewComponent";
@@ -40,9 +40,12 @@ function ReviewAssigneeList({ data, setReviewAssignee, user }) {
       title: "Status",
       dataIndex: "status",
       key: "status",
-      render: (status) => {
-        <p>{status ? "Filled" : "Pending"}</p>;
-      },
+      render: (status) =>
+        status ? (
+          <p className="text-green-600">Filled</p>
+        ) : (
+          <p className="text-red-600">Pending</p>
+        ),
     },
 
     {
@@ -59,7 +62,7 @@ function ReviewAssigneeList({ data, setReviewAssignee, user }) {
                 fetchAnswer(record);
               }}
             >
-              View
+              <EyeOutlined />
             </span>
           ) : null}
           {/* 
