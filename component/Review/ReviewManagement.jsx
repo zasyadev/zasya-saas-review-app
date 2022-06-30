@@ -267,7 +267,7 @@ function ReviewManagement({ user }) {
 
           {record.created_by === user.id && (
             <span
-              className="text-red-500 text-lg mx-2 cursor-pointer"
+              className="primary-color-blue text-lg mx-2 cursor-pointer"
               onClick={() => onDelete(record.id)}
               title="Delete"
             >

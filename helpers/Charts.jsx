@@ -4,8 +4,8 @@ const BarChart = () => {
   const defaultState = {
     series: [
       {
-        name: "sales",
-        data: [2, 3, 4, 10, 8, 7, 1, 9, 10],
+        name: "rating",
+        data: [2, 3, 4, 10, 8, 7, 1, 9, 10, 6, 8, 4],
       },
     ],
 
@@ -16,21 +16,35 @@ const BarChart = () => {
       },
       plotOptions: {
         bar: {
-          borderRadius: 25,
+          borderRadius: 14,
+          columnWidth: "40%",
           dataLabels: {
             position: "top", // top, center, bottom
           },
         },
       },
+      responsive: [
+        {
+          breakpoint: 500,
+          options: {
+            plotOptions: {
+              bar: {
+                borderRadius: 1,
+                columnWidth: "90%",
+              },
+            },
+          },
+        },
+      ],
       dataLabels: {
         enabled: true,
         formatter: function (val) {
-          return val + "%";
+          return val;
         },
         offsetY: -20,
         style: {
           fontSize: "12px",
-          colors: ["#304758"],
+          colors: ["#0F123F"],
         },
       },
       xaxis: {

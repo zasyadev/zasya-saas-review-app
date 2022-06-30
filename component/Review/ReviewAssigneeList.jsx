@@ -42,9 +42,9 @@ function ReviewAssigneeList({ data, setReviewAssignee, user }) {
       key: "status",
       render: (status) =>
         status ? (
-          <p className="text-green-600">Filled</p>
+          <p className="text-green-400">Filled</p>
         ) : (
-          <p className="text-red-600">Pending</p>
+          <p className="text-red-400">Pending</p>
         ),
     },
 
@@ -55,7 +55,7 @@ function ReviewAssigneeList({ data, setReviewAssignee, user }) {
         <div className="">
           {record.status == "answered" ? (
             <span
-              className="text-yellow-500 text-lg mx-2 cursor-pointer"
+              className="FormView text-lg mx-2 cursor-pointer"
               onClick={() => {
                 setAnswerDataModel(true);
                 //   setAnswerData(record);
@@ -107,7 +107,7 @@ function ReviewAssigneeList({ data, setReviewAssignee, user }) {
         </div>
       </div>
       <Row gutter={[16, 16]}>
-        <Col sm={18} md={18} lg={18}>
+        <Col sm={24} md={16} lg={16}>
           <div className="overflow-x-auto">
             <Collapse
               accordion
@@ -134,28 +134,28 @@ function ReviewAssigneeList({ data, setReviewAssignee, user }) {
         </Col>
         <Col
           sm={24}
-          md={24}
-          lg={6}
+          md={8}
+          lg={8}
           className=" bg-white rounded-xl shadow-md py-2 h-30"
         >
           <Row>
             <Col>
               <div className="flex  flex-col items-start justify-between text mx-3 my-3">
-                <div className="review-font-color font-semibold text-sm mr-4 leading-3">
+                <div className="primary-color-blue font-semibold text-lg mr-4 leading-3 mb-2">
                   Review Name :{" "}
-                  <span className=" review-font-color font-semibold text-sm">
+                  <span className=" primary-color-blue font-semibold text-lg">
                     {data.review_name}
                   </span>{" "}
                 </div>
-                <div className="review-font-color font-semibold text-sm mr-4 leading-3">
+                <div className="primary-color-blue font-semibold text-lg mr-4 leading-3 mb-2">
                   Frequency :
-                  <span className="review-font-color font-semibold text-sm">
+                  <span className="primary-color-blue font-semibold text-lg">
                     {data.frequency}
                   </span>
                 </div>
-                <div className="review-font-color font-semibold text-sm">
+                <div className="primary-color-blue font-semibold text-lg mb-2">
                   Review Type :
-                  <span className="review-font-color font-semibold text-sm">
+                  <span className="primary-color-blue font-semibold text-lg">
                     {data.review_type}
                   </span>
                 </div>
@@ -163,11 +163,11 @@ function ReviewAssigneeList({ data, setReviewAssignee, user }) {
             </Col>
           </Row>
           <div className="flex justify-between items-center my-4 ">
-            <div className="text-lime-600 text-sm font-semibold px-2">
-              Review genrated:50
+            <div className="text-green-400 text-base font-semibold px-2">
+              Review genrated : 50
             </div>
-            <div className="text-red-700 text-sm font-semibold px-2">
-              Review pending:20
+            <div className="text-red-400 text-base font-semibold px-2">
+              Review pending : 20
             </div>
           </div>
         </Col>

@@ -116,9 +116,9 @@ function FormView({ user, setReviewAssign, reviewAssign }) {
       dataIndex: "status",
       render: (status) =>
         status ? (
-          <p className="text-green-600">Answered</p>
+          <p className="text-green-400">Answered</p>
         ) : (
-          <p className="text-red-600">Pending</p>
+          <p className="text-red-400">Pending</p>
         ),
     },
 
@@ -128,7 +128,7 @@ function FormView({ user, setReviewAssign, reviewAssign }) {
       render: (_, record) => (
         <p>
           <span
-            className="text-yellow-500 text-lg mx-2"
+            className="primary-color-blue text-lg mx-2"
             onClick={() => showModal(record)}
           >
             <EyeOutlined />

@@ -187,20 +187,20 @@ function TeamMembers({ user }) {
       title: "Action",
       key: "action",
       render: (_, record) => (
-        <div>
-          <button
-            className="text-white text-base bg-indigo-800 text-center px-3 rounded-md pb-2 mr-2 my-2 "
+        <p>
+          <span
+            className="primary-color-blue text-xl mx-2 cursor-pointer "
             onClick={() => onUpdate(record)}
           >
             <EditOutlined />
-          </button>
+          </span>
           <button
-            className="text-white text-base bg-indigo-800 text-center px-3 rounded-md pb-2 my-2"
+            className="primary-color-blue text-xl mx-2 cursor-pointer"
             onClick={() => onDelete(record.email)}
           >
             <DeleteOutlined />
           </button>
-        </div>
+        </p>
       ),
     },
   ];

@@ -1,3 +1,61 @@
+import Chart from "react-apexcharts";
+
+const LineChart = () => {
+  const defaultState = {
+    series: [
+      {
+        name: "Chart Gradient",
+        data: [10, 41, 35, 51, 49, 62, 69, 91, 148],
+      },
+    ],
+    options: {
+      chart: {
+        id: "li",
+        group: "social",
+        type: "area",
+        height: 160,
+        zoom: {
+          enabled: false,
+        },
+      },
+      colors: ["#f8e2fd"],
+      xaxis: {
+        position: "bottom",
+        axisBorder: {
+          show: false,
+        },
+        axisTicks: {
+          show: false,
+        },
+      },
+      grid: {
+        yaxis: {
+          lines: {
+            show: false,
+          },
+        },
+        lines: {
+          show: false,
+        },
+      },
+      title: {
+        text: "Chart Gradient ",
+      },
+    },
+  };
+
+  return (
+    <Chart
+      options={defaultState.options}
+      series={defaultState.series}
+      type="area"
+      height={160}
+    />
+  );
+};
+
+export default LineChart;
+
 // import React from "react";
 // import {
 //   Chart as ChartJS,
@@ -71,60 +129,3 @@
 //     </>
 //   );
 // }
-
-import Chart from "react-apexcharts";
-
-const LineChart = () => {
-  const defaultState = {
-    series: [
-      {
-        name: "Chart Gradient",
-        data: [10, 41, 35, 51, 49, 62, 69, 91, 148],
-      },
-    ],
-    options: {
-      chart: {
-        id: "li",
-        group: "social",
-        type: "area",
-        height: 160,
-        width: 300,
-      },
-      colors: ["#f8e2fd"],
-      xaxis: {
-        position: "bottom",
-        axisBorder: {
-          show: false,
-        },
-        axisTicks: {
-          show: false,
-        },
-      },
-      grid: {
-        yaxis: {
-          lines: {
-            show: false,
-          },
-        },
-        lines: {
-          show: false,
-        },
-      },
-      title: {
-        text: "Chart Gradient ",
-      },
-    },
-  };
-
-  return (
-    <Chart
-      options={defaultState.options}
-      series={defaultState.series}
-      type="area"
-      height={160}
-      width={300}
-    />
-  );
-};
-
-export default LineChart;

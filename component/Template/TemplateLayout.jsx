@@ -113,8 +113,8 @@ function TemplateLayout({ user }) {
                                       setEditFormData(form);
                                     }}
                                   >
-                                    <div className="bg-gradient-to-tr from-pink-500 to-pink-700 -mt-10 mb-4 rounded-xl text-white grid items-center w-full h-24 py-4 px-4 justify-center shadow-lg-pink ">
-                                      <span className="material-icons text-white text-3xl leading-none">
+                                    <div className="grd-bg-pink -mt-10 mb-4 rounded-xl text-white grid items-center w-full h-24 py-4 px-4 justify-center shadow-lg-pink ">
+                                      <span className="material-icons text-white text-3xl  font-semibold leading-none">
                                         {form?.form_data?.title}
                                       </span>
                                     </div>
@@ -127,7 +127,7 @@ function TemplateLayout({ user }) {
                                       icon={false}
                                       onConfirm={() => deleteForm(form.id)}
                                     >
-                                      <span className="font-light whitespace-nowrap cursor-pointer">
+                                      <span className="font-semibold whitespace-nowrap cursor-pointer">
                                         Remove
                                       </span>
                                     </Popconfirm>
