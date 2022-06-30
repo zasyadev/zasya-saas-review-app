@@ -225,7 +225,7 @@ function Profile({ user }) {
                     </Row>
                     <div className="text-center">
                       <Button
-                        className=" cursor-pointer primary-bg-btn text-white text-base  text-center rounded-md h-full w-32"
+                        className="py-2 cursor-pointer primary-bg-btn text-white text-base  text-center rounded-md h-full w-32"
                         htmlType="submit"
                       >
                         Submit

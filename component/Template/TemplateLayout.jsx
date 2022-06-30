@@ -96,14 +96,17 @@ function TemplateLayout({ user }) {
                     </div>
                   </div>
                 </div>
-                <div className="w-full bg-white rounded-xl shadow-md p-4 ">
+                <div className="w-full bg-white rounded-xl shadow-md md:p-4 p-0">
                   <div className="p-4 mt-8">
                     <div className="container mx-auto max-w-full">
                       <div className="grid grid-cols-1 lg:grid-cols-3 mb-4 items-center">
                         {formList.length > 0 ? (
                           formList.map((form, idx) => {
                             return (
-                              <div className="px-4" key={idx + "form"}>
+                              <div
+                                className="md:px-4 px-2 mb-12 md:mb-0"
+                                key={idx + "form"}
+                              >
                                 <div className="w-full bg-white rounded-xl overflow-hdden shadow-md p-4 ">
                                   <div
                                     className="flex flex-wrap border-b border-gray-200  cursor-pointer"

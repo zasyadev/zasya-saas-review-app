@@ -79,11 +79,11 @@ function SiderLayout({ collapsed, setCollapsed, items, setTitle }) {
       className="sider min-h-screen "
       onCollapse={(value) => setCollapsed(value)}
       // collapsedWidth={0}
-      width={270}
+      width={250}
     >
       <div className="flex-col items-stretch min-h-full flex-nowrap px-0 relative">
         <a className="mt-3 text-center w-full inline-block">
-          <h1 className="text-white first-line: text-xl font-serif font-bold leading-normal mt-0 mb-1">
+          <h1 className="text-white first-line: text-xl  font-bold leading-normal mt-0 mb-1">
             Review App
           </h1>
         </a>

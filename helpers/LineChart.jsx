@@ -4,7 +4,7 @@ const LineChart = () => {
   const defaultState = {
     series: [
       {
-        name: "Chart Gradient",
+        name: "Line",
         data: [10, 41, 35, 51, 49, 62, 69, 91, 148],
       },
     ],
@@ -40,6 +40,12 @@ const LineChart = () => {
       },
       title: {
         text: "Chart Gradient ",
+        style: {
+          fontSize: "16",
+          fontWeight: "500",
+          fontFamily: "Montserrat",
+          color: "#0f123f",
+        },
       },
     },
   };

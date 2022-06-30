@@ -9,9 +9,9 @@ import { ApplaudIcon, StarIcon } from "../../assets/Icon/icons";
 
 function SiderRight({ data }) {
   return (
-    <>
+    <div className="mx-3 md:mx-0">
       <Row
-        className=" bg-white rounded-xl shadow-md py-8 px-4 mx-3"
+        className=" bg-white rounded-xl shadow-md py-8 px-4"
         justify="space-around"
       >
         <Col sm={12} md={12} lg={12} className="border-r border-slate-200">
@@ -46,7 +46,7 @@ function SiderRight({ data }) {
         </div>
       </Row>
       {/* <DoughnutChart /> */}
-    </>
+    </div>
   );
 }
 

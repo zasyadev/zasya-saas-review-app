@@ -27,7 +27,7 @@
     }
     .ant-menu {
       .ant-menu-item {
-        height: 66px;
+        height: 60px;
         font-weight: 600;
         font-size: 17px;
         grid-gap: 2rem;
@@ -62,7 +62,7 @@
     padding: 5px 10px;
     border-radius: 0.5rem;
     grid-gap: 2rem;
-    height: 66px;
+    height: 60px;
     display: flex;
     align-items: center;
 
@@ -260,6 +260,7 @@
   width: 250px;
   bottom: 0;
   left: 0;
+  z-index: -1;
 }
 .login-top-image {
   background-image: url("../assets/images/login-top-design.png");
@@ -272,6 +273,7 @@
   width: 250px;
   top: 0;
   right: 0;
+  z-index: -1;
 }
 .login-heading {
   font-weight: 700;
@@ -314,4 +316,7 @@
     color: #fff;
     border-color: #0f123f;
   }
+}
+.ant-collapse {
+  border-radius: 0.75rem !important;
 }

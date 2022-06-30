@@ -72,6 +72,12 @@ const BarChart = () => {
       },
       title: {
         text: "Company Ratting Received Per Month ",
+        style: {
+          fontSize: "20",
+          fontWeight: "600",
+          fontFamily: "Montserrat",
+          color: "#0f123f",
+        },
       },
 
       colors: ["#0F123F"],
