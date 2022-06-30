@@ -159,7 +159,7 @@ function FormView({ user, setReviewAssign, reviewAssign }) {
                 <button
                   className={`${
                     reviewAssign ? "bg-red-400" : "primary-bg-btn"
-                  } " text-white text-sm py-3 text-center px-4 rounded-l-md `}
+                  } " text-white text-sm py-3 text-center px-4 md:rounded-r-none md:rounded-l-md  rounded-md  w-full md:w-fit mt-2 `}
                   onClick={() => setReviewAssign(true)}
                 >
                   Review Recived
@@ -167,7 +167,7 @@ function FormView({ user, setReviewAssign, reviewAssign }) {
                 <button
                   className={`${
                     reviewAssign ? "primary-bg-btn" : "bg-red-400"
-                  } " text-white text-sm py-3 text-center px-4 rounded-r-md `}
+                  } " text-white text-sm py-3 text-center px-4 md:rounded-r-md  md:rounded-l-none rounded-md w-full md:w-fit mt-2 `}
                   onClick={() => setReviewAssign(false)}
                 >
                   Review Created
