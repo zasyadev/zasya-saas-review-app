@@ -134,11 +134,18 @@
       color: #0f123f;
       background-color: #fff;
       font-style: none;
-      font-size: medium;
-      font-weight: bold;
+      font-size: 18px;
+      font-weight: 600;
     }
     .ant-table-cell::before {
       background-color: #fff !important;
+    }
+  }
+  .ant-table-tbody {
+    .ant-table-cell {
+      font-size: 16px;
+      font-weight: 500;
+      color: #6b6b6b;
     }
   }
 }
@@ -216,5 +223,76 @@
 .modal-answer-wrapper {
   .ant-modal-body {
     padding: 0;
+  }
+}
+
+.primary-color-blue {
+  color: #0f123f;
+}
+.primary-border-color-blue {
+  border-color: #0f123f;
+}
+
+.login-image-wrapper {
+  background-image: url("../assets/images/banner-bg-shape.png");
+  background-color: #0f123f;
+}
+.login-bottom-image {
+  background-image: url("../assets/images/login-bottom-design.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.5;
+  height: 250px;
+  position: absolute;
+  width: 250px;
+  bottom: 0;
+  left: 0;
+}
+.login-top-image {
+  background-image: url("../assets/images/login-top-design.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.5;
+  height: 250px;
+  position: absolute;
+  width: 250px;
+  top: 0;
+  right: 0;
+}
+.login-heading {
+  font-weight: 700;
+  font-size: 35px;
+
+  color: #0f123f;
+  text-transform: uppercase;
+  margin: 28px 0 40px;
+}
+.btn-blue {
+  background-color: #0f123f;
+}
+.grd-bg-pink {
+  background: linear-gradient(to right, #fb7185 0%, #fda4af 100%) !important;
+}
+
+.login-form {
+  .ant-form-item-label {
+    font-size: 15px;
+    font-weight: 600;
+    padding: 0 0 1px;
+  }
+  .form-control::placeholder {
+    font-size: 15px;
+    font-weight: 500;
+  }
+  .form-control {
+    height: 52px;
+    font-size: 15px;
+    font-weight: 500;
+  }
+  .ant-input:focus,
+  .ant-input:hover {
+    border-color: #0f123f;
   }
 }

@@ -3,11 +3,16 @@ import { Col, Row } from "antd/lib/grid";
 import Image from "next/image";
 import threeUser from "../../assets/Icon/threeusers.png";
 import ReviewIcon from "../../assets/Icon/reviewicon.png";
-import BarChart from "../../helpers/BarChart";
+// import BarChart from "../../helpers/BarChart";
 import { SmallApplaudIcon } from "../../assets/Icon/icons";
 import dynamic from "next/dynamic";
+// import { BarChart } from "../../helpers/Charts";
 
 const SiderRight = dynamic(import("../SiderRight/SiderRight"), {
+  ssr: false,
+});
+
+const BarChart = dynamic(import("../../helpers/Charts"), {
   ssr: false,
 });
 

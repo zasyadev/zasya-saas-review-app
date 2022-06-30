@@ -1,7 +1,7 @@
 import { Col, Row } from "antd";
 import { StarOutlined, LikeOutlined } from "@ant-design/icons";
 import React from "react";
-import { LineChart } from "../../helpers/LineChart";
+import LineChart from "../../helpers/LineChart";
 import { DoughnutChart } from "../../helpers/DoughnutChart";
 import { ApplaudIcon, StarIcon } from "../../assets/Icon/icons";
 
@@ -38,7 +38,10 @@ function SiderRight({ data }) {
         </Col>
       </Row>
       <Row>
-        <div className="w-full bg-white rounded-xl shadow-md px-4 py-6 mt-8 ">
+        <div className="w-full bg-white rounded-xl shadow-md px-4 py-4 mt-8 ">
+          <p className="text-lg font-bold mb-4 primary-color-blue">
+            Feedback given to me
+          </p>
           <LineChart />
         </div>
       </Row>

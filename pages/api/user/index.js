@@ -22,7 +22,7 @@ export default async (req, res) => {
             password: await hashedPassword(userData.password),
             first_name: userData.first_name,
 
-            last_name: userData.last_name,
+            last_name: "",
             address: "",
             pin_code: "",
             mobile: "",

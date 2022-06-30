@@ -158,7 +158,7 @@ function FormView({ user, setReviewAssign, reviewAssign }) {
               <div>
                 <button
                   className={`${
-                    reviewAssign ? "bg-red-400" : "bg-indigo-800"
+                    reviewAssign ? "bg-red-400" : "primary-bg-btn"
                   } " text-white text-sm py-3 text-center px-4 rounded-l-md `}
                   onClick={() => setReviewAssign(true)}
                 >
@@ -166,7 +166,7 @@ function FormView({ user, setReviewAssign, reviewAssign }) {
                 </button>
                 <button
                   className={`${
-                    reviewAssign ? "bg-indigo-800" : "bg-red-400"
+                    reviewAssign ? "primary-bg-btn" : "bg-red-400"
                   } " text-white text-sm py-3 text-center px-4 rounded-r-md `}
                   onClick={() => setReviewAssign(false)}
                 >

@@ -228,16 +228,27 @@ function ReviewManagement({ user }) {
       title: "Frequency",
       key: "frequency ",
       dataIndex: "frequency",
+      render: (frequency) => <p className={`capitalize `}>{frequency}</p>,
     },
     {
       title: "Type",
       key: "review_type ",
       dataIndex: "review_type",
+      render: (review_type) => <p className={`capitalize `}>{review_type}</p>,
     },
     {
       title: "Status",
       key: "is_published ",
       dataIndex: "is_published",
+      render: (is_published) => (
+        <p
+          className={`capitalize ${
+            is_published === "draft" ? "text-red-400" : "text-green-400"
+          }`}
+        >
+          {is_published}
+        </p>
+      ),
     },
     {
       title: "Action",
@@ -246,7 +257,7 @@ function ReviewManagement({ user }) {
         <p>
           {record.is_published === "draft" && (
             <span
-              className="text-yellow-500 text-xl mx-2 cursor-pointer"
+              className="primary-color-blue text-xl mx-2 cursor-pointer"
               onClick={() => onUpdate(record)}
               title="Assign"
             >

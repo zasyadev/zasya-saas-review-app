@@ -1,62 +1,13 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap");
+
 @import "./antd.css";
 @import "./spinner.css";
 @import "tailwindcss/base";
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
-@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700;900;800&display=swap");
-
 html,
-body {
+body,
+* {
   font-family: "Montserrat", sans-serif;
-}
-
-.primary-color-blue {
-  color: #0f123f;
-}
-.primary-border-color-blue {
-  border-color: #0f123f;
-}
-
-.login-image-wrapper {
-  background-image: url("../assets/images/banner-bg-shape.png");
-  background-color: #0f123f;
-}
-.login-bottom-image {
-  background-image: url("../assets/images/login-bottom-design.png");
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center;
-  opacity: 0.5;
-  height: 250px;
-  position: absolute;
-  width: 250px;
-  bottom: 0;
-  left: 0;
-}
-.login-top-image {
-  background-image: url("../assets/images/login-top-design.png");
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center;
-  opacity: 0.5;
-  height: 250px;
-  position: absolute;
-  width: 250px;
-  top: 0;
-  right: 0;
-}
-.login-heading {
-  font-weight: 700;
-  font-size: 38px;
-  text-align: center;
-  color: #0f123f;
-  text-transform: uppercase;
-  margin: 28px 0;
-}
-.btn-blue {
-  background-color: #0f123f;
-}
-.grd-bg-pink {
-  background: linear-gradient(to right, #fb7185 0%, #fda4af 100%) !important;
 }
