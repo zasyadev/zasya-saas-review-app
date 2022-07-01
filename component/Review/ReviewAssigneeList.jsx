@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import CustomTable from "../../helpers/CustomTable";
-import { EyeOutlined } from "@ant-design/icons";
+import { EyeOutlined, CalendarOutlined } from "@ant-design/icons";
 import moment from "moment";
 import { Modal, Collapse, Skeleton, Row, Col } from "antd";
 import AnswerViewComponent from "./AnswerViewComponent";
@@ -121,7 +121,18 @@ function ReviewAssigneeList({ data, setReviewAssignee, user }) {
                   return (
                     <>
                       <Panel
-                        header={moment(key, "YYYY-MM-DD").format(datePattern)}
+                        header={
+                          <div className="flex items-center">
+                            <CalendarOutlined />
+                            <p className="ml-3">
+                              {moment(key, "YYYY-MM-DD").format(datePattern)}
+                            </p>
+                          </div>
+                        }
+                        // header={`  ${(<CalendarOutlined />)} ${moment(
+                        //   key,
+                        //   "YYYY-MM-DD"
+                        // ).format(datePattern)}`}
                         key={1 + idx}
                       >
                         <CustomTable dataSource={value} columns={columns} />

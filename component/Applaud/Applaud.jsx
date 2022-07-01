@@ -2,9 +2,14 @@ import { Button, Col, Form, Modal, Row, Select, Skeleton } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import React, { useState, useEffect } from "react";
 import { openNotificationBox } from "../../helpers/notification";
-// import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import {
+  EditOutlined,
+  CalendarOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
 import CustomTable from "../../helpers/CustomTable";
 import moment from "moment";
+import { CalanderIcon, CommentIcons, UserIcon } from "../../assets/Icon/icons";
 
 function Applaud({ user }) {
   const [applaudform] = Form.useForm();
@@ -237,28 +242,48 @@ function Applaud({ user }) {
                         receivedApplaudList.map((item, idx) => {
                           return (
                             <div
-                              className="py-4  border-b-2"
+                              className=" border-2 rounded md:m-3 "
                               key={"applaud" + idx}
                             >
-                              <p className="mb-1">
-                                <span className="font-bold uppercase">
-                                  {item.created.first_name}
-                                </span>{" "}
-                                has Applauded you on{" "}
-                                <span className="font-bold">
-                                  {moment(item.created_date).format(
-                                    "DD-MM-YYYY"
-                                  )}
-                                </span>
-                                .
-                              </p>
-                              <p>
-                                {" "}
-                                <span className="font-bold">
-                                  Comment :
-                                </span>{" "}
-                                {item.comment}
-                              </p>
+                              <Row className="my-2 px-2">
+                                <Col xs={2} md={2}>
+                                  <UserIcon className="primary-color-blue font-bold " />
+                                </Col>
+                                <Col xs={22} md={22}>
+                                  <p className="ml-2">
+                                    <span className="uppercase ">
+                                      {item.created.first_name}.
+                                    </span>{" "}
+                                    has Applauded you on.
+                                  </p>{" "}
+                                </Col>
+                              </Row>
+                              <Row className="my-2 px-2">
+                                <Col xs={2} md={2}>
+                                  <CommentIcons className="primary-color-blue font-bold " />
+                                </Col>
+
+                                <Col xs={22} md={22}>
+                                  <p className="ml-2 break-all">
+                                    {item.comment}
+                                  </p>
+                                </Col>
+                              </Row>
+                              <Row className="my-2 px-2">
+                                <Col xs={2} md={2}>
+                                  <CalanderIcon className="primary-color-blue font-bold  " />
+                                </Col>
+                                {/* <span className="font-bold"> */}
+                                {/* Comment : */}
+                                {/* </span>{" "} */}
+                                <Col xs={22} md={22}>
+                                  <p className="font-bold ml-2 ">
+                                    {moment(item.created_date).format(
+                                      "DD-MM-YYYY"
+                                    )}
+                                  </p>
+                                </Col>
+                              </Row>
                             </div>
                           );
                         })
