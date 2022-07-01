@@ -245,41 +245,41 @@ function Applaud({ user }) {
                               className=" border-2 rounded md:m-3 "
                               key={"applaud" + idx}
                             >
-                              <Row className="my-2 px-2">
+                              <Row className="m-5 px-2">
                                 <Col xs={2} md={2}>
-                                  <UserIcon className="primary-color-blue font-bold " />
+                                  <UserIcon className="primary-color-blue font-bold text-base" />
                                 </Col>
                                 <Col xs={22} md={22}>
-                                  <p className="ml-2">
+                                  <p className="ml-2 text-base">
                                     <span className="uppercase ">
-                                      {item.created.first_name}.
+                                      {item.created.first_name}
                                     </span>{" "}
                                     has Applauded you on.
                                   </p>{" "}
                                 </Col>
                               </Row>
-                              <Row className="my-2 px-2">
+                              <Row className="m-5 px-2">
                                 <Col xs={2} md={2}>
-                                  <CommentIcons className="primary-color-blue font-bold " />
+                                  <CommentIcons className="primary-color-blue font-bold text-base" />
                                 </Col>
 
                                 <Col xs={22} md={22}>
-                                  <p className="ml-2 break-all">
+                                  <p className="ml-2 break-all text-base">
                                     {item.comment}
                                   </p>
                                 </Col>
                               </Row>
-                              <Row className="my-2 px-2">
+                              <Row className="m-5 px-2">
                                 <Col xs={2} md={2}>
-                                  <CalanderIcon className="primary-color-blue font-bold  " />
+                                  <CalanderIcon className="primary-color-blue font-bold  text-base" />
                                 </Col>
                                 {/* <span className="font-bold"> */}
                                 {/* Comment : */}
                                 {/* </span>{" "} */}
                                 <Col xs={22} md={22}>
-                                  <p className="font-bold ml-2 ">
+                                  <p className=" ml-2 text-base">
                                     {moment(item.created_date).format(
-                                      "DD-MM-YYYY"
+                                      "DD/MM/YYYY"
                                     )}
                                   </p>
                                 </Col>
