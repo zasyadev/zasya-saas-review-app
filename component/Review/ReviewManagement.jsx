@@ -9,6 +9,7 @@ import {
   Select,
   Input,
   Radio,
+  Checkbox,
 } from "antd";
 import { DeleteOutlined, UserSwitchOutlined } from "@ant-design/icons";
 import { openNotificationBox } from "../../helpers/notification";
@@ -41,6 +42,8 @@ function ReviewManagement({ user }) {
   };
 
   async function onFinish(values) {
+    // console.log(values, "values");
+    // return;
     editMode
       ? updateReviewAssign(updateData, values)
       : addReviewAssign({
@@ -53,7 +56,7 @@ function ReviewManagement({ user }) {
           frequency: values.frequency,
           role_id: user.role_id,
           organization_id: user.organization_id,
-          is_published: values.is_published,
+          is_published: values.is_published ? "published" : "draft",
         });
   }
 
@@ -215,7 +218,9 @@ function ReviewManagement({ user }) {
       render: (_, record) => (
         <p
           onClick={() => {
-            record.is_published != "draft" ? setReviewAssignee(true) : null;
+            record.is_published === "published"
+              ? setReviewAssignee(true)
+              : null;
             setReviewAssigneeData(record);
           }}
           className="cursor-pointer underline"
@@ -243,7 +248,7 @@ function ReviewManagement({ user }) {
       render: (is_published) => (
         <p
           className={`capitalize ${
-            is_published === "draft" ? "text-red-400" : "text-green-400"
+            is_published != "published" ? "text-red-400" : "text-green-400"
           }`}
         >
           {is_published}
@@ -255,7 +260,7 @@ function ReviewManagement({ user }) {
       key: "action",
       render: (_, record) => (
         <p>
-          {record.is_published === "draft" && (
+          {record.is_published != "published" && (
             <span
               className="primary-color-blue text-xl mx-2 cursor-pointer"
               onClick={() => onUpdate(record)}
@@ -272,7 +277,6 @@ function ReviewManagement({ user }) {
               title="Delete"
             >
               <DeleteOutlined />
-              {/* Delete */}
             </span>
           )}
         </p>
@@ -281,7 +285,7 @@ function ReviewManagement({ user }) {
   ];
 
   const onChangeStatus = (e) => {
-    if (e.target.value === "published") {
+    if (e.target.checked) {
       setMemberDetails(true);
     } else {
       setMemberDetails(false);
@@ -353,6 +357,7 @@ function ReviewManagement({ user }) {
                         dataSource={reviewAssignList}
                         columns={columns}
                         pagination={false}
+                        rowKey="review_id"
                       />
                     )}
                   </div>
@@ -406,7 +411,7 @@ function ReviewManagement({ user }) {
                     }
                   >
                     {userList.map((data, index) => (
-                      <Select.Option key={index} value={data.id}>
+                      <Select.Option key={index + "user"} value={data.id}>
                         {data.first_name}
                       </Select.Option>
                     ))}
@@ -419,20 +424,25 @@ function ReviewManagement({ user }) {
               <Col md={12} xs={24}>
                 <Form.Item
                   name="is_published"
-                  label="Status"
-                  rules={[
-                    {
-                      required: true,
-                    },
-                  ]}
+                  // label="Status"
+                  // rules={[
+                  //   {
+                  //     required: true,
+                  //   },
+                  // ]}
+                  valuePropName="checked"
                 >
-                  <Radio.Group
+                  <Checkbox onChange={onChangeStatus}>
+                    {" "}
+                    Publish This Review
+                  </Checkbox>
+                  {/* <Radio.Group
                     placeholder="Select Status"
                     onChange={onChangeStatus}
                   >
                     <Radio value="published">Published</Radio>
                     <Radio value="draft">Draft</Radio>
-                  </Radio.Group>
+                  </Radio.Group> */}
                 </Form.Item>
               </Col>
 
@@ -487,7 +497,7 @@ function ReviewManagement({ user }) {
                       }
                     >
                       {userList.map((data, index) => (
-                        <Select.Option key={index} value={data.id}>
+                        <Select.Option key={index + "users"} value={data.id}>
                           {data.first_name}
                         </Select.Option>
                       ))}
@@ -516,7 +526,7 @@ function ReviewManagement({ user }) {
                     }
                   >
                     {formList.map((data, index) => (
-                      <Select.Option key={index} value={data.id}>
+                      <Select.Option key={index + "form"} value={data.id}>
                         {data.form_title}
                       </Select.Option>
                     ))}

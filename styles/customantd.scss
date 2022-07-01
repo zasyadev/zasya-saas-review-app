@@ -123,11 +123,7 @@
     background-color: #0f123f;
     border-radius: 5px;
   }
-  .ant-btn-primary:hover {
-    // color: #fff;
-    // border-color: #7f23cf;
-    // background-color: #fff;
-  }
+
   .ant-btn-default {
     // border-color: #7f23cf;
     color: #fff;
@@ -342,6 +338,9 @@
 .ant-collapse {
   border-radius: 0.75rem !important;
   border: 0;
+  .ant-collapse-item {
+    border-bottom: 0 !important;
+  }
   .ant-collapse-header {
     border-radius: 0.75rem !important;
   }

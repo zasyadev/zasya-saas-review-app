@@ -32,7 +32,7 @@ function SiderRight({ data }) {
               <StarIcon />
             </div>
             <div>
-              <p className="text-xl font-extrabold my-2">18.5</p>
+              <p className="text-xl font-extrabold my-2">8.5</p>
             </div>
           </div>
         </Col>
