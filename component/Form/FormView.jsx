@@ -43,7 +43,7 @@ function FormView({ user, setReviewAssign, reviewAssign }) {
   useEffect(() => {
     fetchFormAssignList();
   }, []);
-
+  console.log(formValues, "formValues");
   const handleSubmit = async () => {
     // let array = formValues.map((item) => {
     //   return { ...item, user_id: user.id, form_id: updateData.id };
@@ -107,7 +107,7 @@ function FormView({ user, setReviewAssign, reviewAssign }) {
     {
       title: "Frequency",
       dataIndex: "review",
-      key: "review",
+      key: "frequency",
       render: (review) => review.frequency,
     },
     {
@@ -189,6 +189,7 @@ function FormView({ user, setReviewAssign, reviewAssign }) {
                     <CustomTable
                       dataSource={formAssignList}
                       columns={columns}
+                      rowKey="form_view"
                     />
                   )}
                 </div>
@@ -216,31 +217,16 @@ function FormView({ user, setReviewAssign, reviewAssign }) {
         wrapClassName="view_form_modal"
       >
         <div>
-          <div className="  border-t-8 rounded-t-md border-cyan-500 shadow-lg mt-4">
+          <div className=" rounded-t-md shadow-lg">
             <div>
-              <div className="w-full flex flex-col items-start px-4 pt-4 pb-5 ">
+              <div className="w-full flex flex-col items-start px-4 pt-4 pb-5 bg-gray-200">
                 <div>
-                  <TextField
-                    fullWidth={true}
-                    placeholder="Form Tittle"
-                    multiline={true}
-                    // onChange={(e) => {
-                    //   setFormTitle(e.target.value);
-                    // }}
-                    value={updateData?.review?.form?.form_title}
-                    inputProps={{ style: { fontSize: 40, paddingTop: 10 } }}
-                    disabled={true}
-                  />
-                  <TextField
-                    fullWidth={true}
-                    placeholder="Description"
-                    multiline={true}
-                    // onChange={(e) => {
-                    //   setFormDes(e.target.value);
-                    // }}
-                    value={updateData?.review?.form?.form_description}
-                    disabled={true}
-                  />
+                  <h3 className="text-2xl primary-color-blue mb-2">
+                    {updateData?.review?.form?.form_title}
+                  </h3>
+                  <p className="text-base primary-color-blue mb-2">
+                    {updateData?.review?.form?.form_description}
+                  </p>
                 </div>
               </div>
             </div>
@@ -249,7 +235,6 @@ function FormView({ user, setReviewAssign, reviewAssign }) {
           {updateData?.review?.form?.questions.length > 0 &&
             updateData?.review?.form?.questions?.map((question, idx) => (
               <>
-                {console.log(question)}
                 <QuestionViewComponent
                   {...question}
                   idx={idx}

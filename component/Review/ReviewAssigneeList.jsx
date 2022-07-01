@@ -159,13 +159,13 @@ function ReviewAssigneeList({ data, setReviewAssignee, user }) {
                   </span>{" "}
                 </div>
                 <div className="primary-color-blue font-semibold text-lg mr-4 leading-3 mb-2">
-                  Frequency :
+                  Frequency :{" "}
                   <span className="primary-color-blue font-semibold text-lg">
                     {data.frequency}
                   </span>
                 </div>
                 <div className="primary-color-blue font-semibold text-lg mb-2">
-                  Review Type :
+                  Review Type :{" "}
                   <span className="primary-color-blue font-semibold text-lg">
                     {data.review_type}
                   </span>
