@@ -4,6 +4,7 @@ import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import TextField from "@material-ui/core/TextField";
 import React, { useState } from "react";
+import { FrownOutlined, SmileOutlined } from "@ant-design/icons";
 
 import { Slider } from "antd";
 
@@ -17,28 +18,35 @@ const QuestionViewComponent = ({
   lowerLabel,
   higherLabel,
 }) => {
-  const [sliderInputValue, setSliderInputValue] = useState(3);
+  const [sliderInputValue, setSliderInputValue] = useState(0);
   const range = (min, max) =>
     [...Array(max - min + 1).keys()].map((i) => i + min);
 
   return (
-    <div className="shadow-lg mt-8  px-2 cursor-pointer" key={idx + "close"}>
+    <div
+      className="shadow-md mt-8 px-2 cursor-pointer rounded border-2"
+      key={idx + "close"}
+    >
       <div className="flex flex-col items-start ml-4 py-5">
-        <Typography variant="subtitle1" className="ml-0">
-          {idx + 1}. {questionText}
-        </Typography>
+        <p
+          variant="subtitle1"
+          className="ml-0 primary-color-blue font-medium text-base"
+        >
+          {`(${idx + 1})`} {questionText}
+        </p>
 
         {options?.length > 0 && type === "checkbox" && (
           <div>
             <div className="flex">
               <RadioGroup
                 name="checkbox_option"
-                onChange={(e) => handleAnswerChange(id, e)}
+                onChange={(e) => handleAnswerChange(id, e.target.value)}
+                className="radio-button"
               >
                 {options?.map((op, j) => (
                   <>
                     <FormControlLabel
-                      control={<Radio className="mr-2" />}
+                      control={<Radio className="mr-2  " size="small" />}
                       label={op.optionText}
                       value={op.optionText}
                     />
@@ -58,10 +66,11 @@ const QuestionViewComponent = ({
         ) : null}
 
         {type === "scale" && options?.length > 1 && (
-          <div className="flex items-baseline w-full justify-around">
+          <div className="flex w-full justify-center items-center">
             <p>{options[0]?.optionText}</p>
-            <p className="w-64">
+            <p className="w-full text-center mx-2 md:ml-4">
               <Slider
+                className="rating-slider"
                 min={Number(options[0]?.lowerLabel)}
                 max={Number(options[0]?.higherLabel)}
                 step={1}
@@ -71,7 +80,10 @@ const QuestionViewComponent = ({
                 }}
                 // value={typeof inputValue === "number" ? inputValue : 0}
               />
-              <span>{sliderInputValue}</span>
+            </p>
+
+            <p className="rounded-full bg-violet-400 text-white text-center mr-2 md:mr-3  py-1 md:py-2 px-1 md:px-3">
+              {sliderInputValue}
             </p>
 
             {/* <RadioGroup

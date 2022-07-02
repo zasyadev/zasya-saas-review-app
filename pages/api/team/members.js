@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { hashedPassword, randomPassword } from "../../../lib/auth";
-import { mailService } from "../../../lib/emailservice";
+import { mailService, mailTemplate } from "../../../lib/emailservice";
 
 const prisma = new PrismaClient();
 
@@ -64,9 +64,9 @@ export default async (req, res) => {
         from: process.env.SMTP_USER,
         to: transactionData.userData.email,
         subject: `Invitation to collaborate on Review App`,
-        html: `
+        html: mailTemplate(`
         You have been invited to collaborate on Review app . Please <a href= ${process.env.NEXT_APP_URL}/resetpassword?passtoken=${transactionData.passwordResetData.token}>click here</a> to collaborate with them now .
-        `,
+        `),
       };
 
       await mailService.sendMail(mailData, function (err, info) {
