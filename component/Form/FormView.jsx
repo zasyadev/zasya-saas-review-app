@@ -155,11 +155,11 @@ function FormView({ user, setReviewAssign, reviewAssign }) {
               </span>
             </div> */}
             <div className="flex items-center justify-between mb-3">
-              <div>
+              <div className="flex">
                 <button
                   className={`${
                     reviewAssign ? "bg-red-400" : "primary-bg-btn"
-                  } " text-white text-sm py-3 text-center px-4 md:rounded-r-none md:rounded-l-md  rounded-md  w-full md:w-fit mt-2 `}
+                  } " text-white text-sm py-3 text-center px-4 rounded-r-none rounded-l-md  rounded-md   md:w-fit mt-2 `}
                   onClick={() => setReviewAssign(true)}
                 >
                   Review Recived
@@ -167,7 +167,7 @@ function FormView({ user, setReviewAssign, reviewAssign }) {
                 <button
                   className={`${
                     reviewAssign ? "primary-bg-btn" : "bg-red-400"
-                  } " text-white text-sm py-3 text-center px-4 md:rounded-r-md  md:rounded-l-none rounded-md w-full md:w-fit mt-2 `}
+                  } " text-white text-sm py-3 text-center px-4 rounded-r-md rounded-l-none w-full md:w-fit mt-2 `}
                   onClick={() => setReviewAssign(false)}
                 >
                   Review Created
@@ -217,14 +217,14 @@ function FormView({ user, setReviewAssign, reviewAssign }) {
         wrapClassName="view_form_modal"
       >
         <div>
-          <div className=" rounded-t-md shadow-lg">
+          <div className="">
             <div>
-              <div className="w-full flex flex-col items-start px-4 pt-4 pb-5 bg-gray-200">
+              <div className="w-full flex  flex-col items-start px-4 pt-4 pb-5 bg-gray-200 rounded">
                 <div>
-                  <h3 className="text-2xl primary-color-blue mb-2">
+                  <h3 className="text-2xl font-medium primary-color-blue mb-2">
                     {updateData?.review?.form?.form_title}
                   </h3>
-                  <p className="text-base primary-color-blue mb-2">
+                  <p className="text-base  font-normal text-black mb-2">
                     {updateData?.review?.form?.form_description}
                   </p>
                 </div>

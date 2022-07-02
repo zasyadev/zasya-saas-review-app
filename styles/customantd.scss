@@ -97,22 +97,33 @@
   height: 68px;
   display: flex;
   align-items: center;
+
   // justify-content: center;
 
   // position: absolute;
   .ant-modal-title {
     color: #fff;
     text-align: left;
+    font-size: 22px;
   }
 }
 .ant-modal-content {
   border-radius: 5px;
+  .ant-input:focus,
+  .ant-input:hover {
+    border-color: #0f123f;
+  }
+  .ant-select:focus,
+  .ant-select:hover {
+    border-color: #0f123f;
+  }
 
   // position: absolute;
   // border-radius: 10px;
   // padding-top: 15px;
   .ant-modal-close {
     color: #fff;
+    font-size: 22px;
   }
 }
 .ant-modal-footer {
@@ -338,14 +349,41 @@
 .ant-collapse {
   border-radius: 0.75rem !important;
   border: 0;
+  background-color: #d1cfcf;
   .ant-collapse-item {
     border-bottom: 0 !important;
   }
   .ant-collapse-header {
-    border-radius: 0.75rem !important;
+    border-top-left-radius: 5px !important;
+    border-top-right-radius: 5px !important;
   }
   .ant-collapse-content {
     border-top: 0;
-    border-radius: 0.75rem !important;
+    border-bottom-left-radius: 5px !important;
+    border-bottom-right-radius: 5px !important;
+  }
+}
+.radio-button {
+  .MuiFormControlLabel-root {
+    .MuiTypography-body1 {
+      font-size: 14px;
+      font-weight: 500px;
+    }
+  }
+}
+
+.rating-slider {
+  .ant-slider-rail {
+    height: 8px;
+    background-color: #cecece !important;
+  }
+  .ant-slider-track {
+    height: 8px;
+    background-color: #cecece !important;
+  }
+  .ant-slider-handle {
+    margin-top: -3px !important;
+    background-color: #a78bfa !important;
+    border: solid 2px #a78bfa;
   }
 }

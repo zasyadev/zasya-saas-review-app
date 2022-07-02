@@ -277,7 +277,7 @@ function Applaud({ user }) {
                                 {/* Comment : */}
                                 {/* </span>{" "} */}
                                 <Col xs={22} md={22}>
-                                  <p className="font-bold ml-2 ">
+                                  <p className="ml-2 ">
                                     {moment(item.created_date).format(
                                       "DD-MM-YYYY"
                                     )}
