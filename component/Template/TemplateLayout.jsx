@@ -5,6 +5,7 @@ import FormComponent from "../Form/FormComponent";
 // import Image from "next/image";
 import { Popconfirm } from "antd";
 import { openNotificationBox } from "../../helpers/notification";
+import { AddIcon, DeleteTemplateIcon } from "../../assets/Icon/icons";
 
 function TemplateLayout({ user }) {
   const [formDetailShow, setFormDetailShow] = useState(false);
@@ -79,64 +80,69 @@ function TemplateLayout({ user }) {
               />
             ) : (
               <>
-                <div className="grid sm:flex  items-center w-full h-40 sm:h-24  justify-between">
+                {/* <div className="grid sm:flex  items-center w-full h-40 sm:h-24  justify-between">
                   <h2 className="text-black text-2xl font-bold">
                     Template Lists{" "}
                   </h2>
-                  <div className="flex justify-end">
-                    <div className="my-4 ">
-                      <button
-                        className="primary-bg-btn text-white text-sm py-3 text-center px-4 rounded-md"
-                        onClick={() => {
-                          setFormDetailShow(true);
-                        }}
-                      >
-                        Add New
-                      </button>
-                    </div>
-                  </div>
-                </div>
-                <div className="w-full bg-white rounded-xl shadow-md md:p-4 p-0">
-                  <div className="p-4 mt-8">
+                </div> */}
+                <div className="w-full bg-white rounded-md shadow-md md:p-4 p-0 mt-6 ">
+                  <h2 className="text-black text-2xl font-bold p-4">
+                    Template Lists{" "}
+                  </h2>
+                  <div className="p-4 ">
                     <div className="container mx-auto max-w-full">
-                      <div className="grid grid-cols-1 lg:grid-cols-3 mb-4 items-center">
+                      <div className="grid grid-cols-1 lg:grid-cols-4 mb-4 items-center justify-center gap-4">
+                        <div className="template flex primary-bg-color items-center justify-center flex-col  w-full h-full  rounded-xl overflow-hdden shadow-md p-5 ">
+                          <div
+                            className="cursor-pointer "
+                            onClick={() => {
+                              setFormDetailShow(true);
+                            }}
+                          >
+                            <AddIcon className="text-center " />
+                          </div>
+                          <div className="text-white text-center text-sm font-medium my-6">
+                            Blank Template
+                          </div>
+                        </div>
                         {formList.length > 0 ? (
                           formList.map((form, idx) => {
                             return (
                               <div
-                                className="md:px-4 px-2 mb-12 md:mb-0"
+                                className="template h-full w-full shadow-md"
                                 key={idx + "form"}
                               >
-                                <div className="w-full bg-white rounded-xl overflow-hdden shadow-md p-4 ">
-                                  <div
-                                    className="flex flex-wrap border-b border-gray-200  cursor-pointer"
-                                    onClick={() => {
-                                      setFormDetailShow(true);
-                                      setEditMode(true);
-                                      setEditFormData(form);
-                                    }}
-                                  >
-                                    <div className="grd-bg-pink -mt-10 mb-4 rounded-xl text-white grid items-center w-full h-24 py-4 px-4 justify-center shadow-lg-pink ">
-                                      <span className="material-icons text-white text-3xl  font-semibold leading-none">
-                                        {form?.form_data?.title}
-                                      </span>
-                                    </div>
-                                  </div>
-                                  <div className="text-sm text-gray-700 pt-4 flex items-center  justify-end">
-                                    <Popconfirm
-                                      title="Are you sure to delete this Form?"
-                                      okText="Yes"
-                                      cancelText="No"
-                                      icon={false}
-                                      onConfirm={() => deleteForm(form.id)}
-                                    >
-                                      <span className="font-semibold whitespace-nowrap cursor-pointer">
-                                        Remove
-                                      </span>
-                                    </Popconfirm>
+                                {/* <div className="w-full rounded-md"> */}
+                                <div
+                                  className="flex flex-wrap border-gray-200 cursor-pointer item-center justify-center"
+                                  onClick={() => {
+                                    setFormDetailShow(true);
+                                    setEditMode(true);
+                                    setEditFormData(form);
+                                  }}
+                                >
+                                  <div className="rounded-md grid items-center justify-center primary-color-blue text-lg font-semibold mt-8">
+                                    {/* <span className="material-icons primary-color-blue text-lg  font-semibold leading-none"> */}
+                                    {form?.form_data?.title}
+                                    {/* </span> */}
                                   </div>
                                 </div>
+                                <div className="text-sm primary-color-blue  flex items-center  justify-center mt-3">
+                                  <Popconfirm
+                                    title="Are you sure to delete this Form?"
+                                    okText="Yes"
+                                    cancelText="No"
+                                    icon={false}
+                                    onConfirm={() => deleteForm(form.id)}
+                                  >
+                                    <span className="font-semibold whitespace-nowrap cursor-pointer">
+                                      <DeleteTemplateIcon className="primary-color-blue cursor-pointer" />
+                                      {/* Remove */}
+                                    </span>
+                                  </Popconfirm>
+                                </div>
                               </div>
+                              // </div>
                             );
                           })
                         ) : (
