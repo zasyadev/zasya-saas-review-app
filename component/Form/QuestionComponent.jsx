@@ -37,10 +37,10 @@ const QuestionComponent = ({
     [...Array(max - min + 1).keys()].map((i) => i + min);
 
   return open ? (
-    <div className=" rounded-l-md mt-1" key={idx + "questions"}>
-      <div className="w-full flex flex-col items-start px-4 py-5 ">
+    <div className="rounded-l-md mt-1" key={idx + "questions"}>
+      <div className="w-full flex flex-col items-start md:px-4 md:py-5 ">
         <Row gutter={[16, 16]} className="w-full">
-          <Col md={16} xs={16} lg={24}>
+          <Col md={24} xs={24}>
             <h2 className="font-semibold text-base my-2">
               {idx + 1}. Question
             </h2>
@@ -53,7 +53,7 @@ const QuestionComponent = ({
               value={questionText}
             />
           </Col>
-          <Col md={8} xs={8} lg={24}>
+          <Col md={24} xs={24}>
             <h2 className="font-semibold text-base my-2">Type</h2>
             <Select
               value={type}

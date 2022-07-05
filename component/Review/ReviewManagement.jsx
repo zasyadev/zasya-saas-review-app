@@ -41,9 +41,7 @@ function ReviewManagement({ user }) {
     form.resetFields();
   };
 
-  async function onFinish(values) {
-    // console.log(values, "values");
-    // return;
+  function onFinish(values) {
     editMode
       ? updateReviewAssign(updateData, values)
       : addReviewAssign({
@@ -79,7 +77,7 @@ function ReviewManagement({ user }) {
           openNotificationBox("error", response.message, 3);
         }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => fetchReviewAssignList([]));
   }
   async function updateReviewAssign(data, values) {
     if (data.id) {
@@ -139,7 +137,6 @@ function ReviewManagement({ user }) {
         }
       })
       .catch((err) => {
-        console.log(err);
         setUserList([]);
       });
   }
@@ -156,7 +153,6 @@ function ReviewManagement({ user }) {
         }
       })
       .catch((err) => {
-        console.log(err);
         setFormList([]);
       });
   }
@@ -197,7 +193,7 @@ function ReviewManagement({ user }) {
             openNotificationBox("error", response.message, 3);
           }
         })
-        .catch((err) => console.log(err));
+        .catch((err) => fetchReviewAssignList([]));
     }
   }
 

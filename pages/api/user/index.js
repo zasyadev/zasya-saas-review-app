@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { hashedPassword } from "../../../lib/auth";
-import { mailService } from "../../../lib/emailservice";
+import { mailService, mailTemplate } from "../../../lib/emailservice";
 
 const prisma = new PrismaClient();
 
@@ -46,7 +46,9 @@ export default async (req, res) => {
         from: process.env.SMTP_USER,
         to: transactionData.savedData.email,
         subject: `Successfully Registered on Zasya Review App`,
-        html: "You have successfull registered on Review App . Please Login in to continue with your Profile.",
+        html: mailTemplate(
+          "You have successfull registered on Review App . Please Login in to continue with your Profile."
+        ),
       };
 
       await mailService.sendMail(mailData, function (err, info) {

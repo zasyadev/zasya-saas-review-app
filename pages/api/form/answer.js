@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { mailService } from "../../../lib/emailservice";
+import { mailService, mailTemplate } from "../../../lib/emailservice";
 
 const prisma = new PrismaClient();
 
@@ -46,7 +46,9 @@ export default async (req, res) => {
         from: process.env.SMTP_USER,
         to: assignedByUser.email,
         subject: ` ${assignedUser.first_name} has filled your review`,
-        html: ` ${assignedUser.first_name} has just filled your review , click here to see their response now .`,
+        html: mailTemplate(
+          ` ${assignedUser.first_name} has just filled your review , click here to see their response now .`
+        ),
       };
       const assigneeData = await prisma.reviewAssignee.findFirst({
         where: {

@@ -347,6 +347,10 @@
 .login-heading {
   font-weight: 700;
   font-size: 35px;
+  // @include mobile {
+  //   font-size: 20px;
+  //   font-weight: 700;
+  // }
 
   color: #0f123f;
   text-transform: uppercase;
@@ -441,4 +445,12 @@
   border: 1px solid #dadada;
   box-shadow: 0px 4px 4px rgba(171, 171, 171, 0.25);
   border-radius: 5px;
+}
+
+.ant-form-item-control-input {
+  .ant-input:hover,
+  .ant-input:focus {
+    border-color: #0f123f;
+    box-shadow: 0 0 0 1.5px rgba(0, 5, 204, 0.35) !important;
+  }
 }

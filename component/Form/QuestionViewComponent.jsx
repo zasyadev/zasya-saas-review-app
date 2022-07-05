@@ -18,7 +18,7 @@ const QuestionViewComponent = ({
   lowerLabel,
   higherLabel,
 }) => {
-  const [sliderInputValue, setSliderInputValue] = useState(3);
+  const [sliderInputValue, setSliderInputValue] = useState(0);
   const range = (min, max) =>
     [...Array(max - min + 1).keys()].map((i) => i + min);
 
@@ -40,7 +40,7 @@ const QuestionViewComponent = ({
             <div className="flex">
               <RadioGroup
                 name="checkbox_option"
-                onChange={(e) => handleAnswerChange(id, e)}
+                onChange={(e) => handleAnswerChange(id, e.target.value)}
                 className="radio-button"
               >
                 {options?.map((op, j) => (

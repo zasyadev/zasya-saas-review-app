@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { hashedPassword, randomPassword } from "../../../lib/auth";
-import { mailService } from "../../../lib/emailservice";
+import { mailService, mailTemplate } from "../../../lib/emailservice";
 
 const prisma = new PrismaClient();
 
@@ -8,7 +8,6 @@ export default async (req, res) => {
   if (req.method === "POST") {
     try {
       const resData = JSON.parse(req.body);
-      const password = randomPassword(8);
 
       const transactionData = await prisma.$transaction(async (transaction) => {
         let userobj = {
@@ -24,10 +23,29 @@ export default async (req, res) => {
           organization: { connect: { id: resData.organization_id } },
         };
 
-        const userData = await transaction.user.create({
-          data: userobj,
+        let existingUser = await transaction.user.findMany({
+          where: { email: resData.email },
         });
+        let userData = {};
 
+        if (existingUser.length > 0) {
+          userData = await transaction.user.update({
+            where: { email: resData.email },
+            data: { status: 1, deleted_date: null },
+          });
+        } else {
+          userData = await transaction.user.create({
+            data: userobj,
+          });
+          if (userData.id) {
+            const savedTagsData = await transaction.userTags.create({
+              data: {
+                user: { connect: { id: userData.id } },
+                tags: resData.tags,
+              },
+            });
+          }
+        }
         const passwordResetData = await transaction.passwordReset.create({
           data: {
             email: { connect: { email: userData.email } },
@@ -36,14 +54,6 @@ export default async (req, res) => {
           },
         });
 
-        if (userData.id) {
-          const savedTagsData = await transaction.userTags.create({
-            data: {
-              user: { connect: { id: userData.id } },
-              tags: resData.tags,
-            },
-          });
-        }
         return {
           userData,
           passwordResetData,
@@ -54,9 +64,9 @@ export default async (req, res) => {
         from: process.env.SMTP_USER,
         to: transactionData.userData.email,
         subject: `Invitation to collaborate on Review App`,
-        html: `
+        html: mailTemplate(`
         You have been invited to collaborate on Review app . Please <a href= ${process.env.NEXT_APP_URL}/resetpassword?passtoken=${transactionData.passwordResetData.token}>click here</a> to collaborate with them now .
-        `,
+        `),
       };
 
       await mailService.sendMail(mailData, function (err, info) {
@@ -72,7 +82,6 @@ export default async (req, res) => {
         status: 200,
       });
     } catch (error) {
-      console.log(error);
       if (error.code === "P2014") {
         return res
           .status(409)
@@ -135,7 +144,7 @@ export default async (req, res) => {
       const transactionData = await prisma.$transaction(async (transaction) => {
         const deletaData = await transaction.user.update({
           where: { email: reqBody.email },
-          data: { status: 0 },
+          data: { status: 0, deleted_date: new Date() },
         });
 
         return { deletaData };

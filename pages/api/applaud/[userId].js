@@ -7,7 +7,7 @@ export default async (req, res) => {
 
   if (req.method === "GET") {
     if (userId) {
-      const data = await prisma.userApplaud.findMany({
+      const data = await prisma.userApplaud({
         where: { created_by: userId },
         include: { user: true, created: true },
       });

@@ -43,7 +43,7 @@ function FormView({ user, setReviewAssign, reviewAssign }) {
   useEffect(() => {
     fetchFormAssignList();
   }, []);
-  console.log(formValues, "formValues");
+
   const handleSubmit = async () => {
     // let array = formValues.map((item) => {
     //   return { ...item, user_id: user.id, form_id: updateData.id };

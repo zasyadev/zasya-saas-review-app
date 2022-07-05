@@ -3,10 +3,11 @@ import { Col, Row } from "antd/lib/grid";
 import Image from "next/image";
 import threeUser from "../../assets/Icon/threeusers.png";
 import ReviewIcon from "../../assets/Icon/reviewicon.png";
-// import BarChart from "../../helpers/BarChart";
-import { SmallApplaudIcon } from "../../assets/Icon/icons";
+import UserIcon from "../../assets/images/User.png";
 import dynamic from "next/dynamic";
-// import { BarChart } from "../../helpers/Charts";
+import { SmallApplaudIcon, ApplaudIconSmall } from "../../assets/Icon/icons";
+
+import { Skeleton } from "antd";
 
 const SiderRight = dynamic(import("../SiderRight/SiderRight"), {
   ssr: false,
@@ -18,6 +19,7 @@ const BarChart = dynamic(import("../../helpers/Charts"), {
 
 function DashBoard({ user }) {
   const [dashBoardData, setDashboardData] = useState({});
+  const [loading, setLoading] = useState(false);
 
   async function fetchDashboardData() {
     setDashboardData([]);
@@ -116,15 +118,142 @@ function DashBoard({ user }) {
               </div>
               <div className="mt-12">
                 <div className="w-full bg-white rounded-xl overflow-hidden shadow-md p-4 mt-5 ">
-                  <BarChart />
+                  {loading ? (
+                    <Skeleton
+                      title={false}
+                      active={true}
+                      width={[200]}
+                      className="mt-4"
+                    />
+                  ) : (
+                    <BarChart />
+                  )}
                 </div>
               </div>
               <Row className="mt-6 mx-5" gutter={[16, 16]}>
-                <Col md={12} lg={12}>
-                  <div className="w-full bg-white rounded-xl overflow-hidden shadow-md p-4 ">
+                <Col xs={24} md={12} lg={12}>
+                  <div className="w-full bg-white rounded-xl overflow-hidden shadow-md p-4 h-full">
                     <h2 className="text-xl mt-1 font-semibold">
                       Applauds Leaderboard
                     </h2>
+                    <Row>
+                      <Col xs={24} md={12}>
+                        <Row className="">
+                          <Col xs={12} md={8}>
+                            <div className="p-2 mt-2 flex justify-center">
+                              <Image
+                                src={UserIcon}
+                                alt="user "
+                                width={40}
+                                height={40}
+                              />
+                            </div>
+                          </Col>
+                          <Col xs={12} md={16}>
+                            <div className="flex  justify-between items-center">
+                              <div className="py-2 px-3">
+                                <p className="mb-2 primary-color-blue font-medium text-sm">
+                                  Ankush thakur
+                                </p>
+                                <p className="flex">
+                                  <ApplaudIconSmall />
+                                  <span className="pl-2 text-sm font-medium">
+                                    20
+                                  </span>
+                                </p>
+                              </div>
+                            </div>
+                          </Col>
+                        </Row>
+                      </Col>
+                      <Col xs={24} md={12}>
+                        <Row className="">
+                          <Col xs={12} md={8}>
+                            <div className="p-2 mt-2 flex justify-center">
+                              <Image
+                                src={UserIcon}
+                                alt="user "
+                                width={40}
+                                height={40}
+                              />
+                            </div>
+                          </Col>
+                          <Col xs={12} md={16}>
+                            <div className="flex  justify-between items-center">
+                              <div className="py-2 px-3">
+                                <p className="mb-2 primary-color-blue font-medium text-sm">
+                                  Nishant thakur
+                                </p>
+                                <p className="flex">
+                                  <ApplaudIconSmall />
+                                  <span className="pl-2 text-sm font-medium">
+                                    20
+                                  </span>
+                                </p>
+                              </div>
+                            </div>
+                          </Col>
+                        </Row>
+                      </Col>
+                      <Col xs={24} md={12}>
+                        <Row className="">
+                          <Col xs={12} md={8}>
+                            <div className="p-2 mt-2 flex justify-center">
+                              <Image
+                                src={UserIcon}
+                                alt="user "
+                                width={40}
+                                height={40}
+                              />
+                            </div>
+                          </Col>
+                          <Col xs={12} md={16}>
+                            <div className="flex  justify-between items-center">
+                              <div className="py-2 px-3">
+                                <p className="mb-2 primary-color-blue font-medium text-sm">
+                                  Ajay thakur
+                                </p>
+                                <p className="flex">
+                                  <ApplaudIconSmall />
+                                  <span className="pl-2 text-sm font-medium">
+                                    20
+                                  </span>
+                                </p>
+                              </div>
+                            </div>
+                          </Col>
+                        </Row>
+                      </Col>
+                      <Col xs={24} md={12}>
+                        <Row className="">
+                          <Col xs={12} md={8}>
+                            <div className="p-2 mt-2 flex justify-center">
+                              <Image
+                                src={UserIcon}
+                                alt="user "
+                                width={40}
+                                height={40}
+                              />
+                            </div>
+                          </Col>
+                          <Col xs={12} md={16}>
+                            <div className="flex  justify-between items-center">
+                              <div className="py-2 px-3">
+                                <p className="mb-2 primary-color-blue font-medium text-sm">
+                                  Annop thakur
+                                </p>
+                                <p className="flex">
+                                  <ApplaudIconSmall />
+                                  <span className="pl-2 text-sm font-medium">
+                                    20
+                                  </span>
+                                </p>
+                              </div>
+                            </div>
+                          </Col>
+                        </Row>
+                      </Col>
+                    </Row>
                   </div>
                 </Col>
                 <Col md={12} lg={12}>
@@ -132,6 +261,58 @@ function DashBoard({ user }) {
                     <h2 className="text-xl mt-1  font-semibold">
                       Feedback Leaderboard
                     </h2>
+                    <Row>
+                      <Col xs={24} md={24}>
+                        <div className="flex  items-center">
+                          <div className="p-2 w-1/4 flex justify-center">
+                            <Image
+                              src={UserIcon}
+                              alt="user "
+                              width={40}
+                              height={40}
+                            />
+                          </div>
+                          <div className="py-2 px-3">
+                            <p className="mb-2 primary-color-blue font-medium text-sm">
+                              Ankush thakur
+                            </p>
+                            <p className="flex justify-between">
+                              <span className="text-sm font-medium">
+                                Feeback Given : 20
+                              </span>
+                              <span className="pl-2 text-sm font-medium">
+                                Feeback Received : 10
+                              </span>
+                            </p>
+                          </div>
+                        </div>
+                      </Col>
+                      <Col xs={24} md={24}>
+                        <div className="flex  items-center">
+                          <div className="p-2 w-1/4 flex justify-center">
+                            <Image
+                              src={UserIcon}
+                              alt="user "
+                              width={40}
+                              height={40}
+                            />
+                          </div>
+                          <div className="py-2 px-3">
+                            <p className="mb-2 primary-color-blue font-medium text-sm">
+                              Annop thakur
+                            </p>
+                            <p className="flex justify-between">
+                              <span className="text-sm font-medium">
+                                Feeback Given : 20
+                              </span>
+                              <span className="pl-2 text-sm font-medium">
+                                Feeback Received : 10
+                              </span>
+                            </p>
+                          </div>
+                        </div>
+                      </Col>
+                    </Row>
                   </div>
                 </Col>
               </Row>
