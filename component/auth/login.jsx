@@ -47,7 +47,7 @@ function LoginPage() {
             <div className="flex  md:justify-between justify-center items-center flex-wrap h-full g-6">
               <div className="md:w-1/2 w-full mb-12 md:mb-0 px-8 md:px-24 relative flex flex-col justify-center h-screen">
                 <div className="login-top-image"></div>
-                <h2 className="login-heading ">Login to your account</h2>
+                <h2 className="login-heading">Login to your account</h2>
                 <Form
                   form={loginForm}
                   layout="vertical"

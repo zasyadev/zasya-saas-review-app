@@ -2,11 +2,6 @@ import { Button, Col, Form, Modal, Row, Select, Skeleton } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import React, { useState, useEffect } from "react";
 import { openNotificationBox } from "../../helpers/notification";
-import {
-  EditOutlined,
-  CalendarOutlined,
-  UserOutlined,
-} from "@ant-design/icons";
 import CustomTable from "../../helpers/CustomTable";
 import moment from "moment";
 import { CalanderIcon, CommentIcons, UserIcon } from "../../assets/Icon/icons";
@@ -61,7 +56,6 @@ function Applaud({ user }) {
         setLoading(false);
       })
       .catch((err) => {
-        console.log(err);
         setApplaudList([]);
       });
   }
@@ -82,7 +76,7 @@ function Applaud({ user }) {
           openNotificationBox("error", response.message, 3);
         }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => fetchApplaud([]));
   }
 
   async function updateApplaud(obj) {
@@ -105,7 +99,7 @@ function Applaud({ user }) {
           openNotificationBox("error", response.message, 3);
         }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => fetchApplaud([]));
   }
 
   const onFinish = (values) => {
@@ -114,6 +108,7 @@ function Applaud({ user }) {
       comment: values.comment,
       created_by: user.id,
     };
+
     editMode ? updateApplaud(obj) : addApplaud(obj);
   };
 
@@ -136,7 +131,7 @@ function Applaud({ user }) {
           }
         })
         .catch((err) => {
-          console.log(err);
+          fetchApplaud([]);
         });
     }
   }
@@ -339,7 +334,6 @@ function Applaud({ user }) {
               </div>
             </Col>
           </Row>
-          {/* )} */}
 
           <Modal
             title={editMode ? "Update" : "Create Applaud"}

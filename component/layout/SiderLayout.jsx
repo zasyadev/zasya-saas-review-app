@@ -93,7 +93,7 @@ function SiderLayout({ collapsed, setCollapsed, items, setTitle }) {
             onClick={onClickSideTab}
             mode="inline"
             defaultSelectedKeys={router?.pathname}
-            className="dashboard-sider border-0 gap-3 rounded-lg  text-white px-2 "
+            className="dashboard-sider border-0 gap-3 rounded-lg  text-white px-2"
             items={items}
           />
         </div>

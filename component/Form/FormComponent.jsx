@@ -217,7 +217,7 @@ function FormComponent({
   }, []);
 
   return (
-    <div className="w-4/6 mx-auto">
+    <div className="w-full  md:w-4/6 mx-auto">
       <div className="w-full bg-white rounded-xl shadow-md p-4 mt-4 template-wrapper">
         <div className="  rounded-t-md  mt-1">
           <div className="w-full flex flex-col items-start  pt-2 pb-5 ">
@@ -284,24 +284,23 @@ function FormComponent({
             </>
           ))}
 
-        <div className="flex justify-end items-end my-4">
+        <div className="block lg:flex justify-end items-end my-4 lg:pl-56 ">
           <Button
             // className=" px-4 py-3 h-full rounded bg-cyan-500 text-white"
-            className="primary-bg-btn text-white text-sm py-3 px-4 rounded h-full"
+            className="primary-bg-btn text-white text-sm py-3 px-4 rounded h-full w-full"
             type="button"
             onClick={() => {
               addMoreQuestionField();
             }}
           >
-            <span className="MuiButton-label">
-              Add Question
-              <span className="MuiButton-endIcon MuiButton-iconSizeMedium">
-                +
-              </span>
-            </span>
+            {/* <span className="MuiButton-label"> */}
+            Add Question +
+            {/* <span className="MuiButton-endIcon MuiButton-iconSizeMedium"> */}
+            {/* </span>
+            </span> */}
           </Button>
           <Button
-            className=" px-4 py-3 h-full rounded toggle-btn-bg text-white mx-4 "
+            className="py-3 h-full rounded toggle-btn-bg text-white lg:mx-4 w-full "
             type="button"
             onClick={() => {
               setFormDetailShow(false);
@@ -311,7 +310,7 @@ function FormComponent({
             <span className="MuiButton-label">Cancel</span>
           </Button>
           <Button
-            className=" px-4 py-3 h-full rounded primary-bg-btn text-white "
+            className=" px-4 py-3 h-full rounded primary-bg-btn text-white w-full "
             type="button"
             onClick={() => {
               saveFormField();
