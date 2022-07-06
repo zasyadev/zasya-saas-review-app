@@ -109,6 +109,15 @@
 }
 .ant-modal-content {
   border-radius: 5px;
+  .ant-input {
+    height: 44px;
+  }
+  .ant-select-selector {
+    height: 44px !important;
+    .ant-select-selection-placeholder {
+      padding-top: 5px;
+    }
+  }
 
   .ant-checkbox-wrapper:focus,
   .ant-checkbox-wrapper:hover {
@@ -147,7 +156,7 @@
 
   .ant-input:focus,
   .ant-input:hover {
-    border-color: #0f123f;
+    border-color: #0f123f !important;
     box-shadow: 0 0 0 1.5px rgba(0, 5, 204, 0.35) !important;
   }
   .ant-form-item-control-input {
@@ -161,6 +170,7 @@
   .ant-select-selector:focus,
   .ant-select-selector:hover {
     border-color: #0f123f !important;
+    box-shadow: 0 0 0 1.5px rgba(0, 5, 204, 0.35) !important;
   }
 
   // position: absolute;
@@ -187,6 +197,9 @@
     border-radius: 5px;
     width: 97px;
     height: 45px;
+  }
+  .ant-btn-default:hover {
+    border-color: #ff7473;
   }
 }
 .ant-checkbox-wrapper {
@@ -268,7 +281,7 @@
 }
 .template-wrapper {
   .input-box {
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid #d9d9d9;
   }
   .question-select-box {
     .ant-select-selector {
@@ -278,6 +291,16 @@
       align-items: center !important;
       width: 100% !important;
     }
+  }
+  .ant-input:focus,
+  .ant-input:hover {
+    border-color: #0f123f;
+    box-shadow: 0 0 0 1.5px rgba(0, 5, 204, 0.35) !important;
+  }
+  .ant-select-selector:focus,
+  .ant-select-selector:hover {
+    border-color: #0f123f !important;
+    box-shadow: 0 0 0 1.5px rgba(0, 5, 204, 0.35) !important;
   }
 }
 
@@ -294,11 +317,17 @@
 .primary-bg-btn {
   background-color: #0f123f;
 }
+.primary-bg-btn:hover {
+  border-color: #0f123f;
+}
 .primary-bg-color {
   background: #0f123f;
 }
 .toggle-btn-bg {
   background-color: #ff7473;
+}
+.toggle-btn-bg:hover {
+  border-color: #0f123f;
 }
 
 .modal-answer-wrapper {
@@ -452,5 +481,25 @@
   .ant-input:focus {
     border-color: #0f123f;
     box-shadow: 0 0 0 1.5px rgba(0, 5, 204, 0.35) !important;
+  }
+}
+.ant-layout-header {
+  line-height: 0%;
+}
+.logout-dropdown {
+  min-width: 114px !important;
+}
+
+.searchbar-bg {
+  background-color: #ffffff;
+}
+.bg-color-dashboard {
+  background-color: #f3f3fc;
+}
+
+.searchbar-bg {
+  input {
+    width: 288px;
+    padding: 10px 6px;
   }
 }

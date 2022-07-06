@@ -205,10 +205,10 @@ function Applaud({ user }) {
     <div>
       <div className="px-3 md:px-8 h-auto mt-5">
         <div className="container mx-auto max-w-full">
-          <div className="flex justify-end">
+          <div className="md:flex justify-end">
             <div className="my-3 mx-3 ">
               <button
-                className="primary-bg-btn text-white text-sm py-3 text-center px-4 rounded-md"
+                className="primary-bg-btn text-white text-sm py-3 text-center px-4 rounded-md w-full"
                 onClick={showModal}
               >
                 Create Applaud
@@ -237,14 +237,14 @@ function Applaud({ user }) {
                         receivedApplaudList.map((item, idx) => {
                           return (
                             <div
-                              className=" border-2 rounded md:m-3 "
+                              className=" border-2 rounded md:m-3 mt-2 shadow-md "
                               key={"applaud" + idx}
                             >
                               <Row className="m-5 px-2">
-                                <Col xs={2} md={2}>
-                                  <UserIcon className="primary-color-blue font-bold text-base" />
+                                <Col xs={4} md={4}>
+                                  <UserIcon className="primary-color-blue font-bold text-base " />
                                 </Col>
-                                <Col xs={22} md={22}>
+                                <Col xs={20} md={20}>
                                   <p className="ml-2 text-base">
                                     <span className="uppercase ">
                                       {item.created.first_name}
@@ -254,24 +254,24 @@ function Applaud({ user }) {
                                 </Col>
                               </Row>
                               <Row className="m-5 px-2">
-                                <Col xs={2} md={2}>
-                                  <CommentIcons className="primary-color-blue font-bold text-base" />
+                                <Col xs={4} md={4}>
+                                  <CommentIcons className="primary-color-blue font-bold text-base " />
                                 </Col>
 
-                                <Col xs={22} md={22}>
+                                <Col xs={20} md={20}>
                                   <p className="ml-2 break-all text-base">
                                     {item.comment}
                                   </p>
                                 </Col>
                               </Row>
                               <Row className="m-5 px-2">
-                                <Col xs={2} md={2}>
-                                  <CalanderIcon className="primary-color-blue font-bold  text-base" />
+                                <Col xs={4} md={4}>
+                                  <CalanderIcon className="primary-color-blue font-bold  text-base " />
                                 </Col>
                                 {/* <span className="font-bold"> */}
                                 {/* Comment : */}
                                 {/* </span>{" "} */}
-                                <Col xs={22} md={22}>
+                                <Col xs={20} md={20}>
                                   <p className=" ml-2 text-base">
                                     {moment(item.created_date).format(
                                       "DD/MM/YYYY"

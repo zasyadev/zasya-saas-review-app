@@ -86,7 +86,7 @@ function TemplateLayout({ user }) {
                   </h2>
                 </div> */}
                 <div className="w-full bg-white rounded-md shadow-md md:p-4 p-0 mt-6 ">
-                  <h2 className="text-black text-2xl font-bold p-4">
+                  <h2 className="text-black text-2xl font-bold p-4 primary-color-blue">
                     Template Lists{" "}
                   </h2>
                   <div className="p-4 ">
@@ -102,7 +102,7 @@ function TemplateLayout({ user }) {
                             <AddIcon className="text-center " />
                           </div>
                           <div className="text-white text-center text-sm font-medium my-6">
-                            Blank Template
+                            Add Template
                           </div>
                         </div>
                         {formList.length > 0 ? (

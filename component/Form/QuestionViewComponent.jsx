@@ -75,7 +75,7 @@ const QuestionViewComponent = ({
                 max={Number(options[0]?.higherLabel)}
                 step={1}
                 onChange={(e) => {
-                  handleAnswerChange(id, e);
+                  handleAnswerChange(id, e.toString());
                   setSliderInputValue(e);
                 }}
                 // value={typeof inputValue === "number" ? inputValue : 0}

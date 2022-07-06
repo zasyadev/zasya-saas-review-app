@@ -164,6 +164,7 @@ function TeamMembers({ user }) {
   const columns = [
     {
       title: "Name",
+      key: "id",
       render: (_, record) => record.first_name + " " + record.last_name,
     },
     {
@@ -221,10 +222,10 @@ function TeamMembers({ user }) {
               </span>
             </div> */}
 
-                <div className="flex justify-end">
+                <div className="md:flex justify-end">
                   <div className="my-2 ">
                     <button
-                      className="primary-bg-btn text-white text-sm py-3 text-center px-4 rounded-md"
+                      className="primary-bg-btn text-white text-sm md:py-3 py-2 text-center md:px-4 px-2 rounded-md w-full"
                       onClick={showModal}
                     >
                       Create Team

@@ -33,6 +33,12 @@ const BarChart = () => {
                 columnWidth: "90%",
               },
             },
+            title: {
+              text: "Comapny Rating ",
+              style: {
+                fontSize: "14px",
+              },
+            },
           },
         },
       ],
