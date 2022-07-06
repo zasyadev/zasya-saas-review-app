@@ -1,8 +1,6 @@
 import { Col, Row } from "antd";
-import { StarOutlined, LikeOutlined } from "@ant-design/icons";
 import React from "react";
 import LineChart from "../../helpers/LineChart";
-import { DoughnutChart } from "../../helpers/DoughnutChart";
 import { ApplaudIcon, StarIcon } from "../../assets/Icon/icons";
 
 // import dynamic from "next/dynamic";
@@ -20,7 +18,7 @@ function SiderRight({ data }) {
               <ApplaudIcon />
             </div>
             <div>
-              <p className="text-xl font-extrabold my-2">
+              <p className="primary-color-blue text-xl font-extrabold my-2">
                 {data?.applaudData?.length ?? 0}
               </p>
             </div>
@@ -32,14 +30,16 @@ function SiderRight({ data }) {
               <StarIcon />
             </div>
             <div>
-              <p className="text-xl font-extrabold my-2">8.5</p>
+              <p className="primary-color-blue text-xl font-extrabold my-2">
+                8.5
+              </p>
             </div>
           </div>
         </Col>
       </Row>
       <Row className="">
         <div className="w-full bg-white rounded-xl shadow-md px-4 py-4 mt-8 ">
-          <p className="text-lg font-bold mb-4 primary-color-blue">
+          <p className="text-xl mt-1 font-semibold primary-color-blue mb-4">
             Feedback given to me
           </p>
           <LineChart />

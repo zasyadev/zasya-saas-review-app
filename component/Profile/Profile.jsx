@@ -106,7 +106,7 @@ function Profile({ user }) {
                 <div className="flex justify-end ">
                   <div>
                     <button
-                      className="primary-bg-btn text-white text-sm py-3 text-center px-4 rounded-md"
+                      className="primary-bg-btn text-white text-sm md:py-3 py-3 text-center md:px-4 px-2 rounded-md"
                       onClick={showModal}
                     >
                       Change Setting
@@ -185,7 +185,7 @@ function Profile({ user }) {
                         >
                           <Input
                             placeholder="First Name"
-                            className="bg-gray-100 h-12"
+                            className="bg-gray-100 h-12 rounded-md"
                           />
                         </Form.Item>
                       </Col>
@@ -201,7 +201,7 @@ function Profile({ user }) {
                         >
                           <Input
                             placeholder="Last Name"
-                            className="bg-gray-100 h-12"
+                            className="bg-gray-100 h-12 rounded-md"
                           />
                         </Form.Item>{" "}
                       </Col>
@@ -218,7 +218,7 @@ function Profile({ user }) {
                           <Input
                             placeholder="Email"
                             disabled={true}
-                            className="bg-gray-100 h-12"
+                            className="bg-gray-100 h-12 rounded-md"
                           />
                         </Form.Item>
                       </Col>

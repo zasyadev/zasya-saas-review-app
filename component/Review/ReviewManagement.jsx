@@ -10,6 +10,7 @@ import {
   Input,
   Radio,
   Checkbox,
+  Popconfirm,
 } from "antd";
 import { DeleteOutlined, UserSwitchOutlined } from "@ant-design/icons";
 import { openNotificationBox } from "../../helpers/notification";
@@ -267,13 +268,22 @@ function ReviewManagement({ user }) {
           )}
 
           {record.created_by === user.id && (
-            <span
-              className="primary-color-blue text-lg mx-2 cursor-pointer"
-              onClick={() => onDelete(record.id)}
-              title="Delete"
-            >
-              <DeleteOutlined />
-            </span>
+            <>
+              <Popconfirm
+                title="Are you sure？"
+                okText="Yes"
+                cancelText="No"
+                onConfirm={() => onDelete(record.id)}
+              >
+                <span
+                  className="primary-color-blue text-lg mx-2 cursor-pointer"
+                  // onClick={() => onDelete(record.id)}
+                  title="Delete"
+                >
+                  <DeleteOutlined />
+                </span>
+              </Popconfirm>
+            </>
           )}
         </p>
       ),
