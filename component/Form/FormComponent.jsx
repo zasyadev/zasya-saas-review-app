@@ -1,5 +1,5 @@
 import { TextField } from "@material-ui/core";
-import { Button, Input } from "antd";
+import { Button, Col, Input, Row } from "antd";
 import React, { useState, useEffect } from "react";
 import { openNotificationBox } from "../../helpers/notification";
 import QuestionComponent from "./QuestionComponent";
@@ -287,23 +287,23 @@ function FormComponent({
             </>
           ))}
 
-        <div className="block lg:flex justify-end items-end my-4 lg:pl-56 ">
-          <Button
+        <div className="block lg:flex justify-end items-end my-4  lg:pl-56 ">
+          <button
             // className=" px-4 py-3 h-full rounded bg-cyan-500 text-white"
-            className="primary-bg-btn text-white text-sm py-3 px-4 rounded h-full w-full"
+            className="primary-bg-btn text-white text-sm py-3 my-1  rounded h-full w-full"
             type="button"
             onClick={() => {
               addMoreQuestionField();
             }}
           >
             {/* <span className="MuiButton-label"> */}
-            Add Question +
+            Add Question
             {/* <span className="MuiButton-endIcon MuiButton-iconSizeMedium"> */}
             {/* </span>
             </span> */}
-          </Button>
-          <Button
-            className="py-3 h-full rounded toggle-btn-bg text-white lg:mx-4 w-full "
+          </button>
+          <button
+            className="py-3 h-full rounded toggle-btn-bg text-white lg:mx-4 w-full  my-1"
             type="button"
             onClick={() => {
               setFormDetailShow(false);
@@ -311,16 +311,16 @@ function FormComponent({
             }}
           >
             <span className="MuiButton-label">Cancel</span>
-          </Button>
-          <Button
-            className=" px-4 py-3 h-full rounded primary-bg-btn text-white w-full "
+          </button>
+          <button
+            className=" px-4 py-3 h-full rounded primary-bg-btn text-white w-full my-1"
             type="button"
             onClick={() => {
               saveFormField();
             }}
           >
             <span className="MuiButton-label">Save Template</span>
-          </Button>
+          </button>
         </div>
       </div>
     </div>

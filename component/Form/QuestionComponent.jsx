@@ -128,7 +128,7 @@ const QuestionComponent = ({
                   onClick={() => {
                     addOption(idx);
                   }}
-                  className="text-base cursor-pointer my-2 ml-4"
+                  className="text-sm md:text-base cursor-pointer my-2 ml-4"
                 >
                   + Add Option
                 </div>
