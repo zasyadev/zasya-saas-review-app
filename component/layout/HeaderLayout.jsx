@@ -27,7 +27,7 @@ function HeaderLayout({ title, pageName }) {
     />
   );
   return (
-    <Header className="bg-color-dashboard border-b border-b-neutral-300 p-0">
+    <Header className="ant-header bg-color-dashboard border-b border-b-neutral-300 p-0">
       <Row>
         <Col md={20} xs={12}>
           <div className="flex justify-between items-center mt-2">
@@ -43,7 +43,7 @@ function HeaderLayout({ title, pageName }) {
           </div>
         </Col>
         <Col md={4} xs={12}>
-          <div className=" flex justify-end mt-3 pr-3">
+          <div className=" flex justify-end mt-2 pr-3">
             <div className="rounded-md flex justify-between mx-3 ">
               {/* <div className="bg-gray-100 rounded-full py-2 px-2 mr-4"> */}
               {/* <BellIcon /> */}

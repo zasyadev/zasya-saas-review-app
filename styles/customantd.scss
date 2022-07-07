@@ -87,6 +87,12 @@
     color: #fff !important;
   }
 }
+.ant-menu-inline {
+  border-right: 1px solid #0f123f !important;
+}
+.ant-menu.ant-menu-inline-collapsed {
+  border-right: 1px solid #0f123f !important;
+}
 .ant-form input[type="checkbox"]:focus {
   outline: 0;
 }
@@ -487,6 +493,9 @@
 .ant-layout-header {
   line-height: 0%;
 }
+.ant-header {
+  padding: 0% !important;
+}
 .logout-dropdown {
   min-width: 114px !important;
 }
@@ -503,4 +512,13 @@
     width: 288px;
     padding: 10px 6px;
   }
+}
+.profile-submit-button {
+  color: #fff !important;
+  height: 100% !important;
+  font-size: 15px;
+  border-radius: 5px;
+}
+.profile-submit-button:hover {
+  color: #0f123f !important;
 }
