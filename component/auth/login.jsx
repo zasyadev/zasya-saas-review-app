@@ -9,6 +9,7 @@ import loginImage from "../../assets/images/login_img.png";
 import loginTopImage from "../../assets/images/login-top-design.png";
 import loginBottomImage from "../../assets/images/login-bottom-design.png";
 import { LoadingSpinner } from "../Loader/LoadingSpinner";
+import { openNotificationBox } from "../../helpers/notification";
 
 function LoginPage() {
   const router = useRouter();
@@ -24,7 +25,7 @@ function LoginPage() {
     });
 
     if (result.error) {
-      message.error(result.error, 3);
+      openNotificationBox("error", data.message, 3);
 
       setLoading(false);
       return;

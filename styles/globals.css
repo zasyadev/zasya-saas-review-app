@@ -1,10 +1,10 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap");
-
-@import "./antd.css";
+@import "antd/dist/antd.css";
 @import "./spinner.css";
 @import "tailwindcss/base";
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
+/* @import "./antd.css"; */
 
 html,
 body,

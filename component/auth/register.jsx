@@ -2,11 +2,14 @@ import { Form, Input, message } from "antd";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import React, { useState } from "react";
 import loginImage from "../../assets/images/login_img.png";
+import { openNotificationBox } from "../../helpers/notification";
 import { LoadingSpinner } from "../Loader/LoadingSpinner";
 
 function RegisterPage() {
+  const router = useRouter();
   const [registerForm] = Form.useForm();
 
   const [loading, setLoading] = useState(false);
@@ -25,9 +28,12 @@ function RegisterPage() {
       .then((response) => response.json())
       .then((data) => {
         if (data.status === 200) {
-          message.success(data.message, 3);
+          openNotificationBox("success", data.message, 3);
           registerForm.resetFields();
           // setRegisterToggle(false);
+          router.replace("/auth/login");
+        } else {
+          openNotificationBox("error", data.message, 3);
         }
         setLoading(false);
       })
@@ -149,7 +155,6 @@ function RegisterPage() {
                         },
                         ({ getFieldValue }) => ({
                           validator(_, value) {
-                            console.log(value, "sdfsdjkhfjksh");
                             if (!value || getFieldValue("password") === value) {
                               return Promise.resolve();
                             }

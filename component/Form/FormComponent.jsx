@@ -41,15 +41,18 @@ function FormComponent({
     setQuestions((prev) => [...prev, defaultQuestionConfig]);
   }
   function defineType(type, index) {
+    console.log(questions, "questions");
     setQuestions((prev) =>
       prev.map((item, i) =>
         i === index
           ? type === "scale"
             ? {
                 ...defaultScaleQuestion,
+                questionText: item.questionText,
               }
             : {
                 ...defaultQuestionConfig,
+                questionText: item.questionText,
                 type: type,
               }
           : item
