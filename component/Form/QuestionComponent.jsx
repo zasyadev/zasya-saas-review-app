@@ -124,24 +124,13 @@ const QuestionComponent = ({
                 </div>
               ))}
               {options.length < 5 ? (
-                <div>
-                  <FormControlLabel
-                    disabled
-                    control={<Radio />}
-                    label={
-                      <Button
-                        size="small"
-                        onClick={() => {
-                          addOption(idx);
-                        }}
-                        style={{
-                          textTransform: "none",
-                        }}
-                      >
-                        Add Option
-                      </Button>
-                    }
-                  />
+                <div
+                  onClick={() => {
+                    addOption(idx);
+                  }}
+                  className="text-base cursor-pointer my-2 ml-4"
+                >
+                  + Add Option
                 </div>
               ) : (
                 ""

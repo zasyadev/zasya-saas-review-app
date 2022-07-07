@@ -308,7 +308,7 @@ function Applaud({ user }) {
                       <div className="p-4 ">
                         <div className="overflow-x-auto">
                           <p className="font-semibold text-lg primary-color-blue">
-                            Created Applaud
+                            Applaud Given
                           </p>
                           {loading ? (
                             <Skeleton

@@ -9,6 +9,7 @@ import {
   Skeleton,
   Select,
   Input,
+  Popconfirm,
 } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { openNotificationBox } from "../../helpers/notification";
@@ -194,12 +195,17 @@ function TeamMembers({ user }) {
           >
             <EditOutlined />
           </span>
-          <button
-            className="primary-color-blue text-xl mx-2 cursor-pointer"
-            onClick={() => onDelete(record.email)}
+
+          <Popconfirm
+            title="Are you sure？"
+            okText="Yes"
+            cancelText="No"
+            onConfirm={() => onDelete(record.email)}
           >
-            <DeleteOutlined />
-          </button>
+            <button className="primary-color-blue text-xl mx-2 cursor-pointer">
+              <DeleteOutlined />
+            </button>
+          </Popconfirm>
         </p>
       ),
     },
