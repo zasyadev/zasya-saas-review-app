@@ -21,6 +21,9 @@ export default async (req, res) => {
         });
 
         if (updateData) {
+          const deleteData = await prisma.passwordReset.delete({
+            where: { email_id: reqBody.email },
+          });
           return res.status(200).json({
             status: 200,
             data: updateData,

@@ -173,10 +173,10 @@ function ReviewAssigneeList({ data, setReviewAssignee, user }) {
 
             <div className="flex justify-between items-center my-4 ">
               <div className="text-green-400 text-base font-semibold px-2">
-                Review generated : 50
+                Review generated : 0
               </div>
               <div className="text-red-400 text-base font-semibold px-2">
-                Review pending : 20
+                Review pending : 0
               </div>
             </div>
           </div>

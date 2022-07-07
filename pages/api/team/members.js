@@ -46,6 +46,7 @@ export default async (req, res) => {
             });
           }
         }
+
         const passwordResetData = await transaction.passwordReset.create({
           data: {
             email: { connect: { email: userData.email } },
@@ -82,6 +83,7 @@ export default async (req, res) => {
         status: 200,
       });
     } catch (error) {
+      console.log(error, "ssbfsb");
       if (error.code === "P2014") {
         return res
           .status(409)

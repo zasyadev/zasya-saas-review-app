@@ -28,7 +28,7 @@ function ReviewManagement({ user }) {
   const [updateData, setUpdateData] = useState({});
   const [reviewAssignList, setReviewAssignList] = useState([]);
   const [reviewAssign, setReviewAssign] = useState(false);
-  const [memberDetails, setMemberDetails] = useState(true);
+  const [memberDetails, setMemberDetails] = useState(false);
   const [reviewAssignee, setReviewAssignee] = useState(false);
   const [reviewAssigneeData, setReviewAssigneeData] = useState({});
 
@@ -429,48 +429,6 @@ function ReviewManagement({ user }) {
             <Row gutter={16}>
               <Col md={12} xs={24}>
                 <Form.Item
-                  name="is_published"
-                  // label="Status"
-                  // rules={[
-                  //   {
-                  //     required: true,
-                  //   },
-                  // ]}
-                  valuePropName="checked"
-                >
-                  <Checkbox onChange={onChangeStatus}>
-                    {" "}
-                    Publish This Review
-                  </Checkbox>
-                  {/* <Radio.Group
-                    placeholder="Select Status"
-                    onChange={onChangeStatus}
-                  >
-                    <Radio value="published">Published</Radio>
-                    <Radio value="draft">Draft</Radio>
-                  </Radio.Group> */}
-                </Form.Item>
-              </Col>
-
-              <Col md={12} xs={24}>
-                <Form.Item
-                  name="review_type"
-                  label="Review Type"
-                  rules={[
-                    {
-                      required: true,
-                    },
-                  ]}
-                >
-                  <Radio.Group placeholder="Select Type">
-                    <Radio value="feedback">Feedback</Radio>
-                    <Radio value="other">Other</Radio>
-                  </Radio.Group>
-                </Form.Item>
-              </Col>
-
-              <Col md={12} xs={24}>
-                <Form.Item
                   name="review_name"
                   label="Review Name"
                   rules={[
@@ -482,6 +440,43 @@ function ReviewManagement({ user }) {
                   <Input />
                 </Form.Item>
               </Col>
+
+              <Col md={12} xs={24}>
+                <Form.Item
+                  name="template_id"
+                  label="Template"
+                  rules={[
+                    {
+                      required: true,
+                    },
+                  ]}
+                >
+                  <Select
+                    placeholder="Select Template"
+                    showSearch
+                    filterOption={(input, option) =>
+                      option.children
+                        .toLowerCase()
+                        .indexOf(input.toLowerCase()) >= 0
+                    }
+                  >
+                    {formList.map((data, index) => (
+                      <Select.Option key={index + "form"} value={data.id}>
+                        {data.form_title}
+                      </Select.Option>
+                    ))}
+                  </Select>
+                </Form.Item>
+              </Col>
+              <Col md={12} xs={24}>
+                <Form.Item name="is_published" valuePropName="checked">
+                  <Checkbox onChange={onChangeStatus}>
+                    {" "}
+                    Publish This Review
+                  </Checkbox>
+                </Form.Item>
+              </Col>
+
               {memberDetails && (
                 <Col md={12} xs={24}>
                   <Form.Item
@@ -514,34 +509,6 @@ function ReviewManagement({ user }) {
 
               <Col md={12} xs={24}>
                 <Form.Item
-                  name="template_id"
-                  label="Template"
-                  rules={[
-                    {
-                      required: true,
-                    },
-                  ]}
-                >
-                  <Select
-                    placeholder="Select Template"
-                    showSearch
-                    filterOption={(input, option) =>
-                      option.children
-                        .toLowerCase()
-                        .indexOf(input.toLowerCase()) >= 0
-                    }
-                  >
-                    {formList.map((data, index) => (
-                      <Select.Option key={index + "form"} value={data.id}>
-                        {data.form_title}
-                      </Select.Option>
-                    ))}
-                  </Select>
-                </Form.Item>
-              </Col>
-
-              <Col md={12} xs={24}>
-                <Form.Item
                   name="frequency"
                   label="Frequency"
                   rules={[
@@ -551,10 +518,27 @@ function ReviewManagement({ user }) {
                   ]}
                 >
                   <Select placeholder="Select Frequency">
+                    <Select.Option value="once">Once</Select.Option>
                     <Select.Option value="daily">Daily</Select.Option>
                     <Select.Option value="weekly">Weekly</Select.Option>
                     <Select.Option value="monthly">Monthly</Select.Option>
                   </Select>
+                </Form.Item>
+              </Col>
+              <Col md={12} xs={24}>
+                <Form.Item
+                  name="review_type"
+                  label="Review Type"
+                  rules={[
+                    {
+                      required: true,
+                    },
+                  ]}
+                >
+                  <Radio.Group placeholder="Select Type">
+                    <Radio value="feedback">Feedback</Radio>
+                    <Radio value="other">Other</Radio>
+                  </Radio.Group>
                 </Form.Item>
               </Col>
             </Row>

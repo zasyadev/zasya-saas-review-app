@@ -162,7 +162,7 @@ function DashBoard({ user }) {
                                 <p className="flex">
                                   <ApplaudIconSmall />
                                   <span className="pl-2 text-sm font-medium text-gray-500">
-                                    20
+                                    0
                                   </span>
                                 </p>
                               </div>
@@ -191,7 +191,7 @@ function DashBoard({ user }) {
                                 <p className="flex">
                                   <ApplaudIconSmall />
                                   <span className="pl-2 text-sm font-medium text-gray-500">
-                                    20
+                                    0
                                   </span>
                                 </p>
                               </div>
@@ -220,7 +220,7 @@ function DashBoard({ user }) {
                                 <p className="flex">
                                   <ApplaudIconSmall />
                                   <span className="pl-2 text-sm font-medium text-gray-500">
-                                    20
+                                    0
                                   </span>
                                 </p>
                               </div>
@@ -244,7 +244,7 @@ function DashBoard({ user }) {
                                 <p className="flex">
                                   <ApplaudIconSmall />
                                   <span className="pl-2 text-sm font-medium text-gray-500">
-                                    20
+                                    0
                                   </span>
                                 </p>
                               </div>
@@ -278,10 +278,10 @@ function DashBoard({ user }) {
                               </p>
                               <p className="flex justify-between">
                                 <span className="text-sm font-medium text-gray-500">
-                                  Feeback Given : 20
+                                  Feeback Given : 0
                                 </span>
                                 <span className="pl-2 text-sm font-medium text-gray-500">
-                                  Feeback Received : 10
+                                  Feeback Received : 0
                                 </span>
                               </p>
                             </div>
@@ -306,10 +306,10 @@ function DashBoard({ user }) {
                               </p>
                               <p className="flex justify-between">
                                 <span className="text-sm font-medium text-gray-500">
-                                  Feeback Given : 20
+                                  Feeback Given : 0
                                 </span>
                                 <span className="pl-2 text-sm font-medium text-gray-500">
-                                  Feeback Received : 10
+                                  Feeback Received : 0
                                 </span>
                               </p>
                             </div>

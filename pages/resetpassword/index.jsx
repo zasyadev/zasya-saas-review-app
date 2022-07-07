@@ -5,6 +5,8 @@ import { useRouter } from "next/router";
 import Layout from "../../component/layout/Layout";
 import loginImage from "../../assets/images/login_img.png";
 import Image from "next/image";
+import Link from "next/link";
+import { openNotificationBox } from "../../helpers/notification";
 // import loginImage from "../../assets/images/login-image.png";
 // import { LoadingSpinner } from "../../component/Loader/LoadingSpinner";
 
@@ -32,9 +34,12 @@ function ResetPassword() {
         .then((response) => response.json())
         .then((data) => {
           if (data.status === 200) {
-            message.success(data.message, 3);
+            openNotificationBox("success", data.message, 3);
+
             resetForm.resetFields();
             router.replace("/auth/login");
+          } else {
+            openNotificationBox("error", data.message, 3);
           }
           setLoading(false);
         })
@@ -119,6 +124,16 @@ function ResetPassword() {
                   >
                     Submit
                   </button>
+                </div>
+
+                <div className=" md:flex justify-end text-center lg:text-left">
+                  <p className="text-sm font-semibold mt-2 pt-1 mb-0">
+                    <Link href="/auth/login">
+                      <span className="primary-color-blue  font-semibold transition duration-200 ease-in-out cursor-pointer">
+                        Back to Login
+                      </span>
+                    </Link>
+                  </p>
                 </div>
               </Form>
               <div className="login-bottom-image"></div>

@@ -25,8 +25,7 @@ function LoginPage() {
     });
 
     if (result.error) {
-      openNotificationBox("error", data.message, 3);
-
+      openNotificationBox("error", result.error, 3);
       setLoading(false);
       return;
     }

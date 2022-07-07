@@ -9,7 +9,7 @@ import Router from "next/router";
 
 export default function Home({ user }) {
   useEffect(() => {
-    if (user.id) Router.push("/admin/dashboard");
+    if (user.id) Router.push("/dashboard");
     else {
       Router.push("/auth/login");
     }

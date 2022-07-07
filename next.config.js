@@ -1,6 +1,15 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+module.exports = {
   reactStrictMode: true,
-};
 
-module.exports = nextConfig;
+  serverRuntimeConfig: {
+    PROJECT_ROOT: __dirname,
+  },
+  async rewrites() {
+    return [
+      {
+        source: "/auth/login",
+        destination: "/auth/login",
+      },
+    ];
+  },
+};
