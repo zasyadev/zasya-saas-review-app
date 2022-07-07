@@ -1,20 +1,16 @@
-import { Fragment } from "react";
-import React, { useState, useEffect } from "react";
-import { Layout } from "antd";
-import Head from "next/head";
-import SiderLayout from "./SiderLayout";
-import HeaderLayout from "./HeaderLayout";
-import { Content, Footer } from "antd/lib/layout/layout";
-import { Grid } from "antd";
-import Sider from "antd/lib/layout/Sider";
 import {
-  DashboardOutlined,
-  SettingOutlined,
-  LikeOutlined,
   AppstoreOutlined,
-  FileOutlined,
+  DashboardOutlined,
   FormOutlined,
+  LikeOutlined,
+  SettingOutlined,
 } from "@ant-design/icons";
+import { Grid, Layout } from "antd";
+import { Content, Footer } from "antd/lib/layout/layout";
+import Head from "next/head";
+import { Fragment, useEffect, useState } from "react";
+import HeaderLayout from "./HeaderLayout";
+import SiderLayout from "./SiderLayout";
 
 function getItem(label, key, icon, children, type) {
   return {
@@ -39,7 +35,7 @@ function AdminLayout(props) {
   const items = [
     getItem(
       "DashBoard",
-      "/admin/dashboard",
+      "/dashboard",
       <DashboardOutlined className="sidebar-icon" />
     ),
     // getItem("Activity", "sub1", <SettingOutlined />, [
@@ -50,7 +46,7 @@ function AdminLayout(props) {
     // ]),
     getItem(
       "Reviews",
-      "/admin/review/management",
+      "/review/management",
       <FormOutlined className="sidebar-icon " />
     ),
     // getItem("Team", "team", <AppstoreOutlined className="sidebar-icon" />, [
@@ -59,14 +55,10 @@ function AdminLayout(props) {
     // ]),
     getItem(
       "Team",
-      "/admin/team/members",
+      "/team/members",
       <AppstoreOutlined className="sidebar-icon " />
     ),
-    getItem(
-      "Applaud",
-      "/admin/applaud",
-      <LikeOutlined className="sidebar-icon " />
-    ),
+    getItem("Applaud", "/applaud", <LikeOutlined className="sidebar-icon " />),
 
     getItem(
       "Settings",
@@ -75,8 +67,8 @@ function AdminLayout(props) {
       [
         // getItem("Templates", "/admin/template "),
         // getItem("Users", "/admin/user"),
-        getItem("Templates", "/admin/template"),
-        getItem("Profile ", "/admin/profile "),
+        getItem("Templates", "/template"),
+        getItem("Profile ", "/profile "),
       ]
     ),
   ];

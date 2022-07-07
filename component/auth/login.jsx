@@ -29,7 +29,7 @@ function LoginPage() {
       setLoading(false);
       return;
     }
-    router.replace("/admin/dashboard");
+    router.replace("/dashboard");
   }
   return (
     <>
