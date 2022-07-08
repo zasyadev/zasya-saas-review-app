@@ -22,7 +22,7 @@ function SiderLayout({ collapsed, setCollapsed, items, setTitle }) {
 
   const onClickSideTab = (e) => {
     if (e.key.includes("/")) {
-      router.replace(e.key);
+      router.push(e.key);
     }
   };
   return (

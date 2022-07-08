@@ -12,6 +12,8 @@ import { Fragment, useEffect, useState } from "react";
 import HeaderLayout from "./HeaderLayout";
 import SiderLayout from "./SiderLayout";
 
+const { useBreakpoint } = Grid;
+
 function getItem(label, key, icon, children, type) {
   return {
     key,
@@ -23,10 +25,10 @@ function getItem(label, key, icon, children, type) {
 }
 
 function AdminLayout(props) {
+  const { md } = useBreakpoint();
   const [collapsed, setCollapsed] = useState(false);
   const [title, setTitle] = useState("");
-  const { useBreakpoint } = Grid;
-  const { md } = useBreakpoint();
+
   useEffect(() => {
     if (md) setCollapsed(false);
     else setCollapsed(true);

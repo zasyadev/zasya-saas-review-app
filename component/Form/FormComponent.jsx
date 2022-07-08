@@ -4,6 +4,21 @@ import React, { useState, useEffect } from "react";
 import { openNotificationBox } from "../../helpers/notification";
 import QuestionComponent from "./QuestionComponent";
 
+const defaultQuestionConfig = {
+  questionText: "Question",
+  options: [{ optionText: "Option 1" }],
+  open: true,
+  type: "checkbox",
+};
+const defaultScaleQuestion = {
+  questionText: "Question",
+  options: [{ optionText: "low" }, { optionText: "high" }],
+  lowerLabel: 0,
+  higherLabel: 5,
+  open: true,
+  type: "scale",
+};
+
 function FormComponent({
   user,
   setFormDetailShow,
@@ -13,33 +28,19 @@ function FormComponent({
   setEditMode,
   fetchFormList,
 }) {
-  const defaultQuestionConfig = {
-    questionText: "Question",
-    options: [{ optionText: "Option 1" }],
-    open: true,
-    type: "checkbox",
-  };
-  const defaultScaleQuestion = {
-    questionText: "Question",
-    options: [{ optionText: "low" }, { optionText: "high" }],
-    lowerLabel: 0,
-    higherLabel: 5,
-    open: true,
-    type: "scale",
-  };
-
   const [questions, setQuestions] = useState([defaultQuestionConfig]);
   const [formTitle, setFormTitle] = useState("");
   const [formDes, setFormDes] = useState("");
 
   function removeElement(idx) {
-    setQuestions((prev) => prev.filter((item, i) => i != idx));
+    setQuestions((prev) => prev.filter((_, i) => i != idx));
   }
 
   function addMoreQuestionField() {
     expandCloseAll();
     setQuestions((prev) => [...prev, defaultQuestionConfig]);
   }
+
   function defineType(type, index) {
     console.log(questions, "questions");
     setQuestions((prev) =>
@@ -65,6 +66,7 @@ function FormComponent({
       prev.map((item, i) => (i === index ? { ...item, open: false } : item))
     );
   }
+
   function expandCloseAll() {
     setQuestions((prev) =>
       prev.map((item) => (item ? { ...item, open: false } : item))
@@ -73,11 +75,10 @@ function FormComponent({
 
   function handleExpand(idx) {
     setQuestions((prev) =>
-      prev.map((item, i) =>
-        i === idx ? { ...item, open: true } : { ...item, open: false }
-      )
+      prev.map((item, i) => ({ ...item, open: i === idx }))
     );
   }
+
   function addOption(idx) {
     setQuestions((prev) =>
       prev.map((item, i) =>
@@ -116,19 +117,16 @@ function FormComponent({
       )
     );
   }
+
   function handleScaleOptionValue(text, idx, type) {
+    const key = type === "lowerLabel" ? "lowerLabel" : "higherLabel";
     setQuestions((prev) =>
       prev.map((item, i) =>
         i === idx
-          ? type === "lowerLabel"
-            ? {
-                ...item,
-                lowerLabel: text,
-              }
-            : {
-                ...item,
-                higherLabel: text,
-              }
+          ? {
+              ...item,
+              [key]: text,
+            }
           : item
       )
     );
@@ -140,14 +138,14 @@ function FormComponent({
         i === idx
           ? {
               ...item,
-              options: item.options.filter((option, jdx) => j != jdx),
+              options: item.options.filter((_, jdx) => j != jdx),
             }
           : item
       )
     );
   }
 
-  async function saveFormField() {
+  function saveFormField() {
     let id = editFormData.id;
     if (formDes && formTitle) {
       let obj = {
@@ -166,6 +164,7 @@ function FormComponent({
       editMode ? updateFormData(obj, id) : addNewForm(obj);
     }
   }
+
   async function updateFormData(obj, id) {
     if (id) {
       obj.id = id;

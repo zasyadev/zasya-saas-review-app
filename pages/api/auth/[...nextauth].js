@@ -19,6 +19,7 @@ export default NextAuth({
             email: credentials.email,
           },
         });
+
         if (!user) {
           throw new Error("Email not Found.");
         }
