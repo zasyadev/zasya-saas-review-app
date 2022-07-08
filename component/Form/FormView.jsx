@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import { openNotificationBox } from "../../helpers/notification";
 import QuestionViewComponent from "./QuestionViewComponent";
 import CustomTable from "../../helpers/CustomTable";
+import Link from "next/link";
 
 function FormView({ user, setReviewAssign, reviewAssign }) {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -127,12 +128,17 @@ function FormView({ user, setReviewAssign, reviewAssign }) {
       key: "action",
       render: (_, record) => (
         <p>
-          <span
-            className="primary-color-blue text-lg mx-2"
+          {/* <span
+            className="primary-color-blue text-lg mx-2 cursor-pointer"
             onClick={() => showModal(record)}
           >
             <EyeOutlined />
-          </span>
+          </span> */}
+          <Link href={`/review/received/${record.id}`}>
+            <span className="primary-color-blue text-lg mx-2 cursor-pointer">
+              <EyeOutlined />
+            </span>
+          </Link>
         </p>
       ),
     },
@@ -143,17 +149,6 @@ function FormView({ user, setReviewAssign, reviewAssign }) {
       <div className="px-3 md:px-8 h-auto mt-5">
         <div className="container mx-auto max-w-full">
           <div className="grid grid-cols-1 px-4 mb-16">
-            {/* <div className="grid sm:flex bg-gradient-to-tr from-purple-500 to-purple-700 -mt-10 mb-4 rounded-xl text-white  items-center w-full h-40 sm:h-24 py-4 px-8 justify-between shadow-lg-purple ">
-              <h2 className="text-white text-2xl font-bold">
-                View Assigned Reviews{" "}
-              </h2>
-              <span
-                className="text-center  rounded-full border-2 px-4 py-2 cursor-pointer hover:bg-white hover:text-purple-500 hover:border-2 hover:border-purple-500 "
-                onClick={() => setReviewAssign(false)}
-              >
-                Cancel
-              </span>
-            </div> */}
             <div className="flex items-center justify-between mb-3">
               <div className="flex">
                 <button
@@ -203,16 +198,6 @@ function FormView({ user, setReviewAssign, reviewAssign }) {
         visible={isModalVisible}
         onOk={() => handleSubmit()}
         onCancel={() => onCancel()}
-        // footer={[
-        //   <div>
-        //     <Button key="add" type="default" onClick={() => onCancel()}>
-        //       Cancel
-        //     </Button>
-        //     <Button key="add" type="primary" onClick={form.submit}>
-        //       {editMode ? "Update" : "Add"}
-        //     </Button>
-        //   </div>,
-        // ]}
         width={900}
         wrapClassName="view_form_modal"
       >
