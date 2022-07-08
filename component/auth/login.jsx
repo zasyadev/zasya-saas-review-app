@@ -25,8 +25,8 @@ function LoginPage() {
       });
 
       if (result.error) {
-        openNotificationBox("error", result.error, 3);
         setLoading(false);
+        openNotificationBox("error", result.error, 3);
         return;
       }
       router.replace("/dashboard");

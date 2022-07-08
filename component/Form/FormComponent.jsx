@@ -173,10 +173,10 @@ function FormComponent({
         .then((response) => response.json())
         .then((response) => {
           if (response.status === 200) {
-            openNotificationBox("success", response.message, 3);
             setFormDetailShow(false);
             setEditMode(false);
             fetchFormList();
+            openNotificationBox("success", response.message, 3);
           } else {
             openNotificationBox("error", response.message, 3);
           }
@@ -195,10 +195,10 @@ function FormComponent({
       .then((response) => response.json())
       .then((response) => {
         if (response.status === 200) {
-          openNotificationBox("success", response.message, 3);
           setFormDetailShow(false);
           setEditMode(false);
           fetchFormList();
+          openNotificationBox("success", response.message, 3);
         } else {
           openNotificationBox("error", response.message, 3);
         }

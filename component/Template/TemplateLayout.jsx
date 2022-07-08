@@ -48,8 +48,8 @@ function TemplateLayout({ user }) {
         .then((response) => response.json())
         .then((response) => {
           if (response.status === 200) {
-            openNotificationBox("success", response.message, 3);
             fetchFormList();
+            openNotificationBox("success", response.message, 3);
           } else {
             openNotificationBox("error", response.message, 3);
           }
@@ -129,14 +129,14 @@ function TemplateLayout({ user }) {
                                   </div>
                                   <div className="text-sm primary-color-blue  flex items-center  justify-center my-3">
                                     <Popconfirm
-                                      title="Are you sure to delete this Template?"
+                                      title={`Are you sure to delete ${form.form_data.title} ？`}
                                       okText="Yes"
                                       cancelText="No"
                                       icon={false}
                                       onConfirm={() => deleteForm(form.id)}
                                     >
                                       <span className="font-semibold whitespace-nowrap cursor-pointer">
-                                        <DeleteTemplateIcon className="primary-color-blue cursor-pointer" />
+                                        <DeleteTemplateIcon className="cursor-pointer text-red-500" />
                                         {/* Remove */}
                                       </span>
                                     </Popconfirm>

@@ -69,11 +69,11 @@ function AdminUsers({ user }) {
         .then((response) => response.json())
         .then((response) => {
           if (response.status === 200) {
-            message.success(response.message, 3);
+            setEditMode(false);
             fetchUserData();
             form.resetFields();
             setIsModalVisible(false);
-            setEditMode(false);
+            message.success(response.message, 3);
           } else {
             message.error(response.message, 3);
           }
@@ -93,8 +93,8 @@ function AdminUsers({ user }) {
         .then((response) => response.json())
         .then((response) => {
           if (response.status === 200) {
-            message.success(response.message, 3);
             fetchUserData();
+            message.success(response.message, 3);
           } else {
             message.error(response.message, 3);
           }

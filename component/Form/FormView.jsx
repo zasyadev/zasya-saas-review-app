@@ -63,8 +63,8 @@ function FormView({ user, setReviewAssign, reviewAssign }) {
         .then((response) => response.json())
         .then((response) => {
           if (response.status === 200) {
-            openNotificationBox("success", response.message, 3);
             setIsModalVisible(false);
+            openNotificationBox("success", response.message, 3);
           } else {
             openNotificationBox("error", response.message, 3);
           }
@@ -162,7 +162,7 @@ function FormView({ user, setReviewAssign, reviewAssign }) {
                   }  text-white text-sm py-3 text-center px-4 rounded-r-none rounded-l-md  rounded-md   md:w-fit mt-2 `}
                   onClick={() => setReviewAssign(true)}
                 >
-                  Review Recived
+                  Review Received
                 </button>
                 <button
                   className={`${
