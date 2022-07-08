@@ -5,7 +5,7 @@ import Profile from "../../component/Profile/Profile";
 
 function profilePage({ user }) {
   return (
-    <AdminLayout user={user}>
+    <AdminLayout user={user} title={"Profile"}>
       <Profile user={user} />
     </AdminLayout>
   );

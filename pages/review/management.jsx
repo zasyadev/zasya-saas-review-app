@@ -5,7 +5,7 @@ import ReviewManagement from "../../component/Review/ReviewManagement";
 
 function management({ user }) {
   return (
-    <AdminLayout user={user}>
+    <AdminLayout user={user} title={"Reviews"}>
       <ReviewManagement user={user} />
     </AdminLayout>
   );

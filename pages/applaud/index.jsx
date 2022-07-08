@@ -5,7 +5,7 @@ import AdminLayout from "../../component/layout/AdminLayout";
 
 function applaud({ user }) {
   return (
-    <AdminLayout user={user}>
+    <AdminLayout user={user} title={"Applaud"}>
       <Applaud user={user} />
     </AdminLayout>
   );

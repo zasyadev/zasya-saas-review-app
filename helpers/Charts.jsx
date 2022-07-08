@@ -11,6 +11,9 @@ const BarChart = () => {
 
     options: {
       chart: {
+        toolbar: {
+          show: false,
+        },
         type: "bar",
         height: 380,
       },

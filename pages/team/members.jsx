@@ -6,7 +6,7 @@ import TeamMembers from "../../component/Team/TeamMembers";
 
 function membersPage({ user }) {
   return (
-    <AdminLayout user={user}>
+    <AdminLayout user={user} title={"Team"}>
       <TeamMembers user={user} />
     </AdminLayout>
   );

@@ -1,34 +1,32 @@
 import React, { useState } from "react";
 import { Modal, Form, Input, Button, Col, Row, Upload, message } from "antd";
-import Image from "next/image";
-import UserImage from "../../assets/images/User.png";
-import UploadButton from "./UploadButton";
 import { useEffect } from "react";
+import { openNotificationBox } from "../../helpers/notification";
 
-const otherprops = {
-  name: "file",
+// const otherprops = {
+//   name: "file",
 
-  headers: {
-    authorization: "authorization-text",
-  },
+//   headers: {
+//     authorization: "authorization-text",
+//   },
 
-  onChange(info) {
-    if (info.file.status !== "uploading") {
-      console.log(info.file, info.fileList);
-    }
+//   onChange(info) {
+//     if (info.file.status !== "uploading") {
+//       console.log(info.file, info.fileList);
+//     }
 
-    if (info.file.status === "done") {
-      message.success(`${info.file.name} file uploaded successfully`);
-    } else if (info.file.status === "error") {
-      message.error(`${info.file.name} file upload failed.`);
-    }
-  },
-};
+//     if (info.file.status === "done") {
+//       message.success(`${info.file.name} file uploaded successfully`);
+//     } else if (info.file.status === "error") {
+//       message.error(`${info.file.name} file upload failed.`);
+//     }
+//   },
+// };
 function Profile({ user }) {
   const [passwordForm] = Form.useForm();
   const [profileForm] = Form.useForm();
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [userimageSrc, setuserImageSrc] = useState(false);
+  // const [userimageSrc, setuserImageSrc] = useState(false);
   const showModal = () => {
     setIsModalVisible(true);
   };
@@ -53,22 +51,22 @@ function Profile({ user }) {
     getFieldData();
   }, []);
 
-  const handleEdit = () => {
-    setFormMode({ isEdit: true });
-    passwordForm.resetFields();
-    handleToggleModal();
-  };
+  // const handleEdit = () => {
+  //   setFormMode({ isEdit: true });
+  //   passwordForm.resetFields();
+  //   handleToggleModal();
+  // };
 
-  const handleShowModal = () => {
-    handleToggleModal();
-    if (formMode.isEdit) {
-      setFormMode({
-        isEdit: false,
-      });
-    }
+  // const handleShowModal = () => {
+  //   handleToggleModal();
+  //   if (formMode.isEdit) {
+  //     setFormMode({
+  //       isEdit: false,
+  //     });
+  //   }
 
-    passwordForm.resetFields();
-  };
+  //   passwordForm.resetFields();
+  // };
 
   async function onChangePassword(values) {
     let obj = {
@@ -85,7 +83,7 @@ function Profile({ user }) {
       .then((response) => response.json())
       .then((response) => {
         if (response.status === 200) {
-          openNotificationBox("error", response.message, 3);
+          openNotificationBox("success", response.message, 3);
           passwordForm.resetFields();
           setIsModalVisible(false);
         } else {
@@ -101,17 +99,14 @@ function Profile({ user }) {
         <div className="grid grid-cols-1 xl:grid-cols-6 mt-1">
           <div className="xl:col-start-1 xl:col-end-7 px-4 ">
             <div className="rounded-xl text-white grid items-center w-full shadow-lg-purple my-3">
-              <div className="w-full flex item-center justify-between">
-                <h2 className="text-black text-2xl font-bold p-4 primary-color-blue">
-                  Profile
-                </h2>
+              <div className="w-full flex item-center justify-end">
                 <div className="flex justify-end ">
                   <div>
                     <button
                       className="primary-bg-btn text-white text-sm md:py-3 py-3 text-center md:px-4 px-2 rounded-md md:w-full w-20  "
                       onClick={showModal}
                     >
-                      Change Setting
+                      Change Password
                     </button>
                   </div>
                 </div>
@@ -119,54 +114,6 @@ function Profile({ user }) {
             </div>
             <div className="w-full bg-white rounded-xl  shadow-md p-4 ">
               <Row justify="center">
-                {/* <Col lg={8} className="flex  items-center justify-center">
-                  <Image src={UserImage} alt="user" width={120} height={120} /> 
-
-                  <div className="flex flex-wrap items-center mb-3">
-              {user.profile_img ? (
-                <Avatar
-                  className="mb-2  mr-5"
-                  size={avatarSize}
-                  src={`${Config.SERVER_BASE_URL}${user.profile_img}`}
-                />
-              ) : (
-                <Avatar
-                  className="mb-2 mr-5"
-                  size={avatarSize}
-                  icon={<UserOutlined />}
-                />
-              )}
-
-              <div className="img-upload mb-2">
-                <p className="font-medium mb-0">Upload your avatar</p>
-
-                  <div className="flex flex-wrap items-center mb-3">
-                    <Image
-                      src={userimageSrc ? userimageSrc : UserImage}
-                      alt="user_name"
-                      width="60"
-                      height="60"
-                    />
-                  </div>
-                  <div className="img-upload mb-2 text-center">
-                    <p className="font-medium mb-0">Upload your avatar</p>
-
-                    <p className="text-xs text-gray-400 mb-2">
-                      Photo should be at least 300px X 300px
-                    </p>
-                    <p className="mt-5">
-                      {/* <Upload name="image" onChange={handleChange}>
-                        <Button shape="round" className="text-center">
-                          Upload
-                        </Button>
-                      </Upload> 
-                  <UploadButton
-                    onSuccess={(newUploadedfileName) => {
-                      setuserImageSrc("/" + newUploadedfileName);
-                    }}
-                  />
-                </Col> */}
-
                 <Col lg={12} className="mt-4 items-center">
                   <Form
                     form={profileForm}
@@ -241,13 +188,6 @@ function Profile({ user }) {
                   <p className="text-blue-gray-700 text-lg font-light leading-relaxed mt-6 mb-4"></p>
                 </div>
               </div>
-              {/* <div className="p-4 ">
-                <div className="w-full flex justify-center -mt-8">
-                  <a href="#pablo" className="mt-5">
-                    <button className="false flex items-center justify-center gap-1 font-bold outline-none uppercase tracking-wider focus:outline-none focus:shadow-none transition-all duration-300 rounded-lg py-2.5 px-6 text-xs leading-normal bg-transparent text-purple-500 hover:text-purple-700 hover:bg-purple-50 active:bg-purple-100 "></button>
-                  </a>
-                </div>
-              </div> */}
             </div>
           </div>
         </div>
@@ -256,7 +196,6 @@ function Profile({ user }) {
       <Modal
         title="Change Password"
         visible={isModalVisible}
-        onOk={passwordForm.submit}
         onCancel={() => setIsModalVisible(false)}
         footer={[
           <>

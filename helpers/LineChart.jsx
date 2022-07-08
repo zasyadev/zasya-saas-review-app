@@ -10,6 +10,9 @@ const LineChart = () => {
     ],
     options: {
       chart: {
+        toolbar: {
+          show: false,
+        },
         id: "li",
         group: "social",
         type: "area",

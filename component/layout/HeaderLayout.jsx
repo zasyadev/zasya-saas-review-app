@@ -21,8 +21,8 @@ function HeaderLayout({ title, pageName }) {
     <Menu
       items={[
         {
-          key: "1",
-          label: <span onClick={() => logoutHandler()}>Logout</span>,
+          key: "logout",
+          label: <p onClick={() => logoutHandler()}>Logout</p>,
         },
       ]}
     />

@@ -1,5 +1,4 @@
-import { TextField } from "@material-ui/core";
-import { Button, Col, Input, Row } from "antd";
+import { Input } from "antd";
 import React, { useState, useEffect } from "react";
 import { openNotificationBox } from "../../helpers/notification";
 import QuestionComponent from "./QuestionComponent";
@@ -7,7 +6,6 @@ import QuestionComponent from "./QuestionComponent";
 function FormComponent({
   user,
   setFormDetailShow,
-  formList,
   editMode,
   editFormData,
   setEditMode,
@@ -225,7 +223,7 @@ function FormComponent({
         <div className="  rounded-t-md  mt-1">
           <div className="w-full flex flex-col items-start  pt-2 pb-5 ">
             <Input
-              placeholder="Form Title"
+              placeholder="Template Title"
               value={formTitle}
               onChange={(e) => {
                 setFormTitle(e.target.value);
@@ -234,7 +232,7 @@ function FormComponent({
               bordered={false}
             />
             <Input
-              placeholder="Description"
+              placeholder="Template Description"
               value={formDes}
               onChange={(e) => {
                 setFormDes(e.target.value);

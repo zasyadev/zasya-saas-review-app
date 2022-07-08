@@ -92,64 +92,60 @@ function TemplateLayout({ user }) {
                   <div className="p-4 ">
                     <div className="container mx-auto max-w-full">
                       <div className="grid grid-cols-1 lg:grid-cols-4 mb-4 items-center justify-center gap-4">
-                        <div className="template flex primary-bg-color items-center justify-center flex-col  w-full h-full  rounded-xl overflow-hdden shadow-md p-5 ">
-                          <div
-                            className="cursor-pointer"
-                            onClick={() => {
-                              setFormDetailShow(true);
-                            }}
-                          >
+                        <div
+                          className="template flex primary-bg-color items-center justify-center flex-col  w-full h-full  rounded-xl overflow-hdden shadow-md p-5  cursor-pointer my-2"
+                          onClick={() => {
+                            setFormDetailShow(true);
+                          }}
+                        >
+                          <div className="cursor-pointer">
                             <AddIcon className="text-center " />
                           </div>
-                          <div className="text-white text-center text-sm font-medium my-6">
+                          <div className="text-white text-center text-sm font-medium mt-5">
                             Add Template
                           </div>
                         </div>
-                        {formList.length > 0 ? (
-                          formList.map((form, idx) => {
-                            return (
-                              <div
-                                className="template h-full w-full shadow-md"
-                                key={idx + "form"}
-                              >
-                                {/* <div className="w-full rounded-md"> */}
+                        {formList.length > 0
+                          ? formList.map((form, idx) => {
+                              return (
                                 <div
-                                  className="flex flex-wrap border-gray-200 cursor-pointer item-center justify-center"
-                                  onClick={() => {
-                                    setFormDetailShow(true);
-                                    setEditMode(true);
-                                    setEditFormData(form);
-                                  }}
+                                  className="template h-full w-full shadow-md"
+                                  key={idx + "form"}
                                 >
-                                  <div className="rounded-md grid items-center justify-center primary-color-blue text-lg font-semibold mt-8">
-                                    {/* <span className="material-icons primary-color-blue text-lg  font-semibold leading-none"> */}
-                                    {form?.form_data?.title}
-                                    {/* </span> */}
+                                  {/* <div className="w-full rounded-md"> */}
+                                  <div
+                                    className="flex flex-wrap border-gray-200 cursor-pointer item-center justify-center"
+                                    onClick={() => {
+                                      setFormDetailShow(true);
+                                      setEditMode(true);
+                                      setEditFormData(form);
+                                    }}
+                                  >
+                                    <div className="rounded-md grid items-center justify-center primary-color-blue text-lg font-semibold mt-8">
+                                      {/* <span className="material-icons primary-color-blue text-lg  font-semibold leading-none"> */}
+                                      {form?.form_data?.title}
+                                      {/* </span> */}
+                                    </div>
+                                  </div>
+                                  <div className="text-sm primary-color-blue  flex items-center  justify-center my-3">
+                                    <Popconfirm
+                                      title="Are you sure to delete this Template?"
+                                      okText="Yes"
+                                      cancelText="No"
+                                      icon={false}
+                                      onConfirm={() => deleteForm(form.id)}
+                                    >
+                                      <span className="font-semibold whitespace-nowrap cursor-pointer">
+                                        <DeleteTemplateIcon className="primary-color-blue cursor-pointer" />
+                                        {/* Remove */}
+                                      </span>
+                                    </Popconfirm>
                                   </div>
                                 </div>
-                                <div className="text-sm primary-color-blue  flex items-center  justify-center my-3">
-                                  <Popconfirm
-                                    title="Are you sure to delete this Form?"
-                                    okText="Yes"
-                                    cancelText="No"
-                                    icon={false}
-                                    onConfirm={() => deleteForm(form.id)}
-                                  >
-                                    <span className="font-semibold whitespace-nowrap cursor-pointer">
-                                      <DeleteTemplateIcon className="primary-color-blue cursor-pointer" />
-                                      {/* Remove */}
-                                    </span>
-                                  </Popconfirm>
-                                </div>
-                              </div>
-                              // </div>
-                            );
-                          })
-                        ) : (
-                          <div className="grid  lg:grid-cols-1 text-center items-center">
-                            No Templates Found
-                          </div>
-                        )}
+                                // </div>
+                              );
+                            })
+                          : null}
                       </div>
                     </div>
                   </div>

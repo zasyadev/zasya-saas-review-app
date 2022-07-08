@@ -5,7 +5,7 @@ import TemplateLayout from "../../component/Template/TemplateLayout";
 
 function templatePage({ user }) {
   return (
-    <AdminLayout user={user}>
+    <AdminLayout user={user} title={"Templates"}>
       <TemplateLayout user={user} />
     </AdminLayout>
   );

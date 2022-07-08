@@ -5,7 +5,7 @@ import AdminLayout from "../../component/layout/AdminLayout";
 
 function dashboard({ user }) {
   return (
-    <AdminLayout user={user}>
+    <AdminLayout user={user} title={"DashBoard"}>
       <DashBoard user={user} />
     </AdminLayout>
   );
