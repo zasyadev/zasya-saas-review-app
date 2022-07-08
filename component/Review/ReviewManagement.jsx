@@ -321,7 +321,7 @@ function ReviewManagement({ user }) {
                   <button
                     className={`${
                       reviewAssign ? "toggle-btn-bg" : "primary-bg-btn"
-                    } " text-white text-sm  py-3 text-center px-4 rounded-r-none rounded-l-md  md:w-fit mt-2 `}
+                    }  text-white text-sm  py-3 text-center px-4 rounded-r-none rounded-l-md  md:w-fit mt-2 `}
                     onClick={() => setReviewAssign(true)}
                   >
                     Review Recived
@@ -329,7 +329,7 @@ function ReviewManagement({ user }) {
                   <button
                     className={`${
                       reviewAssign ? "primary-bg-btn" : "toggle-btn-bg"
-                    } " text-white text-sm py-3 text-center px-4  rounded-l-none rounded-r-md    md:w-fit mt-2`}
+                    }  text-white text-sm py-3 text-center px-4  rounded-l-none rounded-r-md md:w-fit mt-2`}
                     onClick={() => setReviewAssign(false)}
                   >
                     Review Created

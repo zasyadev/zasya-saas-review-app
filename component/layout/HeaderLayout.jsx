@@ -1,6 +1,7 @@
 import React from "react";
 import { UserOutlined, SearchOutlined } from "@ant-design/icons";
-
+import Image from "next/image";
+import User from "../../assets/images/User.png";
 import { Avatar, Button, Col, Dropdown, Input, Layout, Menu, Row } from "antd";
 import { signOut } from "next-auth/client";
 import { useRouter } from "next/router";
@@ -21,7 +22,7 @@ function HeaderLayout({ title, pageName }) {
       items={[
         {
           key: "1",
-          label: <p onClick={() => logoutHandler()}>Logout</p>,
+          label: <span onClick={() => logoutHandler()}>Logout</span>,
         },
       ]}
     />
@@ -43,7 +44,7 @@ function HeaderLayout({ title, pageName }) {
           </div>
         </Col>
         <Col md={4} xs={12}>
-          <div className=" flex justify-end mt-2 pr-3">
+          <div className=" flex justify-end mt-2 ">
             <div className="rounded-md flex justify-between mx-3 ">
               {/* <div className="bg-gray-100 rounded-full py-2 px-2 mr-4"> */}
               {/* <BellIcon /> */}
@@ -57,11 +58,7 @@ function HeaderLayout({ title, pageName }) {
                   size=""
                 >
                   <div className="flex items-center justify-center cursor-pointer">
-                    <Avatar
-                      className="bg-gray-400"
-                      size={38}
-                      icon={<UserOutlined />}
-                    />
+                    <Image src={User} alt="user" width={38} height={38} />
                   </div>
                 </Dropdown>
               </div>
