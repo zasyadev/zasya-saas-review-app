@@ -1,8 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 
 import { Menu, Layout } from "antd";
 import { useRouter } from "next/router";
-import Head from "next/head";
+// import Head from "next/head";
+import Logo from "../../assets/images/review.png";
+import Image from "next/image";
+import Link from "next/link";
 
 const { Sider } = Layout;
 
@@ -33,11 +36,14 @@ function SiderLayout({ collapsed, setCollapsed, items, setTitle }) {
       width={250}
     >
       <div className="flex-col items-stretch min-h-full flex-nowrap px-0 relative">
-        <a className="mt-3 text-center w-full inline-block">
-          <h1 className="text-white first-line: text-xl  font-bold leading-normal mt-0 mb-1">
+        <Link href="/dashboard">
+          <div className="mt-3 text-center w-full inline-block cursor-pointer">
+            <Image src={Logo} width={100} height={50} />
+          </div>
+          {/* <h1 className="text-white first-line: text-xl  font-bold leading-normal mt-0 mb-1">
             Review App
-          </h1>
-        </a>
+          </h1> */}
+        </Link>
 
         <div className=" flex flex-col py-4 px-2">
           <Menu
