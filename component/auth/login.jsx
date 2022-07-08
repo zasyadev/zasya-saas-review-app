@@ -1,4 +1,4 @@
-import { Form, Input, message } from "antd";
+import { Form, Input } from "antd";
 import Head from "next/head";
 import { signIn } from "next-auth/client";
 import Image from "next/image";
@@ -6,8 +6,6 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import loginImage from "../../assets/images/login_img.png";
-import loginTopImage from "../../assets/images/login-top-design.png";
-import loginBottomImage from "../../assets/images/login-bottom-design.png";
 import { LoadingSpinner } from "../Loader/LoadingSpinner";
 import { openNotificationBox } from "../../helpers/notification";
 import { HeadersComponent } from "../../helpers/HeadersComponent";
@@ -18,19 +16,24 @@ function LoginPage() {
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(values) {
-    setLoading(true);
-    const result = await signIn("credentials", {
-      redirect: false,
-      email: values.email,
-      password: values.password,
-    });
+    try {
+      setLoading(true);
+      const result = await signIn("credentials", {
+        redirect: false,
+        email: values.email,
+        password: values.password,
+      });
 
-    if (result.error) {
-      openNotificationBox("error", result.error, 3);
+      if (result.error) {
+        openNotificationBox("error", result.error, 3);
+        setLoading(false);
+        return;
+      }
+      router.replace("/dashboard");
+    } catch (error) {
       setLoading(false);
-      return;
+      openNotificationBox("error", error.message ?? "Failed", 3);
     }
-    router.replace("/dashboard");
   }
   return (
     <>
@@ -51,15 +54,17 @@ function LoginPage() {
                   onFinish={handleSubmit}
                   className="login-form"
                 >
-                  <div className="md:mb-6  mb-4">
-                    <Form.Item name="email" label="Email">
-                      <Input
-                        type="text"
-                        className="form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white  focus:outline-none"
-                        placeholder="Email address"
-                      />
-                    </Form.Item>
-                  </div>
+                  <Form.Item
+                    name="email"
+                    label="Email"
+                    className="md:mb-6  mb-4"
+                  >
+                    <Input
+                      type="text"
+                      className="form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white  focus:outline-none"
+                      placeholder="Email address"
+                    />
+                  </Form.Item>
 
                   <div className="md:mb-8  mb-4">
                     <Form.Item name="password" label="Password">

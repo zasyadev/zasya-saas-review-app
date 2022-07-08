@@ -37,9 +37,9 @@ function ReviewManagement({ user }) {
   };
 
   const onCancel = () => {
-    setIsModalVisible(false);
-    setEditMode(false);
     form.resetFields();
+    setIsModalVisible(false);
+    if (editMode) setEditMode(false);
   };
 
   function onFinish(values) {
@@ -471,7 +471,6 @@ function ReviewManagement({ user }) {
               <Col md={12} xs={24}>
                 <Form.Item name="is_published" valuePropName="checked">
                   <Checkbox onChange={onChangeStatus}>
-                    {" "}
                     Publish This Review
                   </Checkbox>
                 </Form.Item>

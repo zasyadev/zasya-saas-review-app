@@ -1,11 +1,6 @@
-import { useEffect, React } from "react";
+import { useEffect } from "react";
 import { getSession } from "next-auth/client";
 import Router from "next/router";
-// import Head from "next/head";
-// import Image from "next/image";
-// import Link from "next/link";
-// import HomePage from "../component/layout/HomePage";
-// import Layout from "../component/layout/Layout";
 
 export default function Home({ user }) {
   useEffect(() => {

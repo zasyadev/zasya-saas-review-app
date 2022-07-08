@@ -13,7 +13,6 @@ import {
 } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { openNotificationBox } from "../../helpers/notification";
-import { Table } from "antd";
 import CustomTable from "../../helpers/CustomTable";
 // import SiderRight from "../SiderRight/SiderRight";
 
@@ -51,10 +50,10 @@ function TeamMembers({ user }) {
       .then((response) => response.json())
       .then((response) => {
         if (response.status === 200) {
-          openNotificationBox("success", response.message, 3);
-          fetchMembersData();
           form.resetFields();
           setIsModalVisible(false);
+          fetchMembersData();
+          openNotificationBox("success", response.message, 3);
         } else {
           openNotificationBox("error", response.message, 3);
         }
@@ -152,10 +151,11 @@ function TeamMembers({ user }) {
       status: data.status,
     });
   };
+
   const onCancel = () => {
-    setIsModalVisible(false);
-    setEditMode(false);
     form.resetFields();
+    if (editMode) setEditMode(false);
+    setIsModalVisible(false);
   };
 
   useEffect(() => {
@@ -232,7 +232,7 @@ function TeamMembers({ user }) {
                   <div className="my-2 ">
                     <button
                       className="primary-bg-btn text-white text-sm md:py-3 py-2 text-center md:px-4 px-2 rounded-md w-full"
-                      onClick={showModal}
+                      onClick={() => showModal()}
                     >
                       Create Team
                     </button>
@@ -272,7 +272,6 @@ function TeamMembers({ user }) {
       <Modal
         title={`${editMode ? "Update" : "Add"}  Team Members`}
         visible={isModalVisible}
-        onOk={form.submit}
         onCancel={() => onCancel()}
         footer={[
           <>
