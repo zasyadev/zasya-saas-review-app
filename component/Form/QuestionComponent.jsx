@@ -45,7 +45,7 @@ const QuestionComponent = ({
               {idx + 1}. Question
             </h2>
             <Input
-              className="bg-gray-100 h-12"
+              className="question-border bg-gray-100 h-12"
               placeholder="Question Text"
               onChange={(e) => {
                 handleQuestionValue(e.target.value, idx);

@@ -346,7 +346,7 @@ function TeamMembers({ user }) {
                   },
                 ]}
               >
-                <Select mode="tags" placeholder="Tags">
+                <Select mode="tags" placeholder="Tags" className="select-tag">
                   <Select.Option key={"developer"} value={"Developer"}>
                     Developer
                   </Select.Option>

@@ -102,11 +102,13 @@ function Profile({ user }) {
           <div className="xl:col-start-1 xl:col-end-7 px-4 ">
             <div className="rounded-xl text-white grid items-center w-full shadow-lg-purple my-3">
               <div className="w-full flex item-center justify-between">
-                <h2 className="text-black text-2xl">Profile</h2>
+                <h2 className="text-black text-2xl font-bold p-4 primary-color-blue">
+                  Profile
+                </h2>
                 <div className="flex justify-end ">
                   <div>
                     <button
-                      className="primary-bg-btn text-white text-sm md:py-3 py-3 text-center md:px-4 px-2 rounded-md md:w-full w-20"
+                      className="primary-bg-btn text-white text-sm md:py-3 py-3 text-center md:px-4 px-2 rounded-md md:w-full w-20  "
                       onClick={showModal}
                     >
                       Change Setting

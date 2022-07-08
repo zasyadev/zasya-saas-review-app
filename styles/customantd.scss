@@ -119,8 +119,18 @@
   .ant-input {
     height: 44px;
   }
+  .select-tag {
+    .ant-select-selector {
+      .ant-select-selection-item {
+        padding: 0px 0px !important;
+      }
+    }
+  }
   .ant-select-selector {
     height: 44px !important;
+    .ant-select-selection-item {
+      padding: 6px 0px !important;
+    }
     .ant-select-selection-placeholder {
       padding-top: 5px;
     }
@@ -299,8 +309,8 @@
       width: 100% !important;
     }
   }
-  .ant-input:focus,
-  .ant-input:hover {
+  .question-border:focus,
+  .question-border:hover {
     border-color: #0f123f;
     box-shadow: 0 0 0 1.5px rgba(0, 5, 204, 0.35) !important;
   }
