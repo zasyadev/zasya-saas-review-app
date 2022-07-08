@@ -73,11 +73,11 @@ function TeamMembers({ user }) {
         .then((response) => response.json())
         .then((response) => {
           if (response.status === 200) {
-            openNotificationBox("success", response.message, 3);
             fetchMembersData();
             form.resetFields();
             setIsModalVisible(false);
             setEditMode(false);
+            openNotificationBox("success", response.message, 3);
           } else {
             openNotificationBox("error", response.message, 3);
           }
@@ -99,8 +99,8 @@ function TeamMembers({ user }) {
         .then((response) => response.json())
         .then((response) => {
           if (response.status === 200) {
-            openNotificationBox("success", response.message, 3);
             fetchMembersData();
+            openNotificationBox("success", response.message, 3);
           } else {
             openNotificationBox("error", response.message, 3);
           }
@@ -189,22 +189,21 @@ function TeamMembers({ user }) {
       key: "action",
       render: (_, record) => (
         <p>
-          <span
-            className="primary-color-blue text-xl mx-2 cursor-pointer "
+          <EditOutlined
+            className="primary-color-blue text-xl mx-1  md:mx-2 cursor-pointer"
             onClick={() => onUpdate(record)}
-          >
-            <EditOutlined />
-          </span>
+          />
 
           <Popconfirm
-            title="Are you sure？"
+            title={`Are you sure to delete ${
+              record.first_name + " " + record.last_name
+            }？`}
             okText="Yes"
             cancelText="No"
             onConfirm={() => onDelete(record.email)}
+            icon={false}
           >
-            <button className="primary-color-blue text-xl mx-2 cursor-pointer">
-              <DeleteOutlined />
-            </button>
+            <DeleteOutlined className="text-red-500 text-xl mx-1 md:mx-2 cursor-pointer" />
           </Popconfirm>
         </p>
       ),

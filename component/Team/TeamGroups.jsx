@@ -48,10 +48,10 @@ function Team({ user }) {
       .then((response) => response.json())
       .then((response) => {
         if (response.status === 200) {
-          message.success(response.message, 3);
-          fetchGroupsData();
           form.resetFields();
+          fetchGroupsData();
           setIsModalVisible(false);
+          message.success(response.message, 3);
         } else {
           message.error(response.message, 3);
         }
@@ -71,11 +71,11 @@ function Team({ user }) {
         .then((response) => response.json())
         .then((response) => {
           if (response.status === 200) {
-            message.success(response.message, 3);
-            fetchGroupsData();
             form.resetFields();
+            fetchGroupsData();
             setIsModalVisible(false);
             setEditMode(false);
+            message.success(response.message, 3);
           } else {
             message.error(response.message, 3);
           }
@@ -98,8 +98,8 @@ function Team({ user }) {
         .then((response) => response.json())
         .then((response) => {
           if (response.status === 200) {
-            message.success(response.message, 3);
             fetchGroupsData();
+            message.success(response.message, 3);
           } else {
             message.error(response.message, 3);
           }

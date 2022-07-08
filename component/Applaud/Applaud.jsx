@@ -68,10 +68,10 @@ function Applaud({ user }) {
       .then((response) => response.json())
       .then((response) => {
         if (response.status === 200) {
-          openNotificationBox("success", response.message, 3);
           applaudform.resetFields();
           setIsModalVisible(false);
           fetchApplaud();
+          openNotificationBox("success", response.message, 3);
         } else {
           openNotificationBox("error", response.message, 3);
         }
@@ -90,11 +90,11 @@ function Applaud({ user }) {
       .then((response) => response.json())
       .then((response) => {
         if (response.status === 200) {
-          openNotificationBox("success", response.message, 3);
-          fetchApplaud();
           applaudform.resetFields();
+          fetchApplaud();
           setIsModalVisible(false);
           setEditMode(false);
+          openNotificationBox("success", response.message, 3);
         } else {
           openNotificationBox("error", response.message, 3);
         }
@@ -124,8 +124,8 @@ function Applaud({ user }) {
         .then((res) => res.json())
         .then((res) => {
           if (res.status === 200) {
-            openNotificationBox("success", res.message, 3);
             fetchApplaud();
+            openNotificationBox("success", res.message, 3);
           } else {
             openNotificationBox("error", res.message, 3);
           }

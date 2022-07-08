@@ -56,10 +56,10 @@ function FormManagement({ user }) {
       .then((response) => response.json())
       .then((response) => {
         if (response.status === 200) {
-          openNotificationBox("success", response.message, 3);
-          fetchFormAssignList();
           form.resetFields();
+          fetchFormAssignList();
           setIsModalVisible(false);
+          openNotificationBox("success", response.message, 3);
         } else {
           openNotificationBox("error", response.message, 3);
         }
@@ -79,11 +79,11 @@ function FormManagement({ user }) {
         .then((response) => response.json())
         .then((response) => {
           if (response.status === 200) {
-            openNotificationBox("success", response.message, 3);
-            fetchFormAssignList();
             form.resetFields();
+            fetchFormAssignList();
             setIsModalVisible(false);
             setEditMode(false);
+            openNotificationBox("success", response.message, 3);
           } else {
             openNotificationBox("error", response.message, 3);
           }
@@ -171,8 +171,8 @@ function FormManagement({ user }) {
         .then((response) => response.json())
         .then((response) => {
           if (response.status === 200) {
-            openNotificationBox("success", response.message, 3);
             fetchFormAssignList();
+            openNotificationBox("success", response.message, 3);
           } else {
             openNotificationBox("error", response.message, 3);
           }

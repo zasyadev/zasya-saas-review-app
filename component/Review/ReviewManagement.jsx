@@ -70,10 +70,10 @@ function ReviewManagement({ user }) {
       .then((response) => response.json())
       .then((response) => {
         if (response.status === 200) {
-          openNotificationBox("success", response.message, 3);
-          fetchReviewAssignList();
           form.resetFields();
+          fetchReviewAssignList();
           setIsModalVisible(false);
+          openNotificationBox("success", response.message, 3);
         } else {
           openNotificationBox("error", response.message, 3);
         }
@@ -95,11 +95,11 @@ function ReviewManagement({ user }) {
         .then((response) => response.json())
         .then((response) => {
           if (response.status === 200) {
-            openNotificationBox("success", response.message, 3);
-            fetchReviewAssignList();
             form.resetFields();
+            fetchReviewAssignList();
             setIsModalVisible(false);
             setEditMode(false);
+            openNotificationBox("success", response.message, 3);
           } else {
             openNotificationBox("error", response.message, 3);
           }
@@ -188,8 +188,8 @@ function ReviewManagement({ user }) {
         .then((response) => response.json())
         .then((response) => {
           if (response.status === 200) {
-            openNotificationBox("success", response.message, 3);
             fetchReviewAssignList();
+            openNotificationBox("success", response.message, 3);
           } else {
             openNotificationBox("error", response.message, 3);
           }
@@ -270,18 +270,13 @@ function ReviewManagement({ user }) {
           {record.created_by === user.id && (
             <>
               <Popconfirm
-                title="Are you sure？"
+                title={`Are you sure to delete ${record.review_name} ？`}
                 okText="Yes"
                 cancelText="No"
                 onConfirm={() => onDelete(record.id)}
+                icon={false}
               >
-                <span
-                  className="primary-color-blue text-lg mx-2 cursor-pointer"
-                  // onClick={() => onDelete(record.id)}
-                  title="Delete"
-                >
-                  <DeleteOutlined />
-                </span>
+                <DeleteOutlined className="text-red-500 text-xl" />
               </Popconfirm>
             </>
           )}
@@ -324,7 +319,7 @@ function ReviewManagement({ user }) {
                     }  text-white text-sm  py-3 text-center px-4 rounded-r-none rounded-l-md  md:w-fit mt-2 `}
                     onClick={() => setReviewAssign(true)}
                   >
-                    Review Recived
+                    Review Received
                   </button>
                   <button
                     className={`${

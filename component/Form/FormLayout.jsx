@@ -49,8 +49,8 @@ function FormLayout({ user }) {
         .then((response) => response.json())
         .then((response) => {
           if (response.status === 200) {
-            openNotificationBox("success", response.message, 3);
             fetchFormList();
+            openNotificationBox("success", response.message, 3);
           } else {
             openNotificationBox("error", response.message, 3);
           }

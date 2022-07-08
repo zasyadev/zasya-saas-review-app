@@ -83,9 +83,9 @@ function Profile({ user }) {
       .then((response) => response.json())
       .then((response) => {
         if (response.status === 200) {
-          openNotificationBox("success", response.message, 3);
           passwordForm.resetFields();
           setIsModalVisible(false);
+          openNotificationBox("success", response.message, 3);
         } else {
           openNotificationBox("error", response.message, 3);
         }
