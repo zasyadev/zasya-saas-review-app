@@ -155,7 +155,7 @@ function FormComponent({
     let newQuestionData = questions.map((item) => {
       let error = "";
       if (!item.questionText || item.questionText.trim() === "") {
-        error = "Question field required";
+        error = "Question field required!";
       }
 
       return {
@@ -293,7 +293,6 @@ function FormComponent({
             /> */}
           </div>
         </div>
-        {console.log(questions)}
 
         {questions?.length > 0 &&
           questions?.map((question, idx) => (

@@ -29,7 +29,7 @@ function LoginPage() {
         openNotificationBox("error", result.error, 3);
         return;
       }
-      router.replace("/dashboard");
+      router.push("/dashboard");
     } catch (error) {
       setLoading(false);
       openNotificationBox("error", error.message ?? "Failed", 3);

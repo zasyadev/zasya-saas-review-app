@@ -32,7 +32,7 @@ function RegisterPage() {
           openNotificationBox("success", data.message, 3);
           registerForm.resetFields();
           // setRegisterToggle(false);
-          router.replace("/auth/login");
+          router.push("/auth/login");
         } else {
           openNotificationBox("error", data.message, 3);
         }

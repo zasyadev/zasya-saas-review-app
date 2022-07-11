@@ -109,8 +109,7 @@ const QuestionComponent = ({
                         handleOptionValue(e.target.value, idx, j);
                       }}
                     /> */}
-                    <IconButton
-                      aria-label="delete"
+                    <button
                       onClick={() => {
                         removeOption(idx, j);
                       }}
@@ -121,7 +120,7 @@ const QuestionComponent = ({
                         width={20}
                         height={20}
                       />
-                    </IconButton>
+                    </button>
                   </div>
                 </div>
               ))}

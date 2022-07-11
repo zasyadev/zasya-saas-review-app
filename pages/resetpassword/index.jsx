@@ -38,7 +38,7 @@ function ResetPassword() {
             openNotificationBox("success", data.message, 3);
 
             resetForm.resetFields();
-            router.replace("/auth/login");
+            router.push("/auth/login");
           } else {
             openNotificationBox("error", data.message, 3);
           }

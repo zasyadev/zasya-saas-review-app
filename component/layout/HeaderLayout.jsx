@@ -15,7 +15,7 @@ function HeaderLayout({ title, pageName }) {
     signOut({
       redirect: false,
     });
-    router.replace("/");
+    router.push("/");
   };
   const menu = (
     <Menu
