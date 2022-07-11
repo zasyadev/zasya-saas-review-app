@@ -1,19 +1,18 @@
-import React from "react";
-import { getSession } from "next-auth/client";
-import DashBoard from "../../component/DashBoard/DashBoard";
-import AdminLayout from "../../component/layout/AdminLayout";
+import React, { useEffect, useState } from "react";
 
-function dashboard({ user, session }) {
-  // const { user } = session;
+import AdminLayout from "../../component/layout/AdminLayout";
+import { getSession } from "next-auth/client";
+import FormComponent from "../../component/Form/FormComponent";
+
+function AddTemplate({ user }) {
   return (
-    <AdminLayout user={user} title={"DashBoard"}>
-      <DashBoard user={user} />
+    <AdminLayout user={user} title="Template">
+      <FormComponent user={user} />
     </AdminLayout>
   );
 }
 
-export default dashboard;
-
+export default AddTemplate;
 export async function getServerSideProps(context) {
   const session = await getSession({ req: context.req });
 

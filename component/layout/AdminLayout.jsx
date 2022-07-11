@@ -47,11 +47,7 @@ function AdminLayout(props) {
     //     getItem("Option 8", "8"),
     //   ]),
     // ]),
-    getItem(
-      "Reviews",
-      "/review/management",
-      <FormOutlined className="sidebar-icon " />
-    ),
+    getItem("Reviews", "/review", <FormOutlined className="sidebar-icon " />),
     // getItem("Team", "team", <AppstoreOutlined className="sidebar-icon" />, [
     //   getItem("Groups", "/admin/team/groups"),
     //   getItem("Members", "/admin/team/members"),
@@ -93,7 +89,7 @@ function AdminLayout(props) {
             {props.children}
           </Content>
           <Footer className="text-center bg-color-dashboard">
-            Review App ©2021 Created by Zasya Solution
+            Review App ©2022 Created by Zasya Solution
           </Footer>
         </Layout>
       </Layout>

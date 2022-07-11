@@ -1,5 +1,5 @@
 import { EyeOutlined } from "@ant-design/icons";
-import { TextField } from "@material-ui/core";
+
 import { Modal, Skeleton } from "antd";
 import React, { useEffect, useState } from "react";
 import { openNotificationBox } from "../../helpers/notification";
@@ -22,7 +22,7 @@ function FormView({ user, setReviewAssign, reviewAssign }) {
   const onCancel = () => {
     setIsModalVisible(false);
   };
-
+  console.log(formAssignList, "formAssignList");
   async function fetchFormAssignList() {
     if (user.id) {
       setLoading(true);
@@ -134,11 +134,15 @@ function FormView({ user, setReviewAssign, reviewAssign }) {
           >
             <EyeOutlined />
           </span> */}
-          <Link href={`/review/received/${record.id}`}>
-            <span className="primary-color-blue text-lg mx-2 cursor-pointer">
-              <EyeOutlined />
-            </span>
-          </Link>
+          {!record.status ? (
+            <Link href={`/review/received/${record.id}`}>
+              <span className="primary-color-blue text-lg mx-2 cursor-pointer">
+                <EyeOutlined />
+              </span>
+            </Link>
+          ) : (
+            ""
+          )}
         </p>
       ),
     },
