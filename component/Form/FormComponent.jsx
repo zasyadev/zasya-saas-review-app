@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import React, { useState, useEffect } from "react";
 import { openNotificationBox } from "../../helpers/notification";
 import QuestionComponent from "./QuestionComponent";
+import Link from "next/link";
 
 const defaultQuestionConfig = {
   questionText: "Question",
@@ -175,7 +176,7 @@ function FormComponent({
       openNotificationBox("error", "Field(s) Required", 3);
       return;
     }
-    if (formDes && formTitle) {
+    if (formTitle) {
       // {
       //   questions.filter((item, idx) =>
       //     item.questionText === "" ? setQuestions() : item
@@ -186,11 +187,11 @@ function FormComponent({
         user_id: user.id,
         form_data: {
           title: formTitle,
-          description: formDes,
+          description: formDes ?? "",
           questions: questions,
         },
         form_title: formTitle,
-        form_description: formDes,
+        form_description: formDes ?? "",
         status: true,
         questions: questions,
       };
@@ -209,9 +210,7 @@ function FormComponent({
         .then((response) => response.json())
         .then((response) => {
           if (response.status === 200) {
-            setFormDetailShow(false);
-            setEditMode(false);
-            fetchFormList();
+            router.push("/template");
             openNotificationBox("success", response.message, 3);
           } else {
             openNotificationBox("error", response.message, 3);
@@ -231,9 +230,6 @@ function FormComponent({
       .then((response) => response.json())
       .then((response) => {
         if (response.status === 200) {
-          // setFormDetailShow(false);
-          // setEditMode(false);
-          // fetchFormList();
           router.push("/template");
           openNotificationBox("success", response.message, 3);
         } else {
@@ -335,16 +331,14 @@ function FormComponent({
             {/* </span>
             </span> */}
           </button>
-          <button
-            className="py-3 h-full rounded toggle-btn-bg text-white lg:mx-4 w-full  my-1"
-            type="button"
-            onClick={() => {
-              setFormDetailShow(false);
-              setEditMode(false);
-            }}
-          >
-            <span className="MuiButton-label">Cancel</span>
-          </button>
+          <Link href={"/template"}>
+            <button
+              className="py-3 h-full rounded toggle-btn-bg text-white lg:mx-4 w-full  my-1"
+              type="button"
+            >
+              <span className="MuiButton-label">Cancel</span>
+            </button>
+          </Link>
           <button
             className=" px-4 py-3 h-full rounded primary-bg-btn text-white w-full my-1"
             type="button"

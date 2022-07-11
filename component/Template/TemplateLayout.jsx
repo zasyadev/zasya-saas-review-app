@@ -116,20 +116,22 @@ function TemplateLayout({ user }) {
                                   key={idx + "form"}
                                 >
                                   {/* <div className="w-full rounded-md"> */}
-                                  <div
-                                    className="flex flex-wrap border-gray-200 cursor-pointer item-center justify-center"
-                                    onClick={() => {
-                                      setFormDetailShow(true);
-                                      setEditMode(true);
-                                      setEditFormData(form);
-                                    }}
-                                  >
-                                    <div className="rounded-md grid items-center justify-center primary-color-blue text-lg font-semibold mt-8">
-                                      {/* <span className="material-icons primary-color-blue text-lg  font-semibold leading-none"> */}
-                                      {form?.form_data?.title}
-                                      {/* </span> */}
+                                  <Link href={`/template/edit/${form.id}`}>
+                                    <div
+                                      className="flex flex-wrap border-gray-200 cursor-pointer item-center justify-center"
+                                      // onClick={() => {
+                                      //   setFormDetailShow(true);
+                                      //   setEditMode(true);
+                                      //   setEditFormData(form);
+                                      // }}
+                                    >
+                                      <div className="rounded-md grid items-center justify-center primary-color-blue text-lg font-semibold mt-8">
+                                        {/* <span className="material-icons primary-color-blue text-lg  font-semibold leading-none"> */}
+                                        {form?.form_data?.title}
+                                        {/* </span> */}
+                                      </div>
                                     </div>
-                                  </div>
+                                  </Link>
                                   <div className="text-sm primary-color-blue  flex items-center  justify-center my-3">
                                     <Popconfirm
                                       title={`Are you sure to delete ${form.form_data.title} ？`}
