@@ -468,7 +468,42 @@ function ReviewManagement({ user }) {
                   </Select>
                 </Form.Item>
               </Col>
-              <Col md={24} xs={24}>
+
+              <Col md={12} xs={24}>
+                <Form.Item
+                  name="frequency"
+                  label="Frequency"
+                  rules={[
+                    {
+                      required: true,
+                    },
+                  ]}
+                >
+                  <Select placeholder="Select Frequency">
+                    <Select.Option value="once">Once</Select.Option>
+                    <Select.Option value="daily">Daily</Select.Option>
+                    <Select.Option value="weekly">Weekly</Select.Option>
+                    <Select.Option value="monthly">Monthly</Select.Option>
+                  </Select>
+                </Form.Item>
+              </Col>
+              <Col md={12} xs={24}>
+                <Form.Item
+                  name="review_type"
+                  label="Review Type"
+                  rules={[
+                    {
+                      required: true,
+                    },
+                  ]}
+                >
+                  <Radio.Group placeholder="Select Type">
+                    <Radio value="feedback">Feedback</Radio>
+                    <Radio value="other">Other</Radio>
+                  </Radio.Group>
+                </Form.Item>
+              </Col>
+              <Col md={12} xs={24}>
                 <Form.Item name="is_published" valuePropName="checked">
                   <Checkbox onChange={onChangeStatus}>
                     Publish This Review
@@ -505,41 +540,6 @@ function ReviewManagement({ user }) {
                   </Form.Item>
                 </Col>
               )}
-
-              <Col md={12} xs={24}>
-                <Form.Item
-                  name="frequency"
-                  label="Frequency"
-                  rules={[
-                    {
-                      required: true,
-                    },
-                  ]}
-                >
-                  <Select placeholder="Select Frequency">
-                    <Select.Option value="once">Once</Select.Option>
-                    <Select.Option value="daily">Daily</Select.Option>
-                    <Select.Option value="weekly">Weekly</Select.Option>
-                    <Select.Option value="monthly">Monthly</Select.Option>
-                  </Select>
-                </Form.Item>
-              </Col>
-              <Col md={12} xs={24}>
-                <Form.Item
-                  name="review_type"
-                  label="Review Type"
-                  rules={[
-                    {
-                      required: true,
-                    },
-                  ]}
-                >
-                  <Radio.Group placeholder="Select Type">
-                    <Radio value="feedback">Feedback</Radio>
-                    <Radio value="other">Other</Radio>
-                  </Radio.Group>
-                </Form.Item>
-              </Col>
             </Row>
           )}
         </Form>

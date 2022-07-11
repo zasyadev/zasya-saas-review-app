@@ -22,7 +22,7 @@ function FormView({ user, setReviewAssign, reviewAssign }) {
   const onCancel = () => {
     setIsModalVisible(false);
   };
-  console.log(formAssignList, "formAssignList");
+
   async function fetchFormAssignList() {
     if (user.id) {
       setLoading(true);
