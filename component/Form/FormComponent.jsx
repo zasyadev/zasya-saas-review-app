@@ -1,4 +1,4 @@
-import { Input } from "antd";
+import { Input, message } from "antd";
 import React, { useState, useEffect } from "react";
 import { openNotificationBox } from "../../helpers/notification";
 import QuestionComponent from "./QuestionComponent";
@@ -8,6 +8,7 @@ const defaultQuestionConfig = {
   options: [{ optionText: "Option 1" }],
   open: true,
   type: "checkbox",
+  error: "",
 };
 const defaultScaleQuestion = {
   questionText: "Question",
@@ -16,6 +17,7 @@ const defaultScaleQuestion = {
   higherLabel: 5,
   open: true,
   type: "scale",
+  error: "",
 };
 
 function FormComponent({
@@ -40,7 +42,6 @@ function FormComponent({
   }
 
   function defineType(type, index) {
-    console.log(questions, "questions");
     setQuestions((prev) =>
       prev.map((item, i) =>
         i === index
@@ -93,10 +94,15 @@ function FormComponent({
     );
   }
 
-  function handleQuestionValue(text, idx) {
+  function handleQuestionValue(text, idx, isRequired = false) {
+    let error = "";
+    if (isRequired && !text && !text.trim()) {
+      error = "Question field required!";
+    }
+
     setQuestions((prev) =>
       prev.map((item, i) =>
-        i === idx ? { ...item, questionText: text } : item
+        i === idx ? { ...item, questionText: text, error } : item
       )
     );
   }
@@ -145,7 +151,32 @@ function FormComponent({
 
   function saveFormField() {
     let id = editFormData.id;
+
+    let newQuestionData = questions.map((item) => {
+      let error = "";
+      if (!item.questionText || item.questionText.trim() === "") {
+        error = "Question field required";
+      }
+
+      return {
+        ...item,
+        open: true,
+        error: error,
+      };
+    });
+
+    setQuestions(newQuestionData);
+    if (newQuestionData.filter((item) => item.error).length > 0) {
+      openNotificationBox("error", "Field(s) Required", 3);
+      return;
+    }
     if (formDes && formTitle) {
+      // {
+      //   questions.filter((item, idx) =>
+      //     item.questionText === "" ? setQuestions() : item
+      //   );
+      // }
+
       let obj = {
         user_id: user.id,
         form_data: {

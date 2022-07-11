@@ -23,6 +23,7 @@ const QuestionComponent = ({
   questionText,
   options,
   open,
+  error = "",
   showAsQuestion,
   handleExpand,
   addOption,
@@ -48,10 +49,11 @@ const QuestionComponent = ({
               className="question-border bg-gray-100 h-12"
               placeholder="Question Text"
               onChange={(e) => {
-                handleQuestionValue(e.target.value, idx);
+                handleQuestionValue(e.target.value, idx, true);
               }}
               value={questionText}
             />
+            {error && <p className="text-red-600 text-sm my-2">{error}</p>}
           </Col>
           <Col md={24} xs={24}>
             <h2 className="font-semibold text-base my-2">Type</h2>
