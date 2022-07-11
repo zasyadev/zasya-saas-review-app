@@ -6,6 +6,7 @@ import FormComponent from "../Form/FormComponent";
 import { Popconfirm } from "antd";
 import { openNotificationBox } from "../../helpers/notification";
 import { AddIcon, DeleteTemplateIcon } from "../../assets/Icon/icons";
+import Link from "next/link";
 
 function TemplateLayout({ user }) {
   const [formDetailShow, setFormDetailShow] = useState(false);
@@ -92,19 +93,21 @@ function TemplateLayout({ user }) {
                   <div className="p-4 ">
                     <div className="container mx-auto max-w-full">
                       <div className="grid grid-cols-1 lg:grid-cols-4 mb-4 items-center justify-center gap-4">
-                        <div
-                          className="template flex primary-bg-color items-center justify-center flex-col  w-full h-full  rounded-xl overflow-hdden shadow-md p-5  cursor-pointer my-2"
-                          onClick={() => {
-                            setFormDetailShow(true);
-                          }}
-                        >
-                          <div className="cursor-pointer">
-                            <AddIcon className="text-center " />
+                        <Link href="/template/add">
+                          <div
+                            className="template flex primary-bg-color items-center justify-center flex-col  w-full h-full  rounded-xl overflow-hdden shadow-md p-5  cursor-pointer my-2"
+                            // onClick={() => {
+                            //   setFormDetailShow(true);
+                            // }}
+                          >
+                            <div className="cursor-pointer">
+                              <AddIcon className="text-center " />
+                            </div>
+                            <div className="text-white text-center text-sm font-medium mt-5">
+                              Add Template
+                            </div>
                           </div>
-                          <div className="text-white text-center text-sm font-medium mt-5">
-                            Add Template
-                          </div>
-                        </div>
+                        </Link>
                         {formList.length > 0
                           ? formList.map((form, idx) => {
                               return (
