@@ -134,7 +134,9 @@ function ReviewManagement({ user }) {
       .then((response) => response.json())
       .then((response) => {
         if (response.status === 200) {
-          let data = response.data.filter((item) => item.status);
+          let data = response.data.filter(
+            (item) => item.status && item.id != user.id
+          );
           setUserList(data);
         }
       })
