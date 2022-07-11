@@ -16,7 +16,8 @@ import { DeleteOutlined, UserSwitchOutlined } from "@ant-design/icons";
 import { openNotificationBox } from "../../helpers/notification";
 import FormView from "../Form/FormView";
 import CustomTable from "../../helpers/CustomTable";
-import ReviewAssigneeList from "../Review/ReviewAssigneeList";
+// import ReviewAssigneeList from "../Review/ReviewAssigneeList";
+import Link from "next/link";
 
 function ReviewManagement({ user }) {
   const [form] = Form.useForm();
@@ -29,8 +30,8 @@ function ReviewManagement({ user }) {
   const [reviewAssignList, setReviewAssignList] = useState([]);
   const [reviewAssign, setReviewAssign] = useState(false);
   const [memberDetails, setMemberDetails] = useState(false);
-  const [reviewAssignee, setReviewAssignee] = useState(false);
-  const [reviewAssigneeData, setReviewAssigneeData] = useState({});
+  // const [reviewAssignee, setReviewAssignee] = useState(false);
+  // const [reviewAssigneeData, setReviewAssigneeData] = useState({});
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -214,15 +215,17 @@ function ReviewManagement({ user }) {
       key: "review_name",
       render: (_, record) => (
         <p
-          onClick={() => {
-            record.is_published === "published"
-              ? setReviewAssignee(true)
-              : null;
-            setReviewAssigneeData(record);
-          }}
+          // onClick={() => {
+          //   record.is_published === "published"
+          //     ? setReviewAssignee(true)
+          //     : null;
+          //   setReviewAssigneeData(record);
+          // }}
           className="cursor-pointer underline"
         >
-          {record.review_name}
+          <Link href={`/review/created/${record.id}`}>
+            {record.review_name}
+          </Link>
         </p>
       ),
     },
@@ -303,69 +306,69 @@ function ReviewManagement({ user }) {
     <div>
       <div className="px-3 md:px-8 h-auto mt-5">
         <div className="container mx-auto max-w-full">
-          {reviewAssignee ? (
+          {/* {reviewAssignee ? (
             <ReviewAssigneeList
               data={reviewAssigneeData}
               setReviewAssignee={setReviewAssignee}
               user={user}
             />
-          ) : (
-            <div className="grid grid-cols-1 px-4 mb-16">
-              <div className=" md:flex items-center justify-between mb-3  ">
-                <div className="flex">
-                  <button
-                    className={`${
-                      reviewAssign ? "toggle-btn-bg" : "primary-bg-btn"
-                    }  text-white text-sm  py-3 text-center px-4 rounded-r-none rounded-l-md  md:w-fit mt-2 `}
-                    onClick={() => setReviewAssign(true)}
-                  >
-                    Review Received
-                  </button>
-                  <button
-                    className={`${
-                      reviewAssign ? "primary-bg-btn" : "toggle-btn-bg"
-                    }  text-white text-sm py-3 text-center px-4  rounded-l-none rounded-r-md md:w-fit mt-2`}
-                    onClick={() => setReviewAssign(false)}
-                  >
-                    Review Created
-                  </button>
-                </div>
-                <div>
-                  <div className="md:flex items-end mt-2 ">
-                    <button
-                      className="primary-bg-btn text-white text-sm py-3 text-center px-4 rounded-md w-full "
-                      onClick={showModal}
-                    >
-                      Create Review
-                    </button>
-                  </div>
-                </div>
+          ) : ( */}
+          <div className="grid grid-cols-1 px-4 mb-16">
+            <div className=" md:flex items-center justify-between mb-3  ">
+              <div className="flex">
+                <button
+                  className={`${
+                    reviewAssign ? "toggle-btn-bg" : "primary-bg-btn"
+                  }  text-white text-sm  py-3 text-center px-4 rounded-r-none rounded-l-md  md:w-fit mt-2 `}
+                  onClick={() => setReviewAssign(true)}
+                >
+                  Review Received
+                </button>
+                <button
+                  className={`${
+                    reviewAssign ? "primary-bg-btn" : "toggle-btn-bg"
+                  }  text-white text-sm py-3 text-center px-4  rounded-l-none rounded-r-md md:w-fit mt-2`}
+                  onClick={() => setReviewAssign(false)}
+                >
+                  Review Created
+                </button>
               </div>
-
-              <div className="w-full bg-white rounded-xl overflow-hdden shadow-md p-4 ">
-                <div className="">
-                  <div className="overflow-x-auto">
-                    {loading ? (
-                      <Skeleton
-                        title={false}
-                        active={true}
-                        width={[200]}
-                        className="mt-4"
-                        rows={3}
-                      />
-                    ) : (
-                      <CustomTable
-                        dataSource={reviewAssignList}
-                        columns={columns}
-                        pagination={false}
-                        rowKey="review_id"
-                      />
-                    )}
-                  </div>
+              <div>
+                <div className="md:flex items-end mt-2 ">
+                  <button
+                    className="primary-bg-btn text-white text-sm py-3 text-center px-4 rounded-md w-full "
+                    onClick={showModal}
+                  >
+                    Create Review
+                  </button>
                 </div>
               </div>
             </div>
-          )}
+
+            <div className="w-full bg-white rounded-xl overflow-hdden shadow-md p-4 ">
+              <div className="">
+                <div className="overflow-x-auto">
+                  {loading ? (
+                    <Skeleton
+                      title={false}
+                      active={true}
+                      width={[200]}
+                      className="mt-4"
+                      rows={3}
+                    />
+                  ) : (
+                    <CustomTable
+                      dataSource={reviewAssignList}
+                      columns={columns}
+                      pagination={false}
+                      rowKey="review_id"
+                    />
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+          {/* )} */}
         </div>
       </div>
       <Modal
@@ -463,7 +466,7 @@ function ReviewManagement({ user }) {
                   </Select>
                 </Form.Item>
               </Col>
-              <Col md={12} xs={24}>
+              <Col md={24} xs={24}>
                 <Form.Item name="is_published" valuePropName="checked">
                   <Checkbox onChange={onChangeStatus}>
                     Publish This Review

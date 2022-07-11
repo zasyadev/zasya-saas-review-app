@@ -37,7 +37,7 @@ function ReceivedReviewComponent({ user, reviewId }) {
         .then((response) => {
           if (response.status === 200) {
             openNotificationBox("success", response.message, 3);
-            router.push("/review/management");
+            router.push("/review");
           } else {
             openNotificationBox("error", response.message, 3);
           }
@@ -69,11 +69,11 @@ function ReceivedReviewComponent({ user, reviewId }) {
       });
   };
   function handleCancel() {
-    router.push("/review/management");
+    router.push("/review");
   }
 
   useEffect(() => {
-    if ((user, reviewId)) fetchReviewData(user, reviewId);
+    if (user && reviewId) fetchReviewData(user, reviewId);
     else return;
   }, []);
 

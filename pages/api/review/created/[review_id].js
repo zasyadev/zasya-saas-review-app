@@ -9,19 +9,14 @@ export default async (req, res) => {
   try {
     if (req.method === "POST") {
       if (review_id && userId) {
-        const data = await prisma.reviewAssignee.findUnique({
+        const data = await prisma.review.findUnique({
           where: { id: review_id },
           include: {
-            review: {
+            created: true,
+            form: true,
+            ReviewAssignee: {
               include: {
-                created: true,
-                form: {
-                  include: {
-                    questions: {
-                      include: { options: true },
-                    },
-                  },
-                },
+                assigned_to: true,
               },
             },
           },
@@ -46,6 +41,7 @@ export default async (req, res) => {
       });
     }
   } catch (error) {
+    console.log(error);
     return res.status(500).json({
       message: "INTERNAL SERVER ERROR",
     });

@@ -3,27 +3,22 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export default async (req, res) => {
-  const { review_id } = req.query;
+  const { template_id } = req.query;
   const { userId } = JSON.parse(req.body);
 
   try {
     if (req.method === "POST") {
-      if (review_id && userId) {
-        const data = await prisma.reviewAssignee.findUnique({
-          where: { id: review_id },
-          include: {
-            review: {
-              include: {
-                created: true,
-                form: {
-                  include: {
-                    questions: {
-                      include: { options: true },
-                    },
-                  },
-                },
+      if (userId && template_id) {
+        const data = await prisma.reviewTemplate.findMany({
+          where: {
+            AND: [
+              {
+                id: template_id,
               },
-            },
+              {
+                user_id: userId,
+              },
+            ],
           },
         });
 
@@ -31,8 +26,8 @@ export default async (req, res) => {
         if (data) {
           return res.status(200).json({
             status: 200,
-            data: data,
-            message: "Review Details Retrieved",
+            data: data[0],
+            message: "Templates Retrieved",
           });
         }
 

@@ -1,4 +1,5 @@
 import { Input, message } from "antd";
+import { useRouter } from "next/router";
 import React, { useState, useEffect } from "react";
 import { openNotificationBox } from "../../helpers/notification";
 import QuestionComponent from "./QuestionComponent";
@@ -28,6 +29,7 @@ function FormComponent({
   setEditMode,
   fetchFormList,
 }) {
+  const router = useRouter();
   const [questions, setQuestions] = useState([defaultQuestionConfig]);
   const [formTitle, setFormTitle] = useState("");
   const [formDes, setFormDes] = useState("");
@@ -150,7 +152,10 @@ function FormComponent({
   }
 
   function saveFormField() {
-    let id = editFormData.id;
+    let id = "";
+    if (editMode) {
+      id = editFormData.id;
+    }
 
     let newQuestionData = questions.map((item) => {
       let error = "";
@@ -226,9 +231,10 @@ function FormComponent({
       .then((response) => response.json())
       .then((response) => {
         if (response.status === 200) {
-          setFormDetailShow(false);
-          setEditMode(false);
-          fetchFormList();
+          // setFormDetailShow(false);
+          // setEditMode(false);
+          // fetchFormList();
+          router.push("/template");
           openNotificationBox("success", response.message, 3);
         } else {
           openNotificationBox("error", response.message, 3);

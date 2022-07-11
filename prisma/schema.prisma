@@ -86,7 +86,7 @@ model GroupsEmployees {
 }
 
 model ReviewAssignTemplate {
-  id               Int      @id @default(autoincrement())
+  id               String   @id @default(uuid())
   user             User     @relation(fields: [user_id], references: [id])
   user_id          String
   form_title       String?
@@ -108,7 +108,7 @@ model ReviewAssignTemplate {
 model ReviewQuestions {
   id            Int                  @id @default(autoincrement())
   form          ReviewAssignTemplate @relation("questions", fields: [form_id], references: [id], onDelete: Cascade)
-  form_id       Int
+  form_id       String
   questionText  String
   type          String
   open          Boolean
@@ -137,12 +137,12 @@ model ReviewQuestionOption {
 }
 
 model Review {
-  id              Int                  @id @default(autoincrement())
+  id              String               @id @default(uuid())
   created         User                 @relation("taskReviewBy", fields: [created_by], references: [id])
   created_by      String
   review_name     String
   form            ReviewAssignTemplate @relation(fields: [form_id], references: [id], onDelete: Cascade)
-  form_id         Int
+  form_id         String
   status          String
   frequency       String
   review_type     String
@@ -162,9 +162,9 @@ model Review {
 }
 
 model ReviewAssignee {
-  id                    Int                     @id @default(autoincrement())
+  id                    String                  @id @default(uuid())
   review                Review                  @relation(fields: [review_id], references: [id], onDelete: Cascade)
-  review_id             Int                     @unique
+  review_id             String                  @unique
   assigned_to           User                    @relation(fields: [assigned_to_id], references: [id], onDelete: Cascade)
   assigned_to_id        String
   created_date          DateTime                @default(now())
@@ -180,9 +180,9 @@ model ReviewAssigneeAnswers {
   user               User           @relation(fields: [user_id], references: [id])
   user_id            String
   review             Review         @relation(fields: [review_id], references: [id], onDelete: Cascade)
-  review_id          Int
+  review_id          String
   review_assignee    ReviewAssignee @relation(fields: [review_assignee_id], references: [id], onDelete: Cascade)
-  review_assignee_id Int
+  review_assignee_id String
   created_date       DateTime       @default(now())
   modified_date      DateTime       @default(now())
   delete_date        DateTime?
@@ -191,7 +191,7 @@ model ReviewAssigneeAnswers {
   ReviewAssigneeAnswerOption ReviewAssigneeAnswerOption[]
 
   ReviewAssignTemplate   ReviewAssignTemplate? @relation(fields: [reviewAssignTemplateId], references: [id])
-  reviewAssignTemplateId Int?
+  reviewAssignTemplateId String?
   @@map("review_assignee_answers")
 }
 
@@ -212,7 +212,7 @@ model ReviewAssigneeAnswerOption {
 }
 
 model ReviewTemplate {
-  id               Int       @id @default(autoincrement())
+  id               String    @id @default(uuid())
   user             User      @relation(fields: [user_id], references: [id])
   user_id          String
   form_title       String?
