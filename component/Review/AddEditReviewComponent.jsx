@@ -3,8 +3,17 @@ import { Form, Row, Col, Select, Input, Radio, Checkbox, Button } from "antd";
 import Link from "next/link";
 
 import { useRouter } from "next/router";
-import QuestionViewComponent from "../Form/QuestionViewComponent";
+import { openNotificationBox } from "../../helpers/notification";
 import ReviewViewComponent from "../Form/ReviewViewComponent";
+
+const defaultScaleQuestion = {
+  questionText: "Rating",
+  options: [{ optionText: "low" }, { optionText: "high" }],
+  lowerLabel: 1,
+  higherLabel: 10,
+  open: false,
+  type: "scale",
+};
 
 function AddEditReviewComponent({ editMode, user }) {
   const router = useRouter();
@@ -12,6 +21,7 @@ function AddEditReviewComponent({ editMode, user }) {
   const [formList, setFormList] = useState([]);
   const [memberDetails, setMemberDetails] = useState(false);
   const [userList, setUserList] = useState([]);
+  const [questionList, setQuestionList] = useState([]);
   const [previewForm, setPreviewForm] = useState(false);
   const [reviewFormData, setReviewFormData] = useState({});
 
@@ -19,10 +29,15 @@ function AddEditReviewComponent({ editMode, user }) {
     required: "${label} is required!",
   };
 
-  function onFinish(values) {
-    // editMode
-    //   ? updateReviewAssign(updateData, values)
-    //   :
+  function onFinish(values, type) {
+    let templateData = {};
+    if (type === "preview") {
+      templateData = values.templateData;
+    } else {
+      templateData = formList.find((item) => item.id == values.template_id);
+      if (values.review_type === "feedback")
+        templateData?.form_data?.questions.push(defaultScaleQuestion);
+    }
 
     addReviewAssign({
       created_by: user.id,
@@ -35,6 +50,7 @@ function AddEditReviewComponent({ editMode, user }) {
       role_id: user.role_id,
       organization_id: user.organization_id,
       is_published: values.is_published ? "published" : "draft",
+      templateData: templateData,
     });
   }
 
@@ -101,20 +117,49 @@ function AddEditReviewComponent({ editMode, user }) {
         setUserList([]);
       });
   }
-  console.log(formList, "formList");
+
   useEffect(() => {
     fetchTemplateData();
     fetchUserData();
   }, []);
-  const handlePreviewForm = () => {
-    let formData = form.getFieldsValue();
 
-    let templateData = [];
-    if (formData.template_id) {
-      templateData = formList.filter((item) => item.id == formData.template_id);
-    }
-    setReviewFormData({ ...formData, templateData: templateData[0] });
-    setPreviewForm(true);
+  function removeElement(idx) {
+    setQuestionList((prev) => prev.filter((_, i) => i != idx));
+  }
+
+  const handlePreviewForm = () => {
+    setReviewFormData({});
+    setQuestionList([]);
+
+    form.validateFields().then((data) => {
+      let templateData = {};
+      if (data.template_id) {
+        templateData = formList.find((item) => item.id == data.template_id);
+        if (data.review_type === "feedback") {
+          templateData?.form_data?.questions.length > 0
+            ? templateData?.form_data?.questions.push(defaultScaleQuestion)
+            : null;
+        }
+        setQuestionList(templateData.form_data.questions);
+        setReviewFormData({ ...data, templateData: templateData });
+        setPreviewForm(true);
+      } else {
+        openNotificationBox("error", "Need to Select Template", 3);
+      }
+    });
+  };
+  const onPreviewSubmit = () => {
+    let obj = {
+      ...reviewFormData,
+      templateData: {
+        ...reviewFormData.templateData,
+        form_data: {
+          ...reviewFormData.templateData.form_data,
+          questions: questionList,
+        },
+      },
+    };
+    onFinish(obj, "preview");
   };
 
   return (
@@ -123,14 +168,45 @@ function AddEditReviewComponent({ editMode, user }) {
         <div className="  rounded-t-md  mt-1">
           {previewForm ? (
             <div>
-              {reviewFormData?.templateData?.form_data?.questions.length > 0 &&
-                reviewFormData?.templateData?.form_data?.questions?.map(
-                  (question, idx) => (
-                    <>
-                      <ReviewViewComponent {...question} idx={idx} />
-                    </>
-                  )
-                )}
+              <div>
+                <p>Review Name : {reviewFormData.review_name}</p>
+                <p>Review Type : {reviewFormData.review_type}</p>
+              </div>
+              {questionList.length > 0 &&
+                questionList?.map((question, idx) => (
+                  <>
+                    <ReviewViewComponent
+                      {...question}
+                      idx={idx}
+                      removeElement={removeElement}
+                    />
+                  </>
+                ))}
+              <div>
+                <div className="flex justify-end">
+                  <button
+                    key="cancel"
+                    type="default"
+                    onClick={() => {
+                      setPreviewForm(false);
+                      setReviewFormData({});
+                      setQuestionList([]);
+                    }}
+                    className="py-3 h-full rounded toggle-btn-bg text-white lg:mx-4 w-1/4  my-1"
+                  >
+                    Cancel
+                  </button>
+
+                  <button
+                    key="add"
+                    type="default"
+                    onClick={() => onPreviewSubmit()}
+                    className=" px-4 py-3 h-full rounded primary-bg-btn text-white w-1/4 my-1"
+                  >
+                    Submit
+                  </button>
+                </div>
+              </div>
             </div>
           ) : (
             <div className="w-full flex flex-col items-start  pt-2 pb-5 ">
@@ -292,20 +368,30 @@ function AddEditReviewComponent({ editMode, user }) {
                     <Col md={24} xs={24}>
                       <div className="flex justify-end">
                         <Link href="/review">
-                          <Button key="cancel" type="default">
+                          <button
+                            key="cancel"
+                            type="default"
+                            className="primary-bg-btn text-white text-sm py-3 my-1  rounded h-full w-1/4"
+                          >
                             Cancel
-                          </Button>
+                          </button>
                         </Link>
-                        <Button
+                        <button
                           key="preview"
                           type="default"
                           onClick={() => handlePreviewForm()}
+                          className="py-3 h-full rounded toggle-btn-bg text-white lg:mx-4 w-1/4  my-1"
                         >
                           Preview
-                        </Button>
-                        <Button key="add" type="default" htmlType="submit">
+                        </button>
+                        <button
+                          key="add"
+                          type="default"
+                          htmlType="submit"
+                          className=" px-4 py-3 h-full rounded primary-bg-btn text-white w-1/4 my-1"
+                        >
                           {editMode ? "Update" : "Add"}
-                        </Button>
+                        </button>
                       </div>
                     </Col>
                   </Row>

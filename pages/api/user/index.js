@@ -47,7 +47,7 @@ export default async (req, res) => {
         to: transactionData.savedData.email,
         subject: `Successfully Registered on Zasya Review App`,
         html: mailTemplate(
-          "You have successfull registered on Review App . Please Login in to continue with your Profile."
+          `You have successfull registered on Review App . Please <a href= ${process.env.NEXT_APP_URL}/auth/login>Login</a> in to continue with your Profile.`
         ),
       };
 

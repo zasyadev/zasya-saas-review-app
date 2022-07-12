@@ -3,70 +3,66 @@ import { mailService, mailTemplate } from "../../../lib/emailservice";
 
 const prisma = new PrismaClient();
 
-const defaultScaleQuestion = {
-  questionText: "Rating",
-  options: [{ optionText: "low" }, { optionText: "high" }],
-  lowerLabel: 1,
-  higherLabel: 10,
-  open: false,
-  type: "scale",
-};
+// const defaultScaleQuestion = {
+//   questionText: "Rating",
+//   options: [{ optionText: "low" }, { optionText: "high" }],
+//   lowerLabel: 1,
+//   higherLabel: 10,
+//   open: false,
+//   type: "scale",
+// };
 
 export default async (req, res) => {
   if (req.method === "POST") {
     try {
       const resData = JSON.parse(req.body);
 
-      const templateData = await prisma.reviewTemplate.findUnique({
-        where: { id: resData.template_id },
-      });
-      if (resData.review_type === "feedback") {
-        templateData.form_data.questions.push(defaultScaleQuestion);
-      }
+      // const templateData = await prisma.reviewTemplate.findUnique({
+      //   where: { id: resData.template_id },
+      // });
+      // if (resData.review_type === "feedback") {
+      //   resData.templateData.form_data.questions.push(defaultScaleQuestion);
+      // }
 
       const transactionData = await prisma.$transaction(async (transaction) => {
-        const questionData = templateData.form_data.questions.map((item) => {
-          const optionData = item.options.map((opitem) => {
-            if (item.type === "scale") {
-              return {
-                optionText: opitem.optionText,
-                lowerLabel: item.lowerLabel.toString(),
-                higherLabel: item.higherLabel.toString(),
-              };
-            } else {
-              return {
-                optionText: opitem.optionText,
-                lowerLabel: "",
-                higherLabel: "",
-              };
-            }
-          });
+        const questionData = resData.templateData.form_data.questions.map(
+          (item) => {
+            const optionData = item.options.map((opitem) => {
+              if (item.type === "scale") {
+                return {
+                  optionText: opitem.optionText,
+                  lowerLabel: item.lowerLabel.toString(),
+                  higherLabel: item.higherLabel.toString(),
+                };
+              } else {
+                return {
+                  optionText: opitem.optionText,
+                  lowerLabel: "",
+                  higherLabel: "",
+                };
+              }
+            });
 
-          return {
-            questionText: item.questionText,
-            type: item.type,
-            open: item.open,
-            options: { create: optionData },
-          };
-        });
+            return {
+              questionText: item.questionText,
+              type: item.type,
+              open: item.open,
+              options: { create: optionData },
+            };
+          }
+        );
 
         const formdata = await transaction.reviewAssignTemplate.create({
           data: {
             user: { connect: { id: resData.created_by } },
-            form_title: templateData.form_title,
-            form_description: templateData.form_description,
-            form_data: templateData.form_data,
-            status: templateData.status,
+            form_title: resData.templateData.form_title,
+            form_description: resData.templateData.form_description,
+            form_data: resData.templateData.form_data,
+            status: resData.templateData.status,
             questions: {
               create: questionData,
             },
           },
-        });
-
-        let assigneeData = resData.assigned_to_id.map((item) => {
-          return {
-            assigned_to_id: item,
-          };
         });
 
         let dataObj = {
@@ -81,18 +77,18 @@ export default async (req, res) => {
           role: { connect: { id: resData.role_id } },
           parent_id: resData.created_by,
           is_published: resData.is_published,
-          // ReviewAssignee: {
-          //   create: assigneeData,
-          // },
         };
 
         if (dataObj.is_published === "published") {
+          let assigneeData = resData.assigned_to_id.map((item) => {
+            return {
+              assigned_to_id: item,
+            };
+          });
           dataObj.ReviewAssignee = {
             create: assigneeData,
           };
         }
-
-        console.log(dataObj, "dataObj");
 
         const savedData = await transaction.review.create({
           data: dataObj,
@@ -116,7 +112,7 @@ export default async (req, res) => {
             to: user.email,
             subject: `New review assigned by ${assignedFromData.first_name}`,
             html: mailTemplate(
-              `${assignedFromData.first_name} has assigned you new review , please click here to help them now.`
+              `${assignedFromData.first_name} has assigned you new review , please <a href= ${process.env.NEXT_APP_URL}/review>click here </a> to help them now.`
             ),
           };
 
@@ -135,7 +131,6 @@ export default async (req, res) => {
         status: 200,
       });
     } catch (error) {
-      console.log(error);
       return res
         .status(500)
         .json({ error: error, message: "Internal Server Error" });

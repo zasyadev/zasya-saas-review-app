@@ -11,7 +11,7 @@ import { Slider } from "antd";
 const ReviewViewComponent = ({
   type,
   idx,
-
+  removeElement,
   questionText,
   options,
 }) => {
@@ -107,6 +107,12 @@ const ReviewViewComponent = ({
           </div>
         )}
       </div>
+      <span
+        onClick={() => removeElement(idx)}
+        className="cursor-pointer mx-2 w-8 pr-2"
+      >
+        Remove
+      </span>
     </div>
   );
 };
