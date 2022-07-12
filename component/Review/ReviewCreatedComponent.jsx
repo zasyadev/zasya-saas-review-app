@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import CustomTable from "../../helpers/CustomTable";
 import { EyeOutlined, CalendarOutlined } from "@ant-design/icons";
 import moment from "moment";
-import { Modal, Collapse, Skeleton, Row, Col } from "antd";
+import { Modal, Collapse, Skeleton, Row, Col, Table } from "antd";
 import AnswerViewComponent from "./AnswerViewComponent";
 import Link from "next/link";
 
@@ -31,52 +31,135 @@ function ReviewCreatedComponent({ user, reviewData }) {
     applyFilters(reviewData);
   }, []);
 
+  // const columns = [
+  //   {
+  //     title: "Assign To",
+  //     dataIndex: "assigned_to",
+  //     key: "assigned_to",
+  //     render: (assigned_to) =>
+  //       assigned_to.first_name + " " + assigned_to.last_name,
+  //   },
+  //   {
+  //     title: "Status",
+  //     dataIndex: "status",
+  //     key: "status",
+  //     render: (status) =>
+  //       status ? (
+  //         <p className="text-green-400">Filled</p>
+  //       ) : (
+  //         <p className="text-red-400">Pending</p>
+  //       ),
+  //   },
+
+  //   {
+  //     title: "Action",
+  //     key: "action",
+  //     render: (_, record) => (
+  //       <div className="">
+  //         {record.status == "answered" ? (
+  //           <span
+  //             className="FormView text-lg mx-2 cursor-pointer"
+  //             onClick={() => {
+  //               setAnswerDataModel(true);
+  //               //   setAnswerData(record);
+  //               fetchAnswer(record);
+  //             }}
+  //           >
+  //             <EyeOutlined />
+  //           </span>
+  //         ) : null}
+  //         {/*
+  //         <button
+  //           className="text-white text-base bg-indigo-800 text-center px-3 rounded-md pb-2"
+  //           // onClick={() => onDelete(record.id)}
+  //         >
+  //           <DeleteOutlined />
+  //         </button> */}
+  //       </div>
+  //     ),
+  //   },
+  // ];
   const columns = [
     {
-      title: "Assign To",
-      dataIndex: "assigned_to",
-      key: "assigned_to",
-      render: (assigned_to) =>
-        assigned_to.first_name + " " + assigned_to.last_name,
+      title: "Name",
+      width: 100,
+      dataIndex: "name",
+      key: "name",
+      fixed: "left",
     },
     {
-      title: "Status",
-      dataIndex: "status",
-      key: "status",
-      render: (status) =>
-        status ? (
-          <p className="text-green-400">Filled</p>
-        ) : (
-          <p className="text-red-400">Pending</p>
-        ),
+      title: "Question 1",
+      dataIndex: "address",
+      key: "1",
     },
+    {
+      title: "Question 2",
+      dataIndex: "address",
+      key: "2",
+    },
+    {
+      title: "Question 3",
+      dataIndex: "address",
+      key: "3",
+    },
+    {
+      title: "Question 4",
+      dataIndex: "address",
+      key: "4",
+    },
+    {
+      title: "Question 5",
+      dataIndex: "address",
+      key: "5",
+    },
+    {
+      title: "Question 6",
+      dataIndex: "address",
+      key: "6",
+    },
+    {
+      title: "Question 7",
+      dataIndex: "address",
+      key: "7",
+    },
+    {
+      title: "Question 8",
+      dataIndex: "address",
+      key: "8",
+    },
+    // {
+    //   title: "Action",
+    //   key: "operation",
+    //   fixed: "right",
+    //   width: 100,
+    //   render: () => <a>action</a>,
+    // },
+  ];
 
+  const data = [
     {
-      title: "Action",
-      key: "action",
-      render: (_, record) => (
-        <div className="">
-          {record.status == "answered" ? (
-            <span
-              className="FormView text-lg mx-2 cursor-pointer"
-              onClick={() => {
-                setAnswerDataModel(true);
-                //   setAnswerData(record);
-                fetchAnswer(record);
-              }}
-            >
-              <EyeOutlined />
-            </span>
-          ) : null}
-          {/* 
-          <button
-            className="text-white text-base bg-indigo-800 text-center px-3 rounded-md pb-2"
-            // onClick={() => onDelete(record.id)}
-          >
-            <DeleteOutlined />
-          </button> */}
-        </div>
-      ),
+      key: "1",
+      name: "John Brown",
+      age: 32,
+      address: "New York Park ",
+    },
+    {
+      key: "2",
+      name: "Jim Green",
+      age: 40,
+      address: "London Park",
+    },
+    {
+      key: "3",
+      name: "John Brown",
+      age: 40,
+      address: "East Park",
+    },
+    {
+      key: "4",
+      name: "Jim Green",
+      age: 40,
+      address: "East Park",
     },
   ];
 
@@ -109,7 +192,20 @@ function ReviewCreatedComponent({ user, reviewData }) {
               </Link>
             </div>
           </div>
-          <Row gutter={[16, 16]}>
+          <Table
+            className="review-table"
+            columns={columns}
+            dataSource={data}
+            scroll={{
+              x: 1300,
+            }}
+            rowClassName={(_, index) =>
+              index % 2 === 0 ? "" : "background-color-voilet"
+            }
+            bordered
+          />
+
+          {/* <Row gutter={[16, 16]}>
             <Col xs={24} md={16}>
               <div className="overflow-x-auto">
                 <Collapse
@@ -148,6 +244,7 @@ function ReviewCreatedComponent({ user, reviewData }) {
                 </Collapse>
               </div>
             </Col>
+
             <Col xs={24} md={8}>
               <div className="bg-white rounded-xl shadow-md py-4 ">
                 <div className="flex  flex-col items-start justify-between text mx-3 my-3">
@@ -181,7 +278,7 @@ function ReviewCreatedComponent({ user, reviewData }) {
                 </div>
               </div>
             </Col>
-          </Row>
+          </Row> */}
           <Modal
             title="Answers"
             visible={answerDataModel}

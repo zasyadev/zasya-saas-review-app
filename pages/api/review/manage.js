@@ -63,12 +63,6 @@ export default async (req, res) => {
           },
         });
 
-        let assigneeData = resData.assigned_to_id.map((item) => {
-          return {
-            assigned_to_id: item,
-          };
-        });
-
         let dataObj = {
           created: { connect: { id: resData.created_by } },
           review_name: resData.review_name,
@@ -87,6 +81,11 @@ export default async (req, res) => {
         };
 
         if (dataObj.is_published === "published") {
+          let assigneeData = resData.assigned_to_id.map((item) => {
+            return {
+              assigned_to_id: item,
+            };
+          });
           dataObj.ReviewAssignee = {
             create: assigneeData,
           };
