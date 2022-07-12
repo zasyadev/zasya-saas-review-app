@@ -225,9 +225,7 @@ function ReviewManagement({ user }) {
           // }}
           className="cursor-pointer underline"
         >
-          <Link href={`/review/created/${record.id}`}>
-            {record.review_name}
-          </Link>
+          <Link href={`/review/${record.id}`}>{record.review_name}</Link>
         </p>
       ),
     },
@@ -336,14 +334,16 @@ function ReviewManagement({ user }) {
                 </button>
               </div>
               <div>
-                <div className="md:flex items-end mt-2 ">
-                  <button
-                    className="primary-bg-btn text-white text-sm py-3 text-center px-4 rounded-md w-full "
-                    onClick={showModal}
-                  >
-                    Create Review
-                  </button>
-                </div>
+                <Link href="/review/add">
+                  <div className="md:flex items-end mt-2 ">
+                    <button
+                      className="primary-bg-btn text-white text-sm py-3 text-center px-4 rounded-md w-full "
+                      // onClick={showModal}
+                    >
+                      Create Review
+                    </button>
+                  </div>
+                </Link>
               </div>
             </div>
 

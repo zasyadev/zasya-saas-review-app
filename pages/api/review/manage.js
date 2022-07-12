@@ -92,6 +92,8 @@ export default async (req, res) => {
           };
         }
 
+        console.log(dataObj, "dataObj");
+
         const savedData = await transaction.review.create({
           data: dataObj,
         });
@@ -133,6 +135,7 @@ export default async (req, res) => {
         status: 200,
       });
     } catch (error) {
+      console.log(error);
       return res
         .status(500)
         .json({ error: error, message: "Internal Server Error" });

@@ -135,7 +135,7 @@ function FormView({ user, setReviewAssign, reviewAssign }) {
             <EyeOutlined />
           </span> */}
           {!record.status ? (
-            <Link href={`/review/received/${record.id}`}>
+            <Link href={`/review/id/${record.id}`}>
               <span className="primary-color-blue text-lg mx-2 cursor-pointer">
                 <EyeOutlined />
               </span>
