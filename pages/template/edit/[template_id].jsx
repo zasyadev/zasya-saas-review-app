@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import AdminLayout from "../../../component/layout/AdminLayout";
 import { getSession } from "next-auth/client";
 import FormComponent from "../../../component/Form/FormComponent";
+import { Skeleton } from "antd";
 
 function EditTemplate({ user }) {
   const router = useRouter();
@@ -39,8 +40,33 @@ function EditTemplate({ user }) {
   return (
     <AdminLayout user={user} title="Template">
       {loading ? (
-        "Loading"
-      ) : Object.keys(formData).length ? (
+        <>
+          <div class="border shadow bg-white rounded-md p-2 mt-4 w-full  md:w-4/6 mx-auto">
+            <div className="w-full  rounded-xl  p-2 mt-2 template-wrapper">
+              <div class="animate-pulse flex space-x-4">
+                <div class="flex-1 space-y-6 py-1">
+                  <div class="h-4 bg-slate-200 rounded"></div>
+                  <div class="h-4 bg-slate-200 rounded"></div>
+
+                  <div class="space-y-5">
+                    <div class="grid grid-cols-2 gap-4">
+                      <div class="h-4 bg-slate-200 rounded"></div>
+                    </div>
+                    <div class="h-4 bg-slate-200 rounded"></div>
+                  </div>
+                  <div class="space-y-5">
+                    <div class="grid grid-cols-2 gap-4">
+                      <div class="h-4 bg-slate-200 rounded"></div>
+                    </div>
+                    <div class="h-4 bg-slate-200 rounded"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
+      ) : // "Loading"
+      Object.keys(formData).length ? (
         <FormComponent user={user} editFormData={formData} editMode={true} />
       ) : null}
     </AdminLayout>

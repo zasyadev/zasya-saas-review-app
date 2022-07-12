@@ -178,6 +178,9 @@
   }
   .ant-form-item-control-input {
     .ant-select-focused {
+      .ant-select-selection-search-input {
+        margin: 5px 0px;
+      }
       .ant-select-selector {
         border-color: #0f123f !important;
         box-shadow: 0 0 0 1.5px rgba(0, 5, 204, 0.35) !important;
@@ -528,7 +531,6 @@
   height: 100% !important;
   font-size: 15px;
   border-radius: 5px;
-}
-.profile-submit-button:hover {
-  color: #0f123f !important;
+  background-color: #0f123f !important;
+  border-color: #0f123f !important;
 }

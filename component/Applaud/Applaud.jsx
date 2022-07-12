@@ -255,7 +255,7 @@ function Applaud({ user }) {
                               </Row>
                               <Row className="m-5 px-2">
                                 <Col xs={4} md={4}>
-                                  <CommentIcons className="primary-color-blue font-bold text-base " />
+                                  <CommentIcons className="primary-color-blue font-bold text-base" />
                                 </Col>
 
                                 <Col xs={20} md={20}>

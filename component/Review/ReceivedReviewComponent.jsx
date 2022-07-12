@@ -120,22 +120,22 @@ function ReceivedReviewComponent({ user, reviewId }) {
                       )}
 
                     <div className="flex justify-end mt-4">
-                      <Button
+                      <button
                         key="add"
                         className="profile-submit-button py-2 cursor-pointer primary-bg-btn text-white text-base  text-center rounded-md h-full w-32 mr-2"
                         type="primary"
                         onClick={() => handleCancel()}
                       >
                         Cancel
-                      </Button>
-                      <Button
+                      </button>
+                      <button
                         key="add"
                         className="profile-submit-button py-2 cursor-pointer primary-bg-btn text-white text-base  text-center rounded-md h-full w-32"
                         type="primary"
                         onClick={() => handleSubmit()}
                       >
                         Submit
-                      </Button>
+                      </button>
                     </div>
                   </>
                 )}

@@ -148,12 +148,7 @@ function ReviewCreatedComponent({ user, reviewData }) {
                 </Collapse>
               </div>
             </Col>
-            <Col
-              xs={24}
-              md={8}
-
-              // className=" "
-            >
+            <Col xs={24} md={8}>
               <div className="bg-white rounded-xl shadow-md py-4 ">
                 <div className="flex  flex-col items-start justify-between text mx-3 my-3">
                   <div className="primary-color-blue font-semibold text-lg mr-4 leading-3 mb-2">
