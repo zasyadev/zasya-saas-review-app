@@ -71,20 +71,20 @@ const QuestionComponent = ({
         </Row>
 
         <div className="mt-5 mb-2 w-full">
-          {type === "input" && (
+          {/* {type === "input" && (
             // <TextField
             //   fullWidth={true}
             //   placeholder="Short Text "
             //   rows={1}
             //   disabled
             // />
-            <Input
-              placeholder="Short Text "
-              disabled
-              className="input-box  text-base "
-              bordered={false}
-            />
-          )}
+            // <Input
+            //   placeholder="Short Text "
+            //   disabled
+            //   className="input-box  text-base "
+            //   bordered={false}
+            // />
+          )} */}
           {type === "checkbox" && (
             <>
               {options.map((op, j) => (
@@ -139,7 +139,7 @@ const QuestionComponent = ({
             </>
           )}
 
-          {type === "textarea" && (
+          {/* {type === "textarea" && (
             <Input
               placeholder="Long Description Text "
               disabled
@@ -152,7 +152,7 @@ const QuestionComponent = ({
             //   rows={1}
             //   disabled
             // />
-          )}
+          )} */}
           {type === "scale" && (
             <>
               <div className="flex items-center">
