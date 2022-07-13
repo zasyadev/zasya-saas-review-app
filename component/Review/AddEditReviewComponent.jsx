@@ -332,39 +332,39 @@ function AddEditReviewComponent({ editMode, user }) {
                       </Form.Item>
                     </Col>
 
-                    {memberDetails && (
-                      <Col md={12} xs={24}>
-                        <Form.Item
-                          name="assigned_to_id"
-                          label="Employee Name"
-                          rules={[
-                            {
-                              required: true,
-                            },
-                          ]}
+                    {/* {memberDetails && ( */}
+                    <Col md={12} xs={24}>
+                      <Form.Item
+                        name="assigned_to_id"
+                        label="Employee Name"
+                        rules={[
+                          {
+                            required: true,
+                          },
+                        ]}
+                      >
+                        <Select
+                          mode="multiple"
+                          placeholder="Select Member"
+                          showSearch
+                          filterOption={(input, option) =>
+                            option.children
+                              .toLowerCase()
+                              .indexOf(input.toLowerCase()) >= 0
+                          }
                         >
-                          <Select
-                            mode="multiple"
-                            placeholder="Select Member"
-                            showSearch
-                            filterOption={(input, option) =>
-                              option.children
-                                .toLowerCase()
-                                .indexOf(input.toLowerCase()) >= 0
-                            }
-                          >
-                            {userList.map((data, index) => (
-                              <Select.Option
-                                key={index + "users"}
-                                value={data.id}
-                              >
-                                {data.first_name}
-                              </Select.Option>
-                            ))}
-                          </Select>
-                        </Form.Item>
-                      </Col>
-                    )}
+                          {userList.map((data, index) => (
+                            <Select.Option
+                              key={index + "users"}
+                              value={data.id}
+                            >
+                              {data.first_name}
+                            </Select.Option>
+                          ))}
+                        </Select>
+                      </Form.Item>
+                    </Col>
+                    {/* )} */}
                     <Col md={24} xs={24}>
                       <div className="flex justify-end">
                         <Link href="/review">

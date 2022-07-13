@@ -3,26 +3,10 @@ import { mailService, mailTemplate } from "../../../lib/emailservice";
 
 const prisma = new PrismaClient();
 
-// const defaultScaleQuestion = {
-//   questionText: "Rating",
-//   options: [{ optionText: "low" }, { optionText: "high" }],
-//   lowerLabel: 1,
-//   higherLabel: 10,
-//   open: false,
-//   type: "scale",
-// };
-
 export default async (req, res) => {
   if (req.method === "POST") {
     try {
       const resData = JSON.parse(req.body);
-
-      // const templateData = await prisma.reviewTemplate.findUnique({
-      //   where: { id: resData.template_id },
-      // });
-      // if (resData.review_type === "feedback") {
-      //   resData.templateData.form_data.questions.push(defaultScaleQuestion);
-      // }
 
       const transactionData = await prisma.$transaction(async (transaction) => {
         const questionData = resData.templateData.form_data.questions.map(
@@ -66,7 +50,6 @@ export default async (req, res) => {
         });
 
         let dataObj = {
-          created: { connect: { id: resData.created_by } },
           review_name: resData.review_name,
           form: { connect: { id: formdata.id } },
 
@@ -79,22 +62,37 @@ export default async (req, res) => {
           is_published: resData.is_published,
         };
 
-        if (dataObj.is_published === "published") {
+        if (resData.is_published === "published") {
           let assigneeData = resData.assigned_to_id.map((item) => {
             return {
               assigned_to_id: item,
             };
           });
+          dataObj.created = { connect: { id: resData.created_by } };
           dataObj.ReviewAssignee = {
             create: assigneeData,
           };
+
+          let savedData = await transaction.review.create({
+            data: dataObj,
+          });
+          return { savedData };
+        } else {
+          let newAssignData = [];
+          let assignData = resData.assigned_to_id.forEach((item) => {
+            newAssignData.push({
+              ...dataObj,
+              created: { connect: { id: item } },
+            });
+          });
+
+          let savedData = newAssignData.map(async (item) => {
+            return await prisma.review.create({
+              data: item,
+            });
+          });
+          return { savedData };
         }
-
-        const savedData = await transaction.review.create({
-          data: dataObj,
-        });
-
-        return { savedData };
       });
 
       if (transactionData.savedData.is_published === "published") {
@@ -107,12 +105,19 @@ export default async (req, res) => {
         });
 
         assignedToData.forEach(async (user) => {
+          const assigneeData = await prisma.reviewAssignee.findFirst({
+            where: {
+              review_id: transactionData.savedData.id,
+              assigned_to_id: user.id,
+            },
+          });
+
           const mailData = {
             from: process.env.SMTP_USER,
             to: user.email,
             subject: `New review assigned by ${assignedFromData.first_name}`,
             html: mailTemplate(
-              `${assignedFromData.first_name} has assigned you new review , please <a href= ${process.env.NEXT_APP_URL}/review>click here </a> to help them now.`
+              `${assignedFromData.first_name} has assigned you new review , please <a href= ${process.env.NEXT_APP_URL}review/id/${assigneeData.id}>click here </a> to help them now.`
             ),
           };
 

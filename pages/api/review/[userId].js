@@ -18,11 +18,10 @@ export default async (req, res) => {
             {
               created_by: userId,
             },
-            {
-              organization_id: userData.organization_id,
-
-              is_published: "draft",
-            },
+            // {
+            //   organization_id: userData.organization_id,
+            //   is_published: "draft",
+            // },
           ],
         },
         include: {

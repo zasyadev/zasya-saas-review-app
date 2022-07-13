@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import CustomTable from "../../helpers/CustomTable";
-import { EyeOutlined, CalendarOutlined } from "@ant-design/icons";
+
+import { CalendarOutlined } from "@ant-design/icons";
 import moment from "moment";
 import { Modal, Collapse, Skeleton, Row, Col, Table } from "antd";
 import AnswerViewComponent from "./AnswerViewComponent";
@@ -9,15 +9,16 @@ import Link from "next/link";
 function ReviewCreatedComponent({ user, reviewData }) {
   const { Panel } = Collapse;
   const datePattern = "DD-MM-YYYY";
-  const [answerData, setAnswerData] = useState({});
+  const [answerData, setAnswerData] = useState([]);
+  const [headersData, setHeadersData] = useState([]);
   const [answerDataModel, setAnswerDataModel] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const [dataSource, setDataSource] = useState([]);
 
   const applyFilters = (object) => {
-    if (object.ReviewAssignee.length > 0) {
-      let result = object?.ReviewAssignee.reduce(function (obj, key) {
+    if (object.length > 0) {
+      let result = object?.reduce(function (obj, key) {
         obj[key.created_date.split("T")[0]] =
           obj[key.created_date.split("T")[0]] || [];
         obj[key.created_date.split("T")[0]].push(key);
@@ -27,153 +28,56 @@ function ReviewCreatedComponent({ user, reviewData }) {
     } else setDataSource([]);
   };
 
+  let nameTitle = {
+    title: "Name",
+    dataIndex: "name",
+    fixed: "left",
+  };
+
   useEffect(() => {
-    applyFilters(reviewData);
+    let headersData = reviewData?.form?.form_data?.questions.map((item, i) => {
+      return {
+        title: item.questionText,
+        dataIndex: "option" + i,
+      };
+    });
+    headersData.unshift(nameTitle);
+    setHeadersData(headersData);
+    fetchAnswer(reviewData.id);
   }, []);
 
-  // const columns = [
-  //   {
-  //     title: "Assign To",
-  //     dataIndex: "assigned_to",
-  //     key: "assigned_to",
-  //     render: (assigned_to) =>
-  //       assigned_to.first_name + " " + assigned_to.last_name,
-  //   },
-  //   {
-  //     title: "Status",
-  //     dataIndex: "status",
-  //     key: "status",
-  //     render: (status) =>
-  //       status ? (
-  //         <p className="text-green-400">Filled</p>
-  //       ) : (
-  //         <p className="text-red-400">Pending</p>
-  //       ),
-  //   },
+  const columns = [...headersData];
 
-  //   {
-  //     title: "Action",
-  //     key: "action",
-  //     render: (_, record) => (
-  //       <div className="">
-  //         {record.status == "answered" ? (
-  //           <span
-  //             className="FormView text-lg mx-2 cursor-pointer"
-  //             onClick={() => {
-  //               setAnswerDataModel(true);
-  //               //   setAnswerData(record);
-  //               fetchAnswer(record);
-  //             }}
-  //           >
-  //             <EyeOutlined />
-  //           </span>
-  //         ) : null}
-  //         {/*
-  //         <button
-  //           className="text-white text-base bg-indigo-800 text-center px-3 rounded-md pb-2"
-  //           // onClick={() => onDelete(record.id)}
-  //         >
-  //           <DeleteOutlined />
-  //         </button> */}
-  //       </div>
-  //     ),
-  //   },
-  // ];
-  const columns = [
-    {
-      title: "Name",
-      width: 100,
-      dataIndex: "name",
-      key: "name",
-      fixed: "left",
-    },
-    {
-      title: "Question 1",
-      dataIndex: "address",
-      key: "1",
-    },
-    {
-      title: "Question 2",
-      dataIndex: "address",
-      key: "2",
-    },
-    {
-      title: "Question 3",
-      dataIndex: "address",
-      key: "3",
-    },
-    {
-      title: "Question 4",
-      dataIndex: "address",
-      key: "4",
-    },
-    {
-      title: "Question 5",
-      dataIndex: "address",
-      key: "5",
-    },
-    {
-      title: "Question 6",
-      dataIndex: "address",
-      key: "6",
-    },
-    {
-      title: "Question 7",
-      dataIndex: "address",
-      key: "7",
-    },
-    {
-      title: "Question 8",
-      dataIndex: "address",
-      key: "8",
-    },
-    // {
-    //   title: "Action",
-    //   key: "operation",
-    //   fixed: "right",
-    //   width: 100,
-    //   render: () => <a>action</a>,
-    // },
-  ];
-
-  const data = [
-    {
-      key: "1",
-      name: "John Brown",
-      age: 32,
-      address: "New York Park ",
-    },
-    {
-      key: "2",
-      name: "Jim Green",
-      age: 40,
-      address: "London Park",
-    },
-    {
-      key: "3",
-      name: "John Brown",
-      age: 40,
-      address: "East Park",
-    },
-    {
-      key: "4",
-      name: "Jim Green",
-      age: 40,
-      address: "East Park",
-    },
-  ];
-
-  const fetchAnswer = async (obj) => {
-    setAnswerData({});
+  const fetchAnswer = async (id) => {
+    setDataSource([]);
     setLoading(true);
-    await fetch("/api/review/answer/" + user.id, {
-      method: "POST",
-      body: JSON.stringify(obj),
+    await fetch("/api/review/answer/" + id, {
+      method: "GET",
     })
       .then((response) => response.json())
       .then((response) => {
         if (response.status === 200) {
-          setAnswerData(response.data);
+          let data = response.data.map((item) => ({
+            user: item.user,
+            answers: item.ReviewAssigneeAnswerOption.reverse(),
+            created_date: item.created_date,
+          }));
+
+          let dataobj = data.map((item) => {
+            let optionObj = {};
+
+            item.answers.forEach((data, i) => {
+              optionObj[`option${i}`] = data.option;
+            });
+
+            return {
+              name: item.user.first_name + " " + item.user.last_name,
+              created_date: item.created_date,
+              ...optionObj,
+            };
+          });
+          applyFilters(dataobj);
+          // setAnswerData(dataobj);
         }
         setLoading(false);
       })
@@ -192,10 +96,10 @@ function ReviewCreatedComponent({ user, reviewData }) {
               </Link>
             </div>
           </div>
-          <Table
-            className="review-table"
+          {/* <Table
+            className="review-question-table"
             columns={columns}
-            dataSource={data}
+            dataSource={answerData}
             scroll={{
               x: 1300,
             }}
@@ -203,10 +107,10 @@ function ReviewCreatedComponent({ user, reviewData }) {
               index % 2 === 0 ? "" : "background-color-voilet"
             }
             bordered
-          />
+          /> */}
 
-          {/* <Row gutter={[16, 16]}>
-            <Col xs={24} md={16}>
+          <Row gutter={[16, 16]}>
+            <Col xs={24} md={24}>
               <div className="overflow-x-auto">
                 <Collapse
                   accordion
@@ -230,13 +134,20 @@ function ReviewCreatedComponent({ user, reviewData }) {
                                 </p>
                               </div>
                             }
-                            // header={`  ${(<CalendarOutlined />)} ${moment(
-                            //   key,
-                            //   "YYYY-MM-DD"
-                            // ).format(datePattern)}`}
                             key={1 + idx}
                           >
-                            <CustomTable dataSource={value} columns={columns} />
+                            <Table
+                              className="review-question-table"
+                              columns={columns}
+                              dataSource={value}
+                              scroll={{
+                                x: 1300,
+                              }}
+                              rowClassName={(_, index) =>
+                                index % 2 === 0 ? "" : "background-color-voilet"
+                              }
+                              bordered
+                            />
                           </Panel>
                         </>
                       );
@@ -244,41 +155,7 @@ function ReviewCreatedComponent({ user, reviewData }) {
                 </Collapse>
               </div>
             </Col>
-
-            <Col xs={24} md={8}>
-              <div className="bg-white rounded-xl shadow-md py-4 ">
-                <div className="flex  flex-col items-start justify-between text mx-3 my-3">
-                  <div className="primary-color-blue font-semibold text-lg mr-4 leading-3 mb-2">
-                    Review Name :{" "}
-                    <span className=" primary-color-blue font-semibold text-lg">
-                      {reviewData.review_name}
-                    </span>{" "}
-                  </div>
-                  <div className="primary-color-blue font-semibold text-lg mr-4 leading-3 mb-2">
-                    Frequency :{" "}
-                    <span className="primary-color-blue font-semibold text-lg">
-                      {reviewData.frequency}
-                    </span>
-                  </div>
-                  <div className="primary-color-blue font-semibold text-lg mb-2">
-                    Review Type :{" "}
-                    <span className="primary-color-blue font-semibold text-lg">
-                      {reviewData.review_type}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="flex justify-between items-center my-4 ">
-                  <div className="text-green-400 text-base font-semibold px-2">
-                    Review generated : 0
-                  </div>
-                  <div className="text-red-400 text-base font-semibold px-2">
-                    Review pending : 0
-                  </div>
-                </div>
-              </div>
-            </Col>
-          </Row> */}
+          </Row>
           <Modal
             title="Answers"
             visible={answerDataModel}
@@ -310,15 +187,6 @@ function ReviewCreatedComponent({ user, reviewData }) {
                                   type={item.question.type}
                                   idx={i}
                                 />
-                                {/* <div 
-                        //   key={i + "ans"}
-                        //   className=" m-1 bg-slate-200 p-2"
-                        // >
-                        //   <p>
-                        //     {item.question.questionText} :{"    "}{" "}
-                        //     {item.option}
-                        //   </p>
-                        // </div>*/}
                               </>
                             );
                           })

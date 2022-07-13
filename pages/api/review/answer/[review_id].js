@@ -4,21 +4,22 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export default async (req, res) => {
-  const { userId } = req.query;
-  const reqData = JSON.parse(req.body);
+  const { review_id } = req.query;
 
-  if (req.method === "POST") {
+  if (req.method === "GET") {
     try {
-      if (userId) {
+      if (review_id) {
         const data = await prisma.reviewAssigneeAnswers.findMany({
           where: {
-            review_assignee_id: reqData.id,
-            user_id: reqData.assigned_to_id,
+            review_id: review_id,
           },
           orderBy: { id: "desc" },
           include: {
             ReviewAssigneeAnswerOption: {
               include: { question: true },
+            },
+            user: {
+              select: { first_name: true, last_name: true },
             },
           },
         });

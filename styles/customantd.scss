@@ -253,7 +253,7 @@
     }
   }
 }
-.review-table {
+.review-question-table {
   .ant-table-thead {
     .ant-table-cell-fix-left {
       // background-color: #0f123f !important;
@@ -274,6 +274,13 @@
     font-size: 15px;
     font-weight: 500;
     // background: #fff !important;
+  }
+
+  .ant-table-thead > tr > th {
+    resize: horizontal;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
   }
 }
 
