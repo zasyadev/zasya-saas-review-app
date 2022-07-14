@@ -1,17 +1,18 @@
 import React, { useState } from "react";
 import { getSession } from "next-auth/client";
 import AdminLayout from "../../component/layout/AdminLayout";
-import ReviewManagement from "../../component/Review/ReviewManagement";
 
-function Management({ user }) {
+import FormView from "../../component/Form/FormView";
+
+function ReviewReceivedPage({ user }) {
   return (
-    <AdminLayout user={user} title={"Reviews"}>
-      <ReviewManagement user={user} />
+    <AdminLayout user={user} title={"Reviews Received"}>
+      <FormView user={user} />
     </AdminLayout>
   );
 }
 
-export default Management;
+export default ReviewReceivedPage;
 
 export async function getServerSideProps(context) {
   const session = await getSession({ req: context.req });

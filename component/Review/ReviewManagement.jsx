@@ -28,7 +28,7 @@ function ReviewManagement({ user }) {
   const [formList, setFormList] = useState([]);
   const [updateData, setUpdateData] = useState({});
   const [reviewAssignList, setReviewAssignList] = useState([]);
-  const [reviewAssign, setReviewAssign] = useState(false);
+
   const [memberDetails, setMemberDetails] = useState(false);
   // const [reviewAssignee, setReviewAssignee] = useState(false);
   // const [reviewAssigneeData, setReviewAssigneeData] = useState({});
@@ -296,13 +296,7 @@ function ReviewManagement({ user }) {
     }
   };
 
-  return reviewAssign ? (
-    <FormView
-      user={user}
-      setReviewAssign={setReviewAssign}
-      reviewAssign={reviewAssign}
-    />
-  ) : (
+  return (
     <div>
       <div className="px-3 md:px-8 h-auto mt-5">
         <div className="container mx-auto max-w-full">
@@ -316,19 +310,19 @@ function ReviewManagement({ user }) {
           <div className="grid grid-cols-1 px-4 mb-16">
             <div className=" md:flex items-center justify-between mb-3  ">
               <div className="flex">
+                <Link href={"/review/received"}>
+                  <button
+                    className={`primary-bg-btn
+                     text-white text-sm  py-3 text-center px-4 rounded-r-none rounded-l-md  md:w-fit mt-2 `}
+                    // onClick={() => setReviewAssign(true)}
+                  >
+                    Review Received
+                  </button>
+                </Link>
                 <button
-                  className={`${
-                    reviewAssign ? "toggle-btn-bg" : "primary-bg-btn"
-                  }  text-white text-sm  py-3 text-center px-4 rounded-r-none rounded-l-md  md:w-fit mt-2 `}
-                  onClick={() => setReviewAssign(true)}
-                >
-                  Review Received
-                </button>
-                <button
-                  className={`${
-                    reviewAssign ? "primary-bg-btn" : "toggle-btn-bg"
-                  }  text-white text-sm py-3 text-center px-4  rounded-l-none rounded-r-md md:w-fit mt-2`}
-                  onClick={() => setReviewAssign(false)}
+                  className={`toggle-btn-bg
+                  text-white text-sm py-3 text-center px-4  rounded-l-none rounded-r-md md:w-fit mt-2`}
+                  // onClick={() => setReviewAssign(false)}
                 >
                   Review Created
                 </button>

@@ -7,7 +7,7 @@ import QuestionViewComponent from "./QuestionViewComponent";
 import CustomTable from "../../helpers/CustomTable";
 import Link from "next/link";
 
-function FormView({ user, setReviewAssign, reviewAssign }) {
+function FormView({ user }) {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const [updateData, setUpdateData] = useState({});
@@ -156,21 +156,21 @@ function FormView({ user, setReviewAssign, reviewAssign }) {
             <div className="flex items-center justify-between mb-3">
               <div className="flex">
                 <button
-                  className={`${
-                    reviewAssign ? "bg-red-400" : "primary-bg-btn"
-                  }  text-white text-sm py-3 text-center px-4 rounded-r-none rounded-l-md rounded-md md:w-fit mt-2 `}
-                  onClick={() => setReviewAssign(true)}
+                  className={`
+                    bg-red-400
+                   text-white text-sm py-3 text-center px-4 rounded-r-none rounded-l-md rounded-md md:w-fit mt-2 `}
                 >
                   Review Received
                 </button>
-                <button
-                  className={`${
-                    reviewAssign ? "primary-bg-btn" : "bg-red-400"
-                  } text-white text-sm py-3 text-center px-4 rounded-r-md rounded-l-none md:w-fit mt-2 `}
-                  onClick={() => setReviewAssign(false)}
-                >
-                  Review Created
-                </button>
+
+                <Link href="/review">
+                  <button
+                    className={`primary-bg-btn
+                    text-white text-sm py-3 text-center px-4 rounded-r-md rounded-l-none md:w-fit mt-2 `}
+                  >
+                    Review Created
+                  </button>
+                </Link>
               </div>
             </div>
             <div className="w-full bg-white rounded-xl overflow-hdden shadow-md p-4 ">

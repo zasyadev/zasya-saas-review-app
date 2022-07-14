@@ -48,7 +48,7 @@ function AddEditReviewComponent({ editMode, user }) {
       frequency: values.frequency,
       role_id: user.role_id,
       organization_id: user.organization_id,
-      is_published: values.is_published ? "published" : "draft",
+      is_published: values.is_published,
       templateData: templateData,
     });
   }
@@ -226,195 +226,178 @@ function AddEditReviewComponent({ editMode, user }) {
                   onFinish={onFinish}
                   validateMessages={validateMessages}
                 >
-                  {editMode ? (
-                    <Row gutter={16}>
-                      <Col md={24} xs={24}>
-                        <Form.Item
-                          name="assigned_to_id"
-                          label="Employee Name"
-                          rules={[
-                            {
-                              required: true,
-                            },
-                          ]}
-                        >
-                          <Select
-                            placeholder="Select Member"
-                            showSearch
-                            filterOption={(input, option) =>
-                              option.children
-                                .toLowerCase()
-                                .indexOf(input.toLowerCase()) >= 0
-                            }
-                          >
-                            {userList.map((data, index) => (
-                              <Select.Option
-                                key={index + "user"}
-                                value={data.id}
-                              >
-                                {data.first_name}
-                              </Select.Option>
-                            ))}
-                          </Select>
-                        </Form.Item>
-                      </Col>
-                    </Row>
-                  ) : (
-                    <Row gutter={16}>
-                      <Col md={12} xs={24}>
-                        <Form.Item
-                          name="review_name"
-                          label="Review Name"
-                          rules={[
-                            {
-                              required: true,
-                            },
-                          ]}
-                        >
-                          <Input />
-                        </Form.Item>
-                      </Col>
+                  <Row gutter={16}>
+                    <Col md={12} xs={24}>
+                      <Form.Item
+                        name="is_published"
+                        label="How to Publish "
+                        rules={[
+                          {
+                            required: true,
+                          },
+                        ]}
+                      >
+                        {/* <Checkbox onChange={onChangeStatus}>
+                          Publish This Review
+                        </Checkbox> */}
+                        <Select placeholder="Select One">
+                          <Select.Option value="published">
+                            For Yourself
+                          </Select.Option>
+                          <Select.Option value="draft">
+                            For Others
+                          </Select.Option>
+                        </Select>
+                      </Form.Item>
+                    </Col>
+                    <Col md={12} xs={24}>
+                      <Form.Item
+                        name="review_name"
+                        label="Enter Review Name"
+                        rules={[
+                          {
+                            required: true,
+                          },
+                        ]}
+                      >
+                        <Input />
+                      </Form.Item>
+                    </Col>
 
-                      <Col md={12} xs={24}>
-                        <Form.Item
-                          name="template_id"
-                          label="Template"
-                          rules={[
-                            {
-                              required: true,
-                            },
-                          ]}
+                    <Col md={12} xs={24}>
+                      <Form.Item
+                        name="template_id"
+                        label="Select Template "
+                        rules={[
+                          {
+                            required: true,
+                          },
+                        ]}
+                      >
+                        <Select
+                          placeholder="Select Template"
+                          showSearch
+                          filterOption={(input, option) =>
+                            option.children
+                              .toLowerCase()
+                              .indexOf(input.toLowerCase()) >= 0
+                          }
                         >
-                          <Select
-                            placeholder="Select Template"
-                            showSearch
-                            filterOption={(input, option) =>
-                              option.children
-                                .toLowerCase()
-                                .indexOf(input.toLowerCase()) >= 0
-                            }
-                          >
-                            {formList.map((data, index) => (
-                              <Select.Option
-                                key={index + "form"}
-                                value={data.id}
-                              >
-                                {data.form_title}
-                              </Select.Option>
-                            ))}
-                          </Select>
-                        </Form.Item>
-                      </Col>
-
-                      <Col md={12} xs={24}>
-                        <Form.Item
-                          name="frequency"
-                          label="Frequency"
-                          rules={[
-                            {
-                              required: true,
-                            },
-                          ]}
-                        >
-                          <Select placeholder="Select Frequency">
-                            <Select.Option value="once">Once</Select.Option>
-                            <Select.Option value="daily">Daily</Select.Option>
-                            <Select.Option value="weekly">Weekly</Select.Option>
-                            <Select.Option value="monthly">
-                              Monthly
+                          {formList.map((data, index) => (
+                            <Select.Option key={index + "form"} value={data.id}>
+                              {data.form_title}
                             </Select.Option>
-                          </Select>
-                        </Form.Item>
-                      </Col>
-                      <Col md={12} xs={24}>
-                        <Form.Item
-                          name="review_type"
-                          label="Review Type"
-                          rules={[
-                            {
-                              required: true,
-                            },
-                          ]}
-                        >
-                          <Radio.Group placeholder="Select Type">
-                            <Radio value="feedback">Feedback</Radio>
-                            <Radio value="other">Other</Radio>
-                          </Radio.Group>
-                        </Form.Item>
-                      </Col>
-                      <Col md={12} xs={24}>
-                        <Form.Item name="is_published" valuePropName="checked">
-                          <Checkbox onChange={onChangeStatus}>
-                            Publish This Review
-                          </Checkbox>
-                        </Form.Item>
-                      </Col>
+                          ))}
+                        </Select>
+                      </Form.Item>
+                    </Col>
 
-                      {/* {memberDetails && ( */}
-                      <Col md={12} xs={24}>
-                        <Form.Item
-                          className="select-tag"
-                          name="assigned_to_id"
-                          label="Member Name"
-                          rules={[
-                            {
-                              required: true,
-                            },
-                          ]}
+                    <Col md={12} xs={24}>
+                      <Form.Item
+                        name="frequency"
+                        label="Select Frequency"
+                        rules={[
+                          {
+                            required: true,
+                          },
+                        ]}
+                      >
+                        <Select placeholder="Select Frequency">
+                          <Select.Option value="once">Once</Select.Option>
+                          <Select.Option value="daily">Daily</Select.Option>
+                          <Select.Option value="weekly">Weekly</Select.Option>
+                          <Select.Option value="monthly">Monthly</Select.Option>
+                        </Select>
+                      </Form.Item>
+                    </Col>
+                    <Col md={12} xs={24}>
+                      <Form.Item
+                        name="review_type"
+                        label="Review Type"
+                        rules={[
+                          {
+                            required: true,
+                          },
+                        ]}
+                      >
+                        <Radio.Group placeholder="Select Type">
+                          <Radio value="feedback">Feedback</Radio>
+                          <Radio value="other">Other</Radio>
+                        </Radio.Group>
+                      </Form.Item>
+                    </Col>
+                    {/* <Col md={12} xs={24}>
+                      <Form.Item name="is_published" valuePropName="checked">
+                        <Checkbox onChange={onChangeStatus}>
+                          Publish This Review
+                        </Checkbox>
+                      </Form.Item>
+                    </Col> */}
+
+                    {/* {memberDetails && ( */}
+                    <Col md={12} xs={24}>
+                      <Form.Item
+                        className="select-tag"
+                        name="assigned_to_id"
+                        label="Select Member(s)"
+                        rules={[
+                          {
+                            required: true,
+                          },
+                        ]}
+                      >
+                        <Select
+                          mode="multiple"
+                          placeholder="Select Member"
+                          showSearch
+                          filterOption={(input, option) =>
+                            option.children
+                              .toLowerCase()
+                              .indexOf(input.toLowerCase()) >= 0
+                          }
                         >
-                          <Select
-                            mode="multiple"
-                            placeholder="Select Member"
-                            showSearch
-                            filterOption={(input, option) =>
-                              option.children
-                                .toLowerCase()
-                                .indexOf(input.toLowerCase()) >= 0
-                            }
-                          >
-                            {userList.map((data, index) => (
-                              <Select.Option
-                                key={index + "users"}
-                                value={data.id}
-                              >
-                                {data.first_name}
-                              </Select.Option>
-                            ))}
-                          </Select>
-                        </Form.Item>
-                      </Col>
-                      {/* )} */}
-                      <Col md={24} xs={24}>
-                        <div className="flex justify-end">
-                          <Link href="/review">
-                            <button
-                              key="cancel"
-                              type="default"
-                              className="primary-bg-btn text-white text-sm py-3 my-1  rounded h-full w-1/4"
+                          {userList.map((data, index) => (
+                            <Select.Option
+                              key={index + "users"}
+                              value={data.id}
                             >
-                              Cancel
-                            </button>
-                          </Link>
+                              {data.first_name}
+                            </Select.Option>
+                          ))}
+                        </Select>
+                      </Form.Item>
+                    </Col>
+                    {/* )} */}
+                    <Col md={24} xs={24}>
+                      <div className="flex justify-end">
+                        <Link href="/review">
                           <button
-                            key="preview"
+                            key="cancel"
                             type="default"
-                            onClick={() => handlePreviewForm()}
-                            className="py-3 h-full rounded toggle-btn-bg text-white lg:mx-4 w-1/4  my-1"
+                            className="primary-bg-btn text-white text-sm py-3 my-1  rounded h-full w-1/4"
                           >
-                            Preview
+                            Cancel
                           </button>
-                          <button
-                            key="add"
-                            type="default"
-                            htmlType="submit"
-                            className=" px-4 py-3 h-full rounded primary-bg-btn text-white w-1/4 my-1"
-                          >
-                            {editMode ? "Update" : "Add"}
-                          </button>
-                        </div>
-                      </Col>
-                    </Row>
-                  )}
+                        </Link>
+                        <button
+                          key="preview"
+                          type="default"
+                          onClick={() => handlePreviewForm()}
+                          className="py-3 h-full rounded toggle-btn-bg text-white lg:mx-4 w-1/4  my-1"
+                        >
+                          Preview
+                        </button>
+                        <button
+                          key="add"
+                          type="default"
+                          htmlType="submit"
+                          className=" px-4 py-3 h-full rounded primary-bg-btn text-white w-1/4 my-1"
+                        >
+                          Add
+                        </button>
+                      </div>
+                    </Col>
+                  </Row>
                 </Form>
               </div>
             </div>
