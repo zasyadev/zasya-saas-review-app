@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import AdminLayout from "../../component/layout/AdminLayout";
+import AdminLayout from "../../../component/layout/AdminLayout";
 import { getSession } from "next-auth/client";
 import AddEditReviewComponent from "../../component/Review/AddEditReviewComponent";
 
