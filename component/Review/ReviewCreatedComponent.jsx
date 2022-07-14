@@ -32,6 +32,8 @@ function ReviewCreatedComponent({ user, reviewData }) {
     title: "Name",
     dataIndex: "name",
     fixed: "left",
+
+    sorter: (a, b) => a.name?.localeCompare(b.name),
   };
 
   useEffect(() => {
@@ -39,6 +41,7 @@ function ReviewCreatedComponent({ user, reviewData }) {
       return {
         title: item.questionText,
         dataIndex: "option" + i,
+        sorter: (a, b) => a[`option${i}`]?.localeCompare(b[`option${i}`]),
       };
     });
     headersData.unshift(nameTitle);
