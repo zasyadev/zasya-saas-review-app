@@ -215,13 +215,17 @@
   }
 }
 .review-question-table {
+  .ant-table-cell-fix-left {
+    font-weight: 600 !important;
+  }
   .ant-table-thead {
-    .ant-table-cell-fix-left {
-      // background-color: #0f123f !important;
+    .ant-table-column-sorter {
+      color: #0f123f;
     }
+
     .ant-table-cell {
-      background-color: #0f123f;
-      color: #fff;
+      // background-color: #0f123f;
+      color: #0f123f;
       font-style: none;
       font-size: 15px;
       font-weight: 500;
@@ -236,6 +240,11 @@
     font-weight: 500;
     // background: #fff !important;
   }
+  // @include mobile {
+  //   .ant-table-cell-fix-left {
+  //     width: 100px;
+  //   }
+  // }
 
   .ant-table-thead > tr > th {
     resize: horizontal;
@@ -278,6 +287,9 @@
 }
 .review-collapse {
   .ant-collapse-item {
+    background-color: #f6f6f6 !important;
+    box-shadow: 0px 20px 70px rgba(86, 89, 146, 0.1);
+
     .ant-collapse-header,
     .ant-collapse-arrow {
       font-size: 15px;
@@ -285,18 +297,19 @@
     }
     .ant-collapse-content-active {
       .ant-collapse-content-box {
-        padding: 0 10px 5px;
+        padding: 0px 0px;
       }
     }
   }
 }
-.template-wrapper {
-  ant-select-focused:not(.ant-select-disabled).ant-select:not(.ant-select-customize-input)
-    .ant-select-selector {
-    border: #0f123f !important;
-  }
+.add-template-wrapper {
   .input-box {
     border-bottom: 1px solid #d9d9d9;
+  }
+  .ant-select-focused:not(.ant-select-disabled).ant-select:not(.ant-select-customize-input)
+    .ant-select-selector {
+    border-color: #0f123f !important;
+    box-shadow: 0 0 0 0px rgba(0, 5, 204, 0.35) !important ;
   }
   .question-select-box {
     .ant-select-selector {
@@ -504,9 +517,6 @@
 .ant-header {
   padding: 0% !important;
 }
-.logout-dropdown {
-  min-width: 114px !important;
-}
 
 .searchbar-bg {
   background-color: #ffffff;
@@ -603,4 +613,33 @@
 
 .bg-delete-icon {
   background-color: #ff6968;
+}
+
+.user-menu-wrapper {
+  background-color: #ffffff;
+  .user-deatils {
+    font-weight: 700;
+    font-size: 16px;
+    color: #0f123f;
+    text-transform: capitalize;
+  }
+}
+
+.logout-dropdown {
+  min-width: 190px !important;
+  .ant-dropdown-menu-title-content {
+    padding: 10px 20px;
+    font-weight: 500;
+    font-size: 16px;
+    .span-text {
+      margin-left: 5px;
+    }
+  }
+  .ant-dropdown-menu-item:hover {
+    background: linear-gradient(90deg, #ff6968 0%, #ffa3a3 100%);
+    color: #fff;
+  }
+  .ant-dropdown-menu {
+    border-radius: 5px;
+  }
 }

@@ -21,7 +21,7 @@ const ReviewViewComponent = ({
   return (
     <>
       <Row
-        className="shadow-md mt-8  cursor-pointer rounded border-2 px-2 "
+        className="shadow-md mt-8   rounded border-2 px-2 "
         key={idx + "close"}
       >
         <Col xs={24} sm={24} md={22}>

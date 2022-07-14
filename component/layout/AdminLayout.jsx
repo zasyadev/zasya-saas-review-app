@@ -28,7 +28,6 @@ function getItem(label, key, icon, children, type) {
 function AdminLayout(props) {
   const { md } = useBreakpoint();
   const [collapsed, setCollapsed] = useState(false);
-  const [title, setTitle] = useState("");
 
   useEffect(() => {
     if (md) setCollapsed(false);
@@ -85,7 +84,7 @@ function AdminLayout(props) {
         <Layout>
           <Content className="bg-color-dashboard ">
             {/* <HeaderLayout /> */}
-            <HeaderLayout title={props.title} />
+            <HeaderLayout title={props.title} user={props.user} />
             {props.children}
           </Content>
           <Footer className="text-center bg-color-dashboard">
