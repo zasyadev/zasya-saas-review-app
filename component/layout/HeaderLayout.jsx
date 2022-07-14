@@ -1,15 +1,16 @@
 import React from "react";
-import { UserOutlined, SearchOutlined } from "@ant-design/icons";
+import { DownOutlined, UserOutlined, LogoutOutlined } from "@ant-design/icons";
 import Image from "next/image";
+import Link from "next/link";
 import User from "../../assets/images/User.png";
-import { Avatar, Button, Col, Dropdown, Input, Layout, Menu, Row } from "antd";
+import { Button, Col, Dropdown, Layout, Menu, Row } from "antd";
 import { signOut } from "next-auth/client";
 import { useRouter } from "next/router";
 import { BellIcon, SearchIcon } from "../../assets/Icon/icons";
 
 const { Header } = Layout;
 
-function HeaderLayout({ title, pageName }) {
+function HeaderLayout({ title, pageName, user }) {
   const router = useRouter();
   const logoutHandler = () => {
     signOut({
@@ -21,8 +22,40 @@ function HeaderLayout({ title, pageName }) {
     <Menu
       items={[
         {
+          key: "account",
+          label: (
+            <Link href="/profile">
+              <div className="flex items-center">
+                {" "}
+                <UserOutlined /> <span className="span-text">My Account</span>
+              </div>
+            </Link>
+          ),
+        },
+        {
           key: "logout",
-          label: <p onClick={() => logoutHandler()}>Logout</p>,
+          label: (
+            <div
+              onClick={() => logoutHandler()}
+              className=" flex items-center "
+            >
+              <LogoutOutlined /> <span className="span-text">Sign Out</span>
+            </div>
+          ),
+        },
+      ]}
+    />
+  );
+  const createMenu = (
+    <Menu
+      items={[
+        {
+          key: "review",
+          label: <Link href="/review/add">Review</Link>,
+        },
+        {
+          key: "template",
+          label: <Link href="/template/add">Template</Link>,
         },
       ]}
     />
@@ -30,78 +63,45 @@ function HeaderLayout({ title, pageName }) {
   return (
     <Header className="ant-header bg-color-dashboard border-b border-b-neutral-300 p-0">
       <Row>
-        <Col md={20} xs={12}>
+        <Col md={16} xs={12}>
           <div className="flex justify-between items-center mt-2">
             <div className=" font-bold mx-3 md:mx-6 text-2xl primary-color-blue">
               {title}
             </div>
-            <div className="hidden rounded-lg searchbar-bg  shadow-md md:flex items-center justify-between px-3">
-              <Input placeholder="Search" bordered={false} />
-              <button>
-                <SearchIcon />
-              </button>
-            </div>
           </div>
         </Col>
-        <Col md={4} xs={12}>
-          <div className=" flex justify-end mt-2 ">
-            <div className="rounded-md flex justify-between mx-3 ">
-              {/* <div className="bg-gray-100 rounded-full py-2 px-2 mr-4"> */}
-              {/* <BellIcon /> */}
-              {/* </div> */}
+        <Col md={4} xs={12} className="hidden md:block">
+          <div className="hidden   md:flex items-center justify-between px-3">
+            <Dropdown overlay={createMenu} trigger={["click"]}>
+              <button
+                key="create"
+                type="default"
+                className="primary-bg-btn text-white text-sm py-3 my-1 px-5 rounded flex  items-center  "
+              >
+                <span className="mr-2">Create</span> <DownOutlined />
+              </button>
+            </Dropdown>
+          </div>
+        </Col>
+        <Col md={4} xs={12} className="pr-3">
+          <Dropdown
+            trigger={"click"}
+            overlay={menu}
+            overlayClassName="logout-dropdown "
+            placement="bottomRight"
+            size=""
+          >
+            <div className=" flex items-center mt-2 user-menu-wrapper py-1 px-4 cursor-pointer rounded-md">
+              <div className="rounded-md flex justify-between mr-3 ">
+                <Image src={User} alt="user" width={38} height={38} />
+              </div>
               <div>
-                <Dropdown
-                  trigger={"click"}
-                  overlay={menu}
-                  overlayClassName="logout-dropdown "
-                  placement="bottomRight"
-                  size=""
-                >
-                  <div className="flex items-center justify-center cursor-pointer">
-                    <Image src={User} alt="user" width={38} height={38} />
-                  </div>
-                </Dropdown>
+                <p className="user-deatils">{user?.first_name}</p>
               </div>
             </div>
-          </div>
+          </Dropdown>
         </Col>
       </Row>
-
-      {/* <div className="px-4 flex item justify-start ">
-        <div>{title} </div>
-        <div className="">
-          <span
-            onClick={() => setCollapsed(!collapsed)}
-            className=" cursor-pointer text-white text-lg"
-          >
-            {collapsed ? (
-              <MenuUnfoldOutlined className="sidebar-icon" />
-            ) : (
-              <MenuFoldOutlined className="sidebar-icon" />
-            )}
-          
-          </span>
-        </div> 
-
-        <div className="flex items-end justify-end">
-          <div className="flex items-center justify-between mt-3">
-            <Image src={User} alt="user" width={38} height={38} />
-
-            <Button
-              className="text-black bg-white text-center justify-center ml-4 rounded-md "
-              onClick={() => logoutHandler()}
-            >
-              Logout
-               <span
-              onClick={() => logoutHandler()}
-              className=" cursor-pointer text-white text-sm tracking-wider   "
-            >
-              <LogoutOutlined />
-            </span> 
-            </Button>
-          </div>
-        </div>
-      </div> */}
     </Header>
   );
 }

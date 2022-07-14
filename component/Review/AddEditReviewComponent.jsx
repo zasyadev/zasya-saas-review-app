@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Form, Row, Col, Select, Input, Radio, Checkbox, Button } from "antd";
+import { Form, Row, Col, Select, Input, Radio } from "antd";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { openNotificationBox } from "../../helpers/notification";
@@ -90,13 +90,13 @@ function AddEditReviewComponent({ editMode, user }) {
       });
   }
 
-  const onChangeStatus = (e) => {
-    if (e.target.checked) {
-      setMemberDetails(true);
-    } else {
-      setMemberDetails(false);
-    }
-  };
+  // const onChangeStatus = (e) => {
+  //   if (e.target.checked) {
+  //     setMemberDetails(true);
+  //   } else {
+  //     setMemberDetails(false);
+  //   }
+  // };
 
   async function fetchUserData() {
     setUserList([]);
@@ -118,9 +118,11 @@ function AddEditReviewComponent({ editMode, user }) {
   }
 
   useEffect(() => {
-    fetchTemplateData();
     fetchUserData();
   }, []);
+  useEffect(() => {
+    fetchTemplateData();
+  }, [questionList]);
 
   function removeElement(idx) {
     setQuestionList((prev) => prev.filter((_, i) => i != idx));
@@ -129,14 +131,14 @@ function AddEditReviewComponent({ editMode, user }) {
   const handlePreviewForm = () => {
     setReviewFormData({});
     setQuestionList([]);
-
     form.validateFields().then((data) => {
       let templateData = {};
       if (data.template_id) {
         templateData = formList.find((item) => item.id == data.template_id);
+
         if (data.review_type === "feedback") {
-          templateData?.form_data?.questions.length > 0
-            ? templateData?.form_data?.questions.push(defaultScaleQuestion)
+          templateData.form_data.questions.length > 0
+            ? templateData.form_data.questions.push(defaultScaleQuestion)
             : null;
         }
         setQuestionList(templateData.form_data.questions);
@@ -237,9 +239,6 @@ function AddEditReviewComponent({ editMode, user }) {
                           },
                         ]}
                       >
-                        {/* <Checkbox onChange={onChangeStatus}>
-                          Publish This Review
-                        </Checkbox> */}
                         <Select placeholder="Select One">
                           <Select.Option value="published">
                             For Yourself
@@ -310,29 +309,6 @@ function AddEditReviewComponent({ editMode, user }) {
                         </Select>
                       </Form.Item>
                     </Col>
-                    <Col md={12} xs={24}>
-                      <Form.Item
-                        name="review_type"
-                        label="Review Type"
-                        rules={[
-                          {
-                            required: true,
-                          },
-                        ]}
-                      >
-                        <Radio.Group placeholder="Select Type">
-                          <Radio value="feedback">Feedback</Radio>
-                          <Radio value="other">Other</Radio>
-                        </Radio.Group>
-                      </Form.Item>
-                    </Col>
-                    {/* <Col md={12} xs={24}>
-                      <Form.Item name="is_published" valuePropName="checked">
-                        <Checkbox onChange={onChangeStatus}>
-                          Publish This Review
-                        </Checkbox>
-                      </Form.Item>
-                    </Col> */}
 
                     {/* {memberDetails && ( */}
                     <Col md={12} xs={24}>
@@ -367,6 +343,22 @@ function AddEditReviewComponent({ editMode, user }) {
                         </Select>
                       </Form.Item>
                     </Col>
+                    <Col md={12} xs={24}>
+                      <Form.Item
+                        name="review_type"
+                        label="Review Type"
+                        rules={[
+                          {
+                            required: true,
+                          },
+                        ]}
+                      >
+                        <Radio.Group placeholder="Select Type">
+                          <Radio value="feedback">Feedback</Radio>
+                          <Radio value="other">Other</Radio>
+                        </Radio.Group>
+                      </Form.Item>
+                    </Col>
                     {/* )} */}
                     <Col md={24} xs={24}>
                       <div className="flex justify-end">
@@ -382,7 +374,9 @@ function AddEditReviewComponent({ editMode, user }) {
                         <button
                           key="preview"
                           type="default"
-                          onClick={() => handlePreviewForm()}
+                          onClick={() => {
+                            handlePreviewForm();
+                          }}
                           className="py-3 h-full rounded toggle-btn-bg text-white lg:mx-4 w-1/4  my-1"
                         >
                           Preview
