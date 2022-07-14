@@ -2,7 +2,7 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 async function main() {
-  const roles = await prisma.role.create({
+  const roles = await prisma.role.createMany({
     data: [
       {
         name: "Super Admin",
