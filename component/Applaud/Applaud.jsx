@@ -32,22 +32,22 @@ function Applaud({ user }) {
   //   required: "${label} is required!",
   // };
 
-  async function fetchMember() {
-    await fetch("/api/team/" + user.organization_id, {
-      method: "GET",
-    })
-      .then((res) => res.json())
-      .then((res) => {
-        if (res.status === 200) {
-          let data = res.data.filter((item) => item.id != user.id);
-          setMembersList(data);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-        setMembersList([]);
-      });
-  }
+  // async function fetchMember() {
+  //   await fetch("/api/team/" + user.organization_id, {
+  //     method: "GET",
+  //   })
+  //     .then((res) => res.json())
+  //     .then((res) => {
+  //       if (res.status === 200) {
+  //         let data = res.data.filter((item) => item.id != user.id);
+  //         setMembersList(data);
+  //       }
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //       setMembersList([]);
+  //     });
+  // }
   async function fetchApplaud() {
     setLoading(true);
     await fetch("/api/applaud/" + user.id, { method: "GET" })
@@ -148,7 +148,7 @@ function Applaud({ user }) {
   };
 
   useEffect(() => {
-    fetchMember();
+    // fetchMember();
     fetchApplaud();
     fetchReceivedApplaud();
   }, []);

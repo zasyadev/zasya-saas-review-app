@@ -100,14 +100,14 @@ function AddEditReviewComponent({ editMode, user }) {
 
   async function fetchUserData() {
     setUserList([]);
-    await fetch("/api/user/oraganizationId/" + user.organization_id, {
+    await fetch("/api/user/organizationId/" + user.organization_id, {
       method: "GET",
     })
       .then((response) => response.json())
       .then((response) => {
         if (response.status === 200) {
           let data = response.data.filter(
-            (item) => item.status && item.id != user.id
+            (item) => item.status == 1 && item.id != user.id
           );
           setUserList(data);
         }

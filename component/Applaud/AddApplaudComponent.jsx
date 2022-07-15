@@ -2,10 +2,15 @@ import { Col, Form, Row, Select } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/router";
+import { openNotificationBox } from "../../helpers/notification";
+import Router from "next/router";
 
 function AddApplaud({ user }) {
+  const router = useRouter();
   const [applaudform] = Form.useForm();
   const [membersList, setMembersList] = useState([]);
+  const [updateData, setUpdateData] = useState({});
 
   const validateMessages = {
     required: "${label} is required!",
@@ -35,7 +40,7 @@ function AddApplaud({ user }) {
       created_by: user.id,
     };
 
-    editMode ? updateApplaud(obj) : addApplaud(obj);
+    addApplaud(obj);
   };
 
   async function addApplaud(obj) {
@@ -46,39 +51,38 @@ function AddApplaud({ user }) {
       .then((response) => response.json())
       .then((response) => {
         if (response.status === 200) {
-          applaudform.resetFields();
-          setIsModalVisible(false);
-          fetchApplaud();
+          console.log(response.message);
           openNotificationBox("success", response.message, 3);
+          router.push("/applaud");
         } else {
           openNotificationBox("error", response.message, 3);
         }
       })
-      .catch((err) => fetchApplaud([]));
+      .catch((err) => console.log(err));
   }
 
-  async function updateApplaud(obj) {
-    if (updateData.id) {
-      obj.id = updateData.id;
-    }
-    await fetch("/api/applaud", {
-      method: "PUT",
-      body: JSON.stringify(obj),
-    })
-      .then((response) => response.json())
-      .then((response) => {
-        if (response.status === 200) {
-          applaudform.resetFields();
-          fetchApplaud();
-          setIsModalVisible(false);
-          setEditMode(false);
-          openNotificationBox("success", response.message, 3);
-        } else {
-          openNotificationBox("error", response.message, 3);
-        }
-      })
-      .catch((err) => fetchApplaud([]));
-  }
+  // async function updateApplaud(obj) {
+  //   if (updateData.id) {
+  //     obj.id = updateData.id;
+  //   }
+  //   await fetch("/api/applaud", {
+  //     method: "PUT",
+  //     body: JSON.stringify(obj),
+  //   })
+  //     .then((response) => response.json())
+  //     .then((response) => {
+  //       if (response.status === 200) {
+  //         applaudform.resetFields();
+  //         // fetchApplaud();
+  //         setIsModalVisible(false);
+  //         setEditMode(false);
+  //         openNotificationBox("success", response.message, 3);
+  //       } else {
+  //         openNotificationBox("error", response.message, 3);
+  //       }
+  //     })
+  //     .catch((err) => fetchApplaud([]));
+  // }
 
   useEffect(() => {
     fetchMember();

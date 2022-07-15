@@ -14,6 +14,7 @@ import {
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { openNotificationBox } from "../../helpers/notification";
 import CustomTable from "../../helpers/CustomTable";
+import Link from "next/link";
 // import SiderRight from "../SiderRight/SiderRight";
 
 function TeamMembers({ user }) {
@@ -230,12 +231,14 @@ function TeamMembers({ user }) {
 
                 <div className="md:flex justify-end">
                   <div className="my-2 ">
-                    <button
-                      className="primary-bg-btn text-white text-sm md:py-3 py-2 text-center md:px-4 px-2 rounded-md w-full"
-                      onClick={() => showModal()}
-                    >
-                      Create Team
-                    </button>
+                    <Link href="/team/add">
+                      <button
+                        className="primary-bg-btn text-white text-sm md:py-3 py-2 text-center md:px-4 px-2 rounded-md w-full"
+                        // onClick={() => showModal()}
+                      >
+                        Create Team
+                      </button>
+                    </Link>
                   </div>
                 </div>
 
