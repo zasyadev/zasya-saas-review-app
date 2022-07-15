@@ -1,5 +1,5 @@
 import { Form, Input } from "antd";
-import Head from "next/head";
+
 import { signIn } from "next-auth/client";
 import Image from "next/image";
 import Link from "next/link";
@@ -57,7 +57,13 @@ function LoginPage() {
                   <Form.Item
                     name="email"
                     label="Email"
-                    className="md:mb-6  mb-4"
+                    className="md:mb-6 mb-4"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please enter your email address!",
+                      },
+                    ]}
                   >
                     <Input
                       type="text"
@@ -67,7 +73,16 @@ function LoginPage() {
                   </Form.Item>
 
                   <div className="md:mb-8  mb-4">
-                    <Form.Item name="password" label="Password">
+                    <Form.Item
+                      name="password"
+                      label="Password"
+                      rules={[
+                        {
+                          required: true,
+                          message: "Please enter your password!",
+                        },
+                      ]}
+                    >
                       <Input
                         type="password"
                         className="form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white  focus:outline-none"
@@ -87,12 +102,11 @@ function LoginPage() {
 
                   <div className="flex justify-between items-center mb-6">
                     <div className="form-group form-check">
-                      <a
-                        href="#!"
-                        className="primary-color-blue  font-semibold transition duration-200 ease-in-out cursor-pointer underline"
-                      >
-                        Forgot password ?
-                      </a>
+                      <Link href="/forgotpassword">
+                        <p className="primary-color-blue  font-semibold transition duration-200 ease-in-out cursor-pointer underline">
+                          Forgot password ?
+                        </p>
+                      </Link>
                     </div>
                     <Link href="/auth/register">
                       <span className="primary-color-blue  font-semibold transition duration-200 ease-in-out cursor-pointer underline">
