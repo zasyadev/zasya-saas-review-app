@@ -17,6 +17,7 @@ export default async (req, res) => {
           where: { email: reqBody.email },
           data: {
             password: await hashedPassword(reqBody.password),
+            status: 1,
           },
         });
 
