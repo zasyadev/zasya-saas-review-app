@@ -15,7 +15,7 @@ function ForgotPassword() {
   const router = useRouter();
   const params = router.query;
 
-  const [resetForm] = Form.useForm();
+  const [forgotForm] = Form.useForm();
   const [loading, setLoading] = useState(false);
   async function handleSubmit(values) {
     setLoading(true);
@@ -34,8 +34,7 @@ function ForgotPassword() {
         .then((data) => {
           if (data.status === 200) {
             openNotificationBox("success", data.message, 3);
-
-            resetForm.resetFields();
+            forgotForm.resetFields();
             router.push("/auth/login");
           } else {
             openNotificationBox("error", data.message, 3);
@@ -56,14 +55,22 @@ function ForgotPassword() {
 
               <h2 className="login-heading">Forgot Password</h2>
               <Form
-                form={resetForm}
+                form={forgotForm}
                 layout="vertical"
                 autoComplete="off"
                 onFinish={handleSubmit}
                 className="login-form"
               >
                 <div className="md:mb-10  mb-4">
-                  <Form.Item name="email">
+                  <Form.Item
+                    name="email"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please enter email!",
+                      },
+                    ]}
+                  >
                     <Input
                       type="text"
                       className="form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white  focus:outline-none"
