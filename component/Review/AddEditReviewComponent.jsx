@@ -232,7 +232,7 @@ function AddEditReviewComponent({ editMode, user }) {
                     <Col md={12} xs={24}>
                       <Form.Item
                         name="is_published"
-                        label="How to Publish "
+                        label="Review Published For ? "
                         rules={[
                           {
                             required: true,
@@ -241,11 +241,9 @@ function AddEditReviewComponent({ editMode, user }) {
                       >
                         <Select placeholder="Select One">
                           <Select.Option value="published">
-                            For Yourself
+                            Yourself
                           </Select.Option>
-                          <Select.Option value="draft">
-                            For Others
-                          </Select.Option>
+                          <Select.Option value="draft">Others</Select.Option>
                         </Select>
                       </Form.Item>
                     </Col>
@@ -383,8 +381,7 @@ function AddEditReviewComponent({ editMode, user }) {
                         </button>
                         <button
                           key="add"
-                          type="default"
-                          htmlType="submit"
+                          type="submit"
                           className=" px-4 py-3 h-full rounded primary-bg-btn text-white w-1/4 my-1"
                         >
                           Add

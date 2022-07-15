@@ -33,8 +33,6 @@ function ReviewEdit({ user }) {
     else return;
   }, []);
 
-  console.log(reviewData, "reviewData");
-
   return (
     <AdminLayout user={user} title="Template">
       <AddEditReviewComponent user={user} />

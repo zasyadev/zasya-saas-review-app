@@ -6,7 +6,7 @@ import User from "../../assets/images/User.png";
 import { Button, Col, Dropdown, Layout, Menu, Row } from "antd";
 import { signOut } from "next-auth/client";
 import { useRouter } from "next/router";
-import { BellIcon, SearchIcon } from "../../assets/Icon/icons";
+// import { BellIcon, SearchIcon } from "../../assets/Icon/icons";
 
 const { Header } = Layout;
 
@@ -32,6 +32,7 @@ function HeaderLayout({ title, pageName, user }) {
             </Link>
           ),
         },
+
         {
           key: "logout",
           label: (
@@ -61,35 +62,54 @@ function HeaderLayout({ title, pageName, user }) {
     />
   );
   return (
+<<<<<<< HEAD
     <Header className="ant-header bg-color-dashboard border-b border-b-neutral-300 p-0  ">
       <Row className="h-full ">
         <Col md={16} xs={12} className="my-auto">
           <div className="flex justify-between items-center  ">
             <div className=" font-bold mx-3 md:mx-6 text-2xl primary-color-blue ">
+=======
+    <Header className="ant-header bg-color-dashboard border-b border-b-neutral-300 p-0">
+      <Row className="items-center">
+        <Col md={16} xs={12}>
+          <div className="flex justify-between items-center mt-2">
+            <div className=" font-bold mx-3 md:mx-6 text-2xl primary-color-blue">
+>>>>>>> eddfa8f7bda38578f71f623c92abbcefdc3895e5
               {title}
             </div>
           </div>
         </Col>
+<<<<<<< HEAD
         <Col md={4} xs={12} className="hidden md:block my-auto">
+=======
+        <Col md={3} xs={12} className="hidden md:block">
+>>>>>>> eddfa8f7bda38578f71f623c92abbcefdc3895e5
           <div className="hidden md:flex items-center justify-between px-3">
             <Dropdown overlay={createMenu} trigger={["click"]}>
               <button
                 key="create"
                 type="default"
+<<<<<<< HEAD
                 className="primary-bg-btn text-white text-sm py-3  px-5 rounded flex items-center  "
+=======
+                className="primary-bg-btn text-white text-sm py-3  px-5 rounded flex  items-center  "
+>>>>>>> eddfa8f7bda38578f71f623c92abbcefdc3895e5
               >
                 <span className="mr-2">Create</span> <DownOutlined />
               </button>
             </Dropdown>
           </div>
         </Col>
+<<<<<<< HEAD
         <Col md={4} xs={12} className="pr-3 my-auto">
+=======
+        <Col md={5} xs={12} className="pr-3">
+>>>>>>> eddfa8f7bda38578f71f623c92abbcefdc3895e5
           <Dropdown
             trigger={"click"}
             overlay={menu}
             overlayClassName="logout-dropdown "
             placement="bottomRight"
-            size=""
           >
             <div className=" flex items-center user-menu-wrapper py-1 px-4 cursor-pointer rounded-md">
               <div className="rounded-md flex justify-between mr-3 ">

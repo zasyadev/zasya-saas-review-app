@@ -43,7 +43,9 @@ model User {
   userCreated           UserApplaud[]           @relation("userCreated")
   userFeild             UserApplaud[]           @relation("userFeild")
 
-  ReviewAssignee ReviewAssignee[]
+  ReviewAssignee          ReviewAssignee[]
+  UserOraganizationGroups UserOraganizationGroups[]
+
   @@map("users")
 }
 
@@ -54,7 +56,8 @@ model Role {
   modified_date DateTime @default(now())
   User          User[]
 
-  Review Review[]
+  Review                  Review[]
+  UserOraganizationGroups UserOraganizationGroups[]
   @@map("users_role")
 }
 
@@ -243,7 +246,8 @@ model UserOrganization {
   modified_date DateTime @default(now())
   User          User[]
 
-  Review Review[]
+  Review                  Review[]
+  UserOraganizationGroups UserOraganizationGroups[]
   @@map("user_organization")
 }
 
@@ -270,7 +274,7 @@ model PasswordReset {
 }
 
 model UserApplaud {
-  id            Int      @id @default(autoincrement())
+  id            String   @id @default(uuid())
   user          User     @relation("userFeild", fields: [user_id], references: [id])
   user_id       String
   comment       String?  @db.LongText
@@ -280,4 +284,19 @@ model UserApplaud {
   modified_date DateTime @default(now())
 
   @@map("user_applaud")
+}
+
+model UserOraganizationGroups {
+  id              Int              @id @default(autoincrement())
+  user            User             @relation(fields: [user_id], references: [id])
+  user_id         String
+  role            Role             @relation(fields: [role_id], references: [id])
+  role_id         Int
+  organization    UserOrganization @relation(fields: [organization_id], references: [id])
+  organization_id Int
+  status          Boolean
+  created_date    DateTime         @default(now())
+  modified_date   DateTime         @default(now())
+
+  @@map("user_organization_groups")
 }
