@@ -25,7 +25,7 @@ function HeaderLayout({ title, pageName, user }) {
           key: "account",
           label: (
             <Link href="/profile">
-              <div className="flex items-center">
+              <div className="flex items-center my-auto">
                 {" "}
                 <UserOutlined /> <span className="span-text">My Account</span>
               </div>
@@ -61,29 +61,29 @@ function HeaderLayout({ title, pageName, user }) {
     />
   );
   return (
-    <Header className="ant-header bg-color-dashboard border-b border-b-neutral-300 p-0">
-      <Row>
-        <Col md={16} xs={12}>
-          <div className="flex justify-between items-center mt-2">
-            <div className=" font-bold mx-3 md:mx-6 text-2xl primary-color-blue">
+    <Header className="ant-header bg-color-dashboard border-b border-b-neutral-300 p-0  ">
+      <Row className="h-full ">
+        <Col md={16} xs={12} className="my-auto">
+          <div className="flex justify-between items-center  ">
+            <div className=" font-bold mx-3 md:mx-6 text-2xl primary-color-blue ">
               {title}
             </div>
           </div>
         </Col>
-        <Col md={4} xs={12} className="hidden md:block">
-          <div className="hidden   md:flex items-center justify-between px-3">
+        <Col md={4} xs={12} className="hidden md:block my-auto">
+          <div className="hidden md:flex items-center justify-between px-3">
             <Dropdown overlay={createMenu} trigger={["click"]}>
               <button
                 key="create"
                 type="default"
-                className="primary-bg-btn text-white text-sm py-3 my-1 px-5 rounded flex  items-center  "
+                className="primary-bg-btn text-white text-sm py-3  px-5 rounded flex items-center  "
               >
                 <span className="mr-2">Create</span> <DownOutlined />
               </button>
             </Dropdown>
           </div>
         </Col>
-        <Col md={4} xs={12} className="pr-3">
+        <Col md={4} xs={12} className="pr-3 my-auto">
           <Dropdown
             trigger={"click"}
             overlay={menu}
@@ -91,7 +91,7 @@ function HeaderLayout({ title, pageName, user }) {
             placement="bottomRight"
             size=""
           >
-            <div className=" flex items-center mt-2 user-menu-wrapper py-1 px-4 cursor-pointer rounded-md">
+            <div className=" flex items-center user-menu-wrapper py-1 px-4 cursor-pointer rounded-md">
               <div className="rounded-md flex justify-between mr-3 ">
                 <Image src={User} alt="user" width={38} height={38} />
               </div>

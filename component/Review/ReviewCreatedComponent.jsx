@@ -112,13 +112,13 @@ function ReviewCreatedComponent({ user, reviewData }) {
                   <ShareIcon />
                 </div>
               </div>
-              <div className="flex  primary-color-blue md:mx-10">
-                <p className="">Type:</p>
-                <p>Feedback</p>
+              <div className="flex  primary-color-blue md:mx-10 my-auto">
+                <p className="my-auto">Type:</p>
+                <p className="my-auto">Feedback</p>
               </div>
-              <div className="flex  primary-color-blue">
-                <p className="">Created Date:</p>
-                <p>10/11/2018</p>
+              <div className="flex  primary-color-blue my-auto">
+                <p className="my-auto">Created Date:</p>
+                <p className="my-auto">10/11/2018</p>
               </div>
             </div>
 
@@ -230,7 +230,7 @@ function ReviewCreatedComponent({ user, reviewData }) {
                             header={
                               <div className="flex items-center">
                                 <CalendarOutlined />
-                                <p className="ml-3">
+                                <p className="ml-3 my-auto">
                                   {moment(key, "YYYY-MM-DD").format(
                                     datePattern
                                   )}
