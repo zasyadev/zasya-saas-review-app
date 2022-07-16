@@ -38,6 +38,10 @@ function HeaderLayout({ title, pageName, user }) {
           key: "applaud",
           label: <Link href="/applaud/add">Applaud</Link>,
         },
+        {
+          key: "applaud",
+          label: <Link href="/team/add">Team</Link>,
+        },
       ]}
     />
   );

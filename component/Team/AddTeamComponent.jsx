@@ -30,9 +30,6 @@ function AddTeamComponent({ user, editMode, memberData }) {
         .then((response) => {
           if (response.status === 200) {
             form.resetFields();
-            // setIsModalVisible(false);
-            // fetchMembersData();
-
             openNotificationBox("success", response.message, 3);
             router.push("/team/members");
           } else {
@@ -57,9 +54,9 @@ function AddTeamComponent({ user, editMode, memberData }) {
             if (response.status === 200) {
               fetchMembersData();
               form.resetFields();
-              //   setIsModalVisible(false);
-              setEditMode(false);
+
               openNotificationBox("success", response.message, 3);
+              router.push("/team/members");
             } else {
               openNotificationBox("error", response.message, 3);
             }
@@ -81,7 +78,6 @@ function AddTeamComponent({ user, editMode, memberData }) {
 
   useEffect(() => {
     if (editMode && memberData) {
-      console.log(memberData, "first_name");
       form.setFieldsValue({
         first_name: memberData?.first_name,
         last_name: memberData?.last_name,
