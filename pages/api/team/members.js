@@ -126,6 +126,7 @@ export default async (req, res) => {
             pin_code: "",
             mobile: "",
             status: resData.status,
+            role_id: resData.role,
             UserTags: {
               update: {
                 tags: resData.tags,

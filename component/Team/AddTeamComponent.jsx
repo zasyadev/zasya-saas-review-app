@@ -1,10 +1,11 @@
 import { Col, Form, Input, Row, Select } from "antd";
+
 import Link from "next/link";
-import React from "react";
+import React, { useEffect } from "react";
 import { useRouter } from "next/router";
 import { openNotificationBox } from "../../helpers/notification";
 
-function AddTeamComponent({ user, editMode }) {
+function AddTeamComponent({ user, editMode, memberData }) {
   const router = useRouter();
   const [form] = Form.useForm();
 
@@ -41,8 +42,8 @@ function AddTeamComponent({ user, editMode }) {
         .catch((err) => console.log(err));
   }
   async function updatingMember(obj) {
-    if (upadteData.id) {
-      (obj.tag_id = upadteData?.UserTags?.id), 0;
+    if (memberData.id) {
+      (obj.tag_id = memberData?.UserTags?.id), 0;
       (obj.status = 1),
         await fetch("/api/team/members", {
           method: "PUT",
@@ -66,6 +67,7 @@ function AddTeamComponent({ user, editMode }) {
           .catch((err) => console.log(err));
     }
   }
+
   const validateMessages = {
     required: "${label} is required!",
     types: {
@@ -76,20 +78,19 @@ function AddTeamComponent({ user, editMode }) {
       range: "${label} must be between ${min} and ${max}",
     },
   };
-  const onUpdate = (data) => {
-    setEditMode(true);
-    setUpdateData(data);
-    setIsModalVisible(true);
 
-    form.setFieldsValue({
-      first_name: data.first_name,
-      last_name: data.last_name,
-      email: data.email,
-      tags: data.UserTags.tags,
-      status: data.status,
-      role: data.role_id,
-    });
-  };
+  useEffect(() => {
+    if (editMode && memberData) {
+      console.log(memberData, "first_name");
+      form.setFieldsValue({
+        first_name: memberData?.first_name,
+        last_name: memberData?.last_name,
+        email: memberData?.email,
+        tags: memberData?.UserTags?.tags,
+        role: memberData?.role_id,
+      });
+    }
+  }, []);
 
   return (
     <div>
@@ -144,9 +145,7 @@ function AddTeamComponent({ user, editMode }) {
                       },
                     ]}
                   >
-                    <Input
-                    //   disabled={editMode}
-                    />
+                    <Input disabled={editMode} />
                   </Form.Item>
                 </Col>
 
@@ -189,7 +188,7 @@ function AddTeamComponent({ user, editMode }) {
                     ]}
                   >
                     <Select placeholder="Roles" className="select-tag">
-                      <Select.Option key={"mamanger"} value={3}>
+                      <Select.Option key={"manager"} value={3}>
                         Manager
                       </Select.Option>
                       <Select.Option key={"member"} value={4}>
@@ -215,7 +214,7 @@ function AddTeamComponent({ user, editMode }) {
                       type="submit"
                       className=" px-4 py-3 h-full rounded  text-sm primary-bg-btn text-white w-1/4 my-1"
                     >
-                      Add
+                      {editMode ? "Update" : "Add"}
                     </button>
                   </div>
                 </Col>
