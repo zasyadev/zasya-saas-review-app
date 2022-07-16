@@ -52,7 +52,6 @@ function AddTeamComponent({ user, editMode, memberData }) {
           .then((response) => response.json())
           .then((response) => {
             if (response.status === 200) {
-              fetchMembersData();
               form.resetFields();
 
               openNotificationBox("success", response.message, 3);

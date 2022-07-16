@@ -23,6 +23,35 @@ function HeaderLayout({ title, pageName, user }) {
     });
     router.push("/");
   };
+
+  const userMenu = (
+    <Menu>
+      <Menu.Item key={"account"}>
+        <Link href="/profile">
+          <div className="flex items-center">
+            {" "}
+            <UserOutlined /> <span className="span-text">My Account</span>
+          </div>
+        </Link>
+      </Menu.Item>
+      {user.role_id == 2 && (
+        <Menu.Item key={"team"}>
+          <Link href="/team/members">
+            <div className="flex items-center">
+              {" "}
+              <UsergroupAddOutlined /> <span className="span-text">Team</span>
+            </div>
+          </Link>
+        </Menu.Item>
+      )}
+
+      <Menu.Item key={"sign_out"}>
+        <div onClick={() => logoutHandler()} className=" flex items-center ">
+          <LogoutOutlined /> <span className="span-text">Sign Out</span>
+        </div>
+      </Menu.Item>
+    </Menu>
+  );
   const createMenu = (
     <Menu
       items={[
@@ -71,40 +100,7 @@ function HeaderLayout({ title, pageName, user }) {
         <Col md={5} xs={12} className="pr-3">
           <Dropdown
             trigger={"click"}
-            overlay={
-              <Menu>
-                <Menu.Item key={"account"}>
-                  <Link href="/profile">
-                    <div className="flex items-center">
-                      {" "}
-                      <UserOutlined />{" "}
-                      <span className="span-text">My Account</span>
-                    </div>
-                  </Link>
-                </Menu.Item>
-                {user.role_id == 2 && (
-                  <Menu.Item key={"team"}>
-                    <Link href="/team/members">
-                      <div className="flex items-center">
-                        {" "}
-                        <UsergroupAddOutlined />{" "}
-                        <span className="span-text">Team</span>
-                      </div>
-                    </Link>
-                  </Menu.Item>
-                )}
-
-                <Menu.Item key={"sign_out"}>
-                  <div
-                    onClick={() => logoutHandler()}
-                    className=" flex items-center "
-                  >
-                    <LogoutOutlined />{" "}
-                    <span className="span-text">Sign Out</span>
-                  </div>
-                </Menu.Item>
-              </Menu>
-            }
+            overlay={userMenu}
             overlayClassName="logout-dropdown "
             placement="bottomRight"
           >
