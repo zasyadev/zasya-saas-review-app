@@ -100,14 +100,14 @@ function AddEditReviewComponent({ editMode, user }) {
 
   async function fetchUserData() {
     setUserList([]);
-    await fetch("/api/user/oraganizationId/" + user.organization_id, {
+    await fetch("/api/user/organizationId/" + user.organization_id, {
       method: "GET",
     })
       .then((response) => response.json())
       .then((response) => {
         if (response.status === 200) {
           let data = response.data.filter(
-            (item) => item.status && item.id != user.id
+            (item) => item.status == 1 && item.id != user.id
           );
           setUserList(data);
         }
@@ -219,7 +219,7 @@ function AddEditReviewComponent({ editMode, user }) {
         </>
       ) : (
         <div className="w-full  md:w-4/6 mx-auto">
-          <div className="w-full bg-white rounded-xl shadow-md p-4 mt-4 template-wrapper">
+          <div className="w-full bg-white rounded-xl shadow-md p-4 mt-4 add-template-wrapper">
             <div className="  rounded-t-md  mt-1">
               <div className="add-review-from w-full flex flex-col items-start  pt-2 pb-5 ">
                 <Form
@@ -232,7 +232,7 @@ function AddEditReviewComponent({ editMode, user }) {
                     <Col md={12} xs={24}>
                       <Form.Item
                         name="is_published"
-                        label="How to Publish "
+                        label="Review Published For ? "
                         rules={[
                           {
                             required: true,
@@ -241,11 +241,9 @@ function AddEditReviewComponent({ editMode, user }) {
                       >
                         <Select placeholder="Select One">
                           <Select.Option value="published">
-                            For Yourself
+                            Yourself
                           </Select.Option>
-                          <Select.Option value="draft">
-                            For Others
-                          </Select.Option>
+                          <Select.Option value="draft">Others</Select.Option>
                         </Select>
                       </Form.Item>
                     </Col>
@@ -383,8 +381,7 @@ function AddEditReviewComponent({ editMode, user }) {
                         </button>
                         <button
                           key="add"
-                          type="default"
-                          htmlType="submit"
+                          type="submit"
                           className=" px-4 py-3 h-full rounded primary-bg-btn text-white w-1/4 my-1"
                         >
                           Add

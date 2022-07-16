@@ -23,6 +23,7 @@ function ReviewCreatedComponent({ user, reviewData }) {
   const [loading, setLoading] = useState(false);
   const [dataSource, setDataSource] = useState([]);
   const [fixed, setFixed] = useState(false);
+  const [totalRating, setTotalRating] = useState(0);
 
   useEffect(() => {
     if (xs) setFixed(xs);
@@ -41,12 +42,10 @@ function ReviewCreatedComponent({ user, reviewData }) {
     } else setDataSource([]);
   };
 
-  console.log(fixed, "fixed");
   let nameTitle = {
     title: "Name",
     dataIndex: "name",
     fixed: fixed ? false : true,
-
     sorter: (a, b) => a.name?.localeCompare(b.name),
   };
 
@@ -94,31 +93,55 @@ function ReviewCreatedComponent({ user, reviewData }) {
             };
           });
           applyFilters(dataobj);
+          if (reviewData?.review_type == "feedback")
+            totalRatingFunction(response.data);
           // setAnswerData(dataobj);
         }
         setLoading(false);
       })
       .catch((err) => console.log(err));
   };
+
+  const totalRatingFunction = (data) => {
+    let sum = 0;
+    let total = data.reduce((prev, curr) => {
+      if (curr?.ReviewAssigneeAnswerOption?.length > 0) {
+        return (
+          Number(prev) +
+          Number(
+            curr?.ReviewAssigneeAnswerOption[
+              curr?.ReviewAssigneeAnswerOption?.length - 1
+            ].option
+          )
+        );
+      } else return 0;
+    }, sum);
+
+    let totalRating = Number(total) / Number(data?.length);
+    setTotalRating(totalRating);
+  };
+
   return (
     <div>
       <div className="px-3 md:px-8 h-auto mt-5">
         <div className="container mx-auto max-w-full">
           <div className="md:flex items-center justify-between text-base font-medium my-4 ">
             <div className="md:flex items-center ">
-              <div className="primary-color-blue">Monthly Review</div>
+              <div className="primary-color-blue capitalize">
+                {reviewData?.frequency} Review
+              </div>
               <div className="flex ml-2">
                 <div className="bg-red-400 py-2 px-2 rounded-full ">
                   <ShareIcon />
                 </div>
               </div>
               <div className="flex  primary-color-blue md:mx-10">
-                <p className="">Type:</p>
-                <p>Feedback</p>
+                <p className="mr-1">Type:</p>
+                <p className="capitalize">{reviewData?.review_type}</p>
               </div>
               <div className="flex  primary-color-blue">
                 <p className="">Created Date:</p>
-                <p>10/11/2018</p>
+                <p>{moment(reviewData?.created_date).format(datePattern)}</p>
               </div>
             </div>
 
@@ -151,7 +174,7 @@ function ReviewCreatedComponent({ user, reviewData }) {
                     <div className="text-sm md:text-base font-medium">
                       Total Rating
                     </div>
-                    <div className="text-lg font-medium">0.2</div>
+                    <div className="text-lg font-medium">{totalRating}</div>
                   </div>
                 </Col>
               </Row>
@@ -172,7 +195,21 @@ function ReviewCreatedComponent({ user, reviewData }) {
                     <div className="text-sm md:text-base font-medium">
                       Next Due Date
                     </div>
-                    <div className="text-lg font-medium">13/7/2022</div>
+                    <div className="text-lg font-medium">
+                      {reviewData?.frequency === "monthly"
+                        ? moment(reviewData?.created_date)
+                            .add(30, "days")
+                            .format(datePattern)
+                        : reviewData?.frequency === "weekly"
+                        ? moment(reviewData?.created_date)
+                            .add(7, "days")
+                            .format(datePattern)
+                        : reviewData?.frequency === "daily"
+                        ? moment(reviewData?.created_date)
+                            .add(1, "days")
+                            .format(datePattern)
+                        : null}
+                    </div>
                   </div>
                 </Col>
               </Row>
@@ -193,7 +230,9 @@ function ReviewCreatedComponent({ user, reviewData }) {
                     <div className="text-sm md:text-base font-medium">
                       Assign to people
                     </div>
-                    <div className="text-lg font-medium">20</div>
+                    <div className="text-lg font-medium">
+                      {reviewData?.ReviewAssignee?.length}
+                    </div>
                   </div>
                 </Col>
               </Row>
@@ -230,7 +269,7 @@ function ReviewCreatedComponent({ user, reviewData }) {
                             header={
                               <div className="flex items-center">
                                 <CalendarOutlined />
-                                <p className="ml-3">
+                                <p className="ml-3 my-auto">
                                   {moment(key, "YYYY-MM-DD").format(
                                     datePattern
                                   )}

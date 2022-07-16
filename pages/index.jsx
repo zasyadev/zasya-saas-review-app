@@ -9,7 +9,6 @@ export default function Home({ user }) {
       Router.push("/auth/login");
     }
   });
-  return null;
 }
 export async function getServerSideProps(context) {
   const session = await getSession({ req: context.req });

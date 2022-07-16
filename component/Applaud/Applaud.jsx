@@ -5,11 +5,12 @@ import { openNotificationBox } from "../../helpers/notification";
 import CustomTable from "../../helpers/CustomTable";
 import moment from "moment";
 import { CalanderIcon, CommentIcons, UserIcon } from "../../assets/Icon/icons";
+import Link from "next/link";
 
 function Applaud({ user }) {
   const [applaudform] = Form.useForm();
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [membersList, setMembersList] = useState([]);
+  // const [isModalVisible, setIsModalVisible] = useState(false);
+  // const [membersList, setMembersList] = useState([]);
   const [applaudList, setApplaudList] = useState([]);
   const [receivedApplaudList, setReceivedApplaudList] = useState([]);
   const [receivedApplaudListVisible, setReceivedApplaudListVisible] =
@@ -18,35 +19,35 @@ function Applaud({ user }) {
   const [editMode, setEditMode] = useState(false);
   const [updateData, setUpdateData] = useState({});
 
-  const showModal = () => {
-    setIsModalVisible(true);
-  };
+  // const showModal = () => {
+  //   setIsModalVisible(true);
+  // };
 
-  const onCancel = () => {
-    setIsModalVisible(false);
-    applaudform.resetFields();
-  };
+  // const onCancel = () => {
+  //   setIsModalVisible(false);
+  //   applaudform.resetFields();
+  // };
 
-  const validateMessages = {
-    required: "${label} is required!",
-  };
+  // const validateMessages = {
+  //   required: "${label} is required!",
+  // };
 
-  async function fetchMember() {
-    await fetch("/api/team/" + user.organization_id, {
-      method: "GET",
-    })
-      .then((res) => res.json())
-      .then((res) => {
-        if (res.status === 200) {
-          let data = res.data.filter((item) => item.id != user.id);
-          setMembersList(data);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-        setMembersList([]);
-      });
-  }
+  // async function fetchMember() {
+  //   await fetch("/api/team/" + user.organization_id, {
+  //     method: "GET",
+  //   })
+  //     .then((res) => res.json())
+  //     .then((res) => {
+  //       if (res.status === 200) {
+  //         let data = res.data.filter((item) => item.id != user.id);
+  //         setMembersList(data);
+  //       }
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //       setMembersList([]);
+  //     });
+  // }
   async function fetchApplaud() {
     setLoading(true);
     await fetch("/api/applaud/" + user.id, { method: "GET" })
@@ -102,15 +103,15 @@ function Applaud({ user }) {
       .catch((err) => fetchApplaud([]));
   }
 
-  const onFinish = (values) => {
-    let obj = {
-      user_id: values.user_id,
-      comment: values.comment,
-      created_by: user.id,
-    };
+  // const onFinish = (values) => {
+  //   let obj = {
+  //     user_id: values.user_id,
+  //     comment: values.comment,
+  //     created_by: user.id,
+  //   };
 
-    editMode ? updateApplaud(obj) : addApplaud(obj);
-  };
+  //   editMode ? updateApplaud(obj) : addApplaud(obj);
+  // };
 
   async function onDelete(id) {
     if (id) {
@@ -147,7 +148,7 @@ function Applaud({ user }) {
   };
 
   useEffect(() => {
-    fetchMember();
+    // fetchMember();
     fetchApplaud();
     fetchReceivedApplaud();
   }, []);
@@ -207,12 +208,16 @@ function Applaud({ user }) {
         <div className="container mx-auto max-w-full">
           <div className="md:flex justify-end">
             <div className="my-3 mx-3 ">
-              <button
-                className="primary-bg-btn text-white text-sm py-3 text-center px-4 rounded-md w-full"
-                onClick={showModal}
-              >
-                Create Applaud
-              </button>
+              <div>
+                <Link href="/applaud/add">
+                  <button
+                    className="primary-bg-btn text-white text-sm py-3 text-center px-4 rounded-md w-full"
+                    // onClick={showModal}
+                  >
+                    Create Applaud
+                  </button>
+                </Link>
+              </div>
             </div>
           </div>
 
@@ -335,7 +340,7 @@ function Applaud({ user }) {
             </Col>
           </Row>
 
-          <Modal
+          {/* <Modal
             title={editMode ? "Update" : "Create Applaud"}
             visible={isModalVisible}
             onOk={applaudform.submit}
@@ -401,7 +406,7 @@ function Applaud({ user }) {
                 </Col>
               </Row>
             </Form>
-          </Modal>
+          </Modal> */}
         </div>
       </div>
     </div>

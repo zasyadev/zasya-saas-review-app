@@ -128,14 +128,14 @@ function ReviewManagement({ user }) {
 
   async function fetchUserData() {
     setUserList([]);
-    await fetch("/api/user/oraganizationId/" + user.organization_id, {
+    await fetch("/api/user/organizationId/" + user.organization_id, {
       method: "GET",
     })
       .then((response) => response.json())
       .then((response) => {
         if (response.status === 200) {
           let data = response.data.filter(
-            (item) => item.status && item.id != user.id
+            (item) => item.status === 1 && item.id != user.id
           );
           setUserList(data);
         }
@@ -216,17 +216,20 @@ function ReviewManagement({ user }) {
       title: "Review Name",
       key: "review_name",
       render: (_, record) => (
-        <p
-          // onClick={() => {
-          //   record.is_published === "published"
-          //     ? setReviewAssignee(true)
-          //     : null;
-          //   setReviewAssigneeData(record);
-          // }}
-          className="cursor-pointer underline"
-        >
-          <Link href={`/review/${record.id}`}>{record.review_name}</Link>
-        </p>
+        <div className="flex">
+          {/* onClick={() => { 
+        //   record.is_published === "published"
+        //     ? setReviewAssignee(true)
+        //     : null;
+        //   setReviewAssigneeData(record);
+        // }}*/}
+
+          <Link href={`/review/${record.id}`}>
+            <p className="cursor-pointer underline text-gray-500">
+              {record.review_name}
+            </p>
+          </Link>
+        </div>
       ),
     },
     {

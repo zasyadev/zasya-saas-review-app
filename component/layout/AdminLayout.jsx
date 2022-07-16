@@ -51,11 +51,11 @@ function AdminLayout(props) {
     //   getItem("Groups", "/admin/team/groups"),
     //   getItem("Members", "/admin/team/members"),
     // ]),
-    getItem(
-      "Team",
-      "/team/members",
-      <AppstoreOutlined className="sidebar-icon " />
-    ),
+    // getItem(
+    //   "Team",
+    //   "/team/members",
+    //   <AppstoreOutlined className="sidebar-icon " />
+    // ),
     getItem("Applaud", "/applaud", <LikeOutlined className="sidebar-icon " />),
 
     getItem(

@@ -1,47 +1,48 @@
 import React, { useEffect, useState } from "react";
-import { useRouter } from "next/router";
+
 import AdminLayout from "../../../component/layout/AdminLayout";
 import { getSession } from "next-auth/client";
-import AddEditReviewComponent from "../../../component/Review/AddEditReviewComponent";
+import AddTeamComponent from "../../../component/Team/AddTeamComponent";
+import { useRouter } from "next/router";
 
-function ReviewEdit({ user }) {
-  const [reviewData, setReviewData] = useState({});
-
+function EditTeam({ user }) {
   const router = useRouter();
-  const { review_id } = router.query;
+  const { user_id } = router.query;
+  const [memberData, setMemberData] = useState({});
 
-  const fetchReviewData = async (review_id) => {
-    setLoading(true);
-    setReviewData({});
-    await fetch("/api/review/edit/" + review_id, {
+  async function fetchTeamData(id) {
+    // setLoading(true);
+    setMemberData([]);
+    await fetch("/api/team/edit/" + id, {
       method: "GET",
     })
       .then((response) => response.json())
       .then((response) => {
         if (response.status === 200) {
-          setReviewData(response.data);
+          setMemberData(response.data);
         }
-        setLoading(false);
+        // setLoading(false);
       })
       .catch((err) => {
         console.log(err);
+        setMemberData([]);
       });
-  };
+  }
 
   useEffect(() => {
-    if (review_id) fetchReviewData(review_id);
-    else return;
+    if (user_id) fetchTeamData(user_id);
   }, []);
 
   return (
-    <AdminLayout user={user} title="Template">
-      <AddEditReviewComponent user={user} />
+    <AdminLayout user={user} title="">
+      {Object.keys(memberData).length > 0 && (
+        <AddTeamComponent user={user} memberData={memberData} editMode={true} />
+      )}
     </AdminLayout>
   );
 }
 
-export default ReviewEdit;
-
+export default EditTeam;
 export async function getServerSideProps(context) {
   const session = await getSession({ req: context.req });
 

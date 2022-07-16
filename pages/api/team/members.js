@@ -27,11 +27,26 @@ export default async (req, res) => {
           where: { email: resData.email },
         });
         let userData = {};
+        let passwordResetData = {};
 
         if (existingUser.length > 0) {
           userData = await transaction.user.update({
             where: { email: resData.email },
             data: { status: 1, deleted_date: null },
+          });
+
+          let mailData = {
+            from: process.env.SMTP_USER,
+            to: userData.email,
+            subject: `Successfully Registered on Zasya Review App`,
+            html: mailTemplate(
+              `You have successfull registered on Review App . Please <a href= ${process.env.NEXT_APP_URL}/auth/login>Login</a> in to continue with your Profile.`
+            ),
+          };
+
+          await mailService.sendMail(mailData, function (err, info) {
+            if (err) console.log("failed");
+            else console.log("successfull");
           });
         } else {
           userData = await transaction.user.create({
@@ -45,34 +60,32 @@ export default async (req, res) => {
               },
             });
           }
-        }
+          passwordResetData = await transaction.passwordReset.create({
+            data: {
+              email: { connect: { email: userData.email } },
+              // token: randomPassword(16),
+              token: await hashedPassword(resData.email),
+            },
+          });
+          let mailData = {
+            from: process.env.SMTP_USER,
+            to: userData.email,
+            subject: `Invitation to collaborate on Review App`,
+            html: mailTemplate(`
+            You have been invited to collaborate on Review app . Please <a href= ${process.env.NEXT_APP_URL}/resetpassword?passtoken=${passwordResetData.token}>click here</a> to collaborate with them now .
+            `),
+          };
 
-        const passwordResetData = await transaction.passwordReset.create({
-          data: {
-            email: { connect: { email: userData.email } },
-            // token: randomPassword(16),
-            token: await hashedPassword(resData.email),
-          },
-        });
+          await mailService.sendMail(mailData, function (err, info) {
+            if (err) console.log("failed");
+            else console.log("successfull");
+          });
+        }
 
         return {
           userData,
           passwordResetData,
         };
-      });
-
-      const mailData = {
-        from: process.env.SMTP_USER,
-        to: transactionData.userData.email,
-        subject: `Invitation to collaborate on Review App`,
-        html: mailTemplate(`
-        You have been invited to collaborate on Review app . Please <a href= ${process.env.NEXT_APP_URL}/resetpassword?passtoken=${transactionData.passwordResetData.token}>click here</a> to collaborate with them now .
-        `),
-      };
-
-      await mailService.sendMail(mailData, function (err, info) {
-        if (err) console.log("failed");
-        else console.log("successfull");
       });
 
       prisma.$disconnect();
@@ -113,6 +126,7 @@ export default async (req, res) => {
             pin_code: "",
             mobile: "",
             status: resData.status,
+            role_id: resData.role,
             UserTags: {
               update: {
                 tags: resData.tags,
