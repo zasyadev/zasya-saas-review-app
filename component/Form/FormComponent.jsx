@@ -252,7 +252,7 @@ function FormComponent({
   return (
     <div className="w-full  md:w-4/6 mx-auto">
       <div className="w-full bg-white rounded-xl shadow-md p-4 mt-4 add-template-wrapper">
-        <div className="  rounded-t-md  mt-1">
+        <div className="rounded-t-md  mt-1">
           <div className="w-full flex flex-col items-start  pt-2 pb-5 ">
             <Input
               placeholder="Template Title"

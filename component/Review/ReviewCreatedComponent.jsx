@@ -269,7 +269,7 @@ function ReviewCreatedComponent({ user, reviewData }) {
                             header={
                               <div className="flex items-center">
                                 <CalendarOutlined />
-                                <p className="ml-3">
+                                <p className="ml-3 my-auto">
                                   {moment(key, "YYYY-MM-DD").format(
                                     datePattern
                                   )}

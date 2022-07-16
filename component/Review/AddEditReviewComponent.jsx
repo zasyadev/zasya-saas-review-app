@@ -100,14 +100,14 @@ function AddEditReviewComponent({ editMode, user }) {
 
   async function fetchUserData() {
     setUserList([]);
-    await fetch("/api/user/oraganizationId/" + user.organization_id, {
+    await fetch("/api/user/organizationId/" + user.organization_id, {
       method: "GET",
     })
       .then((response) => response.json())
       .then((response) => {
         if (response.status === 200) {
           let data = response.data.filter(
-            (item) => item.status && item.id != user.id
+            (item) => item.status == 1 && item.id != user.id
           );
           setUserList(data);
         }
@@ -219,7 +219,7 @@ function AddEditReviewComponent({ editMode, user }) {
         </>
       ) : (
         <div className="w-full  md:w-4/6 mx-auto">
-          <div className="w-full bg-white rounded-xl shadow-md p-4 mt-4 template-wrapper">
+          <div className="w-full bg-white rounded-xl shadow-md p-4 mt-4 add-template-wrapper">
             <div className="  rounded-t-md  mt-1">
               <div className="add-review-from w-full flex flex-col items-start  pt-2 pb-5 ">
                 <Form

@@ -14,18 +14,13 @@ export default async (req, res) => {
             UserTags: true,
           },
         });
-        const filterdata = data
-          .filter((item) => item.status === 1)
-          .map((item) => {
-            delete item.password;
-            return item;
-          });
 
         prisma.$disconnect();
         if (data) {
+          delete data.password;
           return res.status(200).json({
             status: 200,
-            data: filterdata,
+            data: data,
             message: "User Details Retrieved",
           });
         }

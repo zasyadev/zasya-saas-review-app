@@ -15,7 +15,7 @@ export default async (req, res) => {
           },
         });
         const filterdata = data
-          .filter((item) => item.status === 1)
+          // .filter((item) => item.status === 1)
           .map((item) => {
             delete item.password;
             return item;

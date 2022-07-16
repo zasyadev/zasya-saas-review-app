@@ -15,7 +15,10 @@ export default async (req, res) => {
           },
         });
         const filterdata = data
-          .filter((item) => item.role_id === 4 && item.status === 1)
+          .filter(
+            (item) =>
+              (item.role_id === 4 || item.role_id === 3) && item.status === 1
+          )
           .map((item) => {
             delete item.password;
             return item;

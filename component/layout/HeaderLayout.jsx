@@ -34,12 +34,16 @@ function HeaderLayout({ title, pageName, user }) {
           key: "template",
           label: <Link href="/template/add">Template</Link>,
         },
+        {
+          key: "applaud",
+          label: <Link href="/applaud/add">Applaud</Link>,
+        },
       ]}
     />
   );
   return (
     <Header className="ant-header bg-color-dashboard border-b border-b-neutral-300 p-0">
-      <Row className="items-center">
+      <Row className="items-center h-full">
         <Col md={16} xs={12}>
           <div className="flex justify-between items-center mt-2">
             <div className=" font-bold mx-3 md:mx-6 text-2xl primary-color-blue">
@@ -100,7 +104,7 @@ function HeaderLayout({ title, pageName, user }) {
             overlayClassName="logout-dropdown "
             placement="bottomRight"
           >
-            <div className=" flex items-center mt-2 user-menu-wrapper py-1 px-4 cursor-pointer rounded-md">
+            <div className=" flex items-center user-menu-wrapper py-1 px-4 cursor-pointer rounded-md">
               <div className="rounded-md flex justify-between mr-3 ">
                 <Image src={User} alt="user" width={38} height={38} />
               </div>

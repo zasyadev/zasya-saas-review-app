@@ -14,6 +14,7 @@ import {
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { openNotificationBox } from "../../helpers/notification";
 import CustomTable from "../../helpers/CustomTable";
+import Link from "next/link";
 // import SiderRight from "../SiderRight/SiderRight";
 
 function TeamMembers({ user }) {
@@ -24,9 +25,9 @@ function TeamMembers({ user }) {
   const [editMode, setEditMode] = useState(false);
   const [upadteData, setUpdateData] = useState({});
 
-  const showModal = () => {
-    setIsModalVisible(true);
-  };
+  // const showModal = () => {
+  //   setIsModalVisible(true);
+  // };
 
   async function onFinish(values) {
     let obj = {
@@ -37,54 +38,54 @@ function TeamMembers({ user }) {
     editMode ? updatingMember(obj) : addingMember(obj);
   }
 
-  async function addingMember(obj) {
-    (obj.status = 0),
-      await fetch("/api/team/members", {
-        method: "POST",
-        body: JSON.stringify(obj),
-        // headers: {
-        //   "Content-Type": "application/json",
-        // },
-      })
-        .then((response) => response.json())
-        .then((response) => {
-          if (response.status === 200) {
-            form.resetFields();
-            setIsModalVisible(false);
-            fetchMembersData();
-            openNotificationBox("success", response.message, 3);
-          } else {
-            openNotificationBox("error", response.message, 3);
-          }
-        })
-        .catch((err) => console.log(err));
-  }
-  async function updatingMember(obj) {
-    if (upadteData.id) {
-      (obj.tag_id = upadteData?.UserTags?.id), 0;
-      (obj.status = 1),
-        await fetch("/api/team/members", {
-          method: "PUT",
-          body: JSON.stringify(obj),
-          // headers: {
-          //   "Content-Type": "application/json",
-          // },
-        })
-          .then((response) => response.json())
-          .then((response) => {
-            if (response.status === 200) {
-              fetchMembersData();
-              form.resetFields();
-              setIsModalVisible(false);
-              setEditMode(false);
-              openNotificationBox("success", response.message, 3);
-            } else {
-              openNotificationBox("error", response.message, 3);
-            }
-          })
-          .catch((err) => console.log(err));
-    }
-  }
+  // async function addingMember(obj) {
+  //   (obj.status = 0),
+  //     await fetch("/api/team/members", {
+  //       method: "POST",
+  //       body: JSON.stringify(obj),
+  //       // headers: {
+  //       //   "Content-Type": "application/json",
+  //       // },
+  //     })
+  //       .then((response) => response.json())
+  //       .then((response) => {
+  //         if (response.status === 200) {
+  //           form.resetFields();
+  //           setIsModalVisible(false);
+  //           fetchMembersData();
+  //           openNotificationBox("success", response.message, 3);
+  //         } else {
+  //           openNotificationBox("error", response.message, 3);
+  //         }
+  //       })
+  //       .catch((err) => console.log(err));
+  // }
+  // async function updatingMember(obj) {
+  //   if (upadteData.id) {
+  //     (obj.tag_id = upadteData?.UserTags?.id), 0;
+  //     (obj.status = 1),
+  //       await fetch("/api/team/members", {
+  //         method: "PUT",
+  //         body: JSON.stringify(obj),
+  //         // headers: {
+  //         //   "Content-Type": "application/json",
+  //         // },
+  //       })
+  //         .then((response) => response.json())
+  //         .then((response) => {
+  //           if (response.status === 200) {
+  //             fetchMembersData();
+  //             form.resetFields();
+  //             setIsModalVisible(false);
+  //             setEditMode(false);
+  //             openNotificationBox("success", response.message, 3);
+  //           } else {
+  //             openNotificationBox("error", response.message, 3);
+  //           }
+  //         })
+  //         .catch((err) => console.log(err));
+  //   }
+  // }
   async function onDelete(email) {
     if (email) {
       await fetch("/api/team/members", {
@@ -190,10 +191,12 @@ function TeamMembers({ user }) {
       key: "action",
       render: (_, record) => (
         <p>
-          <EditOutlined
-            className="primary-color-blue text-xl mx-1  md:mx-2 cursor-pointer"
-            onClick={() => onUpdate(record)}
-          />
+          <Link href={`/team/edit/${record.id}`}>
+            <EditOutlined
+              className="primary-color-blue text-xl mx-1  md:mx-2 cursor-pointer"
+              // onClick={() => onUpdate(record)}
+            />
+          </Link>
 
           <Popconfirm
             title={`Are you sure to delete ${
@@ -230,12 +233,14 @@ function TeamMembers({ user }) {
 
                 <div className="md:flex justify-end">
                   <div className="my-2 ">
-                    <button
-                      className="primary-bg-btn text-white text-sm md:py-3 py-2 text-center md:px-4 px-2 rounded-md w-full"
-                      onClick={() => showModal()}
-                    >
-                      Create Team
-                    </button>
+                    <Link href="/team/add">
+                      <button
+                        className="primary-bg-btn text-white text-sm md:py-3 py-2 text-center md:px-4 px-2 rounded-md w-full"
+                        // onClick={() => showModal()}
+                      >
+                        Create Team
+                      </button>
+                    </Link>
                   </div>
                 </div>
 
