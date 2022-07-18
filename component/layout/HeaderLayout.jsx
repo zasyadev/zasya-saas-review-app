@@ -4,6 +4,7 @@ import {
   UserOutlined,
   LogoutOutlined,
   UsergroupAddOutlined,
+  UserSwitchOutlined,
 } from "@ant-design/icons";
 import Image from "next/image";
 import Link from "next/link";
@@ -62,7 +63,15 @@ function HeaderLayout({ title, pageName, user }) {
           </Link>
         </Menu.Item>
       )}
-      <Menu.SubMenu key="org" title="Switch Teams">
+      <Menu.SubMenu
+        key="org"
+        title={
+          <span className="switch-team-dropdown">
+            <UserSwitchOutlined />
+            <span className="ml-1">Switch Teams</span>
+          </span>
+        }
+      >
         {user.UserOraganizationGroups.length > 0
           ? user.UserOraganizationGroups.map((item) => {
               return (
@@ -73,7 +82,6 @@ function HeaderLayout({ title, pageName, user }) {
                       changeOragnizationHandle(item.organization_id);
                     }}
                   >
-                    <UsergroupAddOutlined />{" "}
                     <span className="span-text capitalize">
                       {item?.organization?.company_name}
                     </span>
