@@ -135,11 +135,11 @@ function ReviewCreatedComponent({ user, reviewData }) {
                   <ShareIcon />
                 </div>
               </div>
-              <div className="flex  primary-color-blue md:mx-10">
+              <div className="flex  primary-color-blue md:mx-10 my-auto">
                 <p className="mr-1">Type:</p>
                 <p className="capitalize">{reviewData?.review_type}</p>
               </div>
-              <div className="flex  primary-color-blue">
+              <div className="flex  primary-color-blue my-auto">
                 <p className="">Created Date:</p>
                 <p>{moment(reviewData?.created_date).format(datePattern)}</p>
               </div>
@@ -159,10 +159,10 @@ function ReviewCreatedComponent({ user, reviewData }) {
           </div>
           <Row justify="space-between" gutter={[16, 16]}>
             <Col xs={24} md={6}>
-              <Row gutter={8} className="bg-white rounded-lg h-full py-6 ">
+              <Row gutter={8} className="bg-white rounded-lg h-full py-6">
                 <Col md={8} className="mx-auto my-auto">
                   <div className="flex     ">
-                    <div className="  bg-violet-300 mx-auto my-auto rounded-full ">
+                    <div className="answer-bg-icon mx-auto my-auto rounded-full ">
                       <div className="px-3 py-3">
                         <StarSmallIcon />
                       </div>
@@ -183,7 +183,7 @@ function ReviewCreatedComponent({ user, reviewData }) {
               <Row gutter={8} className="bg-white rounded-lg h-full py-6 ">
                 <Col md={8} className="mx-auto my-auto">
                   <div className="flex     ">
-                    <div className="  bg-violet-300 mx-auto my-auto rounded-full ">
+                    <div className="answer-bg-icon  mx-auto my-auto rounded-full ">
                       <div className="px-3 py-3">
                         <CalanderIcon />
                       </div>
@@ -218,7 +218,7 @@ function ReviewCreatedComponent({ user, reviewData }) {
               <Row gutter={8} className="bg-white rounded-lg h-full py-6">
                 <Col md={8} className="mx-auto my-auto">
                   <div className="flex     ">
-                    <div className="  bg-violet-300 mx-auto my-auto rounded-full ">
+                    <div className="answer-bg-icon mx-auto my-auto rounded-full ">
                       <div className="px-3 py-3">
                         <UserIcon />
                       </div>

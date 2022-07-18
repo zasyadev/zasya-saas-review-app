@@ -167,34 +167,34 @@ function DashBoard({ user }) {
                   <Row>
                     <Col xs={24} md={12}>
                       <Row className="">
-                        <Col xs={7} md={10}>
-                          <div className="p-2 mt-2 flex justify-center">
-                            <Image
-                              src={User1}
-                              alt="user "
-                              // width={40}
-                              // height={40}
-                            />
-                          </div>
-                        </Col>
-                        <Col xs={17} md={14}>
-                          <div className="flex  justify-between items-center">
-                            <div className="py-2 px-3">
-                              <p className="mb-2 primary-color-blue font-medium text-sm">
-                                Ankush Thakur
-                              </p>
-                              <p className="flex">
-                                <ApplaudIconSmall />
-                                <span className="pl-2 text-sm font-medium text-gray-500">
-                                  0
-                                </span>
-                              </p>
-                            </div>
-                          </div>
-                        </Col>
+                        {dashBoardData?.applaudData?.length > 0 &&
+                          dashBoardData?.applaudData.map((item) => (
+                            <>
+                              <Col xs={7} md={10}>
+                                <div className="p-2 mt-2 flex justify-center">
+                                  <Image src={User1} alt="user" />
+                                </div>
+                              </Col>
+                              <Col xs={17} md={14}>
+                                <div className="flex  justify-between items-center">
+                                  <div className="py-2 px-3">
+                                    <p className="mb-2 primary-color-blue font-medium text-sm">
+                                      {item?.created?.first_name}
+                                    </p>
+                                    <p className="flex">
+                                      <ApplaudIconSmall />
+                                      <span className="pl-2 text-sm font-medium text-gray-500">
+                                        0
+                                      </span>
+                                    </p>
+                                  </div>
+                                </div>
+                              </Col>
+                            </>
+                          ))}
                       </Row>
                     </Col>
-                    <Col xs={24} md={12}>
+                    {/* <Col xs={24} md={12}>
                       <Row className="">
                         <Col xs={7} md={10}>
                           <div className="p-2 mt-2 flex justify-center">
@@ -275,7 +275,7 @@ function DashBoard({ user }) {
                           </div>
                         </Col>
                       </Row>
-                    </Col>
+                    </Col> */}
                   </Row>
                 </div>
               </Col>
