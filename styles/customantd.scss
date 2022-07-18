@@ -694,3 +694,8 @@
 .answer-bg-icon {
   background-color: #dfe1ff;
 }
+.tag-select-box {
+  .ant-select-selection-item {
+    padding: 0 !important;
+  }
+}

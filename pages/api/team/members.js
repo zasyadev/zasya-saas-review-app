@@ -15,21 +15,22 @@ export default async (req, res) => {
       let createdUserData = await prisma.user.findUnique({
         where: { id: resData.created_by },
       });
+      if (existingData && createdUserData) {
+        let existingOrgUser = await prisma.userOraganizationGroups.findMany({
+          where: {
+            AND: [
+              { user_id: existingData.id },
+              { organization_id: createdUserData.organization_id },
+            ],
+          },
+        });
 
-      let existingOrgUser = await prisma.userOraganizationGroups.findMany({
-        where: {
-          AND: [
-            { user_id: existingData.id },
-            { organization_id: createdUserData.organization_id },
-          ],
-        },
-      });
-
-      if (existingOrgUser.length > 0) {
-        prisma.$disconnect();
-        return res
-          .status(409)
-          .json({ error: "409", message: "Duplicate Employee" });
+        if (existingOrgUser.length > 0) {
+          prisma.$disconnect();
+          return res
+            .status(409)
+            .json({ error: "409", message: "Duplicate Employee" });
+        }
       }
 
       const transactionData = await prisma.$transaction(async (transaction) => {
@@ -125,6 +126,7 @@ export default async (req, res) => {
         status: 200,
       });
     } catch (error) {
+      console.log(error);
       if (error.code === "P2014") {
         return res
           .status(409)
