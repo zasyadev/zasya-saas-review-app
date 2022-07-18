@@ -1,5 +1,4 @@
 import { Form, Input } from "antd";
-
 import { signIn } from "next-auth/client";
 import Image from "next/image";
 import Link from "next/link";
@@ -29,6 +28,7 @@ function LoginPage() {
         openNotificationBox("error", result.error, 3);
         return;
       }
+
       router.push("/dashboard");
     } catch (error) {
       setLoading(false);

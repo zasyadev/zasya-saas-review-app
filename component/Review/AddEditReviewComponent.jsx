@@ -47,7 +47,7 @@ function AddEditReviewComponent({ editMode, user }) {
       status: values.status ?? "pending",
       frequency: values.frequency,
       role_id: user.role_id,
-      organization_id: user.organization_id,
+      // organization_id: user.organization_id,
       is_published: values.is_published,
       templateData: templateData,
     });
@@ -100,7 +100,7 @@ function AddEditReviewComponent({ editMode, user }) {
 
   async function fetchUserData() {
     setUserList([]);
-    await fetch("/api/user/organizationId/" + user.organization_id, {
+    await fetch("/api/user/organizationId/" + user.id, {
       method: "GET",
     })
       .then((response) => response.json())
@@ -264,7 +264,7 @@ function AddEditReviewComponent({ editMode, user }) {
                     <Col md={12} xs={24}>
                       <Form.Item
                         name="template_id"
-                        label="Select Template "
+                        label={`Select Template`}
                         rules={[
                           {
                             required: true,

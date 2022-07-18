@@ -16,8 +16,8 @@ function AddApplaud({ user }) {
     required: "${label} is required!",
   };
 
-  async function fetchMember() {
-    await fetch("/api/team/" + user.organization_id, {
+  async function fetchMember(user) {
+    await fetch("/api/team/" + user.id, {
       method: "GET",
     })
       .then((res) => res.json())
@@ -85,7 +85,7 @@ function AddApplaud({ user }) {
   // }
 
   useEffect(() => {
-    fetchMember();
+    if (user) fetchMember(user);
   }, []);
 
   return (

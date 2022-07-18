@@ -7,6 +7,9 @@ export default async (req, res) => {
 
   if (req.method === "POST") {
     if (reqBody.userId) {
+      const userTableData = await prisma.user.findUnique({
+        where: { id: reqBody.userId },
+      });
       const reviewCreated = await prisma.review.findMany({
         where: { created_by: reqBody.userId },
         include: {
@@ -32,7 +35,7 @@ export default async (req, res) => {
       let reviewAnswered = await prisma.reviewAssigneeAnswers.findMany({
         where: {
           user: {
-            is: { organization_id: reqBody.orgId },
+            is: { organization_id: userTableData.organization_id },
           },
         },
       });
@@ -43,7 +46,7 @@ export default async (req, res) => {
       // }
 
       const userData = await prisma.user.findMany({
-        where: { organization_id: reqBody.orgId },
+        where: { organization_id: userTableData.organization_id },
       });
       const applaudData = await prisma.userApplaud.findMany({
         where: { user_id: reqBody.userId },

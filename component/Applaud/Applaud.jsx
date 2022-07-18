@@ -33,7 +33,7 @@ function Applaud({ user }) {
   // };
 
   // async function fetchMember() {
-  //   await fetch("/api/team/" + user.organization_id, {
+  //   await fetch("/api/team/" + user.id, {
   //     method: "GET",
   //   })
   //     .then((res) => res.json())

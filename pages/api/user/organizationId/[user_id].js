@@ -3,22 +3,22 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export default async (req, res) => {
-  const { organization_id } = req.query;
+  const { user_id } = req.query;
   try {
     if (req.method === "GET") {
-      if (organization_id) {
+      if (user_id) {
+        const userOrgData = await prisma.user.findUnique({
+          where: { id: user_id },
+        });
         const data = await prisma.user.findMany({
-          where: { organization_id: Number(organization_id) },
+          where: { organization_id: userOrgData.organization_id },
 
           include: {
             UserTags: true,
           },
         });
         const filterdata = data
-          .filter(
-            (item) =>
-              (item.role_id === 4 || item.role_id === 3) && item.status === 1
-          )
+          // .filter((item) => item.status === 1)
           .map((item) => {
             delete item.password;
             return item;

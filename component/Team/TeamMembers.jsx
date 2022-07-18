@@ -25,74 +25,13 @@ function TeamMembers({ user }) {
   const [editMode, setEditMode] = useState(false);
   const [upadteData, setUpdateData] = useState({});
 
-  // const showModal = () => {
-  //   setIsModalVisible(true);
-  // };
-
-  async function onFinish(values) {
-    let obj = {
-      ...values,
-      organization_id: user.organization_id,
-    };
-
-    editMode ? updatingMember(obj) : addingMember(obj);
-  }
-
-  // async function addingMember(obj) {
-  //   (obj.status = 0),
-  //     await fetch("/api/team/members", {
-  //       method: "POST",
-  //       body: JSON.stringify(obj),
-  //       // headers: {
-  //       //   "Content-Type": "application/json",
-  //       // },
-  //     })
-  //       .then((response) => response.json())
-  //       .then((response) => {
-  //         if (response.status === 200) {
-  //           form.resetFields();
-  //           setIsModalVisible(false);
-  //           fetchMembersData();
-  //           openNotificationBox("success", response.message, 3);
-  //         } else {
-  //           openNotificationBox("error", response.message, 3);
-  //         }
-  //       })
-  //       .catch((err) => console.log(err));
-  // }
-  // async function updatingMember(obj) {
-  //   if (upadteData.id) {
-  //     (obj.tag_id = upadteData?.UserTags?.id), 0;
-  //     (obj.status = 1),
-  //       await fetch("/api/team/members", {
-  //         method: "PUT",
-  //         body: JSON.stringify(obj),
-  //         // headers: {
-  //         //   "Content-Type": "application/json",
-  //         // },
-  //       })
-  //         .then((response) => response.json())
-  //         .then((response) => {
-  //           if (response.status === 200) {
-  //             fetchMembersData();
-  //             form.resetFields();
-  //             setIsModalVisible(false);
-  //             setEditMode(false);
-  //             openNotificationBox("success", response.message, 3);
-  //           } else {
-  //             openNotificationBox("error", response.message, 3);
-  //           }
-  //         })
-  //         .catch((err) => console.log(err));
-  //   }
-  // }
   async function onDelete(email) {
     if (email) {
       await fetch("/api/team/members", {
         method: "DELETE",
         body: JSON.stringify({
           email: email,
-          organization_id: user.organization_id,
+          created_by: user.id,
         }),
         // headers: {
         //   "Content-Type": "application/json",
@@ -114,7 +53,7 @@ function TeamMembers({ user }) {
   async function fetchMembersData() {
     setLoading(true);
     setMembersList([]);
-    await fetch("/api/team/" + user.organization_id, {
+    await fetch("/api/team/" + user.id, {
       method: "GET",
     })
       .then((response) => response.json())
@@ -169,18 +108,19 @@ function TeamMembers({ user }) {
     {
       title: "Name",
       key: "id",
-      render: (_, record) => record.first_name + " " + record.last_name,
+      render: (_, record) =>
+        record?.user.first_name + " " + record?.user?.last_name,
     },
     {
       title: "Email",
-      render: (_, record) => record.email,
+      render: (_, record) => record?.user.email,
     },
     {
       title: "Tags",
 
       render: (_, record) =>
-        record?.UserTags?.tags?.length > 0
-          ? record?.UserTags?.tags.map((item, index) => (
+        record?.user?.UserTags?.tags?.length > 0
+          ? record?.user?.UserTags?.tags.map((item, index) => (
               <span className="mx-2" key={index + "tags"}>
                 {item}
               </span>
@@ -289,14 +229,7 @@ function TeamMembers({ user }) {
             </Button>
           </>,
         ]}
-      >
-        <Form
-          layout="vertical"
-          form={form}
-          onFinish={onFinish}
-          validateMessages={validateMessages}
-        ></Form>
-      </Modal>
+      ></Modal>
     </>
   );
 }

@@ -12,7 +12,7 @@ function AddTeamComponent({ user, editMode, memberData }) {
   async function onFinish(values) {
     let obj = {
       ...values,
-      organization_id: user.organization_id,
+      created_by: user.id,
     };
 
     editMode ? updatingMember(obj) : addingMember(obj);

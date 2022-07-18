@@ -30,7 +30,6 @@ function DashBoard({ user }) {
       method: "POST",
       body: JSON.stringify({
         userId: user.id,
-        orgId: user.organization_id,
         role: user.role_id,
       }),
     })

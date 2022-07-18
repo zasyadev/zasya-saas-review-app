@@ -14,7 +14,7 @@ export default async (req, res) => {
         },
       });
 
-      if (orgData.id) {
+      if (orgData) {
         return res
           .status(400)
           .json({ error: "error", message: "Duplicate Company Name" });
@@ -47,6 +47,18 @@ export default async (req, res) => {
             data: userobj,
           });
 
+          const userOrgGroupData =
+            await transaction.userOraganizationGroups.create({
+              data: {
+                user: { connect: { id: savedData.id } },
+                role: { connect: { id: userData.role } },
+                organization: {
+                  connect: { id: organization.id },
+                },
+                status: true,
+              },
+            });
+
           return {
             savedData,
           };
@@ -73,6 +85,7 @@ export default async (req, res) => {
         status: 200,
       });
     } catch (error) {
+      console.log(error);
       if (error.code == "P2002") {
         return res
           .status(500)
