@@ -716,3 +716,8 @@
   font-size: 1.5rem !important;
   line-height: 2rem !important;
 }
+.full-width-label {
+  .ant-form-item-label label {
+    width: 100%;
+  }
+}

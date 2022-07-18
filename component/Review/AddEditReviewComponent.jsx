@@ -261,10 +261,17 @@ function AddEditReviewComponent({ editMode, user }) {
                       </Form.Item>
                     </Col>
 
-                    <Col md={12} xs={24}>
+                    <Col md={12} xs={24} className="full-width-label">
                       <Form.Item
                         name="template_id"
-                        label={`Select Template`}
+                        label={
+                          <div className="w-full flex justify-between">
+                            <p>Select Template</p>
+                            <Link href="/template/add">
+                              <p className="cursor-pointer text-xs">Create</p>
+                            </Link>
+                          </div>
+                        }
                         rules={[
                           {
                             required: true,
@@ -309,11 +316,20 @@ function AddEditReviewComponent({ editMode, user }) {
                     </Col>
 
                     {/* {memberDetails && ( */}
-                    <Col md={12} xs={24}>
+                    <Col md={12} xs={24} className="full-width-label">
                       <Form.Item
                         className="select-tag"
                         name="assigned_to_id"
-                        label="Select Member(s)"
+                        label={
+                          <div className="w-full flex justify-between">
+                            <p>Select Member(s)</p>
+                            {user?.role_id === 2 ? (
+                              <Link href="/team/add">
+                                <p className="cursor-pointer text-xs">Create</p>
+                              </Link>
+                            ) : null}
+                          </div>
+                        }
                         rules={[
                           {
                             required: true,
