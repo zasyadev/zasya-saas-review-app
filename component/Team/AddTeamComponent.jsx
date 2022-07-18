@@ -90,7 +90,7 @@ function AddTeamComponent({ user, editMode, memberData }) {
   return (
     <div>
       <div className="w-full  md:w-3/6 mx-auto">
-        <div className="w-full bg-white rounded-xl shadow-md p-4 mt-4 add-review-from">
+        <div className="w-full bg-white rounded-xl shadow-md p-4 mt-4 add-template-wrapper">
           <div className="  rounded-t-md  mt-1">
             {" "}
             <Form
