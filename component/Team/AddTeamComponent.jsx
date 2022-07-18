@@ -12,7 +12,7 @@ function AddTeamComponent({ user, editMode, memberData }) {
   async function onFinish(values) {
     let obj = {
       ...values,
-      organization_id: user.organization_id,
+      created_by: user.id,
     };
 
     editMode ? updatingMember(obj) : addingMember(obj);
@@ -90,7 +90,7 @@ function AddTeamComponent({ user, editMode, memberData }) {
   return (
     <div>
       <div className="w-full  md:w-3/6 mx-auto">
-        <div className="w-full bg-white rounded-xl shadow-md p-4 mt-4 add-review-from">
+        <div className="w-full bg-white rounded-xl shadow-md p-4 mt-4 add-template-wrapper">
           <div className="  rounded-t-md  mt-1">
             {" "}
             <Form
@@ -103,20 +103,7 @@ function AddTeamComponent({ user, editMode, memberData }) {
                 <Col md={12} xs={24} lg={12}>
                   <Form.Item
                     name="first_name"
-                    label="First Name"
-                    rules={[
-                      {
-                        required: true,
-                      },
-                    ]}
-                  >
-                    <Input />
-                  </Form.Item>
-                </Col>
-                <Col md={12} xs={24} lg={12}>
-                  <Form.Item
-                    name="last_name"
-                    label="Last Name"
+                    label="Name"
                     rules={[
                       {
                         required: true,

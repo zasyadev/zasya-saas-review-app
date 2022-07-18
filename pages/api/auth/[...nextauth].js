@@ -18,6 +18,13 @@ export default NextAuth({
           where: {
             email: credentials.email,
           },
+          include: {
+            UserOraganizationGroups: {
+              include: {
+                organization: true,
+              },
+            },
+          },
         });
 
         if (!user) {

@@ -9,30 +9,59 @@ export default async (req, res) => {
     try {
       const resData = JSON.parse(req.body);
 
+      let existingData = await prisma.user.findUnique({
+        where: { email: resData.email },
+      });
+      let createdUserData = await prisma.user.findUnique({
+        where: { id: resData.created_by },
+      });
+
+      let existingOrgUser = await prisma.userOraganizationGroups.findMany({
+        where: {
+          AND: [
+            { user_id: existingData.id },
+            { organization_id: createdUserData.organization_id },
+          ],
+        },
+      });
+
+      if (existingOrgUser.length > 0) {
+        prisma.$disconnect();
+        return res
+          .status(409)
+          .json({ error: "409", message: "Duplicate Employee" });
+      }
+
       const transactionData = await prisma.$transaction(async (transaction) => {
         let userobj = {
           email: resData.email,
           // password: await hashedPassword(password),
           first_name: resData.first_name,
-          last_name: resData.last_name,
+          last_name: resData.last_name ?? "",
           address: "",
           pin_code: "",
           mobile: "",
           status: resData.status,
           role: { connect: { id: resData.role } },
-          organization: { connect: { id: resData.organization_id } },
+          organization: { connect: { id: createdUserData.organization_id } },
         };
 
-        let existingUser = await transaction.user.findMany({
+        let existingUser = await transaction.user.findUnique({
           where: { email: resData.email },
         });
         let userData = {};
         let passwordResetData = {};
 
-        if (existingUser.length > 0) {
-          userData = await transaction.user.update({
-            where: { email: resData.email },
-            data: { status: 1, deleted_date: null },
+        if (existingUser) {
+          userData = await transaction.userOraganizationGroups.create({
+            data: {
+              user: { connect: { id: existingUser.id } },
+              role: { connect: { id: resData.role } },
+              organization: {
+                connect: { id: createdUserData.organization_id },
+              },
+              status: true,
+            },
           });
 
           let mailData = {
@@ -116,24 +145,53 @@ export default async (req, res) => {
     try {
       const resData = JSON.parse(req.body);
 
+      let createdUserData = await prisma.user.findUnique({
+        where: { id: resData.created_by },
+      });
+
       const transactionData = await prisma.$transaction(async (transaction) => {
-        const userData = await transaction.user.update({
+        let existingData = await transaction.user.findUnique({
           where: { email: resData.email },
-          data: {
-            first_name: resData.first_name,
-            last_name: resData.last_name,
-            address: "",
-            pin_code: "",
-            mobile: "",
-            status: resData.status,
-            role_id: resData.role,
-            UserTags: {
-              update: {
-                tags: resData.tags,
+        });
+
+        let existingOrgUser =
+          await transaction.userOraganizationGroups.findMany({
+            where: {
+              AND: [
+                { user_id: existingData.id },
+                { organization_id: createdUserData.organization_id },
+              ],
+            },
+          });
+
+        let userData = {};
+        if (existingOrgUser.length > 0) {
+          userData = await transaction.user.update({
+            where: { email: resData.email },
+            data: {
+              first_name: resData.first_name,
+              last_name: resData.last_name ?? "",
+              address: "",
+              pin_code: "",
+              mobile: "",
+              status: resData.status,
+              role_id: resData.role,
+              UserTags: {
+                update: {
+                  tags: resData.tags,
+                },
               },
             },
-          },
-        });
+          });
+          const userOrgData = await transaction.userOraganizationGroups.update({
+            where: { id: existingOrgUser[0].id },
+            data: {
+              role_id: resData.role,
+            },
+          });
+        } else {
+          userData = null;
+        }
 
         return {
           userData,
@@ -141,13 +199,17 @@ export default async (req, res) => {
       });
 
       prisma.$disconnect();
-
-      return res.status(200).json({
-        message: "Members Updated Successfully.",
-        status: 200,
-        data: transactionData.userData,
-      });
+      if (transactionData.userData) {
+        return res.status(200).json({
+          message: "Members Updated Successfully.",
+          status: 200,
+          data: transactionData.userData,
+        });
+      } else {
+        return res.status(500).json({ error: 500, message: "No record Found" });
+      }
     } catch (error) {
+      console.log(error);
       return res
         .status(500)
         .json({ error: error, message: "Internal Server Error" });
@@ -156,22 +218,41 @@ export default async (req, res) => {
     const reqBody = JSON.parse(req.body);
 
     if (reqBody.email) {
-      const transactionData = await prisma.$transaction(async (transaction) => {
-        const deletaData = await transaction.user.update({
-          where: { email: reqBody.email },
-          data: { status: 0, deleted_date: new Date() },
-        });
-
-        return { deletaData };
+      let existingData = await prisma.user.findUnique({
+        where: { email: reqBody.email },
+      });
+      let createdUserData = await prisma.user.findUnique({
+        where: { id: resData.created_by },
       });
 
+      let existingOrgUser = await prisma.userOraganizationGroups.findFirst({
+        where: {
+          AND: [
+            { user_id: existingData.id },
+            { organization_id: createdUserData.organization_id },
+          ],
+        },
+      });
       prisma.$disconnect();
-      if (transactionData.deletaData) {
+      if (existingOrgUser) {
+        const deleteData = await prisma.userOraganizationGroups.delete({
+          where: { id: existingOrgUser.id },
+        });
+
         return res.status(200).json({
           status: 200,
           message: "Members Deleted Successfully.",
         });
       }
+      // const transactionData = await prisma.$transaction(async (transaction) => {
+      //   const deletaData = await transaction.user.update({
+      //     where: { email: reqBody.email },
+      //     data: { status: 0, deleted_date: new Date() },
+      //   });
+
+      //   return { deletaData };
+      // });
+
       return res.status(400).json({
         status: 400,
         message: "Failed To Delete Record.",

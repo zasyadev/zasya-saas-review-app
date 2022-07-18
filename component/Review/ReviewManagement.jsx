@@ -55,7 +55,7 @@ function ReviewManagement({ user }) {
           status: values.status ?? "pending",
           frequency: values.frequency,
           role_id: user.role_id,
-          organization_id: user.organization_id,
+          // organization_id: user.organization_id,
           is_published: values.is_published ? "published" : "draft",
         });
   }
@@ -128,7 +128,7 @@ function ReviewManagement({ user }) {
 
   async function fetchUserData() {
     setUserList([]);
-    await fetch("/api/user/organizationId/" + user.organization_id, {
+    await fetch("/api/user/organizationId/" + user.id, {
       method: "GET",
     })
       .then((response) => response.json())
@@ -512,7 +512,7 @@ function ReviewManagement({ user }) {
                 <Col md={12} xs={24}>
                   <Form.Item
                     name="assigned_to_id"
-                    label="Employee Name"
+                    label="Member Name"
                     rules={[
                       {
                         required: true,

@@ -9,6 +9,9 @@ export default async (req, res) => {
       const resData = JSON.parse(req.body);
 
       const transactionData = await prisma.$transaction(async (transaction) => {
+        const userOrgData = await transaction.user.findUnique({
+          where: { id: resData.created_by },
+        });
         const questionData = resData.templateData.form_data.questions.map(
           (item) => {
             const optionData = item.options.map((opitem) => {
@@ -56,7 +59,7 @@ export default async (req, res) => {
           status: resData.status,
           frequency: resData.frequency,
           review_type: resData.review_type,
-          organization: { connect: { id: resData.organization_id } },
+          organization: { connect: { id: userOrgData.organization_id } },
           role: { connect: { id: resData.role_id } },
           parent_id: resData.created_by,
           is_published: resData.is_published,

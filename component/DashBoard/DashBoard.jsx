@@ -3,15 +3,12 @@ import { Col, Row } from "antd/lib/grid";
 import Image from "next/image";
 import threeUser from "../../assets/Icon/threeusers.png";
 import ReviewIcon from "../../assets/Icon/reviewicon.png";
-import UserIcon from "../../assets/images/User.png";
 import User1 from "../../assets/images/User1.png";
 import User2 from "../../assets/images/User2.png";
 import User3 from "../../assets/images/User3.png";
 import User4 from "../../assets/images/User4.png";
 import dynamic from "next/dynamic";
-
 import { SmallApplaudIcon, ApplaudIconSmall } from "../../assets/Icon/icons";
-
 import { Skeleton } from "antd";
 
 const SiderRight = dynamic(() => import("../SiderRight/SiderRight"), {
@@ -25,6 +22,7 @@ const BarChart = dynamic(() => import("../../helpers/Charts"), {
 function DashBoard({ user }) {
   const [dashBoardData, setDashboardData] = useState({});
   const [loading, setLoading] = useState(false);
+  const [totalRating, setTotalRating] = useState(0);
 
   async function fetchDashboardData() {
     setDashboardData([]);
@@ -32,13 +30,14 @@ function DashBoard({ user }) {
       method: "POST",
       body: JSON.stringify({
         userId: user.id,
-        orgId: user.organization_id,
         role: user.role_id,
       }),
     })
       .then((response) => response.json())
       .then((response) => {
         if (response.status === 200) {
+          if (response.data.reviewRating.length > 0)
+            ratingHandler(response.data.reviewRating);
           setDashboardData(response.data);
         }
       })
@@ -46,6 +45,30 @@ function DashBoard({ user }) {
         setDashboardData([]);
       });
   }
+
+  const ratingHandler = (data) => {
+    let sum = 0;
+    let total = data.map((item) => {
+      if (item.ReviewAssigneeAnswers.length > 0) {
+        let totalrating = item.ReviewAssigneeAnswers.reduce((prev, curr) => {
+          if (curr?.ReviewAssigneeAnswerOption?.length > 0) {
+            return (
+              Number(prev) + Number(curr?.ReviewAssigneeAnswerOption[0].option)
+            );
+          } else return 0;
+        }, sum);
+        let averageRating =
+          Number(totalrating) / Number(item?.ReviewAssigneeAnswers?.length);
+        return averageRating;
+      } else return 0;
+    });
+    let avgSum = 0;
+    let avgRatingSum = total.reduce((prev, curr) => {
+      return Number(prev) + Number(curr);
+    }, avgSum);
+    let avgRating = avgRatingSum / total.length;
+    setTotalRating(Number(avgRating).toFixed(2));
+  };
 
   useEffect(() => {
     fetchDashboardData();
@@ -143,34 +166,34 @@ function DashBoard({ user }) {
                   <Row>
                     <Col xs={24} md={12}>
                       <Row className="">
-                        <Col xs={7} md={10}>
-                          <div className="p-2 mt-2 flex justify-center">
-                            <Image
-                              src={User1}
-                              alt="user "
-                              // width={40}
-                              // height={40}
-                            />
-                          </div>
-                        </Col>
-                        <Col xs={17} md={14}>
-                          <div className="flex  justify-between items-center">
-                            <div className="py-2 px-3">
-                              <p className="mb-2 primary-color-blue font-medium text-sm">
-                                Ankush Thakur
-                              </p>
-                              <p className="flex">
-                                <ApplaudIconSmall />
-                                <span className="pl-2 text-sm font-medium text-gray-500">
-                                  0
-                                </span>
-                              </p>
-                            </div>
-                          </div>
-                        </Col>
+                        {dashBoardData?.applaudData?.length > 0 &&
+                          dashBoardData?.applaudData.map((item) => (
+                            <>
+                              <Col xs={7} md={10}>
+                                <div className="p-2 mt-2 flex justify-center">
+                                  <Image src={User1} alt="user" />
+                                </div>
+                              </Col>
+                              <Col xs={17} md={14}>
+                                <div className="flex  justify-between items-center">
+                                  <div className="py-2 px-3">
+                                    <p className="mb-2 primary-color-blue font-medium text-sm">
+                                      {item?.created?.first_name}
+                                    </p>
+                                    <p className="flex">
+                                      <ApplaudIconSmall />
+                                      <span className="pl-2 text-sm font-medium text-gray-500">
+                                        0
+                                      </span>
+                                    </p>
+                                  </div>
+                                </div>
+                              </Col>
+                            </>
+                          ))}
                       </Row>
                     </Col>
-                    <Col xs={24} md={12}>
+                    {/* <Col xs={24} md={12}>
                       <Row className="">
                         <Col xs={7} md={10}>
                           <div className="p-2 mt-2 flex justify-center">
@@ -251,7 +274,7 @@ function DashBoard({ user }) {
                           </div>
                         </Col>
                       </Row>
-                    </Col>
+                    </Col> */}
                   </Row>
                 </div>
               </Col>
@@ -324,7 +347,7 @@ function DashBoard({ user }) {
         </div>
       </Col>
       <Col xs={24} sm={24} md={24} lg={7} className="mt-6 h-full  ">
-        <SiderRight data={dashBoardData} />
+        <SiderRight data={dashBoardData} totalRating={totalRating} />
       </Col>
     </Row>
   );

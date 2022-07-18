@@ -47,7 +47,7 @@ function AddEditReviewComponent({ editMode, user }) {
       status: values.status ?? "pending",
       frequency: values.frequency,
       role_id: user.role_id,
-      organization_id: user.organization_id,
+      // organization_id: user.organization_id,
       is_published: values.is_published,
       templateData: templateData,
     });
@@ -100,7 +100,7 @@ function AddEditReviewComponent({ editMode, user }) {
 
   async function fetchUserData() {
     setUserList([]);
-    await fetch("/api/user/organizationId/" + user.organization_id, {
+    await fetch("/api/user/organizationId/" + user.id, {
       method: "GET",
     })
       .then((response) => response.json())
@@ -221,7 +221,7 @@ function AddEditReviewComponent({ editMode, user }) {
         <div className="w-full  md:w-4/6 mx-auto">
           <div className="w-full bg-white rounded-xl shadow-md p-4 mt-4 add-template-wrapper">
             <div className="  rounded-t-md  mt-1">
-              <div className="add-review-from w-full flex flex-col items-start  pt-2 pb-5 ">
+              <div className=" w-full flex flex-col items-start  pt-2 pb-5 ">
                 <Form
                   layout="vertical"
                   form={form}
@@ -264,7 +264,7 @@ function AddEditReviewComponent({ editMode, user }) {
                     <Col md={12} xs={24}>
                       <Form.Item
                         name="template_id"
-                        label="Select Template "
+                        label={`Select Template`}
                         rules={[
                           {
                             required: true,

@@ -41,15 +41,15 @@ const LineChart = () => {
           show: false,
         },
       },
-      title: {
-        text: "Chart Gradient ",
-        style: {
-          fontSize: "16",
-          fontWeight: "500",
-          fontFamily: "Montserrat",
-          color: "#0f123f",
-        },
-      },
+      // title: {
+      //   text: "Chart Gradient ",
+      //   style: {
+      //     fontSize: "16",
+      //     fontWeight: "500",
+      //     fontFamily: "Montserrat",
+      //     color: "#0f123f",
+      //   },
+      // },
     },
   };
 

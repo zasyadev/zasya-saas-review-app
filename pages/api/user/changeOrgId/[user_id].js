@@ -4,30 +4,33 @@ const prisma = new PrismaClient();
 
 export default async (req, res) => {
   const { user_id } = req.query;
+  const reqBody = JSON.parse(req.body);
   try {
-    if (req.method === "GET") {
-      if (user_id) {
-        const data = await prisma.user.findUnique({
+    if (req.method === "POST") {
+      if (user_id && reqBody.org_id) {
+        let userData = await prisma.user.update({
           where: { id: user_id },
-          include: {
-            UserTags: true,
+          data: {
+            organization_id: reqBody.org_id,
           },
         });
 
         prisma.$disconnect();
-        if (data) {
-          delete data.password;
+        if (userData) {
           return res.status(200).json({
             status: 200,
-            data: data,
-            message: "User Details Retrieved",
+            data: userData,
+            message: "Organization Updated",
           });
         }
+        return res.status(400).json({
+          status: 400,
 
-        return res
-          .status(404)
-          .json({ status: 404, message: "No Record Found" });
+          message: "Organization Not Updated",
+        });
       }
+
+      return res.status(404).json({ status: 404, message: "No Record Found" });
     } else {
       return res.status(405).json({
         message: "Method Not allowed",

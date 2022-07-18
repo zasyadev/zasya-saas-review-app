@@ -9,6 +9,18 @@ export default async (req, res) => {
     if (req.method === "POST") {
       const reqBody = JSON.parse(req.body);
 
+      let alreadyData = await prisma.passwordReset.findUnique({
+        where: {
+          email_id: reqBody.email,
+        },
+      });
+      if (alreadyData) {
+        return res.status(402).json({
+          error: "FAILED",
+          message: "Already Email Has been Sent to Reset Password.",
+        });
+      }
+
       let generatedToken = await hashedPassword(reqBody.email);
 
       const passwordResetData = await prisma.passwordReset.create({
