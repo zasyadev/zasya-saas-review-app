@@ -18,7 +18,7 @@ function AddEditReviewComponent({ editMode, user }) {
   const router = useRouter();
   const [form] = Form.useForm();
   const [formList, setFormList] = useState([]);
-  const [memberDetails, setMemberDetails] = useState(false);
+  // const [memberDetails, setMemberDetails] = useState(false);
   const [userList, setUserList] = useState([]);
   const [questionList, setQuestionList] = useState([]);
   const [previewForm, setPreviewForm] = useState(false);
@@ -265,7 +265,7 @@ function AddEditReviewComponent({ editMode, user }) {
                       <Form.Item
                         name="template_id"
                         label={
-                          <div className="w-full flex justify-between">
+                          <div className="w-full flex justify-between items-center">
                             <p>Select Template</p>
                             <Link href="/template/add">
                               <p className="cursor-pointer text-xs">Create</p>
@@ -321,7 +321,7 @@ function AddEditReviewComponent({ editMode, user }) {
                         className="select-tag"
                         name="assigned_to_id"
                         label={
-                          <div className="w-full flex justify-between">
+                          <div className="w-full flex justify-between items-center">
                             <p>Select Member(s)</p>
                             {user?.role_id === 2 ? (
                               <Link href="/team/add">

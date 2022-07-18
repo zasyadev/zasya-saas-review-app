@@ -89,6 +89,17 @@ export default async (req, res) => {
                 tags: resData.tags,
               },
             });
+
+            userOrgData = await transaction.userOraganizationGroups.create({
+              data: {
+                user: { connect: { id: userData.id } },
+                role: { connect: { id: resData.role } },
+                organization: {
+                  connect: { id: createdUserData.organization_id },
+                },
+                status: true,
+              },
+            });
           }
           passwordResetData = await transaction.passwordReset.create({
             data: {
