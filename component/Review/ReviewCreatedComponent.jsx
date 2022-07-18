@@ -80,6 +80,7 @@ function ReviewCreatedComponent({ user, reviewData }) {
           }));
 
           let dataobj = data.map((item) => {
+            console.log(item);
             let optionObj = {};
 
             item.answers.forEach((data, i) => {

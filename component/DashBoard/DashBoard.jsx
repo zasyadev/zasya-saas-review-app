@@ -23,6 +23,7 @@ function DashBoard({ user }) {
   const [dashBoardData, setDashboardData] = useState({});
   const [loading, setLoading] = useState(false);
   const [totalRating, setTotalRating] = useState(0);
+  const [applaudData, setApplaudData] = useState({});
 
   async function fetchDashboardData() {
     setDashboardData([]);
@@ -40,12 +41,26 @@ function DashBoard({ user }) {
           if (response.data.reviewRating.length > 0)
             ratingHandler(response.data.reviewRating);
           setDashboardData(response.data);
+          applaudcount(response.data.applaudData);
         }
       })
+
       .catch((err) => {
         setDashboardData([]);
       });
   }
+
+  const applaudcount = (data) => {
+    if (data.length > 0) {
+      let res = data?.reduce(function (obj, key) {
+        obj[key.created.first_name] = obj[key.created.first_name] || [];
+        obj[key.created.first_name].push(key);
+        return obj;
+      }, {});
+
+      setApplaudData(res);
+    } else setApplaudData([]);
+  };
 
   const ratingHandler = (data) => {
     let sum = 0;
@@ -165,35 +180,73 @@ function DashBoard({ user }) {
                     Applauds Leaderboard
                   </h2>
                   <Row>
-                    <Col xs={24} md={12}>
-                      <Row className="">
-                        {dashBoardData?.applaudData?.length > 0 &&
-                          dashBoardData?.applaudData.map((item) => (
-                            <>
-                              <Col xs={7} md={10}>
-                                <div className="p-2 mt-2 flex justify-center">
-                                  <Image src={User1} alt="user" />
-                                </div>
-                              </Col>
-                              <Col xs={17} md={14}>
-                                <div className="flex  justify-between items-center">
-                                  <div className="py-2 px-3">
-                                    <p className="mb-2 primary-color-blue font-medium text-sm">
-                                      {item?.created?.first_name}
-                                    </p>
-                                    <p className="flex">
-                                      <ApplaudIconSmall />
-                                      <span className="pl-2 text-sm font-medium text-gray-500">
-                                        0
-                                      </span>
-                                    </p>
+                    {Object.entries(applaudData).length ? (
+                      Object.entries(applaudData).map(([key, value], idx) => {
+                        return (
+                          <>
+                            <Col xs={24} md={12}>
+                              <Row className="">
+                                <Col xs={7} md={10}>
+                                  <div className="p-2 mt-2 flex justify-center">
+                                    <Image src={User1} alt="user" />
                                   </div>
-                                </div>
-                              </Col>
-                            </>
-                          ))}
-                      </Row>
-                    </Col>
+                                </Col>
+
+                                <Col xs={17} md={14}>
+                                  <div className="flex  justify-between items-center">
+                                    <div className="py-2 px-3">
+                                      <p className="mb-2 primary-color-blue font-medium text-sm">
+                                        {key}
+                                      </p>
+                                      <p className="flex">
+                                        <ApplaudIconSmall />
+                                        <span className="pl-2 text-sm font-medium text-gray-500">
+                                          {value.length}
+                                        </span>
+                                      </p>
+                                    </div>
+                                  </div>
+                                </Col>
+                              </Row>
+                            </Col>
+                          </>
+                        );
+                      })
+                    ) : (
+                      <Col xs={24} md={24}>
+                        <div className="flex justify-center items-center h-48">
+                          <div className="text-center  ">No Applaud Found</div>
+                        </div>
+                      </Col>
+                    )}
+
+                    {/* // <>
+                      //   <Col xs={24} md={12}>
+                      //     <Row className="">
+                      //       <Col xs={7} md={10}>
+                      //         <div className="p-2 mt-2 flex justify-center">
+                      //           <Image src={User1} alt="user" />
+                      //         </div>
+                      //       </Col>
+                      //       <Col xs={17} md={14}>
+                      //         <div className="flex  justify-between items-center">
+                      //           <div className="py-2 px-3">
+                      //             <p className="mb-2 primary-color-blue font-medium text-sm">
+                      //               {item?.created?.first_name}
+                      //             </p>
+                      //             <p className="flex">
+                      //               <ApplaudIconSmall />
+                      //               <span className="pl-2 text-sm font-medium text-gray-500">
+                      //                 0
+                      //               </span>
+                      //             </p>
+                      //           </div>
+                      //         </div>
+                      //       </Col>
+                      //     </Row>
+                      //   </Col>
+                      // </>; */}
+
                     {/* <Col xs={24} md={12}>
                       <Row className="">
                         <Col xs={7} md={10}>
