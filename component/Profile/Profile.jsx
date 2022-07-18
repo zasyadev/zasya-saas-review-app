@@ -271,7 +271,6 @@ function Profile({ user }) {
                   },
                   ({ getFieldValue }) => ({
                     validator(_, value) {
-                      console.log(value, "sdfsdjkhfjksh");
                       if (!value || getFieldValue("new_password") === value) {
                         return Promise.resolve();
                       }

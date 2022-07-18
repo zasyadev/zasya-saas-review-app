@@ -16,8 +16,8 @@ function AddApplaud({ user }) {
     required: "${label} is required!",
   };
 
-  async function fetchMember() {
-    await fetch("/api/team/" + user.organization_id, {
+  async function fetchMember(user) {
+    await fetch("/api/team/" + user.id, {
       method: "GET",
     })
       .then((res) => res.json())
@@ -51,7 +51,6 @@ function AddApplaud({ user }) {
       .then((response) => response.json())
       .then((response) => {
         if (response.status === 200) {
-          console.log(response.message);
           openNotificationBox("success", response.message, 3);
           router.push("/applaud");
         } else {
@@ -85,7 +84,7 @@ function AddApplaud({ user }) {
   // }
 
   useEffect(() => {
-    fetchMember();
+    if (user) fetchMember(user);
   }, []);
 
   return (

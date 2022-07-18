@@ -85,7 +85,7 @@ export default async (req, res) => {
   } else if (req.method === "PUT") {
     try {
       const resData = JSON.parse(req.body);
-      console.log(resData, "resData");
+
       return;
       const transactionData = await prisma.$transaction(async (transaction) => {
         const questionData = resData.questions.map((item) => {

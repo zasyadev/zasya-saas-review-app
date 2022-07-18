@@ -262,7 +262,7 @@ function FormComponent({
               onChange={(e) => {
                 setFormTitle(e.target.value);
               }}
-              className="input-box text-2xl "
+              className="input-box text-2xl template-title"
               bordered={false}
             />
             <Input

@@ -1,5 +1,4 @@
 import { PrismaClient } from "@prisma/client";
-import { info } from "autoprefixer";
 import { hashedPassword, randomPassword } from "../../../lib/auth";
 import { mailService, mailTemplate } from "../../../lib/emailservice";
 
@@ -13,21 +12,25 @@ export default async (req, res) => {
       let existingData = await prisma.user.findUnique({
         where: { email: resData.email },
       });
-
-      let existingOrgUser = await prisma.userOraganizationGroups.findMany({
-        where: {
-          AND: [
-            { user_id: existingData.id },
-            { organization_id: resData.organization_id },
-          ],
-        },
+      let createdUserData = await prisma.user.findUnique({
+        where: { id: resData.created_by },
       });
+      if (existingData && createdUserData) {
+        let existingOrgUser = await prisma.userOraganizationGroups.findMany({
+          where: {
+            AND: [
+              { user_id: existingData.id },
+              { organization_id: createdUserData.organization_id },
+            ],
+          },
+        });
 
-      if (existingOrgUser.length > 0) {
-        prisma.$disconnect();
-        return res
-          .status(409)
-          .json({ error: "409", message: "Duplicate Employee" });
+        if (existingOrgUser.length > 0) {
+          prisma.$disconnect();
+          return res
+            .status(409)
+            .json({ error: "409", message: "Duplicate Employee" });
+        }
       }
 
       const transactionData = await prisma.$transaction(async (transaction) => {
@@ -41,7 +44,7 @@ export default async (req, res) => {
           mobile: "",
           status: resData.status,
           role: { connect: { id: resData.role } },
-          organization: { connect: { id: resData.organization_id } },
+          organization: { connect: { id: createdUserData.organization_id } },
         };
 
         let existingUser = await transaction.user.findUnique({
@@ -55,7 +58,9 @@ export default async (req, res) => {
             data: {
               user: { connect: { id: existingUser.id } },
               role: { connect: { id: resData.role } },
-              organization: { connect: { id: resData.organization_id } },
+              organization: {
+                connect: { id: createdUserData.organization_id },
+              },
               status: true,
             },
           });
@@ -82,6 +87,17 @@ export default async (req, res) => {
               data: {
                 user: { connect: { id: userData.id } },
                 tags: resData.tags,
+              },
+            });
+
+            userOrgData = await transaction.userOraganizationGroups.create({
+              data: {
+                user: { connect: { id: userData.id } },
+                role: { connect: { id: resData.role } },
+                organization: {
+                  connect: { id: createdUserData.organization_id },
+                },
+                status: true,
               },
             });
           }
@@ -141,6 +157,10 @@ export default async (req, res) => {
     try {
       const resData = JSON.parse(req.body);
 
+      let createdUserData = await prisma.user.findUnique({
+        where: { id: resData.created_by },
+      });
+
       const transactionData = await prisma.$transaction(async (transaction) => {
         let existingData = await transaction.user.findUnique({
           where: { email: resData.email },
@@ -151,7 +171,7 @@ export default async (req, res) => {
             where: {
               AND: [
                 { user_id: existingData.id },
-                { organization_id: resData.organization_id },
+                { organization_id: createdUserData.organization_id },
               ],
             },
           });
@@ -201,7 +221,6 @@ export default async (req, res) => {
         return res.status(500).json({ error: 500, message: "No record Found" });
       }
     } catch (error) {
-      console.log(error);
       return res
         .status(500)
         .json({ error: error, message: "Internal Server Error" });
@@ -213,12 +232,15 @@ export default async (req, res) => {
       let existingData = await prisma.user.findUnique({
         where: { email: reqBody.email },
       });
+      let createdUserData = await prisma.user.findUnique({
+        where: { id: resData.created_by },
+      });
 
       let existingOrgUser = await prisma.userOraganizationGroups.findFirst({
         where: {
           AND: [
             { user_id: existingData.id },
-            { organization_id: reqBody.organization_id },
+            { organization_id: createdUserData.organization_id },
           ],
         },
       });

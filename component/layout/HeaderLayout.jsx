@@ -4,6 +4,7 @@ import {
   UserOutlined,
   LogoutOutlined,
   UsergroupAddOutlined,
+  UserSwitchOutlined,
 } from "@ant-design/icons";
 import Image from "next/image";
 import Link from "next/link";
@@ -11,6 +12,7 @@ import User from "../../assets/images/User.png";
 import { Col, Dropdown, Layout, Menu, Row } from "antd";
 import { signOut } from "next-auth/client";
 import { useRouter } from "next/router";
+import { openNotificationBox } from "../../helpers/notification";
 // import { BellIcon, SearchIcon } from "../../assets/Icon/icons";
 
 const { Header } = Layout;
@@ -22,6 +24,23 @@ function HeaderLayout({ title, pageName, user }) {
       redirect: false,
     });
     router.push("/");
+  };
+
+  const changeOragnizationHandle = async (values) => {
+    await fetch("/api/user/changeOrgId/" + user.id, {
+      method: "POST",
+      body: JSON.stringify({ org_id: values }),
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        if (response.status === 200) {
+          openNotificationBox("success", response.message, 3);
+        }
+        // setLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const userMenu = (
@@ -44,6 +63,34 @@ function HeaderLayout({ title, pageName, user }) {
           </Link>
         </Menu.Item>
       )}
+      <Menu.SubMenu
+        key="org"
+        title={
+          <span className="switch-team-dropdown">
+            <UserSwitchOutlined />
+            <span className="ml-1">Switch Teams</span>
+          </span>
+        }
+      >
+        {user.UserOraganizationGroups.length > 0
+          ? user.UserOraganizationGroups.map((item) => {
+              return (
+                <Menu.Item key={`team${item.organization_id}`}>
+                  <div
+                    className="flex items-center"
+                    onClick={() => {
+                      changeOragnizationHandle(item.organization_id);
+                    }}
+                  >
+                    <span className="span-text capitalize">
+                      {item?.organization?.company_name}
+                    </span>
+                  </div>
+                </Menu.Item>
+              );
+            })
+          : null}
+      </Menu.SubMenu>
 
       <Menu.Item key={"sign_out"}>
         <div onClick={() => logoutHandler()} className=" flex items-center ">

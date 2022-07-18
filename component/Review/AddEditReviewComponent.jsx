@@ -18,7 +18,7 @@ function AddEditReviewComponent({ editMode, user }) {
   const router = useRouter();
   const [form] = Form.useForm();
   const [formList, setFormList] = useState([]);
-  const [memberDetails, setMemberDetails] = useState(false);
+  // const [memberDetails, setMemberDetails] = useState(false);
   const [userList, setUserList] = useState([]);
   const [questionList, setQuestionList] = useState([]);
   const [previewForm, setPreviewForm] = useState(false);
@@ -47,7 +47,7 @@ function AddEditReviewComponent({ editMode, user }) {
       status: values.status ?? "pending",
       frequency: values.frequency,
       role_id: user.role_id,
-      organization_id: user.organization_id,
+      // organization_id: user.organization_id,
       is_published: values.is_published,
       templateData: templateData,
     });
@@ -100,7 +100,7 @@ function AddEditReviewComponent({ editMode, user }) {
 
   async function fetchUserData() {
     setUserList([]);
-    await fetch("/api/user/organizationId/" + user.organization_id, {
+    await fetch("/api/user/organizationId/" + user.id, {
       method: "GET",
     })
       .then((response) => response.json())
@@ -261,10 +261,17 @@ function AddEditReviewComponent({ editMode, user }) {
                       </Form.Item>
                     </Col>
 
-                    <Col md={12} xs={24}>
+                    <Col md={12} xs={24} className="full-width-label">
                       <Form.Item
                         name="template_id"
-                        label="Select Template "
+                        label={
+                          <div className="w-full flex justify-between items-center">
+                            <p>Select Template</p>
+                            <Link href="/template/add">
+                              <p className="cursor-pointer text-xs">Create</p>
+                            </Link>
+                          </div>
+                        }
                         rules={[
                           {
                             required: true,
@@ -309,11 +316,20 @@ function AddEditReviewComponent({ editMode, user }) {
                     </Col>
 
                     {/* {memberDetails && ( */}
-                    <Col md={12} xs={24}>
+                    <Col md={12} xs={24} className="full-width-label">
                       <Form.Item
                         className="select-tag"
                         name="assigned_to_id"
-                        label="Select Member(s)"
+                        label={
+                          <div className="w-full flex justify-between items-center">
+                            <p>Select Member(s)</p>
+                            {user?.role_id === 2 ? (
+                              <Link href="/team/add">
+                                <p className="cursor-pointer text-xs">Create</p>
+                              </Link>
+                            ) : null}
+                          </div>
+                        }
                         rules={[
                           {
                             required: true,
