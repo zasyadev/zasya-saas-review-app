@@ -124,7 +124,7 @@ function Profile({ user }) {
                     <Row gutter={16}>
                       <Col md={24} sm={24} xs={24}>
                         <Form.Item
-                          label="First Name"
+                          label="Name"
                           name="first_name"
                           rules={[
                             {
@@ -135,10 +135,11 @@ function Profile({ user }) {
                           <Input
                             placeholder="First Name"
                             className="bg-gray-100 h-12 rounded-md"
+                            disabled
                           />
                         </Form.Item>
                       </Col>
-                      <Col md={24} sm={24} xs={24}>
+                      {/* <Col md={24} sm={24} xs={24}>
                         <Form.Item
                           label="Last Name"
                           name="last_name"
@@ -153,7 +154,7 @@ function Profile({ user }) {
                             className="bg-gray-100 h-12 rounded-md"
                           />
                         </Form.Item>{" "}
-                      </Col>
+                      </Col> */}
                       <Col md={24} sm={24} xs={24}>
                         <Form.Item
                           label="Email"
@@ -176,6 +177,7 @@ function Profile({ user }) {
                       <Button
                         className="profile-submit-button py-2 cursor-pointer primary-bg-btn text-white text-base  text-center rounded-md h-full w-32"
                         htmlType="submit"
+                        disabled
                       >
                         Submit
                       </Button>

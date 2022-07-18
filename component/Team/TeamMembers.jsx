@@ -92,6 +92,7 @@ function TeamMembers({ user }) {
         method: "DELETE",
         body: JSON.stringify({
           email: email,
+          organization_id: user.organization_id,
         }),
         // headers: {
         //   "Content-Type": "application/json",
@@ -294,98 +295,7 @@ function TeamMembers({ user }) {
           form={form}
           onFinish={onFinish}
           validateMessages={validateMessages}
-        >
-          <Row gutter={16}>
-            <Col md={12} xs={24} lg={12}>
-              <Form.Item
-                name="first_name"
-                label="First Name"
-                rules={[
-                  {
-                    required: true,
-                  },
-                ]}
-              >
-                <Input />
-              </Form.Item>
-            </Col>
-            <Col md={12} xs={24} lg={12}>
-              <Form.Item
-                name="last_name"
-                label="Last Name"
-                rules={[
-                  {
-                    required: true,
-                  },
-                ]}
-              >
-                <Input />
-              </Form.Item>
-            </Col>
-
-            <Col md={12} xs={24} lg={12}>
-              <Form.Item
-                name="email"
-                label="Email"
-                rules={[
-                  {
-                    required: true,
-                  },
-                  {
-                    type: "email",
-                  },
-                ]}
-              >
-                <Input disabled={editMode} />
-              </Form.Item>
-            </Col>
-
-            <Col md={12} xs={24} lg={12}>
-              <Form.Item
-                name="tags"
-                label="Tags Name"
-                rules={[
-                  {
-                    required: true,
-                  },
-                ]}
-              >
-                <Select mode="tags" placeholder="Tags" className="select-tag">
-                  <Select.Option key={"developer"} value={"Developer"}>
-                    Developer
-                  </Select.Option>
-                  <Select.Option key={"QA"} value={"QA"}>
-                    QA
-                  </Select.Option>
-                  <Select.Option key={"Testing"} value={"Testing"}>
-                    Testing
-                  </Select.Option>
-                </Select>
-              </Form.Item>
-            </Col>
-
-            <Col md={12} xs={24} lg={12}>
-              <Form.Item
-                name="role"
-                label="Roles "
-                rules={[
-                  {
-                    required: true,
-                  },
-                ]}
-              >
-                <Select placeholder="Roles" className="select-tag">
-                  <Select.Option key={"mamanger"} value={3}>
-                    Manager
-                  </Select.Option>
-                  <Select.Option key={"member"} value={4}>
-                    Member
-                  </Select.Option>
-                </Select>
-              </Form.Item>
-            </Col>
-          </Row>
-        </Form>
+        ></Form>
       </Modal>
     </>
   );

@@ -4,7 +4,6 @@ const prisma = new PrismaClient();
 
 export default async (req, res) => {
   const { user_id } = req.query;
-
   try {
     if (req.method === "GET") {
       if (user_id) {

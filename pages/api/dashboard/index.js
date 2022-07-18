@@ -21,8 +21,14 @@ export default async (req, res) => {
           },
         },
       });
-      // let reviewAnswered = [];
-      // if (reqBody.role == 2) {
+      const reviewRating = await prisma.review.findMany({
+        where: { created_by: reqBody.userId },
+        include: {
+          ReviewAssigneeAnswers: {
+            include: { ReviewAssigneeAnswerOption: true },
+          },
+        },
+      });
       let reviewAnswered = await prisma.reviewAssigneeAnswers.findMany({
         where: {
           user: {
@@ -51,6 +57,7 @@ export default async (req, res) => {
         reviewAnswered: reviewAnswered.length,
         userData: userData.length,
         applaudData: applaudData,
+        reviewRating: reviewRating,
       };
 
       if (data) {

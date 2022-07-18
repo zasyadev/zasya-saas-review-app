@@ -197,6 +197,8 @@ function FormComponent({
       };
 
       editMode ? updateFormData(obj, id) : addNewForm(obj);
+    } else {
+      openNotificationBox("error", "Template Title Required", 3);
     }
   }
 

@@ -8,6 +8,17 @@ export default async (req, res) => {
   if (req.method === "POST") {
     try {
       const userData = JSON.parse(req.body);
+      let orgData = await prisma.userOrganization.findUnique({
+        where: {
+          company_name: userData.company_name,
+        },
+      });
+
+      if (orgData.id) {
+        return res
+          .status(400)
+          .json({ error: "error", message: "Duplicate Company Name" });
+      }
 
       const transactionData = await prisma.$transaction(async (transaction) => {
         const organization = await transaction.userOrganization.create({
@@ -62,6 +73,11 @@ export default async (req, res) => {
         status: 200,
       });
     } catch (error) {
+      if (error.code == "P2002") {
+        return res
+          .status(500)
+          .json({ error: error, message: "Duplicate Email Address" });
+      }
       return res
         .status(500)
         .json({ error: error, message: "Internal Server Error" });

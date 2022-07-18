@@ -512,7 +512,7 @@ function ReviewManagement({ user }) {
                 <Col md={12} xs={24}>
                   <Form.Item
                     name="assigned_to_id"
-                    label="Employee Name"
+                    label="Member Name"
                     rules={[
                       {
                         required: true,

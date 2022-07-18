@@ -103,20 +103,7 @@ function AddTeamComponent({ user, editMode, memberData }) {
                 <Col md={12} xs={24} lg={12}>
                   <Form.Item
                     name="first_name"
-                    label="First Name"
-                    rules={[
-                      {
-                        required: true,
-                      },
-                    ]}
-                  >
-                    <Input />
-                  </Form.Item>
-                </Col>
-                <Col md={12} xs={24} lg={12}>
-                  <Form.Item
-                    name="last_name"
-                    label="Last Name"
+                    label="Name"
                     rules={[
                       {
                         required: true,

@@ -8,7 +8,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import User from "../../assets/images/User.png";
-import { Button, Col, Dropdown, Layout, Menu, Row } from "antd";
+import { Col, Dropdown, Layout, Menu, Row } from "antd";
 import { signOut } from "next-auth/client";
 import { useRouter } from "next/router";
 // import { BellIcon, SearchIcon } from "../../assets/Icon/icons";
@@ -53,26 +53,22 @@ function HeaderLayout({ title, pageName, user }) {
     </Menu>
   );
   const createMenu = (
-    <Menu
-      items={[
-        {
-          key: "review",
-          label: <Link href="/review/add">Review</Link>,
-        },
-        {
-          key: "template",
-          label: <Link href="/template/add">Template</Link>,
-        },
-        {
-          key: "applaud",
-          label: <Link href="/applaud/add">Applaud</Link>,
-        },
-        {
-          key: "applaud",
-          label: <Link href="/team/add">Team</Link>,
-        },
-      ]}
-    />
+    <Menu>
+      <Menu.Item key={"Review"}>
+        <Link href="/review/add">Review</Link>
+      </Menu.Item>
+      <Menu.Item key={"Template"}>
+        <Link href="/template/add">Template</Link>
+      </Menu.Item>
+      <Menu.Item key={"Applaud"}>
+        <Link href="/applaud/add">Applaud</Link>
+      </Menu.Item>
+      {user.role_id == 2 && (
+        <Menu.Item key={"Team"}>
+          <Link href="/team/add">Team</Link>
+        </Menu.Item>
+      )}
+    </Menu>
   );
   return (
     <Header className="ant-header bg-color-dashboard border-b border-b-neutral-300 p-0">
