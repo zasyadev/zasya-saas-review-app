@@ -51,7 +51,6 @@ function AddApplaud({ user }) {
       .then((response) => response.json())
       .then((response) => {
         if (response.status === 200) {
-          console.log(response.message);
           openNotificationBox("success", response.message, 3);
           router.push("/applaud");
         } else {

@@ -137,7 +137,6 @@ export default async (req, res) => {
         status: 200,
       });
     } catch (error) {
-      console.log(error);
       if (error.code === "P2014") {
         return res
           .status(409)
@@ -222,7 +221,6 @@ export default async (req, res) => {
         return res.status(500).json({ error: 500, message: "No record Found" });
       }
     } catch (error) {
-      console.log(error);
       return res
         .status(500)
         .json({ error: error, message: "Internal Server Error" });

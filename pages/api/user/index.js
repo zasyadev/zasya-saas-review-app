@@ -85,7 +85,6 @@ export default async (req, res) => {
         status: 200,
       });
     } catch (error) {
-      console.log(error);
       if (error.code == "P2002") {
         return res
           .status(500)
