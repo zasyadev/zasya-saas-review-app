@@ -1,7 +1,13 @@
 import { PrismaClient } from "@prisma/client";
 import { mailService, mailTemplate } from "../../../lib/emailservice";
+import moment from "moment";
+import { ReviewScheduler } from "../../../helpers/schedulerHelper";
+
+const schedule = require("node-schedule");
 
 const prisma = new PrismaClient();
+
+var reviewJob;
 
 export default async (req, res) => {
   if (req.method === "POST") {
@@ -79,6 +85,28 @@ export default async (req, res) => {
           let savedData = await transaction.review.create({
             data: dataObj,
           });
+
+          if (savedData && savedData.frequency != "once") {
+            ReviewScheduler({ savedData: savedData, resData: resData });
+          }
+
+          // schedule.scheduleJob(savedData.id, "*/1 * * * *", function () {
+          //   console.log("Time for sdfsdf!", savedData.id);
+          //   let newAssignData = [];
+          //   let assignData = resData.assigned_to_id.forEach((item) => {
+          //     newAssignData.push({
+          //       review: { connect: { id: savedData.id } },
+          //       assigned_to: { connect: { id: item } },
+          //     });
+          //   });
+
+          //   newAssignData.map(async (item) => {
+          //     return await prisma.reviewAssignee.create({
+          //       data: item,
+          //     });
+          //   });
+          // });
+
           return { savedData };
         } else {
           let newAssignData = [];
@@ -139,6 +167,7 @@ export default async (req, res) => {
         status: 200,
       });
     } catch (error) {
+      console.log(error);
       return res
         .status(500)
         .json({ error: error, message: "Internal Server Error" });
@@ -165,7 +194,21 @@ export default async (req, res) => {
     }
   } else if (req.method === "PUT") {
     try {
+      // schedule.gracefulShutdown();
       const resData = JSON.parse(req.body);
+      reviewJob = schedule.scheduledJobs[resData.id];
+      if (reviewJob) {
+        reviewJob.cancel();
+        return res.status(200).json({
+          message: "Review Frequency Changed!",
+          status: 200,
+        });
+      } else {
+        return res.status(400).json({
+          message: "Frequency Not Changed!",
+          status: 400,
+        });
+      }
 
       let assigneeData = resData.assigned_to_id.map((item) => {
         return {
@@ -191,6 +234,7 @@ export default async (req, res) => {
         data: data,
       });
     } catch (error) {
+      console.log(error);
       return res
         .status(500)
         .json({ error: error, message: "Internal Server Error" });
@@ -201,11 +245,6 @@ export default async (req, res) => {
       if (reqBody.id) {
         const deletaData = await prisma.review.delete({
           where: { id: reqBody.id },
-          // data: {
-          //   ReviewAssignee: {
-          //     deleteMany: {},
-          //   },
-          // },
         });
         prisma.$disconnect();
         if (deletaData) {
@@ -220,6 +259,7 @@ export default async (req, res) => {
         });
       }
     } catch (error) {
+      console.log(error);
       return res
         .status(500)
         .json({ error: error, message: "Internal Server Error" });

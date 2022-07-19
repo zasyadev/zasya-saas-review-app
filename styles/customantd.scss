@@ -252,6 +252,11 @@
     white-space: nowrap;
     overflow: hidden;
   }
+  .ant-table-content {
+    table {
+      margin-bottom: 18px;
+    }
+  }
 }
 
 .ant-layout-sider-trigger {
