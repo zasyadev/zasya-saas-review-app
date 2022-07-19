@@ -90,7 +90,7 @@ export default async (req, res) => {
               },
             });
 
-            userOrgData = await transaction.userOraganizationGroups.create({
+            let userOrgData = await transaction.userOraganizationGroups.create({
               data: {
                 user: { connect: { id: userData.id } },
                 role: { connect: { id: resData.role } },
@@ -137,6 +137,7 @@ export default async (req, res) => {
         status: 200,
       });
     } catch (error) {
+      console.log(error);
       if (error.code === "P2014") {
         return res
           .status(409)
