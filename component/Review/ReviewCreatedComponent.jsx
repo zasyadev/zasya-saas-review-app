@@ -11,7 +11,7 @@ import {
   Popconfirm,
   Grid,
 } from "antd";
-import AnswerViewComponent from "./AnswerViewComponent";
+// import AnswerViewComponent from "./AnswerViewComponent";
 import Link from "next/link";
 import {
   CalanderIcon,
@@ -22,7 +22,12 @@ import {
 import { openNotificationBox } from "../../helpers/notification";
 const { useBreakpoint } = Grid;
 
-function ReviewCreatedComponent({ user, reviewData, reviewId }) {
+function ReviewCreatedComponent({
+  user,
+  reviewData,
+  reviewId,
+  fetchReviewData,
+}) {
   const { xs } = useBreakpoint();
   const { Panel } = Collapse;
   const datePattern = "DD-MM-YYYY";
@@ -33,7 +38,7 @@ function ReviewCreatedComponent({ user, reviewData, reviewId }) {
   const [dataSource, setDataSource] = useState([]);
   const [fixed, setFixed] = useState(false);
   const [totalRating, setTotalRating] = useState(0);
-
+  console.log(reviewData, "reviewData");
   useEffect(() => {
     if (xs) setFixed(xs);
     else setFixed(xs);
@@ -144,6 +149,7 @@ function ReviewCreatedComponent({ user, reviewData, reviewId }) {
       .then((response) => {
         if (response.status === 200) {
           openNotificationBox("success", response.message, 3);
+          fetchReviewData(user, reviewId);
         } else {
           openNotificationBox("error", response.message, 3);
         }
@@ -181,22 +187,24 @@ function ReviewCreatedComponent({ user, reviewData, reviewId }) {
                   Back
                 </button>
               </Link>
-              {reviewData.frequency != "once" && reviewId && (
-                <Popconfirm
-                  title="Are you sure you want to Stop the frequency of this Review?"
-                  okText="Yes"
-                  cancelText="No"
-                  icon={false}
-                  onConfirm={() => jobChangeHandler(reviewId)}
-                  placement="bottomRight"
-                >
-                  <div className="ml-2">
-                    <button className="primary-bg-btn text-white text-sm py-3 text-center px-4 rounded-md ">
-                      Stop
-                    </button>
-                  </div>
-                </Popconfirm>
-              )}
+              {reviewData.frequency != "once" &&
+                reviewId &&
+                !reviewData.frequency_status && (
+                  <Popconfirm
+                    title="Are you sure you want to Stop the frequency of this Review?"
+                    okText="Yes"
+                    cancelText="No"
+                    icon={false}
+                    onConfirm={() => jobChangeHandler(reviewId)}
+                    placement="bottomRight"
+                  >
+                    <div className="ml-2">
+                      <button className="primary-bg-btn text-white text-sm py-3 text-center px-4 rounded-md ">
+                        Stop
+                      </button>
+                    </div>
+                  </Popconfirm>
+                )}
             </div>
           </div>
           <Row justify="space-between" gutter={[16, 16]}>

@@ -90,6 +90,7 @@ function ReviewCreated({ user }) {
           user={user}
           reviewData={reviewData}
           reviewId={review_id}
+          fetchReviewData={fetchReviewData}
         />
       ) : null}
       {/* {reviewData ? (

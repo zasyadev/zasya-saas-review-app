@@ -144,6 +144,7 @@ model Review {
   role                  Role?                   @relation(fields: [role_id], references: [id])
   role_id               Int?
   parent_id             String?
+  frequency_status      Boolean                 @default(false)
   is_published          String?
   created_date          DateTime                @default(now())
   modified_date         DateTime                @default(now())

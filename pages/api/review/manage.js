@@ -150,7 +150,6 @@ export default async (req, res) => {
         status: 200,
       });
     } catch (error) {
-      console.log(error);
       return res
         .status(500)
         .json({ error: error, message: "Internal Server Error" });
@@ -179,8 +178,15 @@ export default async (req, res) => {
     try {
       // schedule.gracefulShutdown();
       const resData = JSON.parse(req.body);
+
       reviewJob = schedule.scheduledJobs[resData.id];
       if (reviewJob) {
+        let updateReview = await prisma.review.update({
+          where: { id: resData.id },
+          data: {
+            frequency_status: true,
+          },
+        });
         reviewJob.cancel();
         return res.status(200).json({
           message: "Review Frequency Changed!",

@@ -1,5 +1,4 @@
 import { PrismaClient } from "@prisma/client";
-import moment from "moment";
 const schedule = require("node-schedule");
 const prisma = new PrismaClient();
 
@@ -19,11 +18,7 @@ export function ReviewScheduler({ savedData, resData }) {
       scheduleDate = `${minutes} ${hour} ${day} * * `;
     }
 
-    let a = "*";
-    let testDate = `${a} * * * * `;
-    // console.log("testDate", testDate);
-    schedule.scheduleJob(savedData.id, testDate, function () {
-      // console.log("scheduleDate", scheduleDate);
+    schedule.scheduleJob(savedData.id, scheduleDate, function () {
       let newAssignData = [];
       let assignData = resData.assigned_to_id.forEach((item) => {
         newAssignData.push({
