@@ -686,6 +686,21 @@
   }
 }
 
+.create-dropdown {
+  .ant-dropdown-menu-title-content {
+    padding: 5px 8px;
+    font-weight: 400;
+    font-size: 14px;
+  }
+  .ant-dropdown-menu-item:hover {
+    background: linear-gradient(90deg, #ff6968 0%, #ffa3a3 100%);
+    color: #fff;
+  }
+  .ant-dropdown-menu {
+    border-radius: 5px;
+  }
+}
+
 .logout-dropdown {
   .ant-dropdown-menu-title-content {
     padding: 10px 20px;
@@ -732,4 +747,9 @@
   .ant-form-item-label label {
     width: 100%;
   }
+}
+.register-wrapper {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
 }

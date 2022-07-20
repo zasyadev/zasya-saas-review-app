@@ -80,18 +80,17 @@ function HeaderLayout({ title, pageName, user }) {
 
   const userMenu = (
     <Menu>
-      <Menu.Item key={"accountName"}>
-        <div className="flex items-center  py-1 ">
-          <div className="rounded-md flex justify-between mr-3 ">
-            <Image src={User} alt="user" width={38} height={38} />
-          </div>
-          <div>
-            <div className="text-base font-semibold">{user.first_name}</div>
-            {/* <div>{user.role_id === 2 ? "Admin" : "Member"}</div> */}
-            <div>{userOrganizationData?.roleId}</div>
-          </div>
+      <div className="flex my-2 " key={"accountName"}>
+        <div className="flex ml-6 mr-2">
+          <Image src={User} alt="user" width={40} height={30} />
         </div>
-      </Menu.Item>
+        <span>
+          <div className="span-text font-semibold">{user.first_name}</div>
+          {/* <div>{user.role_id === 2 ? "Admin" : "Member"}</div> */}
+          <div className="span-text">{userOrganizationData?.roleId}</div>
+        </span>
+      </div>
+
       <Menu.Item key={"account"}>
         <Link href="/profile">
           <div className="flex items-center">
@@ -169,14 +168,18 @@ function HeaderLayout({ title, pageName, user }) {
       <Row className="items-center h-full">
         <Col md={16} xs={12}>
           <div className="flex justify-between items-center mt-2">
-            <div className=" font-bold mx-3 md:mx-6 text-2xl primary-color-blue">
+            <div className=" font-bold mx-3 md:mx-6 text-lg md:text-2xl primary-color-blue">
               {title}
             </div>
           </div>
         </Col>
         <Col md={3} xs={12} className="hidden md:block">
           <div className="hidden md:flex items-center justify-between px-3">
-            <Dropdown overlay={createMenu} trigger={["click"]}>
+            <Dropdown
+              overlay={createMenu}
+              trigger={["click"]}
+              overlayClassName="create-dropdown "
+            >
               <button
                 key="create"
                 type="default"
