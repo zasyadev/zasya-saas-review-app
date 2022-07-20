@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   DownOutlined,
   UserOutlined,
@@ -9,7 +9,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import User from "../../assets/images/User.png";
-import { Col, Dropdown, Layout, Menu, Row } from "antd";
+import { Avatar, Col, Dropdown, Layout, Menu, Row } from "antd";
 import { signOut } from "next-auth/client";
 import { useRouter } from "next/router";
 import { openNotificationBox } from "../../helpers/notification";
@@ -18,6 +18,10 @@ import { openNotificationBox } from "../../helpers/notification";
 const { Header } = Layout;
 
 function HeaderLayout({ title, pageName, user }) {
+  const [userOrganizationData, setUserOrganizationData] = useState({
+    orgId: "",
+    roleId: "",
+  });
   const router = useRouter();
   const logoutHandler = () => {
     signOut({
@@ -34,21 +38,63 @@ function HeaderLayout({ title, pageName, user }) {
       .then((response) => response.json())
       .then((response) => {
         if (response.status === 200) {
+          fetchUserData();
           openNotificationBox("success", response.message, 3);
         }
-        // setLoading(false);
       })
       .catch((err) => {
         console.log(err);
       });
   };
 
+  async function fetchUserData() {
+    await fetch("/api/organization/" + user.id, {
+      method: "GET",
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        if (response.status === 200) {
+          setUserOrganizationData({
+            orgId: response?.data?.organization?.company_name,
+            roleId:
+              response?.data?.roleData?.role_id === 2
+                ? "Admin"
+                : response?.data?.roleData?.role_id === 3
+                ? "Manager"
+                : response?.data?.roleData?.role_id === 4
+                ? "Member"
+                : null,
+          });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  useEffect(() => {
+    if (user) {
+      fetchUserData();
+    }
+  }, []);
+
   const userMenu = (
     <Menu>
+      <Menu.Item key={"accountName"}>
+        <div className="flex items-center  py-1 ">
+          <div className="rounded-md flex justify-between mr-3 ">
+            <Image src={User} alt="user" width={38} height={38} />
+          </div>
+          <div>
+            <div className="text-base font-semibold">{user.first_name}</div>
+            {/* <div>{user.role_id === 2 ? "Admin" : "Member"}</div> */}
+            <div>{userOrganizationData?.roleId}</div>
+          </div>
+        </div>
+      </Menu.Item>
       <Menu.Item key={"account"}>
         <Link href="/profile">
           <div className="flex items-center">
-            {" "}
             <UserOutlined /> <span className="span-text">My Account</span>
           </div>
         </Link>
@@ -72,8 +118,8 @@ function HeaderLayout({ title, pageName, user }) {
           </span>
         }
       >
-        {user.UserOraganizationGroups.length > 0
-          ? user.UserOraganizationGroups.map((item) => {
+        {user?.UserOraganizationGroups?.length > 0
+          ? user?.UserOraganizationGroups.map((item) => {
               return (
                 <Menu.Item key={`team${item.organization_id}`}>
                   <div
@@ -117,6 +163,7 @@ function HeaderLayout({ title, pageName, user }) {
       )}
     </Menu>
   );
+
   return (
     <Header className="ant-header bg-color-dashboard border-b border-b-neutral-300 p-0">
       <Row className="items-center h-full">
@@ -147,12 +194,23 @@ function HeaderLayout({ title, pageName, user }) {
             overlayClassName="logout-dropdown "
             placement="bottomRight"
           >
-            <div className=" flex items-center user-menu-wrapper py-1 px-4 cursor-pointer rounded-md">
+            <div className="flex items-center user-menu-wrapper py-1 px-4 cursor-pointer rounded-md">
               <div className="rounded-md flex justify-between mr-3 ">
-                <Image src={User} alt="user" width={38} height={38} />
+                <Avatar
+                  style={{ color: "#f56a00", backgroundColor: "#fde3cf" }}
+                  size="large"
+                  alt="c"
+                >
+                  {userOrganizationData?.orgId
+                    ? userOrganizationData?.orgId.substring(0, 1)
+                    : null}
+                </Avatar>
               </div>
               <div>
-                <p className="user-deatils">{user?.first_name}</p>
+                <div className="user-deatils">
+                  {userOrganizationData?.orgId}
+                </div>
+                {/* <div>{user.role_id === 2 ? "Admin" : "Member"}</div> */}
               </div>
             </div>
           </Dropdown>

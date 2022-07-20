@@ -41,6 +41,7 @@ function DashBoard({ user }) {
             ratingHandler(response.data.reviewRating);
           setDashboardData(response.data);
           applaudcount(response.data.applaudData);
+          console.log(response.data);
         }
       })
 
@@ -179,7 +180,7 @@ function DashBoard({ user }) {
                     Applauds Leaderboard
                   </h2>
                   <Row>
-                    {Object.entries(applaudData).length ? (
+                    {Object.entries(applaudData).length > 0 ? (
                       Object.entries(applaudData).map(([key, value], idx) => {
                         return (
                           <>

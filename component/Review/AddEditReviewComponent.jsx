@@ -265,10 +265,12 @@ function AddEditReviewComponent({ editMode, user }) {
                       <Form.Item
                         name="template_id"
                         label={
-                          <div className="w-full flex justify-between items-center">
-                            <p>Select Template</p>
+                          <div className="w-full flex justify-between items-center ">
+                            <p className="my-auto">Select Template</p>
                             <Link href="/template/add">
-                              <p className="cursor-pointer text-xs">Create</p>
+                              <p className="cursor-pointer text-xs my-auto">
+                                Create
+                              </p>
                             </Link>
                           </div>
                         }
@@ -299,7 +301,11 @@ function AddEditReviewComponent({ editMode, user }) {
                     <Col md={12} xs={24}>
                       <Form.Item
                         name="frequency"
-                        label="Select Frequency"
+                        label={
+                          <div className="w-full flex justify-between items-center ">
+                            <p className="my-auto">Select Frequency</p>
+                          </div>
+                        }
                         rules={[
                           {
                             required: true,
@@ -322,7 +328,7 @@ function AddEditReviewComponent({ editMode, user }) {
                         name="assigned_to_id"
                         label={
                           <div className="w-full flex justify-between items-center">
-                            <p>Select Member(s)</p>
+                            <p className="my-auto">Select Member(s)</p>
                             {user?.role_id === 2 ? (
                               <Link href="/team/add">
                                 <p className="cursor-pointer text-xs">Create</p>
@@ -360,7 +366,11 @@ function AddEditReviewComponent({ editMode, user }) {
                     <Col md={12} xs={24}>
                       <Form.Item
                         name="review_type"
-                        label="Review Type"
+                        label={
+                          <div className="w-full flex justify-between items-center">
+                            <p className="my-auto">Review Type</p>
+                          </div>
+                        }
                         rules={[
                           {
                             required: true,

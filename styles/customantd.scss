@@ -312,6 +312,13 @@
     border-bottom: 1px solid #d9d9d9;
   }
   .ant-form {
+    .select-tag {
+      .ant-select-selector {
+        .ant-select-selection-item {
+          padding: 0px 0px !important;
+        }
+      }
+    }
     .ant-select-selector {
       height: 44px;
     }

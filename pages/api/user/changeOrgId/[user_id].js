@@ -8,6 +8,12 @@ export default async (req, res) => {
   try {
     if (req.method === "POST") {
       if (user_id && reqBody.org_id) {
+        // let roleData = await prisma.userOraganizationGroups.findFirst({
+        //   where: {
+        //     AND: [{ user_id: user_id }, { organization_id: reqBody.org_id }],
+        //   },
+        // });
+
         let userData = await prisma.user.update({
           where: { id: user_id },
           data: {
@@ -37,6 +43,7 @@ export default async (req, res) => {
       });
     }
   } catch (error) {
+    console.log(error);
     return res.status(500).json({
       message: "INTERNAL SERVER ERROR",
     });
