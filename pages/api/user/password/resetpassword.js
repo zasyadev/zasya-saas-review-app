@@ -12,6 +12,12 @@ export default async (req, res) => {
         where: { email_id: reqBody.email },
       });
 
+      if (!data) {
+        return res
+          .status(400)
+          .json({ status: 400, message: "Wrong Email Address " });
+      }
+
       if (reqBody.token === data.token) {
         const updateData = await prisma.user.update({
           where: { email: reqBody.email },
@@ -41,6 +47,7 @@ export default async (req, res) => {
     }
   } catch (error) {
     return res.status(500).json({
+      error: error,
       message: "Internal Server Error",
     });
   }

@@ -86,7 +86,11 @@ function ReviewCreated({ user }) {
           </div>
         </>
       ) : Object.keys(reviewData).length ? (
-        <ReviewCreatedComponent user={user} reviewData={reviewData} />
+        <ReviewCreatedComponent
+          user={user}
+          reviewData={reviewData}
+          reviewId={review_id}
+        />
       ) : null}
       {/* {reviewData ? (
         <ReviewCreatedComponent user={user} reviewData={reviewData} />

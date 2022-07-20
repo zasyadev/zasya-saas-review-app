@@ -11,6 +11,7 @@ import {
   StarSmallIcon,
   UserIcon,
 } from "../../assets/Icon/icons";
+import { openNotificationBox } from "../../helpers/notification";
 const { useBreakpoint } = Grid;
 
 function ReviewCreatedComponent({ user, reviewData }) {
@@ -122,6 +123,27 @@ function ReviewCreatedComponent({ user, reviewData }) {
     setTotalRating(totalRating);
   };
 
+  const jobChangeHandler = async (id) => {
+    await fetch("/api/review/manage", {
+      method: "PUT",
+      body: JSON.stringify({
+        id: id,
+      }),
+      // headers: {
+      //   "Content-Type": "application/json",
+      // },
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        if (response.status === 200) {
+          openNotificationBox("success", response.message, 3);
+        } else {
+          openNotificationBox("error", response.message, 3);
+        }
+      })
+      .catch((err) => fetchReviewAssignList([]));
+  };
+
   return (
     <div>
       <div className="px-3 md:px-8 h-auto mt-5">
@@ -146,16 +168,22 @@ function ReviewCreatedComponent({ user, reviewData }) {
               </div>
             </div>
 
-            <div>
-              <div className="flex items-end justify-end ">
-                <div className="flex ">
-                  <Link href="/review">
-                    <button className="primary-bg-btn text-white text-sm py-3 text-center px-4 rounded-md ">
-                      Back
-                    </button>
-                  </Link>
+            <div className="flex items-end justify-between ">
+              <Link href="/review">
+                <button className="primary-bg-btn text-white text-sm py-3 text-center px-4 rounded-md ">
+                  Back
+                </button>
+              </Link>
+              {reviewData.frequency != "once" && (
+                <div
+                  className="ml-2"
+                  onClick={() => jobChangeHandler(reviewId)}
+                >
+                  <button className="primary-bg-btn text-white text-sm py-3 text-center px-4 rounded-md ">
+                    Stop
+                  </button>
                 </div>
-              </div>
+              )}
             </div>
           </div>
           <Row justify="space-between" gutter={[16, 16]}>
@@ -290,6 +318,7 @@ function ReviewCreatedComponent({ user, reviewData }) {
                                 index % 2 === 0 ? "" : "background-color-voilet"
                               }
                               bordered={true}
+                              pagination={false}
                             />
                           </Panel>
                         </>

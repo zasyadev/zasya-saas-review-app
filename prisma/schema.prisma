@@ -300,3 +300,5 @@ model UserOraganizationGroups {
 
   @@map("user_organization_groups")
 }
+
+

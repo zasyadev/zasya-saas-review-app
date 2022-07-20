@@ -137,7 +137,6 @@ export default async (req, res) => {
         status: 200,
       });
     } catch (error) {
-      console.log(error);
       if (error.code === "P2014") {
         return res
           .status(409)
