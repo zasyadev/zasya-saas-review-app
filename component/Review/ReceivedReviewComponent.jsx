@@ -27,6 +27,7 @@ function ReceivedReviewComponent({ user, reviewId }) {
         review_assignee_id: reviewData.id,
         answers: formValues,
         review_id: reviewData.review.id,
+        created_assignee_date: reviewData.created_date,
       };
 
       await fetch("/api/form/answer", {
@@ -47,7 +48,7 @@ function ReceivedReviewComponent({ user, reviewId }) {
         });
     }
   };
-
+  console.log(reviewData, "reviewData");
   const fetchReviewData = async (user, reviewId) => {
     setLoading(true);
     // setFormAssignList([]);
