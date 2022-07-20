@@ -1,8 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { Grid } from "antd";
 import { CalendarOutlined } from "@ant-design/icons";
 import moment from "moment";
-import { Modal, Collapse, Skeleton, Row, Col, Table } from "antd";
+import {
+  Modal,
+  Collapse,
+  Skeleton,
+  Row,
+  Col,
+  Table,
+  Popconfirm,
+  Grid,
+} from "antd";
 import AnswerViewComponent from "./AnswerViewComponent";
 import Link from "next/link";
 import {
@@ -14,13 +22,13 @@ import {
 import { openNotificationBox } from "../../helpers/notification";
 const { useBreakpoint } = Grid;
 
-function ReviewCreatedComponent({ user, reviewData }) {
+function ReviewCreatedComponent({ user, reviewData, reviewId }) {
   const { xs } = useBreakpoint();
   const { Panel } = Collapse;
   const datePattern = "DD-MM-YYYY";
-  const [answerData, setAnswerData] = useState([]);
+  // const [answerData, setAnswerData] = useState([]);
   const [headersData, setHeadersData] = useState([]);
-  const [answerDataModel, setAnswerDataModel] = useState(false);
+  // const [answerDataModel, setAnswerDataModel] = useState(false);
   const [loading, setLoading] = useState(false);
   const [dataSource, setDataSource] = useState([]);
   const [fixed, setFixed] = useState(false);
@@ -77,7 +85,7 @@ function ReviewCreatedComponent({ user, reviewData }) {
           let data = response.data.map((item) => ({
             user: item.user,
             answers: item.ReviewAssigneeAnswerOption.reverse(),
-            created_date: item.created_date,
+            created_date: item.created_assignee_date ?? item.created_date,
           }));
 
           let dataobj = data.map((item) => {
@@ -173,15 +181,21 @@ function ReviewCreatedComponent({ user, reviewData }) {
                   Back
                 </button>
               </Link>
-              {reviewData.frequency != "once" && (
-                <div
-                  className="ml-2"
-                  onClick={() => jobChangeHandler(reviewId)}
+              {reviewData.frequency != "once" && reviewId && (
+                <Popconfirm
+                  title="Are you sure you want to Stop the frequency of this Review?"
+                  okText="Yes"
+                  cancelText="No"
+                  icon={false}
+                  onConfirm={() => jobChangeHandler(reviewId)}
+                  placement="bottomRight"
                 >
-                  <button className="primary-bg-btn text-white text-sm py-3 text-center px-4 rounded-md ">
-                    Stop
-                  </button>
-                </div>
+                  <div className="ml-2">
+                    <button className="primary-bg-btn text-white text-sm py-3 text-center px-4 rounded-md ">
+                      Stop
+                    </button>
+                  </div>
+                </Popconfirm>
               )}
             </div>
           </div>
@@ -266,18 +280,6 @@ function ReviewCreatedComponent({ user, reviewData }) {
               </Row>
             </Col>
           </Row>
-          {/* <Table
-            className="review-question-table"
-            columns={columns}
-            dataSource={answerData}
-            scroll={{
-              x: 1300,
-            }}
-            rowClassName={(_, index) =>
-              index % 2 === 0 ? "" : "background-color-voilet"
-            }
-            bordered
-          /> */}
 
           <Row gutter={[16, 16]}>
             <Col xs={24} md={24}>
@@ -327,7 +329,7 @@ function ReviewCreatedComponent({ user, reviewData }) {
               </div>
             </Col>
           </Row>
-          <Modal
+          {/* <Modal
             title="Answers"
             visible={answerDataModel}
             //    onOk={handleOk}
@@ -367,7 +369,7 @@ function ReviewCreatedComponent({ user, reviewData }) {
                 })
               ) : null}
             </div>
-          </Modal>
+          </Modal> */}
         </div>
       </div>
     </div>

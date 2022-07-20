@@ -24,6 +24,7 @@ export default async (req, res) => {
             user: { connect: { id: resData.user_id } },
             review: { connect: { id: resData.review_id } },
             review_assignee: { connect: { id: resData.review_assignee_id } },
+            created_assignee_date: resData.created_assignee_date,
             ReviewAssigneeAnswerOption: {
               create: answerData,
             },

@@ -20,10 +20,8 @@ const { Header } = Layout;
 function HeaderLayout({ title, pageName, user }) {
   const router = useRouter();
   const logoutHandler = () => {
-    signOut({
-      redirect: false,
-    });
-    router.push("/");
+    signOut();
+    router.push("/auth/login");
   };
 
   const changeOragnizationHandle = async (values) => {

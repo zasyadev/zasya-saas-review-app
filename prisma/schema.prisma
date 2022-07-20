@@ -12,37 +12,33 @@ datasource db {
 }
 
 model User {
-  id         String  @id @default(uuid())
-  email      String  @unique()
-  password   String?
-  first_name String?
-  last_name  String?
-  address    String? @db.LongText
-  pin_code   String?
-  mobile     String?
-
-  status               Int
-  role                 Role                   @relation(fields: [role_id], references: [id])
-  role_id              Int
-  organization         UserOrganization       @relation(fields: [organization_id], references: [id])
-  organization_id      Int
-  createdDate          DateTime?              @default(now())
-  modified_date        DateTime?              @default(now())
-  deleted_date         DateTime?
-  Groups               Groups[]
-  GroupsEmployees      GroupsEmployees?
-  ReviewAssignTemplate ReviewAssignTemplate[]
-
-  taskReviewBy Review[] @relation("taskReviewBy")
-
-  ReviewTemplate        ReviewTemplate[]
-  ReviewAssigneeAnswers ReviewAssigneeAnswers[]
-  UserTags              UserTags?
-  UserImage             UserImage?
-  PasswordReset         PasswordReset?
-  userCreated           UserApplaud[]           @relation("userCreated")
-  userFeild             UserApplaud[]           @relation("userFeild")
-
+  id                      String                    @id @default(uuid())
+  email                   String                    @unique() @db.VarChar(62)
+  password                String?
+  first_name              String?                   @db.VarChar(50)
+  last_name               String?                   @db.VarChar(50)
+  address                 String?                   @db.LongText
+  pin_code                String?                   @db.VarChar(20)
+  mobile                  String?                   @db.VarChar(15)
+  status                  Int
+  role                    Role                      @relation(fields: [role_id], references: [id])
+  role_id                 Int
+  organization            UserOrganization          @relation(fields: [organization_id], references: [id])
+  organization_id         Int
+  createdDate             DateTime?                 @default(now())
+  modified_date           DateTime?                 @default(now())
+  deleted_date            DateTime?
+  Groups                  Groups[]
+  GroupsEmployees         GroupsEmployees?
+  ReviewAssignTemplate    ReviewAssignTemplate[]
+  taskReviewBy            Review[]                  @relation("taskReviewBy")
+  ReviewTemplate          ReviewTemplate[]
+  ReviewAssigneeAnswers   ReviewAssigneeAnswers[]
+  UserTags                UserTags?
+  UserImage               UserImage?
+  PasswordReset           PasswordReset?
+  userCreated             UserApplaud[]             @relation("userCreated")
+  userFeild               UserApplaud[]             @relation("userFeild")
   ReviewAssignee          ReviewAssignee[]
   UserOraganizationGroups UserOraganizationGroups[]
 
@@ -50,14 +46,14 @@ model User {
 }
 
 model Role {
-  id            Int      @id @default(autoincrement())
-  name          String
-  created_date  DateTime @default(now())
-  modified_date DateTime @default(now())
-  User          User[]
-
+  id                      Int                       @id @default(autoincrement())
+  name                    RoleEnum                  @default(Member)
+  created_date            DateTime                  @default(now())
+  modified_date           DateTime                  @default(now())
+  User                    User[]
   Review                  Review[]
   UserOraganizationGroups UserOraganizationGroups[]
+
   @@map("users_role")
 }
 
@@ -89,19 +85,16 @@ model GroupsEmployees {
 }
 
 model ReviewAssignTemplate {
-  id               String   @id @default(uuid())
-  user             User     @relation(fields: [user_id], references: [id])
-  user_id          String
-  form_title       String?
-  form_description String?
-  form_data        Json?
-  status           Boolean
-  created_date     DateTime @default(now())
-  modified_date    DateTime @default(now())
-
-
-  questions ReviewQuestions[] @relation("questions")
-
+  id                    String                  @id @default(uuid())
+  user                  User                    @relation(fields: [user_id], references: [id])
+  user_id               String
+  form_title            String?
+  form_description      String?
+  form_data             Json?
+  status                Boolean
+  created_date          DateTime                @default(now())
+  modified_date         DateTime                @default(now())
+  questions             ReviewQuestions[]       @relation("questions")
   Review                Review[]
   ReviewAssigneeAnswers ReviewAssigneeAnswers[]
 
@@ -109,33 +102,30 @@ model ReviewAssignTemplate {
 }
 
 model ReviewQuestions {
-  id            Int                  @id @default(autoincrement())
-  form          ReviewAssignTemplate @relation("questions", fields: [form_id], references: [id], onDelete: Cascade)
-  form_id       String
-  questionText  String
-  type          String
-  open          Boolean
-  created_date  DateTime             @default(now())
-  modified_date DateTime             @default(now())
-
-  options ReviewQuestionOption[] @relation("options")
-
-
+  id                         Int                          @id @default(autoincrement())
+  form                       ReviewAssignTemplate         @relation("questions", fields: [form_id], references: [id], onDelete: Cascade)
+  form_id                    String
+  questionText               String
+  type                       String
+  open                       Boolean
+  created_date               DateTime                     @default(now())
+  modified_date              DateTime                     @default(now())
+  options                    ReviewQuestionOption[]       @relation("options")
   ReviewAssigneeAnswerOption ReviewAssigneeAnswerOption[]
 
   @@map("review_questions")
 }
 
 model ReviewQuestionOption {
-  id          Int             @id @default(autoincrement())
-  question    ReviewQuestions @relation("options", fields: [question_id], references: [id], onDelete: Cascade)
-  question_id Int
-  optionText  String?
-  lowerLabel  String?
-  higherLabel String?
+  id            Int             @id @default(autoincrement())
+  question      ReviewQuestions @relation("options", fields: [question_id], references: [id], onDelete: Cascade)
+  question_id   Int
+  optionText    String?
+  lowerLabel    String?
+  higherLabel   String?
+  created_date  DateTime        @default(now())
+  modified_date DateTime        @default(now())
 
-  created_date  DateTime @default(now())
-  modified_date DateTime @default(now())
   @@map("review_question_option")
 }
 
@@ -147,8 +137,8 @@ model Review {
   form                  ReviewAssignTemplate    @relation(fields: [form_id], references: [id], onDelete: Cascade)
   form_id               String
   status                String
-  frequency             String
-  review_type           String
+  frequency             Frequency               @default(once)
+  review_type           ReviewType              @default(other)
   organization          UserOrganization?       @relation(fields: [organization_id], references: [id])
   organization_id       Int?
   role                  Role?                   @relation(fields: [role_id], references: [id])
@@ -178,18 +168,17 @@ model ReviewAssignee {
 }
 
 model ReviewAssigneeAnswers {
-  id                 Int            @id @default(autoincrement())
-  user               User           @relation(fields: [user_id], references: [id])
-  user_id            String
-  review             Review         @relation(fields: [review_id], references: [id], onDelete: Cascade)
-  review_id          String
-  review_assignee    ReviewAssignee @relation(fields: [review_assignee_id], references: [id], onDelete: Cascade)
-  review_assignee_id String
-  created_date       DateTime       @default(now())
-  modified_date      DateTime       @default(now())
-  delete_date        DateTime?
-
-
+  id                         Int                          @id @default(autoincrement())
+  user                       User                         @relation(fields: [user_id], references: [id])
+  user_id                    String
+  review                     Review                       @relation(fields: [review_id], references: [id], onDelete: Cascade)
+  review_id                  String
+  review_assignee            ReviewAssignee               @relation(fields: [review_assignee_id], references: [id], onDelete: Cascade)
+  review_assignee_id         String
+  created_date               DateTime                     @default(now())
+  modified_date              DateTime                     @default(now())
+  created_assignee_date      DateTime?
+  delete_date                DateTime?
   ReviewAssigneeAnswerOption ReviewAssigneeAnswerOption[]
 
   ReviewAssignTemplate   ReviewAssignTemplate? @relation(fields: [reviewAssignTemplateId], references: [id])
@@ -240,14 +229,14 @@ model UserTags {
 }
 
 model UserOrganization {
-  id            Int      @id @default(autoincrement())
-  company_name  String   @unique
-  created_date  DateTime @default(now())
-  modified_date DateTime @default(now())
-  User          User[]
-
+  id                      Int                       @id @default(autoincrement())
+  company_name            String                    @unique
+  created_date            DateTime                  @default(now())
+  modified_date           DateTime                  @default(now())
+  User                    User[]
   Review                  Review[]
   UserOraganizationGroups UserOraganizationGroups[]
+
   @@map("user_organization")
 }
 
@@ -301,4 +290,21 @@ model UserOraganizationGroups {
   @@map("user_organization_groups")
 }
 
+enum RoleEnum {
+  SuperAdmin
+  Admin
+  Manager
+  Member
+}
 
+enum Frequency {
+  once
+  daily
+  weekly
+  monthly
+}
+
+enum ReviewType {
+  feedback
+  other
+}

@@ -90,23 +90,6 @@ export default async (req, res) => {
             ReviewScheduler({ savedData: savedData, resData: resData });
           }
 
-          // schedule.scheduleJob(savedData.id, "*/1 * * * *", function () {
-          //   console.log("Time for sdfsdf!", savedData.id);
-          //   let newAssignData = [];
-          //   let assignData = resData.assigned_to_id.forEach((item) => {
-          //     newAssignData.push({
-          //       review: { connect: { id: savedData.id } },
-          //       assigned_to: { connect: { id: item } },
-          //     });
-          //   });
-
-          //   newAssignData.map(async (item) => {
-          //     return await prisma.reviewAssignee.create({
-          //       data: item,
-          //     });
-          //   });
-          // });
-
           return { savedData };
         } else {
           let newAssignData = [];
@@ -234,7 +217,6 @@ export default async (req, res) => {
         data: data,
       });
     } catch (error) {
-      console.log(error);
       return res
         .status(500)
         .json({ error: error, message: "Internal Server Error" });
@@ -248,9 +230,13 @@ export default async (req, res) => {
         });
         prisma.$disconnect();
         if (deletaData) {
+          reviewJob = schedule.scheduledJobs[reqBody.id];
+          if (reviewJob) {
+            reviewJob.cancel();
+          }
           return res.status(200).json({
             status: 200,
-            message: " Assign Review Deleted Successfully.",
+            message: "Assign Review Deleted Successfully.",
           });
         }
         return res.status(400).json({
@@ -259,7 +245,6 @@ export default async (req, res) => {
         });
       }
     } catch (error) {
-      console.log(error);
       return res
         .status(500)
         .json({ error: error, message: "Internal Server Error" });
