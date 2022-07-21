@@ -48,7 +48,7 @@ function ReceivedReviewComponent({ user, reviewId }) {
         });
     }
   };
-  console.log(reviewData, "reviewData");
+
   const fetchReviewData = async (user, reviewId) => {
     setLoading(true);
     // setFormAssignList([]);

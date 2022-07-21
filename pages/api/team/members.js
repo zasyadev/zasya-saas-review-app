@@ -132,7 +132,7 @@ export default async (req, res) => {
       prisma.$disconnect();
 
       return res.status(201).json({
-        message: "Members Saved Successfully",
+        message: "Member Saved Successfully",
         data: transactionData.userData,
         status: 200,
       });
@@ -233,7 +233,7 @@ export default async (req, res) => {
         where: { email: reqBody.email },
       });
       let createdUserData = await prisma.user.findUnique({
-        where: { id: resData.created_by },
+        where: { id: reqBody.created_by },
       });
 
       let existingOrgUser = await prisma.userOraganizationGroups.findFirst({
@@ -252,7 +252,7 @@ export default async (req, res) => {
 
         return res.status(200).json({
           status: 200,
-          message: "Members Deleted Successfully.",
+          message: "Member Deleted Successfully.",
         });
       }
       // const transactionData = await prisma.$transaction(async (transaction) => {

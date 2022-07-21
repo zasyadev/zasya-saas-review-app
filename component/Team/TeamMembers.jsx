@@ -132,7 +132,7 @@ function TeamMembers({ user }) {
       key: "action",
       render: (_, record) => (
         <p>
-          <Link href={`/team/edit/${record.id}`}>
+          <Link href={`/team/edit/${record.user_id}`}>
             <EditOutlined
               className="primary-color-blue text-xl mx-1  md:mx-2 cursor-pointer"
               // onClick={() => onUpdate(record)}
@@ -141,11 +141,11 @@ function TeamMembers({ user }) {
 
           <Popconfirm
             title={`Are you sure to delete ${
-              record.first_name + " " + record.last_name
+              record?.user?.first_name + " " + record?.user?.last_name
             }？`}
             okText="Yes"
             cancelText="No"
-            onConfirm={() => onDelete(record.email)}
+            onConfirm={() => onDelete(record.user.email)}
             icon={false}
           >
             <DeleteOutlined className="text-red-500 text-xl mx-1 md:mx-2 cursor-pointer" />

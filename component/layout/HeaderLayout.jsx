@@ -106,37 +106,39 @@ function HeaderLayout({ title, pageName, user }) {
           </Link>
         </Menu.Item>
       )}
-      <Menu.SubMenu
-        key="org"
-        title={
-          <span className="switch-team-dropdown">
-            <UserSwitchOutlined />
-            <span className="ml-1">Switch Teams</span>
-          </span>
-        }
-      >
-        {user?.UserOraganizationGroups?.length > 0
-          ? user?.UserOraganizationGroups.map((item) => {
-              return (
-                <Menu.Item key={`team${item.organization_id}`}>
-                  <div
-                    className="flex items-center"
-                    onClick={() => {
-                      changeOragnizationHandle(item.organization_id);
-                    }}
-                  >
-                    <span className="span-text capitalize">
-                      {item?.organization?.company_name}
-                    </span>
-                  </div>
-                </Menu.Item>
-              );
-            })
-          : null}
-      </Menu.SubMenu>
+      {user?.UserOraganizationGroups?.length > 1 ? (
+        <Menu.SubMenu
+          key="org"
+          title={
+            <span className="switch-team-dropdown">
+              <UserSwitchOutlined />
+              <span className="ml-1">Switch Teams</span>
+            </span>
+          }
+        >
+          {user?.UserOraganizationGroups?.length > 0
+            ? user?.UserOraganizationGroups.map((item) => {
+                return (
+                  <Menu.Item key={`team${item.organization_id}`}>
+                    <div
+                      className="flex items-center"
+                      onClick={() => {
+                        changeOragnizationHandle(item.organization_id);
+                      }}
+                    >
+                      <span className="span-text capitalize">
+                        {item?.organization?.company_name}
+                      </span>
+                    </div>
+                  </Menu.Item>
+                );
+              })
+            : null}
+        </Menu.SubMenu>
+      ) : null}
 
-      <Menu.Item key={"sign_out"}>
-        <div onClick={() => logoutHandler()} className=" flex items-center ">
+      <Menu.Item key={"sign_out"} onClick={() => logoutHandler()}>
+        <div className=" flex items-center ">
           <LogoutOutlined /> <span className="span-text">Sign Out</span>
         </div>
       </Menu.Item>

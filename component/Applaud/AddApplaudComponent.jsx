@@ -4,7 +4,6 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { openNotificationBox } from "../../helpers/notification";
-import Router from "next/router";
 
 function AddApplaud({ user }) {
   const router = useRouter();
@@ -119,8 +118,8 @@ function AddApplaud({ user }) {
                       }
                     >
                       {membersList.map((data, index) => (
-                        <Select.Option key={index} value={data.id}>
-                          {data.first_name}
+                        <Select.Option key={index} value={data.user_id}>
+                          {data?.user?.first_name}
                         </Select.Option>
                       ))}
                     </Select>

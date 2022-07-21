@@ -5,8 +5,8 @@ import threeUser from "../../assets/Icon/threeusers.png";
 import ReviewIcon from "../../assets/Icon/reviewicon.png";
 import User1 from "../../assets/images/User1.png";
 import User2 from "../../assets/images/User2.png";
-import User3 from "../../assets/images/User3.png";
-import User4 from "../../assets/images/User4.png";
+// import User3 from "../../assets/images/User3.png";
+// import User4 from "../../assets/images/User4.png";
 import dynamic from "next/dynamic";
 import { SmallApplaudIcon, ApplaudIconSmall } from "../../assets/Icon/icons";
 import { Skeleton } from "antd";
@@ -41,7 +41,6 @@ function DashBoard({ user }) {
             ratingHandler(response.data.reviewRating);
           setDashboardData(response.data);
           applaudcount(response.data.applaudData);
-          console.log(response.data);
         }
       })
 

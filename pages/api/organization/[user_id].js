@@ -36,7 +36,7 @@ export default async (req, res) => {
               roleData: roleData,
             };
           });
-        console.log(filterdata, "sdfsf");
+
         prisma.$disconnect();
         if (filterdata) {
           return res.status(200).json({

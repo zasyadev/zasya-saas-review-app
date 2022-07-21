@@ -139,7 +139,7 @@ function RegisterPage() {
             rules={[
               {
                 required: true,
-                message: "Please confirm your password!",
+                message: "Please enter confirm your password!",
               },
               ({ getFieldValue }) => ({
                 validator(_, value) {
@@ -148,7 +148,7 @@ function RegisterPage() {
                   }
                   return Promise.reject(
                     new Error(
-                      "The two passwords that you entered do not match!"
+                      "The  password that you have entered did not match!"
                     )
                   );
                 },
