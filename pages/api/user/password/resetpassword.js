@@ -15,7 +15,7 @@ export default async (req, res) => {
       if (!data) {
         return res
           .status(400)
-          .json({ status: 400, message: "Wrong Email Address " });
+          .json({ status: 400, message: "Wrong email address " });
       }
 
       if (reqBody.token === data.token) {
@@ -34,15 +34,15 @@ export default async (req, res) => {
           return res.status(200).json({
             status: 200,
             data: updateData,
-            message: "Password has been Updated",
+            message: "Password has been updated",
           });
         } else {
           return res
             .status(404)
-            .json({ status: 404, message: "No Record Found" });
+            .json({ status: 404, message: "No record found" });
         }
       } else {
-        return res.status(400).json({ status: 400, message: "Wrong Token " });
+        return res.status(400).json({ status: 400, message: "Invalid token " });
       }
     }
   } catch (error) {

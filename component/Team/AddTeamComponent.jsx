@@ -196,7 +196,7 @@ function AddTeamComponent({ user, editMode, memberData }) {
                       type="submit"
                       className=" px-4 py-3 h-full rounded  text-sm primary-bg-btn text-white w-1/4 my-1"
                     >
-                      {editMode ? "Update" : "Add"}
+                      {editMode ? "Update" : "Create"}
                     </button>
                   </div>
                 </Col>

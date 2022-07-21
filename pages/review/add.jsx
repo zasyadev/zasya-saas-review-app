@@ -5,7 +5,7 @@ import { getSession } from "next-auth/client";
 import AddEditReviewComponent from "../../component/Review/AddEditReviewComponent";
 function ReviewAdd({ user }) {
   return (
-    <AdminLayout user={user} title="Add Review">
+    <AdminLayout user={user} title="Create Review">
       <AddEditReviewComponent user={user} />
     </AdminLayout>
   );

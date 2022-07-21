@@ -5,7 +5,7 @@ import AdminLayout from "../../component/layout/AdminLayout";
 
 function addapplaud({ user }) {
   return (
-    <AdminLayout user={user} title="Add Applaud">
+    <AdminLayout user={user} title="Create Applaud">
       <AddApplaudComponent user={user} />
     </AdminLayout>
   );

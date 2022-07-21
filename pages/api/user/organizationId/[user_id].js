@@ -10,13 +10,14 @@ export default async (req, res) => {
         const userOrgData = await prisma.user.findUnique({
           where: { id: user_id },
         });
-        const data = await prisma.user.findMany({
-          where: { organization_id: userOrgData.organization_id },
 
+        const data = await prisma.userOraganizationGroups.findMany({
+          where: { organization_id: userOrgData.organization_id },
           include: {
-            UserTags: true,
+            user: true,
           },
         });
+
         const filterdata = data
           // .filter((item) => item.status === 1)
           .map((item) => {

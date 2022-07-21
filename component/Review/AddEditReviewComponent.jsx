@@ -355,9 +355,9 @@ function AddEditReviewComponent({ editMode, user }) {
                           {userList.map((data, index) => (
                             <Select.Option
                               key={index + "users"}
-                              value={data.id}
+                              value={data?.user?.id}
                             >
-                              {data.first_name}
+                              {data?.user?.first_name}
                             </Select.Option>
                           ))}
                         </Select>
@@ -410,7 +410,7 @@ function AddEditReviewComponent({ editMode, user }) {
                           type="submit"
                           className=" px-4 py-3 h-full rounded primary-bg-btn text-white w-1/4 my-1"
                         >
-                          Add
+                          Create
                         </button>
                       </div>
                     </Col>

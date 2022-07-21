@@ -225,7 +225,7 @@ function TeamMembers({ user }) {
               Cancel
             </Button>
             <Button key="add" type="primary" onClick={form.submit}>
-              {editMode ? "Update" : "Add"}
+              {editMode ? "Update" : "Create"}
             </Button>
           </>,
         ]}

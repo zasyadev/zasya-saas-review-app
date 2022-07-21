@@ -224,14 +224,6 @@ function Applaud({ user }) {
           <Row>
             <Col xs={24} md={12}>
               <div className="grid grid-cols-1 px-2 w-full">
-                {/* <div className="flex justify-end ">
-                  <button
-                    className="primary-bg-btn text-white text-sm py-3 text-center px-4 rounded-md"
-                    onClick={() => setReceivedApplaudListVisible(false)}
-                  >
-                    Back
-                  </button>
-                </div> */}
                 <div className=" bg-white rounded-xl overflow-hdden shadow-md my-3">
                   <div className="p-4 ">
                     <div className="overflow-x-auto">
@@ -254,7 +246,7 @@ function Applaud({ user }) {
                                     <span className="uppercase ">
                                       {item.created.first_name}
                                     </span>{" "}
-                                    has Applauded you on.
+                                    has Applauded you.
                                   </p>{" "}
                                 </Col>
                               </Row>

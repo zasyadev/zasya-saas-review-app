@@ -99,7 +99,7 @@ export default async (req, res) => {
       if (deletaData) {
         return res.status(200).json({
           status: 200,
-          message: "Form Deleted Successfully.",
+          message: "Template Deleted Successfully.",
         });
       }
       return res.status(400).json({
