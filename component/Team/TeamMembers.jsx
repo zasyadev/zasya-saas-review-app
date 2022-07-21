@@ -59,7 +59,8 @@ function TeamMembers({ user }) {
       .then((response) => response.json())
       .then((response) => {
         if (response.status === 200) {
-          setMembersList(response.data);
+          let data = response.data.filter((item) => item.user_id != user.id);
+          setMembersList(data);
         }
         setLoading(false);
       })
@@ -79,20 +80,20 @@ function TeamMembers({ user }) {
       range: "${label} must be between ${min} and ${max}",
     },
   };
-  const onUpdate = (data) => {
-    setEditMode(true);
-    setUpdateData(data);
-    setIsModalVisible(true);
+  // const onUpdate = (data) => {
+  //   setEditMode(true);
+  //   setUpdateData(data);
+  //   setIsModalVisible(true);
 
-    form.setFieldsValue({
-      first_name: data.first_name,
-      last_name: data.last_name,
-      email: data.email,
-      tags: data.UserTags.tags,
-      status: data.status,
-      role: data.role_id,
-    });
-  };
+  //   form.setFieldsValue({
+  //     first_name: data.first_name,
+  //     last_name: data.last_name,
+  //     email: data.email,
+  //     tags: data.UserTags.tags,
+  //     status: data.status,
+  //     role: data.role_id,
+  //   });
+  // };
 
   const onCancel = () => {
     form.resetFields();
@@ -215,21 +216,6 @@ function TeamMembers({ user }) {
           <SiderRight />
         </Col> */}
       </Row>
-      <Modal
-        title={`${editMode ? "Update" : "Add"}  Team Members`}
-        visible={isModalVisible}
-        onCancel={() => onCancel()}
-        footer={[
-          <>
-            <Button key="add" type="default" onClick={() => onCancel()}>
-              Cancel
-            </Button>
-            <Button key="add" type="primary" onClick={form.submit}>
-              {editMode ? "Update" : "Create"}
-            </Button>
-          </>,
-        ]}
-      ></Modal>
     </>
   );
 }

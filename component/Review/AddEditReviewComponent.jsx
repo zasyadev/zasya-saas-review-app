@@ -18,7 +18,6 @@ function AddEditReviewComponent({ editMode, user }) {
   const router = useRouter();
   const [form] = Form.useForm();
   const [formList, setFormList] = useState([]);
-  // const [memberDetails, setMemberDetails] = useState(false);
   const [userList, setUserList] = useState([]);
   const [questionList, setQuestionList] = useState([]);
   const [previewForm, setPreviewForm] = useState(false);
@@ -47,7 +46,7 @@ function AddEditReviewComponent({ editMode, user }) {
       status: values.status ?? "pending",
       frequency: values.frequency,
       role_id: user.role_id,
-      // organization_id: user.organization_id,
+
       is_published: values.is_published,
       templateData: templateData,
     });
@@ -89,14 +88,6 @@ function AddEditReviewComponent({ editMode, user }) {
         setFormList([]);
       });
   }
-
-  // const onChangeStatus = (e) => {
-  //   if (e.target.checked) {
-  //     setMemberDetails(true);
-  //   } else {
-  //     setMemberDetails(false);
-  //   }
-  // };
 
   async function fetchUserData() {
     setUserList([]);

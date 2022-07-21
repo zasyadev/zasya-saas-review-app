@@ -22,7 +22,7 @@ function AddApplaud({ user }) {
       .then((res) => res.json())
       .then((res) => {
         if (res.status === 200) {
-          let data = res.data.filter((item) => item.id != user.id);
+          let data = res.data.filter((item) => item.user_id != user.id);
           setMembersList(data);
         }
       })

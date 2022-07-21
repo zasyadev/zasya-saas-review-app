@@ -1,17 +1,12 @@
 import React, { useState } from "react";
-import Head from "next/head";
 import { Form, Input, message } from "antd";
 import { useRouter } from "next/router";
-// import Layout from "../../component/layout/Layout";
-import loginImage from "../../assets/images/login_img.png";
-import Image from "next/image";
 import Link from "next/link";
 import { openNotificationBox } from "../../helpers/notification";
 import { HeadersComponent } from "../../helpers/HeadersComponent";
 import { LoadingSpinner } from "../../component/Loader/LoadingSpinner";
 import AuthWrapper from "../../component/auth/AuthWrapper";
-// import loginImage from "../../assets/images/login-image.png";
-// import { LoadingSpinner } from "../../component/Loader/LoadingSpinner";
+import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 
 function ResetPassword() {
   const router = useRouter();
@@ -86,10 +81,13 @@ function ResetPassword() {
               },
             ]}
           >
-            <Input
+            <Input.Password
               type="password"
-              className="form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white  focus:outline-none"
+              className="flex form-control w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white  focus:outline-none"
               placeholder="New Password"
+              iconRender={(visible) =>
+                visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+              }
             />
           </Form.Item>
         </div>
@@ -117,7 +115,7 @@ function ResetPassword() {
           >
             <Input
               type="password"
-              className="form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white  focus:outline-none"
+              className="flex form-control  w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white  focus:outline-none"
               placeholder="Confirm Password"
             />
           </Form.Item>

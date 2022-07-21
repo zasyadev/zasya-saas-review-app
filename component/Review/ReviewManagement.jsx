@@ -268,8 +268,8 @@ function ReviewManagement({ user }) {
       ),
     },
     {
-      title: "Assignees",
-      key: "assignees ",
+      title: "Count",
+      key: "count ",
 
       render: (_, record) => (
         <p>

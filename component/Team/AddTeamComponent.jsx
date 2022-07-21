@@ -170,6 +170,9 @@ function AddTeamComponent({ user, editMode, memberData }) {
                     ]}
                   >
                     <Select placeholder="Roles" className="select-tag">
+                      <Select.Option key={"amin"} value={2} disabled>
+                        Admin
+                      </Select.Option>
                       <Select.Option key={"manager"} value={3}>
                         Manager
                       </Select.Option>

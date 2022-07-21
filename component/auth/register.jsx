@@ -1,14 +1,12 @@
 import { Col, Form, Input, message, Row } from "antd";
-import Head from "next/head";
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
-import loginImage from "../../assets/images/login_img.png";
 import { HeadersComponent } from "../../helpers/HeadersComponent";
 import { openNotificationBox } from "../../helpers/notification";
 import { LoadingSpinner } from "../Loader/LoadingSpinner";
 import AuthWrapper from "./AuthWrapper";
+import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 
 function RegisterPage() {
   const router = useRouter();
@@ -155,10 +153,13 @@ function RegisterPage() {
               }),
             ]}
           >
-            <Input
-              type="password"
-              className="form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white  focus:outline-none"
+            <Input.Password
+              // type="password"
+              className="flex form-control w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white  focus:outline-none"
               placeholder="Confirm Password"
+              iconRender={(visible) =>
+                visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+              }
             />
           </Form.Item>
         </div>

@@ -1,9 +1,7 @@
 import { Form, Input, Select, Option } from "antd";
 import { Typography } from "@material-ui/core";
-import Button from "@material-ui/core/Button";
+
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-import IconButton from "@material-ui/core/IconButton";
-import MenuItem from "@material-ui/core/MenuItem";
 import Radio from "@material-ui/core/Radio";
 // import Select from "@material-ui/core/Select";
 import TextField from "@material-ui/core/TextField";
@@ -71,20 +69,6 @@ const QuestionComponent = ({
         </Row>
 
         <div className="mt-5 mb-2 w-full">
-          {/* {type === "input" && (
-            // <TextField
-            //   fullWidth={true}
-            //   placeholder="Short Text "
-            //   rows={1}
-            //   disabled
-            // />
-            // <Input
-            //   placeholder="Short Text "
-            //   disabled
-            //   className="input-box  text-base "
-            //   bordered={false}
-            // />
-          )} */}
           {type === "checkbox" && (
             <>
               {options.map((op, j) => (
@@ -100,15 +84,7 @@ const QuestionComponent = ({
                       }}
                       value={op.optionText}
                     />
-                    {/* <TextField
-                      fullWidth={true}
-                      placeholder="Option Text"
-                      multiline={true}
-                      value={op.optionText}
-                      onChange={(e) => {
-                        handleOptionValue(e.target.value, idx, j);
-                      }}
-                    /> */}
+
                     <button
                       onClick={() => {
                         removeOption(idx, j);
@@ -139,20 +115,6 @@ const QuestionComponent = ({
             </>
           )}
 
-          {/* {type === "textarea" && (
-            <Input
-              placeholder="Long Description Text "
-              disabled
-              className="input-box  text-base "
-              bordered={false}
-            />
-            // <TextField
-            //   fullWidth={true}
-            //   placeholder="Long Description Text "
-            //   rows={1}
-            //   disabled
-            // />
-          )} */}
           {type === "scale" && (
             <>
               <div className="flex items-center">
@@ -192,15 +154,6 @@ const QuestionComponent = ({
                       }}
                       value={options[0].optionText}
                     />
-                    {/* <TextField
-                      placeholder="Scale Text"
-                      multiline={true}
-                      className="w-1/2"
-                      onChange={(e) => {
-                        handleOptionValue(e.target.value, idx, 0);
-                      }}
-                      value={options[0].optionText}
-                    /> */}
                   </div>
                   <div className="flex flex-row  items-center py-2">
                     <p className="mr-4">{higherLabel ?? 5}</p>
@@ -213,15 +166,6 @@ const QuestionComponent = ({
                       }}
                       value={options[1].optionText}
                     />
-                    {/* <TextField
-                      placeholder="Scale Text"
-                      multiline={true}
-                      className="w-1/2"
-                      onChange={(e) => {
-                        handleOptionValue(e.target.value, idx, 1);
-                      }}
-                      value={options[1].optionText}
-                    /> */}
                   </div>
                 </>
               )}
@@ -305,22 +249,6 @@ const QuestionComponent = ({
           </div>
         )}
       </div>
-      {/* <div>
-        <div className="w-full flex flex-col items-start ml-4 pt-4 pb-5 ">
-          <h4 className="mb-5 text-xl">{questionText}</h4>
-           <Radio.Group>
-            {options?.map((option, i) => (
-              <Radio
-                key={i + "rdoption"}
-                className="w-full"
-                value={option.optionText}
-              >
-                {option.optionText}
-              </Radio>
-            ))}
-          </Radio.Group> 
-        </div>
-      </div> */}
     </div>
   );
 };

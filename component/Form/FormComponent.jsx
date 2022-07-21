@@ -1,4 +1,4 @@
-import { Input, message } from "antd";
+import { Input } from "antd";
 import { useRouter } from "next/router";
 import React, { useState, useEffect } from "react";
 import { openNotificationBox } from "../../helpers/notification";
@@ -274,27 +274,6 @@ function FormComponent({
               className="input-box text-base mt-4 "
               bordered={false}
             />
-            {/* <TextField
-              fullWidth={true}
-              placeholder="Form Tittle"
-              multiline={true}
-              onChange={(e) => {
-                setFormTitle(e.target.value);
-              }}
-              value={formTitle}
-              inputProps={{
-                style: { fontSize: 40, paddingTop: 10 },
-              }}
-            /> */}
-            {/* <TextField
-              fullWidth={true}
-              placeholder="Description"
-              multiline={true}
-              onChange={(e) => {
-                setFormDes(e.target.value);
-              }}
-              value={formDes}
-            /> */}
           </div>
         </div>
 
