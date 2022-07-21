@@ -211,6 +211,15 @@ function ReviewManagement({ user }) {
     required: "${label} is required!",
   };
 
+  const answerAssignee = (data) => {
+    if (data.length > 0) {
+      let length = 0;
+      let a = data.filter((item) => item.status);
+      if (a.length) return a.length;
+      else return length;
+    }
+  };
+
   const columns = [
     {
       title: "Review Name",
@@ -255,6 +264,16 @@ function ReviewManagement({ user }) {
           }`}
         >
           {is_published}
+        </p>
+      ),
+    },
+    {
+      title: "Assignees",
+      key: "assignees ",
+
+      render: (_, record) => (
+        <p>
+          {answerAssignee(record.ReviewAssignee)}/{record.ReviewAssignee.length}
         </p>
       ),
     },
@@ -344,7 +363,7 @@ function ReviewManagement({ user }) {
               </div>
             </div>
 
-            <div className="w-full bg-white rounded-xl overflow-hdden shadow-md p-4 ">
+            <div className="w-full bg-white rounded-xl overflow-hdden shadow-md px-4 pb-4">
               <div className="">
                 <div className="overflow-x-auto">
                   {loading ? (

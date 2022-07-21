@@ -1,5 +1,4 @@
 import { EyeOutlined } from "@ant-design/icons";
-
 import { Modal, Skeleton } from "antd";
 import React, { useEffect, useState } from "react";
 import { openNotificationBox } from "../../helpers/notification";
@@ -8,20 +7,10 @@ import CustomTable from "../../helpers/CustomTable";
 import Link from "next/link";
 
 function FormView({ user }) {
-  const [isModalVisible, setIsModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const [updateData, setUpdateData] = useState({});
   const [formAssignList, setFormAssignList] = useState([]);
   const [formValues, setFormValues] = useState([]);
-
-  const showModal = (item) => {
-    setIsModalVisible(true);
-    setUpdateData(item);
-  };
-
-  const onCancel = () => {
-    setIsModalVisible(false);
-  };
 
   async function fetchFormAssignList() {
     if (user.id) {
@@ -45,37 +34,6 @@ function FormView({ user }) {
     fetchFormAssignList();
   }, []);
 
-  const handleSubmit = async () => {
-    // let array = formValues.map((item) => {
-    //   return { ...item, user_id: user.id, form_id: updateData.id };
-    // });
-    if (user.id && updateData.id) {
-      let obj = {
-        user_id: user.id,
-        review_assignee_id: updateData.id,
-        answers: formValues,
-        review_id: updateData.review.id,
-      };
-
-      await fetch("/api/form/answer", {
-        method: "POST",
-        body: JSON.stringify(obj),
-      })
-        .then((response) => response.json())
-        .then((response) => {
-          if (response.status === 200) {
-            setIsModalVisible(false);
-            openNotificationBox("success", response.message, 3);
-          } else {
-            openNotificationBox("error", response.message, 3);
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
-  };
-
   const handleAnswerChange = (quesId, value) => {
     setFormValues((prev) =>
       prev.find((item) => item.questionId === quesId)
@@ -93,12 +51,7 @@ function FormView({ user }) {
       render: (review) =>
         review.created.first_name + " " + review.created.last_name,
     },
-    // {
-    //   title: "Assign To",
-    //   dataIndex: "assigned_to",
-    //   render: (assigned_to) =>
-    //     assigned_to.first_name + " " + assigned_to.last_name,
-    // },
+
     {
       title: "Review Name",
       dataIndex: "review",
@@ -176,7 +129,7 @@ function FormView({ user }) {
                 </Link>
               </div>
             </div>
-            <div className="w-full bg-white rounded-xl overflow-hdden shadow-md p-4 ">
+            <div className="w-full bg-white rounded-xl overflow-hdden shadow-md px-4 pb-4">
               <div className="p-4 ">
                 <div className="overflow-x-auto">
                   {loading ? (
@@ -200,43 +153,6 @@ function FormView({ user }) {
           </div>
         </div>
       </div>
-      <Modal
-        title="View Review Template"
-        visible={isModalVisible}
-        onOk={() => handleSubmit()}
-        onCancel={() => onCancel()}
-        width={900}
-        wrapClassName="view_form_modal"
-      >
-        <div>
-          <div className="">
-            <div>
-              <div className="w-full flex  flex-col items-start px-4 pt-4 pb-5 bg-gray-200 rounded">
-                <div>
-                  <h3 className="text-2xl font-medium primary-color-blue mb-2">
-                    {updateData?.review?.form?.form_title}
-                  </h3>
-                  <p className="text-base  font-normal text-black mb-2">
-                    {updateData?.review?.form?.form_description}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {updateData?.review?.form?.questions.length > 0 &&
-            updateData?.review?.form?.questions?.map((question, idx) => (
-              <>
-                <QuestionViewComponent
-                  {...question}
-                  idx={idx}
-                  open={false}
-                  handleAnswerChange={handleAnswerChange}
-                />
-              </>
-            ))}
-        </div>
-      </Modal>
     </div>
   );
 }
