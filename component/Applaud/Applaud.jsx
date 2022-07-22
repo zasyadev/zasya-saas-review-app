@@ -1,53 +1,17 @@
-import { Button, Col, Form, Modal, Row, Select, Skeleton } from "antd";
-import TextArea from "antd/lib/input/TextArea";
+import { Col, Row, Skeleton } from "antd";
+
 import React, { useState, useEffect } from "react";
-import { openNotificationBox } from "../../helpers/notification";
 import CustomTable from "../../helpers/CustomTable";
 import moment from "moment";
 import { CalanderIcon, CommentIcons, UserIcon } from "../../assets/Icon/icons";
 import Link from "next/link";
 
 function Applaud({ user }) {
-  const [applaudform] = Form.useForm();
-  // const [isModalVisible, setIsModalVisible] = useState(false);
-  // const [membersList, setMembersList] = useState([]);
   const [applaudList, setApplaudList] = useState([]);
   const [receivedApplaudList, setReceivedApplaudList] = useState([]);
-  const [receivedApplaudListVisible, setReceivedApplaudListVisible] =
-    useState(false);
+
   const [loading, setLoading] = useState(false);
-  const [editMode, setEditMode] = useState(false);
-  const [updateData, setUpdateData] = useState({});
 
-  // const showModal = () => {
-  //   setIsModalVisible(true);
-  // };
-
-  // const onCancel = () => {
-  //   setIsModalVisible(false);
-  //   applaudform.resetFields();
-  // };
-
-  // const validateMessages = {
-  //   required: "${label} is required!",
-  // };
-
-  // async function fetchMember() {
-  //   await fetch("/api/team/" + user.id, {
-  //     method: "GET",
-  //   })
-  //     .then((res) => res.json())
-  //     .then((res) => {
-  //       if (res.status === 200) {
-  //         let data = res.data.filter((item) => item.id != user.id);
-  //         setMembersList(data);
-  //       }
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //       setMembersList([]);
-  //     });
-  // }
   async function fetchApplaud() {
     setLoading(true);
     await fetch("/api/applaud/" + user.id, { method: "GET" })
@@ -61,94 +25,17 @@ function Applaud({ user }) {
       });
   }
 
-  async function addApplaud(obj) {
-    await fetch("/api/applaud", {
-      method: "POST",
-      body: JSON.stringify(obj),
-    })
-      .then((response) => response.json())
-      .then((response) => {
-        if (response.status === 200) {
-          applaudform.resetFields();
-          setIsModalVisible(false);
-          fetchApplaud();
-          openNotificationBox("success", response.message, 3);
-        } else {
-          openNotificationBox("error", response.message, 3);
-        }
-      })
-      .catch((err) => fetchApplaud([]));
-  }
-
-  async function updateApplaud(obj) {
-    if (updateData.id) {
-      obj.id = updateData.id;
-    }
-    await fetch("/api/applaud", {
-      method: "PUT",
-      body: JSON.stringify(obj),
-    })
-      .then((response) => response.json())
-      .then((response) => {
-        if (response.status === 200) {
-          applaudform.resetFields();
-          fetchApplaud();
-          setIsModalVisible(false);
-          setEditMode(false);
-          openNotificationBox("success", response.message, 3);
-        } else {
-          openNotificationBox("error", response.message, 3);
-        }
-      })
-      .catch((err) => fetchApplaud([]));
-  }
-
-  // const onFinish = (values) => {
-  //   let obj = {
-  //     user_id: values.user_id,
-  //     comment: values.comment,
-  //     created_by: user.id,
-  //   };
-
-  //   editMode ? updateApplaud(obj) : addApplaud(obj);
+  // const onUpdate = (data) => {
+  //   setEditMode(true);
+  //   setUpdateData(data);
+  //   setIsModalVisible(true);
+  //   applaudform.setFieldsValue({
+  //     user_id: data.user_id,
+  //     comment: data.comment,
+  //   });
   // };
 
-  async function onDelete(id) {
-    if (id) {
-      let obj = {
-        id: id,
-      };
-      await fetch("/api/applaud", {
-        method: "DELETE",
-        body: JSON.stringify(obj),
-      })
-        .then((res) => res.json())
-        .then((res) => {
-          if (res.status === 200) {
-            fetchApplaud();
-            openNotificationBox("success", res.message, 3);
-          } else {
-            openNotificationBox("error", res.message, 3);
-          }
-        })
-        .catch((err) => {
-          fetchApplaud([]);
-        });
-    }
-  }
-
-  const onUpdate = (data) => {
-    setEditMode(true);
-    setUpdateData(data);
-    setIsModalVisible(true);
-    applaudform.setFieldsValue({
-      user_id: data.user_id,
-      comment: data.comment,
-    });
-  };
-
   useEffect(() => {
-    // fetchMember();
     fetchApplaud();
     fetchReceivedApplaud();
   }, []);
@@ -210,10 +97,7 @@ function Applaud({ user }) {
             <div className="my-3 mx-3 ">
               <div>
                 <Link href="/applaud/add">
-                  <button
-                    className="primary-bg-btn text-white text-sm py-3 text-center px-4 rounded-md w-full"
-                    // onClick={showModal}
-                  >
+                  <button className="primary-bg-btn text-white text-sm py-3 text-center px-4 rounded-md w-full">
                     Create Applaud
                   </button>
                 </Link>
@@ -224,14 +108,6 @@ function Applaud({ user }) {
           <Row>
             <Col xs={24} md={12}>
               <div className="grid grid-cols-1 px-2 w-full">
-                {/* <div className="flex justify-end ">
-                  <button
-                    className="primary-bg-btn text-white text-sm py-3 text-center px-4 rounded-md"
-                    onClick={() => setReceivedApplaudListVisible(false)}
-                  >
-                    Back
-                  </button>
-                </div> */}
                 <div className=" bg-white rounded-xl overflow-hdden shadow-md my-3">
                   <div className="p-4 ">
                     <div className="overflow-x-auto">
@@ -254,7 +130,7 @@ function Applaud({ user }) {
                                     <span className="uppercase ">
                                       {item.created.first_name}
                                     </span>{" "}
-                                    has Applauded you on.
+                                    has Applauded you.
                                   </p>{" "}
                                 </Col>
                               </Row>
@@ -273,9 +149,7 @@ function Applaud({ user }) {
                                 <Col xs={4} md={4}>
                                   <CalanderIcon className="primary-color-blue font-bold  text-base " />
                                 </Col>
-                                {/* <span className="font-bold"> */}
-                                {/* Comment : */}
-                                {/* </span>{" "} */}
+
                                 <Col xs={20} md={20}>
                                   <p className=" ml-2 text-base">
                                     {moment(item.created_date).format(
@@ -288,7 +162,7 @@ function Applaud({ user }) {
                           );
                         })
                       ) : (
-                        <p className="text-center">No Applauds received.</p>
+                        <p className="text-center p-4">No Applauds received.</p>
                       )}
                     </div>
                   </div>
@@ -299,16 +173,7 @@ function Applaud({ user }) {
               <div className="px-1  h-auto ">
                 <div className="container mx-auto max-w-full ">
                   <div className="grid grid-cols-1 px-2  mb-16">
-                    <div className="flex justify-end ">
-                      {/* <div className=" ">
-                    <button
-                      className="primary-bg-btn text-white text-sm py-3 text-center px-4 rounded-md"
-                      onClick={() => setReceivedApplaudListVisible(true)}
-                    >
-                      Received Applauds
-                    </button>
-                  </div> */}
-                    </div>
+                    <div className="flex justify-end "></div>
                     <div className="w-full bg-white rounded-xl overflow-hdden shadow-md my-3">
                       <div className="p-4 ">
                         <div className="overflow-x-auto">
@@ -339,74 +204,6 @@ function Applaud({ user }) {
               </div>
             </Col>
           </Row>
-
-          {/* <Modal
-            title={editMode ? "Update" : "Create Applaud"}
-            visible={isModalVisible}
-            onOk={applaudform.submit}
-            onCancel={() => onCancel()}
-            footer={[
-              <>
-                <Button key="cancel" type="default" onClick={() => onCancel()}>
-                  Cancel
-                </Button>
-                <Button key="add" type="primary" onClick={applaudform.submit}>
-                  {editMode ? "Update" : "Add"}
-                </Button>
-              </>,
-            ]}
-          >
-            <Form
-              layout="vertical"
-              form={applaudform}
-              onFinish={onFinish}
-              validateMessages={validateMessages}
-            >
-              <Row gutter={16}>
-                <Col md={24} xs={24}>
-                  <Form.Item
-                    name="user_id"
-                    label="Member Name"
-                    rules={[
-                      {
-                        required: true,
-                      },
-                    ]}
-                  >
-                    <Select
-                      placeholder="Select Member"
-                      showSearch
-                      filterOption={(input, option) =>
-                        option.children
-                          .toLowerCase()
-                          .indexOf(input.toLowerCase()) >= 0
-                      }
-                    >
-                      {membersList.map((data, index) => (
-                        <Select.Option key={index} value={data.id}>
-                          {data.first_name}
-                        </Select.Option>
-                      ))}
-                    </Select>
-                  </Form.Item>
-                </Col>
-
-                <Col md={24} xs={24}>
-                  <Form.Item
-                    name="comment"
-                    label="Comment"
-                    rules={[
-                      {
-                        required: true,
-                      },
-                    ]}
-                  >
-                    <TextArea />
-                  </Form.Item>
-                </Col>
-              </Row>
-            </Form>
-          </Modal> */}
         </div>
       </div>
     </div>

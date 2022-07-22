@@ -59,7 +59,8 @@ function TeamMembers({ user }) {
       .then((response) => response.json())
       .then((response) => {
         if (response.status === 200) {
-          setMembersList(response.data);
+          let data = response.data.filter((item) => item.user_id != user.id);
+          setMembersList(data);
         }
         setLoading(false);
       })
@@ -79,20 +80,20 @@ function TeamMembers({ user }) {
       range: "${label} must be between ${min} and ${max}",
     },
   };
-  const onUpdate = (data) => {
-    setEditMode(true);
-    setUpdateData(data);
-    setIsModalVisible(true);
+  // const onUpdate = (data) => {
+  //   setEditMode(true);
+  //   setUpdateData(data);
+  //   setIsModalVisible(true);
 
-    form.setFieldsValue({
-      first_name: data.first_name,
-      last_name: data.last_name,
-      email: data.email,
-      tags: data.UserTags.tags,
-      status: data.status,
-      role: data.role_id,
-    });
-  };
+  //   form.setFieldsValue({
+  //     first_name: data.first_name,
+  //     last_name: data.last_name,
+  //     email: data.email,
+  //     tags: data.UserTags.tags,
+  //     status: data.status,
+  //     role: data.role_id,
+  //   });
+  // };
 
   const onCancel = () => {
     form.resetFields();
@@ -119,8 +120,8 @@ function TeamMembers({ user }) {
       title: "Tags",
 
       render: (_, record) =>
-        record?.user?.UserTags?.tags?.length > 0
-          ? record?.user?.UserTags?.tags.map((item, index) => (
+        record?.tags?.length > 0
+          ? record?.tags.map((item, index) => (
               <span className="mx-2" key={index + "tags"}>
                 {item}
               </span>
@@ -132,7 +133,7 @@ function TeamMembers({ user }) {
       key: "action",
       render: (_, record) => (
         <p>
-          <Link href={`/team/edit/${record.id}`}>
+          <Link href={`/team/edit/${record.user_id}`}>
             <EditOutlined
               className="primary-color-blue text-xl mx-1  md:mx-2 cursor-pointer"
               // onClick={() => onUpdate(record)}
@@ -141,11 +142,11 @@ function TeamMembers({ user }) {
 
           <Popconfirm
             title={`Are you sure to delete ${
-              record.first_name + " " + record.last_name
+              record?.user?.first_name + " " + record?.user?.last_name
             }？`}
             okText="Yes"
             cancelText="No"
-            onConfirm={() => onDelete(record.email)}
+            onConfirm={() => onDelete(record.user.email)}
             icon={false}
           >
             <DeleteOutlined className="text-red-500 text-xl mx-1 md:mx-2 cursor-pointer" />
@@ -154,7 +155,7 @@ function TeamMembers({ user }) {
       ),
     },
   ];
-
+  console.log(membersList, "membersList");
   return (
     <>
       <Row>
@@ -185,7 +186,7 @@ function TeamMembers({ user }) {
                   </div>
                 </div>
 
-                <div className="w-full bg-white rounded-xl overflow-hdden shadow-md p-4 ">
+                <div className="w-full bg-white rounded-xl overflow-hdden shadow-md px-4 pb-4 ">
                   <div className="p-4 ">
                     <div className="overflow-x-auto">
                       {loading ? (
@@ -215,21 +216,6 @@ function TeamMembers({ user }) {
           <SiderRight />
         </Col> */}
       </Row>
-      <Modal
-        title={`${editMode ? "Update" : "Add"}  Team Members`}
-        visible={isModalVisible}
-        onCancel={() => onCancel()}
-        footer={[
-          <>
-            <Button key="add" type="default" onClick={() => onCancel()}>
-              Cancel
-            </Button>
-            <Button key="add" type="primary" onClick={form.submit}>
-              {editMode ? "Update" : "Add"}
-            </Button>
-          </>,
-        ]}
-      ></Modal>
     </>
   );
 }

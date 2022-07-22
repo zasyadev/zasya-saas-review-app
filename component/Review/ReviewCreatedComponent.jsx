@@ -38,7 +38,7 @@ function ReviewCreatedComponent({
   const [dataSource, setDataSource] = useState([]);
   const [fixed, setFixed] = useState(false);
   const [totalRating, setTotalRating] = useState(0);
-  console.log(reviewData, "reviewData");
+
   useEffect(() => {
     if (xs) setFixed(xs);
     else setFixed(xs);
@@ -94,7 +94,6 @@ function ReviewCreatedComponent({
           }));
 
           let dataobj = data.map((item) => {
-            console.log(item);
             let optionObj = {};
 
             item.answers.forEach((data, i) => {

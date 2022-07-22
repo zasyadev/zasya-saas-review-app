@@ -4,7 +4,6 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { openNotificationBox } from "../../helpers/notification";
-import Router from "next/router";
 
 function AddApplaud({ user }) {
   const router = useRouter();
@@ -23,7 +22,7 @@ function AddApplaud({ user }) {
       .then((res) => res.json())
       .then((res) => {
         if (res.status === 200) {
-          let data = res.data.filter((item) => item.id != user.id);
+          let data = res.data.filter((item) => item.user_id != user.id);
           setMembersList(data);
         }
       })
@@ -119,8 +118,8 @@ function AddApplaud({ user }) {
                       }
                     >
                       {membersList.map((data, index) => (
-                        <Select.Option key={index} value={data.id}>
-                          {data.first_name}
+                        <Select.Option key={index} value={data.user_id}>
+                          {data?.user?.first_name}
                         </Select.Option>
                       ))}
                     </Select>
@@ -162,7 +161,7 @@ function AddApplaud({ user }) {
                       type="submit"
                       className=" px-4 py-3 h-full rounded  text-sm primary-bg-btn text-white w-1/4 my-1"
                     >
-                      Add
+                      Create
                     </button>
                   </div>
                 </Col>

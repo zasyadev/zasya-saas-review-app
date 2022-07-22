@@ -17,7 +17,7 @@ export default async (req, res) => {
       if (alreadyData) {
         return res.status(402).json({
           error: "FAILED",
-          message: "Already Email Has been Sent to Reset Password.",
+          message: "Already email has been sent to reset the password.",
         });
       }
 
@@ -52,7 +52,7 @@ export default async (req, res) => {
 
         if (mailResponse === "SUCCESS") {
           return res.status(201).json({
-            message: "Reset Password Email Sent Successfully",
+            message: "Reset password email sent successfully",
             status: 200,
           });
         } else {
@@ -62,7 +62,7 @@ export default async (req, res) => {
 
           return res.status(402).json({
             error: "FAILED",
-            message: "Reset Password mail not sent.",
+            message: "Reset password mail not sent.",
           });
         }
       } else {

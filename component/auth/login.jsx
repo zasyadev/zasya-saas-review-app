@@ -9,6 +9,7 @@ import { LoadingSpinner } from "../Loader/LoadingSpinner";
 import { openNotificationBox } from "../../helpers/notification";
 import { HeadersComponent } from "../../helpers/HeadersComponent";
 import AuthWrapper from "./AuthWrapper";
+import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 
 function LoginPage() {
   const router = useRouter();
@@ -75,10 +76,13 @@ function LoginPage() {
               },
             ]}
           >
-            <Input
-              type="password"
-              className="form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white  focus:outline-none"
+            <Input.Password
+              // type="password"
+              className=" flex form-control w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white  focus:outline-none"
               placeholder="Password"
+              iconRender={(visible) =>
+                visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+              }
             />
           </Form.Item>
         </div>

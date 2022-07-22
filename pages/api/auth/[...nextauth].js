@@ -34,7 +34,7 @@ export default NextAuth({
         if (user) {
           if (user.status === 0) {
             throw new Error(
-              "Your Account is Under Review Please Try Again After Some Time."
+              "You need to reset your password. Link has been sent to your mail."
             );
           }
         }

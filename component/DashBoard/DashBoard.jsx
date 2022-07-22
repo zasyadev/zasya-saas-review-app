@@ -5,8 +5,8 @@ import threeUser from "../../assets/Icon/threeusers.png";
 import ReviewIcon from "../../assets/Icon/reviewicon.png";
 import User1 from "../../assets/images/User1.png";
 import User2 from "../../assets/images/User2.png";
-import User3 from "../../assets/images/User3.png";
-import User4 from "../../assets/images/User4.png";
+// import User3 from "../../assets/images/User3.png";
+// import User4 from "../../assets/images/User4.png";
 import dynamic from "next/dynamic";
 import { SmallApplaudIcon, ApplaudIconSmall } from "../../assets/Icon/icons";
 import { Skeleton } from "antd";
@@ -41,7 +41,6 @@ function DashBoard({ user }) {
             ratingHandler(response.data.reviewRating);
           setDashboardData(response.data);
           applaudcount(response.data.applaudData);
-          console.log(response.data);
         }
       })
 
@@ -97,7 +96,7 @@ function DashBoard({ user }) {
           <div className="container mx-auto max-w-full">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="grd-bg-pink-hover bg-white rounded-xl transition-all duration-300 ease-in-out shadow-md ">
-                <div className="w-full  rounded-xl overflow-hdden px-4 py-5">
+                <div className="w-full  rounded-xl overflow-hdden px-4 py-5 h-full flex items-center">
                   <div className="flex flex-wrap items-center">
                     <div className=" mb-4 grd-bg-pink text-white grid items-center w-10 h-10 py-1 px-1 justify-center shadow-lg-pink rounded-full">
                       <SmallApplaudIcon />
@@ -114,7 +113,7 @@ function DashBoard({ user }) {
                 </div>
               </div>
               <div className="rounded-xl bg-white grd-bg-pink-hover  transition-all duration-300 ease-in-out shadow-md ">
-                <div className="w-full  rounded-xl overflow-hdden px-4 py-5  ">
+                <div className="w-full  rounded-xl overflow-hdden px-4 py-5  h-full flex items-center">
                   <div className="flex flex-wrap items-center border-gray-200 ">
                     <div className="mb-4 rounded-full text-white grid items-center w-10 h-10 py-1 px-1 justify-center grd-bg-pink">
                       <Image
@@ -137,7 +136,7 @@ function DashBoard({ user }) {
               </div>
 
               <div className="bg-white rounded-xl grd-bg-pink-hover  transition-all duration-300 ease-in-out shadow-md ">
-                <div className="w-full rounded-xl overflow-hdden  px-4 py-5">
+                <div className="w-full rounded-xl overflow-hdden  px-4 py-5 h-full flex items-center">
                   <div className="flex flex-wrap  border-gray-200 ">
                     <div className="grd-bg-pink  mb-4 rounded-full text-white grid items-center w-10 h-10 py-1 px-1 justify-center shadow-lg-purple ">
                       <Image

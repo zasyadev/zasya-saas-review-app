@@ -10,7 +10,7 @@ export default async (req, res) => {
         const data = await prisma.user.findMany({
           where: { id: user_id },
           include: {
-            UserTags: true,
+            // UserTags: true,
             organization: true,
           },
         });

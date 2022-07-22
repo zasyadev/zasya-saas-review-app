@@ -62,6 +62,7 @@ export default async (req, res) => {
                 connect: { id: createdUserData.organization_id },
               },
               status: true,
+              tags: resData.tags,
             },
           });
 
@@ -83,12 +84,12 @@ export default async (req, res) => {
             data: userobj,
           });
           if (userData.id) {
-            const savedTagsData = await transaction.userTags.create({
-              data: {
-                user: { connect: { id: userData.id } },
-                tags: resData.tags,
-              },
-            });
+            // const savedTagsData = await transaction.userTags.create({
+            //   data: {
+            //     user: { connect: { id: userData.id } },
+            //     tags: resData.tags,
+            //   },
+            // });
 
             let userOrgData = await transaction.userOraganizationGroups.create({
               data: {
@@ -98,6 +99,7 @@ export default async (req, res) => {
                   connect: { id: createdUserData.organization_id },
                 },
                 status: true,
+                tags: resData.tags,
               },
             });
           }
@@ -132,7 +134,7 @@ export default async (req, res) => {
       prisma.$disconnect();
 
       return res.status(201).json({
-        message: "Members Saved Successfully",
+        message: "Member Saved Successfully",
         data: transactionData.userData,
         status: 200,
       });
@@ -177,28 +179,19 @@ export default async (req, res) => {
           });
 
         let userData = {};
+
         if (existingOrgUser.length > 0) {
           userData = await transaction.user.update({
             where: { email: resData.email },
             data: {
               first_name: resData.first_name,
-              last_name: resData.last_name ?? "",
-              address: "",
-              pin_code: "",
-              mobile: "",
-              status: resData.status,
-              role_id: resData.role,
-              UserTags: {
-                update: {
-                  tags: resData.tags,
-                },
-              },
             },
           });
           const userOrgData = await transaction.userOraganizationGroups.update({
             where: { id: existingOrgUser[0].id },
             data: {
               role_id: resData.role,
+              tags: resData.tags,
             },
           });
         } else {
@@ -233,7 +226,7 @@ export default async (req, res) => {
         where: { email: reqBody.email },
       });
       let createdUserData = await prisma.user.findUnique({
-        where: { id: resData.created_by },
+        where: { id: reqBody.created_by },
       });
 
       let existingOrgUser = await prisma.userOraganizationGroups.findFirst({
@@ -252,7 +245,7 @@ export default async (req, res) => {
 
         return res.status(200).json({
           status: 200,
-          message: "Members Deleted Successfully.",
+          message: "Member Deleted Successfully.",
         });
       }
       // const transactionData = await prisma.$transaction(async (transaction) => {

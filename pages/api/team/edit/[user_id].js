@@ -4,19 +4,33 @@ const prisma = new PrismaClient();
 
 export default async (req, res) => {
   const { user_id } = req.query;
+  const resBody = JSON.parse(req.body);
   try {
-    if (req.method === "GET") {
-      if (user_id) {
+    if (req.method === "POST") {
+      if (user_id && resBody.org_user) {
         const data = await prisma.user.findUnique({
           where: { id: user_id },
           include: {
-            UserTags: true,
+            UserOraganizationGroups: true,
           },
+        });
+        const orgData = await prisma.user.findUnique({
+          where: { id: resBody.org_user },
         });
 
         prisma.$disconnect();
         if (data) {
+          let userOrgData = {};
+
+          if (data?.UserOraganizationGroups.length > 0) {
+            data?.UserOraganizationGroups.forEach((item) => {
+              if (item.organization_id == orgData.organization_id)
+                userOrgData = item;
+            });
+          }
+          data["userOrgData"] = userOrgData;
           delete data.password;
+          delete data?.UserOraganizationGroups;
           return res.status(200).json({
             status: 200,
             data: data,

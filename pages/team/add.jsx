@@ -5,7 +5,7 @@ import AddTeamComponent from "../../component/Team/AddTeamComponent";
 
 function AddTeam({ user }) {
   return (
-    <AdminLayout user={user} title="Add Team">
+    <AdminLayout user={user} title="Create Team">
       <AddTeamComponent user={user} />
     </AdminLayout>
   );

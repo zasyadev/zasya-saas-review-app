@@ -714,6 +714,19 @@
     padding: 10px;
     font-weight: 500;
     font-size: 16px;
+    display: flex;
+    align-items: center;
+    .ant-dropdown-menu-title-content {
+      display: flex;
+      align-items: center;
+      .switch-team-dropdown {
+        display: flex;
+        align-items: center;
+      }
+    }
+    .ant-dropdown-menu-submenu-expand-icon {
+      padding: 5px 10px 10px;
+    }
   }
   .ant-dropdown-menu-item:hover {
     background: linear-gradient(90deg, #ff6968 0%, #ffa3a3 100%);

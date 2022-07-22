@@ -14,18 +14,14 @@ export default async (req, res) => {
           where: { organization_id: userData.organization_id },
 
           include: {
-            user: {
-              include: {
-                UserTags: true,
-              },
-            },
+            user: true,
           },
         });
 
         const filterdata = data
           .filter(
             (item) =>
-              (item.user.role_id === 4 || item.user.role_id === 3) &&
+              // (item.user.role_id === 4 || item.user.role_id === 3) &&
               item.status === true
           )
           .map((item) => {
