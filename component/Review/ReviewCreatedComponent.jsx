@@ -130,7 +130,9 @@ function ReviewCreatedComponent({
       } else return 0;
     }, sum);
 
-    let totalRating = Number(total) / Number(data?.length);
+    let totalRating = 0;
+    if (total) totalRating = Number(total) / Number(data?.length);
+
     setTotalRating(totalRating);
   };
 
@@ -190,7 +192,7 @@ function ReviewCreatedComponent({
                 reviewId &&
                 !reviewData.frequency_status && (
                   <Popconfirm
-                    title="Are you sure you want to Stop the frequency of this Review?"
+                    title="Are you sure you want to stop the frequency of this review?"
                     okText="Yes"
                     cancelText="No"
                     icon={false}
@@ -223,7 +225,9 @@ function ReviewCreatedComponent({
                     <div className="text-sm md:text-base font-medium">
                       Total Rating
                     </div>
-                    <div className="text-lg font-medium">{totalRating}</div>
+                    <div className="text-lg font-medium">
+                      {totalRating ?? 0}
+                    </div>
                   </div>
                 </Col>
               </Row>

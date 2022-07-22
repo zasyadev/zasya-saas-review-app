@@ -189,7 +189,7 @@ function AddEditReviewComponent({ editMode, user }) {
                         setReviewFormData({});
                         setQuestionList([]);
                       }}
-                      className="py-3 h-full rounded toggle-btn-bg text-white lg:mx-4 w-1/4  my-1"
+                      className="py-3 h-full rounded toggle-btn-bg text-white lg:mx-4 w-1/4 my-1"
                     >
                       Cancel
                     </button>
@@ -248,9 +248,7 @@ function AddEditReviewComponent({ editMode, user }) {
                           },
                         ]}
                       >
-                        <Input 
-                          placeholder="for eg: Monthly feedback , Lastest trip review , weekly feedback ... "
-                        />
+                        <Input placeholder="for eg: Monthly feedback , Lastest trip review , weekly feedback ... " />
                       </Form.Item>
                     </Col>
 
@@ -259,7 +257,9 @@ function AddEditReviewComponent({ editMode, user }) {
                         name="template_id"
                         label={
                           <div className="w-full flex justify-between items-center ">
-                            <p className="my-auto">Select your feedback Template</p>
+                            <p className="my-auto">
+                              Select your feedback Template
+                            </p>
                             <Link href="/template/add">
                               <p className="cursor-pointer text-xs my-auto">
                                 Create
@@ -296,7 +296,9 @@ function AddEditReviewComponent({ editMode, user }) {
                         name="frequency"
                         label={
                           <div className="w-full flex justify-between items-center ">
-                            <p className="my-auto">Please select feedback Frequency</p>
+                            <p className="my-auto">
+                              Please select feedback Frequency
+                            </p>
                           </div>
                         }
                         rules={[
@@ -321,8 +323,11 @@ function AddEditReviewComponent({ editMode, user }) {
                         name="assigned_to_id"
                         label={
                           <div className="w-full flex justify-between items-center">
-                            <p className="my-auto"> Please select your team members, who should be giving feedback to you ?
- </p>
+                            <p className="my-auto">
+                              {" "}
+                              Please select your team members, who should be
+                              giving feedback to you ?
+                            </p>
                             {user?.role_id === 2 ? (
                               <Link href="/team/add">
                                 <p className="cursor-pointer text-xs">Create</p>
@@ -362,8 +367,9 @@ function AddEditReviewComponent({ editMode, user }) {
                         name="review_type"
                         label={
                           <div className="w-full flex justify-between items-center">
-                            <p className="my-auto">Would you like to let your team members rate you ?
-</p>
+                            <p className="my-auto">
+                              Would you like to let your team members rate you ?
+                            </p>
                           </div>
                         }
                         rules={[
