@@ -47,7 +47,7 @@ function AddEditReviewComponent({ editMode, user }) {
       frequency: values.frequency,
       role_id: user.role_id,
 
-      is_published: values.is_published,
+      is_published: "published",
       templateData: templateData,
     });
   }
@@ -220,7 +220,7 @@ function AddEditReviewComponent({ editMode, user }) {
                   validateMessages={validateMessages}
                 >
                   <Row gutter={16}>
-                    <Col md={12} xs={24}>
+                    {/* <Col md={12} xs={24}>
                       <Form.Item
                         name="is_published"
                         label="Review Published For ? "
@@ -237,27 +237,29 @@ function AddEditReviewComponent({ editMode, user }) {
                           <Select.Option value="draft">Others</Select.Option>
                         </Select>
                       </Form.Item>
-                    </Col>
-                    <Col md={12} xs={24}>
+                    </Col> */}
+                    <Col md={24} xs={24}>
                       <Form.Item
                         name="review_name"
-                        label="Enter Review Name"
+                        label="Please enter your feedback title"
                         rules={[
                           {
                             required: true,
                           },
                         ]}
                       >
-                        <Input />
+                        <Input 
+                          placeholder="for eg: Monthly feedback , Lastest trip review , weekly feedback ... "
+                        />
                       </Form.Item>
                     </Col>
 
-                    <Col md={12} xs={24} className="full-width-label">
+                    <Col md={24} xs={24} className="full-width-label">
                       <Form.Item
                         name="template_id"
                         label={
                           <div className="w-full flex justify-between items-center ">
-                            <p className="my-auto">Select Template</p>
+                            <p className="my-auto">Select your feedback Template</p>
                             <Link href="/template/add">
                               <p className="cursor-pointer text-xs my-auto">
                                 Create
@@ -289,12 +291,12 @@ function AddEditReviewComponent({ editMode, user }) {
                       </Form.Item>
                     </Col>
 
-                    <Col md={12} xs={24}>
+                    <Col md={24} xs={24}>
                       <Form.Item
                         name="frequency"
                         label={
                           <div className="w-full flex justify-between items-center ">
-                            <p className="my-auto">Select Frequency</p>
+                            <p className="my-auto">Please select feedback Frequency</p>
                           </div>
                         }
                         rules={[
@@ -313,13 +315,14 @@ function AddEditReviewComponent({ editMode, user }) {
                     </Col>
 
                     {/* {memberDetails && ( */}
-                    <Col md={12} xs={24} className="full-width-label">
+                    <Col md={24} xs={24} className="full-width-label">
                       <Form.Item
                         className="select-tag"
                         name="assigned_to_id"
                         label={
                           <div className="w-full flex justify-between items-center">
-                            <p className="my-auto">Select Member(s)</p>
+                            <p className="my-auto"> Please select your team members, who should be giving feedback to you ?
+ </p>
                             {user?.role_id === 2 ? (
                               <Link href="/team/add">
                                 <p className="cursor-pointer text-xs">Create</p>
@@ -359,7 +362,8 @@ function AddEditReviewComponent({ editMode, user }) {
                         name="review_type"
                         label={
                           <div className="w-full flex justify-between items-center">
-                            <p className="my-auto">Review Type</p>
+                            <p className="my-auto">Would you like to let your team members rate you ?
+</p>
                           </div>
                         }
                         rules={[
@@ -369,8 +373,8 @@ function AddEditReviewComponent({ editMode, user }) {
                         ]}
                       >
                         <Radio.Group placeholder="Select Type">
-                          <Radio value="feedback">Feedback</Radio>
-                          <Radio value="other">Other</Radio>
+                          <Radio value="feedback">yes</Radio>
+                          <Radio value="other">no</Radio>
                         </Radio.Group>
                       </Form.Item>
                     </Col>
