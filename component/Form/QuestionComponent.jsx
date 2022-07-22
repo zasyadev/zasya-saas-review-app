@@ -34,6 +34,7 @@ const QuestionComponent = ({
 }) => {
   const range = (min, max) =>
     [...Array(max - min + 1).keys()].map((i) => i + min);
+  console.log(error);
 
   return open ? (
     <div className="rounded-l-md mt-1" key={idx + "questions"}>

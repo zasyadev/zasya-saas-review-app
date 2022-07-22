@@ -36,7 +36,10 @@ export default async (req, res) => {
               roleData: roleData,
             };
           });
+<<<<<<< HEAD
 
+=======
+>>>>>>> e2aa24c1a9c94a8628969633a0d847a6f3ab57ba
         prisma.$disconnect();
         if (filterdata) {
           return res.status(200).json({

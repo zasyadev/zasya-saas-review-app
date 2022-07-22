@@ -5,6 +5,7 @@ import RadioGroup from "@material-ui/core/RadioGroup";
 import TextField from "@material-ui/core/TextField";
 import React, { useState } from "react";
 import { FrownOutlined, SmileOutlined } from "@ant-design/icons";
+import { FormControl } from "@material-ui/core";
 
 import { Slider } from "antd";
 
@@ -17,8 +18,11 @@ const QuestionViewComponent = ({
   handleAnswerChange,
   lowerLabel,
   higherLabel,
+  error = "",
 }) => {
   const [sliderInputValue, setSliderInputValue] = useState(0);
+  // console.log(questions, "questions");
+
   const range = (min, max) =>
     [...Array(max - min + 1).keys()].map((i) => i + min);
 
@@ -38,21 +42,23 @@ const QuestionViewComponent = ({
         {options?.length > 0 && type === "checkbox" && (
           <div>
             <div className="flex">
-              <RadioGroup
-                name="checkbox_option"
-                onChange={(e) => handleAnswerChange(id, e.target.value)}
-                className="radio-button"
-              >
-                {options?.map((op, j) => (
-                  <>
-                    <FormControlLabel
-                      control={<Radio className="mr-2  " size="small" />}
-                      label={op.optionText}
-                      value={op.optionText}
-                    />
-                  </>
-                ))}
-              </RadioGroup>
+              <FormControl required={true}>
+                <RadioGroup
+                  name="checkbox_option"
+                  onChange={(e) => handleAnswerChange(id, e.target.value)}
+                  className="radio-button"
+                >
+                  {options?.map((op, j) => (
+                    <>
+                      <FormControlLabel
+                        control={<Radio className="mr-2  " size="small" />}
+                        label={op.optionText}
+                        value={op.optionText}
+                      />
+                    </>
+                  ))}
+                </RadioGroup>
+              </FormControl>
             </div>
           </div>
         )}
@@ -113,6 +119,7 @@ const QuestionViewComponent = ({
             <p>{options[1]?.optionText}</p>
           </div>
         )}
+        {error ? <p className="text-red-600 text-sm my-2">{error}</p> : null}
       </div>
     </div>
   );

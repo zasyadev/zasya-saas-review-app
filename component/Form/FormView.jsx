@@ -8,9 +8,8 @@ import Link from "next/link";
 
 function FormView({ user }) {
   const [loading, setLoading] = useState(false);
-  const [updateData, setUpdateData] = useState({});
+
   const [formAssignList, setFormAssignList] = useState([]);
-  const [formValues, setFormValues] = useState([]);
 
   async function fetchFormAssignList() {
     if (user.id) {
@@ -34,15 +33,6 @@ function FormView({ user }) {
     fetchFormAssignList();
   }, []);
 
-  const handleAnswerChange = (quesId, value) => {
-    setFormValues((prev) =>
-      prev.find((item) => item.questionId === quesId)
-        ? prev.map((item) =>
-            item.questionId === quesId ? { ...item, answer: value } : item
-          )
-        : [...prev, { questionId: quesId, answer: value }]
-    );
-  };
   const columns = [
     {
       title: "Assign By",

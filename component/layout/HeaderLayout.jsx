@@ -173,16 +173,16 @@ function HeaderLayout({ title, pageName, user }) {
           </div>
         </Col>
         <Col md={3} xs={12} className="hidden md:block">
-          <div className="hidden md:flex items-center justify-between px-3">
+          <div className="hidden md:flex items-center justify-between px-3 ">
             <Dropdown
               overlay={createMenu}
               trigger={["click"]}
-              overlayClassName="create-dropdown "
+              overlayClassName="create-dropdown"
             >
               <button
                 key="create"
                 type="default"
-                className="primary-bg-btn text-white text-sm py-3  px-5 rounded flex  items-center  "
+                className="primary-bg-btn text-white text-base py-3  px-5 rounded flex  items-center  "
               >
                 <span className="mr-2">Create</span> <DownOutlined />
               </button>
