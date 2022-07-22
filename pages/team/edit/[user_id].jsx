@@ -14,7 +14,10 @@ function EditTeam({ user }) {
     // setLoading(true);
     setMemberData([]);
     await fetch("/api/team/edit/" + id, {
-      method: "GET",
+      method: "POST",
+      body: JSON.stringify({
+        org_user: user.id,
+      }),
     })
       .then((response) => response.json())
       .then((response) => {

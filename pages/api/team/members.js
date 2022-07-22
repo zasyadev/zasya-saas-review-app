@@ -62,6 +62,7 @@ export default async (req, res) => {
                 connect: { id: createdUserData.organization_id },
               },
               status: true,
+              tags: resData.tags,
             },
           });
 
@@ -83,12 +84,12 @@ export default async (req, res) => {
             data: userobj,
           });
           if (userData.id) {
-            const savedTagsData = await transaction.userTags.create({
-              data: {
-                user: { connect: { id: userData.id } },
-                tags: resData.tags,
-              },
-            });
+            // const savedTagsData = await transaction.userTags.create({
+            //   data: {
+            //     user: { connect: { id: userData.id } },
+            //     tags: resData.tags,
+            //   },
+            // });
 
             let userOrgData = await transaction.userOraganizationGroups.create({
               data: {
@@ -98,6 +99,7 @@ export default async (req, res) => {
                   connect: { id: createdUserData.organization_id },
                 },
                 status: true,
+                tags: resData.tags,
               },
             });
           }
@@ -177,28 +179,19 @@ export default async (req, res) => {
           });
 
         let userData = {};
+
         if (existingOrgUser.length > 0) {
           userData = await transaction.user.update({
             where: { email: resData.email },
             data: {
               first_name: resData.first_name,
-              last_name: resData.last_name ?? "",
-              address: "",
-              pin_code: "",
-              mobile: "",
-              status: resData.status,
-              role_id: resData.role,
-              UserTags: {
-                update: {
-                  tags: resData.tags,
-                },
-              },
             },
           });
           const userOrgData = await transaction.userOraganizationGroups.update({
             where: { id: existingOrgUser[0].id },
             data: {
               role_id: resData.role,
+              tags: resData.tags,
             },
           });
         } else {

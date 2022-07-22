@@ -14,11 +14,7 @@ export default async (req, res) => {
           where: { organization_id: userData.organization_id },
 
           include: {
-            user: {
-              include: {
-                UserTags: true,
-              },
-            },
+            user: true,
           },
         });
 
