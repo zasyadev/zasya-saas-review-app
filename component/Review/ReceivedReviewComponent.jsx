@@ -1,14 +1,21 @@
-import { Button, Skeleton } from "antd";
+import { Skeleton } from "antd";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { openNotificationBox } from "../../helpers/notification";
 import QuestionViewComponent from "../Form/QuestionViewComponent";
+// import {
+//   InputComponent,
+//   OptionComponent,
+//   TextAreaComponent,
+//   SliderComponent,
+// } from "./formhelper/FormComponent";
 
 function ReceivedReviewComponent({ user, reviewId }) {
   const router = useRouter();
   const [reviewData, setReviewData] = useState({});
   const [loading, setLoading] = useState(false);
   const [formValues, setFormValues] = useState([]);
+  const [questions, setQuestions] = useState([]);
 
   const handleAnswerChange = (quesId, value) => {
     setFormValues((prev) =>
@@ -18,9 +25,39 @@ function ReceivedReviewComponent({ user, reviewId }) {
           )
         : [...prev, { questionId: quesId, answer: value }]
     );
+
+    // setQuestions((prev) =>
+    //   prev.find((item) => item.id === quesId && item.error)
+    //     ? prev.map((item) =>
+    //         item.id === quesId && item.error ? { ...item, error: "" } : item
+    //       )
+    //     : prev
+    // );
   };
 
   const handleSubmit = async () => {
+    if (formValues.length <= 0) {
+      openNotificationBox("error", "You have to answer all question", 3);
+      return;
+    }
+    if (questions.length != formValues.length) {
+      openNotificationBox("error", "You have to answer all question", 3);
+      // setQuestions((prev) =>
+      //   prev.map((queItem) => {
+      //     let errorAnswer;
+      //     formValues.forEach((ansItem, idx) => {
+      //       errorAnswer =
+      //         ansItem.questionId == queItem.id
+      //           ? queItem
+      //           : { ...queItem, error: "Answer field required!" };
+      //     });
+
+      //     return errorAnswer;
+      //   })
+      // );
+      return;
+    }
+
     if (user.id && reviewData.id) {
       let obj = {
         user_id: user.id,
@@ -38,7 +75,7 @@ function ReceivedReviewComponent({ user, reviewId }) {
         .then((response) => {
           if (response.status === 200) {
             openNotificationBox("success", response.message, 3);
-            router.push("/review");
+            router.push("/review/received");
           } else {
             openNotificationBox("error", response.message, 3);
           }
@@ -48,7 +85,7 @@ function ReceivedReviewComponent({ user, reviewId }) {
         });
     }
   };
-  console.log(reviewData, "reviewData");
+
   const fetchReviewData = async (user, reviewId) => {
     setLoading(true);
     // setFormAssignList([]);
@@ -62,6 +99,7 @@ function ReceivedReviewComponent({ user, reviewId }) {
       .then((response) => {
         if (response.status === 200) {
           setReviewData(response.data);
+          setQuestions(response?.data?.review?.form?.questions);
         }
         setLoading(false);
       })
@@ -82,7 +120,7 @@ function ReceivedReviewComponent({ user, reviewId }) {
     <div className="px-3 md:px-8 h-auto mt-5">
       <div className="container mx-auto max-w-full">
         <div className="grid grid-cols-1 px-4 mb-16">
-          <div className="w-full bg-white rounded-xl overflow-hdden shadow-md p-4 ">
+          <div className="w-full bg-white rounded-xl overflow-hdden shadow-md p-4 h-full ">
             <div className="p-4 ">
               <div className="overflow-x-auto">
                 {loading ? (
@@ -106,19 +144,17 @@ function ReceivedReviewComponent({ user, reviewId }) {
                       </div>
                     </div>
 
-                    {reviewData?.review?.form?.questions.length > 0 &&
-                      reviewData?.review?.form?.questions?.map(
-                        (question, idx) => (
-                          <>
-                            <QuestionViewComponent
-                              {...question}
-                              idx={idx}
-                              open={false}
-                              handleAnswerChange={handleAnswerChange}
-                            />
-                          </>
-                        )
-                      )}
+                    {questions.length > 0 &&
+                      questions?.map((question, idx) => (
+                        <>
+                          <QuestionViewComponent
+                            {...question}
+                            idx={idx}
+                            open={false}
+                            handleAnswerChange={handleAnswerChange}
+                          />
+                        </>
+                      ))}
 
                     <div className="flex justify-end mt-4">
                       <button

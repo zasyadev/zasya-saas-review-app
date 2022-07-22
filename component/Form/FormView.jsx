@@ -49,6 +49,7 @@ function FormView({ user }) {
     // let array = formValues.map((item) => {
     //   return { ...item, user_id: user.id, form_id: updateData.id };
     // });
+    // console.log(formValues, "sdfjhkjhksgjhkgsdf");
     if (user.id && updateData.id) {
       let obj = {
         user_id: user.id,
@@ -77,6 +78,8 @@ function FormView({ user }) {
   };
 
   const handleAnswerChange = (quesId, value) => {
+    console.log(value);
+
     setFormValues((prev) =>
       prev.find((item) => item.questionId === quesId)
         ? prev.map((item) =>
@@ -85,6 +88,7 @@ function FormView({ user }) {
         : [...prev, { questionId: quesId, answer: value }]
     );
   };
+
   const columns = [
     {
       title: "Assign By",
