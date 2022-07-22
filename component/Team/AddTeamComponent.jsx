@@ -40,7 +40,7 @@ function AddTeamComponent({ user, editMode, memberData }) {
   }
   async function updatingMember(obj) {
     if (memberData.id) {
-      (obj.tag_id = memberData?.UserTags?.id), 0;
+      // (obj.tag_id = memberData?.UserTags?.id), 0;
       (obj.status = 1),
         await fetch("/api/team/members", {
           method: "PUT",
@@ -81,8 +81,8 @@ function AddTeamComponent({ user, editMode, memberData }) {
         first_name: memberData?.first_name,
         last_name: memberData?.last_name,
         email: memberData?.email,
-        tags: memberData?.UserTags?.tags,
-        role: memberData?.role_id,
+        tags: memberData?.userOrgData?.tags,
+        role: memberData?.userOrgData?.role_id,
       });
     }
   }, []);
@@ -170,9 +170,9 @@ function AddTeamComponent({ user, editMode, memberData }) {
                     ]}
                   >
                     <Select placeholder="Roles" className="select-tag">
-                      <Select.Option key={"amin"} value={2} disabled>
+                      {/* <Select.Option key={"amin"} value={2} disabled>
                         Admin
-                      </Select.Option>
+                      </Select.Option> */}
                       <Select.Option key={"manager"} value={3}>
                         Manager
                       </Select.Option>

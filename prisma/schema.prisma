@@ -34,7 +34,6 @@ model User {
   taskReviewBy            Review[]                  @relation("taskReviewBy")
   ReviewTemplate          ReviewTemplate[]
   ReviewAssigneeAnswers   ReviewAssigneeAnswers[]
-  UserTags                UserTags?
   UserImage               UserImage?
   PasswordReset           PasswordReset?
   userCreated             UserApplaud[]             @relation("userCreated")
@@ -218,17 +217,6 @@ model ReviewTemplate {
   @@map("review_template")
 }
 
-model UserTags {
-  id            Int      @id @default(autoincrement())
-  user          User     @relation(fields: [user_id], references: [id])
-  user_id       String   @unique
-  tags          Json?
-  created_date  DateTime @default(now())
-  modified_date DateTime @default(now())
-
-  @@map("user_tags")
-}
-
 model UserOrganization {
   id                      Int                       @id @default(autoincrement())
   company_name            String                    @unique
@@ -285,6 +273,7 @@ model UserOraganizationGroups {
   organization    UserOrganization @relation(fields: [organization_id], references: [id])
   organization_id Int
   status          Boolean
+  tags            Json?
   created_date    DateTime         @default(now())
   modified_date   DateTime         @default(now())
 

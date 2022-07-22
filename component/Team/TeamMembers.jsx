@@ -120,8 +120,8 @@ function TeamMembers({ user }) {
       title: "Tags",
 
       render: (_, record) =>
-        record?.user?.UserTags?.tags?.length > 0
-          ? record?.user?.UserTags?.tags.map((item, index) => (
+        record?.tags?.length > 0
+          ? record?.tags.map((item, index) => (
               <span className="mx-2" key={index + "tags"}>
                 {item}
               </span>
@@ -155,7 +155,7 @@ function TeamMembers({ user }) {
       ),
     },
   ];
-
+  console.log(membersList, "membersList");
   return (
     <>
       <Row>
