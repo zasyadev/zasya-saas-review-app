@@ -13,7 +13,6 @@ import { Avatar, Col, Dropdown, Layout, Menu, Row } from "antd";
 import { signOut } from "next-auth/client";
 import { useRouter } from "next/router";
 import { openNotificationBox } from "../../helpers/notification";
-// import { BellIcon, SearchIcon } from "../../assets/Icon/icons";
 
 const { Header } = Layout;
 
@@ -165,15 +164,15 @@ function HeaderLayout({ title, pageName, user }) {
 
   return (
     <Header className="ant-header bg-color-dashboard border-b border-b-neutral-300 p-0">
-      <Row className="items-center h-full">
-        <Col md={16} xs={12}>
+      <Row className="items-center h-full" justify="space-between">
+        <Col md={16} xs={16}>
           <div className="flex justify-between items-center mt-2">
             <div className=" font-bold mx-3 md:mx-6 text-lg md:text-2xl primary-color-blue">
               {title}
             </div>
           </div>
         </Col>
-        <Col md={3} xs={12} className="hidden md:block">
+        <Col md={3} xs={12} className="create-header-button">
           <div className="hidden md:flex items-center justify-between px-3 ">
             <Dropdown
               overlay={createMenu}
@@ -190,33 +189,35 @@ function HeaderLayout({ title, pageName, user }) {
             </Dropdown>
           </div>
         </Col>
-        <Col md={5} xs={12} className="pr-3">
-          <Dropdown
-            trigger={"click"}
-            overlay={userMenu}
-            overlayClassName="logout-dropdown "
-            placement="bottomRight"
-          >
-            <div className="flex items-center user-menu-wrapper py-1 px-4 cursor-pointer rounded-md">
-              <div className="rounded-md flex justify-between mr-3 ">
-                <Avatar
-                  style={{ color: "#f56a00", backgroundColor: "#fde3cf" }}
-                  size="large"
-                  alt="c"
-                >
-                  {userOrganizationData?.orgId
-                    ? userOrganizationData?.orgId.substring(0, 1)
-                    : null}
-                </Avatar>
-              </div>
+        <Col md={5} xs={5} className="pr-3">
+          <div className="w-full user-menu-wrapper cursor-pointer rounded-md py-2 px-2 ">
+            <Dropdown
+              trigger={"click"}
+              overlay={userMenu}
+              overlayClassName="logout-dropdown "
+              placement="bottomRight"
+            >
               <div>
-                <div className="user-deatils">
-                  {userOrganizationData?.orgId}
+                <div className="flex items-center">
+                  <div className="pr-2">
+                    <Avatar
+                      style={{ color: "#f56a00", backgroundColor: "#fde3cf" }}
+                      alt="C"
+                    >
+                      {userOrganizationData?.orgId
+                        ? userOrganizationData?.orgId.substring(0, 1)
+                        : null}
+                    </Avatar>
+                  </div>
+                  <div className="mt-3">
+                    <p className="user-deatils whitespace-nowrap hidden md:block">
+                      {userOrganizationData?.orgId}
+                    </p>
+                  </div>
                 </div>
-                {/* <div>{user.role_id === 2 ? "Admin" : "Member"}</div> */}
               </div>
-            </div>
-          </Dropdown>
+            </Dropdown>
+          </div>
         </Col>
       </Row>
     </Header>

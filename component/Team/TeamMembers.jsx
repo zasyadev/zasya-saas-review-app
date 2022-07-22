@@ -149,7 +149,7 @@ function TeamMembers({ user }) {
             onConfirm={() => onDelete(record.user.email)}
             icon={false}
           >
-            <DeleteOutlined className="text-red-500 text-xl mx-1 md:mx-2 cursor-pointer" />
+            <DeleteOutlined className="text-color-red text-xl mx-1 md:mx-2 cursor-pointer" />
           </Popconfirm>
         </p>
       ),

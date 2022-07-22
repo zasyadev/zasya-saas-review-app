@@ -301,7 +301,7 @@ function ReviewManagement({ user }) {
                 onConfirm={() => onDelete(record.id)}
                 icon={false}
               >
-                <DeleteOutlined className="text-red-500 text-xl" />
+                <DeleteOutlined className="text-color-red text-xl" />
               </Popconfirm>
             </>
           )}
@@ -331,22 +331,22 @@ function ReviewManagement({ user }) {
           ) : ( */}
           <div className="grid grid-cols-1 px-4 mb-16">
             <div className=" md:flex items-center justify-between mb-3  ">
-              <div className="flex">
+              <div className="flex w-auto">
                 <Link href={"/review/received"}>
                   <button
                     className={`primary-bg-btn
-                     text-white text-sm  py-3 text-center px-4 rounded-r-none rounded-l-md  md:w-fit mt-2 `}
+                     text-white text-sm  py-3 text-center px-4 rounded-r-none rounded-l-md  w-1/2 md:w-fit mt-2 `}
                     // onClick={() => setReviewAssign(true)}
                   >
-                    Review Received
+                    Received
                   </button>
                 </Link>
                 <button
                   className={`toggle-btn-bg
-                  text-white text-sm py-3 text-center px-4  rounded-l-none rounded-r-md md:w-fit mt-2`}
+                  text-white text-sm py-3 text-center px-4  rounded-l-none rounded-r-md w-1/2 md:w-fit mt-2`}
                   // onClick={() => setReviewAssign(false)}
                 >
-                  Review Created
+                  Created
                 </button>
               </div>
               <div>
@@ -356,7 +356,7 @@ function ReviewManagement({ user }) {
                       className="primary-bg-btn text-white text-sm py-3 text-center px-4 rounded-md w-full "
                       // onClick={showModal}
                     >
-                      Create Review
+                      Create
                     </button>
                   </div>
                 </Link>
