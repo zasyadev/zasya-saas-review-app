@@ -99,8 +99,8 @@ function FormView({ user }) {
       <div className="px-3 md:px-8 h-auto mt-5">
         <div className="container mx-auto max-w-full">
           <div className="grid grid-cols-1 px-4 mb-16">
-            <div className="flex items-center justify-between mb-3">
-              <div className="flex w-full">
+            <div className="md:flex items-center justify-between mb-3">
+              <div className="flex w-auto">
                 <button
                   className={`
                     bg-red-400

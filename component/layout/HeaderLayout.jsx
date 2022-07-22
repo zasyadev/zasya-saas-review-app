@@ -172,7 +172,7 @@ function HeaderLayout({ title, pageName, user }) {
             </div>
           </div>
         </Col>
-        <Col md={3} xs={12} className="hidden md:block">
+        <Col md={3} xs={12} className="create-header-button">
           <div className="hidden md:flex items-center justify-between px-3 ">
             <Dropdown
               overlay={createMenu}
@@ -198,7 +198,7 @@ function HeaderLayout({ title, pageName, user }) {
               placement="bottomRight"
             >
               <div>
-                <div className=" flex items-center">
+                <div className="flex items-center">
                   <div className="pr-2">
                     <Avatar
                       style={{ color: "#f56a00", backgroundColor: "#fde3cf" }}
@@ -209,9 +209,11 @@ function HeaderLayout({ title, pageName, user }) {
                         : null}
                     </Avatar>
                   </div>
-                  <p className="user-deatils whitespace-nowrap hidden md:block">
-                    {userOrganizationData?.orgId}
-                  </p>
+                  <div className="mt-3">
+                    <p className="user-deatils whitespace-nowrap hidden md:block">
+                      {userOrganizationData?.orgId}
+                    </p>
+                  </div>
                 </div>
               </div>
             </Dropdown>

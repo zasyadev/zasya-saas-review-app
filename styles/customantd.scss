@@ -808,3 +808,9 @@
     }
   }
 }
+
+.create-header-button {
+  @include mobile {
+    display: none !important;
+  }
+}
