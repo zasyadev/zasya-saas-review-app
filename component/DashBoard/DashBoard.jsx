@@ -81,7 +81,11 @@ function DashBoard({ user }) {
     let avgRatingSum = total.reduce((prev, curr) => {
       return Number(prev) + Number(curr);
     }, avgSum);
-    let avgRating = avgRatingSum / total.length;
+    let assigneAnswerLength = data.filter((item) =>
+      item?.ReviewAssigneeAnswers?.length > 0 ? item : null
+    );
+
+    let avgRating = avgRatingSum / assigneAnswerLength.length;
     setTotalRating(Number(avgRating).toFixed(2));
   };
 
@@ -218,116 +222,6 @@ function DashBoard({ user }) {
                         </div>
                       </Col>
                     )}
-
-                    {/* // <>
-                      //   <Col xs={24} md={12}>
-                      //     <Row className="">
-                      //       <Col xs={7} md={10}>
-                      //         <div className="p-2 mt-2 flex justify-center">
-                      //           <Image src={User1} alt="user" />
-                      //         </div>
-                      //       </Col>
-                      //       <Col xs={17} md={14}>
-                      //         <div className="flex  justify-between items-center">
-                      //           <div className="py-2 px-3">
-                      //             <p className="mb-2 primary-color-blue font-medium text-sm">
-                      //               {item?.created?.first_name}
-                      //             </p>
-                      //             <p className="flex">
-                      //               <ApplaudIconSmall />
-                      //               <span className="pl-2 text-sm font-medium text-gray-500">
-                      //                 0
-                      //               </span>
-                      //             </p>
-                      //           </div>
-                      //         </div>
-                      //       </Col>
-                      //     </Row>
-                      //   </Col>
-                      // </>; */}
-
-                    {/* <Col xs={24} md={12}>
-                      <Row className="">
-                        <Col xs={7} md={10}>
-                          <div className="p-2 mt-2 flex justify-center">
-                            <Image
-                              src={User2}
-                              alt="user "
-                              // width={40}
-                              // height={40}
-                            />
-                          </div>
-                        </Col>
-                        <Col xs={17} md={14}>
-                          <div className="flex  justify-between items-center">
-                            <div className="py-2 px-3">
-                              <p className="mb-2 primary-color-blue font-medium text-sm">
-                                Nishant Thakur
-                              </p>
-                              <p className="flex">
-                                <ApplaudIconSmall />
-                                <span className="pl-2 text-sm font-medium text-gray-500">
-                                  0
-                                </span>
-                              </p>
-                            </div>
-                          </div>
-                        </Col>
-                      </Row>
-                    </Col>
-                    <Col xs={24} md={12}>
-                      <Row className="">
-                        <Col xs={7} md={10}>
-                          <div className="p-2 mt-2 flex justify-center">
-                            <Image
-                              src={User3}
-                              alt="user "
-                              // width={80}
-                              // height={80}
-                            />
-                          </div>
-                        </Col>
-                        <Col xs={17} md={14}>
-                          <div className="flex  justify-between items-center">
-                            <div className="py-2 px-3">
-                              <p className="mb-2 primary-color-blue font-medium text-sm">
-                                Tanvi Rana
-                              </p>
-                              <p className="flex">
-                                <ApplaudIconSmall />
-                                <span className="pl-2 text-sm font-medium text-gray-500">
-                                  0
-                                </span>
-                              </p>
-                            </div>
-                          </div>
-                        </Col>
-                      </Row>
-                    </Col>
-                    <Col xs={24} md={12}>
-                      <Row className="">
-                        <Col xs={7} md={10}>
-                          <div className="p-2 mt-2 flex justify-center">
-                            <Image src={User4} alt="user " />
-                          </div>
-                        </Col>
-                        <Col xs={17} md={14}>
-                          <div className="flex  justify-between items-center">
-                            <div className="py-2 px-3">
-                              <p className="mb-2 primary-color-blue font-medium text-sm">
-                                Annop Thakur
-                              </p>
-                              <p className="flex">
-                                <ApplaudIconSmall />
-                                <span className="pl-2 text-sm font-medium text-gray-500">
-                                  0
-                                </span>
-                              </p>
-                            </div>
-                          </div>
-                        </Col>
-                      </Row>
-                    </Col> */}
                   </Row>
                 </div>
               </Col>

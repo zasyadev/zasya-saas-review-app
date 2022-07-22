@@ -115,7 +115,7 @@ export default async (req, res) => {
             to: userData.email,
             subject: `Invitation to collaborate on Review App`,
             html: mailTemplate(`
-            You have been invited to collaborate on Review app . Please <a href= ${process.env.NEXT_APP_URL}/resetpassword?passtoken=${passwordResetData.token}>click here</a> to collaborate with them now .
+            You have been invited to collaborate on Review app . Please <a href= ${process.env.NEXT_APP_URL}/resetpassword?passtoken=${passwordResetData.token}&email=${userData.email}>click here</a> to collaborate with them now .
             `),
           };
 

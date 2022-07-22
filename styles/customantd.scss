@@ -248,9 +248,12 @@
 
   .ant-table-thead > tr > th {
     resize: horizontal;
-    text-overflow: ellipsis;
-    white-space: nowrap;
     overflow: hidden;
+    .ant-table-column-title {
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+    }
   }
   .ant-table-content {
     table {

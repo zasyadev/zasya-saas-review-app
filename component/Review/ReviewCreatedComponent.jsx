@@ -11,7 +11,7 @@ import {
   Popconfirm,
   Grid,
 } from "antd";
-// import AnswerViewComponent from "./AnswerViewComponent";
+
 import Link from "next/link";
 import {
   CalanderIcon,
@@ -31,9 +31,9 @@ function ReviewCreatedComponent({
   const { xs } = useBreakpoint();
   const { Panel } = Collapse;
   const datePattern = "DD-MM-YYYY";
-  // const [answerData, setAnswerData] = useState([]);
+
   const [headersData, setHeadersData] = useState([]);
-  // const [answerDataModel, setAnswerDataModel] = useState(false);
+
   const [loading, setLoading] = useState(false);
   const [dataSource, setDataSource] = useState([]);
   const [fixed, setFixed] = useState(false);
@@ -109,7 +109,6 @@ function ReviewCreatedComponent({
           applyFilters(dataobj);
           if (reviewData?.review_type == "feedback")
             totalRatingFunction(response.data);
-          // setAnswerData(dataobj);
         }
         setLoading(false);
       })

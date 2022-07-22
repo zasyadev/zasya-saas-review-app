@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Form, Input, message } from "antd";
 import { useRouter } from "next/router";
 import Link from "next/link";
@@ -11,7 +11,6 @@ import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 function ResetPassword() {
   const router = useRouter();
   const params = router.query;
-
   const [resetForm] = Form.useForm();
   const [loading, setLoading] = useState(false);
   async function handleSubmit(values) {
@@ -44,6 +43,13 @@ function ResetPassword() {
         .catch((err) => console.log(err));
     }
   }
+
+  useEffect(() => {
+    if (params && params.email)
+      resetForm.setFieldsValue({
+        email: params.email,
+      });
+  }, [params]);
   const ResetPasswordComponent = () => {
     return (
       <Form

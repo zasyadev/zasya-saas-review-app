@@ -36,7 +36,7 @@ export default async (req, res) => {
           to: reqBody.email,
           subject: `Review App Forgot Password`,
           html: mailTemplate(`
-          You have been send Link to Reset Your  Review app Password . Please <a href= ${process.env.NEXT_APP_URL}/resetpassword?passtoken=${generatedToken}>click here</a> to collaborate with them now .
+          You have been send Link to Reset Your  Review app Password . Please <a href= ${process.env.NEXT_APP_URL}/resetpassword?passtoken=${generatedToken}&email=${reqBody.email}>click here</a> to collaborate with them now .
           `),
         };
 

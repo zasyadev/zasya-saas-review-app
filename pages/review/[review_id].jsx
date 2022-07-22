@@ -43,8 +43,6 @@ function ReviewCreated({ user }) {
         <>
           <div className="px-3 md:px-8 h-auto mt-5">
             <div className="container mx-auto max-w-full">
-              {/* <Row gutter={[16, 16]}>
-                <Col xs={24} md={16}> */}
               <div className="border shadow bg-white rounded-md p-2 mt-4 w-full mx-auto">
                 <div className="w-full  rounded-xl  p-2 mt-2 template-wrapper">
                   <div className="animate-pulse flex space-x-4">
@@ -61,27 +59,6 @@ function ReviewCreated({ user }) {
                   </div>
                 </div>
               </div>
-              {/* </Col>
-                <Col xs={24} md={8}> */}
-              {/* <div className="border shadow bg-white rounded-md p-2 mt-4 w-full   mx-auto">
-                    <div className="w-full  rounded-xl  p-2 mt-2 template-wrapper">
-                      <div className="animate-pulse flex space-x-4">
-                        <div className="flex-1 space-y-6 py-1">
-                          <div className="h-4 bg-slate-200 rounded"></div>
-                          <div className="h-4 bg-slate-200 rounded"></div>
-
-                          <div className="space-y-5">
-                            <div className="grid grid-cols-2 gap-4">
-                              <div className="h-4 bg-slate-200 rounded"></div>
-                              <div className="h-4 bg-slate-200 rounded"></div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div> */}
-              {/* </Col>
-              </Row> */}
             </div>
           </div>
         </>
@@ -93,9 +70,6 @@ function ReviewCreated({ user }) {
           fetchReviewData={fetchReviewData}
         />
       ) : null}
-      {/* {reviewData ? (
-        <ReviewCreatedComponent user={user} reviewData={reviewData} />
-      ) : null} */}
     </AdminLayout>
   );
 }

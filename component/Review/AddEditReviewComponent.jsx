@@ -98,7 +98,7 @@ function AddEditReviewComponent({ editMode, user }) {
       .then((response) => {
         if (response.status === 200) {
           let data = response.data.filter(
-            (item) => item.status == 1 && item.user_id != user.id
+            (item) => item.user.status && item.user_id != user.id
           );
           setUserList(data);
         }

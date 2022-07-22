@@ -110,21 +110,21 @@ function FormView({ user }) {
         <div className="container mx-auto max-w-full">
           <div className="grid grid-cols-1 px-4 mb-16">
             <div className="flex items-center justify-between mb-3">
-              <div className="flex">
+              <div className="flex w-full">
                 <button
                   className={`
                     bg-red-400
-                   text-white text-sm py-3 text-center px-4 rounded-r-none rounded-l-md rounded-md md:w-fit mt-2 `}
+                   text-white text-sm py-3 text-center px-4 rounded-r-none rounded-l-md rounded-md w-1/2 md:w-fit mt-2 `}
                 >
-                  Review Received
+                  Received
                 </button>
 
                 <Link href="/review">
                   <button
                     className={`primary-bg-btn
-                    text-white text-sm py-3 text-center px-4 rounded-r-md rounded-l-none md:w-fit mt-2 `}
+                    text-white text-sm py-3 text-center px-4 rounded-r-md rounded-l-none w-1/2 md:w-fit mt-2 `}
                   >
-                    Review Created
+                    Created
                   </button>
                 </Link>
               </div>
