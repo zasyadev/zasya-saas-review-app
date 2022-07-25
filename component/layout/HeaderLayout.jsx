@@ -155,7 +155,7 @@ function HeaderLayout({
       )}
     </Menu>
   );
-  console.log(userOrganizationData, "userOrganizationData");
+
   return (
     <Header className="ant-header bg-color-dashboard border-b border-b-neutral-300 p-0">
       <Row className="items-center h-full" justify="space-between">

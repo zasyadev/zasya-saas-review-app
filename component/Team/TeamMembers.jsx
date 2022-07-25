@@ -1,29 +1,13 @@
 import React, { useState, useEffect } from "react";
-import {
-  Button,
-  Layout,
-  Modal,
-  Form,
-  Row,
-  Col,
-  Skeleton,
-  Select,
-  Input,
-  Popconfirm,
-} from "antd";
+import { Row, Col, Skeleton, Popconfirm } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { openNotificationBox } from "../../helpers/notification";
 import CustomTable from "../../helpers/CustomTable";
 import Link from "next/link";
-// import SiderRight from "../SiderRight/SiderRight";
 
 function TeamMembers({ user }) {
-  const [form] = Form.useForm();
-  const [isModalVisible, setIsModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const [membersList, setMembersList] = useState([]);
-  const [editMode, setEditMode] = useState(false);
-  const [upadteData, setUpdateData] = useState({});
 
   async function onDelete(email) {
     if (email) {
@@ -59,7 +43,10 @@ function TeamMembers({ user }) {
       .then((response) => response.json())
       .then((response) => {
         if (response.status === 200) {
-          let data = response.data.filter((item) => item.user_id != user.id);
+          let data = response.data.filter(
+            (item) => item.user_id != user.id && item.role_id != 2
+          );
+
           setMembersList(data);
         }
         setLoading(false);
@@ -69,37 +56,6 @@ function TeamMembers({ user }) {
         setMembersList([]);
       });
   }
-
-  const validateMessages = {
-    required: "${label} is required!",
-    types: {
-      email: "${label} is not a valid email!",
-      number: "${label} is not a valid number!",
-    },
-    number: {
-      range: "${label} must be between ${min} and ${max}",
-    },
-  };
-  // const onUpdate = (data) => {
-  //   setEditMode(true);
-  //   setUpdateData(data);
-  //   setIsModalVisible(true);
-
-  //   form.setFieldsValue({
-  //     first_name: data.first_name,
-  //     last_name: data.last_name,
-  //     email: data.email,
-  //     tags: data.UserTags.tags,
-  //     status: data.status,
-  //     role: data.role_id,
-  //   });
-  // };
-
-  const onCancel = () => {
-    form.resetFields();
-    if (editMode) setEditMode(false);
-    setIsModalVisible(false);
-  };
 
   useEffect(() => {
     fetchMembersData();
@@ -155,7 +111,6 @@ function TeamMembers({ user }) {
       ),
     },
   ];
-  console.log(membersList, "membersList");
   return (
     <>
       <Row>
@@ -163,23 +118,10 @@ function TeamMembers({ user }) {
           <div className="px-3 md:px-8 h-auto mt-5">
             <div className="container mx-auto max-w-full">
               <div className="grid grid-cols-1 px-4 mb-16">
-                {/* <div className="grid sm:flex bg-gradient-to-tr from-purple-500 to-purple-700 -mt-10 mb-4 rounded-xl text-white  items-center w-full h-40 sm:h-24 py-4 px-6 md:px-8 justify-between shadow-lg-purple ">
-              <h2 className="text-white text-2xl font-bold ">Team Members </h2>
-              <span
-                className="text-center  rounded-full border-2 px-4 py-2 cursor-pointer hover:bg-white hover:text-purple-500 hover:border-2 hover:border-purple-500 "
-                onClick={showModal}
-              >
-                Create
-              </span>
-            </div> */}
-
                 <div className="md:flex justify-end">
                   <div className="my-2 ">
                     <Link href="/team/add">
-                      <button
-                        className="primary-bg-btn text-white text-sm md:py-3 py-2 text-center md:px-4 px-2 rounded-md w-full"
-                        // onClick={() => showModal()}
-                      >
+                      <button className="primary-bg-btn text-white text-sm md:py-3 py-2 text-center md:px-4 px-2 rounded-md w-full">
                         Create Team
                       </button>
                     </Link>
@@ -212,9 +154,6 @@ function TeamMembers({ user }) {
             </div>
           </div>
         </Col>
-        {/* <Col sm={24} md={24} lg={7} className="mt-6 ">
-          <SiderRight />
-        </Col> */}
       </Row>
     </>
   );

@@ -77,35 +77,16 @@ function AdminLayout(props) {
       "/dashboard",
       <DashboardOutlined className="sidebar-icon" />
     ),
-    // getItem("Activity", "sub1", <SettingOutlined />, [
-    //   getItem("Submenu", "sub3", null, [
-    //     getItem("Option 7", "7"),
-    //     getItem("Option 8", "8"),
-    //   ]),
-    // ]),
-    getItem("Reviews", "/review", <FormOutlined className="sidebar-icon " />),
-    // getItem("Team", "team", <AppstoreOutlined className="sidebar-icon" />, [
-    //   getItem("Groups", "/admin/team/groups"),
-    //   getItem("Members", "/admin/team/members"),
-    // ]),
 
-    // getItem(
-    //   "Team",
-    //   "/team/members",
-    //   <AppstoreOutlined className="sidebar-icon " />
-    // ),
+    getItem("Reviews", "/review", <FormOutlined className="sidebar-icon " />),
+
     getItem("Applaud", "/applaud", <LikeOutlined className="sidebar-icon " />),
 
     getItem(
       "Settings",
       "setting",
       <SettingOutlined className="sidebar-icon " />,
-      [
-        // getItem("Templates", "/admin/template "),
-        // getItem("Users", "/admin/user"),
-        getItem("Templates", "/template"),
-        getItem("Profile ", "/profile "),
-      ]
+      [getItem("Templates", "/template"), getItem("Profile ", "/profile ")]
     ),
   ];
   const adminItems = [
@@ -114,17 +95,8 @@ function AdminLayout(props) {
       "/dashboard",
       <DashboardOutlined className="sidebar-icon" />
     ),
-    // getItem("Activity", "sub1", <SettingOutlined />, [
-    //   getItem("Submenu", "sub3", null, [
-    //     getItem("Option 7", "7"),
-    //     getItem("Option 8", "8"),
-    //   ]),
-    // ]),
+
     getItem("Reviews", "/review", <FormOutlined className="sidebar-icon " />),
-    // getItem("Team", "team", <AppstoreOutlined className="sidebar-icon" />, [
-    //   getItem("Groups", "/admin/team/groups"),
-    //   getItem("Members", "/admin/team/members"),
-    // ]),
 
     getItem(
       "Team",
@@ -137,12 +109,7 @@ function AdminLayout(props) {
       "Settings",
       "setting",
       <SettingOutlined className="sidebar-icon " />,
-      [
-        // getItem("Templates", "/admin/template "),
-        // getItem("Users", "/admin/user"),
-        getItem("Templates", "/template"),
-        getItem("Profile ", "/profile "),
-      ]
+      [getItem("Templates", "/template"), getItem("Profile ", "/profile ")]
     ),
   ];
 
