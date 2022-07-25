@@ -31,7 +31,7 @@ function SiderRight({ data, totalRating }) {
             </div>
             <div>
               <p className="primary-color-blue text-xl font-extrabold my-2">
-                {totalRating}
+                {totalRating ?? 0}
               </p>
             </div>
           </div>

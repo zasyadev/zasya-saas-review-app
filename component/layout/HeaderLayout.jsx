@@ -16,11 +16,13 @@ import { openNotificationBox } from "../../helpers/notification";
 
 const { Header } = Layout;
 
-function HeaderLayout({ title, pageName, user }) {
-  const [userOrganizationData, setUserOrganizationData] = useState({
-    orgId: "",
-    roleId: "",
-  });
+function HeaderLayout({
+  title,
+  pageName,
+  user,
+  fetchUserData,
+  userOrganizationData,
+}) {
   const router = useRouter();
   const logoutHandler = () => {
     signOut();
@@ -44,30 +46,31 @@ function HeaderLayout({ title, pageName, user }) {
       });
   };
 
-  async function fetchUserData() {
-    await fetch("/api/organization/" + user.id, {
-      method: "GET",
-    })
-      .then((response) => response.json())
-      .then((response) => {
-        if (response.status === 200) {
-          setUserOrganizationData({
-            orgId: response?.data?.organization?.company_name,
-            roleId:
-              response?.data?.roleData?.role_id === 2
-                ? "Admin"
-                : response?.data?.roleData?.role_id === 3
-                ? "Manager"
-                : response?.data?.roleData?.role_id === 4
-                ? "Member"
-                : null,
-          });
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }
+  // async function fetchUserData() {
+  //   await fetch("/api/organization/" + user.id, {
+  //     method: "GET",
+  //   })
+  //     .then((response) => response.json())
+  //     .then((response) => {
+  //       if (response.status === 200) {
+  //         setUserOrganizationData({
+  //           orgId: response?.data?.organization?.company_name,
+  //           roleId:
+  //             response?.data?.roleData?.role_id === 2
+  //               ? "Admin"
+  //               : response?.data?.roleData?.role_id === 3
+  //               ? "Manager"
+  //               : response?.data?.roleData?.role_id === 4
+  //               ? "Member"
+  //               : null,
+  //           role: response?.data?.roleData?.role_id,
+  //         });
+  //       }
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // }
 
   useEffect(() => {
     if (user) {
@@ -95,16 +98,7 @@ function HeaderLayout({ title, pageName, user }) {
           </div>
         </Link>
       </Menu.Item>
-      {user.role_id == 2 && (
-        <Menu.Item key={"team"}>
-          <Link href="/team/members">
-            <div className="flex items-center">
-              {" "}
-              <UsergroupAddOutlined /> <span className="span-text">Team</span>
-            </div>
-          </Link>
-        </Menu.Item>
-      )}
+
       {user?.UserOraganizationGroups?.length > 1 ? (
         <Menu.SubMenu
           key="org"
@@ -154,14 +148,14 @@ function HeaderLayout({ title, pageName, user }) {
       <Menu.Item key={"Applaud"}>
         <Link href="/applaud/add">Applaud</Link>
       </Menu.Item>
-      {user.role_id == 2 && (
+      {(userOrganizationData?.role == 2 || userOrganizationData?.role == 3) && (
         <Menu.Item key={"Team"}>
           <Link href="/team/add">Team</Link>
         </Menu.Item>
       )}
     </Menu>
   );
-
+  console.log(userOrganizationData, "userOrganizationData");
   return (
     <Header className="ant-header bg-color-dashboard border-b border-b-neutral-300 p-0">
       <Row className="items-center h-full" justify="space-between">

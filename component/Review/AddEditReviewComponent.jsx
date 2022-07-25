@@ -189,7 +189,7 @@ function AddEditReviewComponent({ editMode, user }) {
                         setReviewFormData({});
                         setQuestionList([]);
                       }}
-                      className="py-3 h-full rounded toggle-btn-bg text-white lg:mx-4 w-1/4  my-1"
+                      className="py-3 h-full rounded toggle-btn-bg text-white lg:mx-4 w-1/4 my-1"
                     >
                       Cancel
                     </button>

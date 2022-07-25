@@ -84,8 +84,8 @@ function DashBoard({ user }) {
     let assigneAnswerLength = data.filter((item) =>
       item?.ReviewAssigneeAnswers?.length > 0 ? item : null
     );
-
-    let avgRating = avgRatingSum / assigneAnswerLength.length;
+    let avgRating = 0;
+    if (avgRating) avgRating = avgRatingSum / assigneAnswerLength.length;
     setTotalRating(Number(avgRating).toFixed(2));
   };
 
@@ -262,12 +262,7 @@ function DashBoard({ user }) {
                     <Col xs={24} md={24}>
                       <Row>
                         <Col xs={6} md={5}>
-                          <Image
-                            src={User2}
-                            alt="user "
-                            // width={40}
-                            // height={40}
-                          />
+                          <Image src={User2} alt="user " />
                         </Col>
                         <Col xs={18} md={19}>
                           <div className="px-2">
