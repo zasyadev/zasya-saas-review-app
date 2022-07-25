@@ -22,12 +22,30 @@ function AddEditReviewComponent({ editMode, user }) {
   const [questionList, setQuestionList] = useState([]);
   const [previewForm, setPreviewForm] = useState(false);
   const [reviewFormData, setReviewFormData] = useState({});
+  const [nextFormFeild, setNextFormFeild] = useState(0);
+  const [disable, setDisable] = useState({
+    review_name: false,
+    template_id: false,
+    frequency: false,
+    assigned_to_id: false,
+    review_type: false,
+  });
 
   const validateMessages = {
     required: "${label} is required!",
   };
 
-  function onFinish(values, type) {
+  const onInputChange = (value, name) => {
+    if (value && name) {
+      setDisable((prev) => ({ ...prev, [`${name}`]: true }));
+    } else {
+      setDisable((prev) => ({ ...prev, [`${name}`]: false }));
+    }
+  };
+
+  function onFinish(type) {
+    let values = form.getFieldsValue(true);
+
     let templateData = {};
     if (type === "preview") {
       templateData = values.templateData;
@@ -210,182 +228,253 @@ function AddEditReviewComponent({ editMode, user }) {
         </>
       ) : (
         <div className="w-full  md:w-4/6 mx-auto">
-          <div className="w-full bg-white rounded-xl shadow-md p-4 mt-4 add-template-wrapper">
-            <div className="  rounded-t-md  mt-1">
-              <div className=" w-full flex flex-col items-start  pt-2 pb-5 ">
+          <div className="w-full bg-white rounded-md shadow-md mt-4 add-template-wrapper">
+            <div className=" mt-1">
+              <div className=" w-full flex flex-col items-start">
                 <Form
                   layout="vertical"
                   form={form}
-                  onFinish={onFinish}
-                  validateMessages={validateMessages}
+                  // onFinish={onFinish}
+                  className="w-full"
                 >
                   <Row gutter={16}>
-                    {/* <Col md={12} xs={24}>
-                      <Form.Item
-                        name="is_published"
-                        label="Review Published For ? "
-                        rules={[
-                          {
-                            required: true,
-                          },
-                        ]}
-                      >
-                        <Select placeholder="Select One">
-                          <Select.Option value="published">
-                            Yourself
-                          </Select.Option>
-                          <Select.Option value="draft">Others</Select.Option>
-                        </Select>
-                      </Form.Item>
-                    </Col> */}
                     <Col md={24} xs={24}>
-                      <Form.Item
-                        name="review_name"
-                        label="Please enter your feedback title"
-                        rules={[
-                          {
-                            required: true,
-                          },
-                        ]}
-                      >
-                        <Input placeholder="for eg: Monthly feedback , Lastest trip review , weekly feedback ... " />
-                      </Form.Item>
-                    </Col>
-
-                    <Col md={24} xs={24} className="full-width-label">
-                      <Form.Item
-                        name="template_id"
-                        label={
-                          <div className="w-full flex justify-between items-center ">
-                            <p className="my-auto">
-                              Select your feedback Template
+                      <div className="review-form-bg rounded-md h-full w-full">
+                        {nextFormFeild === 0 && (
+                          <div className="py-24 flex flex-col items-center justify-center">
+                            <p className="text-xl font-bold my-5 primary-color-blue">
+                              Please enter your feedback title
                             </p>
-                            <Link href="/template/add">
-                              <p className="cursor-pointer text-xs my-auto">
-                                Create
-                              </p>
-                            </Link>
-                          </div>
-                        }
-                        rules={[
-                          {
-                            required: true,
-                          },
-                        ]}
-                      >
-                        <Select
-                          placeholder="Select Template"
-                          showSearch
-                          filterOption={(input, option) =>
-                            option.children
-                              .toLowerCase()
-                              .indexOf(input.toLowerCase()) >= 0
-                          }
-                        >
-                          {formList.map((data, index) => (
-                            <Select.Option key={index + "form"} value={data.id}>
-                              {data.form_title}
-                            </Select.Option>
-                          ))}
-                        </Select>
-                      </Form.Item>
-                    </Col>
 
-                    <Col md={24} xs={24}>
-                      <Form.Item
-                        name="frequency"
-                        label={
-                          <div className="w-full flex justify-between items-center ">
-                            <p className="my-auto">
+                            <div className=" text-left w-96">
+                              <Form.Item
+                                name="review_name"
+                                rules={[
+                                  {
+                                    required: true,
+                                    message: "Please enter your feedback title",
+                                  },
+                                ]}
+                              >
+                                <Input
+                                  placeholder="for eg: Monthly feedback , Lastest trip review , weekly feedback ... "
+                                  onChange={(e) =>
+                                    onInputChange(e.target.value, "review_name")
+                                  }
+                                />
+                              </Form.Item>
+                            </div>
+                            <div className="my-5">
+                              <button
+                                className="toggle-btn-bg rounded-md text-lg text-white px-14 py-2 "
+                                onClick={() => setNextFormFeild(1)}
+                                disabled={!disable.review_name}
+                              >
+                                Next
+                              </button>
+                            </div>
+                          </div>
+                        )}
+                        {nextFormFeild === 1 && (
+                          <div className="py-24 flex flex-col items-center justify-center px-4">
+                            <p className="text-xl font-bold my-5 primary-color-blue">
+                              Please select your feedback template
+                            </p>
+
+                            <div className=" text-left w-96">
+                              <Form.Item
+                                name="template_id"
+                                rules={[
+                                  {
+                                    required: true,
+                                    message:
+                                      "Please select your feedback template",
+                                  },
+                                ]}
+                              >
+                                <Select
+                                  placeholder="Select Template"
+                                  showSearch
+                                  filterOption={(input, option) =>
+                                    option.children
+                                      .toLowerCase()
+                                      .indexOf(input.toLowerCase()) >= 0
+                                  }
+                                  onChange={(e) =>
+                                    onInputChange(e, "template_id")
+                                  }
+                                >
+                                  {formList.map((data, index) => (
+                                    <Select.Option
+                                      key={index + "form"}
+                                      value={data.id}
+                                    >
+                                      {data.form_title}
+                                    </Select.Option>
+                                  ))}
+                                </Select>
+                              </Form.Item>
+                            </div>
+                            <div className="my-5">
+                              <button
+                                className="toggle-btn-bg rounded-md text-lg text-white px-14 py-2 "
+                                onClick={() => setNextFormFeild(2)}
+                                disabled={!disable.template_id}
+                              >
+                                Next
+                              </button>
+                            </div>
+                          </div>
+                        )}
+                        {nextFormFeild === 2 && (
+                          <div className="py-24 flex flex-col items-center justify-center px-4">
+                            <p className="text-xl font-bold my-5 primary-color-blue">
                               Please select feedback Frequency
                             </p>
-                          </div>
-                        }
-                        rules={[
-                          {
-                            required: true,
-                          },
-                        ]}
-                      >
-                        <Select placeholder="Select Frequency">
-                          <Select.Option value="once">Once</Select.Option>
-                          <Select.Option value="daily">Daily</Select.Option>
-                          <Select.Option value="weekly">Weekly</Select.Option>
-                          <Select.Option value="monthly">Monthly</Select.Option>
-                        </Select>
-                      </Form.Item>
-                    </Col>
 
-                    {/* {memberDetails && ( */}
-                    <Col md={24} xs={24} className="full-width-label">
-                      <Form.Item
-                        className="select-tag"
-                        name="assigned_to_id"
-                        label={
-                          <div className="w-full flex justify-between items-center">
-                            <p className="my-auto">
-                              {" "}
+                            <div className=" text-left w-96">
+                              <Form.Item
+                                name="frequency"
+                                rules={[
+                                  {
+                                    required: true,
+                                    message:
+                                      "Please select your feedback frequency",
+                                  },
+                                ]}
+                              >
+                                <Select
+                                  placeholder="Select Frequency"
+                                  showSearch
+                                  filterOption={(input, option) =>
+                                    option.children
+                                      .toLowerCase()
+                                      .indexOf(input.toLowerCase()) >= 0
+                                  }
+                                  onChange={(e) =>
+                                    onInputChange(e, "frequency")
+                                  }
+                                >
+                                  <Select.Option value="once">
+                                    Once
+                                  </Select.Option>
+                                  <Select.Option value="daily">
+                                    Daily
+                                  </Select.Option>
+                                  <Select.Option value="weekly">
+                                    Weekly
+                                  </Select.Option>
+                                  <Select.Option value="monthly">
+                                    Monthly
+                                  </Select.Option>
+                                </Select>
+                              </Form.Item>
+                            </div>
+                            <div className="my-5">
+                              <button
+                                className="toggle-btn-bg rounded-md text-lg text-white px-14 py-2 "
+                                onClick={() => setNextFormFeild(3)}
+                                disabled={!disable.frequency}
+                              >
+                                Next
+                              </button>
+                            </div>
+                          </div>
+                        )}
+                        {nextFormFeild === 3 && (
+                          <div className="py-24 flex flex-col items-center justify-center px-4">
+                            <p className="text-xl font-bold my-5 primary-color-blue">
                               Please select your team members, who should be
                               giving feedback to you ?
                             </p>
-                            {user?.role_id === 2 ? (
-                              <Link href="/team/add">
-                                <p className="cursor-pointer text-xs">Create</p>
-                              </Link>
-                            ) : null}
+
+                            <div className=" text-left w-96">
+                              <Form.Item
+                                name="assigned_to_id"
+                                rules={[
+                                  {
+                                    required: true,
+                                    message: "Please select your team members",
+                                  },
+                                ]}
+                              >
+                                <Select
+                                  mode="multiple"
+                                  placeholder="Select Member"
+                                  showSearch
+                                  filterOption={(input, option) =>
+                                    option.children
+                                      .toLowerCase()
+                                      .indexOf(input.toLowerCase()) >= 0
+                                  }
+                                  onChange={(e) =>
+                                    onInputChange(e, "assigned_to_id")
+                                  }
+                                >
+                                  {userList.map((data, index) => (
+                                    <Select.Option
+                                      key={index + "users"}
+                                      value={data?.user?.id}
+                                    >
+                                      {data?.user?.first_name}
+                                    </Select.Option>
+                                  ))}
+                                </Select>
+                              </Form.Item>
+                            </div>
+                            <div className="my-5">
+                              <button
+                                className="toggle-btn-bg rounded-md text-lg text-white px-14 py-2 "
+                                onClick={() => setNextFormFeild(4)}
+                                disabled={!disable.assigned_to_id}
+                              >
+                                Next
+                              </button>
+                            </div>
                           </div>
-                        }
-                        rules={[
-                          {
-                            required: true,
-                          },
-                        ]}
-                      >
-                        <Select
-                          mode="multiple"
-                          placeholder="Select Member"
-                          showSearch
-                          filterOption={(input, option) =>
-                            option.children
-                              .toLowerCase()
-                              .indexOf(input.toLowerCase()) >= 0
-                          }
-                        >
-                          {userList.map((data, index) => (
-                            <Select.Option
-                              key={index + "users"}
-                              value={data?.user?.id}
-                            >
-                              {data?.user?.first_name}
-                            </Select.Option>
-                          ))}
-                        </Select>
-                      </Form.Item>
-                    </Col>
-                    <Col md={12} xs={24}>
-                      <Form.Item
-                        name="review_type"
-                        label={
-                          <div className="w-full flex justify-between items-center">
-                            <p className="my-auto">
+                        )}
+                        {nextFormFeild === 4 && (
+                          <div className="py-24 flex flex-col items-center justify-center px-4">
+                            <p className="text-xl font-bold my-5 primary-color-blue">
                               Would you like to let your team members rate you ?
                             </p>
+
+                            <div className=" text-left w-96">
+                              <Form.Item
+                                name="review_type"
+                                rules={[
+                                  {
+                                    required: true,
+                                    message: "Please select your review type",
+                                  },
+                                ]}
+                              >
+                                <Radio.Group
+                                  placeholder="Select Type"
+                                  onChange={(e) =>
+                                    onInputChange(e, "review_type")
+                                  }
+                                >
+                                  <Radio value="feedback">yes</Radio>
+                                  <Radio value="other">no</Radio>
+                                </Radio.Group>
+                              </Form.Item>
+                            </div>
+                            <div className="my-5">
+                              <button
+                                className="toggle-btn-bg rounded-md text-lg text-white px-14 py-2 "
+                                onClick={() => onFinish()}
+                                disabled={!disable.review_type}
+                              >
+                                Next
+                              </button>
+                            </div>
                           </div>
-                        }
-                        rules={[
-                          {
-                            required: true,
-                          },
-                        ]}
-                      >
-                        <Radio.Group placeholder="Select Type">
-                          <Radio value="feedback">yes</Radio>
-                          <Radio value="other">no</Radio>
-                        </Radio.Group>
-                      </Form.Item>
+                        )}
+                      </div>
                     </Col>
-                    {/* )} */}
-                    <Col md={24} xs={24}>
+
+                    {/* <Col md={24} xs={24}>
                       <div className="flex justify-end">
                         <Link href="/review">
                           <button
@@ -414,7 +503,7 @@ function AddEditReviewComponent({ editMode, user }) {
                           Create
                         </button>
                       </div>
-                    </Col>
+                    </Col> */}
                   </Row>
                 </Form>
               </div>
