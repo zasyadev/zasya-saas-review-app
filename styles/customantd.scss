@@ -536,10 +536,10 @@
   }
 }
 .radio-button {
-  .MuiFormControlLabel-root {
-    .MuiTypography-body1 {
-      font-size: 14px;
-      font-weight: 500px;
+  .ant-space-item {
+    .ant-radio-wrapper {
+      font-size: 16px !important;
+      font-weight: 500px !important;
     }
   }
 }
@@ -784,18 +784,48 @@
   }
 }
 
-// Ant crousel Css
-.ant-carousel {
-  .slick-slider {
-    .slick-dots-bottom {
-      display: none !important;
-    }
-  }
-}
 .review-form-bg {
   background-image: url("../assets/images/answerbg.png");
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
   opacity: 1;
+}
+
+.answer-preview {
+  // radio button css
+  .ant-radio-group {
+    .ant-radio:focus,
+    .ant-radio:hover {
+      .ant-radio-inner {
+        border-color: #0f123f !important;
+      }
+    }
+
+    .ant-radio-wrapper:focus,
+    .ant-radio-wrapper:hover {
+      .ant-checkbox-inner {
+        border-color: #0f123f;
+      }
+    }
+    .ant-radio-checked {
+      .ant-radio-inner {
+        border-color: #0f123f;
+        box-shadow: 0 0 0 1.5px rgba(0, 5, 204, 0.35) !important;
+      }
+    }
+    .ant-radio-inner::after {
+      background-color: #0f123f;
+    }
+  }
+
+  // input box css
+  .ant-input {
+    height: 44px;
+    padding: 8px 6px;
+  }
+  .ant-input:hover,
+  .ant-input:focus {
+    border-color: #0f123f;
+  }
 }
