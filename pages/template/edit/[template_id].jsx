@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import AdminLayout from "../../../component/layout/AdminLayout";
 import { getSession } from "next-auth/client";
 import FormComponent from "../../../component/Form/FormComponent";
+import TemplateBuildComponent from "../../../component/Template/TemplateBuildComponent";
 
 function EditTemplate({ user }) {
   const router = useRouter();
@@ -65,7 +66,12 @@ function EditTemplate({ user }) {
           </div>
         </>
       ) : Object.keys(formData).length ? (
-        <FormComponent user={user} editFormData={formData} editMode={true} />
+        // <FormComponent user={user} editFormData={formData} editMode={true} />
+        <TemplateBuildComponent
+          user={user}
+          editFormData={formData}
+          editMode={true}
+        />
       ) : null}
     </AdminLayout>
   );
