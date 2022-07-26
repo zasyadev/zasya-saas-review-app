@@ -814,3 +814,12 @@
     display: none !important;
   }
 }
+
+// Ant crousel Css
+.ant-carousel {
+  .slick-slider {
+    .slick-dots-bottom {
+      display: none !important;
+    }
+  }
+}

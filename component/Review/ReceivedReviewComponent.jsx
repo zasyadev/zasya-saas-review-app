@@ -3,12 +3,13 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { openNotificationBox } from "../../helpers/notification";
 import QuestionViewComponent from "../Form/QuestionViewComponent";
-// import {
-//   InputComponent,
-//   OptionComponent,
-//   TextAreaComponent,
-//   SliderComponent,
-// } from "./formhelper/FormComponent";
+import {
+  InputComponent,
+  OptionComponent,
+  TextAreaComponent,
+  SliderComponent,
+  InputFormComponent,
+} from "./formhelper/FormComponent";
 
 function ReceivedReviewComponent({ user, reviewId }) {
   const router = useRouter();
@@ -133,6 +134,7 @@ function ReceivedReviewComponent({ user, reviewId }) {
                   />
                 ) : (
                   <>
+                    <InputComponent />
                     <div className="w-full flex  flex-col items-start px-4 pt-4 pb-5 bg-gray-200 rounded">
                       <div>
                         <h3 className="text-2xl font-medium primary-color-blue mb-2">
