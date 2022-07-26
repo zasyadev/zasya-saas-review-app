@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { hashedPassword } from "../../../../lib/auth";
+import { mailService, mailTemplate } from "../../../../lib/emailservice";
 
 const prisma = new PrismaClient();
 
@@ -31,6 +32,29 @@ export default async (req, res) => {
           const deleteData = await prisma.passwordReset.delete({
             where: { email_id: reqBody.email },
           });
+          if (data.created_by_id) {
+            let createdData = await prisma.user.findUnique({
+              where: { id: data.created_by_id },
+            });
+
+            if (createdData) {
+              let mailData = {
+                from: process.env.SMTP_USER,
+                to: createdData.email,
+                subject: `${updateData.first_name} has accepted your Invitation to collaborate on Review App`,
+                html: mailTemplate(`
+  
+                ${updateData.first_name} has accepted your Invitation to collaborate on Review App.
+                
+                `),
+              };
+
+              await mailService.sendMail(mailData, function (err, info) {
+                if (err) console.log("failed");
+                else console.log("successfull");
+              });
+            }
+          }
           return res.status(200).json({
             status: 200,
             data: updateData,
@@ -46,6 +70,7 @@ export default async (req, res) => {
       }
     }
   } catch (error) {
+    console.log(error);
     return res.status(500).json({
       error: error,
       message: "Internal Server Error",

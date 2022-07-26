@@ -776,37 +776,6 @@
   background-size: cover;
   background-position: center;
   opacity: 1;
-
-  .answer-bg {
-    background-image: url("../assets/images/answerbg.png");
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center;
-    opacity: 1;
-
-    .rating-slider-a {
-      .ant-slider:hover,
-      .ant-slider-handle:not(.ant-tooltip-open) {
-        border: #ff706f !important;
-      }
-      .ant-slider-rail {
-        height: 8px;
-        background-color: rgb(168, 164, 164) !important;
-      }
-      .ant-slider-track {
-        height: 8px;
-        background-color: #ff706f !important;
-      }
-      .ant-slider-handle {
-        margin-top: -3px !important;
-        background-color: #ff706f !important;
-        border: solid 2px #ff706f;
-      }
-      .ant-slider-handle:focus {
-        border: #ff706f !important;
-      }
-    }
-  }
 }
 
 .create-header-button {
@@ -822,4 +791,11 @@
       display: none !important;
     }
   }
+}
+.review-form-bg {
+  background-image: url("../assets/images/answerbg.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  opacity: 1;
 }
