@@ -1,6 +1,7 @@
 import React, { createRef, useState } from "react";
 import { Button, Carousel, Col, Input, Radio, Row, Slider, Space } from "antd";
 import TextArea from "antd/lib/input/TextArea";
+import Link from "next/link";
 
 export function FormSlideComponent({
   type,
@@ -21,132 +22,144 @@ export function FormSlideComponent({
 
   return (
     <>
-      <div className="">
-        <div className="h-full w-full">
-          <Row>
-            <Col md={24} xs={24}>
-              <div className="text-center answer-preview">
-                <div className="py-24 flex flex-col items-center justify-center text-center">
-                  <p className="text-lg font-bold text-red-400 my-5">
-                    {`Question ${nextSlide + 1}`}
-                  </p>
-                  <p className="text-2xl font-bold primary-color-blue my-5">
-                    {questionText}
-                  </p>
+      <div className="h-full w-full">
+        <Row>
+          <Col md={24} className="text-right">
+            <Link href="/review/received">
+              <button className="primary-bg-btn text-white py-2 px-4 rounded-md">
+                Back
+              </button>
+            </Link>
+          </Col>
+          <Col md={24} xs={24}>
+            <div className="text-center answer-preview">
+              <div className="flex flex-col items-center justify-center text-center mt-5">
+                <p className="text-lg font-bold text-red-400 my-5">
+                  {`Question ${nextSlide + 1}`}
+                </p>
+                <p className="text-2xl font-bold primary-color-blue my-5">
+                  {questionText}
+                </p>
 
-                  {options?.length > 0 && type === "checkbox" && (
-                    <Row>
-                      <Col>
-                        <Radio.Group
-                          className="radio-button"
-                          onChange={(e) =>
-                            handleAnswerChange(id, e.target.value)
-                          }
-                        >
-                          {/* <Space direction="vertical"> */}
-                          {options?.map((op, j) => (
-                            <>
-                              <Radio value={op.optionText}>
-                                {op.optionText}
-                              </Radio>
-                            </>
-                          ))}
-                          {/* </Space> */}
-                        </Radio.Group>
-                      </Col>
-                    </Row>
-                  )}
-
-                  {type == "input" ? (
-                    <div className="my-5 md:w-96 ">
-                      <Input
-                        fullWidth={true}
-                        placeholder={type == "input" ? "Short Text" : ""}
-                        rows={1}
-                        onChange={(e) => handleAnswerChange(id, e.target.value)}
-                      />
-                    </div>
-                  ) : null}
-
-                  {type === "textarea" ? (
-                    <div className="my-5 md:w-96 ">
-                      <TextArea
-                        fullWidth={true}
-                        placeholder={type == "textarea" ? "Long Text" : ""}
-                        rows={1}
-                        onChange={(e) => handleAnswerChange(id, e.target.value)}
-                      />
-                    </div>
-                  ) : null}
-
-                  {type === "scale" && options?.length > 1 && (
-                    <div className=" text-left md:w-96">
-                      <div className="flex w-full justify-center items-center">
-                        <p>{options[0]?.optionText}</p>
-                        <p className="w-full text-center mx-2 md:ml-4">
-                          <Slider
-                            className="rating-slider"
-                            min={Number(options[0]?.lowerLabel)}
-                            max={Number(options[0]?.higherLabel)}
-                            step={1}
-                            onChange={(e) => {
-                              handleAnswerChange(id, e.toString());
-                              setSliderInputValue(e);
-                            }}
-                            // value={typeof inputValue === "number" ? inputValue : 0}
-                          />
-                        </p>
-
-                        <p className="rounded-full bg-violet-400 text-white text-center mr-2 md:mr-3  py-1 md:py-2 px-1 md:px-3">
-                          {sliderInputValue}
-                        </p>
-
-                        <p>{options[1]?.optionText}</p>
-                      </div>
-                      {error ? (
-                        <p className="text-red-600 text-sm my-2">{error}</p>
-                      ) : null}
-                    </div>
-                  )}
+                {options?.length > 0 && type === "checkbox" && (
                   <div className="my-5">
-                    {nextSlide > 0 ? (
-                      <button
-                        className="toggle-btn-bg rounded-md text-lg text-white px-14 py-2 mx-2 "
-                        onClick={() => setNextSlide(nextSlide - 1)}
-                      >
-                        Pre
-                      </button>
-                    ) : (
-                      ""
-                    )}
+                    <Radio.Group
+                      className="radio-button "
+                      onChange={(e) => handleAnswerChange(id, e.target.value)}
+                      required={true}
+                      size="large"
+                    >
+                      {/* <Space direction="vertical"> */}
+                      <Row justify="center">
+                        {options?.map((op, j) => (
+                          <>
+                            <Col md={8}>
+                              <p className="border-2 mx-2 text-left px-4 py-4 rounded-md my-2 bg-white">
+                                <Radio
+                                  className="text-left  "
+                                  value={op.optionText}
+                                >
+                                  {op.optionText}
+                                </Radio>
+                              </p>
+                            </Col>
+                          </>
+                        ))}
+                      </Row>
+                      {/* </Space> */}
+                    </Radio.Group>
+                  </div>
+                )}
 
-                    {length - 1 === nextSlide ? (
-                      <button
-                        className="toggle-btn-bg rounded-md text-lg text-white px-10 py-2 mx-2 my-2 "
-                        onClick={() => handleSubmit()}
-                      >
-                        Submit
-                      </button>
-                    ) : (
-                      <button
-                        className="toggle-btn-bg rounded-md text-lg text-white px-14 py-2 mx-2 my-2 "
-                        onClick={() => setNextSlide(nextSlide + 1)}
-                      >
-                        Next
-                      </button>
-                    )}
-                    {/* <button
+                {type == "input" ? (
+                  <div className="my-5 md:w-96 ">
+                    <Input
+                      fullWidth={true}
+                      placeholder={type == "input" ? "Short Text" : ""}
+                      rows={1}
+                      onChange={(e) => handleAnswerChange(id, e.target.value)}
+                    />
+                  </div>
+                ) : null}
+
+                {type === "textarea" ? (
+                  <div className="my-5 md:w-96 ">
+                    <TextArea
+                      fullWidth={true}
+                      placeholder={type == "textarea" ? "Long Text" : ""}
+                      rows={1}
+                      onChange={(e) => handleAnswerChange(id, e.target.value)}
+                    />
+                  </div>
+                ) : null}
+
+                {type === "scale" && options?.length > 1 && (
+                  <div className=" text-left md:w-96">
+                    <div className="flex w-full justify-center items-center">
+                      <p>{options[0]?.optionText}</p>
+                      <p className="w-full text-center mx-2 md:ml-4">
+                        <Slider
+                          className="rating-slider"
+                          min={Number(options[0]?.lowerLabel)}
+                          max={Number(options[0]?.higherLabel)}
+                          step={1}
+                          onChange={(e) => {
+                            handleAnswerChange(id, e.toString());
+                            setSliderInputValue(e);
+                          }}
+                          // value={typeof inputValue === "number" ? inputValue : 0}
+                        />
+                      </p>
+
+                      <p className="rounded-full bg-violet-400 text-white text-center mr-2 md:mr-3  py-1 md:py-2 px-1 md:px-3">
+                        {sliderInputValue}
+                      </p>
+
+                      <p>{options[1]?.optionText}</p>
+                    </div>
+                    {error ? (
+                      <p className="text-red-600 text-sm my-2">{error}</p>
+                    ) : null}
+                  </div>
+                )}
+                <div className="my-5">
+                  {nextSlide > 0 ? (
+                    <button
+                      className="toggle-btn-bg rounded-md text-lg text-white px-14 py-2 mx-2 "
+                      onClick={() => setNextSlide(nextSlide - 1)}
+                    >
+                      Previous
+                    </button>
+                  ) : (
+                    ""
+                  )}
+
+                  {length - 1 === nextSlide ? (
+                    <button
+                      className="toggle-btn-bg rounded-md text-lg text-white px-10 py-2 mx-2 my-2 "
+                      onClick={() => handleSubmit()}
+                    >
+                      Submit
+                    </button>
+                  ) : (
+                    <button
+                      className="toggle-btn-bg rounded-md text-lg text-white px-14 py-2 mx-2 my-2 "
+                      onClick={() => setNextSlide(nextSlide + 1)}
+                    >
+                      Next
+                    </button>
+                  )}
+                  {/* <button
                       className="toggle-btn-bg rounded-md text-lg text-white px-14 py-2 mx-2 "
                       onClick={() => setNextSlide(nextSlide + 1)}
                     >
                       Next
                     </button> */}
-                  </div>
                 </div>
               </div>
-            </Col>
-          </Row>
-        </div>
+            </div>
+          </Col>
+        </Row>
       </div>
     </>
   );

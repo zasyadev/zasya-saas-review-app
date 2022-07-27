@@ -776,6 +776,7 @@
   background-size: cover;
   background-position: center;
   opacity: 1;
+  height: 100vh;
 }
 
 .create-header-button {
@@ -795,10 +796,15 @@
 .answer-preview {
   // radio button css
   .ant-radio-group {
+    .ant-radio-button-wrapper:hover,
+    .ant-radio-button-wrapper:focus {
+      border: #0f123f !important;
+    }
     .ant-radio:focus,
     .ant-radio:hover {
       .ant-radio-inner {
         border-color: #0f123f !important;
+        box-shadow: 0 0 0 0px rgba(0, 5, 204, 0.35) !important;
       }
     }
 
