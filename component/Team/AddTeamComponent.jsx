@@ -110,7 +110,7 @@ function AddTeamComponent({ user, editMode, memberData }) {
                       },
                     ]}
                   >
-                    <Input />
+                    <Input size="large" />
                   </Form.Item>
                 </Col>
 
@@ -127,7 +127,7 @@ function AddTeamComponent({ user, editMode, memberData }) {
                       },
                     ]}
                   >
-                    <Input disabled={editMode} />
+                    <Input disabled={editMode} size="large" />
                   </Form.Item>
                 </Col>
 
@@ -142,6 +142,7 @@ function AddTeamComponent({ user, editMode, memberData }) {
                     ]}
                   >
                     <Select
+                      size="large"
                       mode="tags"
                       placeholder="Tags"
                       className="select-tag tag-select-box"
@@ -169,7 +170,11 @@ function AddTeamComponent({ user, editMode, memberData }) {
                       },
                     ]}
                   >
-                    <Select placeholder="Roles" className="select-tag">
+                    <Select
+                      placeholder="Roles"
+                      className="select-tag"
+                      size="large"
+                    >
                       {/* <Select.Option key={"amin"} value={2} disabled>
                         Admin
                       </Select.Option> */}

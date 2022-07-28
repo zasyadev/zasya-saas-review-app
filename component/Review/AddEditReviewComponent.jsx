@@ -248,7 +248,10 @@ function AddEditReviewComponent({ editMode, user }) {
                           },
                         ]}
                       >
-                        <Input placeholder="for eg: Monthly feedback , Lastest trip review , weekly feedback ... " />
+                        <Input
+                          placeholder="for eg: Monthly feedback , Lastest trip review , weekly feedback ... "
+                          size="large"
+                        />
                       </Form.Item>
                     </Col>
 
@@ -274,6 +277,7 @@ function AddEditReviewComponent({ editMode, user }) {
                         ]}
                       >
                         <Select
+                          size="large"
                           placeholder="Select Template"
                           showSearch
                           filterOption={(input, option) =>
@@ -307,7 +311,7 @@ function AddEditReviewComponent({ editMode, user }) {
                           },
                         ]}
                       >
-                        <Select placeholder="Select Frequency">
+                        <Select placeholder="Select Frequency" size="large">
                           <Select.Option value="once">Once</Select.Option>
                           <Select.Option value="daily">Daily</Select.Option>
                           <Select.Option value="weekly">Weekly</Select.Option>
@@ -342,6 +346,7 @@ function AddEditReviewComponent({ editMode, user }) {
                         ]}
                       >
                         <Select
+                          size="large"
                           mode="multiple"
                           placeholder="Select Member"
                           showSearch
@@ -356,6 +361,7 @@ function AddEditReviewComponent({ editMode, user }) {
                               key={index + "users"}
                               value={data?.user?.id}
                             >
+                              {/* <Select></Select> */}
                               {data?.user?.first_name}
                             </Select.Option>
                           ))}
