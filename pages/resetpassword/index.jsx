@@ -16,7 +16,7 @@ function ResetPassword() {
   async function handleSubmit(values) {
     setLoading(true);
     let obj = {
-      email: values.email,
+      // email: params.email,
       password: values.password,
       token: params.passtoken,
     };
@@ -44,12 +44,12 @@ function ResetPassword() {
     }
   }
 
-  useEffect(() => {
-    if (params && params.email)
-      resetForm.setFieldsValue({
-        email: params.email,
-      });
-  }, [params]);
+  // useEffect(() => {
+  //   if (params && params.email)
+  //     resetForm.setFieldsValue({
+  //       email: params.email,
+  //     });
+  // }, [params]);
   const ResetPasswordComponent = () => {
     return (
       <Form
@@ -59,7 +59,7 @@ function ResetPassword() {
         onFinish={handleSubmit}
         className="login-form"
       >
-        <div className="md:mb-6  mb-4">
+        {/* <div className="md:mb-6  mb-4">
           <Form.Item
             name="email"
             rules={[
@@ -75,7 +75,7 @@ function ResetPassword() {
               placeholder="Email address"
             />
           </Form.Item>
-        </div>
+        </div> */}
 
         <div className="md:mb-6  mb-4">
           <Form.Item

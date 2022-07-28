@@ -5,7 +5,7 @@ import { ApplaudIcon, StarIcon } from "../../assets/Icon/icons";
 
 // import dynamic from "next/dynamic";
 
-function SiderRight({ data, totalRating }) {
+function SiderRight({ data, totalRating, userApplaud }) {
   return (
     <div className="mx-3 md:mx-0">
       <Row
@@ -19,7 +19,7 @@ function SiderRight({ data, totalRating }) {
             </div>
             <div>
               <p className="primary-color-blue text-xl font-extrabold my-2">
-                {data?.applaudData?.length ?? 0}
+                {userApplaud ?? 0}
               </p>
             </div>
           </div>

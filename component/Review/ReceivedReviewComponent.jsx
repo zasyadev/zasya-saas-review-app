@@ -59,10 +59,11 @@ function ReceivedReviewComponent({ user, reviewId }) {
     }
 
     if (user.id && reviewData.id) {
+      let ansValues = formValues.sort((a, b) => a.questionId - b.questionId);
       let obj = {
         user_id: user.id,
         review_assignee_id: reviewData.id,
-        answers: formValues,
+        answers: ansValues,
         review_id: reviewData.review.id,
         created_assignee_date: reviewData.created_date,
       };

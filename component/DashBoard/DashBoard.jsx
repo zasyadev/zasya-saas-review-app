@@ -23,6 +23,7 @@ function DashBoard({ user }) {
   const [dashBoardData, setDashboardData] = useState({});
   const [loading, setLoading] = useState(false);
   const [totalRating, setTotalRating] = useState(0);
+  const [userApplaud, setUserApplaud] = useState(0);
   const [applaudData, setApplaudData] = useState({});
 
   async function fetchDashboardData() {
@@ -40,7 +41,13 @@ function DashBoard({ user }) {
           if (response.data.reviewRating.length > 0)
             ratingHandler(response.data.reviewRating);
           setDashboardData(response.data);
-          applaudcount(response.data.applaudData);
+          if (response?.data?.applaudData?.length > 0) {
+            applaudcount(response.data.applaudData);
+            let userCount = response.data.applaudData.filter(
+              (item) => item.user_id === user.id
+            );
+            setUserApplaud(userCount?.length);
+          }
         }
       })
 
@@ -52,8 +59,8 @@ function DashBoard({ user }) {
   const applaudcount = (data) => {
     if (data.length > 0) {
       let res = data?.reduce(function (obj, key) {
-        obj[key.created.first_name] = obj[key.created.first_name] || [];
-        obj[key.created.first_name].push(key);
+        obj[key.user.first_name] = obj[key.user.first_name] || [];
+        obj[key.user.first_name].push(key);
         return obj;
       }, {});
 
@@ -289,7 +296,11 @@ function DashBoard({ user }) {
         </div>
       </Col>
       <Col xs={24} sm={24} md={24} lg={7} className="mt-6 h-full  ">
-        <SiderRight data={dashBoardData} totalRating={totalRating} />
+        <SiderRight
+          data={dashBoardData}
+          totalRating={totalRating}
+          userApplaud={userApplaud}
+        />
       </Col>
     </Row>
   );

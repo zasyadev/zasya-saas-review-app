@@ -22,9 +22,34 @@ function AddEditReviewComponent({ editMode, user }) {
   const [questionList, setQuestionList] = useState([]);
   const [previewForm, setPreviewForm] = useState(false);
   const [reviewFormData, setReviewFormData] = useState({});
+  const [disable, setDisable] = useState({
+    review_name: false,
+    template_id: false,
+    frequency: false,
+    assigned_to_id: false,
+    review_type: false,
+  });
 
   const validateMessages = {
     required: "${label} is required!",
+  };
+
+  const onInputChange = (value, name) => {
+    if (value && name) {
+      setDisable((prev) => ({ ...prev, [`${name}`]: true }));
+      if ((name = "assigned_to_id" && userList.length > 0)) {
+        if (value.includes("all")) {
+          let allUsers = userList.map((item) => {
+            return item.user.id;
+          });
+          form.setFieldsValue({
+            assigned_to_id: allUsers,
+          });
+        }
+      }
+    } else {
+      setDisable((prev) => ({ ...prev, [`${name}`]: false }));
+    }
   };
 
   function onFinish(values, type) {
@@ -350,7 +375,11 @@ function AddEditReviewComponent({ editMode, user }) {
                               .toLowerCase()
                               .indexOf(input.toLowerCase()) >= 0
                           }
+                          onChange={(e) => onInputChange(e, "assigned_to_id")}
                         >
+                          <Select.Option key="all" value="all">
+                            ---SELECT ALL---
+                          </Select.Option>
                           {userList.map((data, index) => (
                             <Select.Option
                               key={index + "users"}
