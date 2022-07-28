@@ -34,9 +34,16 @@ export default async (req, res) => {
       });
       let reviewAnswered = await prisma.reviewAssigneeAnswers.findMany({
         where: {
-          user: {
-            is: { organization_id: userTableData.organization_id },
-          },
+          AND: [
+            {
+              user_id: reqBody.userId,
+            },
+            {
+              review: {
+                is: { organization_id: userTableData.organization_id },
+              },
+            },
+          ],
         },
       });
       // } else {
@@ -49,9 +56,9 @@ export default async (req, res) => {
         where: { organization_id: userTableData.organization_id },
       });
       const applaudData = await prisma.userApplaud.findMany({
-        where: { user_id: reqBody.userId },
+        where: { organization_id: userTableData.organization_id },
         include: {
-          created: true,
+          user: true,
         },
       });
 

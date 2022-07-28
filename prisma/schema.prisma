@@ -42,6 +42,7 @@ model User {
   UserOraganizationGroups UserOraganizationGroups[]
 
   @@map("users")
+  UserOraganizationTags UserOraganizationTags[]
 }
 
 model Role {
@@ -226,7 +227,9 @@ model UserOrganization {
   Review                  Review[]
   UserOraganizationGroups UserOraganizationGroups[]
 
+  UserApplaud UserApplaud[]
   @@map("user_organization")
+  UserOraganizationTags UserOraganizationTags[]
 }
 
 model UserImage {
@@ -252,14 +255,16 @@ model PasswordReset {
 }
 
 model UserApplaud {
-  id            String   @id @default(uuid())
-  user          User     @relation("userFeild", fields: [user_id], references: [id])
-  user_id       String
-  comment       String?  @db.LongText
-  created       User     @relation("userCreated", fields: [created_by], references: [id])
-  created_by    String
-  created_date  DateTime @default(now())
-  modified_date DateTime @default(now())
+  id              String            @id @default(uuid())
+  user            User              @relation("userFeild", fields: [user_id], references: [id])
+  user_id         String
+  organization    UserOrganization? @relation(fields: [organization_id], references: [id])
+  organization_id Int?
+  comment         String?           @db.LongText
+  created         User              @relation("userCreated", fields: [created_by], references: [id])
+  created_by      String
+  created_date    DateTime          @default(now())
+  modified_date   DateTime          @default(now())
 
   @@map("user_applaud")
 }
@@ -278,6 +283,17 @@ model UserOraganizationGroups {
   modified_date   DateTime         @default(now())
 
   @@map("user_organization_groups")
+}
+
+model UserOraganizationTags {
+  id              Int              @id @default(autoincrement())
+  user            User             @relation(fields: [user_id], references: [id])
+  user_id         String
+  tag_name        String
+  organization    UserOrganization @relation(fields: [organization_id], references: [id])
+  organization_id Int
+
+  @@map("user_organization_tags")
 }
 
 enum RoleEnum {

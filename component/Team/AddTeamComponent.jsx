@@ -1,13 +1,14 @@
 import { Col, Form, Input, Row, Select } from "antd";
 
 import Link from "next/link";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { openNotificationBox } from "../../helpers/notification";
 
 function AddTeamComponent({ user, editMode, memberData }) {
   const router = useRouter();
   const [form] = Form.useForm();
+  const [tagsList, setTagsList] = useState([]);
 
   async function onFinish(values) {
     let obj = {
@@ -64,6 +65,23 @@ function AddTeamComponent({ user, editMode, memberData }) {
     }
   }
 
+  async function fetchTagsData() {
+    if (user.id) {
+      await fetch("/api/team/tags/" + user.id, {
+        method: "GET",
+      })
+        .then((response) => response.json())
+        .then((response) => {
+          if (response.status === 200) {
+            setTagsList(response.data);
+          } else {
+            setTagsList([]);
+          }
+        })
+        .catch((err) => console.log(err));
+    }
+  }
+
   const validateMessages = {
     required: "${label} is required!",
     types: {
@@ -85,6 +103,7 @@ function AddTeamComponent({ user, editMode, memberData }) {
         role: memberData?.userOrgData?.role_id,
       });
     }
+    fetchTagsData();
   }, []);
 
   return (
@@ -150,12 +169,19 @@ function AddTeamComponent({ user, editMode, memberData }) {
                       <Select.Option key={"developer"} value={"Developer"}>
                         Developer
                       </Select.Option>
-                      <Select.Option key={"QA"} value={"QA"}>
-                        QA
-                      </Select.Option>
-                      <Select.Option key={"Testing"} value={"Testing"}>
-                        Testing
-                      </Select.Option>
+                      {tagsList.length > 0 &&
+                        tagsList
+                          .filter((data) => data.tag_name != "Developer")
+                          .map((item, idx) => {
+                            return (
+                              <Select.Option
+                                key={idx + "tags"}
+                                value={item.tag_name}
+                              >
+                                {item.tag_name}
+                              </Select.Option>
+                            );
+                          })}
                     </Select>
                   </Form.Item>
                 </Col>
