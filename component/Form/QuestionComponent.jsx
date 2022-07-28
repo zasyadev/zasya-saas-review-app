@@ -61,6 +61,7 @@ const QuestionComponent = ({
                     handleQuestionValue(e.target.value, idx, true);
                   }}
                   value={questionText}
+                  maxLength={180}
                 />
                 {error && <p className="text-red-600 text-sm my-2">{error}</p>}
               </Col>
@@ -94,6 +95,7 @@ const QuestionComponent = ({
                             handleOptionValue(e.target.value, idx, j);
                           }}
                           value={op.optionText}
+                          maxLength={180}
                         />
 
                         <button
@@ -164,6 +166,7 @@ const QuestionComponent = ({
                             handleOptionValue(e.target.value, idx, 0);
                           }}
                           value={options[0].optionText}
+                          maxLength={180}
                         />
                       </div>
                       <div className="flex flex-row  items-center py-2">
@@ -176,6 +179,7 @@ const QuestionComponent = ({
                             handleOptionValue(e.target.value, idx, 1);
                           }}
                           value={options[1].optionText}
+                          maxLength={180}
                         />
                       </div>
                     </>

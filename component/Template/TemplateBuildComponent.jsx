@@ -277,6 +277,7 @@ function TemplateBuildComponent({
                   }}
                   className="input-box text-2xl template-title"
                   bordered={false}
+                  maxLength={180}
                 />
               </div>
 
