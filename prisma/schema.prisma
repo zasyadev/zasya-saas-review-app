@@ -193,7 +193,7 @@ model ReviewAssigneeAnswerOption {
   review_id     Int
   question      ReviewQuestions       @relation(fields: [question_id], references: [id], onDelete: Cascade)
   question_id   Int
-  option        String?
+  option        String?               @db.Text
   lowerLabel    String?
   higherLabel   String?
   created_date  DateTime              @default(now())
