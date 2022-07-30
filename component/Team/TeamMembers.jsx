@@ -67,22 +67,31 @@ function TeamMembers({ user }) {
       key: "id",
       render: (_, record) =>
         record?.user.first_name + " " + record?.user?.last_name,
+      sorter: (a, b) => a.user.first_name?.localeCompare(b.user.first_name),
     },
     {
       title: "Email",
       render: (_, record) => record?.user.email,
+      sorter: (a, b) => a.user.email?.localeCompare(b.user.email),
     },
     {
       title: "Tags",
 
-      render: (_, record) =>
-        record?.tags?.length > 0
-          ? record?.tags.map((item, index) => (
-              <span className="mx-2" key={index + "tags"}>
-                {item}
-              </span>
-            ))
-          : null,
+      render: (_, record) => (
+        <div className="grid grid-cols-3 gap-2">
+          {" "}
+          {record?.tags?.length > 0
+            ? record?.tags.map((item, index) => (
+                <span
+                  className="text-sm text-center bg-sky-300  text-white rounded px-2 py-1"
+                  key={index + "tags"}
+                >
+                  {item}
+                </span>
+              ))
+            : null}
+        </div>
+      ),
     },
     {
       title: "Action",
@@ -144,7 +153,11 @@ function TeamMembers({ user }) {
                           dataSource={membersList}
                           columns={columns}
                           className="custom-table"
-                          pagination={false}
+                          pagination={{
+                            defaultPageSize: 10,
+                            showSizeChanger: true,
+                            pageSizeOptions: ["10", "20", "50", "100"],
+                          }}
                         />
                       )}
                     </div>
