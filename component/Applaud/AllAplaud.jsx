@@ -5,12 +5,11 @@ import User1 from "../../assets/images/User1.png";
 import { ApplaudIconSmall } from "../../assets/Icon/icons";
 
 function AllAplaud({ user }) {
-  const [applaud, setApplaud] = useState([]);
-  const [applaudData, setApplaudData] = useState({});
   const [sortApplaudList, setSortApplaudList] = useState({});
+  const [allApplaud, setAllApplaud] = useState([]);
+  const [teamMember, setTeamMember] = useState({});
 
   async function fetchApplaudData() {
-    setApplaud([]);
     if (user?.id) {
       await fetch("/api/applaud/all/" + user.id, {
         method: "GET",
@@ -18,12 +17,7 @@ function AllAplaud({ user }) {
         .then((response) => response.json())
         .then((response) => {
           if (response.status === 200) {
-            setApplaud(response.data);
-            console.log(response.data);
-            if (response?.data?.length > 0) {
-              applaudcount(response.data);
-              sortApplaud(response.data);
-            }
+            setAllApplaud(response.data);
           }
         })
 
@@ -32,43 +26,87 @@ function AllAplaud({ user }) {
         });
     }
   }
-  const applaudcount = (data) => {
-    if (data.length > 0) {
-      let res = data?.reduce(function (obj, key) {
-        obj[key.user.first_name] = obj[key.user.first_name] || [];
-        obj[key.user.first_name].push(key);
-        return obj;
-      }, {});
 
-      setApplaudData(res);
-    } else setApplaudData([]);
-  };
+  async function fetchMembersData() {
+    await fetch("/api/team/" + user.id, {
+      method: "GET",
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        if (response.status === 200) {
+          setTeamMember(response.data);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
 
-  const sortApplaud = (data) => {
-    if (data.length > 0) {
-      let res = data?.reduce(function (obj, key) {
-        obj[key.user.first_name] = obj[key.user.first_name] || [];
-        obj[key.user.first_name].push(key);
-        return obj;
-      }, {});
-      const sortable = Object.fromEntries(
-        Object.entries(res).sort(([, a], [, b]) => b.length - a.length)
+  // const filterTeamMember = (data) => {
+  //   console.log(data, "data");
+  //   if (allApplaud.length > 0) {
+  //     let filterdata = allApplaud.filter((item) => {
+  //       return data.find((a) => {
+  //         return a.user_id === item.user_id ? a : null;
+  //       });
+  //     });
+  //     console.log(filterdata, "filterdata");
+
+  //     let filteredApplaud = filterdata.reduce(function (obj, key) {
+  //       obj[key.user.first_name] = obj[key.user.first_name] || [];
+  //       obj[key.user.first_name].push(key);
+  //       return obj;
+  //     }, {});
+  //     console.log(filteredApplaud, "fjysh");
+  //   }
+  // };
+
+  const filterTeamMember = (teamMember, allApplaud) => {
+    if (allApplaud.length > 0) {
+      let filterdata = allApplaud.filter(({ user_id: id1 }) =>
+        teamMember.some(({ user_id: id2 }) => id2 === id1)
       );
+      let leftOutMember = teamMember.filter(
+        ({ user_id: id1 }) =>
+          !allApplaud.some(({ user_id: id2 }) => id2 === id1)
+      );
+
+      let results = filterdata?.reduce(function (obj, key) {
+        obj[key.user.first_name] = obj[key.user.first_name] || [];
+        obj[key.user.first_name].push(key);
+        return obj;
+      }, {});
+      let leftOutResults = leftOutMember?.reduce(function (obj, key) {
+        obj[key.user.first_name] = obj[key.user.first_name] || [];
+
+        return obj;
+      }, {});
+
+      let obj = { ...results, ...leftOutResults };
+
+      const sortable = Object.fromEntries(
+        Object.entries(obj).sort(([, a], [, b]) => b.length - a.length)
+      );
+
       setSortApplaudList(sortable);
-      console.log(sortable, "sortable");
     }
   };
 
   useEffect(() => {
     fetchApplaudData();
+    fetchMembersData();
   }, []);
+  useEffect(() => {
+    if (teamMember.length && allApplaud.length)
+      filterTeamMember(teamMember, allApplaud);
+  }, [teamMember.length, allApplaud.length]);
 
   return (
     <>
       {/* <div className="bg-white rounded-md overflow-hidden shadow-md "> */}
 
       <Row gutter={[16, 16]}>
-        {Object.entries(sortApplaudList).length > 0 ? (
+        {Object.keys(sortApplaudList).length > 0 ? (
           Object.entries(sortApplaudList).map(([key, value], idx) => {
             return (
               <>
@@ -90,7 +128,7 @@ function AllAplaud({ user }) {
                             <p className="flex">
                               <ApplaudIconSmall />
                               <span className="pl-2 md:text-sm font-medium text-gray-500">
-                                {value.length}
+                                {value?.length}
                               </span>
                             </p>
                           </div>

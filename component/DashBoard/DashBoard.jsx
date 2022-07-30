@@ -52,11 +52,12 @@ function DashBoard({ user }) {
           }
         }
       })
-
       .catch((err) => {
+        console.log(err);
         setDashboardData([]);
       });
   }
+
   const sortApplaud = (data) => {
     if (data.length > 0) {
       let res = data?.reduce(function (obj, key) {
