@@ -3,7 +3,7 @@ import { getSession } from "next-auth/client";
 import AddApplaudComponent from "../../component/Applaud/AddApplaudComponent";
 import AdminLayout from "../../component/layout/AdminLayout";
 
-function addapplaud({ user }) {
+function Addapplaud({ user }) {
   return (
     <AdminLayout user={user} title="Create Applaud">
       <AddApplaudComponent user={user} />
@@ -11,7 +11,7 @@ function addapplaud({ user }) {
   );
 }
 
-export default addapplaud;
+export default Addapplaud;
 
 export async function getServerSideProps(context) {
   const session = await getSession({ req: context.req });

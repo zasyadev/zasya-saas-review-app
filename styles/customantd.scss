@@ -810,7 +810,9 @@
     }
   }
   .ant-space-item:hover {
-    border-color: #0f123f !important;
+    .ant-radio-inner {
+      border-color: #0f123f !important;
+    }
   }
 
   .ant-radio-wrapper:focus,
@@ -829,9 +831,7 @@
     background-color: #0f123f;
   }
 
-  .ant-input:hover {
-    border-color: #0f123f;
-  }
+  .ant-input:hover,
   .ant-input:focus {
     border-color: #0f123f;
     box-shadow: 0 0 0 1.5px rgba(0, 5, 204, 0.35) !important;

@@ -74,6 +74,7 @@ const QuestionViewComponent = ({
             placeholder="Short Text"
             maxLength={180}
             onChange={(e) => handleAnswerChange(id, e.target.value)}
+            // bordered={false}
           />
         )}
         {type === "textarea" && (
@@ -82,6 +83,8 @@ const QuestionViewComponent = ({
             placeholder="Long Text"
             rows={2}
             onChange={(e) => handleAnswerChange(id, e.target.value)}
+            // bordered={false}
+            className=""
           />
         )}
 

@@ -63,11 +63,19 @@ export default async (req, res) => {
           },
         });
 
+        let filterApplaudData = [];
+        if (applaudData.length > 0) {
+          filterApplaudData = applaudData.filter((item) => {
+            delete item?.user?.password;
+            return true;
+          });
+        }
+
         let data = {
           reviewCreated: reviewCreated.length,
           reviewAnswered: reviewAnswered.length,
           userData: userData.length,
-          applaudData: applaudData,
+          applaudData: filterApplaudData,
           reviewRating: reviewRating,
         };
 

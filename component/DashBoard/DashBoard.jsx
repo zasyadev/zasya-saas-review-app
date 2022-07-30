@@ -5,11 +5,11 @@ import threeUser from "../../assets/Icon/threeusers.png";
 import ReviewIcon from "../../assets/Icon/reviewicon.png";
 import User1 from "../../assets/images/User1.png";
 import User2 from "../../assets/images/User2.png";
-// import User3 from "../../assets/images/User3.png";
-// import User4 from "../../assets/images/User4.png";
+
 import dynamic from "next/dynamic";
 import { SmallApplaudIcon, ApplaudIconSmall } from "../../assets/Icon/icons";
 import { Skeleton } from "antd";
+import Link from "next/link";
 
 const SiderRight = dynamic(() => import("../SiderRight/SiderRight"), {
   ssr: false,
@@ -25,6 +25,7 @@ function DashBoard({ user }) {
   const [totalRating, setTotalRating] = useState(0);
   const [userApplaud, setUserApplaud] = useState(0);
   const [applaudData, setApplaudData] = useState({});
+  const [sortApplaudList, setSortApplaudList] = useState({});
 
   async function fetchDashboardData() {
     setDashboardData([]);
@@ -42,7 +43,8 @@ function DashBoard({ user }) {
             ratingHandler(response.data.reviewRating);
           setDashboardData(response.data);
           if (response?.data?.applaudData?.length > 0) {
-            applaudcount(response.data.applaudData);
+            // applaudcount(response.data.applaudData);
+            sortApplaud(response.data.applaudData);
             let userCount = response.data.applaudData.filter(
               (item) => item.user_id === user.id
             );
@@ -55,8 +57,7 @@ function DashBoard({ user }) {
         setDashboardData([]);
       });
   }
-
-  const applaudcount = (data) => {
+  const sortApplaud = (data) => {
     if (data.length > 0) {
       let res = data?.reduce(function (obj, key) {
         obj[key.user.first_name] = obj[key.user.first_name] || [];
@@ -65,8 +66,24 @@ function DashBoard({ user }) {
       }, {});
 
       setApplaudData(res);
-    } else setApplaudData([]);
+      const sortable = Object.fromEntries(
+        Object.entries(res).sort(([, a], [, b]) => b.length - a.length)
+      );
+      setSortApplaudList(sortable);
+    }
   };
+
+  // const applaudcount = (data) => {
+  //   if (data.length > 0) {
+  //     let res = data?.reduce(function (obj, key) {
+  //       obj[key.user.first_name] = obj[key.user.first_name] || [];
+  //       obj[key.user.first_name].push(key);
+  //       return obj;
+  //     }, {});
+
+  //     setApplaudData(res);
+  //   } else setApplaudData([]);
+  // };
 
   const ratingHandler = (data) => {
     let sum = 0;
@@ -190,38 +207,42 @@ function DashBoard({ user }) {
                     Applauds Leaderboard
                   </h2>
                   <Row>
-                    {Object.entries(applaudData).length > 0 ? (
-                      Object.entries(applaudData).map(([key, value], idx) => {
-                        return (
-                          <>
-                            <Col xs={24} md={12}>
-                              <Row className="">
-                                <Col xs={7} md={10}>
-                                  <div className="p-2 mt-2 flex justify-center">
-                                    <Image src={User1} alt="user" />
-                                  </div>
-                                </Col>
+                    {Object.entries(sortApplaudList).length > 0 ? (
+                      Object.entries(sortApplaudList).map(
+                        ([key, value], idx) => {
+                          if (idx <= 3) {
+                            return (
+                              <>
+                                <Col xs={24} md={12}>
+                                  <Row className="">
+                                    <Col xs={7} md={10}>
+                                      <div className="p-2 mt-2 flex justify-center">
+                                        <Image src={User1} alt="user" />
+                                      </div>
+                                    </Col>
 
-                                <Col xs={17} md={14}>
-                                  <div className="flex  justify-between items-center">
-                                    <div className="py-2 px-3">
-                                      <p className="mb-2 primary-color-blue font-medium text-sm">
-                                        {key}
-                                      </p>
-                                      <p className="flex">
-                                        <ApplaudIconSmall />
-                                        <span className="pl-2 text-sm font-medium text-gray-500">
-                                          {value.length}
-                                        </span>
-                                      </p>
-                                    </div>
-                                  </div>
+                                    <Col xs={17} md={14}>
+                                      <div className="flex  justify-between items-center">
+                                        <div className="py-2 px-3">
+                                          <p className="mb-2 primary-color-blue font-medium text-sm">
+                                            {key}
+                                          </p>
+                                          <p className="flex">
+                                            <ApplaudIconSmall />
+                                            <span className="pl-2 text-sm font-medium text-gray-500">
+                                              {value.length}
+                                            </span>
+                                          </p>
+                                        </div>
+                                      </div>
+                                    </Col>
+                                  </Row>
                                 </Col>
-                              </Row>
-                            </Col>
-                          </>
-                        );
-                      })
+                              </>
+                            );
+                          }
+                        }
+                      )
                     ) : (
                       <Col xs={24} md={24}>
                         <div className="flex justify-center items-center h-48">
@@ -230,6 +251,16 @@ function DashBoard({ user }) {
                       </Col>
                     )}
                   </Row>
+
+                  {Object.entries(applaudData).length > 4 ? (
+                    <Link href="/applaud/allapplaud">
+                      <p className="primary-color-blue text-sm  cursor-pointer hover:text-sky-500  text-center mt-2">
+                        View More
+                      </p>
+                    </Link>
+                  ) : (
+                    ""
+                  )}
                 </div>
               </Col>
               <Col md={12} lg={12}>
