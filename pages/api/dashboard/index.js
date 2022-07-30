@@ -54,8 +54,14 @@ export default async (req, res) => {
         // }
 
         const userData = await prisma.user.findMany({
-          where: { organization_id: userTableData.organization_id },
+          where: {
+            AND: [
+              { organization_id: userTableData.organization_id },
+              { status: 1 },
+            ],
+          },
         });
+
         const applaudData = await prisma.userApplaud.findMany({
           where: { organization_id: userTableData.organization_id },
           include: {
@@ -84,7 +90,6 @@ export default async (req, res) => {
           .json({ status: 404, message: "No Record Found" });
       }
     } catch (error) {
-      console.log(error, "error");
       return res.status(500).json({
         error: error,
         message: "Internal Server Error",
