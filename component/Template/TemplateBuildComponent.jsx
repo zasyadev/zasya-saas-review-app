@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { openNotificationBox } from "../../helpers/notification";
 import QuestionComponent from "../Form/QuestionComponent";
 import Link from "next/link";
+import { CloseOutlined } from "@ant-design/icons";
 
 const defaultQuestionConfig = {
   questionText: "Untitled Question",
@@ -38,6 +39,7 @@ function TemplateBuildComponent({
 
   function removeElement(idx) {
     setQuestions((prev) => prev.filter((_, i) => i != idx));
+    if (idx > -1) setActiveQuestionIndex(idx - 1);
   }
 
   function addMoreQuestionField() {
@@ -182,6 +184,7 @@ function TemplateBuildComponent({
     });
 
     setQuestions(newQuestionData);
+
     if (newQuestionData.filter((item) => item.error).length > 0) {
       openNotificationBox("error", "Field(s) Required", 3);
       return;
@@ -192,18 +195,19 @@ function TemplateBuildComponent({
       //     item.questionText === "" ? setQuestions() : item
       //   );
       // }
+      let quesArray = newQuestionData.map((item) => ({ ...item, open: false }));
 
       let obj = {
         user_id: user.id,
         form_data: {
           title: formTitle ?? "",
           description: formDes ?? "",
-          questions: questions,
+          questions: quesArray,
         },
         form_title: formTitle ?? "",
         form_description: formDes ?? "",
         status: true,
-        questions: questions,
+        questions: quesArray,
       };
 
       editMode ? updateFormData(obj, id) : addNewForm(obj);
@@ -260,39 +264,37 @@ function TemplateBuildComponent({
       setFormDes(editFormData?.form_data?.description);
     }
   }, []);
-  console.log(questions, "questions");
-  console.log(activeQuestionIndex, "activeQuestionIndex");
+
   return (
     <div className="mx-2">
       <Row gutter={16}>
         <Col xs={24} md={8}>
-          <div className="w-full bg-white rounded-xl shadow-md p-4 mt-4 add-template-wrapper">
+          <div className="mb-2 px-1 template-title-input">
+            <Input
+              placeholder="Template Title"
+              value={formTitle}
+              onChange={(e) => {
+                setFormTitle(e.target.value);
+              }}
+              className="input-box text-2xl template-title px-4 py-3"
+              bordered={false}
+              maxLength={180}
+            />
+          </div>
+          <div className="w-full bg-white rounded-xl shadow-md  mt-4 add-template-wrapper sider-question-wrapper overflow-auto">
             <div className="rounded-t-md  mt-1">
-              <div className="mb-2">
-                <Input
-                  placeholder="Template Title"
-                  value={formTitle}
-                  onChange={(e) => {
-                    setFormTitle(e.target.value);
-                  }}
-                  className="input-box text-2xl template-title"
-                  bordered={false}
-                  maxLength={180}
-                />
-              </div>
-
-              {questions?.length > 0 &&
-                questions?.map((question, idx) => (
-                  <div
-                    className="question-section-wrapper my-1"
-                    onClick={() => setActiveQuestionIndex(idx)}
-                  >
-                    <div className="question-section-container">
-                      <div className="question-section-contents">
-                        <div className="">
-                          <div className="flex items-center justify-between">
+              <div className="question-section-container">
+                <div className="question-section-contents">
+                  <div className="question-section-contents-card">
+                    {questions?.length > 0 &&
+                      questions?.map((question, idx) => (
+                        <div
+                          className="question-section-wrapper my-1 px-4 py-3 cursor-pointer"
+                          onClick={() => setActiveQuestionIndex(idx)}
+                        >
+                          <div className="flex justify-between">
                             <div className="flex items-center">
-                              <span className="px-2 py-1 bg-black text-white rounded-full">
+                              <span className=" rounded-full linear-bg">
                                 {idx + 1}
                               </span>
 
@@ -302,72 +304,44 @@ function TemplateBuildComponent({
                                 </span>
                               </span>
                             </div>
-                            <div>
+                            <div className="">
                               <span
-                                className="cursor-pointer"
+                                className=" dark-blue-bg cursor-pointer"
                                 onClick={() => removeElement(idx)}
                               >
-                                {" "}
-                                X
+                                <CloseOutlined />
                               </span>
                             </div>
                           </div>
                         </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-
-              <div className="question-section-wrapper mt-2">
-                <div className="question-section-container">
-                  <div className="question-section-contents">
-                    <div className="">
-                      <div className="flex items-center justify-between">
-                        <div
-                          className="flex items-center"
-                          onClick={() => {
-                            addMoreQuestionField();
-                          }}
-                        >
-                          <span className="px-2 py-1 bg-black text-white rounded-full">
-                            +
-                          </span>
-
-                          <span className=" px-2 py-1 ">
-                            <span className="">
-                              <p>Add Question</p>
-                            </span>
-                          </span>
-                        </div>
-                      </div>
-                    </div>
+                      ))}
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <div className="mt-3 mx-auto w-3/4">
+          <div className="mt-3 flex justify-between ">
+            <button
+              className=" px-1 md:px-4 py-3 h-full rounded primary-bg-btn text-white w-3/4 md:w-1/2 my-1"
+              type="button"
+              onClick={() => {
+                addMoreQuestionField();
+              }}
+            >
+              <span className="MuiButton-label">Add New Question</span>
+            </button>
             <Link href={"/template"}>
               <button
-                className="py-3 h-full rounded toggle-btn-bg text-white  w-full  my-1"
+                className="py-3 h-full rounded toggle-btn-bg text-white  w-1/3  my-1"
                 type="button"
               >
                 <span className="MuiButton-label">Cancel</span>
               </button>
             </Link>
-            <button
-              className=" px-4 py-3 h-full rounded primary-bg-btn text-white w-full my-1"
-              type="button"
-              onClick={() => {
-                saveFormField();
-              }}
-            >
-              <span className="MuiButton-label">Save Template</span>
-            </button>
           </div>
         </Col>
         <Col xs={24} md={16}>
-          <div className="w-full bg-white rounded-xl shadow-md p-4 mt-4 add-template-wrapper">
+          <div className="w-full bg-white rounded-xl shadow-md mt-4 add-template-wrapper">
             <div className="rounded-t-md  mt-1">
               {questions?.length > 0 &&
                 questions
@@ -392,6 +366,25 @@ function TemplateBuildComponent({
                     </>
                   ))}
             </div>
+          </div>
+          <div className="block lg:flex justify-end items-end my-4  lg:pl-56 ">
+            {/* <Link href={"/template"}>
+              <button
+                className=" toggle-btn-bg mr-2 px-4 py-3 h-full rounded  text-white  my-1"
+                type="button"
+              >
+                <span className="MuiButton-label">Preview</span>
+              </button>
+            </Link> */}
+            <button
+              className=" px-4 py-3 h-full rounded primary-bg-btn text-white  my-1 ml-2"
+              type="button"
+              onClick={() => {
+                saveFormField();
+              }}
+            >
+              <span className="MuiButton-label">Save </span>
+            </button>
           </div>
         </Col>
       </Row>

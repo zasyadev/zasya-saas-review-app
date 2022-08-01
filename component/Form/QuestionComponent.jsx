@@ -38,17 +38,23 @@ const QuestionComponent = ({
 
   return (
     <>
-      <div className="flex items-center justify-center">
-        <span className="mx-2" onClick={() => handleExpand(idx)}>
+      <div className="flex items-center justify-center question-edit-view">
+        <span
+          className={`mx-2 ${open ? "active-tab" : null}`}
+          onClick={() => handleExpand(idx)}
+        >
           Edit{" "}
         </span>
-        <span className="mx-2" onClick={() => showAsQuestion(idx)}>
+        <span
+          className={`mx-2 ${!open ? "active-tab" : null}`}
+          onClick={() => showAsQuestion(idx)}
+        >
           View{" "}
         </span>
       </div>
       {open ? (
         <div className="rounded-l-md mt-1" key={idx + "questions"}>
-          <div className="w-full flex flex-col items-start md:px-4 md:py-5 ">
+          <div className="w-full flex flex-col items-start px-2 md:px-6 md:py-5 ">
             <Row gutter={[16, 16]} className="w-full">
               <Col md={24} xs={24}>
                 <h2 className="font-semibold text-base my-2">
@@ -80,7 +86,7 @@ const QuestionComponent = ({
               </Col>
             </Row>
 
-            <div className="mt-5 mb-2 w-full">
+            <div className="mt-5 mb-2  mx-2 options-wrapper">
               {type === "checkbox" && (
                 <>
                   {options.map((op, j) => (
@@ -187,8 +193,8 @@ const QuestionComponent = ({
                 </>
               )}
             </div>
-            <div className="mt-4 w-full border-t-2 px-4 py-2">
-              <p className="text-right mt-1">
+            <div className="mt-4 w-full border-t-2 px-4 pt-2">
+              <div className="flex justify-end items-center mt-1">
                 {" "}
                 {/* <span
                   onClick={() => showAsQuestion(idx)}
@@ -196,30 +202,31 @@ const QuestionComponent = ({
                 >
                   <Image src={EyeIcon} alt="Delete" width={20} height={20} />
                 </span> */}
-                <span
+                <div
                   onClick={() => removeElement(idx)}
-                  className="cursor-pointer mx-2 w-8 pr-2"
+                  className="cursor-pointer mx-2 w-10  pr-2"
                 >
                   <Image src={DeleteIcon} alt="Delete" width={20} height={20} />
-                </span>
-                <span
+                </div>
+                <button
+                  className=" px-4 py-3 h-full rounded primary-bg-btn text-white  my-1"
+                  type="button"
                   onClick={() => addNextQuestionField(idx + 1)}
-                  className="cursor-pointer mx-2 w-8 pr-2"
                 >
-                  +
-                </span>
-              </p>
+                  <span className="MuiButton-label">Add Question</span>
+                </button>
+              </div>
             </div>
           </div>
         </div>
       ) : (
         <div
-          className="shadow-lg mt-8  px-2 cursor-pointer"
+          className="shadow-lg   px-2 pt-6 cursor-pointer bg-question-view"
           onClick={() => handleExpand(idx)}
           key={idx + "close"}
         >
-          <div className="flex flex-col items-start ml-4 py-5">
-            <Typography variant="subtitle1" className="ml-0">
+          <div className="flex flex-col items-start ml-4 py-5 ">
+            <Typography variant="subtitle1" className="ml-0 text-white">
               {idx + 1}. {questionText}
             </Typography>
 
@@ -232,7 +239,7 @@ const QuestionComponent = ({
                       disabled
                       control={<Radio className="mr-2" />}
                       label={
-                        <Typography style={{ color: "#555555" }}>
+                        <Typography style={{ color: "#fff" }}>
                           {op.optionText}
                         </Typography>
                       }
@@ -246,6 +253,7 @@ const QuestionComponent = ({
                 placeholder={type == "input" ? "Short Text" : "Long Text"}
                 rows={1}
                 disabled
+                className="text-white"
               />
             ) : null}
 
@@ -254,7 +262,7 @@ const QuestionComponent = ({
                 <p>{options[0]?.optionText}</p>
                 <RadioGroup
                   name="scale"
-                  className="mx-3 flex justify-center"
+                  className="mx-3 flex justify-center text-white"
                   row
                 >
                   {higherLabel &&
@@ -267,6 +275,7 @@ const QuestionComponent = ({
                         label={rg}
                         labelPlacement="top"
                         key={index + "range"}
+                        className="text-white"
                       />
                     ))}
                 </RadioGroup>
