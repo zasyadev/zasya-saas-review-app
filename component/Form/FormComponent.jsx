@@ -6,14 +6,14 @@ import QuestionComponent from "./QuestionComponent";
 import Link from "next/link";
 
 const defaultQuestionConfig = {
-  questionText: "Question",
-  options: [{ optionText: "Option 1" }],
+  questionText: "",
+  options: [{ optionText: "" }],
   open: true,
   type: "checkbox",
   error: "",
 };
 const defaultScaleQuestion = {
-  questionText: "Question",
+  questionText: "",
   options: [{ optionText: "low" }, { optionText: "high" }],
   lowerLabel: 0,
   higherLabel: 5,
@@ -89,7 +89,8 @@ function FormComponent({
               ...item,
               options: [
                 ...item.options,
-                { optionText: `Option ${Number(item.options.length + 1)}` },
+                // { optionText: `Option ${Number(item.options.length + 1)}` },
+                { optionText: `` },
               ],
             }
           : item
@@ -253,7 +254,7 @@ function FormComponent({
 
   return (
     <div className="w-full  md:w-4/6 mx-auto">
-      <div className="w-full bg-white rounded-xl shadow-md p-4 mt-4 add-template-wrapper">
+      <div className="w-full bg-white rounded-xl shadow-md p-4 mt-4 template">
         <div className="rounded-t-md  mt-1">
           <div className="w-full flex flex-col items-start  pt-2 pb-5 ">
             <Input
@@ -262,7 +263,7 @@ function FormComponent({
               onChange={(e) => {
                 setFormTitle(e.target.value);
               }}
-              className="input-box text-2xl template-title"
+              className="input-box text-2xl"
               bordered={false}
             />
             <Input
@@ -271,7 +272,7 @@ function FormComponent({
               onChange={(e) => {
                 setFormDes(e.target.value);
               }}
-              className="input-box text-base mt-4 "
+              className="input-box text-base mt-4  "
               bordered={false}
             />
           </div>

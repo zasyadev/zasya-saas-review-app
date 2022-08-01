@@ -16,8 +16,13 @@ function ReceivedReviewComponent({ user, reviewId }) {
   const [loading, setLoading] = useState(false);
   const [formValues, setFormValues] = useState([]);
   const [questions, setQuestions] = useState([]);
+  console.log(formValues);
 
   const handleAnswerChange = (quesId, value) => {
+    // if (value.length >= 180) {
+    //   console.log("you can't write more than 180 character");
+    //   console.log(questions.type);
+    // }
     setFormValues((prev) =>
       prev.find((item) => item.questionId === quesId)
         ? prev.map((item) =>
@@ -59,10 +64,11 @@ function ReceivedReviewComponent({ user, reviewId }) {
     }
 
     if (user.id && reviewData.id) {
+      let ansValues = formValues.sort((a, b) => a.questionId - b.questionId);
       let obj = {
         user_id: user.id,
         review_assignee_id: reviewData.id,
-        answers: formValues,
+        answers: ansValues,
         review_id: reviewData.review.id,
         created_assignee_date: reviewData.created_date,
       };
@@ -75,7 +81,7 @@ function ReceivedReviewComponent({ user, reviewId }) {
         .then((response) => {
           if (response.status === 200) {
             openNotificationBox("success", response.message, 3);
-            router.push("/review/received");
+            router.replace("/review/received");
           } else {
             openNotificationBox("error", response.message, 3);
           }

@@ -15,6 +15,10 @@ export default async (req, res) => {
       let createdUserData = await prisma.user.findUnique({
         where: { id: resData.created_by },
       });
+      let organizationTags = await prisma.userOraganizationTags.findMany({
+        where: { organization_id: createdUserData.organization_id },
+      });
+
       if (existingData && createdUserData) {
         let existingOrgUser = await prisma.userOraganizationGroups.findMany({
           where: {
@@ -124,6 +128,35 @@ export default async (req, res) => {
             else console.log("successfull");
           });
         }
+        let newTags = [];
+        if (organizationTags.length > 0) {
+          newTags = resData.tags.filter((item) => {
+            return !organizationTags.find((data) => {
+              return data.tag_name === item;
+            });
+          });
+        } else {
+          newTags = resData.tags;
+        }
+        if (newTags.length > 0) {
+          let tagsData = [];
+
+          let multipleTags = newTags.forEach((item) => {
+            tagsData.push({
+              user: { connect: { id: createdUserData.id } },
+              tag_name: item,
+              organization: {
+                connect: { id: createdUserData.organization_id },
+              },
+            });
+          });
+
+          tagsData.map(async (item) => {
+            return await prisma.userOraganizationTags.create({
+              data: item,
+            });
+          });
+        }
 
         return {
           userData,
@@ -196,6 +229,40 @@ export default async (req, res) => {
           });
         } else {
           userData = null;
+        }
+
+        let organizationTags = await prisma.userOraganizationTags.findMany({
+          where: { organization_id: createdUserData.organization_id },
+        });
+
+        let newTags = [];
+        if (organizationTags.length > 0) {
+          newTags = resData.tags.filter((item) => {
+            return !organizationTags.find((data) => {
+              return data.tag_name === item;
+            });
+          });
+        } else {
+          newTags = resData.tags;
+        }
+        if (newTags.length > 0) {
+          let tagsData = [];
+
+          let multipleTags = newTags.forEach((item) => {
+            tagsData.push({
+              user: { connect: { id: createdUserData.id } },
+              tag_name: item,
+              organization: {
+                connect: { id: createdUserData.organization_id },
+              },
+            });
+          });
+
+          tagsData.map(async (item) => {
+            return await prisma.userOraganizationTags.create({
+              data: item,
+            });
+          });
         }
 
         return {

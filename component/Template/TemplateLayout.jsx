@@ -82,12 +82,12 @@ function TemplateLayout({ user }) {
                       ? formList.map((form, idx) => {
                           return (
                             <div
-                              className="template h-full w-full shadow-md"
+                              className="template-list h-full w-full shadow-md flex  flex-col items-center justify-between p-6"
                               key={idx + "form"}
                             >
                               <Link href={`/template/edit/${form.id}`}>
                                 <div className="flex flex-wrap border-gray-200 cursor-pointer item-center justify-center">
-                                  <div className="rounded-md grid items-center justify-center primary-color-blue text-lg font-semibold mt-8">
+                                  <div className="rounded-md grid items-center justify-center primary-color-blue text-lg font-semibold text-center">
                                     {form?.form_data?.title}
                                   </div>
                                 </div>

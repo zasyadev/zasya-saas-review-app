@@ -203,7 +203,7 @@ function HeaderLayout({
                         : null}
                     </Avatar>
                   </div>
-                  <div className="mt-3">
+                  <div className="my-auto">
                     <p className="user-deatils whitespace-nowrap hidden md:block">
                       {userOrganizationData?.orgId}
                     </p>

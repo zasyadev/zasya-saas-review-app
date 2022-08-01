@@ -12,6 +12,7 @@ const defaultQuestionConfig = {
   open: true,
   type: "checkbox",
   error: "",
+  active: true,
 };
 const defaultScaleQuestion = {
   questionText: "Untitled Question",
@@ -36,17 +37,22 @@ function TemplateBuildComponent({
   const [formTitle, setFormTitle] = useState("");
   const [formDes, setFormDes] = useState("");
   const [activeQuestionIndex, setActiveQuestionIndex] = useState(0);
+  const [selectTypeFeild, setSelectTypeFeild] = useState(false);
 
   function removeElement(idx) {
     setQuestions((prev) => prev.filter((_, i) => i != idx));
-    if (idx > -1) setActiveQuestionIndex(idx - 1);
+
+    if (idx > 0) setActiveQuestionIndex(idx - 1);
+    else setActiveQuestionIndex(idx);
   }
 
   function addMoreQuestionField() {
     // expandCloseAll();
     setQuestions((prev) => [...prev, defaultQuestionConfig]);
     setActiveQuestionIndex(questions.length);
+    setSelectTypeFeild(true);
   }
+
   function addNextQuestionField(idx) {
     setActiveQuestionIndex(idx);
     setQuestions((prev) => [
@@ -289,11 +295,18 @@ function TemplateBuildComponent({
                     {questions?.length > 0 &&
                       questions?.map((question, idx) => (
                         <div
-                          className="question-section-wrapper my-1 px-4 py-3 cursor-pointer"
-                          onClick={() => setActiveQuestionIndex(idx)}
+                          className={` question-section-wrapper my-1 px-4 py-3 cursor-pointer ${
+                            idx == questions?.length - 1
+                              ? null
+                              : "border-bottom"
+                          }`}
+                          key={idx + "side que"}
                         >
                           <div className="flex justify-between">
-                            <div className="flex items-center">
+                            <div
+                              className="flex items-center"
+                              onClick={() => setActiveQuestionIndex(idx)}
+                            >
                               <span className=" rounded-full linear-bg">
                                 {idx + 1}
                               </span>
@@ -346,24 +359,23 @@ function TemplateBuildComponent({
               {questions?.length > 0 &&
                 questions
                   ?.filter((_, index) => index === activeQuestionIndex)
-                  ?.map((question, idx) => (
-                    <>
-                      <QuestionComponent
-                        {...question}
-                        editMode={editMode}
-                        idx={activeQuestionIndex}
-                        removeElement={removeElement}
-                        defineType={defineType}
-                        showAsQuestion={showAsQuestion}
-                        handleExpand={handleExpand}
-                        addOption={addOption}
-                        handleQuestionValue={handleQuestionValue}
-                        handleOptionValue={handleOptionValue}
-                        removeOption={removeOption}
-                        handleScaleOptionValue={handleScaleOptionValue}
-                        addNextQuestionField={addNextQuestionField}
-                      />
-                    </>
+                  ?.map((question) => (
+                    <QuestionComponent
+                      {...question}
+                      editMode={editMode}
+                      idx={activeQuestionIndex}
+                      removeElement={removeElement}
+                      defineType={defineType}
+                      showAsQuestion={showAsQuestion}
+                      handleExpand={handleExpand}
+                      addOption={addOption}
+                      handleQuestionValue={handleQuestionValue}
+                      handleOptionValue={handleOptionValue}
+                      removeOption={removeOption}
+                      handleScaleOptionValue={handleScaleOptionValue}
+                      addNextQuestionField={addNextQuestionField}
+                      selectTypeFeild={selectTypeFeild}
+                    />
                   ))}
             </div>
           </div>

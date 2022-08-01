@@ -24,16 +24,12 @@ function AuthWrapper({ FormComponent, heading }) {
         {/* </div> */}
         {/* </div> */}
       </Col>
-      <Col
-        xs={24}
-        md={12}
-        lg={12}
-        className="login-image-wrapper justify-center items-center hidden md:flex"
-      >
+      <Col xs={24} md={12} lg={12}>
         {/* <div className="md:w-1/2 w-full mb-12 md:mb-0 h-screen"> */}
-
-        <div className="login-image-wrapper flex justify-center items-center h-screen">
-          <Image src={loginImage} alt="login" className="h-screen" />
+        <div className="login-image-wrapper justify-center items-center hidden md:flex">
+          <div className="login-image-wrapper flex justify-center items-center h-screen">
+            <Image src={loginImage} alt="login" className="h-screen" />
+          </div>
         </div>
 
         {/* </div> */}

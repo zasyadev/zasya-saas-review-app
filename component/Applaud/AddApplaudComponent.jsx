@@ -109,6 +109,7 @@ function AddApplaud({ user }) {
                     ]}
                   >
                     <Select
+                      size="large"
                       placeholder="Select Member"
                       showSearch
                       filterOption={(input, option) =>

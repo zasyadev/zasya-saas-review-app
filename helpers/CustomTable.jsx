@@ -19,7 +19,6 @@ const CustomTable = ({
       rowClassName={(_, index) =>
         index % 2 === 0 ? "" : "background-color-voilet"
       }
-      pagination={false}
     />
   );
 };

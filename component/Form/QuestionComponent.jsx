@@ -32,11 +32,17 @@ const QuestionComponent = ({
   higherLabel,
   handleScaleOptionValue,
   addNextQuestionField,
+  selectTypeFeild,
 }) => {
   const range = (min, max) =>
     [...Array(max - min + 1).keys()].map((i) => i + min);
-
-  return (
+  console.log(selectTypeFeild, "selectTypeFeild");
+  return selectTypeFeild ? (
+    <>
+      <p onClick={(e) => defineType("input", idx)}>Input </p>
+      <p onClick={(e) => defineType("textarea", idx)}>Text Area </p>
+    </>
+  ) : (
     <>
       <div className="flex items-center justify-center question-edit-view">
         <span
@@ -225,41 +231,36 @@ const QuestionComponent = ({
           onClick={() => handleExpand(idx)}
           key={idx + "close"}
         >
-          <div className="flex flex-col items-start ml-4 py-5 ">
-            <Typography variant="subtitle1" className="ml-0 text-white">
-              {idx + 1}. {questionText}
-            </Typography>
+          <div className="flex flex-col  mx-auto py-5 w-9/12">
+            <p className="ml-0 text-white text-5xl text-center">
+              {questionText}
+            </p>
 
-            {options?.length > 0 &&
-              type === "checkbox" &&
-              options?.map((op, j) => (
-                <div key={j}>
-                  <div style={{ display: "flex" }}>
-                    <FormControlLabel
-                      disabled
-                      control={<Radio className="mr-2" />}
-                      label={
-                        <Typography style={{ color: "#fff" }}>
-                          {op.optionText}
-                        </Typography>
-                      }
-                    />
+            <div class="grid grid-cols-3 gap-4 mt-4">
+              {options?.length > 0 &&
+                type === "checkbox" &&
+                options?.map((op, j) => (
+                  <div
+                    key={j + "op"}
+                    className="bg-white text-black px-2 py-1 text-left rounded-md"
+                  >
+                    <p className=" text-2xl">{op.optionText}</p>
                   </div>
-                </div>
-              ))}
+                ))}
+            </div>
+
             {type == "input" || type === "textarea" ? (
-              <TextField
-                fullWidth={true}
-                placeholder={type == "input" ? "Short Text" : "Long Text"}
-                rows={1}
-                disabled
-                className="text-white"
-              />
+              <div className="mt-2">
+                <p className="text-white text-2xl border-b border-white">
+                  {" "}
+                  {type == "input" ? "Short Text" : "Long Text"}
+                </p>
+              </div>
             ) : null}
 
             {type === "scale" && options?.length > 1 && (
-              <div className="flex items-baseline w-full justify-around">
-                <p>{options[0]?.optionText}</p>
+              <div className="flex items-baseline w-full justify-around mt-2">
+                <p className="text-white text-2xl">{options[0]?.optionText}</p>
                 <RadioGroup
                   name="scale"
                   className="mx-3 flex justify-center text-white"
@@ -279,7 +280,7 @@ const QuestionComponent = ({
                       />
                     ))}
                 </RadioGroup>
-                <p>{options[1]?.optionText}</p>
+                <p className="text-white text-2xl">{options[1]?.optionText}</p>
               </div>
             )}
           </div>

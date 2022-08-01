@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Form, Row, Col, Select, Input, Radio } from "antd";
-import Link from "next/link";
+
 import { useRouter } from "next/router";
 import { openNotificationBox } from "../../helpers/notification";
 import ReviewViewComponent from "../Form/ReviewViewComponent";
@@ -37,9 +37,10 @@ function AddEditReviewComponent({ editMode, user }) {
   };
 
   const onInputChange = (value, name) => {
+    console.log(value, "value");
     if (value && name) {
       setDisable((prev) => ({ ...prev, [`${name}`]: true }));
-      if ((name = "assigned_to_id")) {
+      if ((name = "assigned_to_id" && userList.length > 0)) {
         if (value.includes("all")) {
           let allUsers = userList.map((item) => {
             return item.user.id;
@@ -468,7 +469,7 @@ function AddEditReviewComponent({ editMode, user }) {
                                 <Radio.Group
                                   placeholder="Select Type"
                                   onChange={(e) =>
-                                    onInputChange(e, "review_type")
+                                    onInputChange(e.target.value, "review_type")
                                   }
                                 >
                                   <Radio value="feedback">yes</Radio>
@@ -482,7 +483,7 @@ function AddEditReviewComponent({ editMode, user }) {
                                 onClick={() => onFinish()}
                                 disabled={!disable.review_type}
                               >
-                                Next
+                                Submit
                               </button>
                             </div>
                           </div>
