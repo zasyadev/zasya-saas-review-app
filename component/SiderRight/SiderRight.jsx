@@ -38,10 +38,10 @@ function SiderRight({ data, totalRating, userApplaud }) {
         </Col>
       </Row>
       <Row className="">
-        <div className="w-full bg-white rounded-xl shadow-md px-4 py-4 mt-8 ">
-          <p className="text-xl mt-1 font-semibold primary-color-blue mb-4">
+        <div className="w-full bg-white rounded-xl shadow-md px-4 py-4 mt-8 h-full">
+          {/* <p className="text-xl mt-1 font-semibold primary-color-blue mb-4 ">
             Feedback given to me
-          </p>
+          </p> */}
           <LineChart />
         </div>
       </Row>

@@ -41,25 +41,31 @@ const LineChart = () => {
           show: false,
         },
       },
-      // title: {
-      //   text: "Chart Gradient ",
-      //   style: {
-      //     fontSize: "16",
-      //     fontWeight: "500",
-      //     fontFamily: "Montserrat",
-      //     color: "#0f123f",
-      //   },
-      // },
+      title: {
+        text: "Feedback given to me",
+        style: {
+          fontSize: "16",
+          fontWeight: "500",
+          fontFamily: "Montserrat",
+          color: "#0f123f",
+        },
+      },
     },
   };
 
   return (
-    <Chart
-      options={defaultState.options}
-      series={defaultState.series}
-      type="area"
-      height={250}
-    />
+    <>
+      <div className="bg-data ">
+        <div className="line-chart-text">No Data Found</div>
+        <Chart
+          options={defaultState.options}
+          series={defaultState.series}
+          type="area"
+          height={250}
+          className="chart-data"
+        />
+      </div>
+    </>
   );
 };
 

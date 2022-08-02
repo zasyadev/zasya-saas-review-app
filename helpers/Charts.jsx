@@ -104,12 +104,18 @@ const BarChart = () => {
   };
 
   return (
-    <Chart
-      options={defaultState.options}
-      series={defaultState.series}
-      type="bar"
-      height={380}
-    />
+    <>
+      <div className="bg-data ">
+        <div className="bar-chart-text">No Data Found</div>
+        <Chart
+          options={defaultState.options}
+          series={defaultState.series}
+          type="bar"
+          height={380}
+          className="chart-data"
+        />{" "}
+      </div>
+    </>
   );
 };
 
