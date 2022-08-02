@@ -50,73 +50,75 @@ const QuestionComponent = ({
       <div className="my-4 mx-6">
         <Row gutter={[16, 16]}>
           <Col md={8} xs={12}>
-            <div className="flex items-center question-type-bg">
+            <div
+              className="flex items-center question-type-bg"
+              onClick={(e) => {
+                defineType("input", idx);
+                setSelectTypeFeild(false);
+              }}
+            >
               <div className=" mr-3">
                 <TextIcon />
               </div>
               <div>
-                <p
-                  onClick={(e) => {
-                    defineType("input", idx);
-                    setSelectTypeFeild(false);
-                  }}
-                >
-                  Text
-                </p>
+                <p>Text</p>
               </div>
             </div>
           </Col>
           <Col md={8} xs={12}>
-            <div className="flex items-center question-type-bg">
+            <div
+              className="flex items-center question-type-bg"
+              onClick={(e) => {
+                defineType("textarea", idx);
+                setSelectTypeFeild(false);
+              }}
+            >
               <div className=" mr-3">
                 <TextIcon />
               </div>
-              <p
-                onClick={(e) => {
-                  defineType("textarea", idx);
-                  setSelectTypeFeild(false);
-                }}
-              >
-                Paragraph
-              </p>
+              <p>Paragraph</p>
             </div>
           </Col>
           <Col md={8} xs={12}>
-            <div className="flex items-center question-type-bg">
+            <div
+              className="flex items-center question-type-bg"
+              onClick={(e) => {
+                defineType("checkbox", idx);
+                setSelectTypeFeild(false);
+              }}
+            >
               <div className=" mr-3">
                 <CheckboxIcon />
               </div>
               <div>
-                <p
-                  onClick={(e) => {
-                    defineType("checkbox", idx);
-                    setSelectTypeFeild(false);
-                  }}
-                >
-                  CheckBox{" "}
-                </p>
+                <p>CheckBox </p>
               </div>
             </div>
           </Col>
           <Col md={8} xs={12}>
-            <div className="flex items-center question-type-bg">
+            <div
+              className="flex items-center question-type-bg"
+              onClick={(e) => {
+                defineType("scale", idx);
+                setSelectTypeFeild(false);
+              }}
+            >
               <div className=" mr-3">
                 <ScaleIcon />
               </div>
               <div>
-                <p
-                  onClick={(e) => {
-                    defineType("scale", idx);
-                    setSelectTypeFeild(false);
-                  }}
-                >
-                  Scale{" "}
-                </p>
+                <p>Scale </p>
               </div>
             </div>
           </Col>
           <Col md={8} xs={12}>
-            <div className="flex items-center question-type-bg ">
+            <div
+              className="flex items-center question-type-bg "
+              onClick={(e) => {
+                defineType("yesno", idx);
+                setSelectTypeFeild(false);
+              }}
+            >
               <div className=" mr-3">
                 <p>
                   <LikeIcon />
@@ -125,14 +127,7 @@ const QuestionComponent = ({
                   <DislikeIcon />
                 </p>
               </div>
-              <p
-                onClick={(e) => {
-                  defineType("yesno", idx);
-                  setSelectTypeFeild(false);
-                }}
-              >
-                Yes or No
-              </p>
+              <p>Yes or No</p>
             </div>
           </Col>
         </Row>
@@ -233,10 +228,10 @@ const QuestionComponent = ({
                   {type === "yesno" && (
                     <div className="mt-2">
                       <div className="flex items-center justify-center">
-                        <div className="p-10 border mx-2 rounded-sm">
+                        <div className="p-7 md:p-10  border mx-2 rounded-sm">
                           <LikeOutlined style={{ fontSize: "64px" }} />
                         </div>
-                        <div className="p-10 border mx-2 rounded-sm">
+                        <div className="p-7 md:p-10 border mx-2 rounded-sm">
                           <DislikeOutlined style={{ fontSize: "64px" }} />
                         </div>
                       </div>
@@ -304,7 +299,7 @@ const QuestionComponent = ({
                 </div>
               </Col>
               <Col md={24} xs={24}>
-                <div className="mt-4 w-full border-t-2 px-4 pt-2 flex justify-between">
+                <div className="mt-4 w-full border-t-2 px-4 pt-2 flex justify-between items-center">
                   <div className="">
                     <Select
                       value={type}
@@ -342,7 +337,7 @@ const QuestionComponent = ({
                       />
                     </div>
                     <button
-                      className=" px-4 py-3 h-full rounded primary-bg-btn text-white  my-1"
+                      className=" px-2 md:px-4 py-3 h-full rounded primary-bg-btn text-white  my-1"
                       type="button"
                       onClick={() => addNextQuestionField(idx + 1)}
                     >
@@ -356,7 +351,7 @@ const QuestionComponent = ({
         </div>
       ) : (
         <div
-          className="shadow-lg   px-2 pt-6 cursor-pointer bg-question-view"
+          className="shadow-lg   px-2 py-5 cursor-pointer bg-question-view"
           onClick={() => handleExpand(idx)}
           key={idx + "close"}
         >
@@ -365,7 +360,7 @@ const QuestionComponent = ({
               {questionText}
             </p>
 
-            <div class="grid grid-cols-3 gap-4 mt-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
               {options?.length > 0 &&
                 type === "checkbox" &&
                 options?.map((op, j) => (
@@ -416,10 +411,10 @@ const QuestionComponent = ({
             {type === "yesno" && (
               <div className="mt-2">
                 <div className="flex items-center justify-center">
-                  <div className="p-10 border mx-2 rounded-sm">
+                  <div className="p-8 md:p-10 border mx-2 rounded-sm">
                     <LikeOutlined style={{ fontSize: "64px", color: "#fff" }} />
                   </div>
-                  <div className="p-10 border mx-2 rounded-sm">
+                  <div className="p-8 md:p-10 border mx-2 rounded-sm">
                     <DislikeOutlined
                       style={{ fontSize: "64px", color: "#fff" }}
                     />

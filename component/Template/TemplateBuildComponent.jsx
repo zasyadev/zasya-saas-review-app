@@ -325,7 +325,7 @@ function TemplateBuildComponent({
                                 className=" dark-blue-bg cursor-pointer"
                                 onClick={() => removeElement(idx)}
                               >
-                                <CloseOutlined />
+                                <CloseOutlined className="text-xs" />
                               </span>
                             </div>
                           </div>
@@ -338,7 +338,7 @@ function TemplateBuildComponent({
           </div>
           <div className="mt-3 flex justify-between ">
             <button
-              className=" px-1 md:px-4 py-3 h-full rounded primary-bg-btn text-white w-3/4 md:w-1/2 my-1"
+              className=" px-1 md:px-4 py-3 h-full rounded primary-bg-btn text-white w-3/4 md:w-1/2 my-1 mr-1"
               type="button"
               onClick={() => {
                 addMoreQuestionField();
