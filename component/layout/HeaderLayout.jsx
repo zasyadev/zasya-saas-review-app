@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
+  PlusOutlined,
   DownOutlined,
   UserOutlined,
   LogoutOutlined,
@@ -164,32 +165,41 @@ function HeaderLayout({
   return (
     <Header className="ant-header bg-color-dashboard border-b border-b-neutral-300 p-0">
       <Row className="items-center h-full" justify="space-between">
-        <Col md={16} xs={16}>
+        <Col md={12} lg={16} xs={16}>
           <div className="flex  items-center mt-2">
             <div className=" font-bold mx-3 md:mx-6 text-lg md:text-2xl primary-color-blue">
               {title}
             </div>
           </div>
         </Col>
-        <Col md={3} xs={12} className="create-header-button">
-          <div className="hidden md:flex items-center justify-between px-3 ">
+        <Col md={6} lg={3} xs={3} className="create-header-button">
+          <div className="flex items-center justify-between md:px-4 ">
             <Dropdown
               overlay={createMenu}
               trigger={["click"]}
               overlayClassName="create-dropdown"
             >
-              <button
+              <div
                 key="create"
                 type="default"
-                className="primary-bg-btn text-white text-base py-3  px-5 rounded flex  items-center  "
+                className="primary-bg-btn text-white text-base py-2 md:py-2 px-2 rounded flex  items-center justify-center"
               >
-                <span className="mr-2">Create</span> <DownOutlined />
-              </button>
+                <div className="hidden md:flex items-center ">
+                  <div className="mx-2 ">Create</div>
+                  <div className="text-xs ">
+                    <DownOutlined />
+                  </div>
+                </div>
+
+                <div className="md:hidden mx-1 text-base ">
+                  <PlusOutlined />
+                </div>
+              </div>
             </Dropdown>
           </div>
         </Col>
-        <Col md={5} xs={5} className="pr-3 flex items-center">
-          <div className="w-full user-menu-wrapper cursor-pointer rounded-md py-2 px-2 ">
+        <Col md={6} lg={5} xs={5} className="pr-3 flex items-center">
+          <div className="w-full user-menu-wrapper cursor-pointer rounded-md py-1 md:py-1 px-2 ">
             <Dropdown
               trigger={"click"}
               overlay={userMenu}

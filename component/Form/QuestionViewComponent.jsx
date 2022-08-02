@@ -47,9 +47,7 @@ const QuestionViewComponent = ({
               <Radio.Group
                 name="checkbox_option"
                 onChange={(e) => handleAnswerChange(id, e.target.value)}
-                className=""
               >
-                {" "}
                 <Space direction="vertical">
                   {options?.map((op, j) => (
                     <>
@@ -73,18 +71,20 @@ const QuestionViewComponent = ({
             fullWidth={true}
             placeholder="Short Text"
             maxLength={180}
-            onChange={(e) => handleAnswerChange(id, e.target.value)}
-            // bordered={false}
+            onChange={(e) => handleAnswerChange(id, e.target.value, "input")}
+            bordered={false}
+            className="input-box"
           />
         )}
         {type === "textarea" && (
           <TextArea
+            size="large"
             fullWidth={true}
             placeholder="Long Text"
             rows={2}
             onChange={(e) => handleAnswerChange(id, e.target.value)}
-            // bordered={false}
-            className=""
+            bordered={false}
+            className="input-box"
           />
         )}
 

@@ -12,26 +12,121 @@ export default async (req, res) => {
           where: { id: userId },
         });
 
-        const applaudData = await prisma.userApplaud.findMany({
+        const orgData = await prisma.userOraganizationGroups.findMany({
           where: { organization_id: userTableData.organization_id },
+
           include: {
-            user: true,
+            user: {
+              select: {
+                first_name: true,
+              },
+            },
           },
         });
 
-        let filterApplaudData = [];
-        if (applaudData.length > 0) {
-          filterApplaudData = applaudData.filter((item) => {
-            delete item?.user?.password;
-            return true;
+        const applaudData = await prisma.userApplaud.findMany({
+          where: { organization_id: userTableData.organization_id },
+          include: {
+            user: {
+              select: {
+                first_name: true,
+              },
+            },
+            created: {
+              select: {
+                first_name: true,
+              },
+            },
+          },
+        });
+
+        let fetchData = {};
+        if (orgData.length > 0 && applaudData.length > 0) {
+          let takefilterData = applaudData.filter(({ user_id: id1 }) =>
+            orgData.some(({ user_id: id2 }) => id2 === id1)
+          );
+          let takeleftOverData = orgData.filter(
+            ({ user_id: id1 }) =>
+              !applaudData.some(({ user_id: id2 }) => id2 === id1)
+          );
+
+          let takeresults = takefilterData?.reduce(function (obj, key) {
+            obj[key.user.first_name] = obj[key.user.first_name] || {};
+
+            if (!obj[key.user.first_name]?.taken) {
+              obj[key.user.first_name].taken = [];
+            }
+            obj[key.user.first_name].taken.push(key);
+
+            return obj;
+          }, {});
+
+          let takeleftOutResults = takeleftOverData?.reduce(function (
+            obj,
+            key
+          ) {
+            obj[key.user.first_name] = obj[key.user.first_name] || {};
+            if (!obj[key.user.first_name]?.taken) {
+              obj[key.user.first_name].taken = [];
+            }
+
+            return obj;
+          },
+          {});
+
+          let takeObj = { ...takeresults, ...takeleftOutResults };
+
+          let givenFilterData = applaudData.filter(({ created_by: id1 }) =>
+            orgData.some(({ user_id: id2 }) => id2 === id1)
+          );
+          let givenleftOutMember = orgData.filter(
+            ({ user_id: id1 }) =>
+              !applaudData.some(({ created_by: id2 }) => id2 === id1)
+          );
+
+          let givenResults = givenFilterData?.reduce(function (obj, key) {
+            obj[key.created.first_name] = obj[key.created.first_name] || {};
+
+            if (!obj[key.created.first_name]?.given) {
+              obj[key.created.first_name].given = [];
+            }
+            obj[key.created.first_name].given.push(key);
+
+            return obj;
+          }, {});
+
+          let givenLeftOutResults = givenleftOutMember?.reduce(function (
+            obj,
+            key
+          ) {
+            obj[key.user.first_name] = obj[key.user.first_name] || {};
+            if (!obj[key.user.first_name]?.given) {
+              obj[key.user.first_name].given = [];
+            }
+
+            return obj;
+          },
+          {});
+
+          let givenObj = { ...givenResults, ...givenLeftOutResults };
+
+          let conbinedData = Object.entries(takeObj).map(([key, value]) => {
+            return {
+              [key]: {
+                ...takeObj[key],
+                ...givenObj[key],
+              },
+            };
           });
+
+          if (conbinedData.length > 0) fetchData = conbinedData;
         }
 
         prisma.$disconnect();
-        if (filterApplaudData) {
+        if (Object.keys(fetchData).length) {
           return res.status(200).json({
             status: 200,
-            data: filterApplaudData,
+            data: fetchData,
             message: "Applaud Data Received",
           });
         }
