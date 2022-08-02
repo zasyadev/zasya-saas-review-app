@@ -9,8 +9,8 @@ export default async (req, res) => {
     if (req.method === "POST") {
       const reqBody = JSON.parse(req.body);
 
-      const data = await prisma.passwordReset.findUnique({
-        where: { email_id: reqBody.email },
+      const data = await prisma.passwordReset.findFirst({
+        where: { token: reqBody.token },
       });
 
       if (!data) {
@@ -21,7 +21,7 @@ export default async (req, res) => {
 
       if (reqBody.token === data.token) {
         const updateData = await prisma.user.update({
-          where: { email: reqBody.email },
+          where: { email: data.email_id },
           data: {
             password: await hashedPassword(reqBody.password),
             status: 1,
@@ -30,7 +30,7 @@ export default async (req, res) => {
 
         if (updateData) {
           const deleteData = await prisma.passwordReset.delete({
-            where: { email_id: reqBody.email },
+            where: { email_id: data.email_id },
           });
           if (data.created_by_id) {
             let createdData = await prisma.user.findUnique({

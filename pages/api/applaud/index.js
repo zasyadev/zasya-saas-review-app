@@ -7,21 +7,32 @@ export default async (req, res) => {
     try {
       const reqBody = JSON.parse(req.body);
 
-      const data = await prisma.userApplaud.create({
-        data: {
-          user: { connect: { id: reqBody.user_id } },
-          comment: reqBody.comment,
-          created: { connect: { id: reqBody.created_by } },
-        },
+      let userData = await prisma.user.findUnique({
+        where: { id: reqBody.user_id },
       });
 
-      prisma.$disconnect();
+      if (userData) {
+        const data = await prisma.userApplaud.create({
+          data: {
+            user: { connect: { id: reqBody.user_id } },
+            comment: reqBody.comment,
+            created: { connect: { id: reqBody.created_by } },
+            organization: { connect: { id: userData.organization_id } },
+          },
+        });
 
-      return res.status(201).json({
-        message: "Saved  Successfully",
-        data: data,
-        status: 200,
-      });
+        prisma.$disconnect();
+
+        return res.status(201).json({
+          message: "Saved  Successfully",
+          data: data,
+          status: 200,
+        });
+      } else {
+        return res
+          .status(402)
+          .json({ error: "error", message: "User Not Found" });
+      }
     } catch (error) {
       return res
         .status(500)

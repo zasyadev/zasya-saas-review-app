@@ -125,6 +125,7 @@ function AdminLayout(props) {
               ? adminItems
               : items
           }
+          md={md}
           // setTitle={setTitle}
         />
         <Layout>
@@ -135,6 +136,9 @@ function AdminLayout(props) {
               user={props.user}
               fetchUserData={fetchUserData}
               userOrganizationData={userOrganizationData}
+              setCollapsed={setCollapsed}
+              collapsed={collapsed}
+              md={md}
             />
             {props.children}
           </Content>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Form, Row, Col, Select, Input, Radio } from "antd";
-import Link from "next/link";
+
 import { useRouter } from "next/router";
 import { openNotificationBox } from "../../helpers/notification";
 import ReviewViewComponent from "../Form/ReviewViewComponent";
@@ -20,6 +20,7 @@ function AddEditReviewComponent({ editMode, user }) {
   const [formList, setFormList] = useState([]);
   const [userList, setUserList] = useState([]);
   const [questionList, setQuestionList] = useState([]);
+  const [selectAllState, setSelectAllState] = useState([]);
   const [previewForm, setPreviewForm] = useState(false);
   const [reviewFormData, setReviewFormData] = useState({});
   const [nextFormFeild, setNextFormFeild] = useState(0);
@@ -36,8 +37,19 @@ function AddEditReviewComponent({ editMode, user }) {
   };
 
   const onInputChange = (value, name) => {
+    console.log(value, "value");
     if (value && name) {
       setDisable((prev) => ({ ...prev, [`${name}`]: true }));
+      if ((name = "assigned_to_id" && userList.length > 0)) {
+        if (value.includes("all")) {
+          let allUsers = userList.map((item) => {
+            return item.user.id;
+          });
+          form.setFieldsValue({
+            assigned_to_id: allUsers,
+          });
+        }
+      }
     } else {
       setDisable((prev) => ({ ...prev, [`${name}`]: false }));
     }
@@ -407,10 +419,15 @@ function AddEditReviewComponent({ editMode, user }) {
                                       .toLowerCase()
                                       .indexOf(input.toLowerCase()) >= 0
                                   }
-                                  onChange={(e) =>
-                                    onInputChange(e, "assigned_to_id")
+                                  onChange={
+                                    (e) => onInputChange(e, "assigned_to_id")
+                                    // onMultipleInputChange(e, "assigned_to_id")
                                   }
+                                  // value={selectAllState.value}
                                 >
+                                  <Select.Option key="all" value="all">
+                                    ---SELECT ALL---
+                                  </Select.Option>
                                   {userList.map((data, index) => (
                                     <Select.Option
                                       key={index + "users"}
@@ -452,7 +469,7 @@ function AddEditReviewComponent({ editMode, user }) {
                                 <Radio.Group
                                   placeholder="Select Type"
                                   onChange={(e) =>
-                                    onInputChange(e, "review_type")
+                                    onInputChange(e.target.value, "review_type")
                                   }
                                 >
                                   <Radio value="feedback">yes</Radio>
@@ -466,7 +483,7 @@ function AddEditReviewComponent({ editMode, user }) {
                                 onClick={() => onFinish()}
                                 disabled={!disable.review_type}
                               >
-                                Next
+                                Submit
                               </button>
                             </div>
                           </div>

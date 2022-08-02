@@ -1,17 +1,17 @@
-import React, { useState } from "react";
+import React from "react";
 import { getSession } from "next-auth/client";
-import AddApplaudComponent from "../../component/Applaud/AddApplaudComponent";
 import AdminLayout from "../../component/layout/AdminLayout";
+import AllApplaud from "../../component/Applaud/AllAplaud";
 
-function Addapplaud({ user }) {
+function Allapplaud({ user }) {
   return (
-    <AdminLayout user={user} title="Create Applaud">
-      <AddApplaudComponent user={user} />
+    <AdminLayout user={user} title="View All Applaud">
+      <AllApplaud user={user} />
     </AdminLayout>
   );
 }
 
-export default Addapplaud;
+export default Allapplaud;
 
 export async function getServerSideProps(context) {
   const session = await getSession({ req: context.req });

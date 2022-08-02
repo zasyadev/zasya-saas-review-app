@@ -17,3 +17,22 @@ body {
 .text-color-red {
   color: rgb(255, 0, 0) !important;
 }
+/* width */
+.add-template-wrapper::-webkit-scrollbar {
+  width: 7px;
+}
+
+/* Track */
+.add-template-wrapper::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+.add-template-wrapper::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* Handle on hover */
+.add-template-wrapper::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}

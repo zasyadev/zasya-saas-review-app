@@ -86,8 +86,24 @@ export default async (req, res) => {
             data: dataObj,
           });
 
-          if (savedData && savedData.frequency != "once") {
-            ReviewScheduler({ savedData: savedData, resData: resData });
+          if (
+            savedData &&
+            savedData.frequency != "once" &&
+            resData.assigned_to_id.length > 0
+          ) {
+            ReviewScheduler({
+              reviewData: savedData,
+              asigneeList: resData.assigned_to_id,
+            });
+
+            let scheduleData = await transaction.scheduleJobs.create({
+              data: {
+                review: { connect: { id: savedData.id } },
+                assignee_list: resData.assigned_to_id,
+                schedule_created_date: savedData.created_date,
+                status: true,
+              },
+            });
           }
 
           return { savedData };
@@ -150,9 +166,11 @@ export default async (req, res) => {
         status: 200,
       });
     } catch (error) {
-      return res
-        .status(500)
-        .json({ error: error, message: "Internal Server Error" });
+      console.log(error);
+      return res.status(500).json({
+        error: error,
+        message: "Internal Server Error",
+      });
     }
   } else if (req.method === "GET") {
     try {
@@ -180,6 +198,7 @@ export default async (req, res) => {
       const resData = JSON.parse(req.body);
 
       reviewJob = schedule.scheduledJobs[resData.id];
+
       if (reviewJob) {
         let updateReview = await prisma.review.update({
           where: { id: resData.id },
@@ -234,6 +253,7 @@ export default async (req, res) => {
         const deletaData = await prisma.review.delete({
           where: { id: reqBody.id },
         });
+
         prisma.$disconnect();
         if (deletaData) {
           reviewJob = schedule.scheduledJobs[reqBody.id];

@@ -18,17 +18,25 @@ function ReceivedReviewComponent({ user, reviewId }) {
   const [loading, setLoading] = useState(false);
   const [formValues, setFormValues] = useState([]);
   const [questions, setQuestions] = useState([]);
-  const [nextSlide, setNextSlide] = useState(0);
-  const [disable, setDisable] = useState(false);
+  // console.log(questions, "questions");
 
-  const handleAnswerChange = (quesId, value) => {
-    setFormValues((prev) =>
-      prev.find((item) => item.questionId === quesId)
-        ? prev.map((item) =>
-            item.questionId === quesId ? { ...item, answer: value } : item
-          )
-        : [...prev, { questionId: quesId, answer: value }]
-    );
+  const handleAnswerChange = (quesId, value, type) => {
+    if (type === "input" && value.length > 179) {
+      openNotificationBox(
+        "error",
+        "You can't write more than 180 character",
+        3
+      );
+    }
+    if (value && value.trim() && quesId) {
+      setFormValues((prev) =>
+        prev.find((item) => item.questionId === quesId)
+          ? prev.map((item) =>
+              item.questionId === quesId ? { ...item, answer: value } : item
+            )
+          : [...prev, { questionId: quesId, answer: value }]
+      );
+    }
 
     // setQuestions((prev) =>
     //   prev.find((item) => item.id === quesId && item.error)
@@ -63,10 +71,11 @@ function ReceivedReviewComponent({ user, reviewId }) {
     }
 
     if (user.id && reviewData.id) {
+      let ansValues = formValues.sort((a, b) => a.questionId - b.questionId);
       let obj = {
         user_id: user.id,
         review_assignee_id: reviewData.id,
-        answers: formValues,
+        answers: ansValues,
         review_id: reviewData.review.id,
         created_assignee_date: reviewData.created_date,
       };
@@ -79,7 +88,7 @@ function ReceivedReviewComponent({ user, reviewId }) {
         .then((response) => {
           if (response.status === 200) {
             openNotificationBox("success", response.message, 3);
-            router.push("/review/received");
+            router.replace("/review/received");
           } else {
             openNotificationBox("error", response.message, 3);
           }

@@ -24,14 +24,14 @@ export function FormSlideComponent({
     <>
       <div className="h-full w-full">
         <Row>
-          <Col md={24} className="text-right">
+          <Col xs={24} md={24} className="text-right">
             <Link href="/review/received">
               <button className="primary-bg-btn text-white py-2 px-4 rounded-md">
                 Back
               </button>
             </Link>
           </Col>
-          <Col md={24} xs={24}>
+          <Col xs={24} md={24}>
             <div className="text-center answer-preview">
               <div className="flex flex-col items-center justify-center text-center mt-5">
                 <p className="text-lg font-bold text-red-400 my-5">
@@ -42,38 +42,38 @@ export function FormSlideComponent({
                 </p>
 
                 {options?.length > 0 && type === "checkbox" && (
-                  <div className="my-5">
-                    <Radio.Group
-                      className="radio-button "
-                      onChange={(e) => handleAnswerChange(id, e.target.value)}
-                      required={true}
-                      size="large"
-                    >
-                      {/* <Space direction="vertical"> */}
-                      <Row justify="center">
-                        {options?.map((op, j) => (
-                          <>
-                            <Col md={8}>
-                              <p className="border-2 mx-2 text-left px-4 py-4 rounded-md my-2 bg-white">
-                                <Radio
-                                  className="text-left  "
-                                  value={op.optionText}
-                                >
-                                  {op.optionText}
-                                </Radio>
-                              </p>
-                            </Col>
-                          </>
-                        ))}
-                      </Row>
-                      {/* </Space> */}
-                    </Radio.Group>
-                  </div>
+                  <Radio.Group
+                    className="radio-button "
+                    onChange={(e) => handleAnswerChange(id, e.target.value)}
+                    required={true}
+                    size="large"
+                  >
+                    {/* <Space direction="vertical"> */}
+                    <Row justify="center">
+                      {options?.map((op, j) => (
+                        <>
+                          <Col md={8}>
+                            <p className="my-2">
+                              <Radio.Button
+                                size="large"
+                                className="text-left"
+                                value={op.optionText}
+                              >
+                                {op.optionText}
+                              </Radio.Button>
+                            </p>
+                          </Col>
+                        </>
+                      ))}
+                    </Row>
+                    {/* </Space> */}
+                  </Radio.Group>
                 )}
 
                 {type == "input" ? (
                   <div className="my-5 md:w-96 ">
                     <Input
+                      size="large"
                       fullWidth={true}
                       placeholder={type == "input" ? "Short Text" : ""}
                       rows={1}

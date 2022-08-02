@@ -34,13 +34,13 @@ export default async (req, res) => {
       });
 
       const assignedByFromData = await prisma.review.findFirst({
-        where: { id: transactionData.review_id },
+        where: { id: transactionData.formdata.review_id },
       });
       const assignedByUser = await prisma.user.findFirst({
         where: { id: assignedByFromData.created_by },
       });
       const assignedUser = await prisma.user.findFirst({
-        where: { id: transactionData.user_id },
+        where: { id: transactionData.formdata.user_id },
       });
 
       const mailData = {
@@ -86,6 +86,7 @@ export default async (req, res) => {
         status: 200,
       });
     } catch (error) {
+      console.log(error);
       return res
         .status(500)
         .json({ error: error, message: "Internal Server Error" });
