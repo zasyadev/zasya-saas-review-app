@@ -685,6 +685,7 @@
 
 .user-menu-wrapper {
   background-color: #ffffff;
+
   .user-deatils {
     font-weight: 700;
     font-size: 16px;
@@ -695,7 +696,7 @@
 
 .create-dropdown {
   .ant-dropdown-menu-title-content {
-    padding: 5px 6px;
+    padding: 3px 0px;
     font-weight: 500;
     font-size: 16px;
   }
@@ -785,7 +786,7 @@
 
 .create-header-button {
   @include mobile {
-    display: none !important;
+    // display: none !important;
   }
 }
 
@@ -830,10 +831,44 @@
   .ant-radio-inner::after {
     background-color: #0f123f;
   }
+}
+.chart-data {
+  filter: blur(3px);
+}
+.line-chart-text {
+  position: absolute;
+  top: 65%;
+  left: 25%;
+  right: 25%;
+  z-index: 2;
+  text-align: center;
+  color: #fff;
+}
 
-  .ant-input:hover,
-  .ant-input:focus {
-    border-color: #0f123f;
-    box-shadow: 0 0 0 1.5px rgba(0, 5, 204, 0.35) !important;
+.bar-chart-text {
+  position: absolute;
+  top: 45%;
+  left: 45%;
+  z-index: 2;
+  text-align: center;
+  color: #fff;
+  @include mobile {
+    top: 40%;
+    left: 25%;
+    right: 25%;
+    bottom: 40%;
+  }
+}
+.bg-data {
+  background-color: rgba(0, 0, 0, 0.4);
+  font-weight: bold;
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+}
+
+.review-answer {
+  .input-box {
+    border-bottom: 1px solid #d9d9d9;
   }
 }

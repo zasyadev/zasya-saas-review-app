@@ -16,20 +16,25 @@ function ReceivedReviewComponent({ user, reviewId }) {
   const [loading, setLoading] = useState(false);
   const [formValues, setFormValues] = useState([]);
   const [questions, setQuestions] = useState([]);
-  console.log(formValues);
+  // console.log(questions, "questions");
 
-  const handleAnswerChange = (quesId, value) => {
-    // if (value.length >= 180) {
-    //   console.log("you can't write more than 180 character");
-    //   console.log(questions.type);
-    // }
-    setFormValues((prev) =>
-      prev.find((item) => item.questionId === quesId)
-        ? prev.map((item) =>
-            item.questionId === quesId ? { ...item, answer: value } : item
-          )
-        : [...prev, { questionId: quesId, answer: value }]
-    );
+  const handleAnswerChange = (quesId, value, type) => {
+    if (type === "input" && value.length > 179) {
+      openNotificationBox(
+        "error",
+        "You can't write more than 180 character",
+        3
+      );
+    }
+    if (value && value.trim() && quesId) {
+      setFormValues((prev) =>
+        prev.find((item) => item.questionId === quesId)
+          ? prev.map((item) =>
+              item.questionId === quesId ? { ...item, answer: value } : item
+            )
+          : [...prev, { questionId: quesId, answer: value }]
+      );
+    }
 
     // setQuestions((prev) =>
     //   prev.find((item) => item.id === quesId && item.error)

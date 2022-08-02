@@ -203,65 +203,71 @@ function DashBoard({ user }) {
             </div>
             <Row className="mt-6 mx-5" gutter={[16, 16]}>
               <Col xs={24} md={12} lg={12}>
-                <div className="w-full bg-white rounded-xl overflow-hidden shadow-md p-4 h-full">
-                  <h2 className="text-xl mt-1 font-semibold primary-color-blue mb-2">
-                    Applauds Leaderboard
-                  </h2>
-                  <Row>
-                    {Object.entries(sortApplaudList).length > 0 ? (
-                      Object.entries(sortApplaudList).map(
-                        ([key, value], idx) => {
-                          if (idx <= 3) {
-                            return (
-                              <>
-                                <Col xs={24} md={12}>
-                                  <Row className="">
-                                    <Col xs={7} md={10}>
-                                      <div className="p-2 mt-2 flex justify-center">
-                                        <Image src={User1} alt="user" />
-                                      </div>
-                                    </Col>
+                <div className="w-full bg-white rounded-xl overflow-hidden shadow-md p-4 h-full flex flex-col justify-between">
+                  <div>
+                    <h2 className="text-xl mt-1 font-semibold primary-color-blue mb-2">
+                      Applauds Leaderboard
+                    </h2>
 
-                                    <Col xs={17} md={14}>
-                                      <div className="flex  justify-between items-center">
-                                        <div className="py-2 px-3">
-                                          <p className="mb-2 primary-color-blue font-medium text-sm">
-                                            {key}
-                                          </p>
-                                          <p className="flex">
-                                            <ApplaudIconSmall />
-                                            <span className="pl-2 text-sm font-medium text-gray-500">
-                                              {value.length}
-                                            </span>
-                                          </p>
+                    <Row>
+                      {Object.keys(sortApplaudList).length > 0 ? (
+                        Object.entries(sortApplaudList).map(
+                          ([key, value], idx) => {
+                            if (idx <= 3) {
+                              return (
+                                <>
+                                  <Col xs={24} md={12}>
+                                    <Row className="">
+                                      <Col xs={7} md={10}>
+                                        <div className="p-2 mt-2 flex justify-center">
+                                          <Image src={User1} alt="user" />
                                         </div>
-                                      </div>
-                                    </Col>
-                                  </Row>
-                                </Col>
-                              </>
-                            );
-                          }
-                        }
-                      )
-                    ) : (
-                      <Col xs={24} md={24}>
-                        <div className="flex justify-center items-center h-48">
-                          <div className="text-center  ">No Applaud Found</div>
-                        </div>
-                      </Col>
-                    )}
-                  </Row>
+                                      </Col>
 
-                  {Object.entries(applaudData).length > 4 ? (
-                    <Link href="/applaud/allapplaud">
-                      <p className="primary-color-blue text-sm  cursor-pointer hover:text-sky-500  text-center mt-2">
-                        View More
-                      </p>
-                    </Link>
-                  ) : (
-                    ""
-                  )}
+                                      <Col xs={17} md={14}>
+                                        <div className="flex  justify-between items-center">
+                                          <div className="py-2 px-3">
+                                            <p className="mb-2 primary-color-blue font-medium text-sm">
+                                              {key}
+                                            </p>
+                                            <p className="flex">
+                                              <ApplaudIconSmall />
+                                              <span className="pl-2 text-sm font-medium text-gray-500">
+                                                {value.length}
+                                              </span>
+                                            </p>
+                                          </div>
+                                        </div>
+                                      </Col>
+                                    </Row>
+                                  </Col>
+                                </>
+                              );
+                            }
+                          }
+                        )
+                      ) : (
+                        <Col xs={24} md={24}>
+                          <div className="flex justify-center items-center h-48">
+                            <div className="text-center  ">
+                              No Applaud Found
+                            </div>
+                          </div>
+                        </Col>
+                      )}
+                    </Row>
+                  </div>
+                  <div>
+                    {Object.keys(applaudData).length > 0 ? (
+                      <Link href="/applaud/allapplaud">
+                        <div className="primary-color-blue text-sm  cursor-pointer font-medium hover:underline  text-center mt-2">
+                          View All
+                        </div>
+                      </Link>
+                    ) : (
+                      ""
+                    )}
+                  </div>
                 </div>
               </Col>
               <Col md={12} lg={12}>
