@@ -1,5 +1,5 @@
 import React from "react";
-
+import { RightOutlined, LeftOutlined } from "@ant-design/icons";
 import { Menu, Layout } from "antd";
 import { useRouter } from "next/router";
 import Logo from "../../assets/images/review.png";
@@ -8,7 +8,7 @@ import Link from "next/link";
 
 const { Sider } = Layout;
 
-function SiderLayout({ collapsed, setCollapsed, items, setTitle }) {
+function SiderLayout({ collapsed, setCollapsed, items, setTitle, md }) {
   const router = useRouter();
 
   const onClickSideTab = (e) => {
@@ -16,9 +16,11 @@ function SiderLayout({ collapsed, setCollapsed, items, setTitle }) {
       router.push(e.key);
     }
   };
+
   return (
     <Sider
       collapsible
+      collapsedWidth={md ? "80" : "0"}
       collapsed={collapsed}
       className="sider min-h-screen "
       onCollapse={(value) => setCollapsed(value)}

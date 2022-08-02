@@ -5,6 +5,8 @@ import {
   LogoutOutlined,
   UsergroupAddOutlined,
   UserSwitchOutlined,
+  MenuUnfoldOutlined,
+  MenuFoldOutlined,
 } from "@ant-design/icons";
 import Image from "next/image";
 import Link from "next/link";
@@ -22,6 +24,9 @@ function HeaderLayout({
   user,
   fetchUserData,
   userOrganizationData,
+  collapsed,
+  setCollapsed,
+  md,
 }) {
   const router = useRouter();
   const logoutHandler = () => {
@@ -160,7 +165,7 @@ function HeaderLayout({
     <Header className="ant-header bg-color-dashboard border-b border-b-neutral-300 p-0">
       <Row className="items-center h-full" justify="space-between">
         <Col md={16} xs={16}>
-          <div className="flex justify-between items-center mt-2">
+          <div className="flex  items-center mt-2">
             <div className=" font-bold mx-3 md:mx-6 text-lg md:text-2xl primary-color-blue">
               {title}
             </div>
@@ -183,7 +188,7 @@ function HeaderLayout({
             </Dropdown>
           </div>
         </Col>
-        <Col md={5} xs={5} className="pr-3">
+        <Col md={5} xs={5} className="pr-3 flex items-center">
           <div className="w-full user-menu-wrapper cursor-pointer rounded-md py-2 px-2 ">
             <Dropdown
               trigger={"click"}
@@ -212,6 +217,15 @@ function HeaderLayout({
               </div>
             </Dropdown>
           </div>
+          {!md ? (
+            <div onClick={() => setCollapsed(!collapsed)} className="pr-2 pl-1">
+              {collapsed ? (
+                <MenuUnfoldOutlined className="text-base" />
+              ) : (
+                <MenuFoldOutlined className="text-base" />
+              )}
+            </div>
+          ) : null}
         </Col>
       </Row>
     </Header>

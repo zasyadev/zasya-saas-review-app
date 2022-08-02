@@ -1,17 +1,21 @@
-import { Form, Input, Select, Option } from "antd";
-import { Typography } from "@material-ui/core";
+import { Form, Input, Select, Option, Collapse } from "antd";
 
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Radio from "@material-ui/core/Radio";
-// import Select from "@material-ui/core/Select";
-import TextField from "@material-ui/core/TextField";
 import { Col, Row } from "antd";
 import Image from "next/image";
-import React, { useState } from "react";
+import React from "react";
 import CloseIcon from "../../assets/images/close-line.svg";
 import DeleteIcon from "../../assets/images/delete.svg";
-// import EyeIcon from "../../assets/images/eye.svg";
 import RadioGroup from "@material-ui/core/RadioGroup";
+import {
+  CheckboxIcon,
+  DislikeIcon,
+  LikeIcon,
+  ScaleIcon,
+  TextIcon,
+} from "../../assets/Icon/icons";
+import { LikeOutlined, DislikeOutlined } from "@ant-design/icons";
 
 const QuestionComponent = ({
   type,
@@ -33,15 +37,107 @@ const QuestionComponent = ({
   handleScaleOptionValue,
   addNextQuestionField,
   selectTypeFeild,
+  setSelectTypeFeild,
 }) => {
   const range = (min, max) =>
     [...Array(max - min + 1).keys()].map((i) => i + min);
-  console.log(selectTypeFeild, "selectTypeFeild");
+
   return selectTypeFeild ? (
-    <>
-      <p onClick={(e) => defineType("input", idx)}>Input </p>
-      <p onClick={(e) => defineType("textarea", idx)}>Text Area </p>
-    </>
+    <div className="py-4 ">
+      <div className=" py-3 px-5 border-b border-b-e3e3e3">
+        <p className="text-lg font-semibold">Choose Question Type</p>
+      </div>
+      <div className="my-4 mx-6">
+        <Row gutter={[16, 16]}>
+          <Col md={8} xs={12}>
+            <div className="flex items-center question-type-bg">
+              <div className=" mr-3">
+                <TextIcon />
+              </div>
+              <div>
+                <p
+                  onClick={(e) => {
+                    defineType("input", idx);
+                    setSelectTypeFeild(false);
+                  }}
+                >
+                  Text
+                </p>
+              </div>
+            </div>
+          </Col>
+          <Col md={8} xs={12}>
+            <div className="flex items-center question-type-bg">
+              <div className=" mr-3">
+                <TextIcon />
+              </div>
+              <p
+                onClick={(e) => {
+                  defineType("textarea", idx);
+                  setSelectTypeFeild(false);
+                }}
+              >
+                Paragraph
+              </p>
+            </div>
+          </Col>
+          <Col md={8} xs={12}>
+            <div className="flex items-center question-type-bg">
+              <div className=" mr-3">
+                <CheckboxIcon />
+              </div>
+              <div>
+                <p
+                  onClick={(e) => {
+                    defineType("checkbox", idx);
+                    setSelectTypeFeild(false);
+                  }}
+                >
+                  CheckBox{" "}
+                </p>
+              </div>
+            </div>
+          </Col>
+          <Col md={8} xs={12}>
+            <div className="flex items-center question-type-bg">
+              <div className=" mr-3">
+                <ScaleIcon />
+              </div>
+              <div>
+                <p
+                  onClick={(e) => {
+                    defineType("scale", idx);
+                    setSelectTypeFeild(false);
+                  }}
+                >
+                  Scale{" "}
+                </p>
+              </div>
+            </div>
+          </Col>
+          <Col md={8} xs={12}>
+            <div className="flex items-center question-type-bg ">
+              <div className=" mr-3">
+                <p>
+                  <LikeIcon />
+                </p>
+                <p className="mt-1">
+                  <DislikeIcon />
+                </p>
+              </div>
+              <p
+                onClick={(e) => {
+                  defineType("yesno", idx);
+                  setSelectTypeFeild(false);
+                }}
+              >
+                Yes or No
+              </p>
+            </div>
+          </Col>
+        </Row>
+      </div>
+    </div>
   ) : (
     <>
       <div className="flex items-center justify-center question-edit-view">
@@ -78,151 +174,184 @@ const QuestionComponent = ({
                 {error && <p className="text-red-600 text-sm my-2">{error}</p>}
               </Col>
               <Col md={24} xs={24}>
-                <h2 className="font-semibold text-base my-2">Type</h2>
-                <Select
-                  value={type}
-                  onChange={(e) => defineType(e, idx)}
-                  className="question-select-box w-full"
-                >
-                  <Select.Option value={"input"}>Input Box</Select.Option>
-                  <Select.Option value={"checkbox"}>CheckBox</Select.Option>
-                  <Select.Option value={"textarea"}>TextArea</Select.Option>
-                  <Select.Option value={"scale"}>Linear Scale</Select.Option>
-                </Select>
-              </Col>
-            </Row>
-
-            <div className="mt-5 mb-2  mx-2 options-wrapper">
-              {type === "checkbox" && (
-                <>
-                  {options.map((op, j) => (
-                    <div key={j}>
-                      <div className="flex flex-row -ml-4 justify-between py-2">
-                        <Radio disabled />
-                        <Input
-                          placeholder="Option Text "
-                          className="input-box text-base  "
-                          bordered={false}
-                          onChange={(e) => {
-                            handleOptionValue(e.target.value, idx, j);
-                          }}
-                          value={op.optionText}
-                          maxLength={180}
-                        />
-
-                        <button
-                          onClick={() => {
-                            removeOption(idx, j);
-                          }}
-                        >
-                          <Image
-                            src={CloseIcon}
-                            alt="Close "
-                            width={20}
-                            height={20}
-                          />
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                  {options.length < 5 ? (
-                    <div
-                      onClick={() => {
-                        addOption(idx);
-                      }}
-                      className="text-sm md:text-base cursor-pointer my-2 ml-4"
-                    >
-                      + Add Option
-                    </div>
-                  ) : (
-                    ""
-                  )}
-                </>
-              )}
-
-              {type === "scale" && (
-                <>
-                  <div className="flex items-center">
-                    <Select
-                      value={lowerLabel ?? 0}
-                      onChange={(e) => {
-                        handleScaleOptionValue(e, idx, "lowerLabel");
-                      }}
-                    >
-                      <Select.Option value={0}>0</Select.Option>
-                      <Select.Option value={1}>1</Select.Option>
-                    </Select>
-
-                    <p className="mx-4">To </p>
-
-                    <Select
-                      value={higherLabel ?? 5}
-                      onChange={(e) => {
-                        handleScaleOptionValue(e, idx, "highLabel");
-                      }}
-                    >
-                      <Select.Option value={5}>5</Select.Option>
-                      <Select.Option value={10}>10</Select.Option>
-                    </Select>
-                  </div>
-                  {options.length > 1 && (
+                <div className="mt-5 mb-2  mx-2 options-wrapper">
+                  {type === "checkbox" && (
                     <>
-                      {" "}
-                      <div className="flex flex-row  items-center py-2">
-                        <p className="mr-4">{lowerLabel ?? 0}</p>
-                        <Input
-                          placeholder="Scale Text"
-                          className="input-box  text-base  w-1/2"
-                          bordered={false}
-                          onChange={(e) => {
-                            handleOptionValue(e.target.value, idx, 0);
+                      {options.map((op, j) => (
+                        <div key={j}>
+                          <div className="flex flex-row -ml-4 justify-between py-2">
+                            <Radio disabled />
+                            <Input
+                              placeholder="Option Text "
+                              className="input-box text-base  "
+                              bordered={false}
+                              onChange={(e) => {
+                                handleOptionValue(e.target.value, idx, j);
+                              }}
+                              value={op.optionText}
+                              maxLength={180}
+                            />
+
+                            <button
+                              onClick={() => {
+                                removeOption(idx, j);
+                              }}
+                            >
+                              <Image
+                                src={CloseIcon}
+                                alt="Close "
+                                width={20}
+                                height={20}
+                              />
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                      {options.length < 5 ? (
+                        <div
+                          onClick={() => {
+                            addOption(idx);
                           }}
-                          value={options[0].optionText}
-                          maxLength={180}
-                        />
-                      </div>
-                      <div className="flex flex-row  items-center py-2">
-                        <p className="mr-4">{higherLabel ?? 5}</p>
-                        <Input
-                          placeholder="Scale Text"
-                          className="input-box text-base w-1/2"
-                          bordered={false}
-                          onChange={(e) => {
-                            handleOptionValue(e.target.value, idx, 1);
-                          }}
-                          value={options[1].optionText}
-                          maxLength={180}
-                        />
-                      </div>
+                          className="text-sm md:text-base cursor-pointer my-2 ml-4"
+                        >
+                          + Add Option
+                        </div>
+                      ) : (
+                        ""
+                      )}
                     </>
                   )}
-                </>
-              )}
-            </div>
-            <div className="mt-4 w-full border-t-2 px-4 pt-2">
-              <div className="flex justify-end items-center mt-1">
-                {" "}
-                {/* <span
+
+                  {(type === "input" || type === "textarea") && (
+                    <div className="mt-2">
+                      <p className="text-slate-400 text-xl border-b border-slate-400">
+                        {" "}
+                        {type == "input" ? "Short Text" : "Long Text"}
+                      </p>
+                    </div>
+                  )}
+                  {type === "yesno" && (
+                    <div className="mt-2">
+                      <div className="flex items-center justify-center">
+                        <div className="p-10 border mx-2 rounded-sm">
+                          <LikeOutlined style={{ fontSize: "64px" }} />
+                        </div>
+                        <div className="p-10 border mx-2 rounded-sm">
+                          <DislikeOutlined style={{ fontSize: "64px" }} />
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {type === "scale" && (
+                    <>
+                      <div className="flex items-center">
+                        <Select
+                          value={lowerLabel ?? 0}
+                          onChange={(e) => {
+                            handleScaleOptionValue(e, idx, "lowerLabel");
+                          }}
+                        >
+                          <Select.Option value={0}>0</Select.Option>
+                          <Select.Option value={1}>1</Select.Option>
+                        </Select>
+
+                        <p className="mx-4">To </p>
+
+                        <Select
+                          value={higherLabel ?? 5}
+                          onChange={(e) => {
+                            handleScaleOptionValue(e, idx, "highLabel");
+                          }}
+                        >
+                          <Select.Option value={5}>5</Select.Option>
+                          <Select.Option value={10}>10</Select.Option>
+                        </Select>
+                      </div>
+                      {options.length > 1 && (
+                        <>
+                          {" "}
+                          <div className="flex flex-row  items-center py-2">
+                            <p className="mr-4">{lowerLabel ?? 0}</p>
+                            <Input
+                              placeholder="Scale Text"
+                              className="input-box  text-base  w-1/2"
+                              bordered={false}
+                              onChange={(e) => {
+                                handleOptionValue(e.target.value, idx, 0);
+                              }}
+                              value={options[0].optionText}
+                              maxLength={180}
+                            />
+                          </div>
+                          <div className="flex flex-row  items-center py-2">
+                            <p className="mr-4">{higherLabel ?? 5}</p>
+                            <Input
+                              placeholder="Scale Text"
+                              className="input-box text-base w-1/2"
+                              bordered={false}
+                              onChange={(e) => {
+                                handleOptionValue(e.target.value, idx, 1);
+                              }}
+                              value={options[1].optionText}
+                              maxLength={180}
+                            />
+                          </div>
+                        </>
+                      )}
+                    </>
+                  )}
+                </div>
+              </Col>
+              <Col md={24} xs={24}>
+                <div className="mt-4 w-full border-t-2 px-4 pt-2 flex justify-between">
+                  <div className="">
+                    <Select
+                      value={type}
+                      onChange={(e) => defineType(e, idx)}
+                      className="question-select-box w-full"
+                    >
+                      <Select.Option value={"input"}>Text</Select.Option>
+                      <Select.Option value={"checkbox"}>CheckBox</Select.Option>
+                      <Select.Option value={"textarea"}>
+                        Paragraph
+                      </Select.Option>
+                      <Select.Option value={"scale"}>
+                        Linear Scale
+                      </Select.Option>
+                      <Select.Option value={"yesno"}>Yes or No</Select.Option>
+                    </Select>
+                  </div>
+                  <div className="flex justify-end items-center mt-1">
+                    {" "}
+                    {/* <span
                   onClick={() => showAsQuestion(idx)}
                   className="cursor-pointer w-8 pr-2 border-r-2"
                 >
                   <Image src={EyeIcon} alt="Delete" width={20} height={20} />
                 </span> */}
-                <div
-                  onClick={() => removeElement(idx)}
-                  className="cursor-pointer mx-2 w-10  pr-2"
-                >
-                  <Image src={DeleteIcon} alt="Delete" width={20} height={20} />
+                    <div
+                      onClick={() => removeElement(idx)}
+                      className="cursor-pointer mx-2 w-10  pr-2"
+                    >
+                      <Image
+                        src={DeleteIcon}
+                        alt="Delete"
+                        width={20}
+                        height={20}
+                      />
+                    </div>
+                    <button
+                      className=" px-4 py-3 h-full rounded primary-bg-btn text-white  my-1"
+                      type="button"
+                      onClick={() => addNextQuestionField(idx + 1)}
+                    >
+                      <span className="MuiButton-label">Add Question</span>
+                    </button>
+                  </div>
                 </div>
-                <button
-                  className=" px-4 py-3 h-full rounded primary-bg-btn text-white  my-1"
-                  type="button"
-                  onClick={() => addNextQuestionField(idx + 1)}
-                >
-                  <span className="MuiButton-label">Add Question</span>
-                </button>
-              </div>
-            </div>
+              </Col>
+            </Row>
           </div>
         </div>
       ) : (
@@ -281,6 +410,21 @@ const QuestionComponent = ({
                     ))}
                 </RadioGroup>
                 <p className="text-white text-2xl">{options[1]?.optionText}</p>
+              </div>
+            )}
+
+            {type === "yesno" && (
+              <div className="mt-2">
+                <div className="flex items-center justify-center">
+                  <div className="p-10 border mx-2 rounded-sm">
+                    <LikeOutlined style={{ fontSize: "64px", color: "#fff" }} />
+                  </div>
+                  <div className="p-10 border mx-2 rounded-sm">
+                    <DislikeOutlined
+                      style={{ fontSize: "64px", color: "#fff" }}
+                    />
+                  </div>
+                </div>
               </div>
             )}
           </div>

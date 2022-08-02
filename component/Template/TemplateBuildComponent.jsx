@@ -272,7 +272,7 @@ function TemplateBuildComponent({
   }, []);
 
   return (
-    <div className="mx-2">
+    <div className="mx-4">
       <Row gutter={16}>
         <Col xs={24} md={8}>
           <div className="mb-2 px-1 template-title-input">
@@ -305,7 +305,10 @@ function TemplateBuildComponent({
                           <div className="flex justify-between">
                             <div
                               className="flex items-center"
-                              onClick={() => setActiveQuestionIndex(idx)}
+                              onClick={() => {
+                                setActiveQuestionIndex(idx);
+                                setSelectTypeFeild(false);
+                              }}
                             >
                               <span className=" rounded-full linear-bg">
                                 {idx + 1}
@@ -375,6 +378,7 @@ function TemplateBuildComponent({
                       handleScaleOptionValue={handleScaleOptionValue}
                       addNextQuestionField={addNextQuestionField}
                       selectTypeFeild={selectTypeFeild}
+                      setSelectTypeFeild={setSelectTypeFeild}
                     />
                   ))}
             </div>

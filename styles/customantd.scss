@@ -279,6 +279,10 @@
   //   min-width: auto !important;
   //   width: auto !important;
   // }
+  @include mobile {
+    position: fixed;
+    z-index: 99;
+  }
 }
 
 .ant-layout-sider-trigger {
@@ -425,6 +429,16 @@
     width: 96%;
     @include mobile {
       width: 90%;
+    }
+  }
+  .question-type-bg {
+    background-color: #eeeeee;
+    padding: 10px 25px;
+    border-radius: 5px;
+    cursor: pointer;
+    p {
+      font-size: 18px;
+      font-weight: 500;
     }
   }
 }
@@ -912,4 +926,11 @@
     border-color: #0f123f;
     box-shadow: 0 0 0 1.5px rgba(0, 5, 204, 0.35) !important;
   }
+}
+
+.border-b-e3e3e3 {
+  border-bottom: 1px solid #e3e3e3;
+}
+.ant-layout-sider-zero-width-trigger-left {
+  display: none;
 }
