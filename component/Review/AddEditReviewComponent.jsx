@@ -538,7 +538,7 @@ function AddEditReviewComponent({ editMode, user }) {
                           <button
                             key="cancel"
                             type="default"
-                            className="primary-bg-btn text-white text-sm py-3 my-1  rounded h-full w-1/4"
+                            className="px-4 py-3 h-full rounded primary-bg-btn text-white w-1/3 md:w-1/4 my-1"
                           >
                             Cancel
                           </button>
@@ -549,14 +549,14 @@ function AddEditReviewComponent({ editMode, user }) {
                           onClick={() => {
                             handlePreviewForm();
                           }}
-                          className="py-3 h-full rounded toggle-btn-bg text-white lg:mx-4 w-1/4  my-1"
+                          className="py-3 h-full rounded toggle-btn-bg text-white lg:mx-4 my-1 w-1/3 mx-1 md:w-1/4 "
                         >
                           Preview
                         </button>
                         <button
                           key="add"
                           type="submit"
-                          className=" px-4 py-3 h-full rounded primary-bg-btn text-white w-1/4 my-1"
+                          className=" px-4 py-3 h-full rounded primary-bg-btn text-white w-1/3 md:w-1/4 my-1 "
                         >
                           Create
                         </button>

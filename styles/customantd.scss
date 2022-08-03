@@ -586,10 +586,10 @@
   }
 }
 .radio-button {
-  .MuiFormControlLabel-root {
-    .MuiTypography-body1 {
-      font-size: 14px;
-      font-weight: 500px;
+  .ant-space-item {
+    .ant-radio-wrapper {
+      font-size: 16px !important;
+      font-weight: 500px !important;
     }
   }
 }
@@ -826,6 +826,7 @@
   background-size: cover;
   background-position: center;
   opacity: 1;
+  height: 100vh;
 }
 
 .create-header-button {

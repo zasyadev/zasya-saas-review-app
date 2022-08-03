@@ -26,6 +26,7 @@ export default NextAuth({
             },
           },
         });
+        console.log(user, "user");
 
         if (!user) {
           throw new Error("Email not Found.");
