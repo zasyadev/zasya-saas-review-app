@@ -4,7 +4,6 @@ import {
   DownOutlined,
   UserOutlined,
   LogoutOutlined,
-  UsergroupAddOutlined,
   UserSwitchOutlined,
   MenuUnfoldOutlined,
   MenuFoldOutlined,
@@ -45,38 +44,13 @@ function HeaderLayout({
         if (response.status === 200) {
           fetchUserData();
           openNotificationBox("success", response.message, 3);
+          router.reload();
         }
       })
       .catch((err) => {
         console.log(err);
       });
   };
-
-  // async function fetchUserData() {
-  //   await fetch("/api/organization/" + user.id, {
-  //     method: "GET",
-  //   })
-  //     .then((response) => response.json())
-  //     .then((response) => {
-  //       if (response.status === 200) {
-  //         setUserOrganizationData({
-  //           orgId: response?.data?.organization?.company_name,
-  //           roleId:
-  //             response?.data?.roleData?.role_id === 2
-  //               ? "Admin"
-  //               : response?.data?.roleData?.role_id === 3
-  //               ? "Manager"
-  //               : response?.data?.roleData?.role_id === 4
-  //               ? "Member"
-  //               : null,
-  //           role: response?.data?.roleData?.role_id,
-  //         });
-  //       }
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // }
 
   useEffect(() => {
     if (user) {
@@ -92,7 +66,7 @@ function HeaderLayout({
         </div>
         <span>
           <div className="span-text font-semibold">{user.first_name}</div>
-          {/* <div>{user.role_id === 2 ? "Admin" : "Member"}</div> */}
+
           <div className="span-text">{userOrganizationData?.roleId}</div>
         </span>
       </div>

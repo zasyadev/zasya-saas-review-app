@@ -178,6 +178,8 @@ model ReviewAssigneeAnswers {
   review_id                  String
   review_assignee            ReviewAssignee               @relation(fields: [review_assignee_id], references: [id], onDelete: Cascade)
   review_assignee_id         String
+  organization               UserOrganization?            @relation(fields: [organization_id], references: [id])
+  organization_id            Int?
   created_date               DateTime                     @default(now())
   modified_date              DateTime                     @default(now())
   created_assignee_date      DateTime?
@@ -232,6 +234,7 @@ model UserOrganization {
   UserApplaud           UserApplaud[]
   UserOraganizationTags UserOraganizationTags[]
   @@map("user_organization")
+  ReviewAssigneeAnswers ReviewAssigneeAnswers[]
 }
 
 model UserImage {
@@ -249,8 +252,8 @@ model PasswordReset {
   id            Int      @id @default(autoincrement())
   email         User     @relation("userEmail", fields: [email_id], references: [email])
   email_id      String   @unique
-  created_by    User?     @relation("createdBy", fields: [created_by_id], references: [id])
-  created_by_id String?   
+  created_by    User?    @relation("createdBy", fields: [created_by_id], references: [id])
+  created_by_id String?
   token         String?
   created_date  DateTime @default(now())
   modified_date DateTime @default(now())

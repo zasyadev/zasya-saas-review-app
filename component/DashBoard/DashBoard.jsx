@@ -26,6 +26,7 @@ function DashBoard({ user }) {
   const [userApplaud, setUserApplaud] = useState(0);
   const [applaudData, setApplaudData] = useState({});
   const [sortApplaudList, setSortApplaudList] = useState({});
+  const [feedbackList, setFeedbackList] = useState({});
 
   async function fetchDashboardData() {
     setDashboardData([]);
@@ -43,7 +44,6 @@ function DashBoard({ user }) {
             ratingHandler(response.data.reviewRating);
           setDashboardData(response.data);
           if (response?.data?.applaudData?.length > 0) {
-            // applaudcount(response.data.applaudData);
             sortApplaud(response.data.applaudData);
             let userCount = response.data.applaudData.filter(
               (item) => item.user_id === user.id
@@ -56,6 +56,20 @@ function DashBoard({ user }) {
         console.log(err);
         setDashboardData([]);
       });
+  }
+
+  async function fetchFeedbackData() {
+    setFeedbackList([]);
+    await fetch("/api/feedback/all/" + user.id, {
+      method: "GET",
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        if (response.status === 200) {
+          setFeedbackList(response.data);
+        }
+      })
+      .catch((err) => {});
   }
 
   const sortApplaud = (data) => {
@@ -116,6 +130,7 @@ function DashBoard({ user }) {
 
   useEffect(() => {
     fetchDashboardData();
+    fetchFeedbackData();
   }, []);
 
   return (
@@ -215,33 +230,31 @@ function DashBoard({ user }) {
                           ([key, value], idx) => {
                             if (idx <= 3) {
                               return (
-                                <>
-                                  <Col xs={24} md={12}>
-                                    <Row className="">
-                                      <Col xs={7} md={10}>
-                                        <div className="p-2 mt-2 flex justify-center">
-                                          <Image src={User1} alt="user" />
-                                        </div>
-                                      </Col>
+                                <Col xs={24} md={12} key={"applaud" + idx}>
+                                  <Row className="">
+                                    <Col xs={7} md={10}>
+                                      <div className="p-2 mt-2 flex justify-center">
+                                        <Image src={User1} alt="user" />
+                                      </div>
+                                    </Col>
 
-                                      <Col xs={17} md={14}>
-                                        <div className="flex  justify-between items-center">
-                                          <div className="py-2 px-3">
-                                            <p className="mb-2 primary-color-blue font-medium text-sm">
-                                              {key}
-                                            </p>
-                                            <p className="flex">
-                                              <ApplaudIconSmall />
-                                              <span className="pl-2 text-sm font-medium text-gray-500">
-                                                {value.length}
-                                              </span>
-                                            </p>
-                                          </div>
+                                    <Col xs={17} md={14}>
+                                      <div className="flex  justify-between items-center">
+                                        <div className="py-2 px-3">
+                                          <p className="mb-2 primary-color-blue font-medium text-sm">
+                                            {key}
+                                          </p>
+                                          <p className="flex">
+                                            <ApplaudIconSmall />
+                                            <span className="pl-2 text-sm font-medium text-gray-500">
+                                              {value.length}
+                                            </span>
+                                          </p>
                                         </div>
-                                      </Col>
-                                    </Row>
-                                  </Col>
-                                </>
+                                      </div>
+                                    </Col>
+                                  </Row>
+                                </Col>
                               );
                             }
                           }
@@ -275,56 +288,51 @@ function DashBoard({ user }) {
                   <h2 className="text-xl mt-1 primary-color-blue  font-semibold mb-2">
                     Feedback Leaderboard
                   </h2>
-                  <Row>
+                  <Row className="dashboard-feedback">
                     <Col xs={24} md={24}>
-                      <Row className="my-3">
-                        <Col xs={6} md={5}>
-                          <Image
-                            src={User1}
-                            alt="user"
-                            // width={40}
-                            // height={40}
-                          />
-                        </Col>
-                        <Col xs={18} md={19}>
-                          <div className="px-2">
-                            <p className="mb-2 primary-color-blue font-medium text-sm">
-                              Ankush Thakur
-                            </p>
-                            <p className="flex justify-between">
-                              <span className="text-sm font-medium text-gray-500">
-                                Feeback Given : 0
-                              </span>
-                              <span className="pl-2 text-sm font-medium text-gray-500">
-                                Feeback Received : 0
-                              </span>
-                            </p>
-                          </div>
-                        </Col>
-                      </Row>
-                    </Col>
+                      {feedbackList.length > 0
+                        ? feedbackList.map((feedback, idx) => {
+                            return (
+                              <>
+                                {Object.entries(feedback).map(
+                                  ([key, value]) => {
+                                    return (
+                                      <Row
+                                        className="my-3"
+                                        key={idx + "feedback"}
+                                      >
+                                        <Col xs={6} md={5}>
+                                          <Image
+                                            src={User1}
+                                            alt="user"
+                                            // width={40}
+                                            // height={40}
+                                          />
+                                        </Col>
 
-                    <Col xs={24} md={24}>
-                      <Row>
-                        <Col xs={6} md={5}>
-                          <Image src={User2} alt="user " />
-                        </Col>
-                        <Col xs={18} md={19}>
-                          <div className="px-2">
-                            <p className="mb-2 primary-color-blue font-medium text-sm">
-                              Annop Thakur
-                            </p>
-                            <p className="flex justify-between">
-                              <span className="text-sm font-medium text-gray-500">
-                                Feeback Given : 0
-                              </span>
-                              <span className="pl-2 text-sm font-medium text-gray-500">
-                                Feeback Received : 0
-                              </span>
-                            </p>
-                          </div>
-                        </Col>
-                      </Row>
+                                        <Col xs={18} md={19}>
+                                          <div className="px-2">
+                                            <p className="mb-2 primary-color-blue font-medium text-sm">
+                                              {key}
+                                            </p>
+                                            <p className="flex justify-between">
+                                              <span className="text-sm font-medium text-gray-500">
+                                                G : {value?.feedbackGiven}
+                                              </span>
+                                              <span className="pl-2 text-sm font-medium text-gray-500">
+                                                T : {value?.feedbackTaken}
+                                              </span>
+                                            </p>
+                                          </div>
+                                        </Col>
+                                      </Row>
+                                    );
+                                  }
+                                )}
+                              </>
+                            );
+                          })
+                        : null}
                     </Col>
                   </Row>
                 </div>
@@ -333,7 +341,7 @@ function DashBoard({ user }) {
           </div>
         </div>
       </Col>
-      <Col xs={24} sm={24} md={24} lg={7} className="mt-6 h-full  ">
+      <Col xs={24} sm={24} md={24} lg={7} className="mt-6 h-full">
         <SiderRight
           data={dashBoardData}
           totalRating={totalRating}

@@ -21,7 +21,6 @@ function AddEditReviewComponent({ editMode, user }) {
   const [formList, setFormList] = useState([]);
   const [userList, setUserList] = useState([]);
   const [questionList, setQuestionList] = useState([]);
-  const [selectAllState, setSelectAllState] = useState([]);
   const [previewForm, setPreviewForm] = useState(false);
   const [reviewFormData, setReviewFormData] = useState({});
   const [nextFormFeild, setNextFormFeild] = useState(0);
@@ -33,12 +32,7 @@ function AddEditReviewComponent({ editMode, user }) {
     review_type: false,
   });
 
-  const validateMessages = {
-    required: "${label} is required!",
-  };
-
   const onInputChange = (value, name) => {
-    console.log(value, "value");
     if (value && name) {
       setDisable((prev) => ({ ...prev, [`${name}`]: true }));
       if ((name = "assigned_to_id" && userList.length > 0)) {
@@ -77,21 +71,15 @@ function AddEditReviewComponent({ editMode, user }) {
       status: values.status ?? "pending",
       frequency: values.frequency,
       role_id: user.role_id,
-
       is_published: "published",
       templateData: templateData,
     });
   }
 
   async function addReviewAssign(obj) {
-    // console.log(obj, "shdfjksdk");
-    // return;
     await fetch("/api/review/manage", {
       method: "POST",
       body: JSON.stringify(obj),
-      // headers: {
-      //   "Content-Type": "application/json",
-      // },
     })
       .then((response) => response.json())
       .then((response) => {
@@ -249,12 +237,7 @@ function AddEditReviewComponent({ editMode, user }) {
           <div className="w-full bg-white rounded-md shadow-md mt-4 add-template-wrapper">
             <div className=" mt-1">
               <div className=" w-full flex flex-col items-start">
-                <Form
-                  layout="vertical"
-                  form={form}
-                  // onFinish={onFinish}
-                  className="w-full"
-                >
+                <Form layout="vertical" form={form} className="w-full">
                   <Row gutter={16}>
                     <Col md={24} xs={24}>
                       <div className="review-form-bg rounded-md h-full w-full">
@@ -443,11 +426,9 @@ function AddEditReviewComponent({ editMode, user }) {
                                       .toLowerCase()
                                       .indexOf(input.toLowerCase()) >= 0
                                   }
-                                  onChange={
-                                    (e) => onInputChange(e, "assigned_to_id")
-                                    // onMultipleInputChange(e, "assigned_to_id")
+                                  onChange={(e) =>
+                                    onInputChange(e, "assigned_to_id")
                                   }
-                                  // value={selectAllState.value}
                                 >
                                   <Select.Option key="all" value="all">
                                     ---SELECT ALL---
@@ -507,8 +488,8 @@ function AddEditReviewComponent({ editMode, user }) {
                                     onInputChange(e.target.value, "review_type")
                                   }
                                 >
-                                  <Radio value="feedback">yes</Radio>
-                                  <Radio value="other">no</Radio>
+                                  <Radio value="feedback">Yes</Radio>
+                                  <Radio value="other">No</Radio>
                                 </Radio.Group>
                               </Form.Item>
                             </div>
@@ -531,37 +512,6 @@ function AddEditReviewComponent({ editMode, user }) {
                         )}
                       </div>
                     </Col>
-
-                    {/* <Col md={24} xs={24}>
-                      <div className="flex justify-end">
-                        <Link href="/review">
-                          <button
-                            key="cancel"
-                            type="default"
-                            className="px-4 py-3 h-full rounded primary-bg-btn text-white w-1/3 md:w-1/4 my-1"
-                          >
-                            Cancel
-                          </button>
-                        </Link>
-                        <button
-                          key="preview"
-                          type="default"
-                          onClick={() => {
-                            handlePreviewForm();
-                          }}
-                          className="py-3 h-full rounded toggle-btn-bg text-white lg:mx-4 my-1 w-1/3 mx-1 md:w-1/4 "
-                        >
-                          Preview
-                        </button>
-                        <button
-                          key="add"
-                          type="submit"
-                          className=" px-4 py-3 h-full rounded primary-bg-btn text-white w-1/3 md:w-1/4 my-1 "
-                        >
-                          Create
-                        </button>
-                      </div>
-                    </Col> */}
                   </Row>
                 </Form>
               </div>

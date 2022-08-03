@@ -17,22 +17,27 @@ body {
 .text-color-red {
   color: rgb(255, 0, 0) !important;
 }
+
 /* width */
-.add-template-wrapper::-webkit-scrollbar {
+.add-template-wrapper ::-webkit-scrollbar,
+.dashboard-feedback::-webkit-scrollbar {
   width: 7px;
 }
 
 /* Track */
-.add-template-wrapper::-webkit-scrollbar-track {
+.add-template-wrapper::-webkit-scrollbar-track,
+.dashboard-feedback::-webkit-scrollbar-track {
   background: #f1f1f1;
 }
 
 /* Handle */
-.add-template-wrapper::-webkit-scrollbar-thumb {
+.add-template-wrapper::-webkit-scrollbar-thumb,
+.dashboard-feedback::-webkit-scrollbar-thumb {
   background: #888;
 }
 
 /* Handle on hover */
-.add-template-wrapper::-webkit-scrollbar-thumb:hover {
+.add-template-wrapper::-webkit-scrollbar-thumb:hover,
+.dashboard-feedback::-webkit-scrollbar-thumb:hover {
   background: #555;
 }

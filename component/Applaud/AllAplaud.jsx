@@ -16,7 +16,12 @@ function AllAplaud({ user }) {
         .then((response) => response.json())
         .then((response) => {
           if (response.status === 200) {
-            setAllApplaud(response.data);
+            let data = response?.data?.sort(
+              (a, b) =>
+                b[Object.keys(b)]?.taken?.length -
+                a[Object.keys(a)]?.taken?.length
+            );
+            setAllApplaud(data);
           }
         })
 

@@ -105,7 +105,7 @@ const BarChart = () => {
 
   return (
     <>
-      <div className="bg-data ">
+      <div className="bg-blur-overlay ">
         <div className="bar-chart-text">No Data Found</div>
         <Chart
           options={defaultState.options}

@@ -55,7 +55,7 @@ const LineChart = () => {
 
   return (
     <>
-      <div className="bg-data ">
+      <div className="bg-blur-overlay ">
         <div className="line-chart-text">No Data Found</div>
         <Chart
           options={defaultState.options}
