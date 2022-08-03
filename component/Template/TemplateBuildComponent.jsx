@@ -303,29 +303,32 @@ function TemplateBuildComponent({
                           key={idx + "side que"}
                         >
                           <div className="flex justify-between">
-                            <div
-                              className="flex items-center"
-                              onClick={() => {
-                                setActiveQuestionIndex(idx);
-                                setSelectTypeFeild(false);
-                              }}
-                            >
-                              <span className=" rounded-full linear-bg">
-                                {idx + 1}
-                              </span>
-
-                              <span className=" px-2 py-1 ">
-                                <span className="">
-                                  <p>{question?.questionText}</p>
+                            <div className="w-full">
+                              <div
+                                className="flex items-center"
+                                onClick={() => {
+                                  setActiveQuestionIndex(idx);
+                                  setSelectTypeFeild(false);
+                                }}
+                              >
+                                <span className=" rounded-full linear-bg">
+                                  {idx + 1}
                                 </span>
-                              </span>
+
+                                <span className=" px-2 py-1 ">
+                                  <span className="">
+                                    <p>{question?.questionText}</p>
+                                  </span>
+                                </span>
+                              </div>
                             </div>
+
                             <div className="">
                               <span
                                 className=" dark-blue-bg cursor-pointer"
                                 onClick={() => removeElement(idx)}
                               >
-                                <CloseOutlined />
+                                <CloseOutlined className="text-xs" />
                               </span>
                             </div>
                           </div>
@@ -338,7 +341,7 @@ function TemplateBuildComponent({
           </div>
           <div className="mt-3 flex justify-between ">
             <button
-              className=" px-1 md:px-4 py-3 h-full rounded primary-bg-btn text-white w-3/4 md:w-1/2 my-1"
+              className=" px-1 md:px-4 py-3 h-full rounded primary-bg-btn text-white w-3/4 md:w-1/2 my-1 mr-1"
               type="button"
               onClick={() => {
                 addMoreQuestionField();

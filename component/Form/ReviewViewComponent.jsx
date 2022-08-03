@@ -1,10 +1,9 @@
-import { Typography } from "@material-ui/core";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import TextField from "@material-ui/core/TextField";
 import React, { useState } from "react";
-import { FrownOutlined, SmileOutlined } from "@ant-design/icons";
+import { LikeOutlined, DislikeOutlined } from "@ant-design/icons";
 
 import { Col, Row, Slider } from "antd";
 import { DeleteSmallTemplateIcon } from "../../assets/Icon/icons";
@@ -62,6 +61,20 @@ const ReviewViewComponent = ({
                 rows={1}
                 disabled
               />
+            ) : null}
+            {type == "yesno" ? (
+              <div className="mt-2">
+                <div className="flex items-center justify-center">
+                  <div className="p-4  border mx-2 rounded-sm">
+                    <LikeOutlined style={{ fontSize: "28px", color: "#000" }} />
+                  </div>
+                  <div className="p-4 border mx-2 rounded-sm">
+                    <DislikeOutlined
+                      style={{ fontSize: "28px", color: "#000" }}
+                    />
+                  </div>
+                </div>
+              </div>
             ) : null}
 
             {type === "scale" && options?.length > 1 && (
