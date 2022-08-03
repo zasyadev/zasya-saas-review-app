@@ -303,23 +303,26 @@ function TemplateBuildComponent({
                           key={idx + "side que"}
                         >
                           <div className="flex justify-between">
-                            <div
-                              className="flex items-center"
-                              onClick={() => {
-                                setActiveQuestionIndex(idx);
-                                setSelectTypeFeild(false);
-                              }}
-                            >
-                              <span className=" rounded-full linear-bg">
-                                {idx + 1}
-                              </span>
-
-                              <span className=" px-2 py-1 ">
-                                <span className="">
-                                  <p>{question?.questionText}</p>
+                            <div className="w-full">
+                              <div
+                                className="flex items-center"
+                                onClick={() => {
+                                  setActiveQuestionIndex(idx);
+                                  setSelectTypeFeild(false);
+                                }}
+                              >
+                                <span className=" rounded-full linear-bg">
+                                  {idx + 1}
                                 </span>
-                              </span>
+
+                                <span className=" px-2 py-1 ">
+                                  <span className="">
+                                    <p>{question?.questionText}</p>
+                                  </span>
+                                </span>
+                              </div>
                             </div>
+
                             <div className="">
                               <span
                                 className=" dark-blue-bg cursor-pointer"

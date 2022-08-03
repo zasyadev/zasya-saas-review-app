@@ -4,6 +4,7 @@ import { Form, Row, Col, Select, Input, Radio } from "antd";
 import { useRouter } from "next/router";
 import { openNotificationBox } from "../../helpers/notification";
 import ReviewViewComponent from "../Form/ReviewViewComponent";
+import Link from "next/link";
 
 const defaultScaleQuestion = {
   questionText: "Rating",
@@ -83,6 +84,8 @@ function AddEditReviewComponent({ editMode, user }) {
   }
 
   async function addReviewAssign(obj) {
+    // console.log(obj, "shdfjksdk");
+    // return;
     await fetch("/api/review/manage", {
       method: "POST",
       body: JSON.stringify(obj),
@@ -152,23 +155,26 @@ function AddEditReviewComponent({ editMode, user }) {
   const handlePreviewForm = () => {
     setReviewFormData({});
     setQuestionList([]);
-    form.validateFields().then((data) => {
-      let templateData = {};
-      if (data.template_id) {
-        templateData = formList.find((item) => item.id == data.template_id);
 
-        if (data.review_type === "feedback") {
+    let values = form.getFieldsValue(true);
+
+    if (values) {
+      let templateData = {};
+      if (values.template_id) {
+        templateData = formList.find((item) => item.id == values.template_id);
+
+        if (values.review_type === "feedback") {
           templateData.form_data.questions.length > 0
             ? templateData.form_data.questions.push(defaultScaleQuestion)
             : null;
         }
         setQuestionList(templateData.form_data.questions);
-        setReviewFormData({ ...data, templateData: templateData });
+        setReviewFormData({ ...values, templateData: templateData });
         setPreviewForm(true);
       } else {
         openNotificationBox("error", "Need to Select Template", 3);
       }
-    });
+    }
   };
   const onPreviewSubmit = () => {
     let obj = {
@@ -326,8 +332,20 @@ function AddEditReviewComponent({ editMode, user }) {
                                   ))}
                                 </Select>
                               </Form.Item>
+                              <Link href="/template/add" passHref>
+                                <a target="_blank">
+                                  <p className="text-right">Create</p>
+                                </a>
+                              </Link>
                             </div>
                             <div className="my-5">
+                              <button
+                                className="primary-bg-btn rounded-md text-lg text-white px-14 py-2 mr-2"
+                                onClick={() => setNextFormFeild(0)}
+                              >
+                                Previous
+                              </button>
+
                               <button
                                 className="toggle-btn-bg rounded-md text-lg text-white px-14 py-2 "
                                 onClick={() => setNextFormFeild(2)}
@@ -384,6 +402,12 @@ function AddEditReviewComponent({ editMode, user }) {
                             </div>
                             <div className="my-5">
                               <button
+                                className="primary-bg-btn rounded-md text-lg text-white px-14 py-2 mr-2"
+                                onClick={() => setNextFormFeild(1)}
+                              >
+                                Previous
+                              </button>
+                              <button
                                 className="toggle-btn-bg rounded-md text-lg text-white px-14 py-2 "
                                 onClick={() => setNextFormFeild(3)}
                                 disabled={!disable.frequency}
@@ -438,8 +462,19 @@ function AddEditReviewComponent({ editMode, user }) {
                                   ))}
                                 </Select>
                               </Form.Item>
+                              <Link href="/team/add" passHref>
+                                <a target="_blank">
+                                  <p className="text-right">Create</p>
+                                </a>
+                              </Link>
                             </div>
                             <div className="my-5">
+                              <button
+                                className="primary-bg-btn rounded-md text-lg text-white px-14 py-2 mr-2"
+                                onClick={() => setNextFormFeild(2)}
+                              >
+                                Previous
+                              </button>
                               <button
                                 className="toggle-btn-bg rounded-md text-lg text-white px-14 py-2 "
                                 onClick={() => setNextFormFeild(4)}
@@ -479,8 +514,14 @@ function AddEditReviewComponent({ editMode, user }) {
                             </div>
                             <div className="my-5">
                               <button
+                                className="primary-bg-btn rounded-md text-lg text-white px-14 py-2 mr-2"
+                                onClick={() => setNextFormFeild(3)}
+                              >
+                                Previous
+                              </button>
+                              <button
                                 className="toggle-btn-bg rounded-md text-lg text-white px-14 py-2 "
-                                onClick={() => onFinish()}
+                                onClick={() => handlePreviewForm()}
                                 disabled={!disable.review_type}
                               >
                                 Submit
