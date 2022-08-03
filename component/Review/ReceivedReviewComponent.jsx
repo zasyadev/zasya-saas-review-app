@@ -18,6 +18,7 @@ function ReceivedReviewComponent({ user, reviewId }) {
   const [loading, setLoading] = useState(false);
   const [formValues, setFormValues] = useState([]);
   const [questions, setQuestions] = useState([]);
+  const [nextSlide, setNextSlide] = useState(0);
   // console.log(questions, "questions");
 
   const handleAnswerChange = (quesId, value, type) => {

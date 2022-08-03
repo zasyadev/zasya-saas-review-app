@@ -1,7 +1,8 @@
-import React, { createRef, useState } from "react";
-import { Button, Carousel, Col, Input, Radio, Row, Slider, Space } from "antd";
+import React, { useState } from "react";
+import { Col, Input, Radio, Row, Slider } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import Link from "next/link";
+import { LikeOutlined, DislikeOutlined } from "@ant-design/icons";
 
 export function FormSlideComponent({
   type,
@@ -85,6 +86,7 @@ export function FormSlideComponent({
                 {type === "textarea" ? (
                   <div className="my-5 md:w-96 ">
                     <TextArea
+                      size="large"
                       fullWidth={true}
                       placeholder={type == "textarea" ? "Long Text" : ""}
                       rows={1}
@@ -122,10 +124,23 @@ export function FormSlideComponent({
                     ) : null}
                   </div>
                 )}
+                {type === "yesno" ? (
+                  <div className="mt-2">
+                    <div className="flex items-center justify-center">
+                      <div className="p-10 border mx-2 rounded-sm">
+                        <LikeOutlined style={{ fontSize: "64px" }} />
+                      </div>
+                      <div className="p-10 border mx-2 rounded-sm">
+                        <DislikeOutlined style={{ fontSize: "64px" }} />
+                      </div>
+                    </div>
+                  </div>
+                ) : null}
+
                 <div className="my-5">
                   {nextSlide > 0 ? (
                     <button
-                      className="toggle-btn-bg rounded-md text-lg text-white px-14 py-2 mx-2 "
+                      className="toggle-btn-bg rounded-md text-lg text-white px-14 py-2 mx-2"
                       onClick={() => setNextSlide(nextSlide - 1)}
                     >
                       Previous
