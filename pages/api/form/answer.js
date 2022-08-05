@@ -19,12 +19,17 @@ export default async (req, res) => {
           };
         });
 
+        const userTableData = await transaction.user.findUnique({
+          where: { id: resData.user_id },
+        });
+
         const formdata = await transaction.reviewAssigneeAnswers.create({
           data: {
             user: { connect: { id: resData.user_id } },
             review: { connect: { id: resData.review_id } },
             review_assignee: { connect: { id: resData.review_assignee_id } },
             created_assignee_date: resData.created_assignee_date,
+            organization: { connect: { id: userTableData.organization_id } },
             ReviewAssigneeAnswerOption: {
               create: answerData,
             },

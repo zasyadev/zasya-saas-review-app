@@ -2,9 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   PlusOutlined,
   DownOutlined,
-  UserOutlined,
   LogoutOutlined,
-  UsergroupAddOutlined,
   UserSwitchOutlined,
   MenuUnfoldOutlined,
   MenuFoldOutlined,
@@ -45,38 +43,13 @@ function HeaderLayout({
         if (response.status === 200) {
           fetchUserData();
           openNotificationBox("success", response.message, 3);
+          router.reload();
         }
       })
       .catch((err) => {
         console.log(err);
       });
   };
-
-  // async function fetchUserData() {
-  //   await fetch("/api/organization/" + user.id, {
-  //     method: "GET",
-  //   })
-  //     .then((response) => response.json())
-  //     .then((response) => {
-  //       if (response.status === 200) {
-  //         setUserOrganizationData({
-  //           orgId: response?.data?.organization?.company_name,
-  //           roleId:
-  //             response?.data?.roleData?.role_id === 2
-  //               ? "Admin"
-  //               : response?.data?.roleData?.role_id === 3
-  //               ? "Manager"
-  //               : response?.data?.roleData?.role_id === 4
-  //               ? "Member"
-  //               : null,
-  //           role: response?.data?.roleData?.role_id,
-  //         });
-  //       }
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // }
 
   useEffect(() => {
     if (user) {
@@ -86,13 +59,25 @@ function HeaderLayout({
 
   const userMenu = (
     <Menu>
-      <div className="flex my-2 " key={"accountName"}>
-        <div className="flex ml-6 mr-2">
-          <Image src={User} alt="user" width={40} height={30} />
+      <div className="flex my-2 mx-2" key={"accountName"}>
+        <div className="flex mx-2 px-2">
+          <div className="rounded-full">
+            <Image
+              src={
+                userOrganizationData?.userImage
+                  ? "/media/profile/" + userOrganizationData?.userImage
+                  : User
+              }
+              alt="userImage"
+              width={40}
+              height={40}
+              className="rounded-full"
+            />
+          </div>
         </div>
         <span>
           <div className="span-text font-semibold">{user.first_name}</div>
-          {/* <div>{user.role_id === 2 ? "Admin" : "Member"}</div> */}
+
           <div className="span-text">{userOrganizationData?.roleId}</div>
         </span>
       </div>
@@ -100,7 +85,7 @@ function HeaderLayout({
       <Menu.Item key={"account"}>
         <Link href="/profile">
           <div className="flex items-center">
-            <UserOutlined /> <span className="span-text">My Account</span>
+            <span className="span-text">My Account</span>
           </div>
         </Link>
       </Menu.Item>

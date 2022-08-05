@@ -12,6 +12,11 @@ export default async (req, res) => {
           include: {
             // UserTags: true,
             organization: true,
+            UserDetails: {
+              select: {
+                image: true,
+              },
+            },
           },
         });
 
@@ -55,6 +60,7 @@ export default async (req, res) => {
       });
     }
   } catch (error) {
+    console.log(error);
     return res
       .status(500)
       .json({ error: error, message: "Internal Server Error" });

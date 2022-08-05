@@ -16,7 +16,12 @@ function AllAplaud({ user }) {
         .then((response) => response.json())
         .then((response) => {
           if (response.status === 200) {
-            setAllApplaud(response.data);
+            let data = response?.data?.sort(
+              (a, b) =>
+                b[Object.keys(b)]?.taken?.length -
+                a[Object.keys(a)]?.taken?.length
+            );
+            setAllApplaud(data);
           }
         })
 
@@ -44,7 +49,17 @@ function AllAplaud({ user }) {
                         <Row justify="center">
                           <Col xs={10} md={10}>
                             <div className=" flex justify-center">
-                              <Image src={User1} alt="user" />
+                              <Image
+                                src={
+                                  value?.image
+                                    ? "/media/profile/" + value?.image
+                                    : User1
+                                }
+                                alt="userImage"
+                                width={80}
+                                height={80}
+                                className="rounded-full"
+                              />
                             </div>
                           </Col>
 
