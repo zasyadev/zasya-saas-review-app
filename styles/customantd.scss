@@ -271,14 +271,7 @@
 .sider {
   color: #fff;
   background-color: #0f123f;
-  // max-width: 270px !important;
-  // min-width: 270px !important;
-  // width: 270px !important;
-  // @include mobile {
-  //   max-width: auto !important;
-  //   min-width: auto !important;
-  //   width: auto !important;
-  // }
+
   @include mobile {
     position: fixed;
     z-index: 99;
@@ -331,7 +324,6 @@
   .ant-form {
     .ant-form-item-control {
       .ant-input-lg {
-        // height: 44px;
         font-size: 14px;
         padding: 7.5px 11px;
       }
@@ -344,22 +336,18 @@
     .select-tag {
       .ant-select-selector {
         .ant-select-selection-item {
-          // padding: 0px 0px !important;
         }
       }
     }
     .ant-select-selector {
-      // min-height: 44px;
       font-size: 14px;
     }
     #user_id {
       height: 44px;
     }
     .ant-select-selection-item {
-      // padding: 5px 0px;
     }
     .ant-select-selection-placeholder {
-      // padding: 5px 0px;
     }
   }
   .ant-select-focused:not(.ant-select-disabled).ant-select:not(.ant-select-customize-input)
@@ -409,10 +397,7 @@
   .ant-radio-inner::after {
     background-color: #0f123f;
   }
-  // .ant-select-focused:not(.ant-select-disabled).ant-select:not(.ant-select-customize-input)
-  //   .ant-select-selector {
-  //   border-color: #0f123f !important;
-  // }
+
   .question-edit-view {
     border-bottom: 1px solid #e3e3e3;
     span {
@@ -652,77 +637,6 @@
   border-color: #0f123f !important;
 }
 
-// .add-review-from {
-//   .ant-form-item-control {
-//     .ant-input {
-//       height: 44px;
-//     }
-//   }
-//   .ant-select-selection-placeholder {
-//     padding: 5px 0px !important
-//     ;
-//   }
-//   .select-tag {
-//     .ant-select-selector {
-//       .ant-select-selection-item {
-//         padding: 0px 0px !important;
-//       }
-//     }
-//   }
-
-//   .ant-form-item-control-input {
-//     .ant-select-selector {
-//       height: 44px;
-//       border-color: #d9d9d9;
-//       box-shadow: 0 0 0 0px rgba(24, 144, 255, 0.2) !important;
-//     }
-//     #template_id {
-//       height: 44px;
-//     }
-//     .ant-select-selection-item {
-//       padding: 5px 0px;
-//     }
-//   }
-//   .ant-checkbox-wrapper:focus,
-//   .ant-checkbox-wrapper:hover {
-//     .ant-checkbox-inner {
-//       border-color: #0f123f;
-//     }
-//   }
-//   .ant-checkbox-checked {
-//     .ant-checkbox-inner {
-//       background-color: #0f123f;
-//       border-color: #0f123f;
-//       box-shadow: 0 0 0 1.5px rgba(0, 5, 204, 0.35) !important;
-//     }
-//   }
-//   .ant-radio:focus,
-//   .ant-radio:hover {
-//     .ant-radio-inner {
-//       border-color: #0f123f !important;
-//     }
-//   }
-
-//   .ant-radio-wrapper:focus,
-//   .ant-radio-wrapper:hover {
-//     .ant-checkbox-inner {
-//       border-color: #0f123f;
-//     }
-//   }
-//   .ant-radio-checked {
-//     .ant-radio-inner {
-//       border-color: #0f123f;
-//     }
-//   }
-//   .ant-radio-inner::after {
-//     background-color: #0f123f;
-//   }
-//   .ant-select-focused:not(.ant-select-disabled).ant-select:not(.ant-select-customize-input)
-//     .ant-select-selector {
-//     border-color: #0f123f !important;
-//   }
-// }
-
 .bg-delete-icon {
   background-color: #ff6968;
 }
@@ -804,10 +718,6 @@
     padding: 0 !important;
   }
 }
-// .template-title {
-//   font-size: 1.5rem !important;
-//   line-height: 2rem !important;
-// }
 
 .full-width-label {
   .ant-form-item-label label {
@@ -822,11 +732,9 @@
 
 .answer-bg {
   background-image: url("../assets/images/answerbg.png");
-  background-repeat: no-repeat;
+  background-repeat: repeat;
   background-size: cover;
-  background-position: center;
-  opacity: 1;
-  height: 100vh;
+  min-height: 100vh;
 }
 
 .create-header-button {
@@ -969,4 +877,25 @@
 }
 .ant-layout-sider-zero-width-trigger-left {
   display: none;
+}
+
+.answer-radio-button {
+  background: #ffffff;
+  border: 1px solid #d0d0d0;
+  border-radius: 5px;
+}
+.answer-radio-button:hover {
+  background-color: #0f123f;
+  color: #fff;
+}
+.ant-radio-button-wrapper-checked {
+  background-color: #0f123f !important;
+  color: #fff !important;
+  border-color: #0f123f !important;
+}
+
+.answer-preview {
+  .ant-radio-button-wrapper {
+    height: 100%;
+  }
 }

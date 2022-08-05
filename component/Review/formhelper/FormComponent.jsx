@@ -1,313 +1,292 @@
 import React, { useState } from "react";
-import { Col, Input, Radio, Row, Slider } from "antd";
+import { Col, Form, Input, Radio, Row, Slider } from "antd";
 import TextArea from "antd/lib/input/TextArea";
-import Link from "next/link";
 import { LikeOutlined, DislikeOutlined } from "@ant-design/icons";
+import { openNotificationBox } from "../../../helpers/notification";
 
 export function FormSlideComponent({
   type,
-  idx,
   id,
   questionText,
   options,
   handleAnswerChange,
-  lowerLabel,
-  higherLabel,
   error = "",
   nextSlide,
   setNextSlide,
   length,
   handleSubmit,
 }) {
-  const [sliderInputValue, setSliderInputValue] = useState(0);
+  const [sliderInputValue, setSliderInputValue] = useState({
+    [id]: 0,
+  });
+  const [inputLimit, setInputLimit] = useState({
+    [id]: 0,
+  });
+  const [disable, setDisable] = useState({
+    [id]: false,
+  });
+
+  const answerHandle = (queId, value) => {
+    if ((value, value.trim())) {
+      setDisable((prev) => ({ ...prev, [`${queId}`]: true }));
+    } else {
+      setDisable((prev) => ({ ...prev, [`${queId}`]: false }));
+    }
+  };
+  const handleSliderInput = (queId, value) => {
+    if (value) {
+      setSliderInputValue((prev) => ({ ...prev, [`${queId}`]: value }));
+    } else {
+      setSliderInputValue((prev) => ({ ...prev, [`${queId}`]: 0 }));
+    }
+  };
+  const handleInputLimit = (queId, value) => {
+    if (value) {
+      setInputLimit((prev) => ({ ...prev, [`${queId}`]: 180 - value.length }));
+    } else {
+      setInputLimit((prev) => ({ ...prev, [`${queId}`]: 0 }));
+    }
+    if (type === "input" && value.length > 179) {
+      openNotificationBox(
+        "error",
+        "You can't write more than 180 character",
+        3
+      );
+    }
+  };
 
   return (
-    <>
-      <div className="h-full w-full">
-        <Row>
-          <Col xs={24} md={24} className="text-right">
-            <Link href="/review/received">
-              <button className="primary-bg-btn text-white py-2 px-4 rounded-md">
-                Back
-              </button>
-            </Link>
-          </Col>
-          <Col xs={24} md={24}>
-            <div className="text-center answer-preview">
-              <div className="flex flex-col items-center justify-center text-center mt-5">
-                <p className="text-lg font-bold text-red-400 my-5">
-                  {`Question ${nextSlide + 1}`}
-                </p>
-                <p className="text-2xl font-bold primary-color-blue my-5">
-                  {questionText}
-                </p>
+    <div className="answer-preview">
+      <div className=" text-center bg-white rounded-xl py-10 shadow-md md:w-7/12 mx-auto">
+        <p className="text-lg font-bold text-red-400 mt-5">
+          {`Question ${nextSlide + 1}`}
+        </p>
+        <p className="text-2xl font-bold primary-color-blue mt-5">
+          {questionText}
+        </p>
 
-                {options?.length > 0 && type === "checkbox" && (
-                  <Radio.Group
-                    className="radio-button "
-                    onChange={(e) => handleAnswerChange(id, e.target.value)}
-                    required={true}
-                    size="large"
-                  >
-                    {/* <Space direction="vertical"> */}
-                    <Row justify="center">
-                      {options?.map((op, j) => (
-                        <>
-                          <Col md={8}>
-                            <p className="my-2">
-                              <Radio.Button
-                                size="large"
-                                className="text-left"
-                                value={op.optionText}
-                              >
-                                {op.optionText}
-                              </Radio.Button>
-                            </p>
-                          </Col>
-                        </>
-                      ))}
-                    </Row>
-                    {/* </Space> */}
-                  </Radio.Group>
-                )}
+        {options?.length > 0 && type === "checkbox" && (
+          <div className="my-10 mx-2 md:mx-10">
+            <Form.Item
+              name={"ques" + id}
+              rules={[
+                {
+                  required: true,
+                  message: "",
+                },
+              ]}
+              className="w-full h-full"
+            >
+              <Radio.Group
+                onChange={(e) => {
+                  handleAnswerChange(id, e.target.value, "input_box");
 
-                {type == "input" ? (
-                  <div className="my-5 md:w-96 ">
-                    <Input
-                      size="large"
-                      fullWidth={true}
-                      placeholder={type == "input" ? "Short Text" : ""}
-                      rows={1}
-                      onChange={(e) => handleAnswerChange(id, e.target.value)}
-                    />
-                  </div>
-                ) : null}
-
-                {type === "textarea" ? (
-                  <div className="my-5 md:w-96 ">
-                    <TextArea
-                      size="large"
-                      fullWidth={true}
-                      placeholder={type == "textarea" ? "Long Text" : ""}
-                      rows={1}
-                      onChange={(e) => handleAnswerChange(id, e.target.value)}
-                    />
-                  </div>
-                ) : null}
-
-                {type === "scale" && options?.length > 1 && (
-                  <div className=" text-left md:w-96">
-                    <div className="flex w-full justify-center items-center">
-                      <p>{options[0]?.optionText}</p>
-                      <p className="w-full text-center mx-2 md:ml-4">
-                        <Slider
-                          className="rating-slider"
-                          min={Number(options[0]?.lowerLabel)}
-                          max={Number(options[0]?.higherLabel)}
-                          step={1}
-                          onChange={(e) => {
-                            handleAnswerChange(id, e.toString());
-                            setSliderInputValue(e);
-                          }}
-                          // value={typeof inputValue === "number" ? inputValue : 0}
-                        />
-                      </p>
-
-                      <p className="rounded-full bg-violet-400 text-white text-center mr-2 md:mr-3  py-1 md:py-2 px-1 md:px-3">
-                        {sliderInputValue}
-                      </p>
-
-                      <p>{options[1]?.optionText}</p>
-                    </div>
-                    {error ? (
-                      <p className="text-red-600 text-sm my-2">{error}</p>
-                    ) : null}
-                  </div>
-                )}
-                {type === "yesno" ? (
-                  <div className="mt-2">
-                    <div className="flex items-center justify-center">
-                      <div className="p-10 border mx-2 rounded-sm">
-                        <LikeOutlined style={{ fontSize: "64px" }} />
-                      </div>
-                      <div className="p-10 border mx-2 rounded-sm">
-                        <DislikeOutlined style={{ fontSize: "64px" }} />
-                      </div>
-                    </div>
-                  </div>
-                ) : null}
-
-                <div className="my-5">
-                  {nextSlide > 0 ? (
-                    <button
-                      className="toggle-btn-bg rounded-md text-lg text-white px-14 py-2 mx-2"
-                      onClick={() => setNextSlide(nextSlide - 1)}
-                    >
-                      Previous
-                    </button>
-                  ) : (
-                    ""
-                  )}
-
-                  {length - 1 === nextSlide ? (
-                    <button
-                      className="toggle-btn-bg rounded-md text-lg text-white px-10 py-2 mx-2 my-2 "
-                      onClick={() => handleSubmit()}
-                    >
-                      Submit
-                    </button>
-                  ) : (
-                    <button
-                      className="toggle-btn-bg rounded-md text-lg text-white px-14 py-2 mx-2 my-2 "
-                      onClick={() => setNextSlide(nextSlide + 1)}
-                    >
-                      Next
-                    </button>
-                  )}
-                  {/* <button
-                      className="toggle-btn-bg rounded-md text-lg text-white px-14 py-2 mx-2 "
-                      onClick={() => setNextSlide(nextSlide + 1)}
-                    >
-                      Next
-                    </button> */}
-                </div>
-              </div>
-            </div>
-          </Col>
-        </Row>
-      </div>
-    </>
-  );
-}
-
-export function InputComponent() {
-  return (
-    <>
-      <div className="">
-        <div className="answer-bg h-full w-full">
-          <div className="text-center">
-            <div className="text-center">
-              <div className="py-24 flex flex-col items-center justify-center text-center">
-                <p className="text-xl font-bold my-5 text-red-400">
-                  Question 1
-                </p>
-                <p className="text-2xl font-bold primary-color-blue my-5">
-                  What do you feel about your current work environment?
-                </p>
-                <div className="my-5 w-96">
-                  <Input size="large" />
-                </div>
-                <div className="my-5">
-                  <button className="toggle-btn-bg rounded-md text-lg text-white px-14 py-2 ">
-                    Next
-                  </button>
-                </div>
-              </div>
-            </div>
+                  answerHandle(id, e.target.value);
+                }}
+                className="w-full h-full "
+                required={true}
+                size="large"
+              >
+                <Row gutter={[32, 32]} justify="center">
+                  {options?.map((op, j) => {
+                    return (
+                      <Col xs={24} md={12} lg={8}>
+                        <Radio.Button
+                          className="text-center answer-radio-button w-full flex items-center justify-center"
+                          value={op.optionText}
+                        >
+                          {op.optionText}
+                        </Radio.Button>
+                      </Col>
+                    );
+                  })}
+                </Row>
+              </Radio.Group>
+            </Form.Item>
           </div>
-        </div>
-      </div>
-    </>
-  );
-}
-
-export function OptionComponent() {
-  return (
-    <>
-      <div className="">
-        <div className="answer-bg h-full w-full">
-          <div className="text-center  ">
-            <div className="py-24 flex flex-col items-center justify-center">
-              <p className="text-xl font-bold my-5 text-red-400">Question 1</p>
-              <p className="text-2xl font-bold primary-color-blue my-5">
-                Option to select feedback or create new template
-              </p>
-              <div className="text-left ">
-                <Radio.Group>
-                  <Radio value={1} className="text-lg primary-color-blue my-2">
-                    Feedback
-                  </Radio>
-                  <br />
-                  <Radio value={2} className="text-lg primary-color-blue my-2">
-                    Create
-                  </Radio>
-                  <br />
-                  <Radio value={3} className="text-lg primary-color-blue my-2">
-                    Template
-                  </Radio>
-                  <br />
-                  <Radio value={4} className="text-lg primary-color-blue my-2">
-                    Option
-                  </Radio>
-                </Radio.Group>
-              </div>
-              <div className="my-5">
-                <button className="toggle-btn-bg rounded-md text-lg text-white px-14 py-2 ">
-                  Next
-                </button>
-              </div>
+        )}
+        {type == "input" && (
+          <>
+            <div className="text-right mr-3 text-sm md:text-base primary-color-blue mt-6">
+              Text Limit
+              <span className="text-sm md:text-base font-semibold mx-2 ">
+                {inputLimit[id] ?? 180}
+              </span>
             </div>
-          </div>
-        </div>
-      </div>
-    </>
-  );
-}
-
-export function TextAreaComponent() {
-  return (
-    <>
-      <div className="">
-        <div className="answer-bg h-full w-full">
-          <div className="text-center  ">
-            <div className="py-24 flex flex-col items-center justify-center">
-              <p className="text-xl font-bold my-5 text-red-400">Question 3</p>
-              <p className="text-2xl font-bold primary-color-blue my-5">
-                Textarea to select feedback or create new template
-              </p>
-              <div className=" text-left w-96">
-                <TextArea rows={4} />
-              </div>
-              <div className="my-5">
-                <button className="toggle-btn-bg rounded-md text-lg text-white px-14 py-2 ">
-                  Next
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </>
-  );
-}
-
-export function SliderComponent() {
-  return (
-    <>
-      <div className="">
-        <div className="answer-bg h-full w-full">
-          <div className="text-center  ">
-            <div className="py-24 flex flex-col items-center justify-center">
-              <p className="text-xl font-bold my-5 text-red-400">Question 4</p>
-              <p className="text-2xl font-bold primary-color-blue my-5">
-                Rating
-              </p>
-              <div className=" text-left w-96">
-                <Slider
-                  className="rating-slider-a"
-
-                  // value={typeof inputValue === "number" ? inputValue : 0}
+            <div className="mt-2 md:my-6 md:mx-8 mx-2 ">
+              <Form.Item
+                name={"ques" + id}
+                // rules={[
+                //   {
+                //     required: true,
+                //     message: "",
+                //   },
+                // ]}
+              >
+                <Input
+                  size="large"
+                  placeholder={type == "input" ? "Short Text" : ""}
+                  onChange={(e) => {
+                    answerHandle(id, e.target.value);
+                    handleAnswerChange(id, e.target.value);
+                    handleInputLimit(id, e.target.value);
+                  }}
+                  maxLength={180}
                 />
-              </div>
-              <div className="my-5">
-                <button className="toggle-btn-bg rounded-md text-lg text-white px-14 py-2 ">
-                  Next
-                </button>
-              </div>
+              </Form.Item>
             </div>
+          </>
+        )}
+
+        {type === "textarea" && (
+          <div className="my-10 md:mx-8 mx-2 ">
+            <Form.Item
+              name={"ques" + id}
+              rules={[
+                {
+                  required: true,
+                  message: "",
+                },
+              ]}
+            >
+              <TextArea
+                size="large"
+                fullWidth={true}
+                placeholder={type == "textarea" ? "Long Text" : ""}
+                rows={1}
+                onChange={(e) => {
+                  handleAnswerChange(id, e.target.value);
+                  answerHandle(id, e.target.value);
+                }}
+              />
+            </Form.Item>
+          </div>
+        )}
+
+        {type === "scale" && options?.length > 1 && (
+          <div className=" text-left  my-10 md:mx-8 mx-2">
+            <div className="flex w-full justify-center items-center">
+              <p>{options[0]?.optionText}</p>
+              <p className="w-full text-center mx-2 md:ml-4">
+                <Form.Item
+                  name={"ques" + id}
+                  rules={[
+                    {
+                      required: true,
+                      message: "",
+                    },
+                  ]}
+                >
+                  <Slider
+                    className="rating-slider"
+                    min={Number(options[0]?.lowerLabel)}
+                    max={Number(options[0]?.higherLabel)}
+                    step={1}
+                    onChange={(e) => {
+                      handleAnswerChange(id, e.toString());
+
+                      handleSliderInput(id, e);
+                      answerHandle(id, e.toString());
+                    }}
+                  />
+                </Form.Item>
+              </p>
+
+              <p className="rounded-full bg-violet-400 text-white text-center mr-2 md:mr-3  py-1 md:py-2 px-1 md:px-3">
+                {sliderInputValue[id] ?? 0}
+              </p>
+
+              <p>{options[1]?.optionText}</p>
+            </div>
+            {error ? (
+              <p className="text-red-600 text-sm my-2">{error}</p>
+            ) : null}
+          </div>
+        )}
+        {type === "yesno" && (
+          <div className="my-10">
+            <Form.Item
+              name={"ques" + id}
+              rules={[
+                {
+                  required: true,
+                  message: "",
+                },
+              ]}
+              className="w-full"
+            >
+              <Radio.Group
+                onChange={(e) => {
+                  handleAnswerChange(id, e.target.value);
+                  answerHandle(id, e.target.value);
+                }}
+                size="large"
+                className="w-full  "
+              >
+                {" "}
+                <Row gutter={[32, 32]} justify="center">
+                  <Col>
+                    <Radio.Button
+                      // className="rounded-sm cursor-pointer m-8 "
+                      value={"yes"}
+                      size="large"
+                      className="text-center cursor-pointer answer-radio-button  "
+                    >
+                      <LikeOutlined style={{ fontSize: "34px" }} />
+                    </Radio.Button>
+                  </Col>
+                  <Col>
+                    <Radio.Button
+                      // className=" rounded-sm cursor-pointer"
+                      size="large"
+                      className="text-center cursor-pointer answer-radio-button  "
+                      value={"no"}
+                    >
+                      <DislikeOutlined style={{ fontSize: "34px" }} />
+                    </Radio.Button>
+                  </Col>
+                </Row>
+              </Radio.Group>
+            </Form.Item>
+          </div>
+        )}
+
+        <div className="flex items-center justify-center px-3">
+          {nextSlide > 0 && (
+            <div className="md:w-1/4 w-1/2 mx-2 ">
+              <button
+                className="primary-bg-btn rounded-md text-lg text-white py-2  w-full"
+                onClick={() => setNextSlide(nextSlide - 1)}
+              >
+                Previous
+              </button>
+            </div>
+          )}
+
+          <div className="md:w-1/4 w-1/2 mx-2">
+            {length - 1 === nextSlide ? (
+              <button
+                className="toggle-btn-bg rounded-md text-lg text-white py-2   w-full"
+                onClick={() => {
+                  handleSubmit();
+                }}
+              >
+                Submit
+              </button>
+            ) : (
+              <button
+                className="toggle-btn-bg rounded-md text-lg text-white py-2    w-full "
+                onClick={() => {
+                  setNextSlide(nextSlide + 1);
+                }}
+                disabled={!disable[id]}
+              >
+                Next
+              </button>
+            )}
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }

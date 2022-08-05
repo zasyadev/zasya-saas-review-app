@@ -9,10 +9,8 @@ function ReceivedPage({ user }) {
   const router = useRouter();
   const { review_id } = router.query;
   return (
-    // <AdminLayout user={user} title={"Review"}>
     <>
       <HeadersComponent />
-
       <ReceivedReviewComponent user={user} reviewId={review_id} />
     </>
   );
