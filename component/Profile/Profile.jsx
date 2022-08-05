@@ -8,6 +8,8 @@ import userImage from "../../assets/images/User1.png";
 import { ShareIcon } from "../../assets/Icon/icons";
 import { PlusOutlined } from "@ant-design/icons";
 import moment from "moment";
+import Link from "next/link";
+
 const datePattern = "DD/MM/YYYY";
 const BASE = process.env.NEXT_PUBLIC_APP_URL;
 
