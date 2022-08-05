@@ -52,7 +52,7 @@ function AllAplaud({ user }) {
                               <Image
                                 src={
                                   value?.image
-                                    ? "/media/profile/" + value?.image
+                                    ? "/static/media/profile/" + value?.image
                                     : User1
                                 }
                                 alt="userImage"

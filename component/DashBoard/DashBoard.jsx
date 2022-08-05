@@ -346,7 +346,7 @@ function DashBoard({ user }) {
                                           <Image
                                             src={
                                               value?.image
-                                                ? "/media/profile/" +
+                                                ? "/static/media/profile/" +
                                                   value?.image
                                                 : User1
                                             }

@@ -458,7 +458,7 @@ function Profile({ user }) {
                         <Image
                           src={
                             userDetails?.image
-                              ? "/media/profile/" + userDetails?.image
+                              ? "/static/media/profile/" + userDetails?.image
                               : userImage
                           }
                           alt="userImage"
@@ -556,7 +556,7 @@ function Profile({ user }) {
                                   <Image
                                     src={
                                       item?.created?.UserDetails?.image
-                                        ? "/media/profile/" +
+                                        ? "/static/media/profile/" +
                                           item?.created?.UserDetails?.image
                                         : userImage
                                     }
