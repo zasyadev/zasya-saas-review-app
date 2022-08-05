@@ -158,7 +158,6 @@ export default async (req, res) => {
       return res.status(404).json({ status: 404, message: "No Record Found" });
     }
   } catch (error) {
-    console.log(error);
     res.status(500).json({
       status: 500,
       error: error,

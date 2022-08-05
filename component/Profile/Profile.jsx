@@ -442,7 +442,11 @@ function Profile({ user }) {
             <Col md={24} xs={24}>
               <div className="bg-white rounded-sm transition-all duration-300 ease-in-out shadow-md ">
                 <div>
-                  <Image src={profileCover} alt="profileCover" />
+                  <Image
+                    src={profileCover}
+                    alt="profileCover"
+                    layout="responsive"
+                  />
                 </div>
 
                 <div className=" block md:flex justify-end items-center">
@@ -521,7 +525,13 @@ function Profile({ user }) {
                   </div>
                   <div className="m-2">
                     <p className="text-base font-semibold">Website</p>
-                    <p className="text-base font-normal">zasyasolutions.com/</p>
+                    <Link href="https://zasyasolutions.com/" passHref>
+                      <a target="_blank">
+                        <p className="text-base font-normal">
+                          https://zasyasolutions.com
+                        </p>
+                      </a>
+                    </Link>
                   </div>
                 </div>
               </div>

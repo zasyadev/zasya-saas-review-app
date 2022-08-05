@@ -317,7 +317,7 @@ function TemplateBuildComponent({
 
                                 <span className=" px-2 py-1 ">
                                   <span className="">
-                                    <p>{question?.questionText}</p>
+                                    {question?.questionText}
                                   </span>
                                 </span>
                               </div>

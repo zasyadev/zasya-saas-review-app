@@ -61,7 +61,7 @@ const QuestionComponent = ({
                 <TextIcon />
               </div>
               <div>
-                <p>Text</p>
+                <p className="mb-0">Text</p>
               </div>
             </div>
           </Col>
@@ -76,7 +76,7 @@ const QuestionComponent = ({
               <div className=" mr-3">
                 <TextIcon />
               </div>
-              <p>Paragraph</p>
+              <p className="mb-0">Paragraph</p>
             </div>
           </Col>
           <Col md={8} xs={12}>
@@ -91,7 +91,7 @@ const QuestionComponent = ({
                 <CheckboxIcon />
               </div>
               <div>
-                <p>CheckBox </p>
+                <p className="mb-0">CheckBox </p>
               </div>
             </div>
           </Col>
@@ -107,7 +107,7 @@ const QuestionComponent = ({
                 <ScaleIcon />
               </div>
               <div>
-                <p>Scale </p>
+                <p className="mb-0">Scale </p>
               </div>
             </div>
           </Col>
@@ -119,15 +119,15 @@ const QuestionComponent = ({
                 setSelectTypeFeild(false);
               }}
             >
-              <div className=" mr-3">
+              <div className="mb-0 mr-3">
                 <p>
                   <LikeIcon />
                 </p>
-                <p className="mt-1">
+                <p className="mt-1 mb-0">
                   <DislikeIcon />
                 </p>
               </div>
-              <p>Yes or No</p>
+              <p className="mb-0">Yes or No</p>
             </div>
           </Col>
         </Row>

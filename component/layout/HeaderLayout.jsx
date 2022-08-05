@@ -183,44 +183,49 @@ function HeaderLayout({
             </Dropdown>
           </div>
         </Col>
-        <Col md={6} lg={5} xs={5} className="pr-3 flex items-center">
-          <div className="w-full user-menu-wrapper cursor-pointer rounded-md py-1 md:py-1 px-2 ">
-            <Dropdown
-              trigger={"click"}
-              overlay={userMenu}
-              overlayClassName="logout-dropdown "
-              placement="bottomRight"
-            >
-              <div>
-                <div className="flex items-center">
-                  <div className="pr-2">
-                    <Avatar
-                      style={{ color: "#f56a00", backgroundColor: "#fde3cf" }}
-                      alt="C"
-                    >
-                      {userOrganizationData?.orgId
-                        ? userOrganizationData?.orgId.substring(0, 1)
-                        : null}
-                    </Avatar>
-                  </div>
-                  <div className="my-auto">
-                    <p className="user-deatils whitespace-nowrap hidden md:block">
-                      {userOrganizationData?.orgId}
-                    </p>
+        <Col md={6} lg={5} xs={5} className="pr-3 ">
+          <div className="flex items-center">
+            <div className="w-full user-menu-wrapper cursor-pointer rounded-md py-1 md:py-1 px-2 ">
+              <Dropdown
+                trigger={"click"}
+                overlay={userMenu}
+                overlayClassName="logout-dropdown "
+                placement="bottomRight"
+              >
+                <div>
+                  <div className="flex items-center">
+                    <div className="pr-2">
+                      <Avatar
+                        style={{ color: "#f56a00", backgroundColor: "#fde3cf" }}
+                        alt="C"
+                      >
+                        {userOrganizationData?.orgId
+                          ? userOrganizationData?.orgId.substring(0, 1)
+                          : null}
+                      </Avatar>
+                    </div>
+                    <div className="md:mt-3">
+                      <p className="user-deatils whitespace-nowrap hidden md:block">
+                        {userOrganizationData?.orgId}
+                      </p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </Dropdown>
-          </div>
-          {!md ? (
-            <div onClick={() => setCollapsed(!collapsed)} className="pr-2 pl-1">
-              {collapsed ? (
-                <MenuUnfoldOutlined className="text-base" />
-              ) : (
-                <MenuFoldOutlined className="text-base" />
-              )}
+              </Dropdown>
             </div>
-          ) : null}
+            {!md ? (
+              <div
+                onClick={() => setCollapsed(!collapsed)}
+                className="pr-2 pl-1"
+              >
+                {collapsed ? (
+                  <MenuUnfoldOutlined className="text-base" />
+                ) : (
+                  <MenuFoldOutlined className="text-base" />
+                )}
+              </div>
+            ) : null}
+          </div>
         </Col>
       </Row>
     </Header>

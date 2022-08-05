@@ -301,6 +301,7 @@ function AddEditReviewComponent({ editMode, user }) {
                                       .toLowerCase()
                                       .indexOf(input.toLowerCase()) >= 0
                                   }
+                                  size="large"
                                   onChange={(e) =>
                                     onInputChange(e, "template_id")
                                   }
@@ -367,6 +368,7 @@ function AddEditReviewComponent({ editMode, user }) {
                                   onChange={(e) =>
                                     onInputChange(e, "frequency")
                                   }
+                                  size="large"
                                 >
                                   <Select.Option value="once">
                                     Once
@@ -429,6 +431,7 @@ function AddEditReviewComponent({ editMode, user }) {
                                   onChange={(e) =>
                                     onInputChange(e, "assigned_to_id")
                                   }
+                                  size="large"
                                 >
                                   <Select.Option key="all" value="all">
                                     ---SELECT ALL---
