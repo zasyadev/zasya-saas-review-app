@@ -60,7 +60,7 @@ export default async (req, res) => {
                 };
                 if (reqBody.imageName) {
                   if (userDetailData.image) {
-                    let path = `./public/media/profile/${userDetailData.image}`;
+                    let path = `./public/static/media/profile/${userDetailData.image}`;
 
                     fs.unlink(path, (err) => {
                       if (err) {

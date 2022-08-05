@@ -3,7 +3,7 @@ import multer from "multer";
 
 let storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "./public/media/profile");
+    cb(null, "./public/static/media/profile");
   },
   filename: (req, file, cb) => {
     cb(null, Date.now() + ".png");

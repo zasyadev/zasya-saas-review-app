@@ -119,8 +119,8 @@ const QuestionComponent = ({
                 setSelectTypeFeild(false);
               }}
             >
-              <div className="mb-0 mr-3">
-                <p>
+              <div className=" mr-3">
+                <p className="mb-0">
                   <LikeIcon />
                 </p>
                 <p className="mt-1 mb-0">
