@@ -35,13 +35,15 @@ model User {
   ReviewTemplate          ReviewTemplate[]
   ReviewAssigneeAnswers   ReviewAssigneeAnswers[]
   UserImage               UserImage?
-  PasswordReset           PasswordReset?
+  userEmail               PasswordReset?            @relation("userEmail")
+  createdBy               PasswordReset[]           @relation("createdBy")
   userCreated             UserApplaud[]             @relation("userCreated")
   userFeild               UserApplaud[]             @relation("userFeild")
   ReviewAssignee          ReviewAssignee[]
   UserOraganizationGroups UserOraganizationGroups[]
 
   UserOraganizationTags UserOraganizationTags[]
+  UserDetails           UserDetails?
   @@map("users")
 }
 
@@ -177,6 +179,8 @@ model ReviewAssigneeAnswers {
   review_id                  String
   review_assignee            ReviewAssignee               @relation(fields: [review_assignee_id], references: [id], onDelete: Cascade)
   review_assignee_id         String
+  organization               UserOrganization?            @relation(fields: [organization_id], references: [id])
+  organization_id            Int?
   created_date               DateTime                     @default(now())
   modified_date              DateTime                     @default(now())
   created_assignee_date      DateTime?
@@ -230,6 +234,7 @@ model UserOrganization {
 
   UserApplaud           UserApplaud[]
   UserOraganizationTags UserOraganizationTags[]
+  ReviewAssigneeAnswers ReviewAssigneeAnswers[]
   @@map("user_organization")
 }
 
@@ -246,8 +251,10 @@ model UserImage {
 
 model PasswordReset {
   id            Int      @id @default(autoincrement())
-  email         User     @relation(fields: [email_id], references: [email])
+  email         User     @relation("userEmail", fields: [email_id], references: [email])
   email_id      String   @unique
+  created_by    User?    @relation("createdBy", fields: [created_by_id], references: [id])
+  created_by_id String?
   token         String?
   created_date  DateTime @default(now())
   modified_date DateTime @default(now())
@@ -306,6 +313,21 @@ model ScheduleJobs {
   status                Boolean
 
   @@map("schedule_jobs")
+}
+
+model UserDetails {
+  id      Int     @id @default(autoincrement())
+  user    User?   @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user_id String? @unique()
+  image   String?
+
+  address1 String? @db.LongText
+  address2 String? @db.LongText
+  about    String? @db.LongText
+  pin_code String? @db.VarChar(20)
+  mobile   String? @db.VarChar(15)
+
+  @@map("user_details")
 }
 
 enum RoleEnum {

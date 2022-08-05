@@ -4,7 +4,7 @@ import { Typography } from "@material-ui/core";
 // import RadioGroup from "@material-ui/core/RadioGroup";
 // import TextField from "@material-ui/core/TextField";
 import React, { useState } from "react";
-import { FrownOutlined, SmileOutlined } from "@ant-design/icons";
+import { LikeOutlined, DislikeOutlined } from "@ant-design/icons";
 // import { FormControl } from "@material-ui/core";
 
 import { Input, Slider, Space, Radio } from "antd";
@@ -86,6 +86,25 @@ const QuestionViewComponent = ({
             bordered={false}
             className="input-box"
           />
+        )}
+
+        {type === "yesno" && (
+          <div className="mt-2">
+            <div className="flex items-center justify-center">
+              <div
+                className="p-2 border mx-2 rounded-sm"
+                onClick={(e) => handleAnswerChange(id, "yes")}
+              >
+                <LikeOutlined style={{ fontSize: "18px", color: "#000" }} />
+              </div>
+              <div
+                className="p-2 border mx-2 rounded-sm"
+                onClick={(e) => handleAnswerChange(id, "no")}
+              >
+                <DislikeOutlined style={{ fontSize: "18px", color: "#000" }} />
+              </div>
+            </div>
+          </div>
         )}
 
         {type === "scale" && options?.length > 1 && (

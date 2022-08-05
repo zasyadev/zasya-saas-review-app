@@ -12,6 +12,11 @@ export default async (req, res) => {
           include: {
             // UserTags: true,
             organization: true,
+            UserDetails: {
+              select: {
+                image: true,
+              },
+            },
           },
         });
 

@@ -7,8 +7,23 @@ export default async (req, res) => {
   try {
     if (req.method === "GET") {
       if (userId) {
+        const userData = await prisma.user.findUnique({
+          where: { id: userId },
+        });
+
         const data = await prisma.reviewAssignee.findMany({
-          where: { assigned_to_id: userId },
+          where: {
+            AND: [
+              {
+                assigned_to_id: userId,
+              },
+              {
+                review: {
+                  is: { organization_id: userData.organization_id },
+                },
+              },
+            ],
+          },
           include: {
             review: {
               include: {

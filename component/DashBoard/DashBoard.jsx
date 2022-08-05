@@ -24,8 +24,10 @@ function DashBoard({ user }) {
   const [loading, setLoading] = useState(false);
   const [totalRating, setTotalRating] = useState(0);
   const [userApplaud, setUserApplaud] = useState(0);
-  const [applaudData, setApplaudData] = useState({});
-  const [sortApplaudList, setSortApplaudList] = useState({});
+  // const [applaudData, setApplaudData] = useState({});
+  // const [sortApplaudList, setSortApplaudList] = useState({});
+  const [feedbackList, setFeedbackList] = useState([]);
+  const [allApplaud, setAllApplaud] = useState([]);
 
   async function fetchDashboardData() {
     setDashboardData([]);
@@ -42,14 +44,13 @@ function DashBoard({ user }) {
           if (response.data.reviewRating.length > 0)
             ratingHandler(response.data.reviewRating);
           setDashboardData(response.data);
-          if (response?.data?.applaudData?.length > 0) {
-            // applaudcount(response.data.applaudData);
-            sortApplaud(response.data.applaudData);
-            let userCount = response.data.applaudData.filter(
-              (item) => item.user_id === user.id
-            );
-            setUserApplaud(userCount?.length);
-          }
+          // if (response?.data?.applaudData?.length > 0) {
+          //   sortApplaud(response.data.applaudData);
+          //   let userCount = response.data.applaudData.filter(
+          //     (item) => item.user_id === user.id
+          //   );
+          //   setUserApplaud(userCount?.length);
+          // }
         }
       })
       .catch((err) => {
@@ -58,21 +59,35 @@ function DashBoard({ user }) {
       });
   }
 
-  const sortApplaud = (data) => {
-    if (data.length > 0) {
-      let res = data?.reduce(function (obj, key) {
-        obj[key.user.first_name] = obj[key.user.first_name] || [];
-        obj[key.user.first_name].push(key);
-        return obj;
-      }, {});
+  async function fetchFeedbackData() {
+    setFeedbackList([]);
+    await fetch("/api/feedback/all/" + user.id, {
+      method: "GET",
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        if (response.status === 200) {
+          setFeedbackList(response.data);
+        }
+      })
+      .catch((err) => {});
+  }
 
-      setApplaudData(res);
-      const sortable = Object.fromEntries(
-        Object.entries(res).sort(([, a], [, b]) => b.length - a.length)
-      );
-      setSortApplaudList(sortable);
-    }
-  };
+  // const sortApplaud = (data) => {
+  //   if (data.length > 0) {
+  //     let res = data?.reduce(function (obj, key) {
+  //       obj[key.user.first_name] = obj[key.user.first_name] || [];
+  //       obj[key.user.first_name].push(key);
+  //       return obj;
+  //     }, {});
+
+  //     setApplaudData(res);
+  //     const sortable = Object.fromEntries(
+  //       Object.entries(res).sort(([, a], [, b]) => b.length - a.length)
+  //     );
+  //     setSortApplaudList(sortable);
+  //   }
+  // };
 
   // const applaudcount = (data) => {
   //   if (data.length > 0) {
@@ -114,8 +129,34 @@ function DashBoard({ user }) {
     setTotalRating(Number(avgRating).toFixed(2));
   };
 
+  async function fetchApplaudData() {
+    setAllApplaud([]);
+    if (user?.id) {
+      await fetch("/api/applaud/all/" + user.id, {
+        method: "GET",
+      })
+        .then((response) => response.json())
+        .then((response) => {
+          if (response.status === 200) {
+            let data = response?.data?.sort(
+              (a, b) =>
+                b[Object.keys(b)]?.taken?.length -
+                a[Object.keys(a)]?.taken?.length
+            );
+            setAllApplaud(data);
+          }
+        })
+
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }
+
   useEffect(() => {
     fetchDashboardData();
+    fetchFeedbackData();
+    fetchApplaudData();
   }, []);
 
   return (
@@ -210,42 +251,55 @@ function DashBoard({ user }) {
                     </h2>
 
                     <Row>
-                      {Object.keys(sortApplaudList).length > 0 ? (
-                        Object.entries(sortApplaudList).map(
-                          ([key, value], idx) => {
-                            if (idx <= 3) {
-                              return (
-                                <>
-                                  <Col xs={24} md={12}>
-                                    <Row className="">
-                                      <Col xs={7} md={10}>
-                                        <div className="p-2 mt-2 flex justify-center">
-                                          <Image src={User1} alt="user" />
-                                        </div>
-                                      </Col>
-
-                                      <Col xs={17} md={14}>
-                                        <div className="flex  justify-between items-center">
-                                          <div className="py-2 px-3">
-                                            <p className="mb-2 primary-color-blue font-medium text-sm">
-                                              {key}
-                                            </p>
-                                            <p className="flex">
-                                              <ApplaudIconSmall />
-                                              <span className="pl-2 text-sm font-medium text-gray-500">
-                                                {value.length}
-                                              </span>
-                                            </p>
+                      {allApplaud.length > 0 ? (
+                        allApplaud.map((item, idx) => {
+                          if (idx <= 3) {
+                            return (
+                              <>
+                                {Object.entries(item).map(([key, value]) => {
+                                  return (
+                                    <Col xs={24} md={12} key={"applaud" + idx}>
+                                      <Row className="">
+                                        <Col xs={7} md={10}>
+                                          <div className="p-2 mt-2 flex justify-center">
+                                            <Image
+                                              src={
+                                                value?.image
+                                                  ? "/media/profile/" +
+                                                    value?.image
+                                                  : User1
+                                              }
+                                              alt="userImage"
+                                              width={60}
+                                              height={60}
+                                              className="rounded-full"
+                                            />
                                           </div>
-                                        </div>
-                                      </Col>
-                                    </Row>
-                                  </Col>
-                                </>
-                              );
-                            }
+                                        </Col>
+
+                                        <Col xs={17} md={14}>
+                                          <div className="flex  justify-between items-center">
+                                            <div className="py-2 px-3">
+                                              <p className="mb-2 primary-color-blue font-medium text-sm">
+                                                {key}
+                                              </p>
+                                              <p className="flex">
+                                                <ApplaudIconSmall />
+                                                <span className="pl-2 text-sm font-medium text-gray-500">
+                                                  {value?.taken?.length}
+                                                </span>
+                                              </p>
+                                            </div>
+                                          </div>
+                                        </Col>
+                                      </Row>
+                                    </Col>
+                                  );
+                                })}
+                              </>
+                            );
                           }
-                        )
+                        })
                       ) : (
                         <Col xs={24} md={24}>
                           <div className="flex justify-center items-center h-48">
@@ -258,7 +312,7 @@ function DashBoard({ user }) {
                     </Row>
                   </div>
                   <div>
-                    {Object.keys(applaudData).length > 0 ? (
+                    {allApplaud.length > 0 ? (
                       <Link href="/applaud/allapplaud">
                         <div className="primary-color-blue text-sm  cursor-pointer font-medium hover:underline  text-center mt-2">
                           View All
@@ -270,61 +324,62 @@ function DashBoard({ user }) {
                   </div>
                 </div>
               </Col>
-              <Col md={12} lg={12}>
+              <Col md={12} lg={12} xs={24}>
                 <div className="w-full bg-white rounded-xl overflow-hidden shadow-md p-4 h-full">
                   <h2 className="text-xl mt-1 primary-color-blue  font-semibold mb-2">
                     Feedback Leaderboard
                   </h2>
-                  <Row>
+                  <Row className="dashboard-feedback">
                     <Col xs={24} md={24}>
-                      <Row className="my-3">
-                        <Col xs={6} md={5}>
-                          <Image
-                            src={User1}
-                            alt="user"
-                            // width={40}
-                            // height={40}
-                          />
-                        </Col>
-                        <Col xs={18} md={19}>
-                          <div className="px-2">
-                            <p className="mb-2 primary-color-blue font-medium text-sm">
-                              Ankush Thakur
-                            </p>
-                            <p className="flex justify-between">
-                              <span className="text-sm font-medium text-gray-500">
-                                Feeback Given : 0
-                              </span>
-                              <span className="pl-2 text-sm font-medium text-gray-500">
-                                Feeback Received : 0
-                              </span>
-                            </p>
-                          </div>
-                        </Col>
-                      </Row>
-                    </Col>
+                      {feedbackList.length > 0
+                        ? feedbackList.map((feedback, idx) => {
+                            return (
+                              <>
+                                {Object.entries(feedback).map(
+                                  ([key, value]) => {
+                                    return (
+                                      <Row
+                                        className="my-3"
+                                        key={idx + "feedback"}
+                                      >
+                                        <Col xs={6} md={5}>
+                                          <Image
+                                            src={
+                                              value?.image
+                                                ? "/media/profile/" +
+                                                  value?.image
+                                                : User1
+                                            }
+                                            alt="userImage"
+                                            width={70}
+                                            height={70}
+                                            className="rounded-full"
+                                          />
+                                        </Col>
 
-                    <Col xs={24} md={24}>
-                      <Row>
-                        <Col xs={6} md={5}>
-                          <Image src={User2} alt="user " />
-                        </Col>
-                        <Col xs={18} md={19}>
-                          <div className="px-2">
-                            <p className="mb-2 primary-color-blue font-medium text-sm">
-                              Annop Thakur
-                            </p>
-                            <p className="flex justify-between">
-                              <span className="text-sm font-medium text-gray-500">
-                                Feeback Given : 0
-                              </span>
-                              <span className="pl-2 text-sm font-medium text-gray-500">
-                                Feeback Received : 0
-                              </span>
-                            </p>
-                          </div>
-                        </Col>
-                      </Row>
+                                        <Col xs={18} md={19}>
+                                          <div className="px-2">
+                                            <p className="mb-2 primary-color-blue font-medium text-sm">
+                                              {key}
+                                            </p>
+                                            <p className="flex justify-between">
+                                              <span className="text-sm font-medium text-gray-500">
+                                                G : {value?.feedbackGiven}
+                                              </span>
+                                              <span className="pl-2 text-sm font-medium text-gray-500">
+                                                T : {value?.feedbackTaken}
+                                              </span>
+                                            </p>
+                                          </div>
+                                        </Col>
+                                      </Row>
+                                    );
+                                  }
+                                )}
+                              </>
+                            );
+                          })
+                        : null}
                     </Col>
                   </Row>
                 </div>
@@ -333,7 +388,7 @@ function DashBoard({ user }) {
           </div>
         </div>
       </Col>
-      <Col xs={24} sm={24} md={24} lg={7} className="mt-6 h-full  ">
+      <Col xs={24} sm={24} md={24} lg={7} className="mt-6 h-full">
         <SiderRight
           data={dashBoardData}
           totalRating={totalRating}

@@ -110,7 +110,7 @@ export default async (req, res) => {
           passwordResetData = await transaction.passwordReset.create({
             data: {
               email: { connect: { email: userData.email } },
-              // token: randomPassword(16),
+              created_by: { connect: { id: resData.created_by } },
               token: await hashedPassword(resData.email),
             },
           });

@@ -34,7 +34,6 @@ function FormComponent({
   const [questions, setQuestions] = useState([defaultQuestionConfig]);
   const [formTitle, setFormTitle] = useState("");
   const [formDes, setFormDes] = useState("");
-  console.log(questions);
 
   function removeElement(idx) {
     setQuestions((prev) => prev.filter((_, i) => i != idx));

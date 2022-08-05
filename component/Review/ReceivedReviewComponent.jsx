@@ -1,22 +1,20 @@
-import { Skeleton } from "antd";
+import { Form, Skeleton } from "antd";
 import { useRouter } from "next/router";
+import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { openNotificationBox } from "../../helpers/notification";
 import QuestionViewComponent from "../Form/QuestionViewComponent";
-// import {
-//   InputComponent,
-//   OptionComponent,
-//   TextAreaComponent,
-//   SliderComponent,
-// } from "./formhelper/FormComponent";
+import { FormSlideComponent } from "./formhelper/FormComponent";
 
 function ReceivedReviewComponent({ user, reviewId }) {
   const router = useRouter();
+  const [answerForm] = Form.useForm();
   const [reviewData, setReviewData] = useState({});
   const [loading, setLoading] = useState(false);
   const [formValues, setFormValues] = useState([]);
   const [questions, setQuestions] = useState([]);
-  // console.log(questions, "questions");
+  const [nextSlide, setNextSlide] = useState(0);
+  // const [disable, setDisable] = useState(true);
 
   const handleAnswerChange = (quesId, value, type) => {
     if (type === "input" && value.length > 179) {
@@ -35,6 +33,18 @@ function ReceivedReviewComponent({ user, reviewId }) {
           : [...prev, { questionId: quesId, answer: value }]
       );
     }
+
+    // let res = formValues.map((item) => item.questionId === quesId);
+
+    // formValues.find((item) => item.questionId === quesId)
+    //   ? formValues.map((item) => item.answer === "")
+    //     ? setDisable(true)
+    //     : setDisable(false)
+    //   : null;
+
+    // if (value.length === 0 && res) {
+    //   setDisable(true);
+    // } else setDisable(false);
 
     // setQuestions((prev) =>
     //   prev.find((item) => item.id === quesId && item.error)
@@ -128,70 +138,50 @@ function ReceivedReviewComponent({ user, reviewId }) {
   }, []);
 
   return (
-    <div className="px-3 md:px-8 h-auto mt-5">
-      <div className="container mx-auto max-w-full">
-        <div className="grid grid-cols-1 px-4 mb-16">
-          <div className="w-full bg-white rounded-xl overflow-hdden shadow-md p-4 ">
-            <div className="px-4 pb-4">
-              <div className="overflow-x-auto">
-                {loading ? (
-                  <Skeleton
-                    title={false}
-                    active={true}
-                    width={[200]}
-                    className="mt-4"
-                    rows={3}
-                  />
-                ) : (
-                  <>
-                    <div className="w-full flex  flex-col items-start px-4 pt-4 pb-5 bg-gray-200 rounded">
-                      <div>
-                        <h3 className="text-2xl font-medium primary-color-blue mb-2">
-                          {reviewData?.review?.form?.form_title}
-                        </h3>
-                        <p className="text-base  font-normal text-black mb-2">
-                          {reviewData?.review?.form?.form_description}
-                        </p>
-                      </div>
-                    </div>
-
-                    {questions.length > 0 &&
-                      questions?.map((question, idx) => (
-                        <>
-                          <QuestionViewComponent
-                            {...question}
-                            idx={idx}
-                            open={false}
-                            handleAnswerChange={handleAnswerChange}
-                          />
-                        </>
-                      ))}
-
-                    <div className="flex justify-end mt-4">
-                      <button
-                        key="add"
-                        className="profile-submit-button py-2 cursor-pointer primary-bg-btn text-white text-base  text-center rounded-md h-full w-32 mr-2"
-                        type="primary"
-                        onClick={() => handleCancel()}
-                      >
-                        Cancel
-                      </button>
-                      <button
-                        key="add"
-                        className="profile-submit-button py-2 cursor-pointer primary-bg-btn text-white text-base  text-center rounded-md h-full w-32"
-                        type="primary"
-                        onClick={() => handleSubmit()}
-                      >
-                        Submit
-                      </button>
-                    </div>
-                  </>
-                )}
-              </div>
-            </div>
+    <div className="answer-bg p-4">
+      {loading ? (
+        <Skeleton
+          title={false}
+          active={true}
+          width={[200]}
+          className="mt-4"
+          rows={3}
+        />
+      ) : (
+        <>
+          <div className="text-right mt-4 mr-4">
+            <Link href="/review/received">
+              <button className="primary-bg-btn text-white py-2 px-4 rounded-md">
+                Back
+              </button>
+            </Link>
           </div>
-        </div>
-      </div>
+          <Form layout="vertical" className="py-4" form={answerForm}>
+            {questions.length > 0 &&
+              questions
+                ?.filter((_, index) => index === nextSlide)
+                ?.map((question, idx) => (
+                  <FormSlideComponent
+                    {...question}
+                    idx={idx}
+                    open={false}
+                    nextSlide={nextSlide}
+                    handleAnswerChange={handleAnswerChange}
+                    setNextSlide={setNextSlide}
+                    length={questions.length}
+                    handleSubmit={handleSubmit}
+                    // disable={disable}
+                    // formValues={formValues}
+                    // answer={
+                    //   formValues?.questionId == question.id
+                    //     ? formValues?.answer
+                    //     : ""
+                    // }
+                  />
+                ))}
+          </Form>
+        </>
+      )}
     </div>
   );
 }

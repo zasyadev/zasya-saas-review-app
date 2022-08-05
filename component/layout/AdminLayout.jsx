@@ -7,6 +7,7 @@ import {
 } from "@ant-design/icons";
 import { Grid, Layout } from "antd";
 import { Content, Footer } from "antd/lib/layout/layout";
+import { data } from "autoprefixer";
 import Head from "next/head";
 import { Fragment, useEffect, useState } from "react";
 import { HeadersComponent } from "../../helpers/HeadersComponent";
@@ -32,6 +33,7 @@ function AdminLayout(props) {
     orgId: "",
     roleId: "",
     role: 0,
+    userImage: "",
   });
 
   useEffect(() => {
@@ -57,6 +59,7 @@ function AdminLayout(props) {
                 ? "Member"
                 : null,
             role: response?.data?.roleData?.role_id,
+            userImage: response?.data?.UserDetails?.image,
           });
         }
       })
@@ -125,6 +128,7 @@ function AdminLayout(props) {
               ? adminItems
               : items
           }
+          md={md}
           // setTitle={setTitle}
         />
         <Layout>
@@ -135,6 +139,9 @@ function AdminLayout(props) {
               user={props.user}
               fetchUserData={fetchUserData}
               userOrganizationData={userOrganizationData}
+              setCollapsed={setCollapsed}
+              collapsed={collapsed}
+              md={md}
             />
             {props.children}
           </Content>

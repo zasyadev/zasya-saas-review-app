@@ -19,12 +19,17 @@ export default async (req, res) => {
           };
         });
 
+        const userTableData = await transaction.user.findUnique({
+          where: { id: resData.user_id },
+        });
+
         const formdata = await transaction.reviewAssigneeAnswers.create({
           data: {
             user: { connect: { id: resData.user_id } },
             review: { connect: { id: resData.review_id } },
             review_assignee: { connect: { id: resData.review_assignee_id } },
             created_assignee_date: resData.created_assignee_date,
+            organization: { connect: { id: userTableData.organization_id } },
             ReviewAssigneeAnswerOption: {
               create: answerData,
             },
@@ -34,13 +39,13 @@ export default async (req, res) => {
       });
 
       const assignedByFromData = await prisma.review.findFirst({
-        where: { id: transactionData.review_id },
+        where: { id: transactionData.formdata.review_id },
       });
       const assignedByUser = await prisma.user.findFirst({
         where: { id: assignedByFromData.created_by },
       });
       const assignedUser = await prisma.user.findFirst({
-        where: { id: transactionData.user_id },
+        where: { id: transactionData.formdata.user_id },
       });
 
       const mailData = {

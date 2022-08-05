@@ -9,7 +9,28 @@ export default async (req, res) => {
     if (userId) {
       const data = await prisma.userApplaud.findMany({
         where: { created_by: userId },
-        include: { user: true, created: true },
+        include: {
+          user: {
+            select: {
+              first_name: true,
+              UserDetails: {
+                select: {
+                  image: true,
+                },
+              },
+            },
+          },
+          created: {
+            select: {
+              first_name: true,
+              UserDetails: {
+                select: {
+                  image: true,
+                },
+              },
+            },
+          },
+        },
       });
 
       prisma.$disconnect();
@@ -27,7 +48,28 @@ export default async (req, res) => {
     if (userId) {
       const data = await prisma.userApplaud.findMany({
         where: { user_id: userId },
-        include: { user: true, created: true },
+        include: {
+          user: {
+            select: {
+              first_name: true,
+              UserDetails: {
+                select: {
+                  image: true,
+                },
+              },
+            },
+          },
+          created: {
+            select: {
+              first_name: true,
+              UserDetails: {
+                select: {
+                  image: true,
+                },
+              },
+            },
+          },
+        },
       });
 
       prisma.$disconnect();
