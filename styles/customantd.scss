@@ -975,3 +975,16 @@
   height: 185px;
   overflow: auto;
 }
+
+.profile-wrapper {
+  .image-absolute {
+    position: absolute;
+    bottom: 0;
+    left: 45px;
+    @include mobile {
+      position: relative;
+      bottom: 0;
+      left: 5px;
+    }
+  }
+}

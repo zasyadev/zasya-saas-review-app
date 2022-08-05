@@ -30,16 +30,28 @@ export default async (req, res) => {
             created: {
               select: {
                 first_name: true,
+
+                UserDetails: {
+                  select: {
+                    image: true,
+                  },
+                },
               },
             },
           },
         });
+
         const reviewAnsweredData = await prisma.reviewAssigneeAnswers.findMany({
           where: { organization_id: userTableData.organization_id },
           include: {
             user: {
               select: {
                 first_name: true,
+                UserDetails: {
+                  select: {
+                    image: true,
+                  },
+                },
               },
             },
           },
@@ -62,7 +74,11 @@ export default async (req, res) => {
               obj[key.user.first_name].taken = [];
             }
             obj[key.user.first_name].taken.push(key);
-
+            if (key.user.UserDetails && key.user.UserDetails.image) {
+              obj[key.user.first_name].userImg = key.user.UserDetails.image;
+            } else {
+              obj[key.user.first_name].userImg = "";
+            }
             return obj;
           }, {});
 
@@ -74,7 +90,11 @@ export default async (req, res) => {
             if (!obj[key.user.first_name]?.taken) {
               obj[key.user.first_name].taken = [];
             }
-
+            if (key.user.UserDetails && key.user.UserDetails.image) {
+              obj[key.user.first_name].userImg = key.user.UserDetails.image;
+            } else {
+              obj[key.user.first_name].userImg = "";
+            }
             return obj;
           },
           {});
@@ -117,13 +137,18 @@ export default async (req, res) => {
           let givenObj = { ...givenResults, ...givenLeftOutResults };
 
           let conbinedData = Object.entries(takeObj).map(([key, value]) => {
-            const feedbackTaken = takeObj[key]?.taken?.length;
-            const feedbackGiven = givenObj[key]?.feedbackAssigned?.length;
+            let feedbackTakenObj = {
+              feedbackTaken: takeObj[key]?.taken?.length,
+              image: value.userImg ?? "",
+            };
+            let feedbackGivenObj = {
+              feedbackGiven: givenObj[key]?.feedbackAssigned?.length,
+            };
 
             return {
               [key]: {
-                feedbackTaken,
-                feedbackGiven,
+                ...feedbackTakenObj,
+                ...feedbackGivenObj,
               },
             };
           });

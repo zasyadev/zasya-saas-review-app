@@ -2,71 +2,260 @@ import React, { useState } from "react";
 import { Modal, Form, Input, Button, Col, Row, Upload, message } from "antd";
 import { useEffect } from "react";
 import { openNotificationBox } from "../../helpers/notification";
+import Image from "next/image";
+import profileCover from "../../assets/images/profile-cover.png";
+import userImage from "../../assets/images/User1.png";
+import { ShareIcon } from "../../assets/Icon/icons";
+import { PlusOutlined } from "@ant-design/icons";
+import moment from "moment";
+const datePattern = "DD/MM/YYYY";
+const BASE = process.env.NEXT_PUBLIC_APP_URL;
 
-// const otherprops = {
-//   name: "file",
+const ImageUpload = ({
+  category,
+  fileList,
+  setFileList,
+  formName,
+  limit = true,
+  limitSize = 1,
+}) => {
+  const [isUploading, setIsUploading] = useState(false);
+  const [previewVisible, setPreviewVisible] = useState(false);
+  const [previewImage, setPreviewImage] = useState("");
+  const [previewTitle, setPreviewTitle] = useState("");
 
-//   headers: {
-//     authorization: "authorization-text",
-//   },
+  const uploadImageButton = !isUploading ? (
+    <div>
+      <PlusOutlined />
+      <div className="ant-upload-text">Upload </div>
+    </div>
+  ) : (
+    <div className="ant-upload-text">Loading... </div>
+  );
 
-//   onChange(info) {
-//     if (info.file.status !== "uploading") {
-//       console.log(info.file, info.fileList);
-//     }
+  function beforeUpload(file) {
+    const checkJpgOrPng =
+      file.type === "image/png" ||
+      file.type === "image/jpeg" ||
+      file.type === "image/jpg";
+    if (!checkJpgOrPng) {
+      message.error("You can only upload jpg, jpeg and png file!");
+    }
 
-//     if (info.file.status === "done") {
-//       message.success(`${info.file.name} file uploaded successfully`);
-//     } else if (info.file.status === "error") {
-//       message.error(`${info.file.name} file upload failed.`);
-//     }
-//   },
-// };
+    const checkFileSize = file.size < 1126400;
+    if (!checkFileSize) {
+      message.error(" Image must be smaller than 1Mb!");
+    }
+
+    return checkJpgOrPng && checkFileSize;
+  }
+
+  function getImages(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    });
+  }
+
+  function handleChange(info) {
+    if (info.file.status === "uploading") {
+      setFileList(info.fileList);
+      setIsUploading(false);
+    }
+    if (info.file.status === "removed") {
+      setIsUploading(false);
+      setFileList(info.fileList);
+    }
+    if (info.file.status === "error") {
+      setIsUploading(false);
+      return;
+    }
+    if (info.file.status === "done") {
+      setFileList(info.fileList);
+      setIsUploading(false);
+    }
+  }
+
+  // const handlePreview = async (file) => {
+  //   if (!file.url && !file.preview) {
+  //     file.preview = await getImages(file.originFileObj);
+  //   }
+  //   setPreviewVisible(true);
+  //   setPreviewImage(file.url || file.preview);
+
+  //   setPreviewTitle(file.name);
+  // };
+
+  return (
+    <>
+      <Form.Item name={formName} label="Image Upload">
+        <Upload
+          name="image"
+          listType="picture-card"
+          fileList={fileList}
+          // action={actionUploadFunction}
+          onChange={handleChange}
+          // onPreview={handlePreview}
+          data={{ category: category }}
+          // onRemove={(val) => deleteBanner(val.uid)}
+          beforeUpload={beforeUpload}
+        >
+          {limit
+            ? fileList.length >= limitSize
+              ? null
+              : uploadImageButton
+            : uploadImageButton}
+        </Upload>
+      </Form.Item>
+    </>
+  );
+};
 function Profile({ user }) {
   const [passwordForm] = Form.useForm();
   const [profileForm] = Form.useForm();
   const [isModalVisible, setIsModalVisible] = useState(false);
-  // const [userimageSrc, setuserImageSrc] = useState(false);
+  const [editMode, setEditMode] = useState(false);
+  const [userDetails, setUserDetails] = useState({});
+  const [receivedApplaudList, setReceivedApplaudList] = useState([]);
+  const [givenApplaudList, setGivenApplaudList] = useState([]);
+  const [image, setImage] = useState([]);
+
   const showModal = () => {
     setIsModalVisible(true);
   };
 
-  const onFinish = (values) => {
-    console.log(values);
+  const onFinish = async (values) => {
+    if (values.profileImage) {
+      const formData = new FormData();
+      if (image.length > 0) formData.append("image", image[0].originFileObj);
+
+      await fetch("/api/profile/upload", {
+        method: "POST",
+        body: formData,
+      })
+        .then((response) => response.json())
+        .then((response) => {
+          if (response.status === 200) {
+            values.imageName = response.data;
+            profileUpdate(values);
+          } else {
+            openNotificationBox("error", response.data, 3);
+          }
+        })
+        .catch((err) => console.log(err));
+    } else {
+      values.imageName = "";
+      profileUpdate(values);
+    }
+  };
+
+  const profileUpdate = async (data) => {
+    await fetch("/api/profile/" + user.id, {
+      method: "POST",
+      body: JSON.stringify(data),
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        if (response.status === 200) {
+          profileForm.resetFields();
+          openNotificationBox("success", response.message, 3);
+          getProfileData();
+        } else {
+          openNotificationBox("error", response.message, 3);
+        }
+      })
+      .catch((err) => console.log(err));
   };
 
   const validateMessages = {
     required: "${label} is required!",
   };
 
-  const getFieldData = () => {
-    profileForm.setFieldsValue({
-      first_name: user.first_name,
-      last_name: user.last_name,
-      email: user.email,
-    });
+  const getProfileData = async () => {
+    setUserDetails({});
+    await fetch("/api/profile/" + user.id, {
+      method: "GET",
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        if (response.status === 200) {
+          setUserDetails(response.data);
+          profileForm.setFieldsValue({
+            first_name: response.data.user.first_name,
+            address1: response.data.address1 ?? "",
+            about: response.data.about ?? "",
+            address2: response.data.address2 ?? "",
+            mobile: response.data.mobile ?? "",
+            pin_code: response.data.pin_code ?? "",
+          });
+          setImageHandler(response.data.image);
+
+          setEditMode(false);
+        }
+      })
+      .catch((err) => console.log(err));
   };
 
+  const setImageHandler = (img) => {
+    if (img) {
+      let array = [];
+
+      array.push({
+        uid: img,
+        name: "slide.jpg",
+        status: "done",
+        url: BASE + "media/profile/" + img,
+        response: {
+          status: 200,
+          data: {
+            filepaths: ["media/profile/" + img],
+          },
+        },
+        originFileObj: BASE + "media/profile/" + img,
+      });
+
+      setImage(array);
+    }
+  };
+
+  const fetchReceivedApplaud = async () => {
+    setReceivedApplaudList([]);
+    await fetch("/api/applaud/" + user.id, {
+      method: "POST",
+      body: JSON.stringify({
+        user: user.id,
+      }),
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        setReceivedApplaudList(res.data);
+      })
+      .catch((err) => {
+        setReceivedApplaudList([]);
+      });
+  };
+
+  async function fetchGivenApplaud() {
+    setGivenApplaudList([]);
+    await fetch("/api/applaud/" + user.id, { method: "GET" })
+      .then((res) => res.json())
+      .then((res) => {
+        setGivenApplaudList(res.data);
+      })
+      .catch((err) => {
+        setGivenApplaudList([]);
+      });
+  }
+
   useEffect(() => {
-    getFieldData();
+    if (user) {
+      getProfileData();
+      fetchReceivedApplaud();
+      fetchGivenApplaud();
+    }
   }, []);
-
-  // const handleEdit = () => {
-  //   setFormMode({ isEdit: true });
-  //   passwordForm.resetFields();
-  //   handleToggleModal();
-  // };
-
-  // const handleShowModal = () => {
-  //   handleToggleModal();
-  //   if (formMode.isEdit) {
-  //     setFormMode({
-  //       isEdit: false,
-  //     });
-  //   }
-
-  //   passwordForm.resetFields();
-  // };
 
   async function onChangePassword(values) {
     let obj = {
@@ -95,105 +284,314 @@ function Profile({ user }) {
 
   return (
     <>
-      <div className="px-3 md:px-8 h-auto">
-        <div className="grid grid-cols-1 xl:grid-cols-6 mt-1">
-          <div className="xl:col-start-1 xl:col-end-7 px-4 ">
-            <div className="rounded-xl text-white grid items-center w-full shadow-lg-purple my-3">
-              <div className="w-full flex item-center justify-end">
-                <div className="flex justify-end ">
-                  <div>
-                    <button
-                      className="primary-bg-btn text-white text-sm md:py-3 py-3 text-center md:px-4 px-2 rounded-md md:w-full w-20  "
-                      onClick={showModal}
-                    >
-                      Change Password
-                    </button>
+      {editMode ? (
+        <div className="px-3 md:px-8 h-auto">
+          <div className="grid grid-cols-1 xl:grid-cols-6 mt-1">
+            <div className="xl:col-start-1 xl:col-end-7 px-4 ">
+              <div className="rounded-xl text-white grid items-center w-full shadow-lg-purple my-3">
+                <div className="w-full flex item-center justify-end">
+                  <div className="flex justify-end ">
+                    <div>
+                      <button
+                        className="primary-bg-btn text-white text-sm md:py-3 py-3 text-center md:px-4 px-2 rounded-md md:w-full w-20  "
+                        onClick={showModal}
+                      >
+                        Change Password
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <div className="w-full bg-white rounded-xl  shadow-md p-4 ">
-              <Row justify="center">
-                <Col lg={12} className="mt-4 items-center">
-                  <Form
-                    form={profileForm}
-                    layout="vertical"
-                    onFinish={onFinish}
-                    validateMessages={validateMessages}
-                  >
-                    <Row gutter={16}>
-                      <Col md={24} sm={24} xs={24}>
-                        <Form.Item
-                          label="Name"
-                          name="first_name"
-                          rules={[
-                            {
-                              required: true,
-                            },
-                          ]}
+              <div className="w-full bg-white rounded-xl  shadow-md p-4 ">
+                <Row gutter={16}>
+                  <Col lg={24} xs={24} className="mt-4 items-center">
+                    <Form
+                      form={profileForm}
+                      layout="vertical"
+                      onFinish={onFinish}
+                      validateMessages={validateMessages}
+                    >
+                      <Row gutter={16} justify="center">
+                        <Col md={4} xs={24}>
+                          <Row justify="center">
+                            <Col md={24} xs={24}>
+                              <ImageUpload
+                                category="profile"
+                                fileList={image}
+                                setFileList={setImage}
+                                formName="profileImage"
+                              />
+                            </Col>
+                          </Row>
+                        </Col>
+                        <Col md={12} xs={24}>
+                          <Row>
+                            <Col md={24} xs={24}>
+                              <Form.Item
+                                label="Name"
+                                name="first_name"
+                                rules={[
+                                  {
+                                    required: true,
+                                  },
+                                ]}
+                              >
+                                <Input
+                                  placeholder="Name"
+                                  className="bg-gray-100 h-12 rounded-md"
+                                />
+                              </Form.Item>
+                            </Col>
+                            <Col md={24} sm={24} xs={24}>
+                              <Form.Item
+                                label="Address Line 1"
+                                name="address1"
+                                rules={[
+                                  {
+                                    required: true,
+                                  },
+                                ]}
+                              >
+                                <Input
+                                  placeholder="Address Line 1"
+                                  className="bg-gray-100 h-12 rounded-md"
+                                />
+                              </Form.Item>
+                            </Col>
+                            <Col md={24} sm={24} xs={24}>
+                              <Form.Item
+                                label="Address Line 2"
+                                name="address2"
+                                rules={[
+                                  {
+                                    required: true,
+                                  },
+                                ]}
+                              >
+                                <Input
+                                  placeholder="Address Line 2"
+                                  className="bg-gray-100 h-12 rounded-md"
+                                />
+                              </Form.Item>
+                            </Col>
+                            <Col md={24} sm={24} xs={24}>
+                              <Form.Item
+                                label="Phone Number"
+                                name="mobile"
+                                rules={[
+                                  {
+                                    required: true,
+                                  },
+                                ]}
+                              >
+                                <Input
+                                  placeholder="Mobile"
+                                  className="bg-gray-100 h-12 rounded-md"
+                                />
+                              </Form.Item>
+                            </Col>
+                            <Col md={24} sm={24} xs={24}>
+                              <Form.Item
+                                label="About "
+                                name="about"
+                                rules={[
+                                  {
+                                    required: true,
+                                  },
+                                ]}
+                              >
+                                <Input
+                                  placeholder="About You"
+                                  className="bg-gray-100 h-12 rounded-md"
+                                />
+                              </Form.Item>
+                            </Col>
+                          </Row>
+                        </Col>
+                      </Row>
+                      <div className="text-center">
+                        <Button
+                          className="profile-submit-button py-2 cursor-pointer primary-bg-btn text-white text-base  text-center rounded-md h-full w-32 mr-2"
+                          onClick={() => setEditMode(false)}
                         >
-                          <Input
-                            placeholder="First Name"
-                            className="bg-gray-100 h-12 rounded-md"
-                            disabled
-                          />
-                        </Form.Item>
-                      </Col>
-                      {/* <Col md={24} sm={24} xs={24}>
-                        <Form.Item
-                          label="Last Name"
-                          name="last_name"
-                          rules={[
-                            {
-                              required: true,
-                            },
-                          ]}
+                          Cancel
+                        </Button>
+
+                        <Button
+                          className="profile-submit-button py-2 cursor-pointer primary-bg-btn text-white text-base  text-center rounded-md h-full w-32"
+                          htmlType="submit"
                         >
-                          <Input
-                            placeholder="Last Name"
-                            className="bg-gray-100 h-12 rounded-md"
-                          />
-                        </Form.Item>{" "}
-                      </Col> */}
-                      <Col md={24} sm={24} xs={24}>
-                        <Form.Item
-                          label="Email"
-                          name="email"
-                          rules={[
-                            {
-                              required: true,
-                            },
-                          ]}
-                        >
-                          <Input
-                            placeholder="Email"
-                            disabled={true}
-                            className="bg-gray-100 h-12 rounded-md"
-                          />
-                        </Form.Item>
-                      </Col>
-                    </Row>
-                    <div className="text-center">
-                      <Button
-                        className="profile-submit-button py-2 cursor-pointer primary-bg-btn text-white text-base  text-center rounded-md h-full w-32"
-                        htmlType="submit"
-                        disabled
-                      >
-                        Submit
-                      </Button>
-                    </div>
-                  </Form>
-                </Col>
-              </Row>
-              <div className="p-4 ">
-                <div className="border-t border-lightBlue-200 text-center px-2 ">
-                  <p className="text-blue-gray-700 text-lg font-light leading-relaxed mt-6 mb-4"></p>
+                          Submit
+                        </Button>
+                      </div>
+                    </Form>
+                  </Col>
+                </Row>
+                <div className="p-4 ">
+                  <div className="border-t border-lightBlue-200 text-center px-2 ">
+                    <p className="text-blue-gray-700 text-lg font-light leading-relaxed mt-6 mb-4"></p>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      ) : (
+        <div className="px-3 md:px-8 m-4 profile-wrapper">
+          <Row gutter={[16, 16]}>
+            <Col md={24} xs={24}>
+              <div className="bg-white rounded-sm transition-all duration-300 ease-in-out shadow-md ">
+                <div>
+                  <Image src={profileCover} alt="profileCover" />
+                </div>
+
+                <div className=" block md:flex justify-end items-center">
+                  <div className="px-2 py-2 image-absolute">
+                    <div className="w-20 mx-auto ">
+                      <div className="rounded-full">
+                        <Image
+                          src={
+                            userDetails?.image
+                              ? "/media/profile/" + userDetails?.image
+                              : userImage
+                          }
+                          alt="userImage"
+                          width={80}
+                          height={80}
+                          className="rounded-full"
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <p className="text-lg font-semibold text-center md:text-left">
+                        {userDetails?.user?.first_name}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className=" block md:flex justify-between items-center pb-2 md:pb-0">
+                    <div className="flex px-4 py-2">
+                      <div className="text-center mx-2">
+                        <p className="text-xl font-extrabold">
+                          {givenApplaudList?.length}
+                        </p>
+                        <p className="text-base font-medium">Appalud Given</p>
+                      </div>
+                      <div className="text-center mx-2">
+                        <p className="text-xl font-extrabold">
+                          {receivedApplaudList?.length}
+                        </p>
+                        <p className="text-base font-medium">
+                          Appalud Received
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex  justify-center md:mx-4">
+                      <button
+                        className="toggle-btn-bg rounded-md text-md text-white px-8 py-2 "
+                        onClick={() => setEditMode(true)}
+                      >
+                        Edit Profile
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Col>
+            <Col md={8} xs={24}>
+              <div className="bg-white rounded-sm transition-all duration-300 ease-in-out shadow-md mt-8">
+                <div className="p-4">
+                  <div className="m-2">
+                    <p className="text-base font-semibold">About</p>
+                    <p className="text-base font-normal">
+                      {userDetails?.about}
+                    </p>
+                  </div>
+                  <div className="m-2">
+                    <p className="text-base font-semibold">Address</p>
+                    <p className="text-base font-normal">
+                      {userDetails?.address1} {userDetails?.address2}
+                    </p>
+                  </div>
+                  <div className="m-2">
+                    <p className="text-base font-semibold">Phone No.</p>
+                    <p className="text-base font-normal">
+                      {userDetails?.mobile}
+                    </p>
+                  </div>
+                  <div className="m-2">
+                    <p className="text-base font-semibold">Website</p>
+                    <p className="text-base font-normal">zasyasolutions.com/</p>
+                  </div>
+                </div>
+              </div>
+            </Col>
+
+            <Col md={10} xs={24}>
+              {receivedApplaudList.length > 0
+                ? receivedApplaudList.map((item, idx) => {
+                    return (
+                      <div
+                        className="bg-white rounded-sm transition-all duration-300 ease-in-out shadow-md my-8  "
+                        key={idx + "applaud"}
+                      >
+                        <div className="p-4">
+                          <div className="m-2">
+                            <Row gutter={8}>
+                              <Col md={6} xs={6}>
+                                <div className=" w-14">
+                                  {/* <Image src={userImage} alt="userImage" /> */}
+                                  <Image
+                                    src={
+                                      item?.created?.UserDetails?.image
+                                        ? "/media/profile/" +
+                                          item?.created?.UserDetails?.image
+                                        : userImage
+                                    }
+                                    alt="userImage"
+                                    width={60}
+                                    height={60}
+                                    className="rounded-full"
+                                  />
+                                </div>
+                              </Col>
+                              <Col md={12} xs={6}>
+                                <div>
+                                  <p className="text-base font-semibold">
+                                    {item.created.first_name}{" "}
+                                  </p>
+                                  <p className="font-medium">
+                                    {moment(item.created_date).format(
+                                      datePattern
+                                    )}
+                                  </p>
+                                </div>
+                              </Col>
+                              <Col md={6} xs={6}>
+                                <div className="flex justify-end">
+                                  <div className="bg-red-400 py-2 px-2 rounded-full w-10">
+                                    <ShareIcon />
+                                  </div>
+                                </div>
+                              </Col>
+                              <Col md={24} xs={24}>
+                                <div className="mt-4">
+                                  <p className="text-base font-normal">
+                                    {item?.comment}
+                                  </p>
+                                </div>
+                              </Col>
+                            </Row>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })
+                : null}
+            </Col>
+          </Row>
+        </div>
+      )}
 
       <Modal
         title="Change Password"

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import {
   PlusOutlined,
   DownOutlined,
-  UserOutlined,
   LogoutOutlined,
   UserSwitchOutlined,
   MenuUnfoldOutlined,
@@ -60,9 +59,21 @@ function HeaderLayout({
 
   const userMenu = (
     <Menu>
-      <div className="flex my-2 " key={"accountName"}>
-        <div className="flex ml-6 mr-2">
-          <Image src={User} alt="user" width={40} height={30} />
+      <div className="flex my-2 mx-2" key={"accountName"}>
+        <div className="flex mx-2 px-2">
+          <div className="rounded-full">
+            <Image
+              src={
+                userOrganizationData?.userImage
+                  ? "/media/profile/" + userOrganizationData?.userImage
+                  : User
+              }
+              alt="userImage"
+              width={40}
+              height={40}
+              className="rounded-full"
+            />
+          </div>
         </div>
         <span>
           <div className="span-text font-semibold">{user.first_name}</div>
@@ -74,7 +85,7 @@ function HeaderLayout({
       <Menu.Item key={"account"}>
         <Link href="/profile">
           <div className="flex items-center">
-            <UserOutlined /> <span className="span-text">My Account</span>
+            <span className="span-text">My Account</span>
           </div>
         </Link>
       </Menu.Item>

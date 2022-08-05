@@ -49,7 +49,17 @@ function AllAplaud({ user }) {
                         <Row justify="center">
                           <Col xs={10} md={10}>
                             <div className=" flex justify-center">
-                              <Image src={User1} alt="user" />
+                              <Image
+                                src={
+                                  value?.image
+                                    ? "/media/profile/" + value?.image
+                                    : User1
+                                }
+                                alt="userImage"
+                                width={80}
+                                height={80}
+                                className="rounded-full"
+                              />
                             </div>
                           </Col>
 
