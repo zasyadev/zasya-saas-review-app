@@ -59,15 +59,15 @@ export default async (req, res) => {
                   mobile: reqBody.mobile ?? "",
                 };
                 if (reqBody.imageName) {
-                  if (userDetailData.image) {
-                    let path = `./public/static/media/profile/${userDetailData.image}`;
+                  // if (userDetailData.image) {
+                  //   let path = `./public/static/media/profile/${userDetailData.image}`;
 
-                    fs.unlink(path, (err) => {
-                      if (err) {
-                        return err;
-                      }
-                    });
-                  }
+                  //   fs.unlink(path, (err) => {
+                  //     if (err) {
+                  //       return err;
+                  //     }
+                  //   });
+                  // }
                   dataObj.image = reqBody.imageName;
                 }
 
@@ -119,6 +119,7 @@ export default async (req, res) => {
       });
     }
   } catch (error) {
+    console.log(error);
     return res
       .status(500)
       .json({ error: error, message: "Internal Server Error" });

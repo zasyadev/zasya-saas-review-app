@@ -65,7 +65,7 @@ function HeaderLayout({
             <Image
               src={
                 userOrganizationData?.userImage
-                  ? "/static/media/profile/" + userOrganizationData?.userImage
+                  ? userOrganizationData?.userImage
                   : User
               }
               alt="userImage"

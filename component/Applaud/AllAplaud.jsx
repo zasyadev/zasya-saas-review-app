@@ -50,11 +50,7 @@ function AllAplaud({ user }) {
                           <Col xs={10} md={10}>
                             <div className=" flex justify-center">
                               <Image
-                                src={
-                                  value?.image
-                                    ? "/static/media/profile/" + value?.image
-                                    : User1
-                                }
+                                src={value?.image ? value?.image : User1}
                                 alt="userImage"
                                 width={80}
                                 height={80}

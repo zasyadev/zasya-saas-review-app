@@ -9,6 +9,13 @@ import { ShareIcon } from "../../assets/Icon/icons";
 import { PlusOutlined } from "@ant-design/icons";
 import moment from "moment";
 import Link from "next/link";
+import AWS from "aws-sdk";
+import { useS3Upload } from "next-s3-upload";
+
+const s3 = new AWS.S3({
+  accessKeyId: process.env.NEXT_PUBLIC_AWS_KEY,
+  secretAccessKey: process.env.NEXT_PUBLIC_AWS_SECRET,
+});
 
 const datePattern = "DD/MM/YYYY";
 const BASE = process.env.NEXT_PUBLIC_APP_URL;
@@ -97,7 +104,7 @@ const ImageUpload = ({
           name="image"
           listType="picture-card"
           fileList={fileList}
-          // action={actionUploadFunction}
+          // action={handleFileChange}
           onChange={handleChange}
           // onPreview={handlePreview}
           data={{ category: category }}
@@ -115,6 +122,7 @@ const ImageUpload = ({
   );
 };
 function Profile({ user }) {
+  const { uploadToS3 } = useS3Upload();
   const [passwordForm] = Form.useForm();
   const [profileForm] = Form.useForm();
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -127,26 +135,21 @@ function Profile({ user }) {
   const showModal = () => {
     setIsModalVisible(true);
   };
+  // console.log(image, "image");
+
+  let handleFileChange = async (file) => {
+    let { url } = await uploadToS3(file);
+    if (url) {
+      return url;
+    }
+    return;
+  };
 
   const onFinish = async (values) => {
     if (values.profileImage) {
-      const formData = new FormData();
-      if (image.length > 0) formData.append("image", image[0].originFileObj);
-
-      await fetch("/api/profile/upload", {
-        method: "POST",
-        body: formData,
-      })
-        .then((response) => response.json())
-        .then((response) => {
-          if (response.status === 200) {
-            values.imageName = response.data;
-            profileUpdate(values);
-          } else {
-            openNotificationBox("error", response.data, 3);
-          }
-        })
-        .catch((err) => console.log(err));
+      let imageURL = await handleFileChange(image[0].originFileObj);
+      values.imageName = imageURL;
+      profileUpdate(values);
     } else {
       values.imageName = "";
       profileUpdate(values);
@@ -154,6 +157,7 @@ function Profile({ user }) {
   };
 
   const profileUpdate = async (data) => {
+    console.log(data, "data");
     await fetch("/api/profile/" + user.id, {
       method: "POST",
       body: JSON.stringify(data),
@@ -208,14 +212,14 @@ function Profile({ user }) {
         uid: img,
         name: "slide.jpg",
         status: "done",
-        url: BASE + "media/profile/" + img,
+        url: img,
         response: {
           status: 200,
           data: {
-            filepaths: ["media/profile/" + img],
+            filepaths: [img],
           },
         },
-        originFileObj: BASE + "media/profile/" + img,
+        originFileObj: img,
       });
 
       setImage(array);
@@ -457,9 +461,7 @@ function Profile({ user }) {
                       <div className="rounded-full">
                         <Image
                           src={
-                            userDetails?.image
-                              ? "/static/media/profile/" + userDetails?.image
-                              : userImage
+                            userDetails?.image ? userDetails?.image : userImage
                           }
                           alt="userImage"
                           width={80}
@@ -556,8 +558,7 @@ function Profile({ user }) {
                                   <Image
                                     src={
                                       item?.created?.UserDetails?.image
-                                        ? "/static/media/profile/" +
-                                          item?.created?.UserDetails?.image
+                                        ? item?.created?.UserDetails?.image
                                         : userImage
                                     }
                                     alt="userImage"

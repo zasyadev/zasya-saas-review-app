@@ -1,7 +1,11 @@
 module.exports = {
   reactStrictMode: true,
   images: {
-    domains: ["http://localhost:3000/", "review.zasyasolutions.com"],
+    domains: [
+      "http://localhost:3000/",
+      "review.zasyasolutions.com",
+      "zsreview.s3.ap-south-1.amazonaws.com",
+    ],
   },
 
   serverRuntimeConfig: {
