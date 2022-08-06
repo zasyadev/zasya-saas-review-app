@@ -9,17 +9,9 @@ import { ShareIcon } from "../../assets/Icon/icons";
 import { PlusOutlined } from "@ant-design/icons";
 import moment from "moment";
 import Link from "next/link";
-import AWS from "aws-sdk";
 import { useS3Upload } from "next-s3-upload";
 
-const s3 = new AWS.S3({
-  accessKeyId: process.env.NEXT_PUBLIC_AWS_KEY,
-  secretAccessKey: process.env.NEXT_PUBLIC_AWS_SECRET,
-});
-
 const datePattern = "DD/MM/YYYY";
-const BASE = process.env.NEXT_PUBLIC_APP_URL;
-
 const ImageUpload = ({
   category,
   fileList,
@@ -135,7 +127,6 @@ function Profile({ user }) {
   const showModal = () => {
     setIsModalVisible(true);
   };
-  // console.log(image, "image");
 
   let handleFileChange = async (file) => {
     let { url } = await uploadToS3(file);
@@ -157,7 +148,6 @@ function Profile({ user }) {
   };
 
   const profileUpdate = async (data) => {
-    console.log(data, "data");
     await fetch("/api/profile/" + user.id, {
       method: "POST",
       body: JSON.stringify(data),
