@@ -470,16 +470,18 @@ function Profile({ user }) {
                   <div className=" block md:flex justify-between items-center pb-2 md:pb-0">
                     <div className="flex px-4 py-2">
                       <div className="text-center mx-2">
-                        <p className="text-xl font-extrabold">
+                        <p className="text-xl font-extrabold mb-0">
                           {givenApplaudList?.length}
                         </p>
-                        <p className="text-base font-medium">Appalud Given</p>
+                        <p className="text-base font-medium mb-0">
+                          Appalud Given
+                        </p>
                       </div>
                       <div className="text-center mx-2">
-                        <p className="text-xl font-extrabold">
+                        <p className="text-xl font-extrabold mb-0">
                           {receivedApplaudList?.length}
                         </p>
-                        <p className="text-base font-medium">
+                        <p className="text-base font-medium mb-0">
                           Appalud Received
                         </p>
                       </div>
@@ -500,28 +502,28 @@ function Profile({ user }) {
               <div className="bg-white rounded-sm transition-all duration-300 ease-in-out shadow-md mt-8">
                 <div className="p-4">
                   <div className="m-2">
-                    <p className="text-base font-semibold">About</p>
-                    <p className="text-base font-normal">
+                    <p className="text-base font-semibold mb-1">About</p>
+                    <p className="text-base font-normal mb-1">
                       {userDetails?.about}
                     </p>
                   </div>
                   <div className="m-2">
-                    <p className="text-base font-semibold">Address</p>
-                    <p className="text-base font-normal">
+                    <p className="text-base font-semibold mb-1">Address</p>
+                    <p className="text-base font-normal mb-1">
                       {userDetails?.address1} {userDetails?.address2}
                     </p>
                   </div>
                   <div className="m-2">
-                    <p className="text-base font-semibold">Phone No.</p>
-                    <p className="text-base font-normal">
+                    <p className="text-base font-semibold mb-1">Phone No.</p>
+                    <p className="text-base font-normal mb-1">
                       {userDetails?.mobile}
                     </p>
                   </div>
                   <div className="m-2">
-                    <p className="text-base font-semibold">Website</p>
+                    <p className="text-base font-semibold mb-1">Website</p>
                     <Link href="https://zasyasolutions.com/" passHref>
                       <a target="_blank">
-                        <p className="text-base font-normal">
+                        <p className="text-base font-normal mb-1">
                           https://zasyasolutions.com
                         </p>
                       </a>
@@ -560,10 +562,10 @@ function Profile({ user }) {
                               </Col>
                               <Col md={12} xs={6}>
                                 <div>
-                                  <p className="text-base font-semibold">
+                                  <p className="text-base font-semibold mb-1">
                                     {item.created.first_name}{" "}
                                   </p>
-                                  <p className="font-medium">
+                                  <p className="font-medium mb-1">
                                     {moment(item.created_date).format(
                                       datePattern
                                     )}
@@ -579,7 +581,7 @@ function Profile({ user }) {
                               </Col>
                               <Col md={24} xs={24}>
                                 <div className="mt-4">
-                                  <p className="text-base font-normal">
+                                  <p className="text-base font-normal mb-0">
                                     {item?.comment}
                                   </p>
                                 </div>

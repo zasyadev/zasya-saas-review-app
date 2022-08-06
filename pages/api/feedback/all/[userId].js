@@ -19,6 +19,11 @@ export default async (req, res) => {
             user: {
               select: {
                 first_name: true,
+                UserDetails: {
+                  select: {
+                    image: true,
+                  },
+                },
               },
             },
           },

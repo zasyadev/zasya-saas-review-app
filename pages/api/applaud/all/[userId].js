@@ -24,6 +24,11 @@ export default async (req, res) => {
           user: {
             select: {
               first_name: true,
+              UserDetails: {
+                select: {
+                  image: true,
+                },
+              },
             },
           },
         },
@@ -81,6 +86,7 @@ export default async (req, res) => {
           if (!obj[key.user.first_name]?.taken) {
             obj[key.user.first_name].taken = [];
           }
+
           if (key.user.UserDetails && key.user.UserDetails.image) {
             obj[key.user.first_name].userImg = key.user.UserDetails.image;
           } else {

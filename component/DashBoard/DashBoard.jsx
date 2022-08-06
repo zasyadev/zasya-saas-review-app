@@ -43,6 +43,7 @@ function DashBoard({ user }) {
         if (response.status === 200) {
           if (response.data.reviewRating.length > 0)
             ratingHandler(response.data.reviewRating);
+          setUserApplaud(response.data.applaudData.length ?? 0);
           setDashboardData(response.data);
           // if (response?.data?.applaudData?.length > 0) {
           //   sortApplaud(response.data.applaudData);
@@ -107,25 +108,35 @@ function DashBoard({ user }) {
       if (item.ReviewAssigneeAnswers.length > 0) {
         let totalrating = item.ReviewAssigneeAnswers.reduce((prev, curr) => {
           if (curr?.ReviewAssigneeAnswerOption?.length > 0) {
-            return (
-              Number(prev) + Number(curr?.ReviewAssigneeAnswerOption[0].option)
-            );
+            if (isNaN(Number(curr?.ReviewAssigneeAnswerOption[0].option))) {
+              return 0;
+            } else {
+              return (
+                Number(prev) +
+                Number(curr?.ReviewAssigneeAnswerOption[0].option)
+              );
+            }
           } else return 0;
         }, sum);
+
         let averageRating =
           Number(totalrating) / Number(item?.ReviewAssigneeAnswers?.length);
+
         return averageRating;
       } else return 0;
     });
     let avgSum = 0;
+
     let avgRatingSum = total.reduce((prev, curr) => {
       return Number(prev) + Number(curr);
     }, avgSum);
+
     let assigneAnswerLength = data.filter((item) =>
       item?.ReviewAssigneeAnswers?.length > 0 ? item : null
     );
+
     let avgRating = 0;
-    if (avgRating) avgRating = avgRatingSum / assigneAnswerLength.length;
+    if (avgRatingSum > 0) avgRating = avgRatingSum / assigneAnswerLength.length;
     setTotalRating(Number(avgRating).toFixed(2));
   };
 
