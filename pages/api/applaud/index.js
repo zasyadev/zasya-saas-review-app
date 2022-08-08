@@ -10,14 +10,33 @@ export default async (req, res) => {
       let userData = await prisma.user.findUnique({
         where: { id: reqBody.user_id },
       });
+      let createdData = await prisma.user.findUnique({
+        where: { id: reqBody.created_by },
+      });
 
-      if (userData) {
+      if (userData && createdData) {
         const data = await prisma.userApplaud.create({
           data: {
             user: { connect: { id: reqBody.user_id } },
             comment: reqBody.comment,
             created: { connect: { id: reqBody.created_by } },
             organization: { connect: { id: userData.organization_id } },
+          },
+        });
+
+        let notificationMessage = {
+          message: `${createdData.first_name ?? ""} has applauded you`,
+          link: `${process.env.NEXT_APP_URL}/applaud`,
+        };
+
+        let notificationData = await prisma.userNotification.create({
+          data: {
+            user: { connect: { id: reqBody.user_id } },
+            data: notificationMessage,
+            read_at: null,
+            organization: {
+              connect: { id: userData.organization_id },
+            },
           },
         });
 

@@ -6,11 +6,12 @@ import {
   UserSwitchOutlined,
   MenuUnfoldOutlined,
   MenuFoldOutlined,
+  BellOutlined,
 } from "@ant-design/icons";
 import Image from "next/image";
 import Link from "next/link";
 import User from "../../assets/images/User.png";
-import { Avatar, Col, Dropdown, Layout, Menu, Row } from "antd";
+import { Avatar, Col, Dropdown, Layout, Menu, Row, Badge } from "antd";
 import { signOut } from "next-auth/client";
 import { useRouter } from "next/router";
 import { openNotificationBox } from "../../helpers/notification";
@@ -27,6 +28,8 @@ function HeaderLayout({
   setCollapsed,
   md,
 }) {
+  const [pendingNotification, setPendingNotification] = useState(0);
+  const [allNotification, setAllNotification] = useState([]);
   const router = useRouter();
   const logoutHandler = () => {
     signOut();
@@ -50,10 +53,46 @@ function HeaderLayout({
         console.log(err);
       });
   };
+  const notificationHandle = async () => {
+    setAllNotification([]);
+    await fetch("/api/notification/" + user.id, {
+      method: "GET",
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        if (response.status === 200) {
+          setAllNotification(response.data);
+          let filterData = response.data.filter((item) => !item.read_at);
+          if (filterData.length) setPendingNotification(filterData.length);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const notificationViewed = async (data) => {
+    await fetch("/api/notification", {
+      method: "POST",
+      body: JSON.stringify({
+        id: data,
+      }),
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        if (response.status === 200) {
+          console.log(response, "data");
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   useEffect(() => {
     if (user) {
       fetchUserData();
+      notificationHandle();
     }
   }, []);
 
@@ -146,19 +185,47 @@ function HeaderLayout({
       )}
     </Menu>
   );
+  const notificationMenu = (
+    <div className="notification-wrapper">
+      {allNotification.length > 0 ? (
+        allNotification.map((item, idx) => {
+          return (
+            <div
+              key={idx + "notification"}
+              className={`notification-box ${
+                allNotification.length - 1 > idx
+                  ? "notification-border-bottom"
+                  : null
+              }`}
+              onClick={() => notificationViewed(item.id)}
+            >
+              <Badge dot={item.read_at ? false : true}>
+                <Link href={item.data.link}>
+                  <p className="notification-text">{item.data.message}</p>
+                </Link>
+              </Badge>
+            </div>
+          );
+        })
+      ) : (
+        <div className="notification-box">
+          <p className="notification-text">No Notification</p>
+        </div>
+      )}
+    </div>
+  );
 
   return (
     <Header className="ant-header bg-color-dashboard border-b border-b-neutral-300 p-0">
-      <Row className="items-center h-full" justify="space-between">
-        <Col md={12} lg={16} xs={16}>
-          <div className="flex  items-center mt-2">
-            <div className=" font-bold mx-3 md:mx-6 text-lg md:text-2xl primary-color-blue">
-              {title}
-            </div>
+      <div className="items-center h-full flex justify-between">
+        <div className="flex  items-center mt-2">
+          <div className=" font-bold mx-3 md:mx-6 text-lg md:text-2xl primary-color-blue">
+            {title}
           </div>
-        </Col>
-        <Col md={6} lg={3} xs={3} className="create-header-button">
-          <div className="flex items-center justify-between md:px-4 ">
+        </div>
+
+        <div className="create-header-button flex items-center justify-end md:mr-3">
+          <div className="px-2 md:px-4 ">
             <Dropdown
               overlay={createMenu}
               trigger={["click"]}
@@ -182,52 +249,60 @@ function HeaderLayout({
               </div>
             </Dropdown>
           </div>
-        </Col>
-        <Col md={6} lg={5} xs={5} className="pr-3 ">
-          <div className="flex items-center">
-            <div className="w-full user-menu-wrapper cursor-pointer rounded-md py-1 md:py-1 px-2 ">
+          <div className="w-full user-menu-wrapper cursor-pointer rounded-md py-1 md:py-1 px-2 ">
+            <div className="flex items-center">
               <Dropdown
                 trigger={"click"}
                 overlay={userMenu}
                 overlayClassName="logout-dropdown "
                 placement="bottomRight"
               >
-                <div>
-                  <div className="flex items-center">
-                    <div className="pr-2">
-                      <Avatar
-                        style={{ color: "#f56a00", backgroundColor: "#fde3cf" }}
-                        alt="C"
-                      >
-                        {userOrganizationData?.orgId
-                          ? userOrganizationData?.orgId.substring(0, 1)
-                          : null}
-                      </Avatar>
-                    </div>
-                    <div className="md:mt-3">
-                      <p className="user-deatils whitespace-nowrap hidden md:block">
-                        {userOrganizationData?.orgId}
-                      </p>
-                    </div>
+                <div className="flex items-center">
+                  <div className="pr-2">
+                    <Avatar
+                      style={{
+                        color: "#f56a00",
+                        backgroundColor: "#fde3cf",
+                      }}
+                      alt="C"
+                    >
+                      {userOrganizationData?.orgId
+                        ? userOrganizationData?.orgId.substring(0, 1)
+                        : null}
+                    </Avatar>
+                  </div>
+                  <div className="md:mt-3">
+                    <p className="user-deatils whitespace-nowrap hidden md:block">
+                      {userOrganizationData?.orgId}
+                    </p>
                   </div>
                 </div>
               </Dropdown>
-            </div>
-            {!md ? (
-              <div
-                onClick={() => setCollapsed(!collapsed)}
-                className="pr-2 pl-1"
+              <Dropdown
+                trigger={"click"}
+                overlay={notificationMenu}
+                overlayClassName="notification-dropdown "
+                placement="bottomRight"
               >
-                {collapsed ? (
-                  <MenuUnfoldOutlined className="text-base" />
-                ) : (
-                  <MenuFoldOutlined className="text-base" />
-                )}
-              </div>
-            ) : null}
+                <div className="notification-icon">
+                  <Badge count={pendingNotification}>
+                    <BellOutlined style={{ fontSize: 22 }} />
+                  </Badge>
+                </div>
+              </Dropdown>
+            </div>
           </div>
-        </Col>
-      </Row>
+          {!md ? (
+            <div onClick={() => setCollapsed(!collapsed)} className="pr-2 pl-1">
+              {collapsed ? (
+                <MenuUnfoldOutlined className="text-base" />
+              ) : (
+                <MenuFoldOutlined className="text-base" />
+              )}
+            </div>
+          ) : null}
+        </div>
+      </div>
     </Header>
   );
 }

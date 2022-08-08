@@ -21,9 +21,9 @@ const ImageUpload = ({
   limitSize = 1,
 }) => {
   const [isUploading, setIsUploading] = useState(false);
-  const [previewVisible, setPreviewVisible] = useState(false);
-  const [previewImage, setPreviewImage] = useState("");
-  const [previewTitle, setPreviewTitle] = useState("");
+  // const [previewVisible, setPreviewVisible] = useState(false);
+  // const [previewImage, setPreviewImage] = useState("");
+  // const [previewTitle, setPreviewTitle] = useState("");
 
   const uploadImageButton = !isUploading ? (
     <div>
@@ -51,14 +51,14 @@ const ImageUpload = ({
     return checkJpgOrPng && checkFileSize;
   }
 
-  function getImages(file) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = (error) => reject(error);
-    });
-  }
+  // function getImages(file) {
+  //   return new Promise((resolve, reject) => {
+  //     const reader = new FileReader();
+  //     reader.readAsDataURL(file);
+  //     reader.onload = () => resolve(reader.result);
+  //     reader.onerror = (error) => reject(error);
+  //   });
+  // }
 
   function handleChange(info) {
     if (info.file.status === "uploading") {
