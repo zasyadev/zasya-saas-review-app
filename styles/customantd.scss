@@ -213,6 +213,13 @@
       color: #6b6b6b;
     }
   }
+  .ant-pagination-item-active {
+    border-color: #0f123f;
+    color: #0f123f;
+  }
+  .ant-pagination-item-active a {
+    color: #0f123f;
+  }
 }
 .review-question-table {
   .ant-table-cell-fix-left {
@@ -967,4 +974,9 @@
       border-radius: 5px;
     }
   }
+}
+
+.received-applaud-table {
+  height: 500px;
+  overflow: auto;
 }

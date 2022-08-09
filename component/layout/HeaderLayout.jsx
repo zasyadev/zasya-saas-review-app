@@ -201,7 +201,7 @@ function HeaderLayout({
             >
               <Badge dot={item.read_at ? false : true}>
                 <Link href={item.data.link}>
-                  <p className="notification-text">{item.data.message}</p>
+                  <p className="notification-text mb-0">{item.data.message}</p>
                 </Link>
               </Badge>
             </div>

@@ -114,56 +114,60 @@ function Applaud({ user }) {
                       <p className="font-semibold text-lg primary-color-blue">
                         Received Applaud
                       </p>
-                      {receivedApplaudList.length > 0 ? (
-                        receivedApplaudList.map((item, idx) => {
-                          return (
-                            <div
-                              className=" border-2 rounded md:m-3 mt-2 shadow-md "
-                              key={"applaud" + idx}
-                            >
-                              <Row className="m-5 px-2">
-                                <Col xs={4} md={4}>
-                                  <UserIcon className="primary-color-blue font-bold text-base " />
-                                </Col>
-                                <Col xs={20} md={20}>
-                                  <p className="ml-2 text-base">
-                                    <span className="uppercase ">
-                                      {item.created.first_name}
-                                    </span>{" "}
-                                    has Applauded you.
-                                  </p>{" "}
-                                </Col>
-                              </Row>
-                              <Row className="m-5 px-2">
-                                <Col xs={4} md={4}>
-                                  <CommentIcons className="primary-color-blue font-bold text-base" />
-                                </Col>
+                      <div className="received-applaud-table">
+                        {receivedApplaudList.length > 0 ? (
+                          receivedApplaudList.map((item, idx) => {
+                            return (
+                              <div
+                                className=" border-2 rounded md:m-3 mt-2 shadow-md "
+                                key={"applaud" + idx}
+                              >
+                                <Row className="m-5 px-2">
+                                  <Col xs={4} md={4}>
+                                    <UserIcon className="primary-color-blue font-bold text-base mb-0 " />
+                                  </Col>
+                                  <Col xs={20} md={20}>
+                                    <p className="ml-2 text-base mb-0 ">
+                                      <span className="uppercase ">
+                                        {item.created.first_name}
+                                      </span>{" "}
+                                      has Applauded you.
+                                    </p>{" "}
+                                  </Col>
+                                </Row>
+                                <Row className="m-5 px-2">
+                                  <Col xs={4} md={4}>
+                                    <CommentIcons className="primary-color-blue font-bold text-base" />
+                                  </Col>
 
-                                <Col xs={20} md={20}>
-                                  <p className="ml-2 break-all text-base">
-                                    {item.comment}
-                                  </p>
-                                </Col>
-                              </Row>
-                              <Row className="m-5 px-2">
-                                <Col xs={4} md={4}>
-                                  <CalanderIcon className="primary-color-blue font-bold  text-base " />
-                                </Col>
+                                  <Col xs={20} md={20}>
+                                    <p className="ml-2 break-all text-base">
+                                      {item.comment}
+                                    </p>
+                                  </Col>
+                                </Row>
+                                <Row className="m-5 px-2">
+                                  <Col xs={4} md={4}>
+                                    <CalanderIcon className="primary-color-blue font-bold  text-base " />
+                                  </Col>
 
-                                <Col xs={20} md={20}>
-                                  <p className=" ml-2 text-base">
-                                    {moment(item.created_date).format(
-                                      "DD/MM/YYYY"
-                                    )}
-                                  </p>
-                                </Col>
-                              </Row>
-                            </div>
-                          );
-                        })
-                      ) : (
-                        <p className="text-center p-4">No Applauds received.</p>
-                      )}
+                                  <Col xs={20} md={20}>
+                                    <p className=" ml-2 text-base">
+                                      {moment(item.created_date).format(
+                                        "DD/MM/YYYY"
+                                      )}
+                                    </p>
+                                  </Col>
+                                </Row>
+                              </div>
+                            );
+                          })
+                        ) : (
+                          <p className="text-center p-4">
+                            No Applauds received.
+                          </p>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -192,7 +196,7 @@ function Applaud({ user }) {
                             <CustomTable
                               dataSource={applaudList}
                               columns={columns}
-                              pagination={false}
+                              pagination={true}
                               className="custom-table"
                             />
                           )}
