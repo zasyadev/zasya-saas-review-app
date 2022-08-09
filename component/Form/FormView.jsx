@@ -70,7 +70,15 @@ function FormView({ user }) {
       title: "Action",
       key: "action",
       render: (_, record) => (
-        <p>
+        <>
+          {/* <div className="flex "> */}
+          {/* <div>
+            
+              <button className="primary-bg-btn text-white px-2 py-1 rounded-md mx-2">
+                view
+              </button>
+            </div>
+            <div> */}
           {/* <span
             className="primary-color-blue text-lg mx-2 cursor-pointer"
             onClick={() => showModal(record)}
@@ -83,13 +91,21 @@ function FormView({ user }) {
                 className="primary-color-blue text-lg  cursor-pointer"
                 title="Attempt"
               >
-                <EyeOutlined />
+                Attempt
               </span>
             </Link>
           ) : (
-            ""
+            <div>
+              <Link href={`/review/preview/${record.id}`}>
+                <button className="primary-bg-btn text-white px-2 py-1 rounded-md mx-2">
+                  view
+                </button>
+              </Link>
+            </div>
           )}
-        </p>
+          {/* </div> */}
+          {/* </div> */}
+        </>
       ),
     },
   ];
