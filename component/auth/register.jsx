@@ -1,10 +1,10 @@
-import { Col, Form, Input, message, Row } from "antd";
+import { Col, Form, Input, message, Row, Spin } from "antd";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { HeadersComponent } from "../../helpers/HeadersComponent";
 import { openNotificationBox } from "../../helpers/notification";
-import { LoadingSpinner } from "../Loader/LoadingSpinner";
+import { LoadingOutlined } from "@ant-design/icons";
 import AuthWrapper from "./AuthWrapper";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 
@@ -39,6 +39,15 @@ function RegisterPage() {
       })
       .catch((err) => console.log(err));
   }
+  const antIcon = (
+    <LoadingOutlined
+      style={{
+        fontSize: 24,
+        color: "white",
+      }}
+      spin
+    />
+  );
 
   const FormComponent = () => {
     return (
@@ -168,8 +177,9 @@ function RegisterPage() {
           <button
             type="submit"
             className="inline-block px-7 py-5  text-white font-medium text-lg leading-snug  rounded shadow-md  hover:shadow-lg  focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out w-full btn-blue h-16"
+            disabled={loading}
           >
-            Register
+            {loading ? <Spin indicator={antIcon} /> : "Register"}
           </button>
         </div>
 
@@ -188,14 +198,11 @@ function RegisterPage() {
   return (
     <>
       <HeadersComponent />
-      {loading ? (
-        <LoadingSpinner />
-      ) : (
-        <AuthWrapper
-          FormComponent={FormComponent}
-          heading={"Register New account"}
-        />
-      )}
+
+      <AuthWrapper
+        FormComponent={FormComponent}
+        heading={"Register New account"}
+      />
     </>
   );
 }

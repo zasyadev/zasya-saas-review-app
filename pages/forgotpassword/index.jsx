@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 // import Head from "next/head";
-import { Form, Input } from "antd";
+import { Form, Input, Spin } from "antd";
 import { useRouter } from "next/router";
 // import Layout from "../../component/layout/Layout";
 import loginImage from "../../assets/images/login_img.png";
@@ -11,6 +11,7 @@ import { HeadersComponent } from "../../helpers/HeadersComponent";
 import AuthWrapper from "../../component/auth/AuthWrapper";
 // import loginImage from "../../assets/images/login-image.png";
 // import { LoadingSpinner } from "../../component/Loader/LoadingSpinner";
+import { LoadingOutlined } from "@ant-design/icons";
 
 function ForgotPassword() {
   const router = useRouter();
@@ -45,6 +46,15 @@ function ForgotPassword() {
         .catch((err) => console.log(err));
     }
   }
+  const antIcon = (
+    <LoadingOutlined
+      style={{
+        fontSize: 24,
+        color: "white",
+      }}
+      spin
+    />
+  );
   const ForgotPasswordComponent = () => {
     return (
       <Form
@@ -60,7 +70,7 @@ function ForgotPassword() {
             rules={[
               {
                 required: true,
-                message: "Please enter email!",
+                message: "Please enter email ! ",
               },
             ]}
           >
@@ -76,8 +86,9 @@ function ForgotPassword() {
           <button
             type="submit"
             className="inline-block px-7 py-5  text-white font-medium text-lg leading-snug  rounded shadow-md  hover:shadow-lg  focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out w-full btn-blue h-16"
+            disabled={loading}
           >
-            Submit
+            {loading ? <Spin indicator={antIcon} /> : "Submit"}
           </button>
         </div>
 

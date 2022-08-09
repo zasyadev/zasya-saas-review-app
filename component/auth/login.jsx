@@ -1,10 +1,11 @@
-import { Form, Input } from "antd";
+import { Button, Form, Input, Spin } from "antd";
 import { signIn } from "next-auth/client";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import loginImage from "../../assets/images/login_img.png";
+import { LoadingOutlined } from "@ant-design/icons";
 import { LoadingSpinner } from "../Loader/LoadingSpinner";
 import { openNotificationBox } from "../../helpers/notification";
 import { HeadersComponent } from "../../helpers/HeadersComponent";
@@ -37,6 +38,15 @@ function LoginPage() {
       openNotificationBox("error", error.message ?? "Failed", 3);
     }
   }
+  const antIcon = (
+    <LoadingOutlined
+      style={{
+        fontSize: 24,
+        color: "white",
+      }}
+      spin
+    />
+  );
 
   const LoginFormComponent = () => {
     return (
@@ -91,8 +101,9 @@ function LoginPage() {
           <button
             type="submit"
             className="inline-block px-7 py-5  text-white font-medium text-lg leading-snug  rounded shadow-md  hover:shadow-lg  focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out w-full btn-blue h-16"
+            disabled={loading}
           >
-            Login
+            {loading ? <Spin indicator={antIcon} /> : "Login"}
           </button>
         </div>
 
@@ -117,14 +128,11 @@ function LoginPage() {
   return (
     <>
       <HeadersComponent />
-      {loading ? (
-        <LoadingSpinner />
-      ) : (
-        <AuthWrapper
-          FormComponent={LoginFormComponent}
-          heading={"Login to your account"}
-        />
-        // <section className="h-screen">
+      <AuthWrapper
+        FormComponent={LoginFormComponent}
+        heading={"Login to your account"}
+      />
+      {/* // <section className="h-screen">
         //   <div className="text-gray-800">
         //     <div className="flex  md:justify-between justify-center items-center flex-wrap h-full g-6">
         //       <div className="md:w-1/2 w-full mb-12 md:mb-0 px-8 md:px-24 relative flex flex-col justify-center h-screen">
@@ -207,8 +215,7 @@ function LoginPage() {
         //       </div>
         //     </div>
         //   </div>
-        // </section>
-      )}
+        // </section> */}
     </>
   );
 }
