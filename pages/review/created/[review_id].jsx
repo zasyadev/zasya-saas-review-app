@@ -88,9 +88,6 @@ function ReviewCreated({ user }) {
       ) : Object.keys(reviewData).length ? (
         <ReviewCreatedComponent user={user} reviewData={reviewData} />
       ) : null}
-      {/* {reviewData ? (
-        <ReviewCreatedComponent user={user} reviewData={reviewData} />
-      ) : null} */}
     </AdminLayout>
   );
 }

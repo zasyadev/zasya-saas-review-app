@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Form, Input, message } from "antd";
+import React, { useState } from "react";
+import { Form, Input } from "antd";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { openNotificationBox } from "../../helpers/notification";
@@ -16,7 +16,6 @@ function ResetPassword() {
   async function handleSubmit(values) {
     setLoading(true);
     let obj = {
-      // email: params.email,
       password: values.password,
       token: params.passtoken,
     };
@@ -24,9 +23,6 @@ function ResetPassword() {
       await fetch("/api/user/password/resetpassword", {
         method: "POST",
         body: JSON.stringify(obj),
-        // headers: {
-        //   "Content-Type": "application/json",
-        // },
       })
         .then((response) => response.json())
         .then((data) => {
@@ -44,12 +40,6 @@ function ResetPassword() {
     }
   }
 
-  // useEffect(() => {
-  //   if (params && params.email)
-  //     resetForm.setFieldsValue({
-  //       email: params.email,
-  //     });
-  // }, [params]);
   const ResetPasswordComponent = () => {
     return (
       <Form
@@ -59,24 +49,6 @@ function ResetPassword() {
         onFinish={handleSubmit}
         className="login-form"
       >
-        {/* <div className="md:mb-6  mb-4">
-          <Form.Item
-            name="email"
-            rules={[
-              {
-                required: true,
-                message: "Please enter your email!",
-              },
-            ]}
-          >
-            <Input
-              type="text"
-              className="form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white  focus:outline-none"
-              placeholder="Email address"
-            />
-          </Form.Item>
-        </div> */}
-
         <div className="md:mb-6  mb-4">
           <Form.Item
             name="password"

@@ -234,7 +234,7 @@ function HeaderLayout({
               <div
                 key="create"
                 type="default"
-                className="primary-bg-btn text-white text-base py-2 md:py-2 px-2 rounded flex  items-center justify-center"
+                className="primary-bg-btn text-white text-base py-2 md:py-2 px-2 rounded flex  items-center justify-center cursor-pointer"
               >
                 <div className="hidden md:flex items-center ">
                   <div className="mx-2 ">Create</div>

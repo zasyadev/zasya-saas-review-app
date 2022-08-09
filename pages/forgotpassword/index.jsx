@@ -1,21 +1,16 @@
 import React, { useState } from "react";
-// import Head from "next/head";
+
 import { Form, Input, Spin } from "antd";
 import { useRouter } from "next/router";
-// import Layout from "../../component/layout/Layout";
-import loginImage from "../../assets/images/login_img.png";
-import Image from "next/image";
 import Link from "next/link";
 import { openNotificationBox } from "../../helpers/notification";
 import { HeadersComponent } from "../../helpers/HeadersComponent";
 import AuthWrapper from "../../component/auth/AuthWrapper";
-// import loginImage from "../../assets/images/login-image.png";
-// import { LoadingSpinner } from "../../component/Loader/LoadingSpinner";
+
 import { LoadingOutlined } from "@ant-design/icons";
 
 function ForgotPassword() {
   const router = useRouter();
-  const params = router.query;
 
   const [forgotForm] = Form.useForm();
   const [loading, setLoading] = useState(false);

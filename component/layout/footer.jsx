@@ -7,7 +7,7 @@ function Footer() {
       <footer className="bg-gray-100 text-center">
         <div className="px-6 pt-6">
           <form action="">
-            <div className=" grid md:grid-cols-3 gird-cols-1 gap-4 flex justify-center items-center">
+            <div className="  md:grid-cols-3 gird-cols-1 gap-4 flex justify-center items-center">
               <div className="md:ml-auto md:mb-6">
                 <p className="text-gray-800">
                   <strong>Sign up for our newsletter</strong>
