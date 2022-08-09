@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { mailService, mailTemplate } from "../../../lib/emailservice";
-import moment from "moment";
+// import moment from "moment";
 import { ReviewScheduler } from "../../../helpers/schedulerHelper";
 
 const schedule = require("node-schedule");
@@ -155,6 +155,22 @@ export default async (req, res) => {
             if (err) console.log("failed");
             else console.log("successfull");
           });
+
+          let notificationMessage = {
+            message: `${assignedFromData.first_name} has assigned you New Review.`,
+            link: `${process.env.NEXT_APP_URL}review/id/${assigneeData.id}`,
+          };
+
+          let notificationData = await prisma.userNotification.create({
+            data: {
+              user: { connect: { id: user.id } },
+              data: notificationMessage,
+              read_at: null,
+              organization: {
+                connect: { id: assignedFromData.organization_id },
+              },
+            },
+          });
         });
       }
 
@@ -166,6 +182,7 @@ export default async (req, res) => {
         status: 200,
       });
     } catch (error) {
+      console.log(error);
       return res.status(500).json({
         error: error,
         message: "Internal Server Error",
