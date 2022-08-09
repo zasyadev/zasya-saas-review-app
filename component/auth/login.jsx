@@ -128,15 +128,6 @@ function LoginPage() {
     <>
       <HeadersComponent />
 
-      {loading ? (
-        <LoadingSpinner />
-      ) : (
-        <AuthWrapper
-          FormComponent={LoginFormComponent}
-          heading={"Login to your account"}
-        />
-      )}
-
       <AuthWrapper
         FormComponent={LoginFormComponent}
         heading={"Login to your account"}
