@@ -66,7 +66,6 @@ function EditTemplate({ user }) {
           </div>
         </>
       ) : Object.keys(formData).length ? (
-        // <FormComponent user={user} editFormData={formData} editMode={true} />
         <TemplateBuildComponent
           user={user}
           editFormData={formData}

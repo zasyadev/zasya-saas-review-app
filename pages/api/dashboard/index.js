@@ -102,7 +102,12 @@ export default async (req, res) => {
         });
 
         const applaudData = await prisma.userApplaud.findMany({
-          where: { organization_id: userTableData.organization_id },
+          where: {
+            AND: [
+              { user_id: reqBody.userId },
+              { organization_id: userTableData.organization_id },
+            ],
+          },
           include: {
             user: true,
           },

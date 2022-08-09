@@ -45,13 +45,6 @@ function DashBoard({ user }) {
             ratingHandler(response.data.reviewRating);
           setUserApplaud(response.data.applaudData.length ?? 0);
           setDashboardData(response.data);
-          // if (response?.data?.applaudData?.length > 0) {
-          //   sortApplaud(response.data.applaudData);
-          //   let userCount = response.data.applaudData.filter(
-          //     (item) => item.user_id === user.id
-          //   );
-          //   setUserApplaud(userCount?.length);
-          // }
         }
       })
       .catch((err) => {
@@ -73,34 +66,6 @@ function DashBoard({ user }) {
       })
       .catch((err) => {});
   }
-
-  // const sortApplaud = (data) => {
-  //   if (data.length > 0) {
-  //     let res = data?.reduce(function (obj, key) {
-  //       obj[key.user.first_name] = obj[key.user.first_name] || [];
-  //       obj[key.user.first_name].push(key);
-  //       return obj;
-  //     }, {});
-
-  //     setApplaudData(res);
-  //     const sortable = Object.fromEntries(
-  //       Object.entries(res).sort(([, a], [, b]) => b.length - a.length)
-  //     );
-  //     setSortApplaudList(sortable);
-  //   }
-  // };
-
-  // const applaudcount = (data) => {
-  //   if (data.length > 0) {
-  //     let res = data?.reduce(function (obj, key) {
-  //       obj[key.user.first_name] = obj[key.user.first_name] || [];
-  //       obj[key.user.first_name].push(key);
-  //       return obj;
-  //     }, {});
-
-  //     setApplaudData(res);
-  //   } else setApplaudData([]);
-  // };
 
   const ratingHandler = (data) => {
     let sum = 0;
