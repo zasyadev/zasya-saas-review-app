@@ -26,7 +26,7 @@ export default async (req, res) => {
 
         let notificationMessage = {
           message: `${createdData.first_name ?? ""} has applauded you`,
-          link: `${process.env.NEXT_APP_URL}/applaud`,
+          link: `${process.env.NEXT_APP_URL}applaud`,
         };
 
         let notificationData = await prisma.userNotification.create({

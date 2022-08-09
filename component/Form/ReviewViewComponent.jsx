@@ -3,9 +3,8 @@ import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import TextField from "@material-ui/core/TextField";
 import React, { useState } from "react";
-import { LikeOutlined, DislikeOutlined } from "@ant-design/icons";
-
-import { Col, Row, Slider } from "antd";
+import { LikeOutlined, DislikeOutlined, EditOutlined } from "@ant-design/icons";
+import { Col, Row, Slider, Modal, Input } from "antd";
 import { DeleteSmallTemplateIcon } from "../../assets/Icon/icons";
 
 const ReviewViewComponent = ({
@@ -14,6 +13,10 @@ const ReviewViewComponent = ({
   removeElement,
   questionText,
   options,
+  editableFeedback = false,
+  setIsModalVisible,
+  isModalVisible,
+  onHandleReviewChange,
 }) => {
   const [sliderInputValue, setSliderInputValue] = useState(0);
 
@@ -25,12 +28,19 @@ const ReviewViewComponent = ({
       >
         <Col xs={24} sm={24} md={22}>
           <div className="flex flex-col items-start ml-4 py-5">
-            <p
-              variant="subtitle1"
-              className="ml-0 primary-color-blue font-medium text-base"
-            >
-              {`(${idx + 1})`} {questionText}
-            </p>
+            <div className="flex items-center  w-full">
+              <p className="ml-0 primary-color-blue font-medium text-base">
+                {`(${idx + 1})`} {questionText}{" "}
+              </p>{" "}
+              {editableFeedback ? (
+                <p
+                  className="ml-3 primary-color-blue  text-sm cursor-pointer"
+                  onClick={() => setIsModalVisible(true)}
+                >
+                  <EditOutlined />
+                </p>
+              ) : null}
+            </div>
 
             {options?.length > 0 && type === "checkbox" && (
               <div>
@@ -66,11 +76,13 @@ const ReviewViewComponent = ({
               <div className="mt-2">
                 <div className="flex items-center justify-center">
                   <div className="p-4  border mx-2 rounded-sm">
-                    <LikeOutlined style={{ fontSize: "28px", color: "#000" }} />
+                    <LikeOutlined
+                      style={{ fontSize: "28px", color: "#0f123f" }}
+                    />
                   </div>
                   <div className="p-4 border mx-2 rounded-sm">
                     <DislikeOutlined
-                      style={{ fontSize: "28px", color: "#000" }}
+                      style={{ fontSize: "28px", color: "#0f123f" }}
                     />
                   </div>
                 </div>
@@ -95,30 +107,6 @@ const ReviewViewComponent = ({
                   {sliderInputValue}
                 </p>
 
-                {/* <RadioGroup
-              name="scale"
-              className="mx-3 flex justify-center"
-              row
-              onChange={(e) => handleAnswerChange(id, e.target.value)}
-            >
-              {Number(options[0]?.higherLabel) &&
-                Number(options[0]?.lowerLabel) > -1 &&
-                range.length > 0 &&
-                range(
-                  Number(options[0]?.lowerLabel),
-                  Number(options[0]?.higherLabel)
-                ).map((rg, index) => {
-                  return (
-                    <FormControlLabel
-                      value={rg.toString()}
-                      control={<Radio />}
-                      label={rg}
-                      labelPlacement="top"
-                      key={index + "range"}
-                    />
-                  );
-                })}
-            </RadioGroup> */}
                 <p>{options[1]?.optionText}</p>
               </div>
             )}
@@ -136,6 +124,16 @@ const ReviewViewComponent = ({
           </div>
         </Col>
       </Row>
+      <Modal
+        visible={isModalVisible}
+        onCancel={() => setIsModalVisible(false)}
+        onOk={() => setIsModalVisible(false)}
+      >
+        <Input
+          placeholder="Review rating question"
+          onChange={(e) => onHandleReviewChange(e.target.value, idx)}
+        />
+      </Modal>
     </>
   );
 };

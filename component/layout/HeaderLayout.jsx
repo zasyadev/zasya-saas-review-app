@@ -189,6 +189,7 @@ function HeaderLayout({
     <div className="notification-wrapper">
       {allNotification.length > 0 ? (
         allNotification.map((item, idx) => {
+          // if (idx < 10) {
           return (
             <div
               key={idx + "notification"}
@@ -206,6 +207,7 @@ function HeaderLayout({
               </Badge>
             </div>
           );
+          // }
         })
       ) : (
         <div className="notification-box mb-0">

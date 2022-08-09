@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Form, Row, Col, Select, Input, Radio } from "antd";
-
+import { Form, Row, Col, Select, Input, Radio, Modal } from "antd";
 import { useRouter } from "next/router";
 import { openNotificationBox } from "../../helpers/notification";
 import ReviewViewComponent from "../Form/ReviewViewComponent";
@@ -13,6 +12,7 @@ const defaultScaleQuestion = {
   higherLabel: 10,
   open: false,
   type: "scale",
+  editableFeedback: true,
 };
 
 function AddEditReviewComponent({ editMode, user }) {
@@ -31,6 +31,7 @@ function AddEditReviewComponent({ editMode, user }) {
     assigned_to_id: false,
     review_type: false,
   });
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   const onInputChange = (value, name) => {
     if (value && name) {
@@ -53,14 +54,14 @@ function AddEditReviewComponent({ editMode, user }) {
   function onFinish(type) {
     let values = form.getFieldsValue(true);
 
-    let templateData = {};
-    if (type === "preview") {
-      templateData = values.templateData;
-    } else {
-      templateData = formList.find((item) => item.id == values.template_id);
-      if (values.review_type === "feedback")
-        templateData?.form_data?.questions.push(defaultScaleQuestion);
-    }
+    // let templateData = {};
+    // if (type === "preview") {
+    //   templateData = values.templateData;
+    // } else {
+    //   templateData = formList.find((item) => item.id == values.template_id);
+    //   if (values.review_type === "feedback")
+    //     templateData?.form_data?.questions.push(defaultScaleQuestion);
+    // }
 
     addReviewAssign({
       created_by: user.id,
@@ -72,7 +73,7 @@ function AddEditReviewComponent({ editMode, user }) {
       frequency: values.frequency,
       role_id: user.role_id,
       is_published: "published",
-      templateData: templateData,
+      templateData: questionList,
     });
   }
 
@@ -175,7 +176,17 @@ function AddEditReviewComponent({ editMode, user }) {
         },
       },
     };
-    onFinish(obj, "preview");
+
+    onFinish();
+  };
+
+  const onHandleReviewChange = (value, index) => {
+    console.log(value, index, "value, index");
+    setQuestionList((prev) =>
+      prev.map((item, i) =>
+        i === index ? { ...item, questionText: value } : item
+      )
+    );
   };
 
   return (
@@ -200,6 +211,9 @@ function AddEditReviewComponent({ editMode, user }) {
                         {...question}
                         idx={idx}
                         removeElement={removeElement}
+                        setIsModalVisible={setIsModalVisible}
+                        isModalVisible={isModalVisible}
+                        onHandleReviewChange={onHandleReviewChange}
                       />
                     </>
                   ))}
