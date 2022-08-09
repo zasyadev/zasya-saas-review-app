@@ -1,10 +1,11 @@
-import { Input, Row, Col } from "antd";
+import { Input, Row, Col, Form, Button } from "antd";
 import { useRouter } from "next/router";
 import React, { useState, useEffect } from "react";
 import { openNotificationBox } from "../../helpers/notification";
 import QuestionComponent from "../Form/QuestionComponent";
 import Link from "next/link";
 import { CloseOutlined } from "@ant-design/icons";
+import { Modal } from "antd";
 
 const defaultQuestionConfig = {
   questionText: "Untitled Question",
@@ -38,6 +39,7 @@ function TemplateBuildComponent({
   const [formDes, setFormDes] = useState("");
   const [activeQuestionIndex, setActiveQuestionIndex] = useState(0);
   const [selectTypeFeild, setSelectTypeFeild] = useState(false);
+  const [modalTitleopen, setModalTitleOpen] = useState(false);
 
   function removeElement(idx) {
     setQuestions((prev) => prev.filter((_, i) => i != idx));
@@ -271,6 +273,17 @@ function TemplateBuildComponent({
     }
   }, []);
 
+  const handleOk = () => {
+    if (formTitle) setModalTitleOpen(false);
+  };
+  useEffect(() => {
+    if (editMode) {
+      setModalTitleOpen(false);
+    } else {
+      setModalTitleOpen(true);
+    }
+  }, [true]);
+
   return (
     <div className="mx-4">
       <Row gutter={16}>
@@ -485,6 +498,29 @@ function TemplateBuildComponent({
           </div>
         </div>
       </div> */}
+      <Modal
+        visible={modalTitleopen}
+        // onOk={handleOk}
+        // onCancel={handleCancel}
+        footer={
+          <Button key="add" type="primary" onClick={handleOk}>
+            Create Template
+          </Button>
+        }
+      >
+        <div>
+          <div className="primary-color-blue text-base text-center mb-2 font-bold ">
+            Template Title
+          </div>
+          <div>
+            <Input
+              onChange={(e) => {
+                setFormTitle(e.target.value);
+              }}
+            />
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }

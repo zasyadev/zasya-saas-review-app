@@ -6,8 +6,8 @@ export function PreviewAnswer({ item, nextSlide, setNextSlide, length }) {
   return (
     <div className="my-auto answer-bg  ">
       <Row justify="center">
-        <Col xs={18} md={18}>
-          <div className=" bg-white rounded-md shadow-md px-2 py-2 mt-10 sm:mt-15 md:mt-18">
+        <Col xs={20} md={18}>
+          <div className=" bg-white rounded-md shadow-md px-2 py-2 mt-8 sm:mt-15 md:my-10">
             <div className="text-xl font-bold text-red-400 mt-5 px-2 text-center">
               {item.questionText}
             </div>

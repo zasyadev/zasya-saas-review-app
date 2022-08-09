@@ -983,6 +983,16 @@
 
 .preview-answer {
   .answer-bg {
-    min-height: 80vh;
+    min-height: 82vh;
+  }
+  @include mobile {
+    .answer-bg {
+      min-height: 100vh;
+    }
+  }
+  @include tab {
+    .answer-bg {
+      min-height: 78vh;
+    }
   }
 }
