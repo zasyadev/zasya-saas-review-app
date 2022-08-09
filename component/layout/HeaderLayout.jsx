@@ -208,8 +208,8 @@ function HeaderLayout({
           );
         })
       ) : (
-        <div className="notification-box">
-          <p className="notification-text">No Notification</p>
+        <div className="notification-box mb-0">
+          <p className="notification-text mb-0">No Notification</p>
         </div>
       )}
     </div>

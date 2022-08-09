@@ -76,7 +76,7 @@ function PreviewComponent({ user, reviewId }) {
   }, [answers, questions]);
 
   return (
-    <>
+    <div className="preview-answer">
       {previewData.length > 0 &&
         previewData
           ?.filter((_, index) => index === nextSlide)
@@ -90,7 +90,7 @@ function PreviewComponent({ user, reviewId }) {
               />
             </>
           ))}
-    </>
+    </div>
   );
 }
 export default PreviewComponent;

@@ -980,3 +980,9 @@
   height: 500px;
   overflow: auto;
 }
+
+.preview-answer {
+  .answer-bg {
+    min-height: 80vh;
+  }
+}
