@@ -71,6 +71,7 @@ function FormView({ user }) {
       key: "action",
       render: (_, record) => (
         <>
+          {console.log(record.status)}
           {/* <div className="flex "> */}
           {/* <div>
             
@@ -98,7 +99,7 @@ function FormView({ user }) {
             <div>
               <Link href={`/review/preview/${record.id}`}>
                 <button className="primary-bg-btn text-white px-2 py-1 rounded-md mx-2">
-                  view
+                  View
                 </button>
               </Link>
             </div>

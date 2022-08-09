@@ -141,7 +141,7 @@ function Applaud({ user }) {
                                   </Col>
 
                                   <Col xs={20} md={20}>
-                                    <p className="ml-2 break-all text-base">
+                                    <p className="ml-2 break-all text-base mb-0">
                                       {item.comment}
                                     </p>
                                   </Col>
@@ -152,7 +152,7 @@ function Applaud({ user }) {
                                   </Col>
 
                                   <Col xs={20} md={20}>
-                                    <p className=" ml-2 text-base">
+                                    <p className=" ml-2 text-base mb-0">
                                       {moment(item.created_date).format(
                                         "DD/MM/YYYY"
                                       )}
@@ -163,7 +163,7 @@ function Applaud({ user }) {
                             );
                           })
                         ) : (
-                          <p className="text-center p-4">
+                          <p className="text-center p-4 mb-0">
                             No Applauds received.
                           </p>
                         )}
