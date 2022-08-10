@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Col, Form, Input, Radio, Row, Slider } from "antd";
+import { Col, Form, Input, Radio, Rate, Row, Slider } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import { LikeOutlined, DislikeOutlined } from "@ant-design/icons";
 import { openNotificationBox } from "../../../helpers/notification";
@@ -19,6 +19,9 @@ export function FormSlideComponent({
   const [sliderInputValue, setSliderInputValue] = useState({
     [id]: 0,
   });
+  const [rateInputValue, setRateInputValue] = useState({
+    [id]: 0,
+  });
   const [inputLimit, setInputLimit] = useState({
     [id]: 0,
   });
@@ -27,7 +30,7 @@ export function FormSlideComponent({
   });
 
   const answerHandle = (queId, value) => {
-    if ((value, value.trim())) {
+    if (value && value.trim()) {
       setDisable((prev) => ({ ...prev, [`${queId}`]: true }));
     } else {
       setDisable((prev) => ({ ...prev, [`${queId}`]: false }));
@@ -38,6 +41,13 @@ export function FormSlideComponent({
       setSliderInputValue((prev) => ({ ...prev, [`${queId}`]: value }));
     } else {
       setSliderInputValue((prev) => ({ ...prev, [`${queId}`]: 0 }));
+    }
+  };
+  const handleRateInput = (queId, value) => {
+    if (value) {
+      setRateInputValue((prev) => ({ ...prev, [`${queId}`]: value }));
+    } else {
+      setRateInputValue((prev) => ({ ...prev, [`${queId}`]: 0 }));
     }
   };
   const handleInputLimit = (queId, value) => {
@@ -90,7 +100,7 @@ export function FormSlideComponent({
                 <Row gutter={[32, 32]} justify="center">
                   {options?.map((op, j) => {
                     return (
-                      <Col xs={24} md={12} lg={8}>
+                      <Col xs={24} md={12} lg={8} key={j + "option"}>
                         <Radio.Button
                           className="text-center answer-radio-button w-full flex items-center justify-center"
                           value={op.optionText}
@@ -114,15 +124,7 @@ export function FormSlideComponent({
               </span>
             </div>
             <div className="mt-2 md:my-6 md:mx-8 mx-2 ">
-              <Form.Item
-                name={"ques" + id}
-                // rules={[
-                //   {
-                //     required: true,
-                //     message: "",
-                //   },
-                // ]}
-              >
+              <Form.Item name={"ques" + id}>
                 <Input
                   size="large"
                   placeholder={type == "input" ? "Short Text" : ""}
@@ -159,6 +161,31 @@ export function FormSlideComponent({
                   answerHandle(id, e.target.value);
                 }}
               />
+            </Form.Item>
+          </div>
+        )}
+
+        {type === "rating" && (
+          <div className="my-10 md:mx-8 mx-2 ">
+            <Form.Item
+              name={"ques" + id}
+              rules={[
+                {
+                  required: true,
+                  message: "",
+                },
+              ]}
+            >
+              <div className="question-view-rating">
+                <Rate
+                  onChange={(e) => {
+                    handleAnswerChange(id, e.toString());
+                    answerHandle(id, e.toString());
+                    handleRateInput(id, e);
+                  }}
+                  value={rateInputValue[id] ?? 0}
+                />
+              </div>
             </Form.Item>
           </div>
         )}

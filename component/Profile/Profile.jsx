@@ -12,6 +12,8 @@ import Link from "next/link";
 import { useS3Upload } from "next-s3-upload";
 
 const datePattern = "DD/MM/YYYY";
+
+const BASE = process.env.NEXT_PUBLIC_APP_URL;
 const ImageUpload = ({
   category,
   fileList,
@@ -277,6 +279,21 @@ function Profile({ user }) {
       })
       .catch((err) => console.log(err));
   }
+
+  const shareLinkedinUrl = (data) => {
+    let urlEncoded = encodeURI(`https://www.linkedin.com/shareArticle?\
+mini=true&\
+url=${BASE}&\
+title=${data?.created?.first_name + " has given you a Applaud."}&\
+summary=${data?.comment}&\
+source=LinkedIn`);
+
+    window.open(
+      urlEncoded,
+      "_blank",
+      "width=550,height=431,location=no,menubar=no,scrollbars=no,status=no,toolbar=no"
+    );
+  };
 
   return (
     <>
@@ -573,7 +590,10 @@ function Profile({ user }) {
                                 </div>
                               </Col>
                               <Col md={6} xs={6}>
-                                <div className="flex justify-end">
+                                <div
+                                  className="flex justify-end cursor-pointer"
+                                  onClick={() => shareLinkedinUrl(item)}
+                                >
                                   <div className="bg-red-400 py-2 px-2 rounded-full w-10">
                                     <ShareIcon />
                                   </div>

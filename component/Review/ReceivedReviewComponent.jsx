@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { openNotificationBox } from "../../helpers/notification";
-import QuestionViewComponent from "../Form/QuestionViewComponent";
+
 import { FormSlideComponent } from "./formhelper/FormComponent";
 
 function ReceivedReviewComponent({ user, reviewId }) {
@@ -14,7 +14,6 @@ function ReceivedReviewComponent({ user, reviewId }) {
   const [formValues, setFormValues] = useState([]);
   const [questions, setQuestions] = useState([]);
   const [nextSlide, setNextSlide] = useState(0);
-  // const [disable, setDisable] = useState(true);
 
   const handleAnswerChange = (quesId, value, type) => {
     if (type === "input" && value.length > 179) {
@@ -128,9 +127,9 @@ function ReceivedReviewComponent({ user, reviewId }) {
         console.log(err);
       });
   };
-  function handleCancel() {
-    router.push("/review");
-  }
+  // function handleCancel() {
+  //   router.push("/review");
+  // }
 
   useEffect(() => {
     if (user && reviewId) fetchReviewData(user, reviewId);
@@ -170,13 +169,6 @@ function ReceivedReviewComponent({ user, reviewId }) {
                     setNextSlide={setNextSlide}
                     length={questions.length}
                     handleSubmit={handleSubmit}
-                    // disable={disable}
-                    // formValues={formValues}
-                    // answer={
-                    //   formValues?.questionId == question.id
-                    //     ? formValues?.answer
-                    //     : ""
-                    // }
                   />
                 ))}
           </Form>

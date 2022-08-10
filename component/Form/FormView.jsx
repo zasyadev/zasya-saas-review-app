@@ -1,8 +1,5 @@
-import { EyeOutlined } from "@ant-design/icons";
-import { Modal, Skeleton } from "antd";
+import { Skeleton } from "antd";
 import React, { useEffect, useState } from "react";
-import { openNotificationBox } from "../../helpers/notification";
-import QuestionViewComponent from "./QuestionViewComponent";
 import CustomTable from "../../helpers/CustomTable";
 import Link from "next/link";
 
@@ -71,21 +68,6 @@ function FormView({ user }) {
       key: "action",
       render: (_, record) => (
         <>
-          {console.log(record.status)}
-          {/* <div className="flex "> */}
-          {/* <div>
-            
-              <button className="primary-bg-btn text-white px-2 py-1 rounded-md mx-2">
-                view
-              </button>
-            </div>
-            <div> */}
-          {/* <span
-            className="primary-color-blue text-lg mx-2 cursor-pointer"
-            onClick={() => showModal(record)}
-          >
-            <EyeOutlined />
-          </span> */}
           {!record.status ? (
             <Link href={`/review/id/${record.id}`}>
               <span
@@ -104,8 +86,6 @@ function FormView({ user }) {
               </Link>
             </div>
           )}
-          {/* </div> */}
-          {/* </div> */}
         </>
       ),
     },

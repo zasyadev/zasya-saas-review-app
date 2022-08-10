@@ -1,13 +1,9 @@
-import { Form, Input, Select, Option, Collapse } from "antd";
-
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Radio from "@material-ui/core/Radio";
+import { Input, Select, Radio, Rate } from "antd";
 import { Col, Row } from "antd";
 import Image from "next/image";
 import React from "react";
 import CloseIcon from "../../assets/images/close-line.svg";
 import DeleteIcon from "../../assets/images/delete.svg";
-import RadioGroup from "@material-ui/core/RadioGroup";
 import {
   CheckboxIcon,
   DislikeIcon,
@@ -15,7 +11,7 @@ import {
   ScaleIcon,
   TextIcon,
 } from "../../assets/Icon/icons";
-import { LikeOutlined, DislikeOutlined } from "@ant-design/icons";
+import { LikeOutlined, DislikeOutlined, StarOutlined } from "@ant-design/icons";
 
 const QuestionComponent = ({
   type,
@@ -130,6 +126,22 @@ const QuestionComponent = ({
               <p className="mb-0">Yes or No</p>
             </div>
           </Col>
+          <Col md={8} xs={12}>
+            <div
+              className="flex items-center question-type-bg "
+              onClick={(e) => {
+                defineType("rating", idx);
+                setSelectTypeFeild(false);
+              }}
+            >
+              <div className=" mr-3">
+                <StarOutlined />
+              </div>
+              <div>
+                <p className="mb-0">Rating </p>
+              </div>
+            </div>
+          </Col>
         </Row>
       </div>
     </div>
@@ -174,7 +186,7 @@ const QuestionComponent = ({
                     <>
                       {options.map((op, j) => (
                         <div key={j}>
-                          <div className="flex flex-row -ml-4 justify-between py-2">
+                          <div className="flex flex-row justify-between items-center py-2">
                             <Radio disabled />
                             <Input
                               placeholder="Option Text "
@@ -234,6 +246,14 @@ const QuestionComponent = ({
                         <div className="p-7 md:p-10 border mx-2 rounded-sm">
                           <DislikeOutlined style={{ fontSize: "64px" }} />
                         </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {type == "rating" && (
+                    <div className="mt-2 question-rating">
+                      <div className="text-white text-2xl ">
+                        <Rate disabled defaultValue={3} />
                       </div>
                     </div>
                   )}
@@ -315,16 +335,10 @@ const QuestionComponent = ({
                         Linear Scale
                       </Select.Option>
                       <Select.Option value={"yesno"}>Yes or No</Select.Option>
+                      <Select.Option value={"rating"}>Rating</Select.Option>
                     </Select>
                   </div>
                   <div className="flex justify-end items-center mt-1">
-                    {" "}
-                    {/* <span
-                  onClick={() => showAsQuestion(idx)}
-                  className="cursor-pointer w-8 pr-2 border-r-2"
-                >
-                  <Image src={EyeIcon} alt="Delete" width={20} height={20} />
-                </span> */}
                     <div
                       onClick={() => removeElement(idx)}
                       className="cursor-pointer mx-2 w-10  pr-2"
@@ -381,29 +395,39 @@ const QuestionComponent = ({
                 </p>
               </div>
             ) : null}
+            {type == "rating" ? (
+              <div className="mt-2 question-view-rating ">
+                <div className="text-white text-2xl ">
+                  <Rate disabled />
+                </div>
+              </div>
+            ) : null}
 
             {type === "scale" && options?.length > 1 && (
               <div className="flex items-baseline w-full justify-around mt-2">
                 <p className="text-white text-2xl">{options[0]?.optionText}</p>
-                <RadioGroup
+                <Radio.Group
                   name="scale"
-                  className="mx-3 flex justify-center text-white"
+                  className="px-4 flex justify-between text-white question-view-radio-wrapper"
                   row
                 >
                   {higherLabel &&
                     lowerLabel > -1 &&
                     range.length > 0 &&
                     range(lowerLabel, higherLabel).map((rg, index) => (
-                      <FormControlLabel
-                        value={rg}
-                        control={<Radio />}
-                        label={rg}
-                        labelPlacement="top"
-                        key={index + "range"}
-                        className="text-white"
-                      />
+                      <Radio value={rg} className="text-white">
+                        {rg}
+                      </Radio>
+                      // <FormControlLabel
+                      //   value={rg}
+                      //   control={<Radio />}
+                      //   label={rg}
+                      //   labelPlacement="top"
+                      //   key={index + "range"}
+                      //   className="text-white"
+                      // />
                     ))}
-                </RadioGroup>
+                </Radio.Group>
                 <p className="text-white text-2xl">{options[1]?.optionText}</p>
               </div>
             )}

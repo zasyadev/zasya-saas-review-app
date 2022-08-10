@@ -64,7 +64,7 @@ function ReviewCreatedComponent({
   };
 
   useEffect(() => {
-    let headersData = reviewData?.form?.form_data?.questions.map((item, i) => {
+    let headersData = reviewData?.form?.form_data.map((item, i) => {
       return {
         title: item.questionText,
         dataIndex: "option" + i,
@@ -340,47 +340,6 @@ function ReviewCreatedComponent({
               </div>
             </Col>
           </Row>
-          {/* <Modal
-            title="Answers"
-            visible={answerDataModel}
-            //    onOk={handleOk}
-            onCancel={() => setAnswerDataModel(false)}
-            footer={null}
-            wrapClassName="modal-answer-wrapper"
-          >
-            <div>
-              {loading ? (
-                <Skeleton
-                  title={false}
-                  active={true}
-                  width={[200]}
-                  className="mt-4"
-                  rows={3}
-                />
-              ) : answerData?.length > 0 ? (
-                answerData.map((ans, idx) => {
-                  return (
-                    <div key={idx + "que"}>
-                      {ans?.ReviewAssigneeAnswerOption?.length > 0
-                        ? ans?.ReviewAssigneeAnswerOption.map((item, i) => {
-                            return (
-                              <>
-                                <AnswerViewComponent
-                                  questionText={item.question.questionText}
-                                  option={item.option}
-                                  type={item.question.type}
-                                  idx={i}
-                                />
-                              </>
-                            );
-                          })
-                        : null}
-                    </div>
-                  );
-                })
-              ) : null}
-            </div>
-          </Modal> */}
         </div>
       </div>
     </div>

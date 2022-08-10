@@ -181,7 +181,6 @@ function AddEditReviewComponent({ editMode, user }) {
   };
 
   const onHandleReviewChange = (value, index) => {
-    console.log(value, index, "value, index");
     setQuestionList((prev) =>
       prev.map((item, i) =>
         i === index ? { ...item, questionText: value } : item

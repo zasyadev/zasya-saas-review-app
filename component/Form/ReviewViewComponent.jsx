@@ -1,10 +1,6 @@
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Radio from "@material-ui/core/Radio";
-import RadioGroup from "@material-ui/core/RadioGroup";
-import TextField from "@material-ui/core/TextField";
 import React, { useState } from "react";
 import { LikeOutlined, DislikeOutlined, EditOutlined } from "@ant-design/icons";
-import { Col, Row, Slider, Modal, Input } from "antd";
+import { Col, Row, Slider, Modal, Input, Radio, Space, Rate } from "antd";
 import { DeleteSmallTemplateIcon } from "../../assets/Icon/icons";
 
 const ReviewViewComponent = ({
@@ -14,11 +10,10 @@ const ReviewViewComponent = ({
   questionText,
   options,
   editableFeedback = false,
-  setIsModalVisible,
-  isModalVisible,
   onHandleReviewChange,
 }) => {
   const [sliderInputValue, setSliderInputValue] = useState(0);
+  const [inputOuestion, setInputQuestion] = useState(false);
 
   return (
     <>
@@ -29,13 +24,24 @@ const ReviewViewComponent = ({
         <Col xs={24} sm={24} md={22}>
           <div className="flex flex-col items-start ml-4 py-5">
             <div className="flex items-center  w-full">
-              <p className="ml-0 primary-color-blue font-medium text-base">
-                {`(${idx + 1})`} {questionText}{" "}
-              </p>{" "}
+              {inputOuestion && editableFeedback ? (
+                <Input
+                  placeholder="Review rating question"
+                  onChange={(e) => onHandleReviewChange(e.target.value, idx)}
+                  value={questionText}
+                  onPressEnter={() => setInputQuestion(!inputOuestion)}
+                />
+              ) : (
+                <p className="ml-0 primary-color-blue font-medium text-base">
+                  {`(${idx + 1})`} {questionText}{" "}
+                </p>
+              )}
               {editableFeedback ? (
                 <p
                   className="ml-3 primary-color-blue  text-sm cursor-pointer"
-                  onClick={() => setIsModalVisible(true)}
+                  onClick={() => {
+                    setInputQuestion(!inputOuestion);
+                  }}
                 >
                   <EditOutlined />
                 </p>
@@ -43,35 +49,41 @@ const ReviewViewComponent = ({
             </div>
 
             {options?.length > 0 && type === "checkbox" && (
-              <div>
-                <div className="flex">
-                  <RadioGroup
-                    name="checkbox_option"
-                    disabled
-                    className="radio-button"
-                  >
+              <div className="ml-2 my-2">
+                <Radio.Group
+                  name="checkbox_option"
+                  disabled
+                  className="radio-button"
+                >
+                  <Space direction="vertical">
                     {options?.map((op, j) => (
                       <>
-                        <FormControlLabel
-                          control={<Radio className="mr-2  " size="small" />}
-                          label={op.optionText}
-                          value={op.optionText}
-                          disabled
-                        />
+                        <Radio value={op.optionText} disabled>
+                          {op.optionText}
+                        </Radio>
                       </>
                     ))}
-                  </RadioGroup>
-                </div>
+                  </Space>
+                </Radio.Group>
               </div>
             )}
             {type == "input" || type === "textarea" ? (
-              <TextField
-                fullWidth={true}
-                placeholder={type == "input" ? "Short Text" : "Long Text"}
-                rows={1}
-                disabled
-              />
+              <div className="review-view-input-wrraper">
+                <Input
+                  fullWidth={true}
+                  placeholder={type == "input" ? "Short Text" : "Long Text"}
+                  rows={1}
+                  disabled
+                />
+              </div>
             ) : null}
+            {type == "rating" && (
+              <div className="mt-2 review-question-rating">
+                <div className="text-white text-2xl ">
+                  <Rate disabled defaultValue={3} />
+                </div>
+              </div>
+            )}
             {type == "yesno" ? (
               <div className="mt-2">
                 <div className="flex items-center justify-center">
@@ -124,16 +136,6 @@ const ReviewViewComponent = ({
           </div>
         </Col>
       </Row>
-      <Modal
-        visible={isModalVisible}
-        onCancel={() => setIsModalVisible(false)}
-        onOk={() => setIsModalVisible(false)}
-      >
-        <Input
-          placeholder="Review rating question"
-          onChange={(e) => onHandleReviewChange(e.target.value, idx)}
-        />
-      </Modal>
     </>
   );
 };

@@ -44,8 +44,8 @@ model User {
 
   UserOraganizationTags UserOraganizationTags[]
   UserDetails           UserDetails?
+  UserNotification      UserNotification[]
   @@map("users")
-  UserNotification UserNotification[]
 }
 
 model Role {
@@ -136,12 +136,12 @@ model Review {
   id                    String                  @id @default(uuid())
   created               User                    @relation("taskReviewBy", fields: [created_by], references: [id])
   created_by            String
-  review_name           String
-  form                  ReviewAssignTemplate    @relation(fields: [form_id], references: [id], onDelete: Cascade)
-  form_id               String
-  status                String
-  frequency             Frequency               @default(once)
-  review_type           ReviewType              @default(other)
+  review_name           String?
+  form                  ReviewAssignTemplate?   @relation(fields: [form_id], references: [id], onDelete: Cascade)
+  form_id               String?
+  status                String?
+  frequency             Frequency?              @default(once)
+  review_type           ReviewType?             @default(other)
   organization          UserOrganization?       @relation(fields: [organization_id], references: [id])
   organization_id       Int?
   role                  Role?                   @relation(fields: [role_id], references: [id])
@@ -236,8 +236,8 @@ model UserOrganization {
   UserApplaud           UserApplaud[]
   UserOraganizationTags UserOraganizationTags[]
   ReviewAssigneeAnswers ReviewAssigneeAnswers[]
+  UserNotification      UserNotification[]
   @@map("user_organization")
-  UserNotification UserNotification[]
 }
 
 model UserImage {

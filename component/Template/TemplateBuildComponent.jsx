@@ -25,14 +25,7 @@ const defaultScaleQuestion = {
   error: "",
 };
 
-function TemplateBuildComponent({
-  user,
-  setFormDetailShow,
-  editMode,
-  editFormData,
-  setEditMode,
-  fetchFormList,
-}) {
+function TemplateBuildComponent({ user, editMode, editFormData }) {
   const router = useRouter();
   const [questions, setQuestions] = useState([defaultQuestionConfig]);
   const [formTitle, setFormTitle] = useState("");
@@ -198,11 +191,6 @@ function TemplateBuildComponent({
       return;
     }
     if (formTitle) {
-      // {
-      //   questions.filter((item, idx) =>
-      //     item.questionText === "" ? setQuestions() : item
-      //   );
-      // }
       let quesArray = newQuestionData.map((item) => ({ ...item, open: false }));
 
       let obj = {
@@ -270,19 +258,15 @@ function TemplateBuildComponent({
       setQuestions(editFormData?.form_data?.questions);
       setFormTitle(editFormData?.form_data?.title);
       setFormDes(editFormData?.form_data?.description);
+      setModalTitleOpen(false);
+    } else {
+      setModalTitleOpen(true);
     }
   }, []);
 
   const handleOk = () => {
     if (formTitle) setModalTitleOpen(false);
   };
-  useEffect(() => {
-    if (editMode) {
-      setModalTitleOpen(false);
-    } else {
-      setModalTitleOpen(true);
-    }
-  }, [true]);
 
   return (
     <div className="mx-4">
@@ -400,14 +384,6 @@ function TemplateBuildComponent({
             </div>
           </div>
           <div className="block lg:flex justify-end items-end my-4  lg:pl-56 ">
-            {/* <Link href={"/template"}>
-              <button
-                className=" toggle-btn-bg mr-2 px-4 py-3 h-full rounded  text-white  my-1"
-                type="button"
-              >
-                <span className="MuiButton-label">Preview</span>
-              </button>
-            </Link> */}
             <button
               className=" px-4 py-3 h-full rounded primary-bg-btn text-white  my-1 ml-2"
               type="button"
@@ -420,88 +396,9 @@ function TemplateBuildComponent({
           </div>
         </Col>
       </Row>
-      {/* <div className="w-full  md:w-4/6 mx-auto">
-        <div className="w-full bg-white rounded-xl shadow-md p-4 mt-4 add-template-wrapper">
-          <div className="rounded-t-md  mt-1">
-            <div className="w-full flex flex-col items-start  pt-2 pb-5 ">
-              <Input
-                placeholder="Template Title"
-                value={formTitle}
-                onChange={(e) => {
-                  setFormTitle(e.target.value);
-                }}
-                className="input-box text-2xl template-title"
-                bordered={false}
-              />
-              <Input
-                placeholder="Template Description"
-                value={formDes}
-                onChange={(e) => {
-                  setFormDes(e.target.value);
-                }}
-                className="input-box text-base mt-4 "
-                bordered={false}
-              />
-            </div>
-          </div>
 
-          {questions?.length > 0 &&
-            questions?.map((question, idx) => (
-              <>
-                <QuestionComponent
-                  {...question}
-                  editMode={editMode}
-                  idx={idx}
-                  removeElement={removeElement}
-                  defineType={defineType}
-                  showAsQuestion={showAsQuestion}
-                  handleExpand={handleExpand}
-                  addOption={addOption}
-                  handleQuestionValue={handleQuestionValue}
-                  handleOptionValue={handleOptionValue}
-                  removeOption={removeOption}
-                  handleScaleOptionValue={handleScaleOptionValue}
-                />
-              </>
-            ))}
-
-          <div className="block lg:flex justify-end items-end my-4  lg:pl-56 ">
-            <button
-              // className=" px-4 py-3 h-full rounded bg-cyan-500 text-white"
-              className="primary-bg-btn text-white text-sm py-3 my-1  rounded h-full w-full"
-              type="button"
-              onClick={() => {
-                addMoreQuestionField();
-              }}
-            >
-           
-              Add Question
-          
-            </button>
-            <Link href={"/template"}>
-              <button
-                className="py-3 h-full rounded toggle-btn-bg text-white lg:mx-4 w-full  my-1"
-                type="button"
-              >
-                <span className="MuiButton-label">Cancel</span>
-              </button>
-            </Link>
-            <button
-              className=" px-4 py-3 h-full rounded primary-bg-btn text-white w-full my-1"
-              type="button"
-              onClick={() => {
-                saveFormField();
-              }}
-            >
-              <span className="MuiButton-label">Save Template</span>
-            </button>
-          </div>
-        </div>
-      </div> */}
       <Modal
         visible={modalTitleopen}
-        // onOk={handleOk}
-        // onCancel={handleCancel}
         footer={
           <Button key="add" type="primary" onClick={handleOk}>
             Create Template
@@ -514,6 +411,7 @@ function TemplateBuildComponent({
           </div>
           <div>
             <Input
+              placeholder="Template Title"
               onChange={(e) => {
                 setFormTitle(e.target.value);
               }}

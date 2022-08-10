@@ -18,40 +18,39 @@ export default async (req, res) => {
         const userOrgData = await transaction.user.findUnique({
           where: { id: resData.created_by },
         });
-        const questionData = resData.templateData.form_data.questions.map(
-          (item) => {
-            const optionData = item.options.map((opitem) => {
-              if (item.type === "scale") {
-                return {
-                  optionText: opitem.optionText,
-                  lowerLabel: item.lowerLabel.toString(),
-                  higherLabel: item.higherLabel.toString(),
-                };
-              } else {
-                return {
-                  optionText: opitem.optionText,
-                  lowerLabel: "",
-                  higherLabel: "",
-                };
-              }
-            });
 
-            return {
-              questionText: item.questionText,
-              type: item.type,
-              open: item.open,
-              options: { create: optionData },
-            };
-          }
-        );
+        const questionData = resData.templateData.map((item) => {
+          const optionData = item.options.map((opitem) => {
+            if (item.type === "scale") {
+              return {
+                optionText: opitem.optionText,
+                lowerLabel: item.lowerLabel.toString(),
+                higherLabel: item.higherLabel.toString(),
+              };
+            } else {
+              return {
+                optionText: opitem.optionText,
+                lowerLabel: "",
+                higherLabel: "",
+              };
+            }
+          });
+
+          return {
+            questionText: item.questionText,
+            type: item.type,
+            open: item.open,
+            options: { create: optionData },
+          };
+        });
 
         const formdata = await transaction.reviewAssignTemplate.create({
           data: {
             user: { connect: { id: resData.created_by } },
             form_title: resData.templateData.form_title,
             form_description: resData.templateData.form_description,
-            form_data: resData.templateData.form_data,
-            status: resData.templateData.status,
+            form_data: resData.templateData,
+            status: resData?.templateData?.status ?? true,
             questions: {
               create: questionData,
             },
