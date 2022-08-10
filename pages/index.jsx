@@ -1,6 +1,11 @@
 import { useEffect } from "react";
 import { getSession } from "next-auth/client";
 import Router from "next/router";
+// import LandingPage from "../component/layout/LandingPage";
+
+// export default function homePage() {
+//   return <LandingPage />;
+// }
 
 export default function Home({ user }) {
   useEffect(() => {
