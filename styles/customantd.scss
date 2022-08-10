@@ -996,6 +996,7 @@
     }
   }
 }
+
 .review-view-input-wrraper {
   width: 95%;
   margin: 5px 0;
@@ -1042,5 +1043,25 @@
     .ant-rate-star {
       font-size: 22px;
     }
+  }
+}
+
+.landing-page {
+  .background-image {
+    background-image: url("../assets/images/Rectangle\ 4.png");
+    background-position: bottom;
+    background-size: cover;
+  }
+  .backgroung-color-purple {
+    background: #ecedff;
+  }
+  .background-color-grey {
+    background: #cfcfcf;
+  }
+  .bg-group-img {
+    background: url(../assets/images/Group.png);
+    background-size: cover;
+    background-position: bottom;
+    height: 50%;
   }
 }
