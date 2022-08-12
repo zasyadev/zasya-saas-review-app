@@ -1,18 +1,6 @@
 import React, { useState, useEffect } from "react";
-import {
-  Button,
-  Modal,
-  Form,
-  Row,
-  Col,
-  Skeleton,
-  Select,
-  Input,
-  Radio,
-  Checkbox,
-  Popconfirm,
-} from "antd";
-import { DeleteOutlined, UserSwitchOutlined } from "@ant-design/icons";
+import { Form, Skeleton, Popconfirm } from "antd";
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { openNotificationBox } from "../../helpers/notification";
 // import FormView from "../Form/FormView";
 import CustomTable from "../../helpers/CustomTable";
@@ -20,94 +8,9 @@ import CustomTable from "../../helpers/CustomTable";
 import Link from "next/link";
 
 function ReviewManagement({ user }) {
-  const [form] = Form.useForm();
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [editMode, setEditMode] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [userList, setUserList] = useState([]);
-  const [formList, setFormList] = useState([]);
-  const [updateData, setUpdateData] = useState({});
+
   const [reviewAssignList, setReviewAssignList] = useState([]);
-
-  const [memberDetails, setMemberDetails] = useState(false);
-  // const [reviewAssignee, setReviewAssignee] = useState(false);
-  // const [reviewAssigneeData, setReviewAssigneeData] = useState({});
-
-  const showModal = () => {
-    setIsModalVisible(true);
-  };
-
-  const onCancel = () => {
-    form.resetFields();
-    setIsModalVisible(false);
-    if (editMode) setEditMode(false);
-  };
-
-  function onFinish(values) {
-    editMode
-      ? updateReviewAssign(updateData, values)
-      : addReviewAssign({
-          created_by: user.id,
-          assigned_to_id: [values.assigned_to_id],
-          template_id: values.template_id,
-          review_type: values.review_type,
-          review_name: values.review_name,
-          status: values.status ?? "pending",
-          frequency: values.frequency,
-          role_id: user.role_id,
-          // organization_id: user.organization_id,
-          is_published: values.is_published ? "published" : "draft",
-        });
-  }
-
-  async function addReviewAssign(obj) {
-    await fetch("/api/review/manage", {
-      method: "POST",
-      body: JSON.stringify(obj),
-      // headers: {
-      //   "Content-Type": "application/json",
-      // },
-    })
-      .then((response) => response.json())
-      .then((response) => {
-        if (response.status === 200) {
-          form.resetFields();
-          fetchReviewAssignList();
-          setIsModalVisible(false);
-          openNotificationBox("success", response.message, 3);
-        } else {
-          openNotificationBox("error", response.message, 3);
-        }
-      })
-      .catch((err) => fetchReviewAssignList([]));
-  }
-  async function updateReviewAssign(data, values) {
-    if (data.id) {
-      data.assigned_to_id = [values.assigned_to_id];
-      data.review_assigned_by = user.id;
-      data.is_published = "published";
-      await fetch("/api/review/manage", {
-        method: "PUT",
-        body: JSON.stringify(data),
-        // headers: {
-        //   "Content-Type": "application/json",
-        // },
-      })
-        .then((response) => response.json())
-        .then((response) => {
-          if (response.status === 200) {
-            form.resetFields();
-            fetchReviewAssignList();
-            setIsModalVisible(false);
-            setEditMode(false);
-            openNotificationBox("success", response.message, 3);
-          } else {
-            openNotificationBox("error", response.message, 3);
-          }
-        })
-        .catch((err) => console.log(err));
-    }
-  }
 
   async function fetchReviewAssignList() {
     setLoading(true);
@@ -125,56 +28,6 @@ function ReviewManagement({ user }) {
         console.log(err);
       });
   }
-
-  async function fetchUserData() {
-    setUserList([]);
-    await fetch("/api/user/organizationId/" + user.id, {
-      method: "GET",
-    })
-      .then((response) => response.json())
-      .then((response) => {
-        if (response.status === 200) {
-          let data = response.data.filter(
-            (item) => item.status === 1 && item.id != user.id
-          );
-          setUserList(data);
-        }
-      })
-      .catch((err) => {
-        setUserList([]);
-      });
-  }
-  async function fetchTemplateData() {
-    setFormList([]);
-    await fetch("/api/template/" + user.id, {
-      method: "GET",
-    })
-      .then((response) => response.json())
-      .then((response) => {
-        if (response.status === 200) {
-          let data = response.data.filter((item) => item.status);
-          setFormList(data);
-        }
-      })
-      .catch((err) => {
-        setFormList([]);
-      });
-  }
-
-  const onUpdate = (data) => {
-    setEditMode(true);
-    setUpdateData(data);
-    setIsModalVisible(true);
-    // form.setFieldsValue({
-    //   is_published: data.is_published,
-    //   review_type: data.review_type,
-    //   review_name: data.review_name,
-    //   review_type: data.review_type,
-    //   template_id: data.template_id,
-    //   frequency: data.frequency,
-
-    // });
-  };
 
   async function onDelete(id) {
     if (id) {
@@ -203,13 +56,7 @@ function ReviewManagement({ user }) {
 
   useEffect(() => {
     fetchReviewAssignList();
-    fetchUserData();
-    fetchTemplateData();
   }, []);
-
-  const validateMessages = {
-    required: "${label} is required!",
-  };
 
   const answerAssignee = (data) => {
     if (data.length > 0) {
@@ -271,11 +118,15 @@ function ReviewManagement({ user }) {
       title: "Count",
       key: "count ",
 
-      render: (_, record) => (
-        <p>
-          {answerAssignee(record.ReviewAssignee)}/{record.ReviewAssignee.length}
-        </p>
-      ),
+      render: (_, record) =>
+        record.is_published != "published" ? (
+          0
+        ) : (
+          <p>
+            {answerAssignee(record.ReviewAssignee)}/
+            {record.ReviewAssignee.length}
+          </p>
+        ),
     },
     {
       title: "Action",
@@ -283,13 +134,14 @@ function ReviewManagement({ user }) {
       render: (_, record) => (
         <p>
           {record.is_published != "published" && (
-            <span
-              className="primary-color-blue text-xl mx-2 cursor-pointer"
-              onClick={() => onUpdate(record)}
-              title="Assign"
-            >
-              <UserSwitchOutlined />
-            </span>
+            <Link href={`/review/edit/${record.id}`}>
+              <span
+                className="primary-color-blue text-xl mr-4 cursor-pointer"
+                title="Assign"
+              >
+                <EditOutlined />
+              </span>
+            </Link>
           )}
 
           {record.created_by === user.id && (
@@ -309,14 +161,6 @@ function ReviewManagement({ user }) {
       ),
     },
   ];
-
-  const onChangeStatus = (e) => {
-    if (e.target.checked) {
-      setMemberDetails(true);
-    } else {
-      setMemberDetails(false);
-    }
-  };
 
   return (
     <div>
@@ -371,7 +215,7 @@ function ReviewManagement({ user }) {
                     <CustomTable
                       dataSource={reviewAssignList}
                       columns={columns}
-                      pagination={false}
+                      pagination={true}
                       rowKey="review_id"
                     />
                   )}
@@ -382,7 +226,7 @@ function ReviewManagement({ user }) {
           {/* )} */}
         </div>
       </div>
-      <Modal
+      {/* <Modal
         title={`${editMode ? "Update " : "Assign"}  Review`}
         visible={isModalVisible}
         onOk={form.submit}
@@ -552,7 +396,7 @@ function ReviewManagement({ user }) {
             </Row>
           )}
         </Form>
-      </Modal>
+      </Modal> */}
     </div>
   );
 }

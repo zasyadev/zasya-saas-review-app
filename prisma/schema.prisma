@@ -140,7 +140,7 @@ model Review {
   form                  ReviewAssignTemplate?   @relation(fields: [form_id], references: [id], onDelete: Cascade)
   form_id               String?
   status                String?
-  frequency             Frequency?              @default(once)
+  frequency             Frequency?              
   review_type           ReviewType?             @default(other)
   organization          UserOrganization?       @relation(fields: [organization_id], references: [id])
   organization_id       Int?
@@ -149,6 +149,7 @@ model Review {
   parent_id             String?
   frequency_status      Boolean                 @default(false)
   is_published          String?
+  template_data         Json?
   created_date          DateTime                @default(now())
   modified_date         DateTime                @default(now())
   ReviewAssigneeAnswers ReviewAssigneeAnswers[]

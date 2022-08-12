@@ -3,6 +3,7 @@ import React from "react";
 import { Row, Col } from "antd";
 
 export function PreviewAnswer({ item, nextSlide, setNextSlide, length }) {
+  // console.log(item, "item");
   return (
     <div className="my-auto answer-bg  ">
       <Row justify="center">
@@ -24,7 +25,6 @@ export function PreviewAnswer({ item, nextSlide, setNextSlide, length }) {
                     onClick={() => {
                       setNextSlide(nextSlide - 1);
                     }}
-                    // disabled={!disable[id]}
                   >
                     Previous
                   </button>
@@ -43,7 +43,6 @@ export function PreviewAnswer({ item, nextSlide, setNextSlide, length }) {
                     onClick={() => {
                       setNextSlide(nextSlide + 1);
                     }}
-                    //   disabled={!disable[id]}
                   >
                     Next
                   </button>

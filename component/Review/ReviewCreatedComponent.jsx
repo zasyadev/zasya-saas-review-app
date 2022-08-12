@@ -64,13 +64,25 @@ function ReviewCreatedComponent({
   };
 
   useEffect(() => {
-    let headersData = reviewData?.form?.form_data.map((item, i) => {
-      return {
-        title: item.questionText,
-        dataIndex: "option" + i,
-        sorter: (a, b) => a[`option${i}`]?.localeCompare(b[`option${i}`]),
-      };
-    });
+    let headersData = [];
+    if (reviewData?.form?.form_data.length) {
+      headersData = reviewData?.form?.form_data.map((item, i) => {
+        return {
+          title: item.questionText,
+          dataIndex: "option" + i,
+          sorter: (a, b) => a[`option${i}`]?.localeCompare(b[`option${i}`]),
+        };
+      });
+    } else {
+      headersData = reviewData?.form?.form_data.questions.map((item, i) => {
+        return {
+          title: item.questionText,
+          dataIndex: "option" + i,
+          sorter: (a, b) => a[`option${i}`]?.localeCompare(b[`option${i}`]),
+        };
+      });
+    }
+
     headersData.unshift(nameTitle);
     setHeadersData(headersData);
     fetchAnswer(reviewData.id);

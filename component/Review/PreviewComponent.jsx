@@ -33,7 +33,11 @@ function PreviewComponent({ user, reviewId }) {
         if (answers?.length > 0) {
           answers.filter((answerItem) => {
             if (answerItem.question_id === questionitem.id) {
-              let obj = { ...questionitem, ...answerItem };
+              let obj = {
+                questionText: questionitem.questionText,
+                option: answerItem.option,
+                type: questionitem.type,
+              };
               feedBackArray.push(obj);
               return obj;
             }
@@ -68,12 +72,12 @@ function PreviewComponent({ user, reviewId }) {
       fetchReviewData(user, reviewId);
 
       fetchAnswer();
-    } else return;
+    }
   }, []);
 
   useEffect(() => {
-    if (previewAnswer.length) previewAnswer(answers, questions);
-  }, [answers, questions]);
+    if (answers.length && questions.length) previewAnswer(answers, questions);
+  }, [answers.length, questions.length]);
 
   return (
     <div className="preview-answer">

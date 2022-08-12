@@ -92,11 +92,11 @@ export default async (req, res) => {
           },
         });
 
-        const userData = await prisma.user.findMany({
+        const userData = await prisma.userOraganizationGroups.findMany({
           where: {
             AND: [
               { organization_id: userTableData.organization_id },
-              { status: 1 },
+              { status: true },
             ],
           },
         });

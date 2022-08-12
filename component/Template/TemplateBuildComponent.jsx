@@ -2,10 +2,11 @@ import { Input, Row, Col, Form, Button } from "antd";
 import { useRouter } from "next/router";
 import React, { useState, useEffect } from "react";
 import { openNotificationBox } from "../../helpers/notification";
-import QuestionComponent from "../Form/QuestionComponent";
-import Link from "next/link";
-import { CloseOutlined } from "@ant-design/icons";
+// import QuestionComponent from "../Form/QuestionComponent";
+// import Link from "next/link";
+// import { CloseOutlined } from "@ant-design/icons";
 import { Modal } from "antd";
+import TemplateEditor from "./TemplateEditor";
 
 const defaultQuestionConfig = {
   questionText: "Untitled Question",
@@ -270,7 +271,7 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
 
   return (
     <div className="mx-4">
-      <Row gutter={16}>
+      {/* <Row gutter={16}>
         <Col xs={24} md={8}>
           <div className="mb-2 px-1 template-title-input">
             <Input
@@ -395,7 +396,30 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
             </button>
           </div>
         </Col>
-      </Row>
+      </Row> */}
+      <TemplateEditor
+        setFormTitle={setFormTitle}
+        questions={questions}
+        setActiveQuestionIndex={setActiveQuestionIndex}
+        setSelectTypeFeild={setSelectTypeFeild}
+        removeElement={removeElement}
+        addMoreQuestionField={addMoreQuestionField}
+        activeQuestionIndex={activeQuestionIndex}
+        editMode={editMode}
+        defineType={defineType}
+        showAsQuestion={showAsQuestion}
+        handleExpand={handleExpand}
+        addOption={addOption}
+        handleQuestionValue={handleQuestionValue}
+        handleOptionValue={handleOptionValue}
+        removeOption={removeOption}
+        handleScaleOptionValue={handleScaleOptionValue}
+        addNextQuestionField={addNextQuestionField}
+        selectTypeFeild={selectTypeFeild}
+        saveFormField={saveFormField}
+        formTitle={formTitle}
+        saveWrapper={true}
+      />
 
       <Modal
         visible={modalTitleopen}

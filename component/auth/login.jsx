@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import React, { useState } from "react";
 
 import { LoadingOutlined } from "@ant-design/icons";
-import { LoadingSpinner } from "../Loader/LoadingSpinner";
+// import { LoadingSpinner } from "../Loader/LoadingSpinner";
 import { openNotificationBox } from "../../helpers/notification";
 import { HeadersComponent } from "../../helpers/HeadersComponent";
 import AuthWrapper from "./AuthWrapper";

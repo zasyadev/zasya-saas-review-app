@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Form, Row, Col, Select, Input, Radio, Modal } from "antd";
+import { Form, Row, Col, Select, Input, Radio, Spin } from "antd";
 import { useRouter } from "next/router";
 import { openNotificationBox } from "../../helpers/notification";
-import ReviewViewComponent from "../Form/ReviewViewComponent";
 import Link from "next/link";
+import EditorWrapperComponent from "./EditorWrapperComponent";
+import { LoadingOutlined } from "@ant-design/icons";
 
 const defaultScaleQuestion = {
   questionText: "Rating",
@@ -15,69 +16,89 @@ const defaultScaleQuestion = {
   editableFeedback: true,
 };
 
-function AddEditReviewComponent({ editMode, user }) {
+function AddEditReviewComponent({
+  user,
+  previewForm = false,
+  reviewPreviewData,
+  reviewId,
+}) {
   const router = useRouter();
   const [form] = Form.useForm();
+  const [userForm] = Form.useForm();
   const [formList, setFormList] = useState([]);
   const [userList, setUserList] = useState([]);
   const [questionList, setQuestionList] = useState([]);
-  const [previewForm, setPreviewForm] = useState(false);
   const [reviewFormData, setReviewFormData] = useState({});
+  const [formTitle, setFormTitle] = useState("");
   const [nextFormFeild, setNextFormFeild] = useState(0);
+  const [loadingSpin, setLoadingSpin] = useState(false);
   const [disable, setDisable] = useState({
     review_name: false,
     template_id: false,
-    frequency: false,
-    assigned_to_id: false,
     review_type: false,
   });
-  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const antIcon = (
+    <LoadingOutlined
+      style={{
+        fontSize: 24,
+        color: "white",
+      }}
+      spin
+    />
+  );
 
   const onInputChange = (value, name) => {
     if (value && name) {
       setDisable((prev) => ({ ...prev, [`${name}`]: true }));
+    } else {
+      setDisable((prev) => ({ ...prev, [`${name}`]: false }));
+    }
+  };
+  const onBarInputChange = (value, name) => {
+    if (value && name) {
       if ((name = "assigned_to_id" && userList.length > 0)) {
         if (value.includes("all")) {
           let allUsers = userList.map((item) => {
             return item.user.id;
           });
-          form.setFieldsValue({
+          userForm.setFieldsValue({
             assigned_to_id: allUsers,
           });
         }
       }
-    } else {
-      setDisable((prev) => ({ ...prev, [`${name}`]: false }));
     }
   };
 
-  function onFinish(type) {
-    let values = form.getFieldsValue(true);
+  function onPreviewSubmit() {
+    let values = userForm.getFieldsValue(true);
 
-    // let templateData = {};
-    // if (type === "preview") {
-    //   templateData = values.templateData;
-    // } else {
-    //   templateData = formList.find((item) => item.id == values.template_id);
-    //   if (values.review_type === "feedback")
-    //     templateData?.form_data?.questions.push(defaultScaleQuestion);
-    // }
-
-    addReviewAssign({
-      created_by: user.id,
-      assigned_to_id: values.assigned_to_id,
-      template_id: values.template_id,
-      review_type: values.review_type,
-      review_name: values.review_name,
-      status: values.status ?? "pending",
-      frequency: values.frequency,
-      role_id: user.role_id,
-      is_published: "published",
-      templateData: questionList,
-    });
+    if (!values.frequency) {
+      openNotificationBox("error", "Need to Select Frequency", 3);
+    } else if (!values.assigned_to_id) {
+      openNotificationBox("error", "Need to Select Members", 3);
+    } else {
+      if (Object.keys(reviewFormData).length && reviewId) {
+        addReviewAssign({
+          created_by: user.id,
+          assigned_to_id: values.assigned_to_id,
+          review_type: reviewFormData.review_type,
+          review_name: reviewFormData.review_name,
+          status: reviewFormData.status ?? "pending",
+          frequency: values.frequency,
+          role_id: user.role_id,
+          is_published: "published",
+          templateData: questionList,
+          review_id: reviewId,
+        });
+      }
+    }
   }
 
   async function addReviewAssign(obj) {
+    // console.log(obj, "sdfsdsf");
+    // return;
+
     await fetch("/api/review/manage", {
       method: "POST",
       body: JSON.stringify(obj),
@@ -130,20 +151,29 @@ function AddEditReviewComponent({ editMode, user }) {
       });
   }
 
+  const initialData = (data) => {
+    setFormTitle(data.template_data.form_title);
+    setQuestionList(data.template_data.form_data.questions);
+    setReviewFormData(data);
+  };
+
   useEffect(() => {
     fetchUserData();
-  }, []);
-  useEffect(() => {
     fetchTemplateData();
-  }, [questionList]);
 
-  function removeElement(idx) {
-    setQuestionList((prev) => prev.filter((_, i) => i != idx));
-  }
+    if (
+      reviewPreviewData &&
+      Object.keys(reviewPreviewData).length &&
+      previewForm
+    ) {
+      initialData(reviewPreviewData);
+    }
+  }, []);
 
-  const handlePreviewForm = () => {
+  const handlePreviewForm = async () => {
     setReviewFormData({});
     setQuestionList([]);
+    setLoadingSpin(true);
 
     let values = form.getFieldsValue(true);
 
@@ -157,53 +187,126 @@ function AddEditReviewComponent({ editMode, user }) {
             ? templateData.form_data.questions.push(defaultScaleQuestion)
             : null;
         }
-        setQuestionList(templateData.form_data.questions);
-        setReviewFormData({ ...values, templateData: templateData });
-        setPreviewForm(true);
+
+        await fetch("/api/review/manage", {
+          method: "POST",
+          body: JSON.stringify({
+            ...values,
+            template_data: templateData,
+            is_published: "draft",
+            status: values.status ?? "pending",
+            role_id: user.role_id,
+            created_by: user.id,
+          }),
+        })
+          .then((response) => response.json())
+          .then((response) => {
+            if (response.status === 200 && response.data.id) {
+              router.push(`/review/edit/${response.data.id}`);
+            }
+          })
+          .catch((err) => {
+            console.error(err);
+          });
       } else {
         openNotificationBox("error", "Need to Select Template", 3);
       }
     }
-  };
-  const onPreviewSubmit = () => {
-    let obj = {
-      ...reviewFormData,
-      templateData: {
-        ...reviewFormData.templateData,
-        form_data: {
-          ...reviewFormData.templateData.form_data,
-          questions: questionList,
-        },
-      },
-    };
-
-    onFinish();
-  };
-
-  const onHandleReviewChange = (value, index) => {
-    setQuestionList((prev) =>
-      prev.map((item, i) =>
-        i === index ? { ...item, questionText: value } : item
-      )
-    );
   };
 
   return (
     <>
       {previewForm ? (
         <>
-          <div className="w-full  md:w-4/6 mx-auto">
+          <div className="w-full   ">
             <div className="w-full rounded-xl  p-4 mt-4 template-wrapper flex flex-col">
-              <div className="flex justify-between primary-bg-color px-4 py-4 rounded-t-md">
-                <p className="text-white text-base font-medium">
-                  Review Name : {reviewFormData.review_name}
-                </p>
-                <p className="text-white text-base font-medium">
-                  Review Type : {reviewFormData.review_type}
-                </p>
-              </div>
+              <Form layout="vertical" form={userForm}>
+                <div className="primary-bg-color px-4 py-4 rounded-t-md items-center">
+                  <Row gutter={[16, 16]} justify="between" align="middle">
+                    <Col md={6} xs={24}>
+                      <div className="text-center md:text-left">
+                        <p className="text-white text-base font-medium mb-1">
+                          Review Name : {reviewFormData.review_name}
+                        </p>
+                      </div>
+                    </Col>
+                    <Col md={6} xs={24}>
+                      <div className="h-full w-11/12">
+                        <Form.Item name="frequency" className="mb-0">
+                          <Select
+                            placeholder="Select Frequency"
+                            showSearch
+                            filterOption={(input, option) =>
+                              option.children
+                                .toLowerCase()
+                                .indexOf(input.toLowerCase()) >= 0
+                            }
+                            onChange={(e) => onBarInputChange(e, "frequency")}
+                            size="large"
+                          >
+                            <Select.Option value="once">Once</Select.Option>
+                            <Select.Option value="daily">Daily</Select.Option>
+                            <Select.Option value="weekly">Weekly</Select.Option>
+                            <Select.Option value="monthly">
+                              Monthly
+                            </Select.Option>
+                          </Select>
+                        </Form.Item>
+                      </div>
+                    </Col>
+                    <Col md={6} xs={24}>
+                      <div className="w-11/12 h-full">
+                        <Form.Item name="assigned_to_id" className="mb-0">
+                          <Select
+                            mode="multiple"
+                            placeholder="Select Member"
+                            showSearch
+                            filterOption={(input, option) =>
+                              option.children
+                                .toLowerCase()
+                                .indexOf(input.toLowerCase()) >= 0
+                            }
+                            onChange={(e) =>
+                              onBarInputChange(e, "assigned_to_id")
+                            }
+                            size="large"
+                            className="w-full"
+                            maxTagCount="responsive"
+                          >
+                            <Select.Option key="all" value="all">
+                              ---SELECT ALL---
+                            </Select.Option>
+                            {userList.map((data, index) => (
+                              <Select.Option
+                                key={index + "users"}
+                                value={data?.user?.id}
+                              >
+                                {data?.user?.first_name}
+                              </Select.Option>
+                            ))}
+                          </Select>
+                        </Form.Item>
+                      </div>
+                    </Col>
+                    <Col md={6} xs={24}>
+                      <div className="text-center md:text-right">
+                        <p className="text-white text-base font-medium mb-1">
+                          Review Type : {reviewFormData.review_type}
+                        </p>
+                      </div>
+                    </Col>
+                  </Row>
+                </div>
+              </Form>
               <div className="bg-white px-4 rounded-b-md">
-                {questionList.length > 0 &&
+                <EditorWrapperComponent
+                  questions={questionList}
+                  setQuestionList={setQuestionList}
+                  setFormTitle={setFormTitle}
+                  formTitle={formTitle}
+                />
+
+                {/* {questionList.length > 0 &&
                   questionList?.map((question, idx) => (
                     <>
                       <ReviewViewComponent
@@ -214,17 +317,27 @@ function AddEditReviewComponent({ editMode, user }) {
                         isModalVisible={isModalVisible}
                         onHandleReviewChange={onHandleReviewChange}
                       />
+
+                      <TemplateEditor
+                        {...question}
+                        idx={idx}
+                        removeElement={removeElement}
+                        setIsModalVisible={setIsModalVisible}
+                        isModalVisible={isModalVisible}
+                        onHandleReviewChange={onHandleReviewChange}
+                      />
                     </>
-                  ))}
+                  ))} */}
                 <div>
                   <div className="flex justify-end my-5">
                     <button
                       key="cancel"
                       type="default"
                       onClick={() => {
-                        setPreviewForm(false);
+                        // setPreviewForm(false);
                         setReviewFormData({});
                         setQuestionList([]);
+                        router.back();
                       }}
                       className="py-3 h-full rounded toggle-btn-bg text-white lg:mx-4 w-1/4 my-1"
                     >
@@ -353,7 +466,7 @@ function AddEditReviewComponent({ editMode, user }) {
                             </div>
                           </div>
                         )}
-                        {nextFormFeild === 2 && (
+                        {/* {nextFormFeild === 2 && (
                           <div className="py-24 flex flex-col items-center justify-center px-4">
                             <p className="text-xl font-bold my-5 primary-color-blue">
                               Please select feedback Frequency
@@ -481,8 +594,8 @@ function AddEditReviewComponent({ editMode, user }) {
                               </button>
                             </div>
                           </div>
-                        )}
-                        {nextFormFeild === 4 && (
+                        )} */}
+                        {nextFormFeild === 2 && (
                           <div className="py-24 flex flex-col items-center justify-center px-4">
                             <p className="text-xl font-bold my-5 primary-color-blue">
                               Would you like to let your team members rate you ?
@@ -512,17 +625,26 @@ function AddEditReviewComponent({ editMode, user }) {
                             <div className="my-5">
                               <button
                                 className="primary-bg-btn rounded-md text-lg text-white px-14 py-2 mr-2"
-                                onClick={() => setNextFormFeild(3)}
+                                onClick={() => setNextFormFeild(1)}
                               >
                                 Previous
                               </button>
-                              <button
-                                className="toggle-btn-bg rounded-md text-lg text-white px-14 py-2 "
-                                onClick={() => handlePreviewForm()}
-                                disabled={!disable.review_type}
-                              >
-                                Submit
-                              </button>
+                              {loadingSpin ? (
+                                <button
+                                  className="toggle-btn-bg rounded-md text-lg text-white px-14 py-2 "
+                                  disabled={true}
+                                >
+                                  <Spin indicator={antIcon} />
+                                </button>
+                              ) : (
+                                <button
+                                  className="toggle-btn-bg rounded-md text-lg text-white px-14 py-2 "
+                                  onClick={() => handlePreviewForm()}
+                                  disabled={!disable.review_type}
+                                >
+                                  Preview
+                                </button>
+                              )}
                             </div>
                           </div>
                         )}

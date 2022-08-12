@@ -6,6 +6,7 @@ import AddEditReviewComponent from "../../../component/Review/AddEditReviewCompo
 
 function ReviewEdit({ user }) {
   const [reviewData, setReviewData] = useState({});
+  const [loading, setLoading] = useState(true);
 
   const router = useRouter();
   const { review_id } = router.query;
@@ -30,12 +31,41 @@ function ReviewEdit({ user }) {
 
   useEffect(() => {
     if (review_id) fetchReviewData(review_id);
-    else return;
   }, []);
 
   return (
-    <AdminLayout user={user} title="Template">
-      <AddEditReviewComponent user={user} />
+    <AdminLayout user={user} title="Review">
+      {loading ? (
+        <>
+          <div className="px-3 md:px-8 h-auto mt-5">
+            <div className="container mx-auto max-w-full">
+              <div className="border shadow bg-white rounded-md p-2 mt-4 w-full mx-auto">
+                <div className="w-full  rounded-xl  p-2 mt-2 template-wrapper">
+                  <div className="animate-pulse flex space-x-4">
+                    <div className="flex-1 space-y-6 py-1">
+                      <div className="h-4 bg-slate-200 rounded"></div>
+                      <div className="h-4 bg-slate-200 rounded"></div>
+
+                      <div className="space-y-5">
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="h-4 bg-slate-200 rounded"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
+      ) : (
+        <AddEditReviewComponent
+          user={user}
+          reviewPreviewData={reviewData}
+          previewForm={true}
+          reviewId={review_id}
+        />
+      )}
     </AdminLayout>
   );
 }

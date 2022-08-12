@@ -7,8 +7,6 @@ import {
 } from "@ant-design/icons";
 import { Grid, Layout } from "antd";
 import { Content, Footer } from "antd/lib/layout/layout";
-import { data } from "autoprefixer";
-import Head from "next/head";
 import { Fragment, useEffect, useState } from "react";
 import { HeadersComponent } from "../../helpers/HeadersComponent";
 import HeaderLayout from "./HeaderLayout";
@@ -42,7 +40,7 @@ function AdminLayout(props) {
   }, [md]);
 
   async function fetchUserData() {
-    await fetch("/api/organization/" + props?.user?.id, {
+    await fetch("/api/organization/" + props.user.id, {
       method: "GET",
     })
       .then((response) => response.json())
@@ -69,10 +67,10 @@ function AdminLayout(props) {
   }
 
   useEffect(() => {
-    if (props?.user) {
+    if (props.user) {
       fetchUserData();
     }
-  }, []);
+  }, [props.user.id]);
 
   const items = [
     getItem(
