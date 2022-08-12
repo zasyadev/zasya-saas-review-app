@@ -82,7 +82,6 @@ function ReviewCreatedComponent({
         };
       });
     }
-
     headersData.unshift(nameTitle);
     setHeadersData(headersData);
     fetchAnswer(reviewData.id);
