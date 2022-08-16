@@ -5,6 +5,7 @@ import { openNotificationBox } from "../../helpers/notification";
 import Link from "next/link";
 import EditorWrapperComponent from "./EditorWrapperComponent";
 import { LoadingOutlined } from "@ant-design/icons";
+import { PrimaryButton, SecondaryButton } from "../../helpers/CustomButton";
 
 const defaultScaleQuestion = {
   questionText: "Rating",
@@ -75,23 +76,30 @@ function AddEditReviewComponent({
 
     if (!values.frequency) {
       openNotificationBox("error", "Need to Select Frequency", 3);
-    } else if (!values.assigned_to_id) {
+      return;
+    }
+    if (!values.assigned_to_id) {
       openNotificationBox("error", "Need to Select Members", 3);
-    } else {
-      if (Object.keys(reviewFormData).length && reviewId) {
-        addReviewAssign({
-          created_by: user.id,
-          assigned_to_id: values.assigned_to_id,
-          review_type: reviewFormData.review_type,
-          review_name: reviewFormData.review_name,
-          status: reviewFormData.status ?? "pending",
-          frequency: values.frequency,
-          role_id: user.role_id,
-          is_published: "published",
-          templateData: questionList,
-          review_id: reviewId,
-        });
-      }
+      return;
+    }
+    if (values.assigned_to_id && values.assigned_to_id.length == 0) {
+      openNotificationBox("error", "Need to Select Members", 3);
+      return;
+    }
+
+    if (Object.keys(reviewFormData).length && reviewId) {
+      addReviewAssign({
+        created_by: user.id,
+        assigned_to_id: values.assigned_to_id,
+        review_type: reviewFormData.review_type,
+        review_name: reviewFormData.review_name,
+        status: reviewFormData.status ?? "pending",
+        frequency: values.frequency,
+        role_id: user.role_id,
+        is_published: "published",
+        templateData: questionList,
+        review_id: reviewId,
+      });
     }
   }
 
@@ -226,7 +234,7 @@ function AddEditReviewComponent({
                     <Col md={6} xs={24}>
                       <div className="text-center md:text-left">
                         <p className="text-white text-base font-medium mb-1">
-                          Review Name : {reviewFormData.review_name}
+                          Name : {reviewFormData.review_name}
                         </p>
                       </div>
                     </Col>
@@ -290,8 +298,8 @@ function AddEditReviewComponent({
                     </Col>
                     <Col md={6} xs={24}>
                       <div className="text-center md:text-right">
-                        <p className="text-white text-base font-medium mb-1">
-                          Review Type : {reviewFormData.review_type}
+                        <p className="text-white text-base font-medium mb-1 capitalize">
+                          Type : {reviewFormData.review_type}
                         </p>
                       </div>
                     </Col>
@@ -306,52 +314,23 @@ function AddEditReviewComponent({
                   formTitle={formTitle}
                 />
 
-                {/* {questionList.length > 0 &&
-                  questionList?.map((question, idx) => (
-                    <>
-                      <ReviewViewComponent
-                        {...question}
-                        idx={idx}
-                        removeElement={removeElement}
-                        setIsModalVisible={setIsModalVisible}
-                        isModalVisible={isModalVisible}
-                        onHandleReviewChange={onHandleReviewChange}
-                      />
-
-                      <TemplateEditor
-                        {...question}
-                        idx={idx}
-                        removeElement={removeElement}
-                        setIsModalVisible={setIsModalVisible}
-                        isModalVisible={isModalVisible}
-                        onHandleReviewChange={onHandleReviewChange}
-                      />
-                    </>
-                  ))} */}
                 <div>
                   <div className="flex justify-end my-5">
-                    <button
-                      key="cancel"
-                      type="default"
+                    <SecondaryButton
                       onClick={() => {
-                        // setPreviewForm(false);
                         setReviewFormData({});
                         setQuestionList([]);
                         router.back();
                       }}
-                      className="py-3 h-full rounded toggle-btn-bg text-white lg:mx-4 w-1/4 my-1"
-                    >
-                      Cancel
-                    </button>
+                      className="h-full rounded mr-2 lg:mx-4 md:w-1/4 my-1"
+                      title="Cancel"
+                    />
 
-                    <button
-                      key="add"
-                      type="default"
+                    <PrimaryButton
                       onClick={() => onPreviewSubmit()}
-                      className=" px-4 py-3 h-full rounded primary-bg-btn text-white w-1/4 my-1"
-                    >
-                      Submit
-                    </button>
+                      className="  h-full rounded md:w-1/4 my-1"
+                      title="Submit"
+                    />
                   </div>
                 </div>
               </div>
@@ -392,13 +371,14 @@ function AddEditReviewComponent({
                               </Form.Item>
                             </div>
                             <div className="my-5">
-                              <button
-                                className="toggle-btn-bg rounded-md text-lg text-white px-14 py-2 "
+                              <SecondaryButton
                                 onClick={() => setNextFormFeild(1)}
-                                disabled={!disable.review_name}
-                              >
-                                Next
-                              </button>
+                                btnProps={{
+                                  disabled: !disable.review_name,
+                                }}
+                                className="px-14 py-2 text-base rounded-md"
+                                title="Next"
+                              />
                             </div>
                           </div>
                         )}
@@ -449,152 +429,23 @@ function AddEditReviewComponent({
                               </Link>
                             </div>
                             <div className="my-5">
-                              <button
-                                className="primary-bg-btn rounded-md text-lg text-white px-14 py-2 mr-2"
+                              <PrimaryButton
                                 onClick={() => setNextFormFeild(0)}
-                              >
-                                Previous
-                              </button>
-
-                              <button
-                                className="toggle-btn-bg rounded-md text-lg text-white px-14 py-2 "
+                                className="px-14 py-2 text-base rounded-md mr-2"
+                                title="Previous"
+                              />
+                              <SecondaryButton
                                 onClick={() => setNextFormFeild(2)}
-                                disabled={!disable.template_id}
-                              >
-                                Next
-                              </button>
+                                btnProps={{
+                                  disabled: !disable.template_id,
+                                }}
+                                className="px-14 py-2 text-base rounded-md"
+                                title="Next"
+                              />
                             </div>
                           </div>
                         )}
-                        {/* {nextFormFeild === 2 && (
-                          <div className="py-24 flex flex-col items-center justify-center px-4">
-                            <p className="text-xl font-bold my-5 primary-color-blue">
-                              Please select feedback Frequency
-                            </p>
 
-                            <div className=" text-left w-96">
-                              <Form.Item
-                                name="frequency"
-                                rules={[
-                                  {
-                                    required: true,
-                                    message:
-                                      "Please select your feedback frequency",
-                                  },
-                                ]}
-                              >
-                                <Select
-                                  placeholder="Select Frequency"
-                                  showSearch
-                                  filterOption={(input, option) =>
-                                    option.children
-                                      .toLowerCase()
-                                      .indexOf(input.toLowerCase()) >= 0
-                                  }
-                                  onChange={(e) =>
-                                    onInputChange(e, "frequency")
-                                  }
-                                  size="large"
-                                >
-                                  <Select.Option value="once">
-                                    Once
-                                  </Select.Option>
-                                  <Select.Option value="daily">
-                                    Daily
-                                  </Select.Option>
-                                  <Select.Option value="weekly">
-                                    Weekly
-                                  </Select.Option>
-                                  <Select.Option value="monthly">
-                                    Monthly
-                                  </Select.Option>
-                                </Select>
-                              </Form.Item>
-                            </div>
-                            <div className="my-5">
-                              <button
-                                className="primary-bg-btn rounded-md text-lg text-white px-14 py-2 mr-2"
-                                onClick={() => setNextFormFeild(1)}
-                              >
-                                Previous
-                              </button>
-                              <button
-                                className="toggle-btn-bg rounded-md text-lg text-white px-14 py-2 "
-                                onClick={() => setNextFormFeild(3)}
-                                disabled={!disable.frequency}
-                              >
-                                Next
-                              </button>
-                            </div>
-                          </div>
-                        )}
-                        {nextFormFeild === 3 && (
-                          <div className="py-24 flex flex-col items-center justify-center px-4">
-                            <p className="text-xl font-bold my-5 primary-color-blue">
-                              Please select your team members, who should be
-                              giving feedback to you ?
-                            </p>
-
-                            <div className=" text-left w-96">
-                              <Form.Item
-                                name="assigned_to_id"
-                                rules={[
-                                  {
-                                    required: true,
-                                    message: "Please select your team members",
-                                  },
-                                ]}
-                              >
-                                <Select
-                                  mode="multiple"
-                                  placeholder="Select Member"
-                                  showSearch
-                                  filterOption={(input, option) =>
-                                    option.children
-                                      .toLowerCase()
-                                      .indexOf(input.toLowerCase()) >= 0
-                                  }
-                                  onChange={(e) =>
-                                    onInputChange(e, "assigned_to_id")
-                                  }
-                                  size="large"
-                                >
-                                  <Select.Option key="all" value="all">
-                                    ---SELECT ALL---
-                                  </Select.Option>
-                                  {userList.map((data, index) => (
-                                    <Select.Option
-                                      key={index + "users"}
-                                      value={data?.user?.id}
-                                    >
-                                      {data?.user?.first_name}
-                                    </Select.Option>
-                                  ))}
-                                </Select>
-                              </Form.Item>
-                              <Link href="/team/add" passHref>
-                                <a target="_blank">
-                                  <p className="text-right">Create</p>
-                                </a>
-                              </Link>
-                            </div>
-                            <div className="my-5">
-                              <button
-                                className="primary-bg-btn rounded-md text-lg text-white px-14 py-2 mr-2"
-                                onClick={() => setNextFormFeild(2)}
-                              >
-                                Previous
-                              </button>
-                              <button
-                                className="toggle-btn-bg rounded-md text-lg text-white px-14 py-2 "
-                                onClick={() => setNextFormFeild(4)}
-                                disabled={!disable.assigned_to_id}
-                              >
-                                Next
-                              </button>
-                            </div>
-                          </div>
-                        )} */}
                         {nextFormFeild === 2 && (
                           <div className="py-24 flex flex-col items-center justify-center px-4">
                             <p className="text-xl font-bold my-5 primary-color-blue">
@@ -623,27 +474,28 @@ function AddEditReviewComponent({
                               </Form.Item>
                             </div>
                             <div className="my-5">
-                              <button
-                                className="primary-bg-btn rounded-md text-lg text-white px-14 py-2 mr-2"
+                              <PrimaryButton
                                 onClick={() => setNextFormFeild(1)}
-                              >
-                                Previous
-                              </button>
+                                className="px-14 py-2 text-base rounded-md mr-2"
+                                title="Previous"
+                              />
                               {loadingSpin ? (
-                                <button
-                                  className="toggle-btn-bg rounded-md text-lg text-white px-14 py-2 "
-                                  disabled={true}
-                                >
-                                  <Spin indicator={antIcon} />
-                                </button>
+                                <SecondaryButton
+                                  btnProps={{
+                                    disabled: true,
+                                  }}
+                                  className="px-14 py-2 text-base rounded-md"
+                                  title={<Spin indicator={antIcon} />}
+                                />
                               ) : (
-                                <button
-                                  className="toggle-btn-bg rounded-md text-lg text-white px-14 py-2 "
+                                <SecondaryButton
                                   onClick={() => handlePreviewForm()}
-                                  disabled={!disable.review_type}
-                                >
-                                  Preview
-                                </button>
+                                  btnProps={{
+                                    disabled: !disable.review_type,
+                                  }}
+                                  className="px-14 py-2 text-base rounded-md"
+                                  title="Preview"
+                                />
                               )}
                             </div>
                           </div>

@@ -1,11 +1,9 @@
-import { PrismaClient } from "@prisma/client";
+import prisma from "../../../lib/prisma";
 import { mailService, mailTemplate } from "../../../lib/emailservice";
 // import moment from "moment";
 import { ReviewScheduler } from "../../../helpers/schedulerHelper";
 
 const schedule = require("node-schedule");
-
-const prisma = new PrismaClient();
 
 var reviewJob;
 

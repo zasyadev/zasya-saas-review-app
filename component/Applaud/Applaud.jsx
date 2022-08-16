@@ -5,6 +5,7 @@ import CustomTable from "../../helpers/CustomTable";
 import moment from "moment";
 import { CalanderIcon, CommentIcons, UserIcon } from "../../assets/Icon/icons";
 import Link from "next/link";
+import { PrimaryButton } from "../../helpers/CustomButton";
 
 function Applaud({ user }) {
   const [applaudList, setApplaudList] = useState([]);
@@ -93,14 +94,15 @@ function Applaud({ user }) {
     <div>
       <div className="px-3 md:px-8 h-auto mt-5">
         <div className="container mx-auto max-w-full">
-          <div className="md:flex justify-end">
+          <div className="flex justify-end">
             <div className="my-3 mx-3 ">
               <div>
-                <Link href="/applaud/add">
-                  <button className="primary-bg-btn text-white text-sm py-3 text-center px-4 rounded-md w-full">
-                    Create Applaud
-                  </button>
-                </Link>
+                <PrimaryButton
+                  withLink={true}
+                  className="rounded-md  "
+                  linkHref="/applaud/add"
+                  title={"Create"}
+                />
               </div>
             </div>
           </div>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Col, Form, Input, Popconfirm, Row } from "antd";
+import { Popconfirm } from "antd";
 import { openNotificationBox } from "../../helpers/notification";
 import { AddIcon, DeleteTemplateIcon } from "../../assets/Icon/icons";
 import Link from "next/link";
@@ -69,7 +69,7 @@ function TemplateLayout({ user }) {
                 <div className="container mx-auto max-w-full">
                   <div className="grid grid-cols-1 lg:grid-cols-4 mb-4 items-center justify-center gap-4">
                     <Link href="/template/add">
-                      <div className="template flex primary-bg-color items-center justify-center flex-col  w-full h-full  rounded-xl overflow-hdden shadow-md p-5  cursor-pointer my-2">
+                      <div className="template flex primary-bg-color items-center justify-center flex-col  w-full h-full  rounded-md overflow-hdden shadow-md p-5  cursor-pointer my-2">
                         <div className="cursor-pointer">
                           <AddIcon className="text-center " />
                         </div>

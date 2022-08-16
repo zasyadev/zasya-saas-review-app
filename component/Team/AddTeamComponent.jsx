@@ -4,6 +4,7 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { openNotificationBox } from "../../helpers/notification";
+import { PrimaryButton, SecondaryButton } from "../../helpers/CustomButton";
 
 function AddTeamComponent({ user, editMode, memberData }) {
   const router = useRouter();
@@ -214,24 +215,18 @@ function AddTeamComponent({ user, editMode, memberData }) {
                   </Form.Item>
                 </Col>
                 <Col md={24} xs={24}>
-                  <div className="flex justify-end  ">
-                    <Link href="/team/members">
-                      <button
-                        key="cancel"
-                        type="default"
-                        className="toggle-btn-bg text-white text-sm py-3 px-4  lg:mx-4 rounded h-full w-1/4 my-1"
-                      >
-                        Cancel
-                      </button>
-                    </Link>
-
-                    <button
-                      key="add"
-                      type="submit"
-                      className=" px-4 py-3 h-full rounded  text-sm primary-bg-btn text-white w-1/4 my-1"
-                    >
-                      {editMode ? "Update" : "Create"}
-                    </button>
+                  <div className="flex justify-end">
+                    <SecondaryButton
+                      withLink={true}
+                      linkHref="/team/members"
+                      className="mx-4 rounded my-1"
+                      title="Cancel"
+                    />
+                    <PrimaryButton
+                      onClick={() => addMoreQuestionField()}
+                      className=" my-1 rounded "
+                      title={editMode ? "Update" : "Create"}
+                    />
                   </div>
                 </Col>
               </Row>

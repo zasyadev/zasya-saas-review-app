@@ -3,7 +3,7 @@ import { getSession } from "next-auth/client";
 import DashBoard from "../../component/DashBoard/DashBoard";
 import AdminLayout from "../../component/layout/AdminLayout";
 
-function dashboard({ user, session }) {
+function dashboard({ user }) {
   // const { user } = session;
   return (
     <AdminLayout user={user} title={"DashBoard"}>

@@ -4,6 +4,7 @@ import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { openNotificationBox } from "../../helpers/notification";
 import CustomTable from "../../helpers/CustomTable";
 import Link from "next/link";
+import { PrimaryButton } from "../../helpers/CustomButton";
 
 function TeamMembers({ user }) {
   const [loading, setLoading] = useState(false);
@@ -78,7 +79,7 @@ function TeamMembers({ user }) {
       title: "Tags",
 
       render: (_, record) => (
-        <div className="grid grid-cols-3 gap-2">
+        <div className="grid grid-cols-1  md:grid-cols-3 gap-2">
           {" "}
           {record?.tags?.length > 0
             ? record?.tags.map((item, index) => (
@@ -127,13 +128,14 @@ function TeamMembers({ user }) {
           <div className="px-3 md:px-8 h-auto mt-5">
             <div className="container mx-auto max-w-full">
               <div className="grid grid-cols-1 px-4 mb-16">
-                <div className="md:flex justify-end">
+                <div className="flex justify-end">
                   <div className="my-2 ">
-                    <Link href="/team/add">
-                      <button className="primary-bg-btn text-white text-sm md:py-3 py-2 text-center md:px-4 px-2 rounded-md w-full">
-                        Create Team
-                      </button>
-                    </Link>
+                    <PrimaryButton
+                      withLink={true}
+                      className="rounded-md  px-2 md:px-4 "
+                      linkHref="/team/add"
+                      title={"Create"}
+                    />
                   </div>
                 </div>
 

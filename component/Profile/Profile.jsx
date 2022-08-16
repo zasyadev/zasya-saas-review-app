@@ -10,6 +10,7 @@ import { PlusOutlined } from "@ant-design/icons";
 import moment from "moment";
 import Link from "next/link";
 import { useS3Upload } from "next-s3-upload";
+import { PrimaryButton, SecondaryButton } from "../../helpers/CustomButton";
 
 const datePattern = "DD/MM/YYYY";
 
@@ -305,12 +306,11 @@ source=LinkedIn`);
                 <div className="w-full flex item-center justify-end">
                   <div className="flex justify-end ">
                     <div>
-                      <button
-                        className="primary-bg-btn text-white text-sm md:py-3 py-3 text-center md:px-4 px-2 rounded-md md:w-full w-20  "
-                        onClick={showModal}
-                      >
-                        Change Password
-                      </button>
+                      <PrimaryButton
+                        onClick={() => showModal()}
+                        className="md:px-4 px-2 rounded-md md:w-full w-20"
+                        title="Change Password"
+                      />
                     </div>
                   </div>
                 </div>
@@ -423,19 +423,16 @@ source=LinkedIn`);
                         </Col>
                       </Row>
                       <div className="text-center">
-                        <Button
-                          className="profile-submit-button py-2 cursor-pointer primary-bg-btn text-white text-base  text-center rounded-md h-full w-32 mr-2"
+                        <SecondaryButton
                           onClick={() => setEditMode(false)}
-                        >
-                          Cancel
-                        </Button>
-
-                        <Button
-                          className="profile-submit-button py-2 cursor-pointer primary-bg-btn text-white text-base  text-center rounded-md h-full w-32"
-                          htmlType="submit"
-                        >
-                          Submit
-                        </Button>
+                          className="rounded h-full w-32 mr-2"
+                          title="Cancel"
+                        />
+                        <PrimaryButton
+                          btnProps={{ htmlType: "submit" }}
+                          className=" h-full w-32 rounded "
+                          title="Submit"
+                        />
                       </div>
                     </Form>
                   </Col>
@@ -504,12 +501,12 @@ source=LinkedIn`);
                       </div>
                     </div>
                     <div className="flex  justify-center md:mx-4">
-                      <button
-                        className="toggle-btn-bg rounded-md text-md text-white px-8 py-2 "
+                      <SecondaryButton
+                        withLink={false}
                         onClick={() => setEditMode(true)}
-                      >
-                        Edit Profile
-                      </button>
+                        className="text-md px-8 rounded-md"
+                        title="Edit Profile"
+                      />
                     </div>
                   </div>
                 </div>
@@ -624,16 +621,16 @@ source=LinkedIn`);
         onCancel={() => setIsModalVisible(false)}
         footer={[
           <>
-            <Button
-              key="add"
-              type="default"
+            <SecondaryButton
               onClick={() => setIsModalVisible(false)}
-            >
-              Cancel
-            </Button>
-            <Button key="add" type="primary" onClick={passwordForm.submit}>
-              Change Password
-            </Button>
+              className="rounded h-full mr-2"
+              title="Cancel"
+            />
+            <PrimaryButton
+              onClick={() => passwordForm.submit()}
+              className=" h-full rounded "
+              title="Change Password"
+            />
           </>,
         ]}
         wrapClassName="view_form_modal"

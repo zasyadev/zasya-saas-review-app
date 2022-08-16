@@ -1,7 +1,4 @@
-import { PrismaClient } from "@prisma/client";
-// const fs = require("fs");
-
-const prisma = new PrismaClient();
+import prisma from "../../../lib/prisma";
 
 export default async (req, res) => {
   const { user_id } = req.query;

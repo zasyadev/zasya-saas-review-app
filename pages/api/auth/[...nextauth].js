@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import prisma from "../../../lib/prisma";
 import NextAuth from "next-auth";
 import Providers from "next-auth/providers";
 import { compareHashedPassword } from "../../../lib/auth";
@@ -12,9 +12,7 @@ export default NextAuth({
   providers: [
     Providers.Credentials({
       async authorize(credentials) {
-        const prismaClient = new PrismaClient();
-
-        const user = await prismaClient.user.findFirst({
+        const user = await prisma.user.findFirst({
           where: {
             email: credentials.email,
           },
@@ -46,7 +44,7 @@ export default NextAuth({
         if (!isValid) {
           throw new Error("Invalid Password!");
         }
-        prismaClient.$disconnect();
+        prisma.$disconnect();
         if (user) {
           delete user.password;
 

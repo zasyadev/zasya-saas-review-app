@@ -1,7 +1,5 @@
-import { PrismaClient } from "@prisma/client";
+import prisma from "../../../lib/prisma";
 import { mailService, mailTemplate } from "../../../lib/emailservice";
-
-const prisma = new PrismaClient();
 
 export default async (req, res) => {
   if (req.method === "POST") {

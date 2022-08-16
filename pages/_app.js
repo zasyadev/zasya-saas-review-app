@@ -1,6 +1,6 @@
 import "../styles/globals.css";
 import "../styles/customantd.scss";
-import { useSession } from "next-auth/client";
+// import { useSession } from "next-auth/client";
 
 function MyApp({ Component, pageProps }) {
   // const [session] = useSession();

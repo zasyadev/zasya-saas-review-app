@@ -1,6 +1,4 @@
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import prisma from "../../../lib/prisma";
 
 export default async (req, res) => {
   const { userId } = req.query;
@@ -12,6 +10,11 @@ export default async (req, res) => {
         });
 
         const data = await prisma.reviewAssignee.findMany({
+          orderBy: [
+            {
+              modified_date: "desc",
+            },
+          ],
           where: {
             AND: [
               {

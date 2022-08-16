@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { openNotificationBox } from "../../helpers/notification";
+import { PrimaryButton, SecondaryButton } from "../../helpers/CustomButton";
 
 function AddApplaud({ user }) {
   const router = useRouter();
@@ -141,29 +142,19 @@ function AddApplaud({ user }) {
                   </Form.Item>
                 </Col>
 
-                {/* <Button key="add" type="primary" onClick={applaudform.submit}>
-                  {editMode ? "Update" : "Add"}
-                </Button> */}
-
                 <Col md={24} xs={24}>
                   <div className="flex justify-end  ">
-                    <Link href="/applaud">
-                      <button
-                        key="cancel"
-                        type="default"
-                        className="toggle-btn-bg text-white text-sm py-3 px-4  lg:mx-4 rounded h-full w-1/4 my-1"
-                      >
-                        Cancel
-                      </button>
-                    </Link>
-
-                    <button
-                      key="add"
-                      type="submit"
-                      className=" px-4 py-3 h-full rounded  text-sm primary-bg-btn text-white w-1/4 my-1"
-                    >
-                      Create
-                    </button>
+                    <SecondaryButton
+                      withLink={true}
+                      linkHref="/applaud"
+                      className="mr-2 lg:mx-4 rounded my-1"
+                      title="Cancel"
+                    />
+                    <PrimaryButton
+                      className="  my-1 rounded"
+                      title="Create"
+                      btnProps={{ htmlType: "submit" }}
+                    />
                   </div>
                 </Col>
               </Row>

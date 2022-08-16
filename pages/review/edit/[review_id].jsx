@@ -34,7 +34,7 @@ function ReviewEdit({ user }) {
   }, []);
 
   return (
-    <AdminLayout user={user} title="Review">
+    <AdminLayout user={user} title="Edit Review">
       {loading ? (
         <>
           <div className="px-3 md:px-8 h-auto mt-5">

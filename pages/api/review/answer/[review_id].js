@@ -1,7 +1,4 @@
-import { PrismaClient } from "@prisma/client";
-// const scheduler = require("node-schedule");
-
-const prisma = new PrismaClient();
+import prisma from "../../../../lib/prisma";
 
 export default async (req, res) => {
   const { review_id } = req.query;

@@ -1,7 +1,4 @@
-import { PrismaClient } from "@prisma/client";
-// const scheduler = require("node-schedule");
-
-const prisma = new PrismaClient();
+import prisma from "../../../lib/prisma";
 
 export default async (req, res) => {
   const { userId } = req.query;
@@ -13,6 +10,11 @@ export default async (req, res) => {
       });
 
       let data = await prisma.review.findMany({
+        orderBy: [
+          {
+            modified_date: "desc",
+          },
+        ],
         where: {
           AND: [
             {

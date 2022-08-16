@@ -2,6 +2,7 @@ import { Skeleton } from "antd";
 import React, { useEffect, useState } from "react";
 import CustomTable from "../../helpers/CustomTable";
 import Link from "next/link";
+import { PrimaryButton, SecondaryButton } from "../../helpers/CustomButton";
 
 function FormView({ user }) {
   const [loading, setLoading] = useState(false);
@@ -98,22 +99,17 @@ function FormView({ user }) {
           <div className="grid grid-cols-1 px-4 mb-16">
             <div className="md:flex items-center justify-between mb-3">
               <div className="flex w-auto">
-                <button
-                  className={`
-                    bg-red-400
-                   text-white text-sm py-3 text-center px-4 rounded-r-none rounded-l-md rounded-md w-1/2 md:w-fit mt-2 `}
-                >
-                  Received
-                </button>
-
-                <Link href="/review">
-                  <button
-                    className={`primary-bg-btn
-                    text-white text-sm py-3 text-center px-4 rounded-r-md rounded-l-none w-1/2 md:w-fit mt-2 `}
-                  >
-                    Created
-                  </button>
-                </Link>
+                <SecondaryButton
+                  withLink={false}
+                  className="rounded-r-none rounded-l-md rounded-md w-1/2 md:w-fit "
+                  title={"Received"}
+                />
+                <PrimaryButton
+                  withLink={true}
+                  className="rounded-r-md rounded-l-none w-1/2 md:w-fit "
+                  linkHref="/review"
+                  title={"Created"}
+                />
               </div>
             </div>
             <div className="w-full bg-white rounded-xl overflow-hdden shadow-md px-4 pb-4">

@@ -1,8 +1,9 @@
 import React from "react";
-import { Input, Row, Col, Form, Button } from "antd";
+import { Input, Row, Col } from "antd";
 import QuestionComponent from "../Form/QuestionComponent";
 import { CloseOutlined } from "@ant-design/icons";
 import Link from "next/link";
+import { PrimaryButton, SecondaryButton } from "../../helpers/CustomButton";
 
 function TemplateEditor({
   setFormTitle,
@@ -93,24 +94,19 @@ function TemplateEditor({
           </div>
         </div>
         <div className="mt-3 flex justify-between ">
-          <button
-            className=" px-1 md:px-4 py-3 h-full rounded primary-bg-btn text-white w-3/4 md:w-1/2 my-1 mr-1"
-            type="button"
-            onClick={() => {
-              addMoreQuestionField();
-            }}
-          >
-            <span className="MuiButton-label">Add New Question</span>
-          </button>
+          <PrimaryButton
+            onClick={() => addMoreQuestionField()}
+            className=" px-1 md:px-4 h-full rounded w-3/4 md:w-1/2 my-1 mr-1"
+            title="Add New Question"
+          />
+
           {saveWrapper && (
-            <Link href={"/template"}>
-              <button
-                className="py-3 h-full rounded toggle-btn-bg text-white  w-1/3  my-1"
-                type="button"
-              >
-                <span className="MuiButton-label">Cancel</span>
-              </button>
-            </Link>
+            <SecondaryButton
+              withLink={true}
+              linkHref="/template"
+              className="h-full rounded w-1/3  my-1"
+              title="Cancel"
+            />
           )}
         </div>
       </Col>
@@ -143,15 +139,11 @@ function TemplateEditor({
         </div>
         {saveWrapper && (
           <div className="block lg:flex justify-end items-end my-4  lg:pl-56 ">
-            <button
-              className=" px-4 py-3 h-full rounded primary-bg-btn text-white  my-1 ml-2"
-              type="button"
-              onClick={() => {
-                saveFormField();
-              }}
-            >
-              <span className="MuiButton-label">Save </span>
-            </button>
+            <PrimaryButton
+              onClick={() => saveFormField()}
+              className=" my-1 ml-2 rounded"
+              title="Save"
+            />
           </div>
         )}
       </Col>

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import AdminLayout from "../../../component/layout/AdminLayout";
 import { getSession } from "next-auth/client";
-import FormComponent from "../../../component/Form/FormComponent";
 import TemplateBuildComponent from "../../../component/Template/TemplateBuildComponent";
 
 function EditTemplate({ user }) {
@@ -23,7 +22,6 @@ function EditTemplate({ user }) {
       .then((response) => response.json())
       .then((response) => {
         if (response.status === 200) {
-          // let data = response.data.filter((item) => item.status);
           setFormData(response.data);
         }
         setLoading(false);
