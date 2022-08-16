@@ -5,8 +5,9 @@ import { compareHashedPassword } from "../../../lib/auth";
 
 export default NextAuth({
   session: {
+    strategy: "jwt",
     jwt: true,
-    maxAge: 24 * 60 * 60,
+    maxAge: 30 * 24 * 60 * 60,
     updateAge: 30 * 24 * 60 * 60,
   },
   providers: [

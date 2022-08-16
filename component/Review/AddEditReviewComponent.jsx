@@ -240,7 +240,7 @@ function AddEditReviewComponent({
                     </Col>
                     <Col md={6} xs={24}>
                       <div className="h-full w-11/12">
-                        <Form.Item name="frequency" className="mb-0">
+                        <Form.Item name="frequency" className="mb-0 margin-b-0">
                           <Select
                             placeholder="Select Frequency"
                             showSearch
@@ -264,7 +264,10 @@ function AddEditReviewComponent({
                     </Col>
                     <Col md={6} xs={24}>
                       <div className="w-11/12 h-full">
-                        <Form.Item name="assigned_to_id" className="mb-0">
+                        <Form.Item
+                          name="assigned_to_id"
+                          className="mb-0 margin-b-0"
+                        >
                           <Select
                             mode="multiple"
                             placeholder="Select Member"
