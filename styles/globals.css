@@ -26,7 +26,8 @@ body {
 .dashboard-feedback::-webkit-scrollbar,
 .notification-wrapper::-webkit-scrollbar,
 .received-applaud-table::-webkit-scrollbar,
-.sider-question-wrapper::-webkit-scrollbar {
+.sider-question-wrapper::-webkit-scrollbar,
+.received--all-applaud::-webkit-scrollbar {
   width: 7px;
 }
 
@@ -35,7 +36,8 @@ body {
 .dashboard-feedback::-webkit-scrollbar-track,
 .notification-wrapper::-webkit-scrollbar-track,
 .received-applaud-table::-webkit-scrollbar-track,
-.sider-question-wrapper::-webkit-scrollbar-track {
+.sider-question-wrapper::-webkit-scrollbar-track,
+.received--all-applaud::-webkit-scrollbar-track {
   background: #f1f1f1;
 }
 
@@ -44,6 +46,7 @@ body {
 .dashboard-feedback::-webkit-scrollbar-thumb,
 .notification-wrapper::-webkit-scrollbar-thumb,
 .received-applaud-table::-webkit-scrollbar-thumb,
+.received--all-applaud::-webkit-scrollbar-thumb,
 .sider-question-wrapper::-webkit-scrollbar-thumb {
   background: #888;
 }
@@ -53,6 +56,7 @@ body {
 .dashboard-feedback::-webkit-scrollbar-thumb:hover,
 .notification-wrapper::-webkit-scrollbar-thumb:hover,
 .received-applaud-table::-webkit-scrollbar-thumb:hover,
+.received--all-applaud::-webkit-scrollbar-thumb:hover,
 .sider-question-wrapper::-webkit-scrollbar-thumb:hover {
   background: #555;
 }

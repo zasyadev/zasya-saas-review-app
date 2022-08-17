@@ -20,6 +20,7 @@ import {
   UserIcon,
 } from "../../assets/Icon/icons";
 import { openNotificationBox } from "../../helpers/notification";
+import { calculateDuration } from "../../helpers/momentHelper";
 const { useBreakpoint } = Grid;
 
 function ReviewCreatedComponent({
@@ -52,6 +53,7 @@ function ReviewCreatedComponent({
         obj[key.created_date.split("T")[0]].push(key);
         return obj;
       }, {});
+
       setDataSource(result);
     } else setDataSource([]);
   };
@@ -61,6 +63,17 @@ function ReviewCreatedComponent({
     dataIndex: "name",
     fixed: fixed ? false : true,
     sorter: (a, b) => a.name?.localeCompare(b.name),
+  };
+
+  let reactivityTimeColoum = {
+    title: "Reactivity Time",
+    dataIndex: "answer_date",
+
+    render: (answer_date) =>
+      calculateDuration({
+        from: reviewData.created_date,
+        to: answer_date,
+      }),
   };
 
   useEffect(() => {
@@ -82,7 +95,11 @@ function ReviewCreatedComponent({
         };
       });
     }
+
     headersData.unshift(nameTitle);
+
+    headersData.push(reactivityTimeColoum);
+
     setHeadersData(headersData);
     fetchAnswer(reviewData.id);
   }, []);
@@ -102,6 +119,7 @@ function ReviewCreatedComponent({
             user: item.user,
             answers: item.ReviewAssigneeAnswerOption.reverse(),
             created_date: item.created_assignee_date ?? item.created_date,
+            answer_date: item.created_date,
           }));
 
           let dataobj = data.map((item) => {
@@ -114,10 +132,12 @@ function ReviewCreatedComponent({
             return {
               name: item.user.first_name + " " + item.user.last_name,
               created_date: item.created_date,
+              answer_date: item.answer_date,
               ...optionObj,
             };
           });
           applyFilters(dataobj);
+
           if (reviewData?.review_type == "feedback")
             totalRatingFunction(response.data);
         }

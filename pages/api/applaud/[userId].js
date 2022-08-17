@@ -6,6 +6,11 @@ export default async (req, res) => {
   if (req.method === "GET") {
     if (userId) {
       const data = await prisma.userApplaud.findMany({
+        orderBy: [
+          {
+            created_date: "desc",
+          },
+        ],
         where: { created_by: userId },
         include: {
           user: {

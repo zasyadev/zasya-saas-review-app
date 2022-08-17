@@ -4,12 +4,11 @@ import Image from "next/image";
 import threeUser from "../../assets/Icon/threeusers.png";
 import ReviewIcon from "../../assets/Icon/reviewicon.png";
 import User1 from "../../assets/images/User1.png";
-import User2 from "../../assets/images/User2.png";
-
 import dynamic from "next/dynamic";
 import { SmallApplaudIcon, ApplaudIconSmall } from "../../assets/Icon/icons";
 import { Skeleton } from "antd";
 import Link from "next/link";
+import moment from "moment";
 
 const SiderRight = dynamic(() => import("../SiderRight/SiderRight"), {
   ssr: false,
@@ -24,10 +23,12 @@ function DashBoard({ user }) {
   const [loading, setLoading] = useState(false);
   const [totalRating, setTotalRating] = useState(0);
   const [userApplaud, setUserApplaud] = useState(0);
-  // const [applaudData, setApplaudData] = useState({});
-  // const [sortApplaudList, setSortApplaudList] = useState({});
   const [feedbackList, setFeedbackList] = useState([]);
   const [allApplaud, setAllApplaud] = useState([]);
+  const [currentMonth, setCurrentMonth] = useState({
+    lte: moment().endOf("month"),
+    gte: moment().startOf("month"),
+  });
 
   async function fetchDashboardData() {
     setDashboardData([]);
@@ -108,8 +109,12 @@ function DashBoard({ user }) {
   async function fetchApplaudData() {
     setAllApplaud([]);
     if (user?.id) {
-      await fetch("/api/applaud/all/" + user.id, {
-        method: "GET",
+      await fetch("/api/applaud/all", {
+        method: "POST",
+        body: JSON.stringify({
+          date: currentMonth,
+          userId: user.id,
+        }),
       })
         .then((response) => response.json())
         .then((response) => {

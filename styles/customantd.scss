@@ -970,6 +970,10 @@
   height: 500px;
   overflow: auto;
 }
+.received--all-applaud {
+  max-height: 500px;
+  overflow: auto;
+}
 
 .preview-answer {
   .answer-bg {
@@ -1053,5 +1057,10 @@
     background-size: cover;
     background-position: bottom;
     height: 50%;
+  }
+}
+.ant-picker-cell-selected {
+  .ant-picker-cell-inner {
+    background: #0f123f !important;
   }
 }

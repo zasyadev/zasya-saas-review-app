@@ -1,9 +1,14 @@
+// import { SlackHelper } from "../../../helpers/slackHelper";
 import prisma from "../../../lib/prisma";
 
 export default async (req, res) => {
   if (req.method === "POST") {
     try {
       const reqBody = JSON.parse(req.body);
+
+      // SlackHelper({
+      //   data: "",
+      // });
 
       let userData = await prisma.user.findUnique({
         where: { id: reqBody.user_id },
@@ -51,6 +56,7 @@ export default async (req, res) => {
           .json({ error: "error", message: "User Not Found" });
       }
     } catch (error) {
+      console.log(error, "error");
       return res
         .status(500)
         .json({ error: error, message: "Internal Server Error" });

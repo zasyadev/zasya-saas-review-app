@@ -7,7 +7,7 @@ import {
 } from "@ant-design/icons";
 import { Grid, Layout } from "antd";
 import { Content, Footer } from "antd/lib/layout/layout";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useState, useMemo } from "react";
 import { HeadersComponent } from "../../helpers/HeadersComponent";
 import HeaderLayout from "./HeaderLayout";
 import SiderLayout from "./SiderLayout";
@@ -47,17 +47,17 @@ function AdminLayout(props) {
       .then((response) => {
         if (response.status === 200) {
           setUserOrganizationData({
-            orgId: response?.data?.organization?.company_name,
+            orgId: response.data?.organization?.company_name,
             roleId:
-              response?.data?.roleData?.role_id === 2
+              response.data?.roleData?.role_id === 2
                 ? "Admin"
-                : response?.data?.roleData?.role_id === 3
+                : response.data?.roleData?.role_id === 3
                 ? "Manager"
-                : response?.data?.roleData?.role_id === 4
+                : response.data?.roleData?.role_id === 4
                 ? "Member"
                 : null,
-            role: response?.data?.roleData?.role_id,
-            userImage: response?.data?.UserDetails?.image,
+            role: response.data?.roleData?.role_id,
+            userImage: response.data?.UserDetails?.image,
           });
         }
       })
@@ -67,30 +67,12 @@ function AdminLayout(props) {
   }
 
   useEffect(() => {
-    if (props.user) {
+    if (props.user && props.user.id) {
       fetchUserData();
     }
-  }, [props.user.id]);
+  }, [props.user]);
 
-  const items = [
-    getItem(
-      "DashBoard",
-      "/dashboard",
-      <DashboardOutlined className="sidebar-icon" />
-    ),
-
-    getItem("Reviews", "/review", <FormOutlined className="sidebar-icon " />),
-
-    getItem("Applaud", "/applaud", <LikeOutlined className="sidebar-icon " />),
-
-    getItem(
-      "Settings",
-      "setting",
-      <SettingOutlined className="sidebar-icon " />,
-      [getItem("Templates", "/template"), getItem("Profile ", "/profile ")]
-    ),
-  ];
-  const adminItems = [
+  const allMenus = [
     getItem(
       "DashBoard",
       "/dashboard",
@@ -114,6 +96,14 @@ function AdminLayout(props) {
     ),
   ];
 
+  const filteredMenus = useMemo(() => {
+    if (userOrganizationData?.role == 2 || userOrganizationData?.role == 3) {
+      return allMenus;
+    } else {
+      return allMenus.filter((item) => item.label !== "Team");
+    }
+  }, [userOrganizationData]);
+
   return (
     <Fragment>
       <HeadersComponent />
@@ -121,17 +111,11 @@ function AdminLayout(props) {
         <SiderLayout
           collapsed={collapsed}
           setCollapsed={setCollapsed}
-          items={
-            userOrganizationData?.role == 2 || userOrganizationData?.role == 3
-              ? adminItems
-              : items
-          }
+          items={filteredMenus}
           md={md}
-          // setTitle={setTitle}
         />
         <Layout>
           <Content className="bg-color-dashboard ">
-            {/* <HeaderLayout /> */}
             <HeaderLayout
               title={props.title}
               user={props.user}

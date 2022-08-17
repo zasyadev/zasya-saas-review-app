@@ -11,7 +11,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import User from "../../assets/images/User.png";
-import { Avatar, Col, Dropdown, Layout, Menu, Row, Badge } from "antd";
+import { Avatar, Dropdown, Layout, Menu, Row, Badge } from "antd";
 import { signOut } from "next-auth/client";
 import { useRouter } from "next/router";
 import { openNotificationBox } from "../../helpers/notification";
@@ -91,7 +91,7 @@ function HeaderLayout({
 
   useEffect(() => {
     if (user) {
-      fetchUserData();
+      // fetchUserData();
       notificationHandle();
     }
   }, []);
