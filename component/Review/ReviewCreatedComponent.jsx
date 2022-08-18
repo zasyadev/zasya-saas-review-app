@@ -19,7 +19,7 @@ import {
   StarSmallIcon,
   UserIcon,
 } from "../../assets/Icon/icons";
-import { openNotificationBox } from "../../helpers/notification";
+import { openNotificationBox } from "../../component/common/notification";
 import { calculateDuration } from "../../helpers/momentHelper";
 const { useBreakpoint } = Grid;
 

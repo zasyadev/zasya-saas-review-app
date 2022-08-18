@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Form, Skeleton, Popconfirm } from "antd";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import { openNotificationBox } from "../../helpers/notification";
-import CustomTable from "../../helpers/CustomTable";
+import { openNotificationBox } from "../../component/common/notification";
+import CustomTable from "../../component/common/CustomTable";
 import Link from "next/link";
-import { PrimaryButton, SecondaryButton } from "../../helpers/CustomButton";
+import {
+  PrimaryButton,
+  SecondaryButton,
+} from "../../component/common/CustomButton";
 
 function ReviewManagement({ user }) {
   const [loading, setLoading] = useState(false);

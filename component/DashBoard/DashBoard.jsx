@@ -14,12 +14,13 @@ const SiderRight = dynamic(() => import("../SiderRight/SiderRight"), {
   ssr: false,
 });
 
-const BarChart = dynamic(() => import("../../helpers/Charts"), {
+const BarChart = dynamic(() => import("../../component/common/Charts"), {
   ssr: false,
 });
 
 function DashBoard({ user }) {
   const [dashBoardData, setDashboardData] = useState({});
+
   const [loading, setLoading] = useState(false);
   const [totalRating, setTotalRating] = useState(0);
   const [userApplaud, setUserApplaud] = useState(0);
@@ -219,11 +220,11 @@ function DashBoard({ user }) {
                     className="mt-4"
                   />
                 ) : (
-                  <BarChart />
+                  <BarChart user={user} />
                 )}
               </div>
             </div>
-            <Row className="mt-6 mx-5" gutter={[16, 16]}>
+            <Row className="mt-6" gutter={[16, 16]}>
               <Col xs={24} md={12} lg={12}>
                 <div className="w-full bg-white rounded-xl overflow-hidden shadow-md p-4 h-full flex flex-col justify-between">
                   <div>

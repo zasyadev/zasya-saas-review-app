@@ -1,36 +1,37 @@
+// import moment from "moment";
 import prisma from "../../../lib/prisma";
 
-const getMonthName = (month) => {
-  switch (month) {
-    case 0:
-      return "Jan";
-    case 1:
-      return "Feb";
-    case 2:
-      return "Mar";
-    case 3:
-      return "Apr";
-    case 4:
-      return "May";
-    case 5:
-      return "Jun";
-    case 6:
-      return "Jul";
-    case 7:
-      return "Aug";
-    case 8:
-      return "Sep";
-    case 9:
-      return "Oct";
-    case 10:
-      return "Nov";
-    case 11:
-      return "Dec";
+// const getMonthName = (month) => {
+//   switch (month) {
+//     case 0:
+//       return "Jan";
+//     case 1:
+//       return "Feb";
+//     case 2:
+//       return "Mar";
+//     case 3:
+//       return "Apr";
+//     case 4:
+//       return "May";
+//     case 5:
+//       return "Jun";
+//     case 6:
+//       return "Jul";
+//     case 7:
+//       return "Aug";
+//     case 8:
+//       return "Sep";
+//     case 9:
+//       return "Oct";
+//     case 10:
+//       return "Nov";
+//     case 11:
+//       return "Dec";
 
-    default:
-      return "";
-  }
-};
+//     default:
+//       return "";
+//   }
+// };
 
 export default async (req, res) => {
   const reqBody = JSON.parse(req.body);
@@ -63,17 +64,6 @@ export default async (req, res) => {
             },
           },
         });
-
-        let monthWiseData = [];
-        if (reviewRating.length > 0) {
-          monthWiseData = reviewRating?.reduce(function (obj, key) {
-            let date = new Date(key.created_date);
-            const objKey = getMonthName(date.getMonth());
-            obj[objKey] = obj[objKey] || [];
-            obj[objKey].push(key);
-            return obj;
-          }, {});
-        }
 
         let reviewAnswered = await prisma.reviewAssigneeAnswers.findMany({
           where: {

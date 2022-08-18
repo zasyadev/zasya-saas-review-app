@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Form, Row, Col, Select, Input, Radio, Spin } from "antd";
 import { useRouter } from "next/router";
-import { openNotificationBox } from "../../helpers/notification";
+import { openNotificationBox } from "../../component/common/notification";
 import Link from "next/link";
 import EditorWrapperComponent from "./EditorWrapperComponent";
 import { LoadingOutlined } from "@ant-design/icons";
-import { PrimaryButton, SecondaryButton } from "../../helpers/CustomButton";
+import {
+  PrimaryButton,
+  SecondaryButton,
+} from "../../component/common/CustomButton";
 
 const defaultScaleQuestion = {
   questionText: "Rating",

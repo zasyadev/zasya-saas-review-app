@@ -14,7 +14,7 @@ import User from "../../assets/images/User.png";
 import { Avatar, Dropdown, Layout, Menu, Row, Badge } from "antd";
 import { signOut } from "next-auth/client";
 import { useRouter } from "next/router";
-import { openNotificationBox } from "../../helpers/notification";
+import { openNotificationBox } from "../../component/common/notification";
 
 const { Header } = Layout;
 

@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Row, Col, Skeleton, Popconfirm } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
-import { openNotificationBox } from "../../helpers/notification";
-import CustomTable from "../../helpers/CustomTable";
+import { openNotificationBox } from "../../component/common/notification";
+import CustomTable from "../../component/common/CustomTable";
 import Link from "next/link";
-import { PrimaryButton } from "../../helpers/CustomButton";
+import { PrimaryButton } from "../../component/common/CustomButton";
 
 function TeamMembers({ user }) {
   const [loading, setLoading] = useState(false);

@@ -1,7 +1,7 @@
 import { Input } from "antd";
 import { useRouter } from "next/router";
 import React, { useState, useEffect } from "react";
-import { openNotificationBox } from "../../helpers/notification";
+import { openNotificationBox } from "../../component/common/notification";
 import QuestionComponent from "./QuestionComponent";
 import Link from "next/link";
 

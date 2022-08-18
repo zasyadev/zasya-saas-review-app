@@ -1,6 +1,6 @@
 import { Col, Row } from "antd";
 import React from "react";
-import LineChart from "../../helpers/LineChart";
+import LineChart from "../../component/common/LineChart";
 import { ApplaudIcon, StarIcon } from "../../assets/Icon/icons";
 
 // import dynamic from "next/dynamic";
@@ -37,15 +37,12 @@ function SiderRight({ data, totalRating, userApplaud }) {
           </div>
         </Col>
       </Row>
-      <Row className="">
+      {/* <Row className="">
         <div className="w-full bg-white rounded-xl shadow-md px-4 py-4 mt-8 h-full">
-          {/* <p className="text-xl mt-1 font-semibold primary-color-blue mb-4 ">
-            Feedback given to me
-          </p> */}
+
           <LineChart />
         </div>
-      </Row>
-      {/* <DoughnutChart /> */}
+      </Row> */}
     </div>
   );
 }

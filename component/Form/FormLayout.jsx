@@ -4,7 +4,7 @@ import { Layout } from "antd";
 import DeleteIcon from "../../assets/images/delete.svg";
 import Image from "next/image";
 import { Popconfirm } from "antd";
-import { openNotificationBox } from "../../helpers/notification";
+import { openNotificationBox } from "../../component/common/notification";
 
 const { Content } = Layout;
 

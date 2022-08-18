@@ -1,8 +1,11 @@
 import { Skeleton } from "antd";
 import React, { useEffect, useState } from "react";
-import CustomTable from "../../helpers/CustomTable";
+import CustomTable from "../../component/common/CustomTable";
 import Link from "next/link";
-import { PrimaryButton, SecondaryButton } from "../../helpers/CustomButton";
+import {
+  PrimaryButton,
+  SecondaryButton,
+} from "../../component/common/CustomButton";
 
 function FormView({ user }) {
   const [loading, setLoading] = useState(false);

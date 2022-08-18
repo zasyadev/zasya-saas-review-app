@@ -1,7 +1,7 @@
 import { Input, Row, Col, Form, Button } from "antd";
 import { useRouter } from "next/router";
 import React, { useState, useEffect } from "react";
-import { openNotificationBox } from "../../helpers/notification";
+import { openNotificationBox } from "../../component/common/notification";
 // import QuestionComponent from "../Form/QuestionComponent";
 // import Link from "next/link";
 // import { CloseOutlined } from "@ant-design/icons";

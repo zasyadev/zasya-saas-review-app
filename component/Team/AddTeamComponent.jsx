@@ -3,8 +3,11 @@ import { Col, Form, Input, Row, Select } from "antd";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { openNotificationBox } from "../../helpers/notification";
-import { PrimaryButton, SecondaryButton } from "../../helpers/CustomButton";
+import { openNotificationBox } from "../../component/common/notification";
+import {
+  PrimaryButton,
+  SecondaryButton,
+} from "../../component/common/CustomButton";
 
 function AddTeamComponent({ user, editMode, memberData }) {
   const router = useRouter();

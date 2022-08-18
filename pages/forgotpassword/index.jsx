@@ -3,8 +3,8 @@ import React, { useState } from "react";
 import { Form, Input, Spin } from "antd";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import { openNotificationBox } from "../../helpers/notification";
-import { HeadersComponent } from "../../helpers/HeadersComponent";
+import { openNotificationBox } from "../../component/common/notification";
+import { HeadersComponent } from "../../component/common/HeadersComponent";
 import AuthWrapper from "../../component/auth/AuthWrapper";
 
 import { LoadingOutlined } from "@ant-design/icons";

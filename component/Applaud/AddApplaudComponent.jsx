@@ -3,8 +3,11 @@ import TextArea from "antd/lib/input/TextArea";
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { openNotificationBox } from "../../helpers/notification";
-import { PrimaryButton, SecondaryButton } from "../../helpers/CustomButton";
+import { openNotificationBox } from "../../component/common/notification";
+import {
+  PrimaryButton,
+  SecondaryButton,
+} from "../../component/common/CustomButton";
 
 function AddApplaud({ user }) {
   const router = useRouter();

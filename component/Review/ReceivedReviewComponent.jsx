@@ -2,7 +2,7 @@ import { Form, Skeleton } from "antd";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-import { openNotificationBox } from "../../helpers/notification";
+import { openNotificationBox } from "../../component/common/notification";
 
 import { FormSlideComponent } from "./formhelper/FormComponent";
 

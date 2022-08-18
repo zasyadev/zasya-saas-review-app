@@ -13,7 +13,7 @@ import {
   Select,
 } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
-import { openNotificationBox } from "../../helpers/notification";
+import { openNotificationBox } from "../../component/common/notification";
 
 function FormManagement({ user }) {
   const [form] = Form.useForm();

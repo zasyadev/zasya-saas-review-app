@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Col, Form, Input, Radio, Rate, Row, Slider } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import { LikeOutlined, DislikeOutlined } from "@ant-design/icons";
-import { openNotificationBox } from "../../../helpers/notification";
+import { openNotificationBox } from "../../../component/common/notification";
 
 export function FormSlideComponent({
   type,

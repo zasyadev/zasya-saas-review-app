@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Modal, Form, Input, Button, Col, Row, Upload, message } from "antd";
 import { useEffect } from "react";
-import { openNotificationBox } from "../../helpers/notification";
+import { openNotificationBox } from "../../component/common/notification";
 import Image from "next/image";
 import profileCover from "../../assets/images/profile-cover.png";
 import userImage from "../../assets/images/User1.png";
@@ -10,7 +10,10 @@ import { PlusOutlined } from "@ant-design/icons";
 import moment from "moment";
 import Link from "next/link";
 import { useS3Upload } from "next-s3-upload";
-import { PrimaryButton, SecondaryButton } from "../../helpers/CustomButton";
+import {
+  PrimaryButton,
+  SecondaryButton,
+} from "../../component/common/CustomButton";
 
 const datePattern = "DD/MM/YYYY";
 

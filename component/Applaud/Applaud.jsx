@@ -1,11 +1,11 @@
 import { Col, Row, Skeleton } from "antd";
 
 import React, { useState, useEffect } from "react";
-import CustomTable from "../../helpers/CustomTable";
+import CustomTable from "../../component/common/CustomTable";
 import moment from "moment";
 import { CalanderIcon, CommentIcons, UserIcon } from "../../assets/Icon/icons";
 import Link from "next/link";
-import { PrimaryButton } from "../../helpers/CustomButton";
+import { PrimaryButton } from "../../component/common/CustomButton";
 
 function Applaud({ user }) {
   const [applaudList, setApplaudList] = useState([]);
