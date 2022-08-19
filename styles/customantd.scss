@@ -467,6 +467,7 @@
 .login-image-wrapper {
   background-image: url("../assets/images/banner-bg-shape.png");
   background-color: #0f123f;
+  height: 100%;
 }
 .login-bottom-image {
   background-image: url("../assets/images/login-bottom-design.png");
@@ -1071,4 +1072,10 @@
   font-size: 20px;
   font-weight: 600;
   color: #0f123f;
+}
+
+.image_crop_modal {
+  .img-crop-control-zoom {
+    display: none !important;
+  }
 }

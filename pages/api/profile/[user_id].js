@@ -1,3 +1,4 @@
+import { SlackUserList } from "../../../helpers/slackHelper";
 import prisma from "../../../lib/prisma";
 
 export default async (req, res) => {
@@ -42,10 +43,28 @@ export default async (req, res) => {
                   first_name: reqBody.first_name,
                 },
               });
+              let slackUserList = await SlackUserList();
+
+              let valid_slack_email = "";
+              let valid_slack_id = "";
+
+              if (reqBody.slack_email && slackUserList.length) {
+                let slackDetails = slackUserList.find((item) =>
+                  item.profile.email
+                    ? item.profile.email == reqBody.slack_email
+                    : false
+                );
+
+                if (slackDetails) {
+                  valid_slack_email = slackDetails.profile.email;
+                  valid_slack_id = slackDetails.id;
+                }
+              }
 
               const userDetailData = await transaction.userDetails.findUnique({
                 where: { user_id: user_id },
               });
+
               let userDeatilsTable = {};
               if (userDetailData) {
                 let dataObj = {
@@ -54,19 +73,10 @@ export default async (req, res) => {
                   about: reqBody.about ?? "",
                   pin_code: reqBody.pin_code ?? "",
                   mobile: reqBody.mobile ?? "",
+                  slack_email: valid_slack_email,
+                  slack_id: valid_slack_id,
+                  image: reqBody.imageName ?? "",
                 };
-                if (reqBody.imageName) {
-                  // if (userDetailData.image) {
-                  //   let path = `./public/static/media/profile/${userDetailData.image}`;
-
-                  //   fs.unlink(path, (err) => {
-                  //     if (err) {
-                  //       return err;
-                  //     }
-                  //   });
-                  // }
-                  dataObj.image = reqBody.imageName;
-                }
 
                 userDeatilsTable = await transaction.userDetails.update({
                   where: { id: userDetailData.id },

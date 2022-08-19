@@ -14,8 +14,17 @@ import {
   PrimaryButton,
   SecondaryButton,
 } from "../../component/common/CustomButton";
+import ImgCrop from "antd-img-crop";
 
 const datePattern = "DD/MM/YYYY";
+
+const getSrcFromFile = (file) => {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file.originFileObj);
+    reader.onload = () => resolve(reader.result);
+  });
+};
 
 const BASE = process.env.NEXT_PUBLIC_APP_URL;
 const ImageUpload = ({
@@ -95,26 +104,46 @@ const ImageUpload = ({
   //   setPreviewTitle(file.name);
   // };
 
+  const onPreview = async (file) => {
+    const src = file.url || (await getSrcFromFile(file));
+    const imgWindow = window.open(src);
+
+    if (imgWindow) {
+      const image = new Image();
+      image.src = src;
+      imgWindow.document.write(image.outerHTML);
+    } else {
+      window.location.href = src;
+    }
+  };
+
   return (
     <>
       <Form.Item name={formName} label="Image Upload">
-        <Upload
-          name="image"
-          listType="picture-card"
-          fileList={fileList}
-          // action={handleFileChange}
-          onChange={handleChange}
-          // onPreview={handlePreview}
-          data={{ category: category }}
-          // onRemove={(val) => deleteBanner(val.uid)}
-          beforeUpload={beforeUpload}
+        <ImgCrop
+          zoom
+          rotate={false}
+          shape="round"
+          modalClassName="image_crop_modal"
         >
-          {limit
-            ? fileList.length >= limitSize
-              ? null
-              : uploadImageButton
-            : uploadImageButton}
-        </Upload>
+          <Upload
+            name="image"
+            listType="picture-card"
+            fileList={fileList}
+            // action={handleFileChange}
+            onChange={handleChange}
+            onPreview={onPreview}
+            data={{ category: category }}
+            // onRemove={(val) => deleteBanner(val.uid)}
+            beforeUpload={beforeUpload}
+          >
+            {limit
+              ? fileList.length >= limitSize
+                ? null
+                : uploadImageButton
+              : uploadImageButton}
+          </Upload>
+        </ImgCrop>
       </Form.Item>
     </>
   );
@@ -136,6 +165,7 @@ function Profile({ user }) {
 
   let handleFileChange = async (file) => {
     let { url } = await uploadToS3(file);
+
     if (url) {
       return url;
     }
@@ -143,14 +173,17 @@ function Profile({ user }) {
   };
 
   const onFinish = async (values) => {
-    if (values.profileImage) {
-      let imageURL = await handleFileChange(image[0].originFileObj);
-      values.imageName = imageURL;
-      profileUpdate(values);
+    if (image.length) {
+      if (image[0]?.originFileObj) {
+        let imageURL = await handleFileChange(image[0].originFileObj);
+        values.imageName = imageURL;
+      } else {
+        values.imageName = image[0].url;
+      }
     } else {
       values.imageName = "";
-      profileUpdate(values);
     }
+    profileUpdate(values);
   };
 
   const profileUpdate = async (data) => {
@@ -191,6 +224,7 @@ function Profile({ user }) {
             address2: response.data.address2 ?? "",
             mobile: response.data.mobile ?? "",
             pin_code: response.data.pin_code ?? "",
+            slack_email: response.data.slack_email ?? "",
           });
           setImageHandler(response.data.image);
 
@@ -215,7 +249,7 @@ function Profile({ user }) {
             filepaths: [img],
           },
         },
-        originFileObj: img,
+        // originFileObj: img,
       });
 
       setImage(array);
@@ -299,6 +333,10 @@ source=LinkedIn`);
     );
   };
 
+  const onDeleteImage = () => {
+    setImage([]);
+  };
+
   return (
     <>
       {editMode ? (
@@ -336,6 +374,7 @@ source=LinkedIn`);
                                 fileList={image}
                                 setFileList={setImage}
                                 formName="profileImage"
+                                onDelete={onDeleteImage}
                               />
                             </Col>
                           </Row>
@@ -418,6 +457,17 @@ source=LinkedIn`);
                               >
                                 <Input
                                   placeholder="About You"
+                                  className="bg-gray-100 h-12 rounded-md"
+                                />
+                              </Form.Item>
+                            </Col>
+                            <Col md={24} sm={24} xs={24}>
+                              <Form.Item
+                                label="Slack Email Address "
+                                name="slack_email"
+                              >
+                                <Input
+                                  placeholder="Slack Email Address"
                                   className="bg-gray-100 h-12 rounded-md"
                                 />
                               </Form.Item>

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Form, Input } from "antd";
+import { Form, Input, Spin } from "antd";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { openNotificationBox } from "../../component/common/notification";
@@ -7,6 +7,7 @@ import { HeadersComponent } from "../../component/common/HeadersComponent";
 import { LoadingSpinner } from "../../component/Loader/LoadingSpinner";
 import AuthWrapper from "../../component/auth/AuthWrapper";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
+import { LoadingOutlined } from "@ant-design/icons";
 
 function ResetPassword() {
   const router = useRouter();
@@ -39,6 +40,16 @@ function ResetPassword() {
         .catch((err) => console.log(err));
     }
   }
+
+  const antIcon = (
+    <LoadingOutlined
+      style={{
+        fontSize: 24,
+        color: "white",
+      }}
+      spin
+    />
+  );
 
   const ResetPasswordComponent = () => {
     return (
@@ -103,8 +114,9 @@ function ResetPassword() {
           <button
             type="submit"
             className="inline-block px-7 py-5  text-white font-medium text-lg leading-snug  rounded shadow-md  hover:shadow-lg  focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out w-full btn-blue h-16"
+            disabled={loading}
           >
-            Submit
+            {loading ? <Spin indicator={antIcon} /> : "Submit"}
           </button>
         </div>
 

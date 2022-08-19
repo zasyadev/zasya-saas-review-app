@@ -2,6 +2,7 @@ import prisma from "../../../lib/prisma";
 import { mailService, mailTemplate } from "../../../lib/emailservice";
 // import moment from "moment";
 import { ReviewScheduler } from "../../../helpers/schedulerHelper";
+import { SlackPostMessage } from "../../../helpers/slackHelper";
 
 const schedule = require("node-schedule");
 
@@ -127,6 +128,7 @@ export default async (req, res) => {
         if (transactionData.savedData.is_published === "published") {
           const assignedToData = await prisma.user.findMany({
             where: { id: { in: resData.assigned_to_id } },
+            include: { UserDetails: true },
           });
 
           const assignedFromData = await prisma.user.findUnique({
@@ -170,6 +172,13 @@ export default async (req, res) => {
                 },
               },
             });
+
+            if (user.UserDetails.slack_id) {
+              SlackPostMessage({
+                channel: user.UserDetails.slack_id,
+                text: `${assignedFromData.first_name} has assigned you New Review.`,
+              });
+            }
           });
         }
       } else {

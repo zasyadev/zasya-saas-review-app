@@ -100,15 +100,7 @@ const defaultOptions = {
   },
   tooltip: {
     custom: function ({ series, seriesIndex, dataPointIndex, w }) {
-      return (
-        '<div class="tooltip_chart">' +
-        "<span>" +
-        w.globals.labels[dataPointIndex] +
-        ": " +
-        series[seriesIndex][dataPointIndex] +
-        "</span>" +
-        "</div>"
-      );
+      return `<div class="tooltip_chart"> <span> ${w.globals.labels[dataPointIndex]} : ${series[seriesIndex][dataPointIndex]} </span> </div>`;
     },
   },
 };
