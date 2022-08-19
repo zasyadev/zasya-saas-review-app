@@ -8,6 +8,7 @@ import { HeadersComponent } from "../../component/common/HeadersComponent";
 import AuthWrapper from "../../component/auth/AuthWrapper";
 
 import { LoadingOutlined } from "@ant-design/icons";
+import httpService from "../../lib/httpService";
 
 function ForgotPassword() {
   const router = useRouter();
@@ -20,21 +21,15 @@ function ForgotPassword() {
       email: values.email,
     };
     if (obj.email) {
-      await fetch("/api/user/password/forgotpassword", {
-        method: "POST",
-        body: JSON.stringify(obj),
-        // headers: {
-        //   "Content-Type": "application/json",
-        // },
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.status === 200) {
-            openNotificationBox("success", data.message, 3);
+      await httpService
+        .post(`/api/user/password/forgotpassword`, obj)
+        .then(({ data: response }) => {
+          if (response.status === 200) {
+            openNotificationBox("success", response.message, 3);
             forgotForm.resetFields();
             router.push("/auth/login");
           } else {
-            openNotificationBox("error", data.message, 3);
+            openNotificationBox("error", response.message, 3);
           }
           setLoading(false);
         })

@@ -9,6 +9,7 @@ import { Grid, Layout } from "antd";
 import { Content, Footer } from "antd/lib/layout/layout";
 import { Fragment, useEffect, useState, useMemo } from "react";
 import { HeadersComponent } from "../../component/common/HeadersComponent";
+import httpService from "../../lib/httpService";
 import HeaderLayout from "./HeaderLayout";
 import SiderLayout from "./SiderLayout";
 
@@ -40,11 +41,9 @@ function AdminLayout(props) {
   }, [md]);
 
   async function fetchUserData() {
-    await fetch("/api/organization/" + props.user.id, {
-      method: "GET",
-    })
-      .then((response) => response.json())
-      .then((response) => {
+    await httpService
+      .get(`/api/organization/${props.user.id}`)
+      .then(({ data: response }) => {
         if (response.status === 200) {
           setUserOrganizationData({
             orgId: response.data?.organization?.company_name,

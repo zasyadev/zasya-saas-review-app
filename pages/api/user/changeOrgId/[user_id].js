@@ -2,7 +2,7 @@ import prisma from "../../../../lib/prisma";
 
 export default async (req, res) => {
   const { user_id } = req.query;
-  const reqBody = JSON.parse(req.body);
+  const reqBody = req.body;
   try {
     if (req.method === "POST") {
       if (user_id && reqBody.org_id) {

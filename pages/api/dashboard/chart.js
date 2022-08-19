@@ -1,7 +1,7 @@
 import prisma from "../../../lib/prisma";
 
 export default async (req, res) => {
-  const reqBody = JSON.parse(req.body);
+  const reqBody = req.body;
 
   if (req.method === "POST") {
     try {

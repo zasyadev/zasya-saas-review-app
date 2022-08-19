@@ -9,7 +9,7 @@ export default async (req, res) => {
 
   try {
     // const { userId } = req.query;
-    const { date, userId } = JSON.parse(req.body);
+    const { date, userId } = req.body;
 
     if (userId && date) {
       const userTableData = await prisma.user.findUnique({

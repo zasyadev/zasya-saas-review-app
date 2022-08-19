@@ -1,33 +1,30 @@
 import { Col, Form, Row, Select } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import React, { useState, useEffect } from "react";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { openNotificationBox } from "../../component/common/notification";
 import {
   PrimaryButton,
   SecondaryButton,
 } from "../../component/common/CustomButton";
+import httpService from "../../lib/httpService";
 
 function AddApplaud({ user }) {
   const router = useRouter();
   const [applaudform] = Form.useForm();
   const [membersList, setMembersList] = useState([]);
-  const [updateData, setUpdateData] = useState({});
 
   const validateMessages = {
     required: "${label} is required!",
   };
 
   async function fetchMember(user) {
-    await fetch("/api/team/" + user.id, {
-      method: "GET",
-    })
-      .then((res) => res.json())
-      .then((res) => {
-        if (res.status === 200) {
-          let data = res.data.filter((item) => item.user_id != user.id);
-          setMembersList(data);
+    await httpService
+      .get(`/api/team/${user.id}`)
+      .then(({ data }) => {
+        if (data.status === 200) {
+          let filterData = data.data.filter((item) => item.user_id != user.id);
+          setMembersList(filterData);
         }
       })
       .catch((err) => {
@@ -47,12 +44,9 @@ function AddApplaud({ user }) {
   };
 
   async function addApplaud(obj) {
-    await fetch("/api/applaud", {
-      method: "POST",
-      body: JSON.stringify(obj),
-    })
-      .then((response) => response.json())
-      .then((response) => {
+    await httpService
+      .post("/api/applaud", obj)
+      .then(({ data: response }) => {
         if (response.status === 200) {
           openNotificationBox("success", response.message, 3);
           router.push("/applaud");
@@ -60,7 +54,7 @@ function AddApplaud({ user }) {
           openNotificationBox("error", response.message, 3);
         }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.error(err));
   }
 
   // async function updateApplaud(obj) {
@@ -87,7 +81,7 @@ function AddApplaud({ user }) {
   // }
 
   useEffect(() => {
-    if (user) fetchMember(user);
+    fetchMember(user);
   }, []);
 
   return (

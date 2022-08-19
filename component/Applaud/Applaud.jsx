@@ -6,6 +6,7 @@ import moment from "moment";
 import { CalanderIcon, CommentIcons, UserIcon } from "../../assets/Icon/icons";
 import Link from "next/link";
 import { PrimaryButton } from "../../component/common/CustomButton";
+import httpService from "../../lib/httpService";
 
 function Applaud({ user }) {
   const [applaudList, setApplaudList] = useState([]);
@@ -15,9 +16,10 @@ function Applaud({ user }) {
 
   async function fetchApplaud() {
     setLoading(true);
-    await fetch("/api/applaud/" + user.id, { method: "GET" })
-      .then((res) => res.json())
-      .then((res) => {
+
+    await httpService
+      .get(`/api/applaud/${user.id}`)
+      .then(({ data: res }) => {
         setApplaudList(res.data);
         setLoading(false);
       })
@@ -43,14 +45,9 @@ function Applaud({ user }) {
 
   const fetchReceivedApplaud = async () => {
     setReceivedApplaudList([]);
-    await fetch("/api/applaud/" + user.id, {
-      method: "POST",
-      body: JSON.stringify({
-        user: user.id,
-      }),
-    })
-      .then((res) => res.json())
-      .then((res) => {
+    await httpService
+      .post(`/api/applaud/${user.id}`)
+      .then(({ data: res }) => {
         setReceivedApplaudList(res.data);
       })
       .catch((err) => {

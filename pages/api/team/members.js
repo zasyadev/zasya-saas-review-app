@@ -5,7 +5,7 @@ import { mailService, mailTemplate } from "../../../lib/emailservice";
 export default async (req, res) => {
   if (req.method === "POST") {
     try {
-      const resData = JSON.parse(req.body);
+      const resData = req.body;
 
       let existingData = await prisma.user.findUnique({
         where: { email: resData.email },
@@ -188,7 +188,7 @@ export default async (req, res) => {
     return;
   } else if (req.method === "PUT") {
     try {
-      const resData = JSON.parse(req.body);
+      const resData = req.body;
 
       let createdUserData = await prisma.user.findUnique({
         where: { id: resData.created_by },
@@ -284,7 +284,7 @@ export default async (req, res) => {
         .json({ error: error, message: "Internal Server Error" });
     }
   } else if (req.method === "DELETE") {
-    const reqBody = JSON.parse(req.body);
+    const reqBody = req.body;
 
     if (reqBody.email) {
       let existingData = await prisma.user.findUnique({

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Modal, Form, Input, Button, Col, Row, Upload, message } from "antd";
+import { Modal, Form, Input, Col, Row, Upload, message } from "antd";
 import { useEffect } from "react";
 import { openNotificationBox } from "../../component/common/notification";
 import Image from "next/image";
@@ -15,6 +15,7 @@ import {
   SecondaryButton,
 } from "../../component/common/CustomButton";
 import ImgCrop from "antd-img-crop";
+import httpService from "../../lib/httpService";
 
 const datePattern = "DD/MM/YYYY";
 
@@ -187,12 +188,9 @@ function Profile({ user }) {
   };
 
   const profileUpdate = async (data) => {
-    await fetch("/api/profile/" + user.id, {
-      method: "POST",
-      body: JSON.stringify(data),
-    })
-      .then((response) => response.json())
-      .then((response) => {
+    await httpService
+      .post(`/api/profile/${user.id}`, data)
+      .then(({ data: response }) => {
         if (response.status === 200) {
           profileForm.resetFields();
           openNotificationBox("success", response.message, 3);
@@ -210,11 +208,10 @@ function Profile({ user }) {
 
   const getProfileData = async () => {
     setUserDetails({});
-    await fetch("/api/profile/" + user.id, {
-      method: "GET",
-    })
-      .then((response) => response.json())
-      .then((response) => {
+
+    await httpService
+      .get(`/api/profile/${user.id}`)
+      .then(({ data: response }) => {
         if (response.status === 200) {
           setUserDetails(response.data);
           profileForm.setFieldsValue({
@@ -258,14 +255,12 @@ function Profile({ user }) {
 
   const fetchReceivedApplaud = async () => {
     setReceivedApplaudList([]);
-    await fetch("/api/applaud/" + user.id, {
-      method: "POST",
-      body: JSON.stringify({
+
+    await httpService
+      .post(`/api/applaud/${user.id}`, {
         user: user.id,
-      }),
-    })
-      .then((res) => res.json())
-      .then((res) => {
+      })
+      .then(({ data: res }) => {
         setReceivedApplaudList(res.data);
       })
       .catch((err) => {
@@ -275,9 +270,10 @@ function Profile({ user }) {
 
   async function fetchGivenApplaud() {
     setGivenApplaudList([]);
-    await fetch("/api/applaud/" + user.id, { method: "GET" })
-      .then((res) => res.json())
-      .then((res) => {
+    await fetch("/api/applaud/" + user.id, { method: "GET" });
+    await httpService
+      .get(`/api/applaud/${user.id}`)
+      .then(({ data: res }) => {
         setGivenApplaudList(res.data);
       })
       .catch((err) => {
@@ -298,15 +294,10 @@ function Profile({ user }) {
       old_password: values.old_password,
       new_password: values.new_password,
     };
-    await fetch("/api/user/password/" + user.id, {
-      method: "POST",
-      body: JSON.stringify(obj),
-      // headers: {
-      //   "Content-Type": "application/json",
-      // },
-    })
-      .then((response) => response.json())
-      .then((response) => {
+
+    await httpService
+      .post(`/api/user/password/${user.id}`, obj)
+      .then(({ data: response }) => {
         if (response.status === 200) {
           passwordForm.resetFields();
           setIsModalVisible(false);

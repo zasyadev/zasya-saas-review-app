@@ -7,6 +7,7 @@ import { openNotificationBox } from "../../component/common/notification";
 import { LoadingOutlined } from "@ant-design/icons";
 import AuthWrapper from "./AuthWrapper";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
+import httpService from "../../lib/httpService";
 
 function RegisterPage() {
   const router = useRouter();
@@ -18,22 +19,16 @@ function RegisterPage() {
     setLoading(true);
     values["role"] = 2;
     values["status"] = 1;
-    await fetch("/api/user", {
-      method: "POST",
-      body: JSON.stringify(values),
-      // headers: {
-      //   "Content-Type": "application/json",
-      // },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.status === 200) {
-          openNotificationBox("success", data.message, 3);
+
+    await httpService
+      .post(`/api/user`, values)
+      .then(({ data: response }) => {
+        if (response.status === 200) {
+          openNotificationBox("success", response.message, 3);
           registerForm.resetFields();
-          // setRegisterToggle(false);
           router.push("/auth/login");
         } else {
-          openNotificationBox("error", data.message, 3);
+          openNotificationBox("error", response.message, 3);
         }
         setLoading(false);
       })

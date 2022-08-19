@@ -9,6 +9,7 @@ import {
   PrimaryButton,
   SecondaryButton,
 } from "../../component/common/CustomButton";
+import httpService from "../../lib/httpService";
 
 const defaultScaleQuestion = {
   questionText: "Rating",
@@ -107,15 +108,9 @@ function AddEditReviewComponent({
   }
 
   async function addReviewAssign(obj) {
-    // console.log(obj, "sdfsdsf");
-    // return;
-
-    await fetch("/api/review/manage", {
-      method: "POST",
-      body: JSON.stringify(obj),
-    })
-      .then((response) => response.json())
-      .then((response) => {
+    await httpService
+      .post(`/api/review/manage`, obj)
+      .then(({ data: response }) => {
         if (response.status === 200) {
           router.push("/review");
           openNotificationBox("success", response.message, 3);
@@ -128,14 +123,12 @@ function AddEditReviewComponent({
 
   async function fetchTemplateData() {
     setFormList([]);
-    await fetch("/api/template/" + user.id, {
-      method: "GET",
-    })
-      .then((response) => response.json())
-      .then((response) => {
+    await httpService
+      .get(`/api/template/${user.id}`)
+      .then(({ data: response }) => {
         if (response.status === 200) {
-          let data = response.data.filter((item) => item.status);
-          setFormList(data);
+          let filterData = response.data.filter((item) => item.status);
+          setFormList(filterData);
         }
       })
       .catch((err) => {
@@ -145,16 +138,14 @@ function AddEditReviewComponent({
 
   async function fetchUserData() {
     setUserList([]);
-    await fetch("/api/user/organizationId/" + user.id, {
-      method: "GET",
-    })
-      .then((response) => response.json())
-      .then((response) => {
+    await httpService
+      .get(`/api/user/organizationId/${user.id}`)
+      .then(({ data: response }) => {
         if (response.status === 200) {
-          let data = response.data.filter(
+          let filterData = response.data.filter(
             (item) => item.user.status && item.user_id != user.id
           );
-          setUserList(data);
+          setUserList(filterData);
         }
       })
       .catch((err) => {
@@ -199,19 +190,16 @@ function AddEditReviewComponent({
             : null;
         }
 
-        await fetch("/api/review/manage", {
-          method: "POST",
-          body: JSON.stringify({
+        await httpService
+          .post(`/api/review/manage`, {
             ...values,
             template_data: templateData,
             is_published: "draft",
             status: values.status ?? "pending",
             role_id: user.role_id,
             created_by: user.id,
-          }),
-        })
-          .then((response) => response.json())
-          .then((response) => {
+          })
+          .then(({ data: response }) => {
             if (response.status === 200 && response.data.id) {
               router.push(`/review/edit/${response.data.id}`);
             }

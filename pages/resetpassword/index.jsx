@@ -8,6 +8,7 @@ import { LoadingSpinner } from "../../component/Loader/LoadingSpinner";
 import AuthWrapper from "../../component/auth/AuthWrapper";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 import { LoadingOutlined } from "@ant-design/icons";
+import httpService from "../../lib/httpService";
 
 function ResetPassword() {
   const router = useRouter();
@@ -21,19 +22,16 @@ function ResetPassword() {
       token: params.passtoken,
     };
     if (obj.token) {
-      await fetch("/api/user/password/resetpassword", {
-        method: "POST",
-        body: JSON.stringify(obj),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.status === 200) {
-            openNotificationBox("success", data.message, 3);
+      await httpService
+        .post(`/api/user/password/resetpassword`, obj)
+        .then(({ data: response }) => {
+          if (response.status === 200) {
+            openNotificationBox("success", response.message, 3);
 
             resetForm.resetFields();
             router.push("/auth/login");
           } else {
-            openNotificationBox("error", data.message, 3);
+            openNotificationBox("error", response.message, 3);
           }
           setLoading(false);
         })

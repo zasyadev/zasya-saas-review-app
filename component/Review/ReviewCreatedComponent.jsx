@@ -1,16 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { CalendarOutlined } from "@ant-design/icons";
 import moment from "moment";
-import {
-  Modal,
-  Collapse,
-  Skeleton,
-  Row,
-  Col,
-  Table,
-  Popconfirm,
-  Grid,
-} from "antd";
+import { Collapse, Row, Col, Table, Popconfirm, Grid } from "antd";
 
 import Link from "next/link";
 import {
@@ -21,6 +12,7 @@ import {
 } from "../../assets/Icon/icons";
 import { openNotificationBox } from "../../component/common/notification";
 import { calculateDuration } from "../../helpers/momentHelper";
+import httpService from "../../lib/httpService";
 const { useBreakpoint } = Grid;
 
 function ReviewCreatedComponent({
@@ -109,11 +101,9 @@ function ReviewCreatedComponent({
   const fetchAnswer = async (id) => {
     setDataSource([]);
     setLoading(true);
-    await fetch("/api/review/answer/" + id, {
-      method: "GET",
-    })
-      .then((response) => response.json())
-      .then((response) => {
+    await httpService
+      .get(`/api/review/answer/${id}`)
+      .then(({ data: response }) => {
         if (response.status === 200) {
           let data = response.data.map((item) => ({
             user: item.user,
@@ -168,17 +158,11 @@ function ReviewCreatedComponent({
   };
 
   const jobChangeHandler = async (id) => {
-    await fetch("/api/review/manage", {
-      method: "PUT",
-      body: JSON.stringify({
+    await httpService
+      .put(`/api/review/manage`, {
         id: id,
-      }),
-      // headers: {
-      //   "Content-Type": "application/json",
-      // },
-    })
-      .then((response) => response.json())
-      .then((response) => {
+      })
+      .then(({ data: response }) => {
         if (response.status === 200) {
           openNotificationBox("success", response.message, 3);
           fetchReviewData(user, reviewId);

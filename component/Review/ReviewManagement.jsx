@@ -8,6 +8,7 @@ import {
   PrimaryButton,
   SecondaryButton,
 } from "../../component/common/CustomButton";
+import httpService from "../../lib/httpService";
 
 function ReviewManagement({ user }) {
   const [loading, setLoading] = useState(false);
@@ -17,10 +18,9 @@ function ReviewManagement({ user }) {
   async function fetchReviewAssignList() {
     setLoading(true);
     setReviewAssignList([]);
-
-    await fetch("/api/review/" + user.id, { method: "GET" })
-      .then((response) => response.json())
-      .then((response) => {
+    await httpService
+      .get(`/api/review/${user.id}`)
+      .then(({ data: response }) => {
         if (response.status === 200) {
           setReviewAssignList(response.data);
         }
@@ -36,12 +36,10 @@ function ReviewManagement({ user }) {
       let obj = {
         id: id,
       };
-      await fetch("/api/review/manage", {
-        method: "DELETE",
-        body: JSON.stringify(obj),
-      })
-        .then((response) => response.json())
-        .then((response) => {
+
+      await httpService
+        .delete(`/api/review/manage`, obj)
+        .then(({ data: response }) => {
           if (response.status === 200) {
             fetchReviewAssignList();
             openNotificationBox("success", response.message, 3);

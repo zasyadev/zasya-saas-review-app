@@ -5,10 +5,16 @@ import threeUser from "../../assets/Icon/threeusers.png";
 import ReviewIcon from "../../assets/Icon/reviewicon.png";
 import User1 from "../../assets/images/User1.png";
 import dynamic from "next/dynamic";
-import { SmallApplaudIcon, ApplaudIconSmall } from "../../assets/Icon/icons";
+import {
+  SmallApplaudIcon,
+  ApplaudIconSmall,
+  FileLeftIcon,
+  FileRightIcon,
+} from "../../assets/Icon/icons";
 import { Skeleton } from "antd";
 import Link from "next/link";
 import moment from "moment";
+import httpService from "../../lib/httpService";
 
 const SiderRight = dynamic(() => import("../SiderRight/SiderRight"), {
   ssr: false,
@@ -33,15 +39,13 @@ function DashBoard({ user }) {
 
   async function fetchDashboardData() {
     setDashboardData([]);
-    await fetch("/api/dashboard", {
-      method: "POST",
-      body: JSON.stringify({
+
+    await httpService
+      .post(`/api/dashboard`, {
         userId: user.id,
         role: user.role_id,
-      }),
-    })
-      .then((response) => response.json())
-      .then((response) => {
+      })
+      .then(({ data: response }) => {
         if (response.status === 200) {
           if (response.data.reviewRating.length > 0)
             ratingHandler(response.data.reviewRating);
@@ -50,23 +54,27 @@ function DashBoard({ user }) {
         }
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err);
         setDashboardData([]);
       });
   }
 
   async function fetchFeedbackData() {
     setFeedbackList([]);
-    await fetch("/api/feedback/all/" + user.id, {
-      method: "GET",
-    })
-      .then((response) => response.json())
-      .then((response) => {
+
+    await httpService
+      .get(`/api/feedback/all/${user.id}`, {
+        userId: user.id,
+        role: user.role_id,
+      })
+      .then(({ data: response }) => {
         if (response.status === 200) {
           setFeedbackList(response.data);
         }
       })
-      .catch((err) => {});
+      .catch((err) => {
+        setFeedbackList([]);
+      });
   }
 
   const ratingHandler = (data) => {
@@ -109,30 +117,26 @@ function DashBoard({ user }) {
 
   async function fetchApplaudData() {
     setAllApplaud([]);
-    if (user?.id) {
-      await fetch("/api/applaud/all", {
-        method: "POST",
-        body: JSON.stringify({
-          date: currentMonth,
-          userId: user.id,
-        }),
-      })
-        .then((response) => response.json())
-        .then((response) => {
-          if (response.status === 200) {
-            let data = response?.data?.sort(
-              (a, b) =>
-                b[Object.keys(b)]?.taken?.length -
-                a[Object.keys(a)]?.taken?.length
-            );
-            setAllApplaud(data);
-          }
-        })
 
-        .catch((err) => {
-          console.log(err);
-        });
-    }
+    await httpService
+      .post(`/api/applaud/all`, {
+        date: currentMonth,
+        userId: user.id,
+      })
+      .then(({ data: response }) => {
+        if (response.status === 200) {
+          let data = response?.data?.sort(
+            (a, b) =>
+              b[Object.keys(b)]?.taken?.length -
+              a[Object.keys(a)]?.taken?.length
+          );
+          setAllApplaud(data);
+        }
+      })
+
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   useEffect(() => {
@@ -312,54 +316,57 @@ function DashBoard({ user }) {
                   </h2>
                   <Row className="dashboard-feedback">
                     <Col xs={24} md={24}>
-                      {feedbackList.length > 0
-                        ? feedbackList.map((feedback, idx) => {
-                            return (
-                              <>
-                                {Object.entries(feedback).map(
-                                  ([key, value]) => {
-                                    return (
-                                      <Row
-                                        className="my-3"
-                                        key={idx + "feedback"}
-                                      >
-                                        <Col xs={6} md={5}>
-                                          <Image
-                                            src={
-                                              value?.image
-                                                ? value?.image
-                                                : User1
-                                            }
-                                            alt="userImage"
-                                            width={70}
-                                            height={70}
-                                            className="rounded-full"
-                                          />
-                                        </Col>
+                      {feedbackList.length > 0 ? (
+                        feedbackList.map((feedback, idx) => {
+                          return (
+                            <>
+                              {Object.entries(feedback).map(([key, value]) => {
+                                return (
+                                  <Row className="my-3" key={idx + "feedback"}>
+                                    <Col xs={6} md={5}>
+                                      <Image
+                                        src={
+                                          value?.image ? value?.image : User1
+                                        }
+                                        alt="userImage"
+                                        width={70}
+                                        height={70}
+                                        className="rounded-full"
+                                      />
+                                    </Col>
 
-                                        <Col xs={18} md={19}>
-                                          <div className="px-2">
-                                            <p className="mb-2 primary-color-blue font-medium text-sm">
-                                              {key}
-                                            </p>
-                                            <p className="flex justify-between">
-                                              <span className="text-sm font-medium text-gray-500">
-                                                G : {value?.feedbackGiven}
-                                              </span>
-                                              <span className="pl-2 text-sm font-medium text-gray-500">
-                                                T : {value?.feedbackTaken}
-                                              </span>
-                                            </p>
-                                          </div>
-                                        </Col>
-                                      </Row>
-                                    );
-                                  }
-                                )}
-                              </>
-                            );
-                          })
-                        : null}
+                                    <Col xs={18} md={19}>
+                                      <div className="px-4">
+                                        <p className="mb-2 primary-color-blue font-medium text-sm">
+                                          {key}
+                                        </p>
+                                        <p className="flex justify-between mr-0 md:mr-3">
+                                          <span className="flex">
+                                            <FileRightIcon />
+                                            <span className="pl-2 text-sm font-medium text-gray-500">
+                                              {value.feedbackGiven ?? 0}
+                                            </span>
+                                          </span>
+                                          <span className="flex">
+                                            <FileLeftIcon />
+                                            <span className="pl-2 text-sm font-medium text-gray-500">
+                                              {value.feedbackTaken ?? 0}
+                                            </span>
+                                          </span>
+                                        </p>
+                                      </div>
+                                    </Col>
+                                  </Row>
+                                );
+                              })}
+                            </>
+                          );
+                        })
+                      ) : (
+                        <div className="flex justify-center items-center h-48 ">
+                          <p className="text-center">No Record Found</p>
+                        </div>
+                      )}
                     </Col>
                   </Row>
                 </div>

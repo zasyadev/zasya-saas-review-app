@@ -4,7 +4,7 @@ import { mailService, mailTemplate } from "../../../lib/emailservice";
 export default async (req, res) => {
   if (req.method === "POST") {
     try {
-      const resData = JSON.parse(req.body);
+      const resData = req.body;
 
       // console.log(resData, "resData");
       // return;

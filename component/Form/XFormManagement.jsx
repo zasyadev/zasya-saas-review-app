@@ -1,19 +1,8 @@
 import React, { useState, useEffect } from "react";
-import {
-  Button,
-  Layout,
-  Modal,
-  Form,
-  Input,
-  Row,
-  Col,
-  Radio,
-  Skeleton,
-  message,
-  Select,
-} from "antd";
+import { Button, Modal, Form, Row, Col, Radio, Skeleton, Select } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { openNotificationBox } from "../../component/common/notification";
+import httpService from "../../lib/httpService";
 
 function FormManagement({ user }) {
   const [form] = Form.useForm();
@@ -46,15 +35,9 @@ function FormManagement({ user }) {
   }
 
   async function addFormAssign(obj) {
-    await fetch("/api/form/manage", {
-      method: "POST",
-      body: JSON.stringify(obj),
-      // headers: {
-      //   "Content-Type": "application/json",
-      // },
-    })
-      .then((response) => response.json())
-      .then((response) => {
+    await httpService
+      .post(`/api/form/manage`, obj)
+      .then(({ data: response }) => {
         if (response.status === 200) {
           form.resetFields();
           fetchFormAssignList();
@@ -69,15 +52,10 @@ function FormManagement({ user }) {
   async function updateFormAssign(obj) {
     if (updateData.id) {
       obj.id = updateData.id;
-      await fetch("/api/form/manage", {
-        method: "PUT",
-        body: JSON.stringify(obj),
-        // headers: {
-        //   "Content-Type": "application/json",
-        // },
-      })
-        .then((response) => response.json())
-        .then((response) => {
+
+      await httpService
+        .put(`/api/form/manage`, obj)
+        .then(({ data: response }) => {
           if (response.status === 200) {
             form.resetFields();
             fetchFormAssignList();
@@ -95,11 +73,10 @@ function FormManagement({ user }) {
   async function fetchFormAssignList() {
     setLoading(true);
     setFormAssignList([]);
-    await fetch("/api/form/manage", {
-      method: "GET",
-    })
-      .then((response) => response.json())
-      .then((response) => {
+
+    await httpService
+      .get(`/api/form/manage`)
+      .then(({ data: response }) => {
         if (response.status === 200) {
           setFormAssignList(response.data);
         }
@@ -112,11 +89,9 @@ function FormManagement({ user }) {
 
   async function fetchUserData() {
     setUserList([]);
-    await fetch("/api/user/adminuser", {
-      method: "GET",
-    })
-      .then((response) => response.json())
-      .then((response) => {
+    await httpService
+      .get(`/api/user/adminuser`)
+      .then(({ data: response }) => {
         if (response.status === 200) {
           let data = response.data.filter((item) => item.status);
           setUserList(data);
@@ -129,11 +104,10 @@ function FormManagement({ user }) {
   }
   async function fetchFormData() {
     setFormList([]);
-    await fetch("/api/form", {
-      method: "GET",
-    })
-      .then((response) => response.json())
-      .then((response) => {
+
+    await httpService
+      .get(`/api/form`)
+      .then(({ data: response }) => {
         if (response.status === 200) {
           let data = response.data.filter((item) => item.status);
           setFormList(data);
@@ -161,15 +135,9 @@ function FormManagement({ user }) {
       let obj = {
         id: id,
       };
-      await fetch("/api/form/manage", {
-        method: "DELETE",
-        body: JSON.stringify(obj),
-        // headers: {
-        //   "Content-Type": "application/json",
-        // },
-      })
-        .then((response) => response.json())
-        .then((response) => {
+      await httpService
+        .delete(`/api/form/manage`, obj)
+        .then(({ data: response }) => {
           if (response.status === 200) {
             fetchFormAssignList();
             openNotificationBox("success", response.message, 3);

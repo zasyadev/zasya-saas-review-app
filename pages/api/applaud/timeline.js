@@ -8,7 +8,7 @@ export default async (req, res) => {
   }
 
   try {
-    const { date, userId } = JSON.parse(req.body);
+    const { date, userId } = req.body;
     if (userId && date) {
       const userTableData = await prisma.user.findUnique({
         where: { id: userId },

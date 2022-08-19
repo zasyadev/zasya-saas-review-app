@@ -5,7 +5,7 @@ export default async (req, res) => {
   try {
     const { userId } = req.query;
 
-    const reqData = JSON.parse(req.body);
+    const reqData = req.body;
     if (req.method === "POST") {
       if (userId) {
         const data = await prisma.user.findUnique({

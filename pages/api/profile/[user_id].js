@@ -32,7 +32,7 @@ export default async (req, res) => {
       }
     } else if (req.method === "POST") {
       try {
-        const reqBody = JSON.parse(req.body);
+        const reqBody = req.body;
 
         if (user_id && reqBody.first_name) {
           const transactionData = await prisma.$transaction(

@@ -1,6 +1,6 @@
 import { Col, Row } from "antd";
 import React from "react";
-import LineChart from "../../component/common/LineChart";
+
 import { ApplaudIcon, StarIcon } from "../../assets/Icon/icons";
 
 // import dynamic from "next/dynamic";

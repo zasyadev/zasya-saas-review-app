@@ -5,6 +5,7 @@ import User1 from "../../assets/images/User1.png";
 import { ApplaudGiven, ApplaudIconSmall } from "../../assets/Icon/icons";
 import { ClockCircleOutlined } from "@ant-design/icons";
 import moment from "moment";
+import httpService from "../../lib/httpService";
 
 function AllAplaud({ user }) {
   const [allApplaud, setAllApplaud] = useState([]);
@@ -17,52 +18,38 @@ function AllAplaud({ user }) {
 
   async function fetchApplaudData() {
     setAllApplaud([]);
-    if (user.id) {
-      await fetch("/api/applaud/all", {
-        method: "POST",
-        body: JSON.stringify({
-          date: currentMonth,
-          userId: user.id,
-        }),
-      })
-        .then((response) => response.json())
-        .then((response) => {
-          if (response.status === 200) {
-            let data = response.data.sort(
-              (a, b) =>
-                b[Object.keys(b)]?.taken?.length -
-                a[Object.keys(a)]?.taken?.length
-            );
-            setAllApplaud(data);
-          }
-        })
 
-        .catch((err) => {
-          console.log(err);
-        });
-    }
+    await httpService
+      .post("/api/applaud/all", { date: currentMonth, userId: user.id })
+      .then(({ data: response }) => {
+        if (response.status === 200) {
+          let sortData = response.data.sort(
+            (a, b) =>
+              b[Object.keys(b)]?.taken?.length -
+              a[Object.keys(a)]?.taken?.length
+          );
+          setAllApplaud(sortData);
+        }
+      })
+
+      .catch((err) => {
+        console.log(err);
+      });
   }
   async function fetchAllOrgData() {
     setAllOrgApplaud([]);
-    if (user.id) {
-      await fetch("/api/applaud/timeline", {
-        method: "POST",
-        body: JSON.stringify({
-          date: currentMonth,
-          userId: user.id,
-        }),
-      })
-        .then((response) => response.json())
-        .then((response) => {
-          if (response.status === 200) {
-            setAllOrgApplaud(response.data);
-          }
-        })
 
-        .catch((err) => {
-          console.log(err);
-        });
-    }
+    await httpService
+      .post("/api/applaud/timeline", { date: currentMonth, userId: user.id })
+      .then(({ data: response }) => {
+        if (response.status === 200) {
+          setAllOrgApplaud(response.data);
+        }
+      })
+
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   useEffect(() => {

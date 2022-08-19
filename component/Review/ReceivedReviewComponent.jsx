@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import { openNotificationBox } from "../../component/common/notification";
 
 import { FormSlideComponent } from "./formhelper/FormComponent";
+import httpService from "../../lib/httpService";
 
 function ReceivedReviewComponent({ user, reviewId }) {
   const router = useRouter();
@@ -32,26 +33,6 @@ function ReceivedReviewComponent({ user, reviewId }) {
           : [...prev, { questionId: quesId, answer: value }]
       );
     }
-
-    // let res = formValues.map((item) => item.questionId === quesId);
-
-    // formValues.find((item) => item.questionId === quesId)
-    //   ? formValues.map((item) => item.answer === "")
-    //     ? setDisable(true)
-    //     : setDisable(false)
-    //   : null;
-
-    // if (value.length === 0 && res) {
-    //   setDisable(true);
-    // } else setDisable(false);
-
-    // setQuestions((prev) =>
-    //   prev.find((item) => item.id === quesId && item.error)
-    //     ? prev.map((item) =>
-    //         item.id === quesId && item.error ? { ...item, error: "" } : item
-    //       )
-    //     : prev
-    // );
   };
 
   const handleSubmit = async () => {
@@ -61,19 +42,6 @@ function ReceivedReviewComponent({ user, reviewId }) {
     }
     if (questions.length != formValues.length) {
       openNotificationBox("error", "You have to answer all question", 3);
-      // setQuestions((prev) =>
-      //   prev.map((queItem) => {
-      //     let errorAnswer;
-      //     formValues.forEach((ansItem, idx) => {
-      //       errorAnswer =
-      //         ansItem.questionId == queItem.id
-      //           ? queItem
-      //           : { ...queItem, error: "Answer field required!" };
-      //     });
-
-      //     return errorAnswer;
-      //   })
-      // );
       return;
     }
 
@@ -87,12 +55,9 @@ function ReceivedReviewComponent({ user, reviewId }) {
         created_assignee_date: reviewData.created_date,
       };
 
-      await fetch("/api/form/answer", {
-        method: "POST",
-        body: JSON.stringify(obj),
-      })
-        .then((response) => response.json())
-        .then((response) => {
+      await httpService
+        .post(`/api/form/answer`, obj)
+        .then(({ data: response }) => {
           if (response.status === 200) {
             openNotificationBox("success", response.message, 3);
             router.replace("/review/received");
@@ -108,18 +73,21 @@ function ReceivedReviewComponent({ user, reviewId }) {
 
   const fetchReviewData = async (user, reviewId) => {
     setLoading(true);
-    // setFormAssignList([]);
+
     await fetch("/api/review/received/" + reviewId, {
       method: "POST",
       body: JSON.stringify({
         userId: user.id,
       }),
-    })
-      .then((response) => response.json())
-      .then((response) => {
+    });
+    await httpService
+      .post(`/api/review/received/${reviewId}`, {
+        userId: user.id,
+      })
+      .then(({ data: response }) => {
         if (response.status === 200) {
           setReviewData(response.data);
-          setQuestions(response?.data?.review?.form?.questions);
+          setQuestions(response.data?.review?.form?.questions);
         }
         setLoading(false);
       })
@@ -127,12 +95,9 @@ function ReceivedReviewComponent({ user, reviewId }) {
         console.log(err);
       });
   };
-  // function handleCancel() {
-  //   router.push("/review");
-  // }
 
   useEffect(() => {
-    if (user && reviewId) fetchReviewData(user, reviewId);
+    if (reviewId) fetchReviewData(user, reviewId);
     else return;
   }, []);
 

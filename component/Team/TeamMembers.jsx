@@ -5,6 +5,7 @@ import { openNotificationBox } from "../../component/common/notification";
 import CustomTable from "../../component/common/CustomTable";
 import Link from "next/link";
 import { PrimaryButton } from "../../component/common/CustomButton";
+import httpService from "../../lib/httpService";
 
 function TeamMembers({ user }) {
   const [loading, setLoading] = useState(false);
@@ -12,18 +13,12 @@ function TeamMembers({ user }) {
 
   async function onDelete(email) {
     if (email) {
-      await fetch("/api/team/members", {
-        method: "DELETE",
-        body: JSON.stringify({
+      await httpService
+        .delete(`/api/team/members`, {
           email: email,
           created_by: user.id,
-        }),
-        // headers: {
-        //   "Content-Type": "application/json",
-        // },
-      })
-        .then((response) => response.json())
-        .then((response) => {
+        })
+        .then(({ data: response }) => {
           if (response.status === 200) {
             fetchMembersData();
             openNotificationBox("success", response.message, 3);
@@ -38,11 +33,9 @@ function TeamMembers({ user }) {
   async function fetchMembersData() {
     setLoading(true);
     setMembersList([]);
-    await fetch("/api/team/" + user.id, {
-      method: "GET",
-    })
-      .then((response) => response.json())
-      .then((response) => {
+    await httpService
+      .get(`/api/team/${user.id}`)
+      .then(({ data: response }) => {
         if (response.status === 200) {
           let data = response.data.filter(
             (item) => item.user_id != user.id && item.role_id != 2

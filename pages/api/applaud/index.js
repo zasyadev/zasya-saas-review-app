@@ -1,10 +1,11 @@
 import { SlackPostMessage } from "../../../helpers/slackHelper";
 import prisma from "../../../lib/prisma";
+import { RequestHandler } from "../../../lib/RequestHandler";
 
-export default async (req, res) => {
+async function handle(req, res) {
   if (req.method === "POST") {
     try {
-      const reqBody = JSON.parse(req.body);
+      const reqBody = req.body;
 
       let userData = await prisma.user.findUnique({
         where: { id: reqBody.user_id },
@@ -64,6 +65,7 @@ export default async (req, res) => {
           .json({ error: "error", message: "User Not Found" });
       }
     } catch (error) {
+      console.log(error);
       return res
         .status(500)
         .json({ error: error, message: "Internal Server Error" });
@@ -138,4 +140,7 @@ export default async (req, res) => {
       message: "Method Not allowed",
     });
   }
-};
+}
+
+export default (req, res) =>
+  RequestHandler(req, res, handle, ["POST", "GET", "PUT", "DELETE"]);

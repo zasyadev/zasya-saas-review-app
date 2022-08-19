@@ -11,7 +11,7 @@ var reviewJob;
 export default async (req, res) => {
   if (req.method === "POST") {
     try {
-      const resData = JSON.parse(req.body);
+      const resData = req.body;
       let transactionData = {};
       if (resData.is_published === "published" && resData.review_id) {
         transactionData = await prisma.$transaction(async (transaction) => {
@@ -248,7 +248,7 @@ export default async (req, res) => {
   } else if (req.method === "PUT") {
     try {
       // schedule.gracefulShutdown();
-      const resData = JSON.parse(req.body);
+      const resData = req.body;
 
       reviewJob = schedule.scheduledJobs[resData.id];
 
@@ -300,7 +300,7 @@ export default async (req, res) => {
         .json({ error: error, message: "Internal Server Error" });
     }
   } else if (req.method === "DELETE") {
-    const reqBody = JSON.parse(req.body);
+    const reqBody = req.body;
     try {
       if (reqBody.id) {
         const deletaData = await prisma.review.delete({

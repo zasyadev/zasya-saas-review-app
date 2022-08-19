@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import AdminLayout from "../../../component/layout/AdminLayout";
 import { getSession } from "next-auth/client";
 import TemplateBuildComponent from "../../../component/Template/TemplateBuildComponent";
+import httpService from "../../../lib/httpService";
 
 function EditTemplate({ user }) {
   const router = useRouter();
@@ -13,14 +14,12 @@ function EditTemplate({ user }) {
   async function fetchTemplateData() {
     setLoading(true);
     setFormData([]);
-    await fetch("/api/template/edit/" + template_id, {
-      method: "POST",
-      body: JSON.stringify({
+
+    await httpService
+      .post(`/api/template/edit/${template_id}`, {
         userId: user.id,
-      }),
-    })
-      .then((response) => response.json())
-      .then((response) => {
+      })
+      .then(({ data: response }) => {
         if (response.status === 200) {
           setFormData(response.data);
         }

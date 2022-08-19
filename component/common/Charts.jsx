@@ -1,6 +1,7 @@
 import Chart from "react-apexcharts";
 import { Skeleton } from "antd";
 import React, { useState, useEffect } from "react";
+import httpService from "../../lib/httpService";
 
 const defaultChartSeries = {
   name: "Feedback",
@@ -112,14 +113,12 @@ const BarChart = ({ user }) => {
   async function fetchChartData() {
     setLoading(true);
     setChartData([]);
-    await fetch("/api/dashboard/chart", {
-      method: "POST",
-      body: JSON.stringify({
+
+    await httpService
+      .post(`/api/dashboard/chart`, {
         userId: user.id,
-      }),
-    })
-      .then((response) => response.json())
-      .then((response) => {
+      })
+      .then(({ data: response }) => {
         if (response.status === 200) {
           setChartData((prev) => ({ ...prev, data: response.data }));
           setLoading(false);
