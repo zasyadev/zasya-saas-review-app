@@ -25,11 +25,18 @@ const BarChart = dynamic(() => import("../../component/common/Charts"), {
 });
 
 function DashBoard({ user }) {
-  const [dashBoardData, setDashboardData] = useState({});
+  const defaultDashboardData = {
+    reviewCreatedCount: 0,
+    reviewAnsweredCount: 0,
+    userCount: 0,
+    applaudCount: 0,
+    reviewRating: [],
+    averageAnswerTime: 0,
+  };
+
+  const [dashBoardData, setDashboardData] = useState(defaultDashboardData);
 
   const [loading, setLoading] = useState(false);
-  const [totalRating, setTotalRating] = useState(0);
-  const [userApplaud, setUserApplaud] = useState(0);
   const [feedbackList, setFeedbackList] = useState([]);
   const [allApplaud, setAllApplaud] = useState([]);
   const [currentMonth, setCurrentMonth] = useState({
@@ -38,8 +45,6 @@ function DashBoard({ user }) {
   });
 
   async function fetchDashboardData() {
-    setDashboardData([]);
-
     await httpService
       .post(`/api/dashboard`, {
         userId: user.id,
@@ -47,21 +52,16 @@ function DashBoard({ user }) {
       })
       .then(({ data: response }) => {
         if (response.status === 200) {
-          if (response.data.reviewRating.length > 0)
-            ratingHandler(response.data.reviewRating);
-          setUserApplaud(response.data.applaudData.length ?? 0);
           setDashboardData(response.data);
         }
       })
       .catch((err) => {
         console.error(err);
-        setDashboardData([]);
+        setDashboardData(defaultDashboardData);
       });
   }
 
   async function fetchFeedbackData() {
-    setFeedbackList([]);
-
     await httpService
       .get(`/api/feedback/all/${user.id}`, {
         userId: user.id,
@@ -77,47 +77,7 @@ function DashBoard({ user }) {
       });
   }
 
-  const ratingHandler = (data) => {
-    let sum = 0;
-    let total = data.map((item) => {
-      if (item.ReviewAssigneeAnswers.length > 0) {
-        let totalrating = item.ReviewAssigneeAnswers.reduce((prev, curr) => {
-          if (curr?.ReviewAssigneeAnswerOption?.length > 0) {
-            if (isNaN(Number(curr?.ReviewAssigneeAnswerOption[0].option))) {
-              return 0;
-            } else {
-              return (
-                Number(prev) +
-                Number(curr?.ReviewAssigneeAnswerOption[0].option)
-              );
-            }
-          } else return 0;
-        }, sum);
-
-        let averageRating =
-          Number(totalrating) / Number(item?.ReviewAssigneeAnswers?.length);
-
-        return averageRating;
-      } else return 0;
-    });
-    let avgSum = 0;
-
-    let avgRatingSum = total.reduce((prev, curr) => {
-      return Number(prev) + Number(curr);
-    }, avgSum);
-
-    let assigneAnswerLength = data.filter((item) =>
-      item?.ReviewAssigneeAnswers?.length > 0 ? item : null
-    );
-
-    let avgRating = 0;
-    if (avgRatingSum > 0) avgRating = avgRatingSum / assigneAnswerLength.length;
-    setTotalRating(Number(avgRating).toFixed(2));
-  };
-
   async function fetchApplaudData() {
-    setAllApplaud([]);
-
     await httpService
       .post(`/api/applaud/all`, {
         date: currentMonth,
@@ -162,7 +122,7 @@ function DashBoard({ user }) {
                         Review Created
                       </div>
                       <span className="text-2xl primary-color-blue font-semibold ">
-                        {dashBoardData.reviewCreated ?? 0}
+                        {dashBoardData.reviewCreatedCount}
                       </span>
                     </div>
                   </div>
@@ -184,7 +144,7 @@ function DashBoard({ user }) {
                         Review Answered
                       </div>
                       <span className="text-2xl primary-color-blue font-semibold">
-                        {dashBoardData.reviewAnswered ?? 0}
+                        {dashBoardData.reviewAnsweredCount}
                       </span>
                     </div>
                   </div>
@@ -207,7 +167,7 @@ function DashBoard({ user }) {
                         Users
                       </h5>
                       <span className="text-2xl primary-color-blue font-semibold">
-                        {dashBoardData.userData ?? 0}
+                        {dashBoardData.userCount}
                       </span>
                     </div>
                   </div>
@@ -376,11 +336,7 @@ function DashBoard({ user }) {
         </div>
       </Col>
       <Col xs={24} sm={24} md={24} lg={7} className="mt-6 h-full">
-        <SiderRight
-          data={dashBoardData}
-          totalRating={totalRating}
-          userApplaud={userApplaud}
-        />
+        <SiderRight dashBoardData={dashBoardData} />
       </Col>
     </Row>
   );

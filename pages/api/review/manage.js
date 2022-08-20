@@ -1,8 +1,10 @@
 import prisma from "../../../lib/prisma";
 import { mailService, mailTemplate } from "../../../lib/emailservice";
-// import moment from "moment";
 import { ReviewScheduler } from "../../../helpers/schedulerHelper";
-import { SlackPostMessage } from "../../../helpers/slackHelper";
+import {
+  CustomizeSlackMessage,
+  SlackPostMessage,
+} from "../../../helpers/slackHelper";
 
 const schedule = require("node-schedule");
 
@@ -174,9 +176,16 @@ export default async (req, res) => {
             });
 
             if (user.UserDetails.slack_id) {
+              let customText = CustomizeSlackMessage({
+                header: "New Review Recieved",
+                user: assignedFromData.first_name ?? "",
+                link: `${process.env.NEXT_APP_URL}review/id/${assigneeData.id}`,
+                by: "Review Assigned By",
+              });
               SlackPostMessage({
                 channel: user.UserDetails.slack_id,
                 text: `${assignedFromData.first_name} has assigned you New Review.`,
+                block: customText,
               });
             }
           });

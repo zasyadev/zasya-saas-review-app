@@ -1,4 +1,7 @@
-import { SlackPostMessage } from "../../../helpers/slackHelper";
+import {
+  CustomizeSlackMessage,
+  SlackPostMessage,
+} from "../../../helpers/slackHelper";
 import prisma from "../../../lib/prisma";
 import { RequestHandler } from "../../../lib/RequestHandler";
 
@@ -45,14 +48,20 @@ async function handle(req, res) {
           });
 
           if (userData.UserDetails.slack_id) {
+            let customText = CustomizeSlackMessage({
+              header: "New Applaud Recieved",
+              user: createdData.first_name ?? "",
+              link: `${process.env.NEXT_APP_URL}applaud`,
+              by: "Applauded By",
+              text: reqBody.comment,
+            });
             SlackPostMessage({
               channel: userData.UserDetails.slack_id,
               text: `${createdData.first_name ?? ""} has applauded you`,
+              blocks: customText,
             });
           }
         }
-
-        prisma.$disconnect();
 
         return res.status(201).json({
           message: "Saved  Successfully",
@@ -65,7 +74,6 @@ async function handle(req, res) {
           .json({ error: "error", message: "User Not Found" });
       }
     } catch (error) {
-      console.log(error);
       return res
         .status(500)
         .json({ error: error, message: "Internal Server Error" });

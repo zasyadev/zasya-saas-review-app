@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { CalendarOutlined } from "@ant-design/icons";
 import moment from "moment";
-import { Collapse, Row, Col, Table, Popconfirm, Grid } from "antd";
+import { Collapse, Row, Col, Table, Popconfirm, Grid, Tooltip } from "antd";
 
 import Link from "next/link";
 import {
@@ -55,18 +55,31 @@ function ReviewCreatedComponent({
     dataIndex: "name",
     fixed: fixed ? false : true,
     sorter: (a, b) => a.name?.localeCompare(b.name),
+    render: (_, record) => (
+      <div>
+        <p className="mb-0">{record.name}</p>
+        <p className="mb-0 text-gray-400 text-sm ">
+          <Tooltip title="Reactive Time" placement={"bottom"}>
+            {calculateDuration({
+              from: reviewData.created_date,
+              to: record.answer_date,
+            })}
+          </Tooltip>{" "}
+        </p>
+      </div>
+    ),
   };
 
-  let reactivityTimeColoum = {
-    title: "Reactivity Time",
-    dataIndex: "answer_date",
+  // let reactivityTimeColoum = {
+  //   title: "Reactivity Time",
+  //   dataIndex: "answer_date",
 
-    render: (answer_date) =>
-      calculateDuration({
-        from: reviewData.created_date,
-        to: answer_date,
-      }),
-  };
+  //   render: (answer_date) =>
+  //     calculateDuration({
+  //       from: reviewData.created_date,
+  //       to: answer_date,
+  //     }),
+  // };
 
   useEffect(() => {
     let headersData = [];
@@ -90,7 +103,7 @@ function ReviewCreatedComponent({
 
     headersData.unshift(nameTitle);
 
-    headersData.push(reactivityTimeColoum);
+    // headersData.push(reactivityTimeColoum);
 
     setHeadersData(headersData);
     fetchAnswer(reviewData.id);

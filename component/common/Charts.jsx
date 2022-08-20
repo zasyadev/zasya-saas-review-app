@@ -149,7 +149,7 @@ const BarChart = ({ user }) => {
           options={defaultOptions}
           series={[chartData]}
           type="bar"
-          height={380}
+          height={360}
           className="chart-data "
         />
       )}

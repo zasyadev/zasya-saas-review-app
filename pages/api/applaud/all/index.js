@@ -23,6 +23,7 @@ export default async (req, res) => {
           user: {
             select: {
               first_name: true,
+              id: true,
               UserDetails: {
                 select: {
                   image: true,
@@ -51,6 +52,7 @@ export default async (req, res) => {
           user: {
             select: {
               first_name: true,
+              id: true,
               UserDetails: {
                 select: {
                   image: true,
@@ -61,6 +63,7 @@ export default async (req, res) => {
           created: {
             select: {
               first_name: true,
+              id: true,
             },
           },
         },
@@ -98,6 +101,7 @@ export default async (req, res) => {
             obj[key.user.first_name].taken = [];
           }
           obj[key.user.first_name].taken.push(key);
+          obj[key.user.first_name].user_id = key.user.id;
           if (key.user.UserDetails && key.user.UserDetails.image) {
             obj[key.user.first_name].userImg = key.user.UserDetails.image;
           } else {
@@ -112,7 +116,7 @@ export default async (req, res) => {
           if (!obj[key.user.first_name]?.taken) {
             obj[key.user.first_name].taken = [];
           }
-
+          obj[key.user.first_name].user_id = key.user.id;
           if (key.user.UserDetails && key.user.UserDetails.image) {
             obj[key.user.first_name].userImg = key.user.UserDetails.image;
           } else {
@@ -154,6 +158,7 @@ export default async (req, res) => {
           let applaudTakenObj = {
             taken: takeObj[key]?.taken,
             image: value.userImg ?? "",
+            user_id: value.user_id,
           };
           let applaudGivenObj = {
             given: givenObj[key]?.given,

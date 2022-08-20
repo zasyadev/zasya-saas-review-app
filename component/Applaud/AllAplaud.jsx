@@ -1,5 +1,5 @@
 import { Col, DatePicker, Row, Timeline } from "antd";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import User1 from "../../assets/images/User1.png";
 import { ApplaudGiven, ApplaudIconSmall } from "../../assets/Icon/icons";
@@ -10,15 +10,13 @@ import httpService from "../../lib/httpService";
 function AllAplaud({ user }) {
   const [allApplaud, setAllApplaud] = useState([]);
   const [allOrgApplaud, setAllOrgApplaud] = useState([]);
-
+  const [filterByUserId, setFilterByUserId] = useState("");
   const [currentMonth, setCurrentMonth] = useState({
     lte: moment().endOf("month"),
     gte: moment().startOf("month"),
   });
 
   async function fetchApplaudData() {
-    setAllApplaud([]);
-
     await httpService
       .post("/api/applaud/all", { date: currentMonth, userId: user.id })
       .then(({ data: response }) => {
@@ -34,11 +32,10 @@ function AllAplaud({ user }) {
 
       .catch((err) => {
         console.log(err);
+        setAllApplaud([]);
       });
   }
   async function fetchAllOrgData() {
-    setAllOrgApplaud([]);
-
     await httpService
       .post("/api/applaud/timeline", { date: currentMonth, userId: user.id })
       .then(({ data: response }) => {
@@ -49,6 +46,7 @@ function AllAplaud({ user }) {
 
       .catch((err) => {
         console.log(err);
+        setAllOrgApplaud([]);
       });
   }
 
@@ -64,12 +62,25 @@ function AllAplaud({ user }) {
     });
   }
 
+  const allFilterOrgApplaud = useMemo(
+    () =>
+      filterByUserId
+        ? allOrgApplaud.filter(
+            (item) =>
+              item.user_id == filterByUserId ||
+              item.created_by == filterByUserId
+          )
+        : allOrgApplaud,
+
+    [filterByUserId, allOrgApplaud]
+  );
+
   return (
     <div className="mx-3">
       <Row gutter={[16, 16]}>
         <Col xs={24} sm={24} md={24}>
           <div className="flex justify-end w-full">
-            <div className="bg-white rounded-md overflow-hidden shadow-md  py-2 px-4 mt-2">
+            <div className="bg-white rounded-md overflow-hidden shadow-md  py-2 px-4 mt-2 ">
               <DatePicker
                 onChange={onDateChange}
                 picker="month"
@@ -87,7 +98,18 @@ function AllAplaud({ user }) {
                 <>
                   {Object.entries(item).map(([key, value]) => {
                     return (
-                      <div className="bg-white rounded-md overflow-hidden shadow-md  py-3 px-1 mb-3">
+                      <div
+                        className={`bg-white rounded-md overflow-hidden shadow-md  py-3 px-1 mb-3 cursor-pointer ${
+                          filterByUserId === value.user_id
+                            ? "border border-blue-800"
+                            : ""
+                        }`}
+                        onClick={() => {
+                          setFilterByUserId((prev) =>
+                            prev === value.user_id ? "" : value.user_id
+                          );
+                        }}
+                      >
                         <Row justify="center">
                           <Col xs={10} md={10}>
                             <div className=" flex justify-center">
@@ -146,8 +168,8 @@ function AllAplaud({ user }) {
         <Col xs={24} sm={24} md={16}>
           <div className="received--all-applaud bg-white rounded-md  shadow-md  p-4">
             <Timeline className="py-2 mt-1 px-4">
-              {allOrgApplaud.length ? (
-                allOrgApplaud.map((item, idx) => {
+              {allFilterOrgApplaud.length ? (
+                allFilterOrgApplaud.map((item, idx) => {
                   return (
                     <Timeline.Item
                       dot={
@@ -168,7 +190,7 @@ function AllAplaud({ user }) {
                       </p>
                       <p className=" mb-0 text-base">{item.comment}</p>
                       {item.created_date && (
-                        <p className="font-semibold mb-1  text-blue-700 text-right">
+                        <p className=" mb-1  text-gray-400  text-sm text-right">
                           {moment(item.created_date).fromNow()}
                         </p>
                       )}

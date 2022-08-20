@@ -9,12 +9,29 @@ export const calculateDuration = ({ from, to }) => {
   let Remainder = numberOfHours % 24;
   let hours = Math.floor(Remainder);
   let minutes = Math.floor(numerOfMinutes - 60 * numberOfHours);
+
+  return customeTimeString({
+    days,
+    hours,
+    minutes,
+  });
+};
+
+export const calculateMiliDuration = ({ from, to }) => {
+  let FromDate = moment(from);
+  let ToDate = moment(to);
+  let numberOfMiliSecond = ToDate.diff(FromDate);
+
+  return numberOfMiliSecond;
+};
+
+export const customeTimeString = ({ days, hours, minutes }) => {
   let difference = "";
   if (days > 0) {
-    difference += days === 1 ? `${days} d, ` : `${days} ds, `;
+    difference += days === 1 ? `${days} d` : `${days} ds`;
   }
-  difference += hours === 0 || hours === 1 ? `${hours} h ` : `${hours} h `;
-  difference +=
-    minutes === 0 || hours === 1 ? `${minutes} min` : `${minutes} min`;
+
+  difference += hours ? `${days ? ", " : ""} ${hours} h ` : "";
+  difference += minutes ? `${days || hours ? ", " : ""} ${minutes} min` : "";
   return difference;
 };

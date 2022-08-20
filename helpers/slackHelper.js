@@ -1,40 +1,90 @@
+import httpService from "../lib/httpService";
+
 const SLACK_USER_TOKEN = process.env.NEXT_APP_SLACK_USER_TOKEN;
 const SLACK_BOT_TOKEN = process.env.NEXT_APP_SLACK_BOT_TOKEN;
 
 export async function SlackUserList() {
-  const resData = await fetch("https://slack.com/api/users.list", {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: "Bearer " + SLACK_USER_TOKEN,
-    },
-  })
-    .then((response) => response.json())
-    .then((response) => {
-      if (response.ok) {
-        return response.members;
-      }
-      return [];
+  const resData = await httpService
+    .get("https://slack.com/api/users.list", {
+      headers: {
+        Authorization: "Bearer " + SLACK_USER_TOKEN,
+      },
+    })
+    .then(({ data: response }) => {
+      return response.members;
     })
     .catch((err) => {
-      console.log(err);
       return [];
     });
   return resData;
 }
 
-export async function SlackPostMessage({ channel, text }) {
-  const resData = await fetch("https://slack.com/api/chat.postMessage", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: "Bearer " + SLACK_BOT_TOKEN,
-    },
-    body: JSON.stringify({
+export async function SlackPostMessage({ channel, text, blocks }) {
+  const resData = await httpService.post(
+    "https://slack.com/api/chat.postMessage",
+    {
       channel: channel,
-      text: text,
-    }),
-  });
 
+      blocks: blocks,
+      text: text,
+    },
+    {
+      headers: {
+        Authorization: "Bearer " + SLACK_BOT_TOKEN,
+      },
+    }
+  );
   return;
+}
+
+export function CustomizeSlackMessage({ header, user, link, by, text }) {
+  let customText = [
+    {
+      type: "header",
+      text: {
+        type: "plain_text",
+        text: header,
+      },
+    },
+    {
+      type: "context",
+      elements: [
+        {
+          type: "mrkdwn",
+          text: by,
+        },
+        {
+          type: "mrkdwn",
+          text: `*${user}*`,
+        },
+      ],
+    },
+    {
+      type: "actions",
+      elements: [
+        {
+          type: "button",
+          text: {
+            type: "plain_text",
+            text: "Review App",
+            emoji: true,
+          },
+          value: "details",
+          url: link,
+          action_id: "button-action",
+        },
+      ],
+    },
+  ];
+  if (text) {
+    customText.splice(2, 0, {
+      type: "section",
+      text: {
+        type: "mrkdwn",
+        text: text,
+      },
+    });
+  }
+
+  return customText;
 }
