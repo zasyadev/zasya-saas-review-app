@@ -61,11 +61,10 @@ function ReceivedReviewComponent({ user, reviewId }) {
           if (response.status === 200) {
             openNotificationBox("success", response.message, 3);
             router.replace("/review/received");
-          } else {
-            openNotificationBox("error", response.message, 3);
           }
         })
         .catch((err) => {
+          openNotificationBox("error", response.message, 3);
           console.log(err);
         });
     }
@@ -74,12 +73,6 @@ function ReceivedReviewComponent({ user, reviewId }) {
   const fetchReviewData = async (user, reviewId) => {
     setLoading(true);
 
-    await fetch("/api/review/received/" + reviewId, {
-      method: "POST",
-      body: JSON.stringify({
-        userId: user.id,
-      }),
-    });
     await httpService
       .post(`/api/review/received/${reviewId}`, {
         userId: user.id,
@@ -89,16 +82,18 @@ function ReceivedReviewComponent({ user, reviewId }) {
           setReviewData(response.data);
           setQuestions(response.data?.review?.form?.questions);
         }
+
         setLoading(false);
       })
       .catch((err) => {
+        openNotificationBox("error", err.response.data.message);
         console.log(err);
       });
   };
 
   useEffect(() => {
     if (reviewId) fetchReviewData(user, reviewId);
-    else return;
+    // else return;
   }, []);
 
   return (
@@ -111,6 +106,23 @@ function ReceivedReviewComponent({ user, reviewId }) {
           className="mt-4"
           rows={3}
         />
+      ) : reviewData?.status ? (
+        <>
+          <div className="text-right mt-4 mr-4">
+            <Link href="/review/received">
+              <button className="primary-bg-btn text-white py-2 px-4 rounded-md">
+                Back
+              </button>
+            </Link>
+          </div>
+          <div className="answer-preview">
+            <div className=" text-center bg-white rounded-xl py-10 shadow-md md:w-7/12 mx-auto">
+              <p className="text-lg font-bold text-red-400 mt-5">
+                Already Submitted This Review
+              </p>
+            </div>
+          </div>
+        </>
       ) : (
         <>
           <div className="text-right mt-4 mr-4">

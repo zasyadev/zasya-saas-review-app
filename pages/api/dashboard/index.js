@@ -1,3 +1,5 @@
+// import { DailyScheduler } from "../../../helpers/cronjobs/dailycron";
+// import { WeeklyApplaudScheduler } from "../../../helpers/cronjobs/weeklycron";
 import { calculateMiliDuration } from "../../../helpers/momentHelper";
 import prisma from "../../../lib/prisma";
 
@@ -7,6 +9,8 @@ export default async (req, res) => {
   if (req.method === "POST") {
     try {
       if (reqBody.userId) {
+        // DailyScheduler();
+        // WeeklyApplaudScheduler();
         const userTableData = await prisma.user.findUnique({
           where: { id: reqBody.userId },
         });

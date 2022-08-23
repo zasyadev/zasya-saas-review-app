@@ -34,7 +34,7 @@ function TemplateLayout({ user }) {
       };
 
       await httpService
-        .delete(`/api/template`, obj)
+        .delete(`/api/template`, { data: obj })
         .then(({ data: response }) => {
           if (response.status === 200) {
             fetchFormList();

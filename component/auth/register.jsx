@@ -27,12 +27,13 @@ function RegisterPage() {
           openNotificationBox("success", response.message, 3);
           registerForm.resetFields();
           router.push("/auth/login");
-        } else {
-          openNotificationBox("error", response.message, 3);
         }
         setLoading(false);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        openNotificationBox("error", err.response.data.message);
+      });
   }
   const antIcon = (
     <LoadingOutlined

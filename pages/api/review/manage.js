@@ -1,14 +1,10 @@
 import prisma from "../../../lib/prisma";
 import { mailService, mailTemplate } from "../../../lib/emailservice";
-import { ReviewScheduler } from "../../../helpers/schedulerHelper";
+// import { ReviewScheduler } from "../../../helpers/schedulerHelper";
 import {
   CustomizeSlackMessage,
   SlackPostMessage,
 } from "../../../helpers/slackHelper";
-
-const schedule = require("node-schedule");
-
-var reviewJob;
 
 export default async (req, res) => {
   if (req.method === "POST") {
@@ -88,25 +84,25 @@ export default async (req, res) => {
               data: dataObj,
             });
 
-            if (
-              savedData &&
-              savedData.frequency != "once" &&
-              resData.assigned_to_id.length > 0
-            ) {
-              ReviewScheduler({
-                reviewData: savedData,
-                asigneeList: resData.assigned_to_id,
-              });
+            // if (
+            //   savedData &&
+            //   savedData.frequency != "once" &&
+            //   resData.assigned_to_id.length > 0
+            // ) {
+            //   ReviewScheduler({
+            //     reviewData: savedData,
+            //     asigneeList: resData.assigned_to_id,
+            //   });
 
-              let scheduleData = await transaction.scheduleJobs.create({
-                data: {
-                  review: { connect: { id: savedData.id } },
-                  assignee_list: resData.assigned_to_id,
-                  schedule_created_date: savedData.created_date,
-                  status: true,
-                },
-              });
-            }
+            //   let scheduleData = await transaction.scheduleJobs.create({
+            //     data: {
+            //       review: { connect: { id: savedData.id } },
+            //       assignee_list: resData.assigned_to_id,
+            //       schedule_created_date: savedData.created_date,
+            //       status: true,
+            //     },
+            //   });
+            // }
 
             return { savedData };
           } else {
@@ -175,7 +171,7 @@ export default async (req, res) => {
               },
             });
 
-            if (user.UserDetails.slack_id) {
+            if (user.UserDetails && user.UserDetails.slack_id) {
               let customText = CustomizeSlackMessage({
                 header: "New Review Recieved",
                 user: assignedFromData.first_name ?? "",
@@ -185,7 +181,7 @@ export default async (req, res) => {
               SlackPostMessage({
                 channel: user.UserDetails.slack_id,
                 text: `${assignedFromData.first_name} has assigned you New Review.`,
-                block: customText,
+                blocks: customText,
               });
             }
           });
@@ -259,21 +255,23 @@ export default async (req, res) => {
       // schedule.gracefulShutdown();
       const resData = req.body;
 
-      reviewJob = schedule.scheduledJobs[resData.id];
+      // reviewJob = schedule.scheduledJobs[resData.id];
 
-      if (reviewJob) {
-        let updateReview = await prisma.review.update({
-          where: { id: resData.id },
-          data: {
-            frequency_status: true,
-          },
-        });
-        reviewJob.cancel();
+      const updateReview = await prisma.review.update({
+        where: { id: resData.id },
+        data: {
+          frequency_status: true,
+        },
+      });
+
+      if (updateReview) {
         return res.status(200).json({
           message: "Review Frequency Changed!",
           status: 200,
         });
-      } else {
+      }
+      // reviewJob.cancel();
+      else {
         return res.status(400).json({
           message: "Frequency Not Changed!",
           status: 400,
@@ -318,10 +316,10 @@ export default async (req, res) => {
 
         prisma.$disconnect();
         if (deletaData) {
-          reviewJob = schedule.scheduledJobs[reqBody.id];
-          if (reviewJob) {
-            reviewJob.cancel();
-          }
+          // reviewJob = schedule.scheduledJobs[reqBody.id];
+          // if (reviewJob) {
+          //   reviewJob.cancel();
+          // }
           return res.status(200).json({
             status: 200,
             message: "Assign Review Deleted Successfully.",

@@ -7,6 +7,7 @@ import { CalanderIcon, CommentIcons, UserIcon } from "../../assets/Icon/icons";
 import Link from "next/link";
 import { PrimaryButton } from "../../component/common/CustomButton";
 import httpService from "../../lib/httpService";
+import { openNotificationBox } from "../common/notification";
 
 function Applaud({ user }) {
   const [applaudList, setApplaudList] = useState([]);
@@ -24,6 +25,7 @@ function Applaud({ user }) {
         setLoading(false);
       })
       .catch((err) => {
+        openNotificationBox("error", err.response.data.message);
         setApplaudList([]);
       });
   }
@@ -51,6 +53,7 @@ function Applaud({ user }) {
         setReceivedApplaudList(res.data);
       })
       .catch((err) => {
+        openNotificationBox("error", err.response.data.message);
         setReceivedApplaudList([]);
       });
   };

@@ -37,7 +37,13 @@ export async function SlackPostMessage({ channel, text, blocks }) {
   return;
 }
 
-export function CustomizeSlackMessage({ header, user, link, by, text }) {
+export function CustomizeSlackMessage({
+  header,
+  user = "",
+  link,
+  by = "",
+  text = "",
+}) {
   let customText = [
     {
       type: "header",
@@ -85,6 +91,34 @@ export function CustomizeSlackMessage({ header, user, link, by, text }) {
       },
     });
   }
+  return customText;
+}
 
+export function CustomizeCronSlackMessage({ header, link }) {
+  let customText = [
+    {
+      type: "header",
+      text: {
+        type: "plain_text",
+        text: header,
+      },
+    },
+    {
+      type: "actions",
+      elements: [
+        {
+          type: "button",
+          text: {
+            type: "plain_text",
+            text: "Review App",
+            emoji: true,
+          },
+          value: "details",
+          url: link,
+          action_id: "button-action",
+        },
+      ],
+    },
+  ];
   return customText;
 }

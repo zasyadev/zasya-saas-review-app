@@ -15,8 +15,10 @@ function TeamMembers({ user }) {
     if (email) {
       await httpService
         .delete(`/api/team/members`, {
-          email: email,
-          created_by: user.id,
+          data: {
+            email: email,
+            created_by: user.id,
+          },
         })
         .then(({ data: response }) => {
           if (response.status === 200) {

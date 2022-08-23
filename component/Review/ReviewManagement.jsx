@@ -38,7 +38,7 @@ function ReviewManagement({ user }) {
       };
 
       await httpService
-        .delete(`/api/review/manage`, obj)
+        .delete(`/api/review/manage`, { data: obj })
         .then(({ data: response }) => {
           if (response.status === 200) {
             fetchReviewAssignList();

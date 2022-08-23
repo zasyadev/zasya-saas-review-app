@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Modal, Form, Input, Col, Row, Upload, message } from "antd";
+import { Modal, Form, Input, Col, Row, Upload, message, Skeleton } from "antd";
 import { useEffect } from "react";
 import { openNotificationBox } from "../../component/common/notification";
 import Image from "next/image";
@@ -154,6 +154,7 @@ function Profile({ user }) {
   const [passwordForm] = Form.useForm();
   const [profileForm] = Form.useForm();
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [userDetails, setUserDetails] = useState({});
   const [receivedApplaudList, setReceivedApplaudList] = useState([]);
@@ -208,7 +209,7 @@ function Profile({ user }) {
 
   const getProfileData = async () => {
     setUserDetails({});
-
+    setLoading(true);
     await httpService
       .get(`/api/profile/${user.id}`)
       .then(({ data: response }) => {
@@ -226,6 +227,7 @@ function Profile({ user }) {
           setImageHandler(response.data.image);
 
           setEditMode(false);
+          setLoading(false);
         }
       })
       .catch((err) => console.log(err));
@@ -328,7 +330,21 @@ source=LinkedIn`);
     setImage([]);
   };
 
-  return (
+  return loading ? (
+    <div className="px-3 md:px-8 h-auto">
+      <div className="grid grid-cols-1 xl:grid-cols-6 mt-1">
+        <div className="xl:col-start-1 xl:col-end-7 px-4 ">
+          <div className="w-full bg-white rounded-xl  shadow-md p-4 mt-2">
+            <Row gutter={16}>
+              <Col lg={24} xs={24} className="mt-4 items-center">
+                <Skeleton active />
+              </Col>
+            </Row>
+          </div>
+        </div>
+      </div>
+    </div>
+  ) : (
     <>
       {editMode ? (
         <div className="px-3 md:px-8 h-auto">

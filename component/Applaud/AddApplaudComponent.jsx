@@ -29,6 +29,7 @@ function AddApplaud({ user }) {
       })
       .catch((err) => {
         console.log(err);
+        openNotificationBox("error", err.response.data.message);
         setMembersList([]);
       });
   }
@@ -50,11 +51,12 @@ function AddApplaud({ user }) {
         if (response.status === 200) {
           openNotificationBox("success", response.message, 3);
           router.push("/applaud");
-        } else {
-          openNotificationBox("error", response.message, 3);
         }
       })
-      .catch((err) => console.error(err));
+      .catch((err) => {
+        console.error(err);
+        openNotificationBox("error", err.response.data.message);
+      });
   }
 
   // async function updateApplaud(obj) {

@@ -12,7 +12,7 @@
     "lint": "next lint",
     "migrate": "prisma migrate dev",
     "seed": "prisma db seed",
-    "schedule": "node bin/index.js"
+    "cronjob": "node bin/cron-job.js"
   },
   "dependencies": {
     "@prisma/client": "^3.15.2",

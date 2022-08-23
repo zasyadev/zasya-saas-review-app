@@ -6,6 +6,7 @@ import { ApplaudGiven, ApplaudIconSmall } from "../../assets/Icon/icons";
 import { ClockCircleOutlined } from "@ant-design/icons";
 import moment from "moment";
 import httpService from "../../lib/httpService";
+import { openNotificationBox } from "../common/notification";
 
 function AllAplaud({ user }) {
   const [allApplaud, setAllApplaud] = useState([]);
@@ -33,6 +34,7 @@ function AllAplaud({ user }) {
       .catch((err) => {
         console.log(err);
         setAllApplaud([]);
+        openNotificationBox("error", err.response.data.message);
       });
   }
   async function fetchAllOrgData() {
@@ -46,6 +48,7 @@ function AllAplaud({ user }) {
 
       .catch((err) => {
         console.log(err);
+        openNotificationBox("error", err.response.data.message);
         setAllOrgApplaud([]);
       });
   }

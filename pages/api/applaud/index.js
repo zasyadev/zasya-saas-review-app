@@ -47,7 +47,7 @@ async function handle(req, res) {
             },
           });
 
-          if (userData.UserDetails.slack_id) {
+          if (userData.UserDetails && userData.UserDetails.slack_id) {
             let customText = CustomizeSlackMessage({
               header: "New Applaud Recieved",
               user: createdData.first_name ?? "",
