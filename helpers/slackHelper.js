@@ -122,3 +122,46 @@ export function CustomizeCronSlackMessage({ header, link }) {
   ];
   return customText;
 }
+
+export function CustomizeMonthlyCronSlackMessage({
+  applaudCount,
+  reviewCount,
+}) {
+  let customText = [
+    {
+      type: "header",
+      text: {
+        type: "plain_text",
+        text: "Your Monthly Activities",
+        emoji: true,
+      },
+    },
+    {
+      type: "context",
+      elements: [
+        {
+          type: "mrkdwn",
+          text: "Applaud Assigned",
+        },
+        {
+          type: "mrkdwn",
+          text: `*${applaudCount}*`,
+        },
+      ],
+    },
+    {
+      type: "context",
+      elements: [
+        {
+          type: "mrkdwn",
+          text: "Review Given",
+        },
+        {
+          type: "mrkdwn",
+          text: `*${reviewCount}*`,
+        },
+      ],
+    },
+  ];
+  return customText;
+}
