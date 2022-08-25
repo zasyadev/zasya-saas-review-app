@@ -309,7 +309,7 @@ function ReviewCreatedComponent({
                 <Col md={16} className="mx-auto my-auto">
                   <div className="flex flex-col my-auto">
                     <div className="text-sm md:text-base font-medium">
-                      Assign to people
+                      Assign Count
                     </div>
                     <div className="text-lg font-medium">
                       {reviewData?.ReviewAssignee?.length}

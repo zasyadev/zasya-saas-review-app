@@ -125,14 +125,15 @@ export function CustomizeCronSlackMessage({ header, link }) {
 
 export function CustomizeMonthlyCronSlackMessage({
   applaudCount,
-  reviewCount,
+  reviewCreatedCount,
+  reviewAnsweredCount,
 }) {
   let customText = [
     {
       type: "header",
       text: {
         type: "plain_text",
-        text: "Your Monthly Activities",
+        text: ":calendar: | Your Monthly Activities | :calendar:  ",
         emoji: true,
       },
     },
@@ -141,7 +142,7 @@ export function CustomizeMonthlyCronSlackMessage({
       elements: [
         {
           type: "mrkdwn",
-          text: "Applaud Assigned",
+          text: "Applaud Given",
         },
         {
           type: "mrkdwn",
@@ -154,11 +155,24 @@ export function CustomizeMonthlyCronSlackMessage({
       elements: [
         {
           type: "mrkdwn",
-          text: "Review Given",
+          text: "Review Assigned",
         },
         {
           type: "mrkdwn",
-          text: `*${reviewCount}*`,
+          text: `*${reviewCreatedCount}*`,
+        },
+      ],
+    },
+    {
+      type: "context",
+      elements: [
+        {
+          type: "mrkdwn",
+          text: "Review Answered",
+        },
+        {
+          type: "mrkdwn",
+          text: `*${reviewAnsweredCount}*`,
         },
       ],
     },

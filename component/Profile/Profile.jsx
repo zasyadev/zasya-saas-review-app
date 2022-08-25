@@ -152,8 +152,10 @@ const ImageUpload = ({
 function Profile({ user }) {
   const { uploadToS3 } = useS3Upload();
   const [passwordForm] = Form.useForm();
+  const [slackForm] = Form.useForm();
   const [profileForm] = Form.useForm();
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [showSlackEditModal, setShowSlackEditModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [userDetails, setUserDetails] = useState({});
@@ -161,7 +163,7 @@ function Profile({ user }) {
   const [givenApplaudList, setGivenApplaudList] = useState([]);
   const [image, setImage] = useState([]);
 
-  const showModal = () => {
+  const showPasswordEditModal = () => {
     setIsModalVisible(true);
   };
 
@@ -222,6 +224,8 @@ function Profile({ user }) {
             address2: response.data.address2 ?? "",
             mobile: response.data.mobile ?? "",
             pin_code: response.data.pin_code ?? "",
+          });
+          slackForm.setFieldsValue({
             slack_email: response.data.slack_email ?? "",
           });
           setImageHandler(response.data.image);
@@ -330,6 +334,23 @@ source=LinkedIn`);
     setImage([]);
   };
 
+  const onChangeSlack = async (values) => {
+    await httpService
+      .post(`/api/profile/slack/${user.id}`, values)
+      .then(({ data: response }) => {
+        if (response.status === 200) {
+          slackForm.resetFields();
+          setShowSlackEditModal(false);
+          openNotificationBox("success", response.message, 3);
+          getProfileData();
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        openNotificationBox("error", err.response.data.message, 3);
+      });
+  };
+
   return loading ? (
     <div className="px-3 md:px-8 h-auto">
       <div className="grid grid-cols-1 xl:grid-cols-6 mt-1">
@@ -353,10 +374,17 @@ source=LinkedIn`);
               <div className="rounded-xl text-white grid items-center w-full shadow-lg-purple my-3">
                 <div className="w-full flex item-center justify-end">
                   <div className="flex justify-end ">
+                    <div className="mr-2">
+                      <SecondaryButton
+                        onClick={() => setShowSlackEditModal(true)}
+                        className="rounded h-full md:w-full w-32 mr-2"
+                        title="Change Slack Email"
+                      />
+                    </div>
                     <div>
                       <PrimaryButton
-                        onClick={() => showModal()}
-                        className="md:px-4 px-2 rounded-md md:w-full w-20"
+                        onClick={() => showPasswordEditModal()}
+                        className="md:px-4 px-2 rounded-md md:w-full w-24"
                         title="Change Password"
                       />
                     </div>
@@ -468,7 +496,7 @@ source=LinkedIn`);
                                 />
                               </Form.Item>
                             </Col>
-                            <Col md={24} sm={24} xs={24}>
+                            {/* <Col md={24} sm={24} xs={24}>
                               <Form.Item
                                 label="Slack Email Address "
                                 name="slack_email"
@@ -478,7 +506,7 @@ source=LinkedIn`);
                                   className="bg-gray-100 h-12 rounded-md"
                                 />
                               </Form.Item>
-                            </Col>
+                            </Col> */}
                           </Row>
                         </Col>
                       </Row>
@@ -767,6 +795,44 @@ source=LinkedIn`);
                   type="password"
                   className="form-control block w-full px-4 py-2 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-green-500 focus:outline-none"
                   placeholder="Confirm Password"
+                />
+              </Form.Item>
+            </div>
+          </Form>
+        </div>
+      </Modal>
+      <Modal
+        title="Change Slack Email"
+        visible={showSlackEditModal}
+        onCancel={() => setShowSlackEditModal(false)}
+        footer={[
+          <>
+            <SecondaryButton
+              onClick={() => setShowSlackEditModal(false)}
+              className="rounded h-full mr-2"
+              title="Cancel"
+            />
+            <PrimaryButton
+              onClick={() => slackForm.submit()}
+              className=" h-full rounded "
+              title="Change Email"
+            />
+          </>,
+        ]}
+        wrapClassName="view_form_modal"
+      >
+        <div>
+          <Form
+            form={slackForm}
+            layout="vertical"
+            autoComplete="off"
+            onFinish={onChangeSlack}
+          >
+            <div className=" mx-2">
+              <Form.Item label="Slack Email Address " name="slack_email">
+                <Input
+                  placeholder="Slack Email Address"
+                  className="form-control block w-full px-4 py-2 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-green-500 focus:outline-none"
                 />
               </Form.Item>
             </div>

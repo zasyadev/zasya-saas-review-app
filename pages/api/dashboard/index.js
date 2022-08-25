@@ -101,6 +101,7 @@ export default async (req, res) => {
             return true;
           });
         }
+
         let averageAnswerTime = 0;
         if (reviewAnswered.length > 0) {
           const totalMili = reviewAnswered.reduce((prev, curr) => {

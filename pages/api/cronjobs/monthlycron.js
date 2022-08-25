@@ -3,7 +3,6 @@ const prisma = new PrismaClient();
 
 import moment from "moment";
 import {
-  CustomizeCronSlackMessage,
   CustomizeMonthlyCronSlackMessage,
   SlackPostMessage,
 } from "../../../helpers/slackHelper";
@@ -42,6 +41,20 @@ async function handle(req, res) {
               ],
             },
           });
+          let reviewAnswered = await prisma.reviewAssigneeAnswers.findMany({
+            where: {
+              AND: [
+                {
+                  user_id: item.id,
+                },
+                {
+                  organization_id: item.organization_id,
+                },
+                { created_date: lastMonth },
+              ],
+            },
+          });
+
           let applaudCreated = await prisma.userApplaud.findMany({
             where: {
               AND: [
@@ -54,7 +67,8 @@ async function handle(req, res) {
           if (item.UserDetails && item.UserDetails.slack_id) {
             let customText = CustomizeMonthlyCronSlackMessage({
               applaudCount: applaudCreated ? applaudCreated.length : 0,
-              reviewCount: reviewCreated ? reviewCreated.length : 0,
+              reviewCreatedCount: reviewCreated ? reviewCreated.length : 0,
+              reviewAnsweredCount: reviewAnswered ? reviewAnswered.length : 0,
             });
             SlackPostMessage({
               channel: item.UserDetails.slack_id,

@@ -13,7 +13,6 @@ async function handle(req, res) {
   }
 
   const { password } = req.body;
-  console.log(password, "passw", process.env.NEXT_APP_CRON_PASSWORD);
   if (password != process.env.NEXT_APP_CRON_PASSWORD) {
     return res.status(401).json({
       message: "Wrong Password",

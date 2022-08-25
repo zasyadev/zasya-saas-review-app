@@ -4,7 +4,7 @@ const schedule = require("node-schedule");
 
 async function cronJobStart() {
   try {
-    schedule.scheduleJob("daily_schedule", "0 10 * * *", async function () {
+    schedule.scheduleJob("daily_schedule", "30 4 * * *", async function () {
       await axios.post(`${process.env.NEXT_APP_URL}api/cronjobs/dailycron`, {
         password: process.env.NEXT_APP_CRON_PASSWORD,
       });
@@ -15,7 +15,7 @@ async function cronJobStart() {
         }
       );
     });
-    schedule.scheduleJob("weekly_schedule", "0 10 * * 1", async function () {
+    schedule.scheduleJob("weekly_schedule", "30 4 * * 1", async function () {
       await axios.post(`${process.env.NEXT_APP_URL}api/cronjobs/weeklycron`, {
         password: process.env.NEXT_APP_CRON_PASSWORD,
       });
@@ -26,10 +26,10 @@ async function cronJobStart() {
         }
       );
     });
-    schedule.scheduleJob("monthly_schedule", "0 10 1 * *", async function () {
-      //   await axios.post(`${process.env.NEXT_APP_URL}api/cronjobs/weeklycron`, {
-      //     password: process.env.NEXT_APP_CRON_PASSWORD,
-      //   });
+    schedule.scheduleJob("monthly_schedule", "30 4 1 * *", async function () {
+      await axios.post(`${process.env.NEXT_APP_URL}api/cronjobs/monthlycron`, {
+        password: process.env.NEXT_APP_CRON_PASSWORD,
+      });
       await axios.post(
         `${process.env.NEXT_APP_URL}api/cronjobs/monthlyfrequencycron`,
         {
@@ -39,12 +39,9 @@ async function cronJobStart() {
     });
 
     // schedule.scheduleJob("weekly_schedule", "* * * * *", async function () {
-    //   await axios.post(
-    //     `${process.env.NEXT_APP_URL}api/cronjobs/dailyfrequencycron`,
-    //     {
-    //       password: process.env.NEXT_APP_CRON_PASSWORD,
-    //     }
-    //   );
+    //   await axios.post(`${process.env.NEXT_APP_URL}api/cronjobs/monthlycron`, {
+    //     password: process.env.NEXT_APP_CRON_PASSWORD,
+    //   });
     // });
   } catch (error) {
     console.log(error);

@@ -28,8 +28,11 @@ function LoginPage() {
         openNotificationBox("error", result.error, 3);
         return;
       }
-
-      router.push("/dashboard");
+      if (router.query && router.query.back_url) {
+        router.push(router.query.back_url);
+      } else {
+        router.push("/dashboard");
+      }
     } catch (error) {
       setLoading(false);
       openNotificationBox("error", error.message ?? "Failed", 3);

@@ -14,7 +14,7 @@ const defaultOptions = {
       show: false,
     },
     type: "bar",
-    height: 380,
+    height: 360,
   },
   plotOptions: {
     bar: {

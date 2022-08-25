@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 import AdminLayout from "../../component/layout/AdminLayout";
 import { getSession } from "next-auth/client";
@@ -20,7 +20,7 @@ export async function getServerSideProps(context) {
   if (!session) {
     return {
       redirect: {
-        destination: "/",
+        destination: "/auth/login?back_url=/template/add",
         permanent: false,
       },
     };

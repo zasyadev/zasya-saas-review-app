@@ -57,6 +57,12 @@ export default async (req, res) => {
               },
             });
 
+          let userDeatilsTable = await transaction.userDetails.create({
+            data: {
+              user: { connect: { id: savedData.id } },
+            },
+          });
+
           return {
             savedData,
           };

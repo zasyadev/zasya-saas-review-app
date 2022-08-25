@@ -1,5 +1,5 @@
 import prisma from "../../../lib/prisma";
-import { hashedPassword, randomPassword } from "../../../lib/auth";
+import { hashedPassword } from "../../../lib/auth";
 import { mailService, mailTemplate } from "../../../lib/emailservice";
 
 export default async (req, res) => {
@@ -86,13 +86,6 @@ export default async (req, res) => {
             data: userobj,
           });
           if (userData.id) {
-            // const savedTagsData = await transaction.userTags.create({
-            //   data: {
-            //     user: { connect: { id: userData.id } },
-            //     tags: resData.tags,
-            //   },
-            // });
-
             let userOrgData = await transaction.userOraganizationGroups.create({
               data: {
                 user: { connect: { id: userData.id } },
@@ -102,6 +95,12 @@ export default async (req, res) => {
                 },
                 status: true,
                 tags: resData.tags,
+              },
+            });
+
+            let userDeatilsTable = await transaction.userDetails.create({
+              data: {
+                user: { connect: { id: userData.id } },
               },
             });
           }
