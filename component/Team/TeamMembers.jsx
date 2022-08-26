@@ -24,11 +24,12 @@ function TeamMembers({ user }) {
           if (response.status === 200) {
             fetchMembersData();
             openNotificationBox("success", response.message, 3);
-          } else {
-            openNotificationBox("error", response.message, 3);
           }
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          console.error(err.response.data.message);
+          openNotificationBox("error", err.response.data.message);
+        });
     }
   }
 
@@ -48,8 +49,9 @@ function TeamMembers({ user }) {
         setLoading(false);
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err.response.data.message);
         setMembersList([]);
+        setLoading(false);
       });
   }
 

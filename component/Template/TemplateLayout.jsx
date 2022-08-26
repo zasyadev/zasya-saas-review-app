@@ -19,10 +19,9 @@ function TemplateLayout({ user }) {
           let filterData = response.data.filter((item) => item.status);
           setFormList(filterData);
         }
-        // setLoading(false);
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err.response.data.message);
         setFormList([]);
       });
   }
@@ -39,11 +38,12 @@ function TemplateLayout({ user }) {
           if (response.status === 200) {
             fetchFormList();
             openNotificationBox("success", response.message, 3);
-          } else {
-            openNotificationBox("error", response.message, 3);
           }
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          console.error(err.response.data.message);
+          openNotificationBox("error", err.response.data.message);
+        });
     }
   }
 

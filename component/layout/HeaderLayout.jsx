@@ -48,7 +48,7 @@ function HeaderLayout({
         }
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err.response.data.message);
       });
   };
   const notificationHandle = async () => {
@@ -64,7 +64,7 @@ function HeaderLayout({
         }
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err.response.data.message);
       });
   };
 
@@ -79,7 +79,7 @@ function HeaderLayout({
         }
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err.response.data.message);
       });
   };
 

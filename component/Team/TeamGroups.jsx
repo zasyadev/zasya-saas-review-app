@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
   Button,
-  Layout,
   Modal,
   Form,
   Input,
@@ -12,8 +11,6 @@ import {
   message,
 } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
-
-const { Content } = Layout;
 
 function Team({ user }) {
   const [form] = Form.useForm();

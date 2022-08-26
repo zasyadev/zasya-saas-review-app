@@ -4,7 +4,6 @@ import React, { useState, useEffect } from "react";
 import CustomTable from "../../component/common/CustomTable";
 import moment from "moment";
 import { CalanderIcon, CommentIcons, UserIcon } from "../../assets/Icon/icons";
-import Link from "next/link";
 import { PrimaryButton } from "../../component/common/CustomButton";
 import httpService from "../../lib/httpService";
 import { openNotificationBox } from "../common/notification";

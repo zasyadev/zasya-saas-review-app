@@ -4,7 +4,6 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import { openNotificationBox } from "../../component/common/notification";
 import { HeadersComponent } from "../../component/common/HeadersComponent";
-import { LoadingSpinner } from "../../component/Loader/LoadingSpinner";
 import AuthWrapper from "../../component/auth/AuthWrapper";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 import { LoadingOutlined } from "@ant-design/icons";
@@ -30,12 +29,14 @@ function ResetPassword() {
 
             resetForm.resetFields();
             router.push("/auth/login");
-          } else {
-            openNotificationBox("error", response.message, 3);
           }
           setLoading(false);
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          console.error(err.response.data.message);
+          openNotificationBox("error", err.response.data.message);
+          setLoading(false);
+        });
     }
   }
 
@@ -133,14 +134,10 @@ function ResetPassword() {
   return (
     <>
       <HeadersComponent />
-      {loading ? (
-        <LoadingSpinner />
-      ) : (
-        <AuthWrapper
-          FormComponent={ResetPasswordComponent}
-          heading={"Reset Password"}
-        />
-      )}
+      <AuthWrapper
+        FormComponent={ResetPasswordComponent}
+        heading={"Reset Password"}
+      />
     </>
   );
 }

@@ -26,7 +26,8 @@ function ReviewCreated({ user }) {
         setLoading(false);
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err.response.data.message);
+        setLoading(false);
       });
   };
 

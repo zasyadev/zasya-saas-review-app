@@ -10,7 +10,7 @@ export const calculateDuration = ({ from, to }) => {
   let hours = Math.floor(Remainder);
   let minutes = Math.floor(numerOfMinutes - 60 * numberOfHours);
 
-  return customeTimeString({
+  return customTimeString({
     days,
     hours,
     minutes,
@@ -25,7 +25,7 @@ export const calculateMiliDuration = ({ from, to }) => {
   return numberOfMiliSecond;
 };
 
-export const customeTimeString = ({ days, hours, minutes }) => {
+export const customTimeString = ({ days, hours, minutes }) => {
   let difference = "";
   if (days > 0) {
     difference += days === 1 ? `${days} d` : `${days} ds`;

@@ -118,7 +118,7 @@ function AddEditReviewComponent({
           openNotificationBox("error", response.message, 3);
         }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.error(err.response.data.message));
   }
 
   async function fetchTemplateData() {
@@ -133,6 +133,7 @@ function AddEditReviewComponent({
       })
       .catch((err) => {
         setFormList([]);
+        console.error(err.response.data.message);
       });
   }
 
@@ -150,6 +151,7 @@ function AddEditReviewComponent({
       })
       .catch((err) => {
         setUserList([]);
+        console.error(err.response.data.message);
       });
   }
 
@@ -205,7 +207,7 @@ function AddEditReviewComponent({
             }
           })
           .catch((err) => {
-            console.error(err);
+            console.error(err.response.data.message);
           });
       } else {
         openNotificationBox("error", "Need to Select Template", 3);

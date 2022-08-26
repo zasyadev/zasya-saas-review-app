@@ -18,7 +18,7 @@ function PreviewComponent({ user, reviewId }) {
           setAnswers(response.data[0].ReviewAssigneeAnswerOption);
         })
         .catch((err) => {
-          console.log(err);
+          console.error(err.response.data.message);
         });
     }
   };
@@ -58,7 +58,7 @@ function PreviewComponent({ user, reviewId }) {
         }
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err.response.data.message);
       });
   };
 

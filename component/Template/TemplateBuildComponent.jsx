@@ -6,6 +6,7 @@ import { openNotificationBox } from "../../component/common/notification";
 import { Modal } from "antd";
 import TemplateEditor from "./TemplateEditor";
 import httpService from "../../lib/httpService";
+import { SecondaryButton } from "../common/CustomButton";
 
 const defaultQuestionConfig = {
   questionText: "Untitled Question",
@@ -222,12 +223,11 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
           if (response.status === 200) {
             router.push("/template");
             openNotificationBox("success", response.message, 3);
-          } else {
-            openNotificationBox("error", response.message, 3);
           }
         })
         .catch((err) => {
-          console.log(err);
+          console.error(err.response.data.message);
+          openNotificationBox("error", err.response.data.message);
         });
     }
   }
@@ -239,12 +239,12 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
         if (response.status === 200) {
           router.push("/template");
           openNotificationBox("success", response.message, 3);
-        } else {
-          openNotificationBox("error", response.message, 3);
         }
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err.response.data.message);
+
+        openNotificationBox("error", err.response.data.message);
       });
   }
 
@@ -292,9 +292,17 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
       <Modal
         visible={modalTitleopen}
         footer={
-          <Button key="add" type="primary" onClick={handleOk}>
-            Create Template
-          </Button>
+          <>
+            <SecondaryButton
+              withLink={true}
+              linkHref="/template"
+              className="mx-4 rounded my-1"
+              title="Cancel"
+            />
+            <Button key="add" type="primary" onClick={handleOk}>
+              Create Template
+            </Button>
+          </>
         }
       >
         <div>

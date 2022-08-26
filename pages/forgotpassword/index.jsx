@@ -1,12 +1,10 @@
 import React, { useState } from "react";
-
 import { Form, Input, Spin } from "antd";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { openNotificationBox } from "../../component/common/notification";
 import { HeadersComponent } from "../../component/common/HeadersComponent";
 import AuthWrapper from "../../component/auth/AuthWrapper";
-
 import { LoadingOutlined } from "@ant-design/icons";
 import httpService from "../../lib/httpService";
 
@@ -28,12 +26,14 @@ function ForgotPassword() {
             openNotificationBox("success", response.message, 3);
             forgotForm.resetFields();
             router.push("/auth/login");
-          } else {
-            openNotificationBox("error", response.message, 3);
           }
           setLoading(false);
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          console.error(err.response.data.message);
+          setLoading(false);
+          openNotificationBox("error", err.response.data.message);
+        });
     }
   }
   const antIcon = (

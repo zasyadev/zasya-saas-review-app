@@ -146,7 +146,7 @@ function ReviewCreatedComponent({
         }
         setLoading(false);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.log(err.response.data.message));
   };
 
   const totalRatingFunction = (data) => {
@@ -183,7 +183,10 @@ function ReviewCreatedComponent({
           openNotificationBox("error", response.message, 3);
         }
       })
-      .catch((err) => fetchReviewAssignList([]));
+      .catch((err) => {
+        fetchReviewAssignList([]);
+        console.error(err.response.data.message);
+      });
   };
 
   return (
@@ -205,7 +208,7 @@ function ReviewCreatedComponent({
                 <p className="capitalize">{reviewData?.review_type}</p>
               </div>
               <div className="flex  primary-color-blue my-auto">
-                <p className="">Created Date:</p>
+                <p className="mr-1">Created Date: </p>
                 <p>{moment(reviewData?.created_date).format(datePattern)}</p>
               </div>
             </div>

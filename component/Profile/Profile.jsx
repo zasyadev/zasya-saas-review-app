@@ -202,7 +202,7 @@ function Profile({ user }) {
           openNotificationBox("error", response.message, 3);
         }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.error(err.response.data.message));
   };
 
   const validateMessages = {
@@ -234,7 +234,7 @@ function Profile({ user }) {
           setLoading(false);
         }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.error(err.response.data.message));
   };
 
   const setImageHandler = (img) => {
@@ -271,6 +271,7 @@ function Profile({ user }) {
       })
       .catch((err) => {
         setReceivedApplaudList([]);
+        console.error(err.response.data.message);
       });
   };
 
@@ -284,6 +285,7 @@ function Profile({ user }) {
       })
       .catch((err) => {
         setGivenApplaudList([]);
+        console.error(err.response.data.message);
       });
   }
 
@@ -308,11 +310,11 @@ function Profile({ user }) {
           passwordForm.resetFields();
           setIsModalVisible(false);
           openNotificationBox("success", response.message, 3);
-        } else {
-          openNotificationBox("error", response.message, 3);
         }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        openNotificationBox("error", err.response.data.message);
+      });
   }
 
   const shareLinkedinUrl = (data) => {
@@ -346,7 +348,7 @@ source=LinkedIn`);
         }
       })
       .catch((err) => {
-        console.log(err);
+        console.log(err.response.data.message);
         openNotificationBox("error", err.response.data.message, 3);
       });
   };
@@ -452,11 +454,11 @@ source=LinkedIn`);
                               <Form.Item
                                 label="Address Line 2"
                                 name="address2"
-                                rules={[
-                                  {
-                                    required: true,
-                                  },
-                                ]}
+                                // rules={[
+                                //   {
+                                //     required: true,
+                                //   },
+                                // ]}
                               >
                                 <Input
                                   placeholder="Address Line 2"

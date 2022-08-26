@@ -30,11 +30,12 @@ function AddTeamComponent({ user, editMode, memberData }) {
             form.resetFields();
             openNotificationBox("success", response.message, 3);
             router.push("/team/members");
-          } else {
-            openNotificationBox("error", response.message, 3);
           }
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          console.error(err.response.data.message);
+          openNotificationBox("error", err.response.data.message, 3);
+        });
   }
   async function updatingMember(obj) {
     if (memberData.id) {
@@ -52,7 +53,10 @@ function AddTeamComponent({ user, editMode, memberData }) {
               openNotificationBox("error", response.message, 3);
             }
           })
-          .catch((err) => console.log(err));
+          .catch((err) => {
+            console.error(err.response.data.message);
+            openNotificationBox("error", err.response.data.message);
+          });
     }
   }
 
@@ -63,11 +67,12 @@ function AddTeamComponent({ user, editMode, memberData }) {
         .then(({ data: response }) => {
           if (response.status === 200) {
             setTagsList(response.data);
-          } else {
-            setTagsList([]);
           }
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          console.error(err.response.data.message);
+          setTagsList([]);
+        });
     }
   }
 

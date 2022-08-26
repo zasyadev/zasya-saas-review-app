@@ -31,7 +31,7 @@ function RegisterPage() {
         setLoading(false);
       })
       .catch((err) => {
-        console.log(err);
+        console.log(err.response.data.message);
         openNotificationBox("error", err.response.data.message);
       });
   }

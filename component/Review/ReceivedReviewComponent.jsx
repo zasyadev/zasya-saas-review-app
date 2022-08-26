@@ -64,8 +64,8 @@ function ReceivedReviewComponent({ user, reviewId }) {
           }
         })
         .catch((err) => {
-          openNotificationBox("error", response.message, 3);
-          console.log(err);
+          openNotificationBox("error", err.response.data.message, 3);
+          console.error(err.response.data.message);
         });
     }
   };
@@ -87,7 +87,7 @@ function ReceivedReviewComponent({ user, reviewId }) {
       })
       .catch((err) => {
         openNotificationBox("error", err.response.data.message);
-        console.log(err);
+        console.log(err.response.data.message);
       });
   };
 
