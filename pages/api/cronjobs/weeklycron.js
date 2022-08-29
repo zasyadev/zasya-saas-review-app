@@ -19,24 +19,38 @@ async function handle(req, res) {
       };
 
       const userData = await prisma.user.findMany({
-        where: { AND: [{ status: 1 }] },
+        where: {
+          AND: [{ status: 1 }],
+        },
         select: {
+          id: true,
           UserDetails: true,
-          userCreated: {
-            where: {
-              created_date: currentMonth,
-            },
-          },
+        },
+      });
+      const applaudData = await prisma.userApplaud.findMany({
+        where: {
+          created_date: currentMonth,
         },
       });
 
+      let filterdata = [];
+      if (userData.length && applaudData.length) {
+        filterdata = userData.map((userItem) => {
+          let applaudBy = applaudData.filter(
+            (applaudItem) => userItem.id === applaudItem.created_by
+          );
+
+          return { ...userItem, applaudBy: applaudBy };
+        });
+      }
+
       prisma.$disconnect();
 
-      let schedule = userData.map((item) => {
+      let schedule = filterdata.map((item) => {
         if (
           item.UserDetails &&
           item.UserDetails.slack_id &&
-          item.userCreated.length < 3
+          item.applaudBy.length < 3
         ) {
           let customText = CustomizeCronSlackMessage({
             header: "Need to Add New Applaud",

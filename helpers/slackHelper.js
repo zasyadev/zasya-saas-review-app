@@ -66,20 +66,23 @@ export function CustomizeSlackMessage({
       ],
     },
     {
-      type: "actions",
-      elements: [
-        {
-          type: "button",
-          text: {
-            type: "plain_text",
-            text: "Review App",
-            emoji: true,
-          },
-          value: "details",
-          url: link,
-          action_id: "button-action",
+      type: "section",
+      text: {
+        type: "mrkdwn",
+        text: "Go to Review App",
+      },
+      accessory: {
+        type: "button",
+        text: {
+          type: "plain_text",
+          emoji: true,
+          text: "Click Me",
         },
-      ],
+        value: "click_me_123",
+        url: link,
+        action_id: "button-action",
+        style: "primary",
+      },
     },
   ];
   if (text) {
@@ -104,20 +107,23 @@ export function CustomizeCronSlackMessage({ header, link }) {
       },
     },
     {
-      type: "actions",
-      elements: [
-        {
-          type: "button",
-          text: {
-            type: "plain_text",
-            text: "Review App",
-            emoji: true,
-          },
-          value: "details",
-          url: link,
-          action_id: "button-action",
+      type: "section",
+      text: {
+        type: "mrkdwn",
+        text: "Go to Review App",
+      },
+      accessory: {
+        type: "button",
+        text: {
+          type: "plain_text",
+          emoji: true,
+          text: "Click Me",
         },
-      ],
+        value: "click_me_123",
+        style: "primary",
+        url: link,
+        action_id: "button-action",
+      },
     },
   ];
   return customText;

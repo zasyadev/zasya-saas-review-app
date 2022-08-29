@@ -155,7 +155,6 @@ model Review {
   ReviewAssigneeAnswers ReviewAssigneeAnswers[]
   ReviewAssignee        ReviewAssignee[]
 
-  ScheduleJobs ScheduleJobs[]
   @@map("review")
 }
 
@@ -305,17 +304,6 @@ model UserOraganizationTags {
   organization_id Int
 
   @@map("user_organization_tags")
-}
-
-model ScheduleJobs {
-  id                    Int      @id @default(autoincrement())
-  review                Review   @relation(fields: [review_id], references: [id], onDelete: Cascade)
-  review_id             String
-  assignee_list         Json
-  schedule_created_date DateTime @default(now())
-  status                Boolean
-
-  @@map("schedule_jobs")
 }
 
 model UserDetails {

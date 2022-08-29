@@ -3,6 +3,7 @@ const prisma = new PrismaClient();
 
 import {
   CustomizeCronSlackMessage,
+  CustomizeSlackMessage,
   SlackPostMessage,
 } from "../../../helpers/slackHelper";
 import { RequestHandler } from "../../../lib/RequestHandler";
@@ -28,8 +29,20 @@ async function handle(req, res) {
       assigned_to: {
         include: { UserDetails: true },
       },
+      review: {
+        include: {
+          created: {
+            select: {
+              first_name: true,
+            },
+          },
+        },
+      },
     },
   });
+
+  // console.log(reviewAssignedData, "reviewAssignedData");
+  // return;
   prisma.$disconnect();
   let assigneData = reviewAssignedData.map((item) => {
     if (
@@ -37,14 +50,15 @@ async function handle(req, res) {
       item.assigned_to.UserDetails &&
       item.assigned_to.UserDetails.slack_id
     ) {
-      let customText = CustomizeCronSlackMessage({
-        header: "You haven't answered your review.",
-
+      let customText = CustomizeSlackMessage({
+        header: "Feedback is pending.",
         link: `${process.env.NEXT_APP_URL}review/id/${item.id}`,
+        user: item?.review?.created?.first_name ?? "",
+        by: "Review Assigned By",
       });
       SlackPostMessage({
         channel: item.assigned_to.UserDetails.slack_id,
-        text: `You haven't answered your review.`,
+        text: `Feedback is pending.`,
         blocks: customText,
       });
     }

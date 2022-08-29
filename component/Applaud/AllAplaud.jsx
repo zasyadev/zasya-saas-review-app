@@ -47,7 +47,7 @@ function AllAplaud({ user }) {
       })
 
       .catch((err) => {
-        console.log(err);
+        console.log(err.response.data.message);
         openNotificationBox("error", err.response.data.message);
         setAllOrgApplaud([]);
       });
@@ -59,6 +59,7 @@ function AllAplaud({ user }) {
   }, [currentMonth]);
 
   function onDateChange(date, _) {
+    if (filterByUserId) setFilterByUserId("");
     setCurrentMonth({
       lte: moment(date).endOf("month"),
       gte: moment(date).startOf("month"),
@@ -90,6 +91,7 @@ function AllAplaud({ user }) {
                 bordered={false}
                 allowClear={false}
                 format="MMMM"
+                defaultValue={moment()}
               />
             </div>
           </div>
