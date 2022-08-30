@@ -153,11 +153,13 @@ function Profile({ user }) {
   const { uploadToS3 } = useS3Upload();
   const [passwordForm] = Form.useForm();
   const [slackForm] = Form.useForm();
+  const [orgForm] = Form.useForm();
   const [profileForm] = Form.useForm();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [showSlackEditModal, setShowSlackEditModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [editMode, setEditMode] = useState(false);
+  const [organizationModal, setOrganizationModal] = useState(false);
   const [userDetails, setUserDetails] = useState({});
   const [receivedApplaudList, setReceivedApplaudList] = useState([]);
   const [givenApplaudList, setGivenApplaudList] = useState([]);
@@ -290,11 +292,10 @@ function Profile({ user }) {
   }
 
   useEffect(() => {
-    if (user) {
-      getProfileData();
-      fetchReceivedApplaud();
-      fetchGivenApplaud();
-    }
+    getProfileData();
+    fetchReceivedApplaud();
+    fetchGivenApplaud();
+    if (user.role_id === 2) fetchOrgData();
   }, []);
 
   async function onChangePassword(values) {
@@ -345,6 +346,42 @@ source=LinkedIn`);
           setShowSlackEditModal(false);
           openNotificationBox("success", response.message, 3);
           getProfileData();
+        }
+      })
+      .catch((err) => {
+        console.log(err.response.data.message);
+        openNotificationBox("error", err.response.data.message, 3);
+      });
+  };
+  const onChangeOrgData = async (values) => {
+    await httpService
+      .put(`/api/profile/organization`, {
+        applaud_count: Number(values.applaud_count),
+        userId: user.id,
+        orgId: user.organization_id,
+      })
+      .then(({ data: response }) => {
+        if (response.status === 200) {
+          setOrganizationModal(false);
+          openNotificationBox("success", response.message, 3);
+          fetchOrgData();
+        }
+      })
+      .catch((err) => {
+        console.log(err.response.data.message);
+        openNotificationBox("error", err.response.data.message, 3);
+      });
+  };
+  const fetchOrgData = async () => {
+    await httpService
+      .post(`/api/profile/organization`, {
+        userId: user.id,
+      })
+      .then(({ data: response }) => {
+        if (response.status === 200) {
+          orgForm.setFieldsValue({
+            applaud_count: response.data.organization.applaud_count ?? 0,
+          });
         }
       })
       .catch((err) => {
@@ -498,17 +535,6 @@ source=LinkedIn`);
                                 />
                               </Form.Item>
                             </Col>
-                            {/* <Col md={24} sm={24} xs={24}>
-                              <Form.Item
-                                label="Slack Email Address "
-                                name="slack_email"
-                              >
-                                <Input
-                                  placeholder="Slack Email Address"
-                                  className="bg-gray-100 h-12 rounded-md"
-                                />
-                              </Form.Item>
-                            </Col> */}
                           </Row>
                         </Col>
                       </Row>
@@ -603,7 +629,7 @@ source=LinkedIn`);
               </div>
             </Col>
             <Col md={8} xs={24}>
-              <div className="bg-white rounded-sm transition-all duration-300 ease-in-out shadow-md mt-8">
+              <div className="bg-white rounded-sm transition-all duration-300 ease-in-out shadow-md ">
                 <div className="p-4">
                   <div className="m-2">
                     <p className="text-base font-semibold mb-1">About</p>
@@ -638,69 +664,81 @@ source=LinkedIn`);
             </Col>
 
             <Col md={10} xs={24}>
-              {receivedApplaudList.length > 0
-                ? receivedApplaudList.map((item, idx) => {
-                    return (
-                      <div
-                        className="bg-white rounded-sm transition-all duration-300 ease-in-out shadow-md my-8  "
-                        key={idx + "applaud"}
-                      >
-                        <div className="p-4">
-                          <div className="m-2">
-                            <Row gutter={8}>
-                              <Col md={6} xs={6}>
-                                <div className=" w-14">
-                                  {/* <Image src={userImage} alt="userImage" /> */}
-                                  <Image
-                                    src={
-                                      item?.created?.UserDetails?.image
-                                        ? item?.created?.UserDetails?.image
-                                        : userImage
-                                    }
-                                    alt="userImage"
-                                    width={60}
-                                    height={60}
-                                    className="rounded-full"
-                                  />
-                                </div>
-                              </Col>
-                              <Col md={12} xs={6}>
-                                <div>
-                                  <p className="text-base font-semibold mb-1">
-                                    {item.created.first_name}{" "}
-                                  </p>
-                                  <p className="font-medium mb-1">
-                                    {moment(item.created_date).format(
-                                      datePattern
-                                    )}
-                                  </p>
-                                </div>
-                              </Col>
-                              <Col md={6} xs={6}>
-                                <div
-                                  className="flex justify-end cursor-pointer"
-                                  onClick={() => shareLinkedinUrl(item)}
-                                >
-                                  <div className="bg-red-400 py-2 px-2 rounded-full w-10">
-                                    <ShareIcon />
+              <div className="custom-scrollbar profile-applaud-card">
+                {receivedApplaudList.length > 0
+                  ? receivedApplaudList.map((item, idx) => {
+                      return (
+                        <div
+                          className="bg-white rounded-sm transition-all duration-300 ease-in-out shadow-md mb-4  "
+                          key={idx + "applaud"}
+                        >
+                          <div className="p-4">
+                            <div className="m-2">
+                              <Row gutter={8}>
+                                <Col md={6} xs={6}>
+                                  <div className=" w-14">
+                                    {/* <Image src={userImage} alt="userImage" /> */}
+                                    <Image
+                                      src={
+                                        item?.created?.UserDetails?.image
+                                          ? item?.created?.UserDetails?.image
+                                          : userImage
+                                      }
+                                      alt="userImage"
+                                      width={60}
+                                      height={60}
+                                      className="rounded-full"
+                                    />
                                   </div>
-                                </div>
-                              </Col>
-                              <Col md={24} xs={24}>
-                                <div className="mt-4">
-                                  <p className="text-base font-normal mb-0">
-                                    {item?.comment}
-                                  </p>
-                                </div>
-                              </Col>
-                            </Row>
+                                </Col>
+                                <Col md={12} xs={6}>
+                                  <div>
+                                    <p className="text-base font-semibold mb-1">
+                                      {item.created.first_name}{" "}
+                                    </p>
+                                    <p className="font-medium mb-1">
+                                      {moment(item.created_date).format(
+                                        datePattern
+                                      )}
+                                    </p>
+                                  </div>
+                                </Col>
+                                <Col md={6} xs={6}>
+                                  <div
+                                    className="flex justify-end cursor-pointer"
+                                    onClick={() => shareLinkedinUrl(item)}
+                                  >
+                                    <div className="bg-red-400 py-2 px-2 rounded-full w-10">
+                                      <ShareIcon />
+                                    </div>
+                                  </div>
+                                </Col>
+                                <Col md={24} xs={24}>
+                                  <div className="mt-4">
+                                    <p className="text-base font-normal mb-0">
+                                      {item?.comment}
+                                    </p>
+                                  </div>
+                                </Col>
+                              </Row>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    );
-                  })
-                : null}
+                      );
+                    })
+                  : null}
+              </div>
             </Col>
+            {user.role_id === 2 && user.organization_id ? (
+              <Col md={6} xs={24}>
+                <SecondaryButton
+                  withLink={false}
+                  onClick={() => setOrganizationModal(true)}
+                  className="text-md px-8 rounded-md w-full"
+                  title="Edit Organization Data"
+                />
+              </Col>
+            ) : null}
           </Row>
         </div>
       )}
@@ -835,6 +873,45 @@ source=LinkedIn`);
                 <Input
                   placeholder="Slack Email Address"
                   className="form-control block w-full px-4 py-2 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-green-500 focus:outline-none"
+                />
+              </Form.Item>
+            </div>
+          </Form>
+        </div>
+      </Modal>
+      <Modal
+        title="Change Applaud Limit"
+        visible={organizationModal}
+        onCancel={() => setOrganizationModal(false)}
+        footer={[
+          <>
+            <SecondaryButton
+              onClick={() => setOrganizationModal(false)}
+              className="rounded h-full mr-2"
+              title="Cancel"
+            />
+            <PrimaryButton
+              onClick={() => orgForm.submit()}
+              className=" h-full rounded "
+              title="Change Limit"
+            />
+          </>,
+        ]}
+        wrapClassName="view_form_modal"
+      >
+        <div>
+          <Form
+            form={orgForm}
+            layout="vertical"
+            autoComplete="off"
+            onFinish={onChangeOrgData}
+          >
+            <div className=" mx-2">
+              <Form.Item label="Applaud Limit " name="applaud_count">
+                <Input
+                  placeholder=" Applaud Limit"
+                  className="form-control block w-full px-4 py-2 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white  focus:outline-none"
+                  type="number"
                 />
               </Form.Item>
             </div>

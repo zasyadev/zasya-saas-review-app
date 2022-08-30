@@ -1,4 +1,4 @@
-import { Col, Form, Row, Select } from "antd";
+import { Col, Form, Row, Select, Tooltip } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
@@ -13,6 +13,8 @@ function AddApplaud({ user }) {
   const router = useRouter();
   const [applaudform] = Form.useForm();
   const [membersList, setMembersList] = useState([]);
+  const [categoryList, setCategoryList] = useState([]);
+  const [applaudLimit, setApplaudLimit] = useState(0);
 
   const validateMessages = {
     required: "${label} is required!",
@@ -34,14 +36,49 @@ function AddApplaud({ user }) {
       });
   }
 
-  const onFinish = (values) => {
-    let obj = {
-      user_id: values.user_id,
-      comment: values.comment,
-      created_by: user.id,
-    };
+  async function fetchApplaudLimit(user) {
+    await httpService
+      .post(`/api/applaud/applaudlimit`, {
+        userId: user.id,
+      })
+      .then(({ data }) => {
+        if (data.status === 200) {
+          setApplaudLimit(data);
+        }
+      })
+      .catch((err) => {
+        console.log(err.response.data.message);
 
-    addApplaud(obj);
+        setApplaudLimit(0);
+      });
+  }
+  async function fetchCategoryList() {
+    await httpService
+      .get(`/api/applaud/category`)
+      .then(({ data }) => {
+        if (data.status === 200) {
+          setCategoryList(data.data);
+        }
+      })
+      .catch((err) => {
+        console.log(err.response.data.message);
+        setCategoryList(0);
+      });
+  }
+
+  const onFinish = (values) => {
+    if (!applaudLimit > 0) {
+      openNotificationBox("error", "Max Limit has been reached to add applaud");
+    } else {
+      let obj = {
+        user_id: values.user_id,
+        comment: values.comment,
+        created_by: user.id,
+        category: values.category,
+      };
+
+      addApplaud(obj);
+    }
   };
 
   async function addApplaud(obj) {
@@ -84,6 +121,8 @@ function AddApplaud({ user }) {
 
   useEffect(() => {
     fetchMember(user);
+    fetchApplaudLimit(user);
+    fetchCategoryList();
   }, []);
 
   return (
@@ -129,6 +168,38 @@ function AddApplaud({ user }) {
 
                 <Col md={24} xs={24}>
                   <Form.Item
+                    name="category"
+                    label="Category"
+                    rules={[
+                      {
+                        required: true,
+                      },
+                    ]}
+                  >
+                    <Select
+                      size="large"
+                      mode="tags"
+                      placeholder="Tags"
+                      className="select-tag tag-select-box"
+                    >
+                      {categoryList.length > 0 &&
+                        categoryList.map((item, idx) => {
+                          return (
+                            <Select.Option
+                              key={idx + "tags"}
+                              value={item.name}
+                              title={item.about}
+                            >
+                              {item.name}
+                            </Select.Option>
+                          );
+                        })}
+                    </Select>
+                  </Form.Item>
+                </Col>
+
+                <Col md={24} xs={24}>
+                  <Form.Item
                     name="comment"
                     label="Comment"
                     rules={[
@@ -152,7 +223,9 @@ function AddApplaud({ user }) {
                     <PrimaryButton
                       className="  my-1 rounded"
                       title="Create"
-                      btnProps={{ htmlType: "submit" }}
+                      btnProps={{
+                        htmlType: "submit",
+                      }}
                     />
                   </div>
                 </Col>

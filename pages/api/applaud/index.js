@@ -25,6 +25,7 @@ async function handle(req, res) {
           data: {
             user: { connect: { id: reqBody.user_id } },
             comment: reqBody.comment,
+            category: reqBody.category,
             created: { connect: { id: reqBody.created_by } },
             organization: { connect: { id: userData.organization_id } },
           },

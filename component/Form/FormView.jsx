@@ -96,7 +96,7 @@ function FormView({ user }) {
   ];
 
   return (
-    <div>
+    <>
       <div className="px-3 md:px-8 h-auto mt-5">
         <div className="container mx-auto max-w-full">
           <div className="grid grid-cols-1 px-4 mb-16">
@@ -139,7 +139,7 @@ function FormView({ user }) {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

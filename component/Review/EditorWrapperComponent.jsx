@@ -35,7 +35,6 @@ function EditorWrapperComponent({
   }
 
   function addMoreQuestionField() {
-    // expandCloseAll();
     setQuestionList((prev) => [...prev, defaultQuestionConfig]);
     setActiveQuestionIndex(questions.length);
     setSelectTypeFeild(true);
@@ -74,12 +73,6 @@ function EditorWrapperComponent({
       prev.map((item, i) => (i === index ? { ...item, open: false } : item))
     );
   }
-
-  //   function expandCloseAll() {
-  //     setQuestionList((prev) =>
-  //       prev.map((item) => (item ? { ...item, open: false } : item))
-  //     );
-  //   }
 
   function handleExpand(idx) {
     setQuestionList((prev) =>
@@ -179,7 +172,6 @@ function EditorWrapperComponent({
       handleScaleOptionValue={handleScaleOptionValue}
       addNextQuestionField={addNextQuestionField}
       selectTypeFeild={selectTypeFeild}
-      // saveFormField={saveFormField}
     />
   );
 }
