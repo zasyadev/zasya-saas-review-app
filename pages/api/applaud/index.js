@@ -51,7 +51,7 @@ async function handle(req, res) {
             userData?.UserDetails &&
             userData?.UserDetails?.notification &&
             userData?.UserDetails?.notification?.length &&
-            userData?.UserDetails?.notification.include("slack")
+            userData?.UserDetails?.notification.includes("slack")
           ) {
             if (userData.UserDetails.slack_id) {
               let customText = CustomizeSlackMessage({
@@ -81,6 +81,7 @@ async function handle(req, res) {
           .json({ error: "error", message: "User Not Found" });
       }
     } catch (error) {
+      console.log(error);
       return res
         .status(500)
         .json({ error: error, message: "Internal Server Error" });

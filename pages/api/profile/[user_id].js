@@ -1,4 +1,3 @@
-import { SlackUserList } from "../../../helpers/slackHelper";
 import prisma from "../../../lib/prisma";
 
 export default async (req, res) => {
@@ -83,7 +82,7 @@ export default async (req, res) => {
             }
           );
           prisma.$disconnect();
-          console.log(transactionData, "transactionData");
+
           if (transactionData.userDeatilsTable) {
             return res.status(201).json({
               message: "Profile Updated Successfully",

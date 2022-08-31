@@ -2,6 +2,7 @@ import Chart from "react-apexcharts";
 import { Skeleton } from "antd";
 import React, { useState, useEffect } from "react";
 import httpService from "../../lib/httpService";
+import CustomPopover from "./CustomPopover";
 
 const defaultChartSeries = {
   name: "Feedback",
@@ -138,7 +139,14 @@ const BarChart = ({ user }) => {
     <div
     // className=" bg-blur-overlay"
     >
-      <p className="chart-title text-primary">Feedback</p>
+      <p className="chart-title text-primary flex items-center">
+        Feedback{" "}
+        <span className="leading-[0] ml-2">
+          {CustomPopover(
+            "Count of Feedback given by the organization monthly."
+          )}
+        </span>
+      </p>
       {loading ? (
         <>
           {" "}

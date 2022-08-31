@@ -26,6 +26,7 @@ import {
 } from "../../component/common/CustomButton";
 import ImgCrop from "antd-img-crop";
 import httpService from "../../lib/httpService";
+import CustomPopover from "../common/CustomPopover";
 
 const datePattern = "DD/MM/YYYY";
 
@@ -182,6 +183,7 @@ function Profile({ user }) {
   const [editMode, setEditMode] = useState(false);
   const [organizationModal, setOrganizationModal] = useState(false);
   const [userDetails, setUserDetails] = useState({});
+  const [applaudLimit, setApplaudLimit] = useState(0);
   const [receivedApplaudList, setReceivedApplaudList] = useState([]);
   const [givenApplaudList, setGivenApplaudList] = useState([]);
   const [image, setImage] = useState([]);
@@ -283,29 +285,13 @@ function Profile({ user }) {
     }
   };
 
-  const fetchReceivedApplaud = async () => {
-    setReceivedApplaudList([]);
-
-    await httpService
-      .post(`/api/applaud/${user.id}`, {
-        user: user.id,
-      })
-      .then(({ data: res }) => {
-        setReceivedApplaudList(res.data);
-      })
-      .catch((err) => {
-        setReceivedApplaudList([]);
-        console.error(err.response.data.message);
-      });
-  };
-
-  async function fetchGivenApplaud() {
+  async function fetchApplaudData() {
     setGivenApplaudList([]);
-    await fetch("/api/applaud/" + user.id, { method: "GET" });
     await httpService
       .get(`/api/applaud/${user.id}`)
       .then(({ data: res }) => {
-        setGivenApplaudList(res.data);
+        setGivenApplaudList(res.data.givenApplaud);
+        setReceivedApplaudList(res.data.receivedApplaud);
       })
       .catch((err) => {
         setGivenApplaudList([]);
@@ -315,8 +301,7 @@ function Profile({ user }) {
 
   useEffect(() => {
     getProfileData();
-    fetchReceivedApplaud();
-    fetchGivenApplaud();
+    fetchApplaudData();
     if (user.role_id === 2) fetchOrgData();
   }, []);
 
@@ -404,6 +389,7 @@ source=LinkedIn`);
           orgForm.setFieldsValue({
             applaud_count: response.data.organization.applaud_count ?? 0,
           });
+          setApplaudLimit(response.data.organization.applaud_count);
         }
       })
       .catch((err) => {
@@ -697,6 +683,27 @@ source=LinkedIn`);
                       </a>
                     </Link>
                   </div>
+                  {user.role_id === 2 && user.organization_id ? (
+                    <div className="m-2">
+                      <p className="text-base font-semibold mb-1 flex items-center">
+                        Applaud Limit
+                        <span className="leading-[0] ml-2">
+                          {CustomPopover(
+                            "Count of Applauds that can be given by members in a month."
+                          )}
+                        </span>
+                      </p>
+                      <p className="text-base font-normal mb-1 flex items-center justify-between">
+                        {applaudLimit}{" "}
+                        <span
+                          onClick={() => setOrganizationModal(true)}
+                          className="font-semibold cursor-pointer"
+                        >
+                          Edit{" "}
+                        </span>
+                      </p>
+                    </div>
+                  ) : null}
                 </div>
               </div>
             </Col>
@@ -715,7 +722,6 @@ source=LinkedIn`);
                               <Row gutter={8}>
                                 <Col md={6} xs={6}>
                                   <div className=" w-14">
-                                    {/* <Image src={userImage} alt="userImage" /> */}
                                     <Image
                                       src={
                                         item?.created?.UserDetails?.image
@@ -767,16 +773,6 @@ source=LinkedIn`);
                   : null}
               </div>
             </Col>
-            {user.role_id === 2 && user.organization_id ? (
-              <Col md={6} xs={24}>
-                <SecondaryButton
-                  withLink={false}
-                  onClick={() => setOrganizationModal(true)}
-                  className="text-md px-8 rounded-md w-full"
-                  title="Edit Organization Data"
-                />
-              </Col>
-            ) : null}
           </Row>
         </div>
       )}

@@ -6,7 +6,7 @@ async function handle(req, res) {
 
   if (req.method === "GET") {
     if (userId) {
-      const data = await prisma.userApplaud.findMany({
+      const givenData = await prisma.userApplaud.findMany({
         orderBy: [
           {
             created_date: "desc",
@@ -37,20 +37,12 @@ async function handle(req, res) {
         },
       });
 
-      prisma.$disconnect();
-      if (data) {
-        return res.status(200).json({
-          status: 200,
-          data: data,
-          message: "Applaud Data Received",
-        });
-      }
-
-      return res.status(404).json({ status: 404, message: "No Record Found" });
-    }
-  } else if (req.method === "POST") {
-    if (userId) {
-      const data = await prisma.userApplaud.findMany({
+      const receivedData = await prisma.userApplaud.findMany({
+        orderBy: [
+          {
+            created_date: "desc",
+          },
+        ],
         where: { user_id: userId },
         include: {
           user: {
@@ -77,10 +69,89 @@ async function handle(req, res) {
       });
 
       prisma.$disconnect();
-      if (data) {
+      if (receivedData && givenData) {
         return res.status(200).json({
           status: 200,
-          data: data,
+          data: {
+            receivedApplaud: receivedData,
+            givenApplaud: givenData,
+          },
+          message: "Applaud Data Received",
+        });
+      }
+
+      return res.status(404).json({ status: 404, message: "No Record Found" });
+    }
+  } else if (req.method === "POST") {
+    const { currentMonth } = req.body;
+    if (userId) {
+      const receivedData = await prisma.userApplaud.findMany({
+        where: { AND: [{ user_id: userId }, { created_date: currentMonth }] },
+        include: {
+          user: {
+            select: {
+              first_name: true,
+              UserDetails: {
+                select: {
+                  image: true,
+                },
+              },
+            },
+          },
+          created: {
+            select: {
+              first_name: true,
+              UserDetails: {
+                select: {
+                  image: true,
+                },
+              },
+            },
+          },
+        },
+      });
+
+      const givenData = await prisma.userApplaud.findMany({
+        orderBy: [
+          {
+            created_date: "desc",
+          },
+        ],
+        where: {
+          AND: [{ created_by: userId }, { created_date: currentMonth }],
+        },
+        include: {
+          user: {
+            select: {
+              first_name: true,
+              UserDetails: {
+                select: {
+                  image: true,
+                },
+              },
+            },
+          },
+          created: {
+            select: {
+              first_name: true,
+              UserDetails: {
+                select: {
+                  image: true,
+                },
+              },
+            },
+          },
+        },
+      });
+
+      prisma.$disconnect();
+      if (receivedData && givenData) {
+        return res.status(200).json({
+          status: 200,
+          data: {
+            receivedApplaud: receivedData,
+            givenApplaud: givenData,
+          },
           message: "Data Received",
         });
       }

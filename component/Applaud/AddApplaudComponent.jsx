@@ -1,4 +1,4 @@
-import { Col, Form, Row, Select, Tooltip } from "antd";
+import { Col, Form, Row, Select } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
@@ -8,6 +8,7 @@ import {
   SecondaryButton,
 } from "../../component/common/CustomButton";
 import httpService from "../../lib/httpService";
+import CustomPopover from "../common/CustomPopover";
 
 function AddApplaud({ user }) {
   const router = useRouter();
@@ -169,7 +170,16 @@ function AddApplaud({ user }) {
                 <Col md={24} xs={24}>
                   <Form.Item
                     name="category"
-                    label="Category"
+                    label={
+                      <p className="flex items-center">
+                        Category{" "}
+                        <span className="leading-[0] ml-2">
+                          {CustomPopover(
+                            "Category that can  define your applaud. Hover over them to see details"
+                          )}
+                        </span>
+                      </p>
+                    }
                     rules={[
                       {
                         required: true,
@@ -177,20 +187,20 @@ function AddApplaud({ user }) {
                     ]}
                   >
                     <Select
+                      mode="multiple"
                       size="large"
-                      mode="tags"
-                      placeholder="Tags"
+                      placeholder="Category"
                       className="select-tag tag-select-box"
                     >
                       {categoryList.length > 0 &&
                         categoryList.map((item, idx) => {
                           return (
                             <Select.Option
-                              key={idx + "tags"}
+                              key={idx + "category"}
                               value={item.name}
                               title={item.about}
                             >
-                              {item.name}
+                              <span title={item.about}>{item.name}</span>
                             </Select.Option>
                           );
                         })}

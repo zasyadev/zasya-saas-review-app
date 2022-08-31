@@ -1,4 +1,4 @@
-import { Col, Row, Skeleton } from "antd";
+import { Col, DatePicker, Row, Skeleton } from "antd";
 
 import React, { useState, useEffect } from "react";
 import CustomTable from "../../component/common/CustomTable";
@@ -7,27 +7,17 @@ import { CalanderIcon, CommentIcons, UserIcon } from "../../assets/Icon/icons";
 import { PrimaryButton } from "../../component/common/CustomButton";
 import httpService from "../../lib/httpService";
 import { openNotificationBox } from "../common/notification";
+import CustomPopover from "../common/CustomPopover";
 
 function Applaud({ user }) {
   const [applaudList, setApplaudList] = useState([]);
   const [receivedApplaudList, setReceivedApplaudList] = useState([]);
 
   const [loading, setLoading] = useState(false);
-
-  async function fetchApplaud() {
-    setLoading(true);
-
-    await httpService
-      .get(`/api/applaud/${user.id}`)
-      .then(({ data: res }) => {
-        setApplaudList(res.data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        openNotificationBox("error", err.response.data.message);
-        setApplaudList([]);
-      });
-  }
+  const [currentMonth, setCurrentMonth] = useState({
+    lte: moment().endOf("month"),
+    gte: moment().startOf("month"),
+  });
 
   // const onUpdate = (data) => {
   //   setEditMode(true);
@@ -40,16 +30,19 @@ function Applaud({ user }) {
   // };
 
   useEffect(() => {
-    fetchApplaud();
-    fetchReceivedApplaud();
-  }, []);
+    // fetchApplaud();
+    fetchApplaudData();
+  }, [currentMonth]);
 
-  const fetchReceivedApplaud = async () => {
+  const fetchApplaudData = async () => {
     setReceivedApplaudList([]);
     await httpService
-      .post(`/api/applaud/${user.id}`)
+      .post(`/api/applaud/${user.id}`, {
+        currentMonth: currentMonth,
+      })
       .then(({ data: res }) => {
-        setReceivedApplaudList(res.data);
+        setReceivedApplaudList(res.data.receivedApplaud);
+        setApplaudList(res.data.givenApplaud);
       })
       .catch((err) => {
         openNotificationBox("error", err.response.data.message);
@@ -89,11 +82,28 @@ function Applaud({ user }) {
     // },
   ];
 
+  function onDateChange(date, _) {
+    setCurrentMonth({
+      lte: moment(date).endOf("month"),
+      gte: moment(date).startOf("month"),
+    });
+  }
+
   return (
     <div>
       <div className="px-3 md:px-8 h-auto mt-5">
         <div className="container mx-auto max-w-full">
           <div className="flex justify-end">
+            <div className="bg-white rounded-md overflow-hidden shadow-md  py-2 px-4 mt-2 h-12">
+              <DatePicker
+                onChange={onDateChange}
+                picker="month"
+                bordered={false}
+                allowClear={false}
+                format="MMMM"
+                defaultValue={moment()}
+              />
+            </div>
             <div className="my-3 mx-3 ">
               <div>
                 <PrimaryButton
@@ -112,8 +122,13 @@ function Applaud({ user }) {
                 <div className=" bg-white rounded-xl overflow-hdden shadow-md my-3">
                   <div className="p-4 ">
                     <div className="overflow-x-auto">
-                      <p className="font-semibold text-lg primary-color-blue">
+                      <p className="font-semibold text-lg primary-color-blue flex items-center">
                         Received Applaud
+                        <span className="leading-[0] ml-2">
+                          {CustomPopover(
+                            "Applauds given to you by your team members."
+                          )}
+                        </span>
                       </p>
                       <div className="received-applaud-table">
                         {receivedApplaudList.length > 0 ? (
@@ -182,8 +197,13 @@ function Applaud({ user }) {
                     <div className="w-full bg-white rounded-xl overflow-hdden shadow-md my-3">
                       <div className="p-4 ">
                         <div className="overflow-x-auto">
-                          <p className="font-semibold text-lg primary-color-blue">
+                          <p className="font-semibold text-lg primary-color-blue flex items-center">
                             Applaud Given
+                            <span className="leading-[0] ml-2">
+                              {CustomPopover(
+                                "Applauds given by you to your team members."
+                              )}
+                            </span>
                           </p>
                           {loading ? (
                             <Skeleton

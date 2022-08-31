@@ -124,7 +124,7 @@ export default async (req, res) => {
               user.userData?.UserDetails &&
               user.userData?.UserDetails?.notification &&
               user.userData?.UserDetails?.notification?.length &&
-              user.userData?.UserDetails?.notification.include("mail")
+              user.userData?.UserDetails?.notification.includes("mail")
             ) {
               const mailData = {
                 from: process.env.SMTP_USER,
@@ -160,7 +160,7 @@ export default async (req, res) => {
               user.userData?.UserDetails &&
               user.userData?.UserDetails?.notification &&
               user.userData?.UserDetails?.notification?.length &&
-              user.userData?.UserDetails?.notification.include("slack")
+              user.userData?.UserDetails?.notification.includes("slack")
             ) {
               if (user.UserDetails.slack_id) {
                 let customText = CustomizeSlackMessage({
