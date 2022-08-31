@@ -1,6 +1,5 @@
 import prisma from "../../../lib/prisma";
 import { mailService, mailTemplate } from "../../../lib/emailservice";
-// import { ReviewScheduler } from "../../../helpers/schedulerHelper";
 import {
   CustomizeSlackMessage,
   SlackPostMessage,
@@ -84,26 +83,6 @@ export default async (req, res) => {
               data: dataObj,
             });
 
-            // if (
-            //   savedData &&
-            //   savedData.frequency != "once" &&
-            //   resData.assigned_to_id.length > 0
-            // ) {
-            //   ReviewScheduler({
-            //     reviewData: savedData,
-            //     asigneeList: resData.assigned_to_id,
-            //   });
-
-            //   let scheduleData = await transaction.scheduleJobs.create({
-            //     data: {
-            //       review: { connect: { id: savedData.id } },
-            //       assignee_list: resData.assigned_to_id,
-            //       schedule_created_date: savedData.created_date,
-            //       status: true,
-            //     },
-            //   });
-            // }
-
             return { savedData };
           } else {
             let newAssignData = [];
@@ -141,19 +120,26 @@ export default async (req, res) => {
               },
             });
 
-            const mailData = {
-              from: process.env.SMTP_USER,
-              to: user.email,
-              subject: `New review assigned by ${assignedFromData.first_name}`,
-              html: mailTemplate(
-                `${assignedFromData.first_name} has assigned you new review , please <a href= ${process.env.NEXT_APP_URL}review/id/${assigneeData.id}>click here </a> to help them now.`
-              ),
-            };
+            if (
+              user.userData?.UserDetails &&
+              user.userData?.UserDetails?.notification &&
+              user.userData?.UserDetails?.notification?.length &&
+              user.userData?.UserDetails?.notification.include("mail")
+            ) {
+              const mailData = {
+                from: process.env.SMTP_USER,
+                to: user.email,
+                subject: `New review assigned by ${assignedFromData.first_name}`,
+                html: mailTemplate(
+                  `${assignedFromData.first_name} has assigned you new review , please <a href= ${process.env.NEXT_APP_URL}review/id/${assigneeData.id}>click here </a> to help them now.`
+                ),
+              };
 
-            await mailService.sendMail(mailData, function (err, info) {
-              if (err) console.log("failed");
-              else console.log("successfull");
-            });
+              await mailService.sendMail(mailData, function (err, info) {
+                if (err) console.log("failed");
+                else console.log("successfull");
+              });
+            }
 
             let notificationMessage = {
               message: `${assignedFromData.first_name} has assigned you New Review.`,
@@ -170,19 +156,25 @@ export default async (req, res) => {
                 },
               },
             });
-
-            if (user.UserDetails && user.UserDetails.slack_id) {
-              let customText = CustomizeSlackMessage({
-                header: "New Review Recieved",
-                user: assignedFromData.first_name ?? "",
-                link: `${process.env.NEXT_APP_URL}review/id/${assigneeData.id}`,
-                by: "Review Assigned By",
-              });
-              SlackPostMessage({
-                channel: user.UserDetails.slack_id,
-                text: `${assignedFromData.first_name} has assigned you New Review.`,
-                blocks: customText,
-              });
+            if (
+              user.userData?.UserDetails &&
+              user.userData?.UserDetails?.notification &&
+              user.userData?.UserDetails?.notification?.length &&
+              user.userData?.UserDetails?.notification.include("slack")
+            ) {
+              if (user.UserDetails.slack_id) {
+                let customText = CustomizeSlackMessage({
+                  header: "New Review Recieved",
+                  user: assignedFromData.first_name ?? "",
+                  link: `${process.env.NEXT_APP_URL}review/id/${assigneeData.id}`,
+                  by: "Review Assigned By",
+                });
+                SlackPostMessage({
+                  channel: user.UserDetails.slack_id,
+                  text: `${assignedFromData.first_name} has assigned you New Review.`,
+                  blocks: customText,
+                });
+              }
             }
           });
         }
@@ -252,10 +244,7 @@ export default async (req, res) => {
     }
   } else if (req.method === "PUT") {
     try {
-      // schedule.gracefulShutdown();
       const resData = req.body;
-
-      // reviewJob = schedule.scheduledJobs[resData.id];
 
       const updateReview = await prisma.review.update({
         where: { id: resData.id },
@@ -269,38 +258,36 @@ export default async (req, res) => {
           message: "Review Frequency Changed!",
           status: 200,
         });
-      }
-      // reviewJob.cancel();
-      else {
+      } else {
         return res.status(400).json({
           message: "Frequency Not Changed!",
           status: 400,
         });
       }
 
-      let assigneeData = resData.assigned_to_id.map((item) => {
-        return {
-          assigned_to_id: item,
-        };
-      });
+      // let assigneeData = resData.assigned_to_id.map((item) => {
+      //   return {
+      //     assigned_to_id: item,
+      //   };
+      // });
 
-      const data = await prisma.review.update({
-        where: { id: resData.id },
-        data: {
-          created_by: resData.review_assigned_by,
-          is_published: resData.is_published,
-          ReviewAssignee: {
-            create: assigneeData,
-          },
-        },
-      });
-      prisma.$disconnect();
+      // const data = await prisma.review.update({
+      //   where: { id: resData.id },
+      //   data: {
+      //     created_by: resData.review_assigned_by,
+      //     is_published: resData.is_published,
+      //     ReviewAssignee: {
+      //       create: assigneeData,
+      //     },
+      //   },
+      // });
+      // prisma.$disconnect();
 
-      return res.status(200).json({
-        message: "Assign Updated Successfully.",
-        status: 200,
-        data: data,
-      });
+      // return res.status(200).json({
+      //   message: "Assign Updated Successfully.",
+      //   status: 200,
+      //   data: data,
+      // });
     } catch (error) {
       return res
         .status(500)
@@ -316,10 +303,6 @@ export default async (req, res) => {
 
         prisma.$disconnect();
         if (deletaData) {
-          // reviewJob = schedule.scheduledJobs[reqBody.id];
-          // if (reviewJob) {
-          //   reviewJob.cancel();
-          // }
           return res.status(200).json({
             status: 200,
             message: "Assign Review Deleted Successfully.",

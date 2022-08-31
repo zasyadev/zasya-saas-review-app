@@ -43,23 +43,6 @@ export default async (req, res) => {
                   first_name: reqBody.first_name,
                 },
               });
-              let slackUserList = await SlackUserList();
-
-              let valid_slack_email = "";
-              let valid_slack_id = "";
-
-              if (reqBody.slack_email && slackUserList.length) {
-                let slackDetails = slackUserList.find((item) =>
-                  item.profile.email
-                    ? item.profile.email == reqBody.slack_email
-                    : false
-                );
-
-                if (slackDetails) {
-                  valid_slack_email = slackDetails.profile.email;
-                  valid_slack_id = slackDetails.id;
-                }
-              }
 
               const userDetailData = await transaction.userDetails.findUnique({
                 where: { user_id: user_id },
@@ -73,9 +56,8 @@ export default async (req, res) => {
                   about: reqBody.about ?? "",
                   pin_code: reqBody.pin_code ?? "",
                   mobile: reqBody.mobile ?? "",
-                  slack_email: valid_slack_email,
-                  slack_id: valid_slack_id,
                   image: reqBody.imageName ?? "",
+                  notification: reqBody.notification ?? [],
                 };
 
                 userDeatilsTable = await transaction.userDetails.update({

@@ -1,5 +1,15 @@
 import React, { useState } from "react";
-import { Modal, Form, Input, Col, Row, Upload, message, Skeleton } from "antd";
+import {
+  Modal,
+  Form,
+  Input,
+  Col,
+  Row,
+  Upload,
+  message,
+  Skeleton,
+  Checkbox,
+} from "antd";
 import { useEffect } from "react";
 import { openNotificationBox } from "../../component/common/notification";
 import Image from "next/image";
@@ -26,6 +36,17 @@ const getSrcFromFile = (file) => {
     reader.onload = () => resolve(reader.result);
   });
 };
+
+const notificationOptions = [
+  {
+    label: "Mail",
+    value: "mail",
+  },
+  {
+    label: "Slack",
+    value: "slack",
+  },
+];
 
 const BASE = process.env.NEXT_PUBLIC_APP_URL;
 const ImageUpload = ({
@@ -226,6 +247,7 @@ function Profile({ user }) {
             address2: response.data.address2 ?? "",
             mobile: response.data.mobile ?? "",
             pin_code: response.data.pin_code ?? "",
+            notification: response.data.notification ?? [],
           });
           slackForm.setFieldsValue({
             slack_email: response.data.slack_email ?? "",
@@ -438,6 +460,9 @@ source=LinkedIn`);
                       layout="vertical"
                       onFinish={onFinish}
                       validateMessages={validateMessages}
+                      initialValues={{
+                        notification: ["mail"],
+                      }}
                     >
                       <Row gutter={16} justify="center">
                         <Col md={4} xs={24}>
@@ -533,6 +558,19 @@ source=LinkedIn`);
                                   placeholder="About You"
                                   className="bg-gray-100 h-12 rounded-md"
                                 />
+                              </Form.Item>
+                            </Col>
+                            <Col md={24} sm={24} xs={24}>
+                              <Form.Item
+                                label="Notification Method "
+                                name="notification"
+                                rules={[
+                                  {
+                                    required: true,
+                                  },
+                                ]}
+                              >
+                                <Checkbox.Group options={notificationOptions} />
                               </Form.Item>
                             </Col>
                           </Row>

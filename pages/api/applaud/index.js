@@ -47,20 +47,26 @@ async function handle(req, res) {
               },
             },
           });
-
-          if (userData.UserDetails && userData.UserDetails.slack_id) {
-            let customText = CustomizeSlackMessage({
-              header: "New Applaud Recieved",
-              user: createdData.first_name ?? "",
-              link: `${process.env.NEXT_APP_URL}applaud`,
-              by: "Applauded By",
-              text: reqBody.comment,
-            });
-            SlackPostMessage({
-              channel: userData.UserDetails.slack_id,
-              text: `${createdData.first_name ?? ""} has applauded you`,
-              blocks: customText,
-            });
+          if (
+            userData?.UserDetails &&
+            userData?.UserDetails?.notification &&
+            userData?.UserDetails?.notification?.length &&
+            userData?.UserDetails?.notification.include("slack")
+          ) {
+            if (userData.UserDetails.slack_id) {
+              let customText = CustomizeSlackMessage({
+                header: "New Applaud Recieved",
+                user: createdData.first_name ?? "",
+                link: `${process.env.NEXT_APP_URL}applaud`,
+                by: "Applauded By",
+                text: reqBody.comment,
+              });
+              SlackPostMessage({
+                channel: userData.UserDetails.slack_id,
+                text: `${createdData.first_name ?? ""} has applauded you`,
+                blocks: customText,
+              });
+            }
           }
         }
 
