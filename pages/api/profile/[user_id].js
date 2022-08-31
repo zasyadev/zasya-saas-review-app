@@ -74,6 +74,7 @@ export default async (req, res) => {
                     about: reqBody.about ?? "",
                     pin_code: reqBody.pin_code ?? "",
                     mobile: reqBody.mobile ?? "",
+                    notification: reqBody.notification ?? [],
                   },
                 });
               }
@@ -82,6 +83,7 @@ export default async (req, res) => {
             }
           );
           prisma.$disconnect();
+          console.log(transactionData, "transactionData");
           if (transactionData.userDeatilsTable) {
             return res.status(201).json({
               message: "Profile Updated Successfully",
