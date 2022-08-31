@@ -4,6 +4,7 @@ import AdminLayout from "../../../component/layout/AdminLayout";
 import { getSession } from "next-auth/client";
 import AddTeamComponent from "../../../component/Team/AddTeamComponent";
 import { useRouter } from "next/router";
+import httpService from "../../../lib/httpService";
 
 function EditTeam({ user }) {
   const router = useRouter();
@@ -13,21 +14,19 @@ function EditTeam({ user }) {
   async function fetchTeamData(id) {
     // setLoading(true);
     setMemberData([]);
-    await fetch("/api/team/edit/" + id, {
-      method: "POST",
-      body: JSON.stringify({
+
+    await httpService
+      .post(`/api/team/edit/${id}`, {
         org_user: user.id,
-      }),
-    })
-      .then((response) => response.json())
-      .then((response) => {
+      })
+      .then(({ data: response }) => {
         if (response.status === 200) {
           setMemberData(response.data);
         }
         // setLoading(false);
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err.response.data.message);
         setMemberData([]);
       });
   }

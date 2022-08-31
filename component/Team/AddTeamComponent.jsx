@@ -1,10 +1,12 @@
 import { Col, Form, Input, Row, Select } from "antd";
-
-import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { openNotificationBox } from "../../helpers/notification";
-import { PrimaryButton, SecondaryButton } from "../../helpers/CustomButton";
+import { openNotificationBox } from "../../component/common/notification";
+import {
+  PrimaryButton,
+  SecondaryButton,
+} from "../../component/common/CustomButton";
+import httpService from "../../lib/httpService";
 
 function AddTeamComponent({ user, editMode, memberData }) {
   const router = useRouter();
@@ -21,38 +23,27 @@ function AddTeamComponent({ user, editMode, memberData }) {
   }
   async function addingMember(obj) {
     (obj.status = 0),
-      await fetch("/api/team/members", {
-        method: "POST",
-        body: JSON.stringify(obj),
-        // headers: {
-        //   "Content-Type": "application/json",
-        // },
-      })
-        .then((response) => response.json())
-        .then((response) => {
+      await httpService
+        .post(`/api/team/members`, obj)
+        .then(({ data: response }) => {
           if (response.status === 200) {
             form.resetFields();
             openNotificationBox("success", response.message, 3);
             router.push("/team/members");
-          } else {
-            openNotificationBox("error", response.message, 3);
           }
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          console.error(err.response.data.message);
+          openNotificationBox("error", err.response.data.message, 3);
+        });
   }
   async function updatingMember(obj) {
     if (memberData.id) {
       // (obj.tag_id = memberData?.UserTags?.id), 0;
       (obj.status = 1),
-        await fetch("/api/team/members", {
-          method: "PUT",
-          body: JSON.stringify(obj),
-          // headers: {
-          //   "Content-Type": "application/json",
-          // },
-        })
-          .then((response) => response.json())
-          .then((response) => {
+        await httpService
+          .put(`/api/team/members`, obj)
+          .then(({ data: response }) => {
             if (response.status === 200) {
               form.resetFields();
 
@@ -62,24 +53,26 @@ function AddTeamComponent({ user, editMode, memberData }) {
               openNotificationBox("error", response.message, 3);
             }
           })
-          .catch((err) => console.log(err));
+          .catch((err) => {
+            console.error(err.response.data.message);
+            openNotificationBox("error", err.response.data.message);
+          });
     }
   }
 
   async function fetchTagsData() {
     if (user.id) {
-      await fetch("/api/team/tags/" + user.id, {
-        method: "GET",
-      })
-        .then((response) => response.json())
-        .then((response) => {
+      await httpService
+        .get(`/api/team/tags/${user.id}`)
+        .then(({ data: response }) => {
           if (response.status === 200) {
             setTagsList(response.data);
-          } else {
-            setTagsList([]);
           }
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          console.error(err.response.data.message);
+          setTagsList([]);
+        });
     }
   }
 
@@ -223,7 +216,7 @@ function AddTeamComponent({ user, editMode, memberData }) {
                       title="Cancel"
                     />
                     <PrimaryButton
-                      onClick={() => addMoreQuestionField()}
+                      btnProps={{ htmlType: "submit" }}
                       className=" my-1 rounded "
                       title={editMode ? "Update" : "Create"}
                     />

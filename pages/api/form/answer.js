@@ -4,7 +4,7 @@ import { mailService, mailTemplate } from "../../../lib/emailservice";
 export default async (req, res) => {
   if (req.method === "POST") {
     try {
-      const resData = JSON.parse(req.body);
+      const resData = req.body;
 
       // console.log(resData, "resData");
       // return;
@@ -58,6 +58,7 @@ export default async (req, res) => {
         where: {
           review_id: resData.review_id,
           assigned_to_id: resData.user_id,
+          id: resData.review_assignee_id,
         },
       });
       const UpdateAssignee = await prisma.reviewAssignee.update({

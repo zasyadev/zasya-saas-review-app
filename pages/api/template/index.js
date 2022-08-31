@@ -3,7 +3,7 @@ import prisma from "../../../lib/prisma";
 export default async (req, res) => {
   if (req.method === "POST") {
     try {
-      const resData = JSON.parse(req.body);
+      const resData = req.body;
 
       const templateData = await prisma.reviewTemplate.create({
         data: {
@@ -51,7 +51,7 @@ export default async (req, res) => {
     }
   } else if (req.method === "PUT") {
     try {
-      const resData = JSON.parse(req.body);
+      const resData = req.body;
       // console.log(resData, "resData");
       // return;
 
@@ -83,7 +83,7 @@ export default async (req, res) => {
         .json({ error: error, message: "Internal Server Error" });
     }
   } else if (req.method === "DELETE") {
-    const reqBody = JSON.parse(req.body);
+    const reqBody = req.body;
 
     if (reqBody.id) {
       const deletaData = await prisma.reviewTemplate.update({

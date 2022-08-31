@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 // import AdminLayout from "../../../component/layout/AdminLayout";
 import { getSession } from "next-auth/client";
 import ReceivedReviewComponent from "../../../component/Review/ReceivedReviewComponent";
-import { HeadersComponent } from "../../../helpers/HeadersComponent";
+import { HeadersComponent } from "../../../component/common/HeadersComponent";
 
 function ReceivedPage({ user }) {
   const router = useRouter();
@@ -23,7 +23,7 @@ export async function getServerSideProps(context) {
   if (!session) {
     return {
       redirect: {
-        destination: "/",
+        destination: "/auth/login?back_url=/review/received",
         permanent: false,
       },
     };

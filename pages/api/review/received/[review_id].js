@@ -2,7 +2,7 @@ import prisma from "../../../../lib/prisma";
 
 export default async (req, res) => {
   const { review_id } = req.query;
-  const { userId } = JSON.parse(req.body);
+  const { userId } = req.body;
 
   try {
     if (req.method === "POST") {

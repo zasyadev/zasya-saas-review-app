@@ -2,7 +2,7 @@ import prisma from "../../../../lib/prisma";
 
 export default async (req, res) => {
   const { review_id } = req.query;
-  const { userId } = JSON.parse(req.body);
+  const { userId } = req.body;
 
   try {
     if (req.method === "POST") {
@@ -32,6 +32,10 @@ export default async (req, res) => {
         return res
           .status(404)
           .json({ status: 404, message: "No Record Found" });
+      } else {
+        return res.status(402).json({
+          message: "User Not Found",
+        });
       }
     } else {
       return res.status(405).json({

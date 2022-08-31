@@ -11,10 +11,11 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import User from "../../assets/images/User.png";
-import { Avatar, Col, Dropdown, Layout, Menu, Row, Badge } from "antd";
+import { Avatar, Dropdown, Layout, Menu, Row, Badge } from "antd";
 import { signOut } from "next-auth/client";
 import { useRouter } from "next/router";
-import { openNotificationBox } from "../../helpers/notification";
+import { openNotificationBox } from "../../component/common/notification";
+import httpService from "../../lib/httpService";
 
 const { Header } = Layout;
 
@@ -37,12 +38,9 @@ function HeaderLayout({
   };
 
   const changeOragnizationHandle = async (values) => {
-    await fetch("/api/user/changeOrgId/" + user.id, {
-      method: "POST",
-      body: JSON.stringify({ org_id: values }),
-    })
-      .then((response) => response.json())
-      .then((response) => {
+    await httpService
+      .post(`/api/user/changeOrgId/${user.id}`, { org_id: values })
+      .then(({ data: response }) => {
         if (response.status === 200) {
           fetchUserData();
           openNotificationBox("success", response.message, 3);
@@ -50,16 +48,15 @@ function HeaderLayout({
         }
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err.response.data.message);
       });
   };
   const notificationHandle = async () => {
     setAllNotification([]);
-    await fetch("/api/notification/" + user.id, {
-      method: "GET",
-    })
-      .then((response) => response.json())
-      .then((response) => {
+
+    await httpService
+      .get(`/api/notification/${user.id}`)
+      .then(({ data: response }) => {
         if (response.status === 200) {
           setAllNotification(response.data);
           let filterData = response.data.filter((item) => !item.read_at);
@@ -67,31 +64,28 @@ function HeaderLayout({
         }
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err.response.data.message);
       });
   };
 
   const notificationViewed = async (data) => {
-    await fetch("/api/notification", {
-      method: "POST",
-      body: JSON.stringify({
+    await httpService
+      .post(`/api/notification`, {
         id: data,
-      }),
-    })
-      .then((response) => response.json())
-      .then((response) => {
+      })
+      .then(({ data: response }) => {
         if (response.status === 200) {
           // console.log(response, "data");
         }
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err.response.data.message);
       });
   };
 
   useEffect(() => {
     if (user) {
-      fetchUserData();
+      // fetchUserData();
       notificationHandle();
     }
   }, []);

@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import AdminLayout from "../../component/layout/AdminLayout";
 import { getSession } from "next-auth/client";
 import ReviewCreatedComponent from "../../component/Review/ReviewCreatedComponent";
-import { Col, Row } from "antd";
+import httpService from "../../lib/httpService";
 
 function ReviewCreated({ user }) {
   const router = useRouter();
@@ -14,26 +14,25 @@ function ReviewCreated({ user }) {
   const fetchReviewData = async (user, reviewId) => {
     setLoading(true);
     setReviewData({});
-    await fetch("/api/review/created/" + reviewId, {
-      method: "POST",
-      body: JSON.stringify({
+
+    await httpService
+      .post(`/api/review/created/${reviewId}`, {
         userId: user.id,
-      }),
-    })
-      .then((response) => response.json())
-      .then((response) => {
+      })
+      .then(({ data: response }) => {
         if (response.status === 200) {
           setReviewData(response.data);
         }
         setLoading(false);
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err.response.data.message);
+        setLoading(false);
       });
   };
 
   useEffect(() => {
-    if (user && review_id) fetchReviewData(user, review_id);
+    if (review_id) fetchReviewData(user, review_id);
     else return;
   }, []);
 

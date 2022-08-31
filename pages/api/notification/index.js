@@ -2,7 +2,7 @@ import prisma from "../../../lib/prisma";
 
 export default async (req, res) => {
   try {
-    const reqBody = JSON.parse(req.body);
+    const reqBody = req.body;
     if (req.method === "POST" && reqBody.id) {
       let data = await prisma.userNotification.update({
         where: { id: reqBody.id },

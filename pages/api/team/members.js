@@ -1,11 +1,11 @@
 import prisma from "../../../lib/prisma";
-import { hashedPassword, randomPassword } from "../../../lib/auth";
+import { hashedPassword } from "../../../lib/auth";
 import { mailService, mailTemplate } from "../../../lib/emailservice";
 
 export default async (req, res) => {
   if (req.method === "POST") {
     try {
-      const resData = JSON.parse(req.body);
+      const resData = req.body;
 
       let existingData = await prisma.user.findUnique({
         where: { email: resData.email },
@@ -86,13 +86,6 @@ export default async (req, res) => {
             data: userobj,
           });
           if (userData.id) {
-            // const savedTagsData = await transaction.userTags.create({
-            //   data: {
-            //     user: { connect: { id: userData.id } },
-            //     tags: resData.tags,
-            //   },
-            // });
-
             let userOrgData = await transaction.userOraganizationGroups.create({
               data: {
                 user: { connect: { id: userData.id } },
@@ -102,6 +95,12 @@ export default async (req, res) => {
                 },
                 status: true,
                 tags: resData.tags,
+              },
+            });
+
+            let userDeatilsTable = await transaction.userDetails.create({
+              data: {
+                user: { connect: { id: userData.id } },
               },
             });
           }
@@ -188,7 +187,7 @@ export default async (req, res) => {
     return;
   } else if (req.method === "PUT") {
     try {
-      const resData = JSON.parse(req.body);
+      const resData = req.body;
 
       let createdUserData = await prisma.user.findUnique({
         where: { id: resData.created_by },
@@ -284,7 +283,7 @@ export default async (req, res) => {
         .json({ error: error, message: "Internal Server Error" });
     }
   } else if (req.method === "DELETE") {
-    const reqBody = JSON.parse(req.body);
+    const reqBody = req.body;
 
     if (reqBody.email) {
       let existingData = await prisma.user.findUnique({

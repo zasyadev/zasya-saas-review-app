@@ -1,12 +1,13 @@
 import React, { useState } from "react";
-import { Form, Input } from "antd";
+import { Form, Input, Spin } from "antd";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import { openNotificationBox } from "../../helpers/notification";
-import { HeadersComponent } from "../../helpers/HeadersComponent";
-import { LoadingSpinner } from "../../component/Loader/LoadingSpinner";
+import { openNotificationBox } from "../../component/common/notification";
+import { HeadersComponent } from "../../component/common/HeadersComponent";
 import AuthWrapper from "../../component/auth/AuthWrapper";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
+import { LoadingOutlined } from "@ant-design/icons";
+import httpService from "../../lib/httpService";
 
 function ResetPassword() {
   const router = useRouter();
@@ -20,25 +21,34 @@ function ResetPassword() {
       token: params.passtoken,
     };
     if (obj.token) {
-      await fetch("/api/user/password/resetpassword", {
-        method: "POST",
-        body: JSON.stringify(obj),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.status === 200) {
-            openNotificationBox("success", data.message, 3);
+      await httpService
+        .post(`/api/user/password/resetpassword`, obj)
+        .then(({ data: response }) => {
+          if (response.status === 200) {
+            openNotificationBox("success", response.message, 3);
 
             resetForm.resetFields();
             router.push("/auth/login");
-          } else {
-            openNotificationBox("error", data.message, 3);
           }
           setLoading(false);
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          console.error(err.response.data.message);
+          openNotificationBox("error", err.response.data.message);
+          setLoading(false);
+        });
     }
   }
+
+  const antIcon = (
+    <LoadingOutlined
+      style={{
+        fontSize: 24,
+        color: "white",
+      }}
+      spin
+    />
+  );
 
   const ResetPasswordComponent = () => {
     return (
@@ -103,8 +113,9 @@ function ResetPassword() {
           <button
             type="submit"
             className="inline-block px-7 py-5  text-white font-medium text-lg leading-snug  rounded shadow-md  hover:shadow-lg  focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out w-full btn-blue h-16"
+            disabled={loading}
           >
-            Submit
+            {loading ? <Spin indicator={antIcon} /> : "Submit"}
           </button>
         </div>
 
@@ -123,14 +134,10 @@ function ResetPassword() {
   return (
     <>
       <HeadersComponent />
-      {loading ? (
-        <LoadingSpinner />
-      ) : (
-        <AuthWrapper
-          FormComponent={ResetPasswordComponent}
-          heading={"Reset Password"}
-        />
-      )}
+      <AuthWrapper
+        FormComponent={ResetPasswordComponent}
+        heading={"Reset Password"}
+      />
     </>
   );
 }

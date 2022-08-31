@@ -1,63 +1,99 @@
-import { Col, Form, Row, Select } from "antd";
+import { Col, Form, Row, Select, Tooltip } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import React, { useState, useEffect } from "react";
-import Link from "next/link";
 import { useRouter } from "next/router";
-import { openNotificationBox } from "../../helpers/notification";
-import { PrimaryButton, SecondaryButton } from "../../helpers/CustomButton";
+import { openNotificationBox } from "../../component/common/notification";
+import {
+  PrimaryButton,
+  SecondaryButton,
+} from "../../component/common/CustomButton";
+import httpService from "../../lib/httpService";
 
 function AddApplaud({ user }) {
   const router = useRouter();
   const [applaudform] = Form.useForm();
   const [membersList, setMembersList] = useState([]);
-  const [updateData, setUpdateData] = useState({});
+  const [categoryList, setCategoryList] = useState([]);
+  const [applaudLimit, setApplaudLimit] = useState(0);
 
   const validateMessages = {
     required: "${label} is required!",
   };
 
   async function fetchMember(user) {
-    await fetch("/api/team/" + user.id, {
-      method: "GET",
-    })
-      .then((res) => res.json())
-      .then((res) => {
-        if (res.status === 200) {
-          let data = res.data.filter((item) => item.user_id != user.id);
-          setMembersList(data);
+    await httpService
+      .get(`/api/team/${user.id}`)
+      .then(({ data }) => {
+        if (data.status === 200) {
+          let filterData = data.data.filter((item) => item.user_id != user.id);
+          setMembersList(filterData);
         }
       })
       .catch((err) => {
-        console.log(err);
+        console.log(err.response.data.message);
+        openNotificationBox("error", err.response.data.message);
         setMembersList([]);
       });
   }
 
-  const onFinish = (values) => {
-    let obj = {
-      user_id: values.user_id,
-      comment: values.comment,
-      created_by: user.id,
-    };
+  async function fetchApplaudLimit(user) {
+    await httpService
+      .post(`/api/applaud/applaudlimit`, {
+        userId: user.id,
+      })
+      .then(({ data }) => {
+        if (data.status === 200) {
+          setApplaudLimit(data);
+        }
+      })
+      .catch((err) => {
+        console.log(err.response.data.message);
+        openNotificationBox("error", err.response.data.message);
+        setApplaudLimit(0);
+      });
+  }
+  async function fetchCategoryList() {
+    await httpService
+      .get(`/api/applaud/category`)
+      .then(({ data }) => {
+        if (data.status === 200) {
+          setCategoryList(data.data);
+        }
+      })
+      .catch((err) => {
+        console.log(err.response.data.message);
+        setCategoryList(0);
+      });
+  }
 
-    addApplaud(obj);
+  const onFinish = (values) => {
+    if (!applaudLimit > 0) {
+      openNotificationBox("error", "Max Limit has been reached to add applaud");
+    } else {
+      let obj = {
+        user_id: values.user_id,
+        comment: values.comment,
+        created_by: user.id,
+        category: values.category,
+      };
+
+      addApplaud(obj);
+    }
   };
 
   async function addApplaud(obj) {
-    await fetch("/api/applaud", {
-      method: "POST",
-      body: JSON.stringify(obj),
-    })
-      .then((response) => response.json())
-      .then((response) => {
+    await httpService
+      .post("/api/applaud", obj)
+      .then(({ data: response }) => {
         if (response.status === 200) {
           openNotificationBox("success", response.message, 3);
           router.push("/applaud");
-        } else {
-          openNotificationBox("error", response.message, 3);
         }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.error(err);
+        openNotificationBox("error", err.response.data.message);
+      });
   }
 
   // async function updateApplaud(obj) {
@@ -84,7 +120,9 @@ function AddApplaud({ user }) {
   // }
 
   useEffect(() => {
-    if (user) fetchMember(user);
+    fetchMember(user);
+    fetchApplaudLimit(user);
+    fetchCategoryList();
   }, []);
 
   return (
@@ -130,6 +168,38 @@ function AddApplaud({ user }) {
 
                 <Col md={24} xs={24}>
                   <Form.Item
+                    name="category"
+                    label="Category"
+                    rules={[
+                      {
+                        required: true,
+                      },
+                    ]}
+                  >
+                    <Select
+                      size="large"
+                      mode="tags"
+                      placeholder="Tags"
+                      className="select-tag tag-select-box"
+                    >
+                      {categoryList.length > 0 &&
+                        categoryList.map((item, idx) => {
+                          return (
+                            <Select.Option
+                              key={idx + "tags"}
+                              value={item.name}
+                              title={item.about}
+                            >
+                              {item.name}
+                            </Select.Option>
+                          );
+                        })}
+                    </Select>
+                  </Form.Item>
+                </Col>
+
+                <Col md={24} xs={24}>
+                  <Form.Item
                     name="comment"
                     label="Comment"
                     rules={[
@@ -153,7 +223,9 @@ function AddApplaud({ user }) {
                     <PrimaryButton
                       className="  my-1 rounded"
                       title="Create"
-                      btnProps={{ htmlType: "submit" }}
+                      btnProps={{
+                        htmlType: "submit",
+                      }}
                     />
                   </div>
                 </Col>

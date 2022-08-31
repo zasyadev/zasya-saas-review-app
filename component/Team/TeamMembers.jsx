@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Row, Col, Skeleton, Popconfirm } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
-import { openNotificationBox } from "../../helpers/notification";
-import CustomTable from "../../helpers/CustomTable";
+import { openNotificationBox } from "../../component/common/notification";
+import CustomTable from "../../component/common/CustomTable";
 import Link from "next/link";
-import { PrimaryButton } from "../../helpers/CustomButton";
+import { PrimaryButton } from "../../component/common/CustomButton";
+import httpService from "../../lib/httpService";
 
 function TeamMembers({ user }) {
   const [loading, setLoading] = useState(false);
@@ -12,37 +13,32 @@ function TeamMembers({ user }) {
 
   async function onDelete(email) {
     if (email) {
-      await fetch("/api/team/members", {
-        method: "DELETE",
-        body: JSON.stringify({
-          email: email,
-          created_by: user.id,
-        }),
-        // headers: {
-        //   "Content-Type": "application/json",
-        // },
-      })
-        .then((response) => response.json())
-        .then((response) => {
+      await httpService
+        .delete(`/api/team/members`, {
+          data: {
+            email: email,
+            created_by: user.id,
+          },
+        })
+        .then(({ data: response }) => {
           if (response.status === 200) {
             fetchMembersData();
             openNotificationBox("success", response.message, 3);
-          } else {
-            openNotificationBox("error", response.message, 3);
           }
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          console.error(err.response.data.message);
+          openNotificationBox("error", err.response.data.message);
+        });
     }
   }
 
   async function fetchMembersData() {
     setLoading(true);
     setMembersList([]);
-    await fetch("/api/team/" + user.id, {
-      method: "GET",
-    })
-      .then((response) => response.json())
-      .then((response) => {
+    await httpService
+      .get(`/api/team/${user.id}`)
+      .then(({ data: response }) => {
         if (response.status === 200) {
           let data = response.data.filter(
             (item) => item.user_id != user.id && item.role_id != 2
@@ -53,8 +49,9 @@ function TeamMembers({ user }) {
         setLoading(false);
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err.response.data.message);
         setMembersList([]);
+        setLoading(false);
       });
   }
 

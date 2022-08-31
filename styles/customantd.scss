@@ -467,6 +467,7 @@
 .login-image-wrapper {
   background-image: url("../assets/images/banner-bg-shape.png");
   background-color: #0f123f;
+  height: 100%;
 }
 .login-bottom-image {
   background-image: url("../assets/images/login-bottom-design.png");
@@ -834,7 +835,10 @@
   }
 }
 .chart-data {
-  filter: blur(3px);
+  // filter: blur(3px);
+}
+.tooltip_chart {
+  padding: 5px 15px;
 }
 .line-chart-text {
   position: absolute;
@@ -971,6 +975,10 @@
   height: 500px;
   overflow: auto;
 }
+.received--all-applaud {
+  max-height: 500px;
+  overflow: auto;
+}
 
 .preview-answer {
   .answer-bg {
@@ -1055,6 +1063,27 @@
     background-position: bottom;
     height: 50%;
   }
+}
+.ant-picker-cell-selected {
+  .ant-picker-cell-inner {
+    background: #0f123f !important;
+  }
+}
+.chart-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #0f123f;
+}
+
+.image_crop_modal {
+  .img-crop-control-zoom {
+    display: none !important;
+  }
+}
+
+.profile-applaud-card {
+  max-height: 500px;
+  overflow: auto;
 }
 .margin-b-0 {
   margin-bottom: 0 !important;

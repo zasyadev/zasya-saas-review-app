@@ -1,5 +1,4 @@
 import React from "react";
-import { RightOutlined, LeftOutlined } from "@ant-design/icons";
 import { Menu, Layout } from "antd";
 import { useRouter } from "next/router";
 import Logo from "../../assets/images/review.png";
@@ -8,7 +7,7 @@ import Link from "next/link";
 
 const { Sider } = Layout;
 
-function SiderLayout({ collapsed, setCollapsed, items, setTitle, md }) {
+function SiderLayout({ collapsed, setCollapsed, items, md }) {
   const router = useRouter();
 
   const onClickSideTab = (e) => {

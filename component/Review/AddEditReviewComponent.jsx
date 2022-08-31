@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { Form, Row, Col, Select, Input, Radio, Spin } from "antd";
 import { useRouter } from "next/router";
-import { openNotificationBox } from "../../helpers/notification";
+import { openNotificationBox } from "../../component/common/notification";
 import Link from "next/link";
 import EditorWrapperComponent from "./EditorWrapperComponent";
 import { LoadingOutlined } from "@ant-design/icons";
-import { PrimaryButton, SecondaryButton } from "../../helpers/CustomButton";
+import {
+  PrimaryButton,
+  SecondaryButton,
+} from "../../component/common/CustomButton";
+import httpService from "../../lib/httpService";
 
 const defaultScaleQuestion = {
   questionText: "Rating",
@@ -104,15 +108,9 @@ function AddEditReviewComponent({
   }
 
   async function addReviewAssign(obj) {
-    // console.log(obj, "sdfsdsf");
-    // return;
-
-    await fetch("/api/review/manage", {
-      method: "POST",
-      body: JSON.stringify(obj),
-    })
-      .then((response) => response.json())
-      .then((response) => {
+    await httpService
+      .post(`/api/review/manage`, obj)
+      .then(({ data: response }) => {
         if (response.status === 200) {
           router.push("/review");
           openNotificationBox("success", response.message, 3);
@@ -120,42 +118,40 @@ function AddEditReviewComponent({
           openNotificationBox("error", response.message, 3);
         }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.error(err.response.data.message));
   }
 
   async function fetchTemplateData() {
     setFormList([]);
-    await fetch("/api/template/" + user.id, {
-      method: "GET",
-    })
-      .then((response) => response.json())
-      .then((response) => {
+    await httpService
+      .get(`/api/template/${user.id}`)
+      .then(({ data: response }) => {
         if (response.status === 200) {
-          let data = response.data.filter((item) => item.status);
-          setFormList(data);
+          let filterData = response.data.filter((item) => item.status);
+          setFormList(filterData);
         }
       })
       .catch((err) => {
         setFormList([]);
+        console.error(err.response.data.message);
       });
   }
 
   async function fetchUserData() {
     setUserList([]);
-    await fetch("/api/user/organizationId/" + user.id, {
-      method: "GET",
-    })
-      .then((response) => response.json())
-      .then((response) => {
+    await httpService
+      .get(`/api/user/organizationId/${user.id}`)
+      .then(({ data: response }) => {
         if (response.status === 200) {
-          let data = response.data.filter(
+          let filterData = response.data.filter(
             (item) => item.user.status && item.user_id != user.id
           );
-          setUserList(data);
+          setUserList(filterData);
         }
       })
       .catch((err) => {
         setUserList([]);
+        console.error(err.response.data.message);
       });
   }
 
@@ -196,25 +192,22 @@ function AddEditReviewComponent({
             : null;
         }
 
-        await fetch("/api/review/manage", {
-          method: "POST",
-          body: JSON.stringify({
+        await httpService
+          .post(`/api/review/manage`, {
             ...values,
             template_data: templateData,
             is_published: "draft",
             status: values.status ?? "pending",
             role_id: user.role_id,
             created_by: user.id,
-          }),
-        })
-          .then((response) => response.json())
-          .then((response) => {
+          })
+          .then(({ data: response }) => {
             if (response.status === 200 && response.data.id) {
               router.push(`/review/edit/${response.data.id}`);
             }
           })
           .catch((err) => {
-            console.error(err);
+            console.error(err.response.data.message);
           });
       } else {
         openNotificationBox("error", "Need to Select Template", 3);

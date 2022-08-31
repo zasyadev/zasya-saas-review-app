@@ -370,7 +370,7 @@ const QuestionComponent = ({
           key={idx + "close"}
         >
           <div className="flex flex-col  mx-auto py-5 w-9/12">
-            <p className="ml-0 text-white text-5xl text-center">
+            <p className="ml-0 text-white text-5xl text-center mb-0">
               {questionText}
             </p>
 
@@ -382,7 +382,7 @@ const QuestionComponent = ({
                     key={j + "op"}
                     className="bg-white text-black px-2 py-1 text-left rounded-md"
                   >
-                    <p className=" text-2xl">{op.optionText}</p>
+                    <p className=" text-2xl mb-0">{op.optionText}</p>
                   </div>
                 ))}
             </div>

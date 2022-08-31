@@ -1,48 +1,30 @@
+// import { DailyScheduler } from "../../../helpers/cronjobs/dailycron";
+// import { WeeklyApplaudScheduler } from "../../../helpers/cronjobs/weeklycron";
+import { calculateMiliDuration } from "../../../helpers/momentHelper";
 import prisma from "../../../lib/prisma";
 
-const getMonthName = (month) => {
-  switch (month) {
-    case 0:
-      return "Jan";
-    case 1:
-      return "Feb";
-    case 2:
-      return "Mar";
-    case 3:
-      return "Apr";
-    case 4:
-      return "May";
-    case 5:
-      return "Jun";
-    case 6:
-      return "Jul";
-    case 7:
-      return "Aug";
-    case 8:
-      return "Sep";
-    case 9:
-      return "Oct";
-    case 10:
-      return "Nov";
-    case 11:
-      return "Dec";
-
-    default:
-      return "";
-  }
-};
-
 export default async (req, res) => {
-  const reqBody = JSON.parse(req.body);
+  const reqBody = req.body;
 
   if (req.method === "POST") {
     try {
       if (reqBody.userId) {
+        // DailyScheduler();
+        // WeeklyApplaudScheduler();
         const userTableData = await prisma.user.findUnique({
           where: { id: reqBody.userId },
         });
         const reviewCreated = await prisma.review.findMany({
-          where: { created_by: reqBody.userId },
+          where: {
+            AND: [
+              {
+                created_by: reqBody.userId,
+              },
+              {
+                organization_id: userTableData.organization_id,
+              },
+            ],
+          },
           include: {
             created: true,
 
@@ -56,24 +38,22 @@ export default async (req, res) => {
           },
         });
         const reviewRating = await prisma.review.findMany({
-          where: { created_by: reqBody.userId },
+          where: {
+            AND: [
+              {
+                created_by: reqBody.userId,
+              },
+              {
+                organization_id: userTableData.organization_id,
+              },
+            ],
+          },
           include: {
             ReviewAssigneeAnswers: {
               include: { ReviewAssigneeAnswerOption: true },
             },
           },
         });
-
-        let monthWiseData = [];
-        if (reviewRating.length > 0) {
-          monthWiseData = reviewRating?.reduce(function (obj, key) {
-            let date = new Date(key.created_date);
-            const objKey = getMonthName(date.getMonth());
-            obj[objKey] = obj[objKey] || [];
-            obj[objKey].push(key);
-            return obj;
-          }, {});
-        }
 
         let reviewAnswered = await prisma.reviewAssigneeAnswers.findMany({
           where: {
@@ -87,6 +67,9 @@ export default async (req, res) => {
                 },
               },
             ],
+          },
+          include: {
+            review_assignee: true,
           },
         });
 
@@ -119,12 +102,28 @@ export default async (req, res) => {
           });
         }
 
+        let averageAnswerTime = 0;
+        if (reviewAnswered.length > 0) {
+          const totalMili = reviewAnswered.reduce((prev, curr) => {
+            let time = calculateMiliDuration({
+              from: curr.created_assignee_date,
+              to: curr.created_date,
+            });
+
+            return prev + time;
+          }, 0);
+
+          averageAnswerTime =
+            totalMili > 0 ? Math.round(totalMili / reviewAnswered.length) : 0;
+        }
+
         let data = {
-          reviewCreated: reviewCreated.length,
-          reviewAnswered: reviewAnswered.length,
-          userData: userData.length,
-          applaudData: filterApplaudData,
+          reviewCreatedCount: reviewCreated.length,
+          reviewAnsweredCount: reviewAnswered.length,
+          userCount: userData.length,
+          applaudCount: filterApplaudData.length,
           reviewRating: reviewRating,
+          averageAnswerTime: averageAnswerTime,
         };
 
         if (data) {

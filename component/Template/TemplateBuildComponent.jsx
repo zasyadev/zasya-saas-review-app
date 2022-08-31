@@ -1,12 +1,12 @@
-import { Input, Row, Col, Form, Button } from "antd";
+import { Input, Button } from "antd";
 import { useRouter } from "next/router";
 import React, { useState, useEffect } from "react";
-import { openNotificationBox } from "../../helpers/notification";
-// import QuestionComponent from "../Form/QuestionComponent";
-// import Link from "next/link";
-// import { CloseOutlined } from "@ant-design/icons";
+import { openNotificationBox } from "../../component/common/notification";
+
 import { Modal } from "antd";
 import TemplateEditor from "./TemplateEditor";
+import httpService from "../../lib/httpService";
+import { SecondaryButton } from "../common/CustomButton";
 
 const defaultQuestionConfig = {
   questionText: "Untitled Question",
@@ -216,41 +216,35 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
   async function updateFormData(obj, id) {
     if (id) {
       obj.id = id;
-      await fetch("/api/template", {
-        method: "PUT",
-        body: JSON.stringify(obj),
-      })
-        .then((response) => response.json())
-        .then((response) => {
+
+      await httpService
+        .put(`/api/template`, obj)
+        .then(({ data: response }) => {
           if (response.status === 200) {
             router.push("/template");
             openNotificationBox("success", response.message, 3);
-          } else {
-            openNotificationBox("error", response.message, 3);
           }
         })
         .catch((err) => {
-          console.log(err);
+          console.error(err.response.data.message);
+          openNotificationBox("error", err.response.data.message);
         });
     }
   }
 
   async function addNewForm(obj) {
-    await fetch("/api/template", {
-      method: "POST",
-      body: JSON.stringify(obj),
-    })
-      .then((response) => response.json())
-      .then((response) => {
+    await httpService
+      .post(`/api/template`, obj)
+      .then(({ data: response }) => {
         if (response.status === 200) {
           router.push("/template");
           openNotificationBox("success", response.message, 3);
-        } else {
-          openNotificationBox("error", response.message, 3);
         }
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err.response.data.message);
+
+        openNotificationBox("error", err.response.data.message);
       });
   }
 
@@ -271,132 +265,6 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
 
   return (
     <div className="mx-4">
-      {/* <Row gutter={16}>
-        <Col xs={24} md={8}>
-          <div className="mb-2 px-1 template-title-input">
-            <Input
-              placeholder="Template Title"
-              value={formTitle}
-              onChange={(e) => {
-                setFormTitle(e.target.value);
-              }}
-              className="input-box text-2xl template-title px-4 py-3"
-              bordered={false}
-              maxLength={180}
-            />
-          </div>
-          <div className="w-full bg-white rounded-xl shadow-md  mt-4 add-template-wrapper sider-question-wrapper overflow-auto">
-            <div className="rounded-t-md  mt-1">
-              <div className="question-section-container">
-                <div className="question-section-contents">
-                  <div className="question-section-contents-card">
-                    {questions?.length > 0 &&
-                      questions?.map((question, idx) => (
-                        <div
-                          className={` question-section-wrapper my-1 px-4 py-3 cursor-pointer ${
-                            idx == questions?.length - 1
-                              ? null
-                              : "border-bottom"
-                          }`}
-                          key={idx + "side que"}
-                        >
-                          <div className="flex justify-between">
-                            <div className="w-full">
-                              <div
-                                className="flex items-center"
-                                onClick={() => {
-                                  setActiveQuestionIndex(idx);
-                                  setSelectTypeFeild(false);
-                                }}
-                              >
-                                <span className=" rounded-full linear-bg">
-                                  {idx + 1}
-                                </span>
-
-                                <span className=" px-2 py-1 ">
-                                  <span className="">
-                                    {question?.questionText}
-                                  </span>
-                                </span>
-                              </div>
-                            </div>
-
-                            <div className="">
-                              <span
-                                className=" dark-blue-bg cursor-pointer"
-                                onClick={() => removeElement(idx)}
-                              >
-                                <CloseOutlined className="text-xs" />
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="mt-3 flex justify-between ">
-            <button
-              className=" px-1 md:px-4 py-3 h-full rounded primary-bg-btn text-white w-3/4 md:w-1/2 my-1 mr-1"
-              type="button"
-              onClick={() => {
-                addMoreQuestionField();
-              }}
-            >
-              <span className="MuiButton-label">Add New Question</span>
-            </button>
-            <Link href={"/template"}>
-              <button
-                className="py-3 h-full rounded toggle-btn-bg text-white  w-1/3  my-1"
-                type="button"
-              >
-                <span className="MuiButton-label">Cancel</span>
-              </button>
-            </Link>
-          </div>
-        </Col>
-        <Col xs={24} md={16}>
-          <div className="w-full bg-white rounded-xl shadow-md mt-4 add-template-wrapper">
-            <div className="rounded-t-md  mt-1">
-              {questions?.length > 0 &&
-                questions
-                  ?.filter((_, index) => index === activeQuestionIndex)
-                  ?.map((question) => (
-                    <QuestionComponent
-                      {...question}
-                      editMode={editMode}
-                      idx={activeQuestionIndex}
-                      removeElement={removeElement}
-                      defineType={defineType}
-                      showAsQuestion={showAsQuestion}
-                      handleExpand={handleExpand}
-                      addOption={addOption}
-                      handleQuestionValue={handleQuestionValue}
-                      handleOptionValue={handleOptionValue}
-                      removeOption={removeOption}
-                      handleScaleOptionValue={handleScaleOptionValue}
-                      addNextQuestionField={addNextQuestionField}
-                      selectTypeFeild={selectTypeFeild}
-                      setSelectTypeFeild={setSelectTypeFeild}
-                    />
-                  ))}
-            </div>
-          </div>
-          <div className="block lg:flex justify-end items-end my-4  lg:pl-56 ">
-            <button
-              className=" px-4 py-3 h-full rounded primary-bg-btn text-white  my-1 ml-2"
-              type="button"
-              onClick={() => {
-                saveFormField();
-              }}
-            >
-              <span className="MuiButton-label">Save </span>
-            </button>
-          </div>
-        </Col>
-      </Row> */}
       <TemplateEditor
         setFormTitle={setFormTitle}
         questions={questions}
@@ -424,9 +292,17 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
       <Modal
         visible={modalTitleopen}
         footer={
-          <Button key="add" type="primary" onClick={handleOk}>
-            Create Template
-          </Button>
+          <>
+            <SecondaryButton
+              withLink={true}
+              linkHref="/template"
+              className="mx-4 rounded my-1"
+              title="Cancel"
+            />
+            <Button key="add" type="primary" onClick={handleOk}>
+              Create Template
+            </Button>
+          </>
         }
       >
         <div>

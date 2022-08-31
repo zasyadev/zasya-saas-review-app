@@ -1,3 +1,4 @@
+import { SlackUserList } from "../../../helpers/slackHelper";
 import prisma from "../../../lib/prisma";
 
 export default async (req, res) => {
@@ -31,7 +32,7 @@ export default async (req, res) => {
       }
     } else if (req.method === "POST") {
       try {
-        const reqBody = JSON.parse(req.body);
+        const reqBody = req.body;
 
         if (user_id && reqBody.first_name) {
           const transactionData = await prisma.$transaction(
@@ -46,6 +47,7 @@ export default async (req, res) => {
               const userDetailData = await transaction.userDetails.findUnique({
                 where: { user_id: user_id },
               });
+
               let userDeatilsTable = {};
               if (userDetailData) {
                 let dataObj = {
@@ -54,19 +56,9 @@ export default async (req, res) => {
                   about: reqBody.about ?? "",
                   pin_code: reqBody.pin_code ?? "",
                   mobile: reqBody.mobile ?? "",
+                  image: reqBody.imageName ?? "",
+                  notification: reqBody.notification ?? [],
                 };
-                if (reqBody.imageName) {
-                  // if (userDetailData.image) {
-                  //   let path = `./public/static/media/profile/${userDetailData.image}`;
-
-                  //   fs.unlink(path, (err) => {
-                  //     if (err) {
-                  //       return err;
-                  //     }
-                  //   });
-                  // }
-                  dataObj.image = reqBody.imageName;
-                }
 
                 userDeatilsTable = await transaction.userDetails.update({
                   where: { id: userDetailData.id },

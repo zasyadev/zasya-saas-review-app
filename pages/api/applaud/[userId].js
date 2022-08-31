@@ -1,11 +1,17 @@
 import prisma from "../../../lib/prisma";
+import { RequestHandler } from "../../../lib/RequestHandler";
 
-export default async (req, res) => {
+async function handle(req, res) {
   const { userId } = req.query;
 
   if (req.method === "GET") {
     if (userId) {
       const data = await prisma.userApplaud.findMany({
+        orderBy: [
+          {
+            created_date: "desc",
+          },
+        ],
         where: { created_by: userId },
         include: {
           user: {
@@ -86,4 +92,6 @@ export default async (req, res) => {
       message: "Method Not allowed",
     });
   }
-};
+}
+
+export default (req, res) => RequestHandler(req, res, handle, ["POST", "GET"]);

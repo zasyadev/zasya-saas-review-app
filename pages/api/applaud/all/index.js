@@ -1,16 +1,17 @@
 import prisma from "../../../../lib/prisma";
 
 export default async (req, res) => {
-  if (req.method !== "GET") {
+  if (req.method !== "POST") {
     return res.status(405).json({
       message: "Method Not allowed",
     });
   }
 
   try {
-    const { userId } = req.query;
+    // const { userId } = req.query;
+    const { date, userId } = req.body;
 
-    if (userId) {
+    if (userId && date) {
       const userTableData = await prisma.user.findUnique({
         where: { id: userId },
       });
@@ -22,6 +23,7 @@ export default async (req, res) => {
           user: {
             select: {
               first_name: true,
+              id: true,
               UserDetails: {
                 select: {
                   image: true,
@@ -33,11 +35,24 @@ export default async (req, res) => {
       });
 
       const applaudData = await prisma.userApplaud.findMany({
-        where: { organization_id: userTableData.organization_id },
+        orderBy: [
+          {
+            created_date: "desc",
+          },
+        ],
+        where: {
+          AND: [
+            { organization_id: userTableData.organization_id },
+            {
+              created_date: date,
+            },
+          ],
+        },
         include: {
           user: {
             select: {
               first_name: true,
+              id: true,
               UserDetails: {
                 select: {
                   image: true,
@@ -48,19 +63,35 @@ export default async (req, res) => {
           created: {
             select: {
               first_name: true,
+              id: true,
             },
           },
         },
       });
 
       let fetchData = {};
-      if (orgData.length > 0 && applaudData.length > 0) {
-        let takefilterData = applaudData.filter(({ user_id: id1 }) =>
-          orgData.some(({ user_id: id2 }) => id2 === id1)
-        );
+      if (orgData.length > 0) {
+        let takefilterData = [];
+
+        let givenFilterData = [];
+
+        if (applaudData && applaudData.length) {
+          takefilterData = applaudData.filter(({ user_id: id1 }) =>
+            orgData.some(({ user_id: id2 }) => id2 === id1)
+          );
+
+          givenFilterData = applaudData.filter(({ created_by: id1 }) =>
+            orgData.some(({ user_id: id2 }) => id2 === id1)
+          );
+        }
+
         let takeleftOverData = orgData.filter(
           ({ user_id: id1 }) =>
             !applaudData.some(({ user_id: id2 }) => id2 === id1)
+        );
+        let givenleftOutMember = orgData.filter(
+          ({ user_id: id1 }) =>
+            !applaudData.some(({ created_by: id2 }) => id2 === id1)
         );
 
         let takeresults = takefilterData?.reduce(function (obj, key) {
@@ -70,6 +101,7 @@ export default async (req, res) => {
             obj[key.user.first_name].taken = [];
           }
           obj[key.user.first_name].taken.push(key);
+          obj[key.user.first_name].user_id = key.user.id;
           if (key.user.UserDetails && key.user.UserDetails.image) {
             obj[key.user.first_name].userImg = key.user.UserDetails.image;
           } else {
@@ -84,7 +116,7 @@ export default async (req, res) => {
           if (!obj[key.user.first_name]?.taken) {
             obj[key.user.first_name].taken = [];
           }
-
+          obj[key.user.first_name].user_id = key.user.id;
           if (key.user.UserDetails && key.user.UserDetails.image) {
             obj[key.user.first_name].userImg = key.user.UserDetails.image;
           } else {
@@ -95,14 +127,6 @@ export default async (req, res) => {
         }, {});
 
         let takeObj = { ...takeresults, ...takeleftOutResults };
-
-        let givenFilterData = applaudData.filter(({ created_by: id1 }) =>
-          orgData.some(({ user_id: id2 }) => id2 === id1)
-        );
-        let givenleftOutMember = orgData.filter(
-          ({ user_id: id1 }) =>
-            !applaudData.some(({ created_by: id2 }) => id2 === id1)
-        );
 
         let givenResults = givenFilterData?.reduce(function (obj, key) {
           obj[key.created.first_name] = obj[key.created.first_name] || {};
@@ -134,6 +158,7 @@ export default async (req, res) => {
           let applaudTakenObj = {
             taken: takeObj[key]?.taken,
             image: value.userImg ?? "",
+            user_id: value.user_id,
           };
           let applaudGivenObj = {
             given: givenObj[key]?.given,

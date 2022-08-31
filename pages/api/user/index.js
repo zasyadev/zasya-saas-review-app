@@ -5,7 +5,7 @@ import { mailService, mailTemplate } from "../../../lib/emailservice";
 export default async (req, res) => {
   if (req.method === "POST") {
     try {
-      const userData = JSON.parse(req.body);
+      const userData = req.body;
       let orgData = await prisma.userOrganization.findUnique({
         where: {
           company_name: userData.company_name,
@@ -56,6 +56,12 @@ export default async (req, res) => {
                 status: true,
               },
             });
+
+          let userDeatilsTable = await transaction.userDetails.create({
+            data: {
+              user: { connect: { id: savedData.id } },
+            },
+          });
 
           return {
             savedData,

@@ -1,12 +1,20 @@
+import {
+  CustomizeSlackMessage,
+  SlackPostMessage,
+} from "../../../helpers/slackHelper";
 import prisma from "../../../lib/prisma";
+import { RequestHandler } from "../../../lib/RequestHandler";
 
-export default async (req, res) => {
+async function handle(req, res) {
   if (req.method === "POST") {
     try {
-      const reqBody = JSON.parse(req.body);
+      const reqBody = req.body;
 
       let userData = await prisma.user.findUnique({
         where: { id: reqBody.user_id },
+        include: {
+          UserDetails: true,
+        },
       });
       let createdData = await prisma.user.findUnique({
         where: { id: reqBody.created_by },
@@ -17,28 +25,50 @@ export default async (req, res) => {
           data: {
             user: { connect: { id: reqBody.user_id } },
             comment: reqBody.comment,
+            category: reqBody.category,
             created: { connect: { id: reqBody.created_by } },
             organization: { connect: { id: userData.organization_id } },
           },
         });
 
-        let notificationMessage = {
-          message: `${createdData.first_name ?? ""} has applauded you`,
-          link: `${process.env.NEXT_APP_URL}applaud`,
-        };
+        if (data) {
+          let notificationMessage = {
+            message: `${createdData.first_name ?? ""} has applauded you`,
+            link: `${process.env.NEXT_APP_URL}applaud`,
+          };
 
-        let notificationData = await prisma.userNotification.create({
-          data: {
-            user: { connect: { id: reqBody.user_id } },
-            data: notificationMessage,
-            read_at: null,
-            organization: {
-              connect: { id: userData.organization_id },
+          let notificationData = await prisma.userNotification.create({
+            data: {
+              user: { connect: { id: reqBody.user_id } },
+              data: notificationMessage,
+              read_at: null,
+              organization: {
+                connect: { id: userData.organization_id },
+              },
             },
-          },
-        });
-
-        prisma.$disconnect();
+          });
+          if (
+            userData?.UserDetails &&
+            userData?.UserDetails?.notification &&
+            userData?.UserDetails?.notification?.length &&
+            userData?.UserDetails?.notification.include("slack")
+          ) {
+            if (userData.UserDetails.slack_id) {
+              let customText = CustomizeSlackMessage({
+                header: "New Applaud Recieved",
+                user: createdData.first_name ?? "",
+                link: `${process.env.NEXT_APP_URL}applaud`,
+                by: "Applauded By",
+                text: reqBody.comment,
+              });
+              SlackPostMessage({
+                channel: userData.UserDetails.slack_id,
+                text: `${createdData.first_name ?? ""} has applauded you`,
+                blocks: customText,
+              });
+            }
+          }
+        }
 
         return res.status(201).json({
           message: "Saved  Successfully",
@@ -125,4 +155,7 @@ export default async (req, res) => {
       message: "Method Not allowed",
     });
   }
-};
+}
+
+export default (req, res) =>
+  RequestHandler(req, res, handle, ["POST", "GET", "PUT", "DELETE"]);

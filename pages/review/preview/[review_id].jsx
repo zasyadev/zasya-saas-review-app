@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/router";
 // import AdminLayout from "../../../component/layout/AdminLayout";
 import { getSession } from "next-auth/client";
-import { HeadersComponent } from "../../../helpers/HeadersComponent";
+import { HeadersComponent } from "../../../component/common/HeadersComponent";
 import PreviewComponent from "../../../component/Review/PreviewComponent";
 import AdminLayout from "../../../component/layout/AdminLayout";
 

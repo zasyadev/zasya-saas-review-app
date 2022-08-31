@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { getSession } from "next-auth/client";
 import Applaud from "../../component/Applaud/Applaud";
 import AdminLayout from "../../component/layout/AdminLayout";
@@ -19,7 +19,7 @@ export async function getServerSideProps(context) {
   if (!session) {
     return {
       redirect: {
-        destination: "/",
+        destination: "/auth/login?back_url=/applaud",
         permanent: false,
       },
     };

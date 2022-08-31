@@ -1,16 +1,14 @@
 import prisma from "../../../lib/prisma";
 import { mailService, mailTemplate } from "../../../lib/emailservice";
-// import moment from "moment";
-import { ReviewScheduler } from "../../../helpers/schedulerHelper";
-
-const schedule = require("node-schedule");
-
-var reviewJob;
+import {
+  CustomizeSlackMessage,
+  SlackPostMessage,
+} from "../../../helpers/slackHelper";
 
 export default async (req, res) => {
   if (req.method === "POST") {
     try {
-      const resData = JSON.parse(req.body);
+      const resData = req.body;
       let transactionData = {};
       if (resData.is_published === "published" && resData.review_id) {
         transactionData = await prisma.$transaction(async (transaction) => {
@@ -85,26 +83,6 @@ export default async (req, res) => {
               data: dataObj,
             });
 
-            if (
-              savedData &&
-              savedData.frequency != "once" &&
-              resData.assigned_to_id.length > 0
-            ) {
-              ReviewScheduler({
-                reviewData: savedData,
-                asigneeList: resData.assigned_to_id,
-              });
-
-              let scheduleData = await transaction.scheduleJobs.create({
-                data: {
-                  review: { connect: { id: savedData.id } },
-                  assignee_list: resData.assigned_to_id,
-                  schedule_created_date: savedData.created_date,
-                  status: true,
-                },
-              });
-            }
-
             return { savedData };
           } else {
             let newAssignData = [];
@@ -127,6 +105,7 @@ export default async (req, res) => {
         if (transactionData.savedData.is_published === "published") {
           const assignedToData = await prisma.user.findMany({
             where: { id: { in: resData.assigned_to_id } },
+            include: { UserDetails: true },
           });
 
           const assignedFromData = await prisma.user.findUnique({
@@ -141,19 +120,26 @@ export default async (req, res) => {
               },
             });
 
-            const mailData = {
-              from: process.env.SMTP_USER,
-              to: user.email,
-              subject: `New review assigned by ${assignedFromData.first_name}`,
-              html: mailTemplate(
-                `${assignedFromData.first_name} has assigned you new review , please <a href= ${process.env.NEXT_APP_URL}review/id/${assigneeData.id}>click here </a> to help them now.`
-              ),
-            };
+            if (
+              user.userData?.UserDetails &&
+              user.userData?.UserDetails?.notification &&
+              user.userData?.UserDetails?.notification?.length &&
+              user.userData?.UserDetails?.notification.include("mail")
+            ) {
+              const mailData = {
+                from: process.env.SMTP_USER,
+                to: user.email,
+                subject: `New review assigned by ${assignedFromData.first_name}`,
+                html: mailTemplate(
+                  `${assignedFromData.first_name} has assigned you new review , please <a href= ${process.env.NEXT_APP_URL}review/id/${assigneeData.id}>click here </a> to help them now.`
+                ),
+              };
 
-            await mailService.sendMail(mailData, function (err, info) {
-              if (err) console.log("failed");
-              else console.log("successfull");
-            });
+              await mailService.sendMail(mailData, function (err, info) {
+                if (err) console.log("failed");
+                else console.log("successfull");
+              });
+            }
 
             let notificationMessage = {
               message: `${assignedFromData.first_name} has assigned you New Review.`,
@@ -170,6 +156,26 @@ export default async (req, res) => {
                 },
               },
             });
+            if (
+              user.userData?.UserDetails &&
+              user.userData?.UserDetails?.notification &&
+              user.userData?.UserDetails?.notification?.length &&
+              user.userData?.UserDetails?.notification.include("slack")
+            ) {
+              if (user.UserDetails.slack_id) {
+                let customText = CustomizeSlackMessage({
+                  header: "New Review Recieved",
+                  user: assignedFromData.first_name ?? "",
+                  link: `${process.env.NEXT_APP_URL}review/id/${assigneeData.id}`,
+                  by: "Review Assigned By",
+                });
+                SlackPostMessage({
+                  channel: user.UserDetails.slack_id,
+                  text: `${assignedFromData.first_name} has assigned you New Review.`,
+                  blocks: customText,
+                });
+              }
+            }
           });
         }
       } else {
@@ -238,19 +244,16 @@ export default async (req, res) => {
     }
   } else if (req.method === "PUT") {
     try {
-      // schedule.gracefulShutdown();
-      const resData = JSON.parse(req.body);
+      const resData = req.body;
 
-      reviewJob = schedule.scheduledJobs[resData.id];
+      const updateReview = await prisma.review.update({
+        where: { id: resData.id },
+        data: {
+          frequency_status: true,
+        },
+      });
 
-      if (reviewJob) {
-        let updateReview = await prisma.review.update({
-          where: { id: resData.id },
-          data: {
-            frequency_status: true,
-          },
-        });
-        reviewJob.cancel();
+      if (updateReview) {
         return res.status(200).json({
           message: "Review Frequency Changed!",
           status: 200,
@@ -262,36 +265,36 @@ export default async (req, res) => {
         });
       }
 
-      let assigneeData = resData.assigned_to_id.map((item) => {
-        return {
-          assigned_to_id: item,
-        };
-      });
+      // let assigneeData = resData.assigned_to_id.map((item) => {
+      //   return {
+      //     assigned_to_id: item,
+      //   };
+      // });
 
-      const data = await prisma.review.update({
-        where: { id: resData.id },
-        data: {
-          created_by: resData.review_assigned_by,
-          is_published: resData.is_published,
-          ReviewAssignee: {
-            create: assigneeData,
-          },
-        },
-      });
-      prisma.$disconnect();
+      // const data = await prisma.review.update({
+      //   where: { id: resData.id },
+      //   data: {
+      //     created_by: resData.review_assigned_by,
+      //     is_published: resData.is_published,
+      //     ReviewAssignee: {
+      //       create: assigneeData,
+      //     },
+      //   },
+      // });
+      // prisma.$disconnect();
 
-      return res.status(200).json({
-        message: "Assign Updated Successfully.",
-        status: 200,
-        data: data,
-      });
+      // return res.status(200).json({
+      //   message: "Assign Updated Successfully.",
+      //   status: 200,
+      //   data: data,
+      // });
     } catch (error) {
       return res
         .status(500)
         .json({ error: error, message: "Internal Server Error" });
     }
   } else if (req.method === "DELETE") {
-    const reqBody = JSON.parse(req.body);
+    const reqBody = req.body;
     try {
       if (reqBody.id) {
         const deletaData = await prisma.review.delete({
@@ -300,10 +303,6 @@ export default async (req, res) => {
 
         prisma.$disconnect();
         if (deletaData) {
-          reviewJob = schedule.scheduledJobs[reqBody.id];
-          if (reviewJob) {
-            reviewJob.cancel();
-          }
           return res.status(200).json({
             status: 200,
             message: "Assign Review Deleted Successfully.",

@@ -4,8 +4,8 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { LoadingOutlined } from "@ant-design/icons";
-import { openNotificationBox } from "../../helpers/notification";
-import { HeadersComponent } from "../../helpers/HeadersComponent";
+import { openNotificationBox } from "../../component/common/notification";
+import { HeadersComponent } from "../../component/common/HeadersComponent";
 import AuthWrapper from "./AuthWrapper";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 
@@ -28,8 +28,11 @@ function LoginPage() {
         openNotificationBox("error", result.error, 3);
         return;
       }
-
-      router.push("/dashboard");
+      if (router.query && router.query.back_url) {
+        router.push(router.query.back_url);
+      } else {
+        router.push("/dashboard");
+      }
     } catch (error) {
       setLoading(false);
       openNotificationBox("error", error.message ?? "Failed", 3);

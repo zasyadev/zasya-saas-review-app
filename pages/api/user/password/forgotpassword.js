@@ -5,7 +5,7 @@ import { mailService, mailTemplate } from "../../../../lib/emailservice";
 export default async (req, res) => {
   try {
     if (req.method === "POST") {
-      const reqBody = JSON.parse(req.body);
+      const reqBody = req.body;
 
       let alreadyData = await prisma.passwordReset.findUnique({
         where: {
