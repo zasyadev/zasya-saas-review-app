@@ -21,6 +21,7 @@ async function handle(req, res) {
       const userData = await prisma.user.findMany({
         where: { AND: [{ status: 1 }] },
         select: {
+          id: true,
           UserDetails: true,
         },
       });

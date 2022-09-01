@@ -18,7 +18,6 @@ import userImage from "../../assets/images/User1.png";
 import { ShareIcon } from "../../assets/Icon/icons";
 import { PlusOutlined } from "@ant-design/icons";
 import moment from "moment";
-import Link from "next/link";
 import { useS3Upload } from "next-s3-upload";
 import {
   PrimaryButton,
@@ -675,13 +674,16 @@ source=LinkedIn`);
                   </div>
                   <div className="m-2">
                     <p className="text-base font-semibold mb-1">Website</p>
-                    <Link href="https://zasyasolutions.com/" passHref>
-                      <a target="_blank">
-                        <p className="text-base font-normal mb-1">
-                          https://zasyasolutions.com
-                        </p>
-                      </a>
-                    </Link>
+
+                    <a
+                      target="_blank"
+                      href="https://zasyasolutions.com/"
+                      rel="noopener noreferrer"
+                    >
+                      <p className="text-base font-normal mb-1">
+                        https://zasyasolutions.com
+                      </p>
+                    </a>
                   </div>
                   {user.role_id === 2 && user.organization_id ? (
                     <div className="m-2">

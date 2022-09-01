@@ -374,7 +374,7 @@ const QuestionComponent = ({
               {questionText}
             </p>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
               {options?.length > 0 &&
                 type === "checkbox" &&
                 options?.map((op, j) => (
@@ -418,14 +418,6 @@ const QuestionComponent = ({
                       <Radio value={rg} className="text-white">
                         {rg}
                       </Radio>
-                      // <FormControlLabel
-                      //   value={rg}
-                      //   control={<Radio />}
-                      //   label={rg}
-                      //   labelPlacement="top"
-                      //   key={index + "range"}
-                      //   className="text-white"
-                      // />
                     ))}
                 </Radio.Group>
                 <p className="text-white text-2xl">{options[1]?.optionText}</p>

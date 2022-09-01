@@ -1,6 +1,6 @@
-import prisma from "../../../lib/prisma";
+import { RequestHandler } from "../../../lib/RequestHandler";
 
-export default async (req, res) => {
+async function handle(req, res, prisma) {
   if (req.method === "POST") {
     try {
       const resData = JSON.parse(req.body);
@@ -97,4 +97,7 @@ export default async (req, res) => {
       message: "Method Not allowed",
     });
   }
-};
+}
+
+export default (req, res) =>
+  RequestHandler(req, res, handle, ["POST", "GET", "PUT", "DELETE"]);

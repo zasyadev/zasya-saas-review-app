@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { getSession } from "next-auth/client";
 import AdminLayout from "../../component/layout/AdminLayout";
 import Profile from "../../component/Profile/Profile";

@@ -2,10 +2,9 @@ import {
   CustomizeSlackMessage,
   SlackPostMessage,
 } from "../../../helpers/slackHelper";
-import prisma from "../../../lib/prisma";
 import { RequestHandler } from "../../../lib/RequestHandler";
 
-async function handle(req, res) {
+async function handle(req, res, prisma) {
   if (req.method === "POST") {
     try {
       const reqBody = req.body;

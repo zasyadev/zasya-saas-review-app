@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { getSession } from "next-auth/client";
 import AddApplaudComponent from "../../component/Applaud/AddApplaudComponent";
 import AdminLayout from "../../component/layout/AdminLayout";

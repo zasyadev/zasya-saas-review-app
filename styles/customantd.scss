@@ -1098,3 +1098,10 @@
 .ant-checkbox-checked::after {
   border: 1px solid #0f123f;
 }
+
+.ant-select-item-group {
+  color: rgba(0, 0, 0, 0.45);
+  font-size: 14px;
+  cursor: default;
+  font-weight: 700;
+}

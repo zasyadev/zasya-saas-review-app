@@ -2,7 +2,6 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 import {
-  CustomizeCronSlackMessage,
   CustomizeSlackMessage,
   SlackPostMessage,
 } from "../../../helpers/slackHelper";
@@ -41,8 +40,6 @@ async function handle(req, res) {
     },
   });
 
-  // console.log(reviewAssignedData, "reviewAssignedData");
-  // return;
   prisma.$disconnect();
   let assigneData = reviewAssignedData.map((item) => {
     if (

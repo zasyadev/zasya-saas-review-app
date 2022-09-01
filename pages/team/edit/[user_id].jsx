@@ -12,7 +12,6 @@ function EditTeam({ user }) {
   const [memberData, setMemberData] = useState({});
 
   async function fetchTeamData(id) {
-    // setLoading(true);
     setMemberData([]);
 
     await httpService
@@ -23,7 +22,6 @@ function EditTeam({ user }) {
         if (response.status === 200) {
           setMemberData(response.data);
         }
-        // setLoading(false);
       })
       .catch((err) => {
         console.error(err.response.data.message);

@@ -1,53 +1,40 @@
-import prisma from "../../../../lib/prisma";
+import { RequestHandler } from "../../../../lib/RequestHandler";
 
-export default async (req, res) => {
+async function handle(req, res, prisma) {
   const { user_id } = req.query;
   const resBody = req.body;
-  try {
-    if (req.method === "POST") {
-      if (user_id && resBody.org_user) {
-        const data = await prisma.user.findUnique({
-          where: { id: user_id },
-          include: {
-            UserOraganizationGroups: true,
-          },
+
+  if (user_id && resBody.org_user) {
+    const data = await prisma.user.findUnique({
+      where: { id: user_id },
+      include: {
+        UserOraganizationGroups: true,
+      },
+    });
+    const orgData = await prisma.user.findUnique({
+      where: { id: resBody.org_user },
+    });
+
+    if (data) {
+      let userOrgData = {};
+
+      if (data?.UserOraganizationGroups.length > 0) {
+        data?.UserOraganizationGroups.forEach((item) => {
+          if (item.organization_id == orgData.organization_id)
+            userOrgData = item;
         });
-        const orgData = await prisma.user.findUnique({
-          where: { id: resBody.org_user },
-        });
-
-        prisma.$disconnect();
-        if (data) {
-          let userOrgData = {};
-
-          if (data?.UserOraganizationGroups.length > 0) {
-            data?.UserOraganizationGroups.forEach((item) => {
-              if (item.organization_id == orgData.organization_id)
-                userOrgData = item;
-            });
-          }
-          data["userOrgData"] = userOrgData;
-          delete data.password;
-          delete data?.UserOraganizationGroups;
-          return res.status(200).json({
-            status: 200,
-            data: data,
-            message: "User Details Retrieved",
-          });
-        }
-
-        return res
-          .status(404)
-          .json({ status: 404, message: "No Record Found" });
       }
-    } else {
-      return res.status(405).json({
-        message: "Method Not allowed",
+      data["userOrgData"] = userOrgData;
+      delete data.password;
+      delete data?.UserOraganizationGroups;
+      return res.status(200).json({
+        status: 200,
+        data: data,
+        message: "User Details Retrieved",
       });
     }
-  } catch (error) {
-    return res.status(500).json({
-      message: "INTERNAL SERVER ERROR",
-    });
+
+    return res.status(404).json({ status: 404, message: "No Record Found" });
   }
-};
+}
+export default (req, res) => RequestHandler(req, res, handle, ["POST"]);

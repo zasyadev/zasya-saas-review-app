@@ -1,87 +1,63 @@
-import prisma from "../../../lib/prisma";
+import { RequestHandler } from "../../../lib/RequestHandler";
 
-export default async (req, res) => {
+async function handle(req, res, prisma) {
   if (req.method === "POST") {
-    try {
-      const resData = req.body;
+    const resData = req.body;
 
-      const templateData = await prisma.reviewTemplate.create({
-        data: {
-          user: { connect: { id: resData.user_id } },
+    const templateData = await prisma.reviewTemplate.create({
+      data: {
+        user: { connect: { id: resData.user_id } },
 
-          form_title: resData.form_title,
-          form_description: resData.form_description,
-          form_data: resData.form_data,
-          status: resData.status,
-          // questions: {
-          //   create: questionData,
-          // },
-        },
-      });
+        form_title: resData.form_title,
+        form_description: resData.form_description,
+        form_data: resData.form_data,
+        status: resData.status,
+        // questions: {
+        //   create: questionData,
+        // },
+      },
+    });
 
-      prisma.$disconnect();
-
-      return res.status(201).json({
-        message: "Saved  Successfully",
-        data: templateData,
-        status: 200,
-      });
-    } catch (error) {
-      return res
-        .status(500)
-        .json({ error: error, message: "Internal Server Error" });
-    }
+    return res.status(201).json({
+      message: "Saved  Successfully",
+      data: templateData,
+      status: 200,
+    });
   } else if (req.method === "GET") {
-    try {
-      const data = await prisma.reviewTemplate.findMany();
+    const data = await prisma.reviewTemplate.findMany();
 
-      if (data) {
-        return res.status(200).json({
-          status: 200,
-          data: data,
-          message: "All Templates Retrieved",
-        });
-      }
-
-      return res.status(404).json({ status: 404, message: "No Record Found" });
-    } catch (error) {
-      return res
-        .status(500)
-        .json({ error: error, message: "Internal Server Error" });
-    }
-  } else if (req.method === "PUT") {
-    try {
-      const resData = req.body;
-      // console.log(resData, "resData");
-      // return;
-
-      const templateData = await prisma.reviewTemplate.update({
-        where: { id: resData.id },
-        data: {
-          user: { connect: { id: resData.user_id } },
-
-          form_title: resData.form_title,
-          form_description: resData.form_description,
-          form_data: resData.form_data,
-          status: resData.status,
-          // questions: {
-          //   create: questionData,
-          // },
-        },
-      });
-
-      prisma.$disconnect();
-
-      return res.status(201).json({
-        message: "Updated   Successfully",
-        data: templateData,
+    if (data) {
+      return res.status(200).json({
         status: 200,
+        data: data,
+        message: "All Templates Retrieved",
       });
-    } catch (error) {
-      return res
-        .status(500)
-        .json({ error: error, message: "Internal Server Error" });
     }
+
+    return res.status(404).json({ status: 404, message: "No Record Found" });
+  } else if (req.method === "PUT") {
+    const resData = req.body;
+
+    const templateData = await prisma.reviewTemplate.update({
+      where: { id: resData.id },
+      data: {
+        user: { connect: { id: resData.user_id } },
+
+        form_title: resData.form_title,
+        form_description: resData.form_description,
+        form_data: resData.form_data,
+        status: resData.status,
+        // questions: {
+        //   create: questionData,
+        // },
+      },
+    });
+
+    return res.status(201).json({
+      message: "Updated   Successfully",
+      data: templateData,
+      status: 200,
+    });
   } else if (req.method === "DELETE") {
     const reqBody = req.body;
 
@@ -93,7 +69,6 @@ export default async (req, res) => {
         },
       });
 
-      prisma.$disconnect();
       if (deletaData) {
         return res.status(200).json({
           status: 200,
@@ -105,9 +80,8 @@ export default async (req, res) => {
         message: "Failed To Delete Record.",
       });
     }
-  } else {
-    return res.status(405).json({
-      message: "Method Not allowed",
-    });
   }
-};
+}
+
+export default (req, res) =>
+  RequestHandler(req, res, handle, ["POST", "GET", "PUT", "DELETE"]);

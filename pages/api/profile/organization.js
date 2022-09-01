@@ -1,13 +1,6 @@
-import prisma from "../../../lib/prisma";
 import { RequestHandler } from "../../../lib/RequestHandler";
 
-async function handle(req, res) {
-  if (!req.method === "POST") {
-    return res.status(405).json({
-      message: "Method Not allowed",
-    });
-  }
-
+async function handle(req, res, prisma) {
   if (req.method === "POST") {
     const { userId } = req.body;
     const userData = await prisma.user.findUnique({
@@ -50,8 +43,6 @@ async function handle(req, res) {
         applaud_count: resBody.applaud_count,
       },
     });
-
-    console.log(data, "datasdadfsgfg");
 
     if (data) {
       return res.status(200).json({

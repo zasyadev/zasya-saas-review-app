@@ -4,7 +4,6 @@ import DashBoard from "../../component/DashBoard/DashBoard";
 import AdminLayout from "../../component/layout/AdminLayout";
 
 function dashboard({ user }) {
-  // const { user } = session;
   return (
     <AdminLayout user={user} title={"DashBoard"}>
       <DashBoard user={user} />

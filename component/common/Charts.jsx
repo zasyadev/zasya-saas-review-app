@@ -22,7 +22,7 @@ const defaultOptions = {
       borderRadius: 14,
       columnWidth: "40%",
       dataLabels: {
-        position: "top", // top, center, bottom
+        position: "top",
       },
     },
   },
@@ -102,7 +102,7 @@ const defaultOptions = {
   },
   tooltip: {
     custom: function ({ series, seriesIndex, dataPointIndex, w }) {
-      return `<div class="tooltip_chart"> <span> ${w.globals.labels[dataPointIndex]} : ${series[seriesIndex][dataPointIndex]} </span> </div>`;
+      return `<div className="tooltip_chart"> <span> ${w.globals.labels[dataPointIndex]} : ${series[seriesIndex][dataPointIndex]} </span> </div>`;
     },
   },
 };
@@ -136,9 +136,7 @@ const BarChart = ({ user }) => {
   }, []);
 
   return (
-    <div
-    // className=" bg-blur-overlay"
-    >
+    <div>
       <p className="chart-title text-primary flex items-center">
         Feedback{" "}
         <span className="leading-[0] ml-2">

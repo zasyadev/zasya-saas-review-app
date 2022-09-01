@@ -1,8 +1,7 @@
 import moment from "moment";
-import prisma from "../../../lib/prisma";
 import { RequestHandler } from "../../../lib/RequestHandler";
 
-async function handle(req, res) {
+async function handle(req, res, prisma) {
   const { userId } = req.body;
   const currentMonth = {
     lte: moment().endOf("month").format(),

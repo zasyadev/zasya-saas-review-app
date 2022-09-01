@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { LikeOutlined, DislikeOutlined, EditOutlined } from "@ant-design/icons";
-import { Col, Row, Slider, Modal, Input, Radio, Space, Rate } from "antd";
+import { Col, Row, Slider, Input, Radio, Space, Rate } from "antd";
 import { DeleteSmallTemplateIcon } from "../../assets/Icon/icons";
 
 const ReviewViewComponent = ({
@@ -33,7 +33,7 @@ const ReviewViewComponent = ({
                 />
               ) : (
                 <p className="ml-0 primary-color-blue font-medium text-base">
-                  {`(${idx + 1})`} {questionText}{" "}
+                  {`(${idx + 1})`} {questionText}
                 </p>
               )}
               {editableFeedback ? (

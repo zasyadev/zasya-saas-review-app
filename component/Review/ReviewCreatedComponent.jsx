@@ -167,7 +167,7 @@ function ReviewCreatedComponent({
     let totalRating = 0;
     if (total) totalRating = Number(total) / Number(data?.length);
 
-    setTotalRating(totalRating);
+    setTotalRating(totalRating.toFixed(2));
   };
 
   const jobChangeHandler = async (id) => {

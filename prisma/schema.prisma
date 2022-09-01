@@ -339,13 +339,7 @@ model UserNotification {
   @@map("user_notification")
 }
 
-model ApplaudCategory {
-  id    Int    @id @default(autoincrement())
-  name  String
-  about String @db.LongText
 
-  @@map("applaud_category")
-}
 
 enum RoleEnum {
   SuperAdmin

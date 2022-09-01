@@ -1,13 +1,10 @@
-import prisma from "../../../lib/prisma";
 import { mailService, mailTemplate } from "../../../lib/emailservice";
+import { RequestHandler } from "../../../lib/RequestHandler";
 
-export default async (req, res) => {
+async function handle(req, res, prisma) {
   if (req.method === "POST") {
     try {
       const resData = req.body;
-
-      // console.log(resData, "resData");
-      // return;
 
       const transactionData = await prisma.$transaction(async (transaction) => {
         const answerData = resData.answers.map((item) => {
@@ -76,7 +73,6 @@ export default async (req, res) => {
       });
 
       if (!transactionData.formdata || !transactionData) {
-        prisma.$disconnect();
         return res.status(500).json({
           status: 500,
           message: "Internal Server Error!",
@@ -127,7 +123,6 @@ export default async (req, res) => {
           status: resData.status,
         },
       });
-      prisma.$disconnect();
 
       return res.status(200).json({
         message: "Assign Updated Successfully.",
@@ -146,7 +141,7 @@ export default async (req, res) => {
       const deletaData = await prisma.formAssign.delete({
         where: { id: reqBody.id },
       });
-      prisma.$disconnect();
+
       if (deletaData) {
         return res.status(200).json({
           status: 200,
@@ -163,4 +158,6 @@ export default async (req, res) => {
       message: "Method Not allowed",
     });
   }
-};
+}
+export default (req, res) =>
+  RequestHandler(req, res, handle, ["POST", "GET", "PUT", "DELETE"]);

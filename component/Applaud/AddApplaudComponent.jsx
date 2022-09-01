@@ -9,12 +9,12 @@ import {
 } from "../../component/common/CustomButton";
 import httpService from "../../lib/httpService";
 import CustomPopover from "../common/CustomPopover";
+import { ApplaudCategoryList } from "../../constants";
 
 function AddApplaud({ user }) {
   const router = useRouter();
   const [applaudform] = Form.useForm();
   const [membersList, setMembersList] = useState([]);
-  const [categoryList, setCategoryList] = useState([]);
   const [applaudLimit, setApplaudLimit] = useState(0);
 
   const validateMessages = {
@@ -51,19 +51,6 @@ function AddApplaud({ user }) {
         console.log(err.response.data.message);
         openNotificationBox("error", err.response.data.message);
         setApplaudLimit(0);
-      });
-  }
-  async function fetchCategoryList() {
-    await httpService
-      .get(`/api/applaud/category`)
-      .then(({ data }) => {
-        if (data.status === 200) {
-          setCategoryList(data.data);
-        }
-      })
-      .catch((err) => {
-        console.log(err.response.data.message);
-        setCategoryList(0);
       });
   }
 
@@ -123,7 +110,6 @@ function AddApplaud({ user }) {
   useEffect(() => {
     fetchMember(user);
     fetchApplaudLimit(user);
-    fetchCategoryList();
   }, []);
 
   return (
@@ -190,18 +176,30 @@ function AddApplaud({ user }) {
                       mode="multiple"
                       size="large"
                       placeholder="Category"
-                      className="select-tag tag-select-box"
+                      className="select-tag tag-select-box "
                     >
-                      {categoryList.length > 0 &&
-                        categoryList.map((item, idx) => {
+                      {ApplaudCategoryList.length &&
+                        ApplaudCategoryList.map((item, idx) => {
                           return (
-                            <Select.Option
-                              key={idx + "category"}
-                              value={item.name}
-                              title={item.about}
+                            <Select.OptGroup
+                              label={item.name}
+                              key={idx + "group"}
                             >
-                              <span title={item.about}>{item.name}</span>
-                            </Select.Option>
+                              {item.data.map((dataItem, i) => {
+                                return (
+                                  <Select.Option
+                                    key={i + dataItem.value}
+                                    value={dataItem.value}
+                                    title={dataItem.about}
+                                    className="font-medium"
+                                  >
+                                    <span title={dataItem.about}>
+                                      {dataItem.name}
+                                    </span>
+                                  </Select.Option>
+                                );
+                              })}
+                            </Select.OptGroup>
                           );
                         })}
                     </Select>
@@ -243,7 +241,7 @@ function AddApplaud({ user }) {
             </Form>
           </div>
         </div>
-      </div>{" "}
+      </div>
     </div>
   );
 }

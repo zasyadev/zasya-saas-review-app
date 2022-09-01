@@ -1,7 +1,6 @@
-import prisma from "../../../lib/prisma";
 import { RequestHandler } from "../../../lib/RequestHandler";
 
-async function handle(req, res) {
+async function handle(req, res, prisma) {
   const { userId } = req.query;
 
   if (req.method === "GET") {
@@ -68,7 +67,6 @@ async function handle(req, res) {
         },
       });
 
-      prisma.$disconnect();
       if (receivedData && givenData) {
         return res.status(200).json({
           status: 200,
@@ -144,7 +142,6 @@ async function handle(req, res) {
         },
       });
 
-      prisma.$disconnect();
       if (receivedData && givenData) {
         return res.status(200).json({
           status: 200,
