@@ -1,7 +1,7 @@
 import { Col, Row } from "antd";
 import moment from "moment";
 import React from "react";
-import { ApplaudIcon, ClockIcon, StarIcon } from "../../assets/Icon/icons";
+import { ApplaudIcon, ClockIcon, StarIcon } from "../../assets/icons";
 
 const ratingHandler = (data) => {
   if (data.length === 0) {

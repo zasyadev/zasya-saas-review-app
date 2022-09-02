@@ -1,32 +1,20 @@
 import React from "react";
 
 import AdminLayout from "../../component/layout/AdminLayout";
-import { getSession } from "next-auth/client";
+import WithMe from "../../component/layout/WithMe";
 
 import TemplateBuildComponent from "../../component/Template/TemplateBuildComponent";
 
 function AddTemplate({ user }) {
   return (
-    <AdminLayout user={user} title="Template">
-      <TemplateBuildComponent user={user} />
-    </AdminLayout>
+    <WithMe>
+      {({ user }) => (
+        <AdminLayout user={user} title="Template">
+          <TemplateBuildComponent user={user} />
+        </AdminLayout>
+      )}
+    </WithMe>
   );
 }
 
 export default AddTemplate;
-export async function getServerSideProps(context) {
-  const session = await getSession({ req: context.req });
-
-  if (!session) {
-    return {
-      redirect: {
-        destination: "/auth/login?back_url=/template/add",
-        permanent: false,
-      },
-    };
-  }
-  const { user } = session;
-  return {
-    props: { user },
-  };
-}

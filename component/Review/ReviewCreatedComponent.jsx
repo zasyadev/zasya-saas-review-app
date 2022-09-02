@@ -9,7 +9,7 @@ import {
   ShareIcon,
   StarSmallIcon,
   UserIcon,
-} from "../../assets/Icon/icons";
+} from "../../assets/icons";
 import { openNotificationBox } from "../../component/common/notification";
 import { calculateDuration } from "../../helpers/momentHelper";
 import httpService from "../../lib/httpService";

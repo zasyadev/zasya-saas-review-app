@@ -13,9 +13,9 @@ import {
 import { useEffect } from "react";
 import { openNotificationBox } from "../../component/common/notification";
 import Image from "next/image";
-import profileCover from "../../assets/images/profile-cover.png";
+import profileCover from "../../assets/images/profile-cover.webp";
 import userImage from "../../assets/images/User1.png";
-import { ShareIcon } from "../../assets/Icon/icons";
+import { ShareIcon } from "../../assets/icons";
 import { PlusOutlined } from "@ant-design/icons";
 import moment from "moment";
 import { useS3Upload } from "next-s3-upload";
@@ -141,7 +141,7 @@ const ImageUpload = ({
 
   return (
     <>
-      <Form.Item name={formName} label="Image Upload">
+      <Form.Item name={formName} label="Profile Image">
         <ImgCrop
           zoom
           rotate={false}
@@ -614,7 +614,7 @@ source=LinkedIn`);
                       </div>
                     </div>
                     <div>
-                      <p className="text-lg font-semibold text-center md:text-left">
+                      <p className="text-lg font-semibold text-center md:text-left mb-0">
                         {userDetails?.user?.first_name}
                       </p>
                     </div>
@@ -695,6 +695,7 @@ source=LinkedIn`);
                           )}
                         </span>
                       </p>
+
                       <p className="text-base font-normal mb-1 flex items-center justify-between">
                         {applaudLimit}{" "}
                         <span

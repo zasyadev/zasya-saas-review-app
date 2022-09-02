@@ -2,7 +2,7 @@ import { Col, DatePicker, Row, Timeline } from "antd";
 import React, { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import User1 from "../../assets/images/User1.png";
-import { ApplaudGiven, ApplaudIconSmall } from "../../assets/Icon/icons";
+import { ApplaudGiven, ApplaudIconSmall } from "../../assets/icons";
 import { ClockCircleOutlined } from "@ant-design/icons";
 import moment from "moment";
 import httpService from "../../lib/httpService";

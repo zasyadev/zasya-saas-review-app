@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Popconfirm } from "antd";
 import { openNotificationBox } from "../../component/common/notification";
-import { AddIcon, DeleteTemplateIcon } from "../../assets/Icon/icons";
+import { AddIcon, DeleteTemplateIcon } from "../../assets/icons";
 import Link from "next/link";
 import httpService from "../../lib/httpService";
 

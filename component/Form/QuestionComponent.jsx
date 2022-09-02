@@ -2,15 +2,15 @@ import { Input, Select, Radio, Rate } from "antd";
 import { Col, Row } from "antd";
 import Image from "next/image";
 import React from "react";
-import CloseIcon from "../../assets/images/close-line.svg";
-import DeleteIcon from "../../assets/images/delete.svg";
+import CloseIcon from "../../assets/svg/close-line.svg";
+import DeleteIcon from "../../assets/svg/delete.svg";
 import {
   CheckboxIcon,
   DislikeIcon,
   LikeIcon,
   ScaleIcon,
   TextIcon,
-} from "../../assets/Icon/icons";
+} from "../../assets/icons";
 import { LikeOutlined, DislikeOutlined, StarOutlined } from "@ant-design/icons";
 
 const QuestionComponent = ({

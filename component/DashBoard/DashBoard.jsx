@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Col, Row } from "antd/lib/grid";
 import Image from "next/image";
-import threeUser from "../../assets/Icon/threeusers.png";
-import ReviewIcon from "../../assets/Icon/reviewicon.png";
+import threeUser from "../../assets/images/threeusers.png";
+import ReviewIcon from "../../assets/images/reviewicon.png";
 import User1 from "../../assets/images/User1.png";
 import dynamic from "next/dynamic";
 import {
@@ -10,7 +10,7 @@ import {
   ApplaudIconSmall,
   FileLeftIcon,
   FileRightIcon,
-} from "../../assets/Icon/icons";
+} from "../../assets/icons";
 import { Skeleton } from "antd";
 import Link from "next/link";
 import moment from "moment";
