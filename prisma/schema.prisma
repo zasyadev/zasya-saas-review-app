@@ -140,7 +140,7 @@ model Review {
   form                  ReviewAssignTemplate?   @relation(fields: [form_id], references: [id], onDelete: Cascade)
   form_id               String?
   status                String?
-  frequency             Frequency?              
+  frequency             Frequency?
   review_type           ReviewType?             @default(other)
   organization          UserOrganization?       @relation(fields: [organization_id], references: [id])
   organization_id       Int?
@@ -155,7 +155,6 @@ model Review {
   ReviewAssigneeAnswers ReviewAssigneeAnswers[]
   ReviewAssignee        ReviewAssignee[]
 
-  ScheduleJobs ScheduleJobs[]
   @@map("review")
 }
 
@@ -228,6 +227,7 @@ model ReviewTemplate {
 model UserOrganization {
   id                      Int                       @id @default(autoincrement())
   company_name            String                    @unique
+  applaud_count           Int?                      @default(20)
   created_date            DateTime                  @default(now())
   modified_date           DateTime                  @default(now())
   User                    User[]
@@ -272,6 +272,7 @@ model UserApplaud {
   organization    UserOrganization? @relation(fields: [organization_id], references: [id])
   organization_id Int?
   comment         String?           @db.LongText
+  category        Json?
   created         User              @relation("userCreated", fields: [created_by], references: [id])
   created_by      String
   created_date    DateTime          @default(now())
@@ -307,28 +308,20 @@ model UserOraganizationTags {
   @@map("user_organization_tags")
 }
 
-model ScheduleJobs {
-  id                    Int      @id @default(autoincrement())
-  review                Review   @relation(fields: [review_id], references: [id], onDelete: Cascade)
-  review_id             String
-  assignee_list         Json
-  schedule_created_date DateTime @default(now())
-  status                Boolean
-
-  @@map("schedule_jobs")
-}
-
 model UserDetails {
   id      Int     @id @default(autoincrement())
   user    User?   @relation(fields: [user_id], references: [id], onDelete: Cascade)
   user_id String? @unique()
   image   String?
 
-  address1 String? @db.LongText
-  address2 String? @db.LongText
-  about    String? @db.LongText
-  pin_code String? @db.VarChar(20)
-  mobile   String? @db.VarChar(15)
+  address1     String? @db.LongText
+  address2     String? @db.LongText
+  about        String? @db.LongText
+  pin_code     String? @db.VarChar(20)
+  mobile       String? @db.VarChar(15)
+  slack_email  String? @db.VarChar(62)
+  slack_id     String? @db.VarChar(25)
+  notification Json?
 
   @@map("user_details")
 }
@@ -345,6 +338,8 @@ model UserNotification {
 
   @@map("user_notification")
 }
+
+
 
 enum RoleEnum {
   SuperAdmin

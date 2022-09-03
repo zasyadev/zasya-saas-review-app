@@ -1,6 +1,6 @@
-import prisma from "../../../lib/prisma";
+import { RequestHandler } from "../../../lib/RequestHandler";
 
-export default async (req, res) => {
+async function handle(req, res, prisma) {
   if (req.method === "POST") {
     try {
       const resData = JSON.parse(req.body);
@@ -85,52 +85,52 @@ export default async (req, res) => {
       const resData = JSON.parse(req.body);
 
       return;
-      const transactionData = await prisma.$transaction(async (transaction) => {
-        const questionData = resData.questions.map((item) => {
-          const optionData = item.options.map((opitem) => {
-            return {
-              optionText: opitem.optionText,
-            };
-          });
+      // const transactionData = await prisma.$transaction(async (transaction) => {
+      //   const questionData = resData.questions.map((item) => {
+      //     const optionData = item.options.map((opitem) => {
+      //       return {
+      //         optionText: opitem.optionText,
+      //       };
+      //     });
 
-          return {
-            questionText: item.questionText,
-            type: item.type,
-            open: item.open,
-            options: { create: optionData },
-          };
-        });
-        const formdata = await transaction.reviewAssignTemplate.update({
-          where: { id: resData.id },
-          data: {
-            user: { connect: { id: resData.user_id } },
-            form_data: resData.form_data,
-            form_title: resData.form_title,
-            form_description: resData.form_description,
-            status: resData.status,
-            questions: {
-              create: questionData,
-            },
-          },
-        });
+      //     return {
+      //       questionText: item.questionText,
+      //       type: item.type,
+      //       open: item.open,
+      //       options: { create: optionData },
+      //     };
+      //   });
+      //   const formdata = await transaction.reviewAssignTemplate.update({
+      //     where: { id: resData.id },
+      //     data: {
+      //       user: { connect: { id: resData.user_id } },
+      //       form_data: resData.form_data,
+      //       form_title: resData.form_title,
+      //       form_description: resData.form_description,
+      //       status: resData.status,
+      //       questions: {
+      //         create: questionData,
+      //       },
+      //     },
+      //   });
 
-        return { formdata };
-      });
+      //   return { formdata };
+      // });
 
-      if (!transactionData.formdata || !transactionData) {
-        prisma.$disconnect();
-        return res.status(500).json({
-          status: 500,
-          message: "Internal Server Error!",
-          data: {},
-        });
-      }
-      prisma.$disconnect();
-      return res.status(201).json({
-        message: "Form Updated Sucessfully.",
-        data: transactionData.formdata,
-        status: 200,
-      });
+      // if (!transactionData.formdata || !transactionData) {
+      //   prisma.$disconnect();
+      //   return res.status(500).json({
+      //     status: 500,
+      //     message: "Internal Server Error!",
+      //     data: {},
+      //   });
+      // }
+      // prisma.$disconnect();
+      // return res.status(201).json({
+      //   message: "Form Updated Sucessfully.",
+      //   data: transactionData.formdata,
+      //   status: 200,
+      // });
     } catch (error) {
       return res
         .status(500)
@@ -164,4 +164,7 @@ export default async (req, res) => {
       message: "Method Not allowed",
     });
   }
-};
+}
+
+export default (req, res) =>
+  RequestHandler(req, res, handle, ["POST", "GET", "PUT", "DELETE"]);

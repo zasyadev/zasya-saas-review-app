@@ -1,45 +1,32 @@
-import prisma from "../../../../lib/prisma";
+import { RequestHandler } from "../../../../lib/RequestHandler";
 
-export default async (req, res) => {
+async function handle(req, res, prisma) {
   const { review_id } = req.query;
 
-  try {
-    if (req.method === "GET") {
-      if (review_id) {
-        const data = await prisma.review.findUnique({
-          where: { id: review_id },
+  if (review_id) {
+    const data = await prisma.review.findUnique({
+      where: { id: review_id },
+      include: {
+        created: true,
+        form: true,
+        ReviewAssignee: {
           include: {
-            created: true,
-            form: true,
-            ReviewAssignee: {
-              include: {
-                assigned_to: true,
-              },
-            },
+            assigned_to: true,
           },
-        });
+        },
+      },
+    });
 
-        prisma.$disconnect();
-        if (data) {
-          return res.status(200).json({
-            status: 200,
-            data: data,
-            message: "Review Details Retrieved",
-          });
-        }
-
-        return res
-          .status(404)
-          .json({ status: 404, message: "No Record Found" });
-      }
-    } else {
-      return res.status(405).json({
-        message: "Method Not allowed",
+    if (data) {
+      return res.status(200).json({
+        status: 200,
+        data: data,
+        message: "Review Details Retrieved",
       });
     }
-  } catch (error) {
-    return res.status(500).json({
-      message: "INTERNAL SERVER ERROR",
-    });
+
+    return res.status(404).json({ status: 404, message: "No Record Found" });
   }
-};
+}
+
+export default (req, res) => RequestHandler(req, res, handle, ["GET"]);

@@ -1,6 +1,5 @@
 const { PrismaClient } = require("@prisma/client");
 const schedule = require("node-schedule");
-// var cron = require("node-cron");
 
 const prisma = new PrismaClient();
 

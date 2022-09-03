@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import httpService from "../../lib/httpService";
 
 import { PreviewAnswer } from "./formhelper/PreviewAnswer";
 function PreviewComponent({ user, reviewId }) {
@@ -8,19 +9,16 @@ function PreviewComponent({ user, reviewId }) {
   const [nextSlide, setNextSlide] = useState(0);
 
   const fetchAnswer = async () => {
-    if (user && reviewId) {
-      await fetch("/api/review/answer/id/" + reviewId, {
-        method: "POST",
-        body: JSON.stringify({
+    if (reviewId) {
+      await httpService
+        .post(`/api/review/answer/id/${reviewId}`, {
           userId: user.id,
-        }),
-      })
-        .then((response) => response.json())
-        .then((response) => {
+        })
+        .then(({ data: response }) => {
           setAnswers(response.data[0].ReviewAssigneeAnswerOption);
         })
         .catch((err) => {
-          console.log(err);
+          console.error(err.response.data.message);
         });
     }
   };
@@ -50,25 +48,22 @@ function PreviewComponent({ user, reviewId }) {
     }
   };
   const fetchReviewData = async (user, reviewId) => {
-    await fetch("/api/review/received/" + reviewId, {
-      method: "POST",
-      body: JSON.stringify({
+    await httpService
+      .post(`/api/review/received/${reviewId}`, {
         userId: user.id,
-      }),
-    })
-      .then((response) => response.json())
-      .then((response) => {
+      })
+      .then(({ data: response }) => {
         if (response.status === 200) {
-          setQuestions(response?.data?.review?.form?.questions);
+          setQuestions(response.data?.review?.form?.questions);
         }
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err.response.data.message);
       });
   };
 
   useEffect(() => {
-    if (user && reviewId) {
+    if (reviewId) {
       fetchReviewData(user, reviewId);
 
       fetchAnswer();

@@ -1,46 +1,33 @@
-import prisma from "../../../../lib/prisma";
+import { RequestHandler } from "../../../../lib/RequestHandler";
 
-export default async (req, res) => {
+async function handle(req, res, prisma) {
   const { review_id } = req.query;
-  const { userId } = JSON.parse(req.body);
+  const { userId } = req.body;
 
-  try {
-    if (req.method === "POST") {
-      if (review_id && userId) {
-        const data = await prisma.review.findUnique({
-          where: { id: review_id },
+  if (review_id && userId) {
+    const data = await prisma.review.findUnique({
+      where: { id: review_id },
+      include: {
+        created: true,
+        form: true,
+        ReviewAssignee: {
           include: {
-            created: true,
-            form: true,
-            ReviewAssignee: {
-              include: {
-                assigned_to: true,
-              },
-            },
+            assigned_to: true,
           },
-        });
+        },
+      },
+    });
 
-        prisma.$disconnect();
-        if (data) {
-          return res.status(200).json({
-            status: 200,
-            data: data,
-            message: "Review Details Retrieved",
-          });
-        }
-
-        return res
-          .status(404)
-          .json({ status: 404, message: "No Record Found" });
-      }
-    } else {
-      return res.status(405).json({
-        message: "Method Not allowed",
-      });
-    }
-  } catch (error) {
-    return res.status(500).json({
-      message: "INTERNAL SERVER ERROR",
+    return res.status(200).json({
+      status: 200,
+      data: data,
+      message: "Review Details Retrieved",
+    });
+  } else {
+    return res.status(402).json({
+      message: "User Not Found",
     });
   }
-};
+}
+
+export default (req, res) => RequestHandler(req, res, handle, ["POST"]);

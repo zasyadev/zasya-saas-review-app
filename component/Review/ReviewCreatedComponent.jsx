@@ -1,16 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { CalendarOutlined } from "@ant-design/icons";
 import moment from "moment";
-import {
-  Modal,
-  Collapse,
-  Skeleton,
-  Row,
-  Col,
-  Table,
-  Popconfirm,
-  Grid,
-} from "antd";
+import { Collapse, Row, Col, Table, Popconfirm, Grid, Tooltip } from "antd";
 
 import Link from "next/link";
 import {
@@ -18,9 +9,10 @@ import {
   ShareIcon,
   StarSmallIcon,
   UserIcon,
-} from "../../assets/Icon/icons";
+} from "../../assets/icons";
 import { openNotificationBox } from "../../component/common/notification";
 import { calculateDuration } from "../../helpers/momentHelper";
+import httpService from "../../lib/httpService";
 const { useBreakpoint } = Grid;
 
 function ReviewCreatedComponent({
@@ -63,18 +55,31 @@ function ReviewCreatedComponent({
     dataIndex: "name",
     fixed: fixed ? false : true,
     sorter: (a, b) => a.name?.localeCompare(b.name),
+    render: (_, record) => (
+      <div>
+        <p className="mb-0">{record.name}</p>
+        <p className="mb-0 text-gray-400 text-sm ">
+          <Tooltip title="Reactive Time" placement={"bottom"}>
+            {calculateDuration({
+              from: reviewData.created_date,
+              to: record.answer_date,
+            })}
+          </Tooltip>{" "}
+        </p>
+      </div>
+    ),
   };
 
-  let reactivityTimeColoum = {
-    title: "Reactivity Time",
-    dataIndex: "answer_date",
+  // let reactivityTimeColoum = {
+  //   title: "Reactivity Time",
+  //   dataIndex: "answer_date",
 
-    render: (answer_date) =>
-      calculateDuration({
-        from: reviewData.created_date,
-        to: answer_date,
-      }),
-  };
+  //   render: (answer_date) =>
+  //     calculateDuration({
+  //       from: reviewData.created_date,
+  //       to: answer_date,
+  //     }),
+  // };
 
   useEffect(() => {
     let headersData = [];
@@ -98,7 +103,7 @@ function ReviewCreatedComponent({
 
     headersData.unshift(nameTitle);
 
-    headersData.push(reactivityTimeColoum);
+    // headersData.push(reactivityTimeColoum);
 
     setHeadersData(headersData);
     fetchAnswer(reviewData.id);
@@ -109,11 +114,9 @@ function ReviewCreatedComponent({
   const fetchAnswer = async (id) => {
     setDataSource([]);
     setLoading(true);
-    await fetch("/api/review/answer/" + id, {
-      method: "GET",
-    })
-      .then((response) => response.json())
-      .then((response) => {
+    await httpService
+      .get(`/api/review/answer/${id}`)
+      .then(({ data: response }) => {
         if (response.status === 200) {
           let data = response.data.map((item) => ({
             user: item.user,
@@ -143,7 +146,7 @@ function ReviewCreatedComponent({
         }
         setLoading(false);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.log(err.response.data.message));
   };
 
   const totalRatingFunction = (data) => {
@@ -164,21 +167,15 @@ function ReviewCreatedComponent({
     let totalRating = 0;
     if (total) totalRating = Number(total) / Number(data?.length);
 
-    setTotalRating(totalRating);
+    setTotalRating(totalRating.toFixed(2));
   };
 
   const jobChangeHandler = async (id) => {
-    await fetch("/api/review/manage", {
-      method: "PUT",
-      body: JSON.stringify({
+    await httpService
+      .put(`/api/review/manage`, {
         id: id,
-      }),
-      // headers: {
-      //   "Content-Type": "application/json",
-      // },
-    })
-      .then((response) => response.json())
-      .then((response) => {
+      })
+      .then(({ data: response }) => {
         if (response.status === 200) {
           openNotificationBox("success", response.message, 3);
           fetchReviewData(user, reviewId);
@@ -186,7 +183,10 @@ function ReviewCreatedComponent({
           openNotificationBox("error", response.message, 3);
         }
       })
-      .catch((err) => fetchReviewAssignList([]));
+      .catch((err) => {
+        fetchReviewAssignList([]);
+        console.error(err.response.data.message);
+      });
   };
 
   return (
@@ -208,7 +208,7 @@ function ReviewCreatedComponent({
                 <p className="capitalize">{reviewData?.review_type}</p>
               </div>
               <div className="flex  primary-color-blue my-auto">
-                <p className="">Created Date:</p>
+                <p className="mr-1">Created Date: </p>
                 <p>{moment(reviewData?.created_date).format(datePattern)}</p>
               </div>
             </div>
@@ -312,7 +312,7 @@ function ReviewCreatedComponent({
                 <Col md={16} className="mx-auto my-auto">
                   <div className="flex flex-col my-auto">
                     <div className="text-sm md:text-base font-medium">
-                      Assign to people
+                      Assign Count
                     </div>
                     <div className="text-lg font-medium">
                       {reviewData?.ReviewAssignee?.length}

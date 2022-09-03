@@ -1,66 +1,87 @@
 import { Col, Form, Row, Select } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import React, { useState, useEffect } from "react";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { openNotificationBox } from "../../component/common/notification";
 import {
   PrimaryButton,
   SecondaryButton,
 } from "../../component/common/CustomButton";
+import httpService from "../../lib/httpService";
+import CustomPopover from "../common/CustomPopover";
+import { ApplaudCategoryList } from "../../constants";
 
 function AddApplaud({ user }) {
   const router = useRouter();
   const [applaudform] = Form.useForm();
   const [membersList, setMembersList] = useState([]);
-  const [updateData, setUpdateData] = useState({});
+  const [applaudLimit, setApplaudLimit] = useState(0);
 
   const validateMessages = {
     required: "${label} is required!",
   };
 
   async function fetchMember(user) {
-    await fetch("/api/team/" + user.id, {
-      method: "GET",
-    })
-      .then((res) => res.json())
-      .then((res) => {
-        if (res.status === 200) {
-          let data = res.data.filter((item) => item.user_id != user.id);
-          setMembersList(data);
+    await httpService
+      .get(`/api/team/${user.id}`)
+      .then(({ data }) => {
+        if (data.status === 200) {
+          let filterData = data.data.filter((item) => item.user_id != user.id);
+          setMembersList(filterData);
         }
       })
       .catch((err) => {
-        console.log(err);
+        console.log(err.response.data.message);
+        openNotificationBox("error", err.response.data.message);
         setMembersList([]);
       });
   }
 
-  const onFinish = (values) => {
-    let obj = {
-      user_id: values.user_id,
-      comment: values.comment,
-      created_by: user.id,
-    };
+  async function fetchApplaudLimit(user) {
+    await httpService
+      .post(`/api/applaud/applaudlimit`, {
+        userId: user.id,
+      })
+      .then(({ data }) => {
+        if (data.status === 200) {
+          setApplaudLimit(data);
+        }
+      })
+      .catch((err) => {
+        console.log(err.response.data.message);
+        openNotificationBox("error", err.response.data.message);
+        setApplaudLimit(0);
+      });
+  }
 
-    addApplaud(obj);
+  const onFinish = (values) => {
+    if (!applaudLimit > 0) {
+      openNotificationBox("error", "Max Limit has been reached to add applaud");
+    } else {
+      let obj = {
+        user_id: values.user_id,
+        comment: values.comment,
+        created_by: user.id,
+        category: values.category,
+      };
+
+      addApplaud(obj);
+    }
   };
 
   async function addApplaud(obj) {
-    await fetch("/api/applaud", {
-      method: "POST",
-      body: JSON.stringify(obj),
-    })
-      .then((response) => response.json())
-      .then((response) => {
+    await httpService
+      .post("/api/applaud", obj)
+      .then(({ data: response }) => {
         if (response.status === 200) {
           openNotificationBox("success", response.message, 3);
           router.push("/applaud");
-        } else {
-          openNotificationBox("error", response.message, 3);
         }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.error(err);
+        openNotificationBox("error", err.response.data.message);
+      });
   }
 
   // async function updateApplaud(obj) {
@@ -87,7 +108,8 @@ function AddApplaud({ user }) {
   // }
 
   useEffect(() => {
-    if (user) fetchMember(user);
+    fetchMember(user);
+    fetchApplaudLimit(user);
   }, []);
 
   return (
@@ -133,6 +155,59 @@ function AddApplaud({ user }) {
 
                 <Col md={24} xs={24}>
                   <Form.Item
+                    name="category"
+                    label={
+                      <p className="flex items-center">
+                        Category{" "}
+                        <span className="leading-[0] ml-2">
+                          {CustomPopover(
+                            "Category that can  define your applaud. Hover over them to see details"
+                          )}
+                        </span>
+                      </p>
+                    }
+                    rules={[
+                      {
+                        required: true,
+                      },
+                    ]}
+                  >
+                    <Select
+                      mode="multiple"
+                      size="large"
+                      placeholder="Category"
+                      className="select-tag tag-select-box "
+                    >
+                      {ApplaudCategoryList.length &&
+                        ApplaudCategoryList.map((item, idx) => {
+                          return (
+                            <Select.OptGroup
+                              label={item.name}
+                              key={idx + "group"}
+                            >
+                              {item.data.map((dataItem, i) => {
+                                return (
+                                  <Select.Option
+                                    key={i + dataItem.value}
+                                    value={dataItem.value}
+                                    title={dataItem.about}
+                                    className="font-medium"
+                                  >
+                                    <span title={dataItem.about}>
+                                      {dataItem.name}
+                                    </span>
+                                  </Select.Option>
+                                );
+                              })}
+                            </Select.OptGroup>
+                          );
+                        })}
+                    </Select>
+                  </Form.Item>
+                </Col>
+
+                <Col md={24} xs={24}>
+                  <Form.Item
                     name="comment"
                     label="Comment"
                     rules={[
@@ -156,7 +231,9 @@ function AddApplaud({ user }) {
                     <PrimaryButton
                       className="  my-1 rounded"
                       title="Create"
-                      btnProps={{ htmlType: "submit" }}
+                      btnProps={{
+                        htmlType: "submit",
+                      }}
                     />
                   </div>
                 </Col>
@@ -164,7 +241,7 @@ function AddApplaud({ user }) {
             </Form>
           </div>
         </div>
-      </div>{" "}
+      </div>
     </div>
   );
 }

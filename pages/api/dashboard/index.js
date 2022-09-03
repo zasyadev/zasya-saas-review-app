@@ -1,144 +1,143 @@
-// import moment from "moment";
-import prisma from "../../../lib/prisma";
+import { calculateMiliDuration } from "../../../helpers/momentHelper";
+import { RequestHandler } from "../../../lib/RequestHandler";
 
-// const getMonthName = (month) => {
-//   switch (month) {
-//     case 0:
-//       return "Jan";
-//     case 1:
-//       return "Feb";
-//     case 2:
-//       return "Mar";
-//     case 3:
-//       return "Apr";
-//     case 4:
-//       return "May";
-//     case 5:
-//       return "Jun";
-//     case 6:
-//       return "Jul";
-//     case 7:
-//       return "Aug";
-//     case 8:
-//       return "Sep";
-//     case 9:
-//       return "Oct";
-//     case 10:
-//       return "Nov";
-//     case 11:
-//       return "Dec";
+async function handle(req, res, prisma) {
+  const reqBody = req.body;
 
-//     default:
-//       return "";
-//   }
-// };
-
-export default async (req, res) => {
-  const reqBody = JSON.parse(req.body);
-
-  if (req.method === "POST") {
-    try {
-      if (reqBody.userId) {
-        const userTableData = await prisma.user.findUnique({
-          where: { id: reqBody.userId },
-        });
-        const reviewCreated = await prisma.review.findMany({
-          where: { created_by: reqBody.userId },
-          include: {
-            created: true,
-
-            form: {
-              include: {
-                questions: {
-                  include: { options: true },
-                },
-              },
-            },
-          },
-        });
-        const reviewRating = await prisma.review.findMany({
-          where: { created_by: reqBody.userId },
-          include: {
-            ReviewAssigneeAnswers: {
-              include: { ReviewAssigneeAnswerOption: true },
-            },
-          },
-        });
-
-        let reviewAnswered = await prisma.reviewAssigneeAnswers.findMany({
-          where: {
-            AND: [
-              {
-                user_id: reqBody.userId,
-              },
-              {
-                review: {
-                  is: { organization_id: userTableData.organization_id },
-                },
-              },
-            ],
-          },
-        });
-
-        const userData = await prisma.userOraganizationGroups.findMany({
-          where: {
-            AND: [
-              { organization_id: userTableData.organization_id },
-              { status: true },
-            ],
-          },
-        });
-
-        const applaudData = await prisma.userApplaud.findMany({
-          where: {
-            AND: [
-              { user_id: reqBody.userId },
-              { organization_id: userTableData.organization_id },
-            ],
-          },
-          include: {
-            user: true,
-          },
-        });
-
-        let filterApplaudData = [];
-        if (applaudData.length > 0) {
-          filterApplaudData = applaudData.filter((item) => {
-            delete item?.user?.password;
-            return true;
-          });
-        }
-
-        let data = {
-          reviewCreated: reviewCreated.length,
-          reviewAnswered: reviewAnswered.length,
-          userData: userData.length,
-          applaudData: filterApplaudData,
-          reviewRating: reviewRating,
-        };
-
-        if (data) {
-          return res.status(200).json({
-            status: 200,
-            data: data,
-            message: "Dashboard Data Received",
-          });
-        }
-
-        return res
-          .status(404)
-          .json({ status: 404, message: "No Record Found" });
-      }
-    } catch (error) {
-      return res.status(500).json({
-        error: error,
-        message: "Internal Server Error",
-        errorMessage: error,
+  try {
+    if (reqBody.userId) {
+      const userTableData = await prisma.user.findUnique({
+        where: { id: reqBody.userId },
       });
+      const reviewCreated = await prisma.review.findMany({
+        where: {
+          AND: [
+            {
+              created_by: reqBody.userId,
+            },
+            {
+              organization_id: userTableData.organization_id,
+            },
+          ],
+        },
+        include: {
+          created: true,
+
+          form: {
+            include: {
+              questions: {
+                include: { options: true },
+              },
+            },
+          },
+        },
+      });
+      const reviewRating = await prisma.review.findMany({
+        where: {
+          AND: [
+            {
+              created_by: reqBody.userId,
+            },
+            {
+              organization_id: userTableData.organization_id,
+            },
+          ],
+        },
+        include: {
+          ReviewAssigneeAnswers: {
+            include: { ReviewAssigneeAnswerOption: true },
+          },
+        },
+      });
+
+      let reviewAnswered = await prisma.reviewAssigneeAnswers.findMany({
+        where: {
+          AND: [
+            {
+              user_id: reqBody.userId,
+            },
+            {
+              review: {
+                is: { organization_id: userTableData.organization_id },
+              },
+            },
+          ],
+        },
+        include: {
+          review_assignee: true,
+        },
+      });
+
+      const userData = await prisma.userOraganizationGroups.findMany({
+        where: {
+          AND: [
+            { organization_id: userTableData.organization_id },
+            { status: true },
+          ],
+        },
+      });
+
+      const applaudData = await prisma.userApplaud.findMany({
+        where: {
+          AND: [
+            { user_id: reqBody.userId },
+            { organization_id: userTableData.organization_id },
+          ],
+        },
+        include: {
+          user: true,
+        },
+      });
+
+      let filterApplaudData = [];
+      if (applaudData.length > 0) {
+        filterApplaudData = applaudData.filter((item) => {
+          delete item?.user?.password;
+          return true;
+        });
+      }
+
+      let averageAnswerTime = 0;
+      if (reviewAnswered.length > 0) {
+        const totalMili = reviewAnswered.reduce((prev, curr) => {
+          let time = calculateMiliDuration({
+            from: curr.created_assignee_date,
+            to: curr.created_date,
+          });
+
+          return prev + time;
+        }, 0);
+
+        averageAnswerTime =
+          totalMili > 0 ? Math.round(totalMili / reviewAnswered.length) : 0;
+      }
+
+      let data = {
+        reviewCreatedCount: reviewCreated.length,
+        reviewAnsweredCount: reviewAnswered.length,
+        userCount: userData.length,
+        applaudCount: filterApplaudData.length,
+        reviewRating: reviewRating,
+        averageAnswerTime: averageAnswerTime,
+      };
+
+      if (data) {
+        return res.status(200).json({
+          status: 200,
+          data: data,
+          message: "Dashboard Data Received",
+        });
+      }
+
+      return res.status(404).json({ status: 404, message: "No Record Found" });
     }
-  } else {
-    return res.status(405).json({
-      message: "Method Not allowed",
+  } catch (error) {
+    return res.status(500).json({
+      error: error,
+      message: "Internal Server Error",
+      errorMessage: error,
     });
   }
-};
+}
+
+export default (req, res) => RequestHandler(req, res, handle, ["POST"]);

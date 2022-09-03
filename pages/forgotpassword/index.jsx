@@ -1,13 +1,12 @@
 import React, { useState } from "react";
-
 import { Form, Input, Spin } from "antd";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { openNotificationBox } from "../../component/common/notification";
 import { HeadersComponent } from "../../component/common/HeadersComponent";
 import AuthWrapper from "../../component/auth/AuthWrapper";
-
 import { LoadingOutlined } from "@ant-design/icons";
+import httpService from "../../lib/httpService";
 
 function ForgotPassword() {
   const router = useRouter();
@@ -20,25 +19,21 @@ function ForgotPassword() {
       email: values.email,
     };
     if (obj.email) {
-      await fetch("/api/user/password/forgotpassword", {
-        method: "POST",
-        body: JSON.stringify(obj),
-        // headers: {
-        //   "Content-Type": "application/json",
-        // },
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.status === 200) {
-            openNotificationBox("success", data.message, 3);
+      await httpService
+        .post(`/api/user/password/forgotpassword`, obj)
+        .then(({ data: response }) => {
+          if (response.status === 200) {
+            openNotificationBox("success", response.message, 3);
             forgotForm.resetFields();
             router.push("/auth/login");
-          } else {
-            openNotificationBox("error", data.message, 3);
           }
           setLoading(false);
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          console.error(err.response.data.message);
+          setLoading(false);
+          openNotificationBox("error", err.response.data.message);
+        });
     }
   }
   const antIcon = (

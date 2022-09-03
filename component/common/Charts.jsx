@@ -1,6 +1,8 @@
 import Chart from "react-apexcharts";
 import { Skeleton } from "antd";
 import React, { useState, useEffect } from "react";
+import httpService from "../../lib/httpService";
+import CustomPopover from "./CustomPopover";
 
 const defaultChartSeries = {
   name: "Feedback",
@@ -13,14 +15,14 @@ const defaultOptions = {
       show: false,
     },
     type: "bar",
-    height: 380,
+    height: 360,
   },
   plotOptions: {
     bar: {
       borderRadius: 14,
       columnWidth: "40%",
       dataLabels: {
-        position: "top", // top, center, bottom
+        position: "top",
       },
     },
   },
@@ -100,15 +102,7 @@ const defaultOptions = {
   },
   tooltip: {
     custom: function ({ series, seriesIndex, dataPointIndex, w }) {
-      return (
-        '<div class="tooltip_chart">' +
-        "<span>" +
-        w.globals.labels[dataPointIndex] +
-        ": " +
-        series[seriesIndex][dataPointIndex] +
-        "</span>" +
-        "</div>"
-      );
+      return `<div className="tooltip_chart"> <span> ${w.globals.labels[dataPointIndex]} : ${series[seriesIndex][dataPointIndex]} </span> </div>`;
     },
   },
 };
@@ -120,14 +114,12 @@ const BarChart = ({ user }) => {
   async function fetchChartData() {
     setLoading(true);
     setChartData([]);
-    await fetch("/api/dashboard/chart", {
-      method: "POST",
-      body: JSON.stringify({
+
+    await httpService
+      .post(`/api/dashboard/chart`, {
         userId: user.id,
-      }),
-    })
-      .then((response) => response.json())
-      .then((response) => {
+      })
+      .then(({ data: response }) => {
         if (response.status === 200) {
           setChartData((prev) => ({ ...prev, data: response.data }));
           setLoading(false);
@@ -135,6 +127,7 @@ const BarChart = ({ user }) => {
       })
       .catch((err) => {
         setChartData(defaultChartSeries);
+        console.error(err.response.data.message);
       });
   }
 
@@ -143,10 +136,15 @@ const BarChart = ({ user }) => {
   }, []);
 
   return (
-    <div
-    // className=" bg-blur-overlay"
-    >
-      <p className="chart-title text-primary">Feedback</p>
+    <div>
+      <p className="chart-title text-primary flex items-center">
+        Feedback{" "}
+        <span className="leading-[0] ml-2">
+          {CustomPopover(
+            "Count of Feedback given by the organization monthly."
+          )}
+        </span>
+      </p>
       {loading ? (
         <>
           {" "}
@@ -158,7 +156,7 @@ const BarChart = ({ user }) => {
           options={defaultOptions}
           series={[chartData]}
           type="bar"
-          height={380}
+          height={360}
           className="chart-data "
         />
       )}

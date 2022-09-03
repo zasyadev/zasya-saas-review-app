@@ -12,12 +12,14 @@
     "lint": "next lint",
     "migrate": "prisma migrate dev",
     "seed": "prisma db seed",
-    "schedule": "node bin/index.js"
+    "cronjob": "node bin/cron-job.js"
   },
   "dependencies": {
     "@prisma/client": "^3.15.2",
     "antd": "^4.21.6",
+    "antd-img-crop": "^4.2.4",
     "apexcharts": "^3.35.3",
+    "axios": "^0.27.2",
     "bcrypt": "^5.0.1",
     "chart.js": "^3.8.0",
     "moment": "^2.29.4",

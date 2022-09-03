@@ -2,7 +2,6 @@ import React from "react";
 import { Input, Row, Col } from "antd";
 import QuestionComponent from "../Form/QuestionComponent";
 import { CloseOutlined } from "@ant-design/icons";
-import Link from "next/link";
 import {
   PrimaryButton,
   SecondaryButton,

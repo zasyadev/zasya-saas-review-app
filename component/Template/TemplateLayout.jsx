@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Popconfirm } from "antd";
 import { openNotificationBox } from "../../component/common/notification";
-import { AddIcon, DeleteTemplateIcon } from "../../assets/Icon/icons";
+import { AddIcon, DeleteTemplateIcon } from "../../assets/icons";
 import Link from "next/link";
+import httpService from "../../lib/httpService";
 
 function TemplateLayout({ user }) {
   const [formList, setFormList] = useState(false);
@@ -10,19 +11,17 @@ function TemplateLayout({ user }) {
   async function fetchFormList() {
     // setLoading(true);
     setFormList([]);
-    await fetch("/api/template/" + user.id, {
-      method: "GET",
-    })
-      .then((response) => response.json())
-      .then((response) => {
+
+    await httpService
+      .get(`/api/template/${user.id}`)
+      .then(({ data: response }) => {
         if (response.status === 200) {
-          let data = response.data.filter((item) => item.status);
-          setFormList(data);
+          let filterData = response.data.filter((item) => item.status);
+          setFormList(filterData);
         }
-        // setLoading(false);
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err.response.data.message);
         setFormList([]);
       });
   }
@@ -32,23 +31,19 @@ function TemplateLayout({ user }) {
       let obj = {
         id: id,
       };
-      await fetch("/api/template", {
-        method: "DELETE",
-        body: JSON.stringify(obj),
-        // headers: {
-        //   "Content-Type": "application/json",
-        // },
-      })
-        .then((response) => response.json())
-        .then((response) => {
+
+      await httpService
+        .delete(`/api/template`, { data: obj })
+        .then(({ data: response }) => {
           if (response.status === 200) {
             fetchFormList();
             openNotificationBox("success", response.message, 3);
-          } else {
-            openNotificationBox("error", response.message, 3);
           }
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          console.error(err.response.data.message);
+          openNotificationBox("error", err.response.data.message);
+        });
     }
   }
 

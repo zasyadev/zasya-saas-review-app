@@ -6,6 +6,7 @@ import {
   PrimaryButton,
   SecondaryButton,
 } from "../../component/common/CustomButton";
+import httpService from "../../lib/httpService";
 
 function FormView({ user }) {
   const [loading, setLoading] = useState(false);
@@ -13,21 +14,20 @@ function FormView({ user }) {
   const [formAssignList, setFormAssignList] = useState([]);
 
   async function fetchFormAssignList() {
-    if (user.id) {
-      setLoading(true);
-      setFormAssignList([]);
-      await fetch("/api/form/" + user.id, { method: "GET" })
-        .then((response) => response.json())
-        .then((response) => {
-          if (response.status === 200) {
-            setFormAssignList(response.data);
-          }
-          setLoading(false);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
+    setLoading(true);
+    setFormAssignList([]);
+
+    await httpService
+      .get(`/api/form/${user.id}`)
+      .then(({ data: response }) => {
+        if (response.status === 200) {
+          setFormAssignList(response.data);
+        }
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error(err.response.data.message);
+      });
   }
 
   useEffect(() => {
@@ -96,7 +96,7 @@ function FormView({ user }) {
   ];
 
   return (
-    <div>
+    <>
       <div className="px-3 md:px-8 h-auto mt-5">
         <div className="container mx-auto max-w-full">
           <div className="grid grid-cols-1 px-4 mb-16">
@@ -139,7 +139,7 @@ function FormView({ user }) {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

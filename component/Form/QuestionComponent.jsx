@@ -2,15 +2,15 @@ import { Input, Select, Radio, Rate } from "antd";
 import { Col, Row } from "antd";
 import Image from "next/image";
 import React from "react";
-import CloseIcon from "../../assets/images/close-line.svg";
-import DeleteIcon from "../../assets/images/delete.svg";
+import CloseIcon from "../../assets/svg/close-line.svg";
+import DeleteIcon from "../../assets/svg/delete.svg";
 import {
   CheckboxIcon,
   DislikeIcon,
   LikeIcon,
   ScaleIcon,
   TextIcon,
-} from "../../assets/Icon/icons";
+} from "../../assets/icons";
 import { LikeOutlined, DislikeOutlined, StarOutlined } from "@ant-design/icons";
 
 const QuestionComponent = ({
@@ -374,7 +374,7 @@ const QuestionComponent = ({
               {questionText}
             </p>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
               {options?.length > 0 &&
                 type === "checkbox" &&
                 options?.map((op, j) => (
@@ -418,14 +418,6 @@ const QuestionComponent = ({
                       <Radio value={rg} className="text-white">
                         {rg}
                       </Radio>
-                      // <FormControlLabel
-                      //   value={rg}
-                      //   control={<Radio />}
-                      //   label={rg}
-                      //   labelPlacement="top"
-                      //   key={index + "range"}
-                      //   className="text-white"
-                      // />
                     ))}
                 </Radio.Group>
                 <p className="text-white text-2xl">{options[1]?.optionText}</p>

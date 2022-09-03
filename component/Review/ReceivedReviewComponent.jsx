@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import { openNotificationBox } from "../../component/common/notification";
 
 import { FormSlideComponent } from "./formhelper/FormComponent";
+import httpService from "../../lib/httpService";
 
 function ReceivedReviewComponent({ user, reviewId }) {
   const router = useRouter();
@@ -32,26 +33,6 @@ function ReceivedReviewComponent({ user, reviewId }) {
           : [...prev, { questionId: quesId, answer: value }]
       );
     }
-
-    // let res = formValues.map((item) => item.questionId === quesId);
-
-    // formValues.find((item) => item.questionId === quesId)
-    //   ? formValues.map((item) => item.answer === "")
-    //     ? setDisable(true)
-    //     : setDisable(false)
-    //   : null;
-
-    // if (value.length === 0 && res) {
-    //   setDisable(true);
-    // } else setDisable(false);
-
-    // setQuestions((prev) =>
-    //   prev.find((item) => item.id === quesId && item.error)
-    //     ? prev.map((item) =>
-    //         item.id === quesId && item.error ? { ...item, error: "" } : item
-    //       )
-    //     : prev
-    // );
   };
 
   const handleSubmit = async () => {
@@ -61,19 +42,6 @@ function ReceivedReviewComponent({ user, reviewId }) {
     }
     if (questions.length != formValues.length) {
       openNotificationBox("error", "You have to answer all question", 3);
-      // setQuestions((prev) =>
-      //   prev.map((queItem) => {
-      //     let errorAnswer;
-      //     formValues.forEach((ansItem, idx) => {
-      //       errorAnswer =
-      //         ansItem.questionId == queItem.id
-      //           ? queItem
-      //           : { ...queItem, error: "Answer field required!" };
-      //     });
-
-      //     return errorAnswer;
-      //   })
-      // );
       return;
     }
 
@@ -87,53 +55,45 @@ function ReceivedReviewComponent({ user, reviewId }) {
         created_assignee_date: reviewData.created_date,
       };
 
-      await fetch("/api/form/answer", {
-        method: "POST",
-        body: JSON.stringify(obj),
-      })
-        .then((response) => response.json())
-        .then((response) => {
+      await httpService
+        .post(`/api/form/answer`, obj)
+        .then(({ data: response }) => {
           if (response.status === 200) {
             openNotificationBox("success", response.message, 3);
             router.replace("/review/received");
-          } else {
-            openNotificationBox("error", response.message, 3);
           }
         })
         .catch((err) => {
-          console.log(err);
+          openNotificationBox("error", err.response.data.message, 3);
+          console.error(err.response.data.message);
         });
     }
   };
 
   const fetchReviewData = async (user, reviewId) => {
     setLoading(true);
-    // setFormAssignList([]);
-    await fetch("/api/review/received/" + reviewId, {
-      method: "POST",
-      body: JSON.stringify({
+
+    await httpService
+      .post(`/api/review/received/${reviewId}`, {
         userId: user.id,
-      }),
-    })
-      .then((response) => response.json())
-      .then((response) => {
+      })
+      .then(({ data: response }) => {
         if (response.status === 200) {
           setReviewData(response.data);
-          setQuestions(response?.data?.review?.form?.questions);
+          setQuestions(response.data?.review?.form?.questions);
         }
+
         setLoading(false);
       })
       .catch((err) => {
-        console.log(err);
+        openNotificationBox("error", err.response.data.message);
+        console.log(err.response.data.message);
       });
   };
-  // function handleCancel() {
-  //   router.push("/review");
-  // }
 
   useEffect(() => {
-    if (user && reviewId) fetchReviewData(user, reviewId);
-    else return;
+    if (reviewId) fetchReviewData(user, reviewId);
+    // else return;
   }, []);
 
   return (
@@ -146,6 +106,23 @@ function ReceivedReviewComponent({ user, reviewId }) {
           className="mt-4"
           rows={3}
         />
+      ) : reviewData?.status ? (
+        <>
+          <div className="text-right mt-4 mr-4">
+            <Link href="/review/received">
+              <button className="primary-bg-btn text-white py-2 px-4 rounded-md">
+                Back
+              </button>
+            </Link>
+          </div>
+          <div className="answer-preview">
+            <div className=" text-center bg-white rounded-xl py-10 shadow-md md:w-7/12 mx-auto">
+              <p className="text-lg font-bold text-red-400 mt-5">
+                Already Submitted This Review
+              </p>
+            </div>
+          </div>
+        </>
       ) : (
         <>
           <div className="text-right mt-4 mr-4">

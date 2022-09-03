@@ -1,21 +1,52 @@
 import React, { useState } from "react";
-import { Modal, Form, Input, Button, Col, Row, Upload, message } from "antd";
+import {
+  Modal,
+  Form,
+  Input,
+  Col,
+  Row,
+  Upload,
+  message,
+  Skeleton,
+  Checkbox,
+} from "antd";
 import { useEffect } from "react";
 import { openNotificationBox } from "../../component/common/notification";
 import Image from "next/image";
-import profileCover from "../../assets/images/profile-cover.png";
+import profileCover from "../../assets/images/profile-cover.webp";
 import userImage from "../../assets/images/User1.png";
-import { ShareIcon } from "../../assets/Icon/icons";
+import { ShareIcon } from "../../assets/icons";
 import { PlusOutlined } from "@ant-design/icons";
 import moment from "moment";
-import Link from "next/link";
 import { useS3Upload } from "next-s3-upload";
 import {
   PrimaryButton,
   SecondaryButton,
 } from "../../component/common/CustomButton";
+import ImgCrop from "antd-img-crop";
+import httpService from "../../lib/httpService";
+import CustomPopover from "../common/CustomPopover";
 
 const datePattern = "DD/MM/YYYY";
+
+const getSrcFromFile = (file) => {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file.originFileObj);
+    reader.onload = () => resolve(reader.result);
+  });
+};
+
+const notificationOptions = [
+  {
+    label: "Mail",
+    value: "mail",
+  },
+  {
+    label: "Slack",
+    value: "slack",
+  },
+];
 
 const BASE = process.env.NEXT_PUBLIC_APP_URL;
 const ImageUpload = ({
@@ -95,26 +126,46 @@ const ImageUpload = ({
   //   setPreviewTitle(file.name);
   // };
 
+  const onPreview = async (file) => {
+    const src = file.url || (await getSrcFromFile(file));
+    const imgWindow = window.open(src);
+
+    if (imgWindow) {
+      const image = new Image();
+      image.src = src;
+      imgWindow.document.write(image.outerHTML);
+    } else {
+      window.location.href = src;
+    }
+  };
+
   return (
     <>
-      <Form.Item name={formName} label="Image Upload">
-        <Upload
-          name="image"
-          listType="picture-card"
-          fileList={fileList}
-          // action={handleFileChange}
-          onChange={handleChange}
-          // onPreview={handlePreview}
-          data={{ category: category }}
-          // onRemove={(val) => deleteBanner(val.uid)}
-          beforeUpload={beforeUpload}
+      <Form.Item name={formName} label="Profile Image">
+        <ImgCrop
+          zoom
+          rotate={false}
+          shape="round"
+          modalClassName="image_crop_modal"
         >
-          {limit
-            ? fileList.length >= limitSize
-              ? null
-              : uploadImageButton
-            : uploadImageButton}
-        </Upload>
+          <Upload
+            name="image"
+            listType="picture-card"
+            fileList={fileList}
+            // action={handleFileChange}
+            onChange={handleChange}
+            onPreview={onPreview}
+            data={{ category: category }}
+            // onRemove={(val) => deleteBanner(val.uid)}
+            beforeUpload={beforeUpload}
+          >
+            {limit
+              ? fileList.length >= limitSize
+                ? null
+                : uploadImageButton
+              : uploadImageButton}
+          </Upload>
+        </ImgCrop>
       </Form.Item>
     </>
   );
@@ -122,20 +173,27 @@ const ImageUpload = ({
 function Profile({ user }) {
   const { uploadToS3 } = useS3Upload();
   const [passwordForm] = Form.useForm();
+  const [slackForm] = Form.useForm();
+  const [orgForm] = Form.useForm();
   const [profileForm] = Form.useForm();
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [showSlackEditModal, setShowSlackEditModal] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [editMode, setEditMode] = useState(false);
+  const [organizationModal, setOrganizationModal] = useState(false);
   const [userDetails, setUserDetails] = useState({});
+  const [applaudLimit, setApplaudLimit] = useState(0);
   const [receivedApplaudList, setReceivedApplaudList] = useState([]);
   const [givenApplaudList, setGivenApplaudList] = useState([]);
   const [image, setImage] = useState([]);
 
-  const showModal = () => {
+  const showPasswordEditModal = () => {
     setIsModalVisible(true);
   };
 
   let handleFileChange = async (file) => {
     let { url } = await uploadToS3(file);
+
     if (url) {
       return url;
     }
@@ -143,23 +201,23 @@ function Profile({ user }) {
   };
 
   const onFinish = async (values) => {
-    if (values.profileImage) {
-      let imageURL = await handleFileChange(image[0].originFileObj);
-      values.imageName = imageURL;
-      profileUpdate(values);
+    if (image.length) {
+      if (image[0]?.originFileObj) {
+        let imageURL = await handleFileChange(image[0].originFileObj);
+        values.imageName = imageURL;
+      } else {
+        values.imageName = image[0].url;
+      }
     } else {
       values.imageName = "";
-      profileUpdate(values);
     }
+    profileUpdate(values);
   };
 
   const profileUpdate = async (data) => {
-    await fetch("/api/profile/" + user.id, {
-      method: "POST",
-      body: JSON.stringify(data),
-    })
-      .then((response) => response.json())
-      .then((response) => {
+    await httpService
+      .post(`/api/profile/${user.id}`, data)
+      .then(({ data: response }) => {
         if (response.status === 200) {
           profileForm.resetFields();
           openNotificationBox("success", response.message, 3);
@@ -168,7 +226,7 @@ function Profile({ user }) {
           openNotificationBox("error", response.message, 3);
         }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.error(err.response.data.message));
   };
 
   const validateMessages = {
@@ -177,11 +235,10 @@ function Profile({ user }) {
 
   const getProfileData = async () => {
     setUserDetails({});
-    await fetch("/api/profile/" + user.id, {
-      method: "GET",
-    })
-      .then((response) => response.json())
-      .then((response) => {
+    setLoading(true);
+    await httpService
+      .get(`/api/profile/${user.id}`)
+      .then(({ data: response }) => {
         if (response.status === 200) {
           setUserDetails(response.data);
           profileForm.setFieldsValue({
@@ -191,13 +248,18 @@ function Profile({ user }) {
             address2: response.data.address2 ?? "",
             mobile: response.data.mobile ?? "",
             pin_code: response.data.pin_code ?? "",
+            notification: response.data.notification ?? [],
+          });
+          slackForm.setFieldsValue({
+            slack_email: response.data.slack_email ?? "",
           });
           setImageHandler(response.data.image);
 
           setEditMode(false);
+          setLoading(false);
         }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.error(err.response.data.message));
   };
 
   const setImageHandler = (img) => {
@@ -215,48 +277,31 @@ function Profile({ user }) {
             filepaths: [img],
           },
         },
-        originFileObj: img,
+        // originFileObj: img,
       });
 
       setImage(array);
     }
   };
 
-  const fetchReceivedApplaud = async () => {
-    setReceivedApplaudList([]);
-    await fetch("/api/applaud/" + user.id, {
-      method: "POST",
-      body: JSON.stringify({
-        user: user.id,
-      }),
-    })
-      .then((res) => res.json())
-      .then((res) => {
-        setReceivedApplaudList(res.data);
-      })
-      .catch((err) => {
-        setReceivedApplaudList([]);
-      });
-  };
-
-  async function fetchGivenApplaud() {
+  async function fetchApplaudData() {
     setGivenApplaudList([]);
-    await fetch("/api/applaud/" + user.id, { method: "GET" })
-      .then((res) => res.json())
-      .then((res) => {
-        setGivenApplaudList(res.data);
+    await httpService
+      .get(`/api/applaud/${user.id}`)
+      .then(({ data: res }) => {
+        setGivenApplaudList(res.data.givenApplaud);
+        setReceivedApplaudList(res.data.receivedApplaud);
       })
       .catch((err) => {
         setGivenApplaudList([]);
+        console.error(err.response.data.message);
       });
   }
 
   useEffect(() => {
-    if (user) {
-      getProfileData();
-      fetchReceivedApplaud();
-      fetchGivenApplaud();
-    }
+    getProfileData();
+    fetchApplaudData();
+    if (user.role_id === 2) fetchOrgData();
   }, []);
 
   async function onChangePassword(values) {
@@ -264,24 +309,19 @@ function Profile({ user }) {
       old_password: values.old_password,
       new_password: values.new_password,
     };
-    await fetch("/api/user/password/" + user.id, {
-      method: "POST",
-      body: JSON.stringify(obj),
-      // headers: {
-      //   "Content-Type": "application/json",
-      // },
-    })
-      .then((response) => response.json())
-      .then((response) => {
+
+    await httpService
+      .post(`/api/user/password/${user.id}`, obj)
+      .then(({ data: response }) => {
         if (response.status === 200) {
           passwordForm.resetFields();
           setIsModalVisible(false);
           openNotificationBox("success", response.message, 3);
-        } else {
-          openNotificationBox("error", response.message, 3);
         }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        openNotificationBox("error", err.response.data.message);
+      });
   }
 
   const shareLinkedinUrl = (data) => {
@@ -299,7 +339,79 @@ source=LinkedIn`);
     );
   };
 
-  return (
+  const onDeleteImage = () => {
+    setImage([]);
+  };
+
+  const onChangeSlack = async (values) => {
+    await httpService
+      .post(`/api/profile/slack/${user.id}`, values)
+      .then(({ data: response }) => {
+        if (response.status === 200) {
+          slackForm.resetFields();
+          setShowSlackEditModal(false);
+          openNotificationBox("success", response.message, 3);
+          getProfileData();
+        }
+      })
+      .catch((err) => {
+        console.log(err.response.data.message);
+        openNotificationBox("error", err.response.data.message, 3);
+      });
+  };
+  const onChangeOrgData = async (values) => {
+    await httpService
+      .put(`/api/profile/organization`, {
+        applaud_count: Number(values.applaud_count),
+        userId: user.id,
+        orgId: user.organization_id,
+      })
+      .then(({ data: response }) => {
+        if (response.status === 200) {
+          setOrganizationModal(false);
+          openNotificationBox("success", response.message, 3);
+          fetchOrgData();
+        }
+      })
+      .catch((err) => {
+        console.log(err.response.data.message);
+        openNotificationBox("error", err.response.data.message, 3);
+      });
+  };
+  const fetchOrgData = async () => {
+    await httpService
+      .post(`/api/profile/organization`, {
+        userId: user.id,
+      })
+      .then(({ data: response }) => {
+        if (response.status === 200) {
+          orgForm.setFieldsValue({
+            applaud_count: response.data.organization.applaud_count ?? 0,
+          });
+          setApplaudLimit(response.data.organization.applaud_count);
+        }
+      })
+      .catch((err) => {
+        console.log(err.response.data.message);
+        openNotificationBox("error", err.response.data.message, 3);
+      });
+  };
+
+  return loading ? (
+    <div className="px-3 md:px-8 h-auto">
+      <div className="grid grid-cols-1 xl:grid-cols-6 mt-1">
+        <div className="xl:col-start-1 xl:col-end-7 px-4 ">
+          <div className="w-full bg-white rounded-xl  shadow-md p-4 mt-2">
+            <Row gutter={16}>
+              <Col lg={24} xs={24} className="mt-4 items-center">
+                <Skeleton active />
+              </Col>
+            </Row>
+          </div>
+        </div>
+      </div>
+    </div>
+  ) : (
     <>
       {editMode ? (
         <div className="px-3 md:px-8 h-auto">
@@ -308,10 +420,17 @@ source=LinkedIn`);
               <div className="rounded-xl text-white grid items-center w-full shadow-lg-purple my-3">
                 <div className="w-full flex item-center justify-end">
                   <div className="flex justify-end ">
+                    <div className="mr-2">
+                      <SecondaryButton
+                        onClick={() => setShowSlackEditModal(true)}
+                        className="rounded h-full md:w-full w-32 mr-2"
+                        title="Change Slack Email"
+                      />
+                    </div>
                     <div>
                       <PrimaryButton
-                        onClick={() => showModal()}
-                        className="md:px-4 px-2 rounded-md md:w-full w-20"
+                        onClick={() => showPasswordEditModal()}
+                        className="md:px-4 px-2 rounded-md md:w-full w-24"
                         title="Change Password"
                       />
                     </div>
@@ -326,6 +445,9 @@ source=LinkedIn`);
                       layout="vertical"
                       onFinish={onFinish}
                       validateMessages={validateMessages}
+                      initialValues={{
+                        notification: ["mail"],
+                      }}
                     >
                       <Row gutter={16} justify="center">
                         <Col md={4} xs={24}>
@@ -336,6 +458,7 @@ source=LinkedIn`);
                                 fileList={image}
                                 setFileList={setImage}
                                 formName="profileImage"
+                                onDelete={onDeleteImage}
                               />
                             </Col>
                           </Row>
@@ -378,11 +501,11 @@ source=LinkedIn`);
                               <Form.Item
                                 label="Address Line 2"
                                 name="address2"
-                                rules={[
-                                  {
-                                    required: true,
-                                  },
-                                ]}
+                                // rules={[
+                                //   {
+                                //     required: true,
+                                //   },
+                                // ]}
                               >
                                 <Input
                                   placeholder="Address Line 2"
@@ -420,6 +543,19 @@ source=LinkedIn`);
                                   placeholder="About You"
                                   className="bg-gray-100 h-12 rounded-md"
                                 />
+                              </Form.Item>
+                            </Col>
+                            <Col md={24} sm={24} xs={24}>
+                              <Form.Item
+                                label="Notification Method "
+                                name="notification"
+                                rules={[
+                                  {
+                                    required: true,
+                                  },
+                                ]}
+                              >
+                                <Checkbox.Group options={notificationOptions} />
                               </Form.Item>
                             </Col>
                           </Row>
@@ -478,7 +614,7 @@ source=LinkedIn`);
                       </div>
                     </div>
                     <div>
-                      <p className="text-lg font-semibold text-center md:text-left">
+                      <p className="text-lg font-semibold text-center md:text-left mb-0">
                         {userDetails?.user?.first_name}
                       </p>
                     </div>
@@ -516,7 +652,7 @@ source=LinkedIn`);
               </div>
             </Col>
             <Col md={8} xs={24}>
-              <div className="bg-white rounded-sm transition-all duration-300 ease-in-out shadow-md mt-8">
+              <div className="bg-white rounded-sm transition-all duration-300 ease-in-out shadow-md ">
                 <div className="p-4">
                   <div className="m-2">
                     <p className="text-base font-semibold mb-1">About</p>
@@ -538,81 +674,107 @@ source=LinkedIn`);
                   </div>
                   <div className="m-2">
                     <p className="text-base font-semibold mb-1">Website</p>
-                    <Link href="https://zasyasolutions.com/" passHref>
-                      <a target="_blank">
-                        <p className="text-base font-normal mb-1">
-                          https://zasyasolutions.com
-                        </p>
-                      </a>
-                    </Link>
+
+                    <a
+                      target="_blank"
+                      href="https://zasyasolutions.com/"
+                      rel="noopener noreferrer"
+                    >
+                      <p className="text-base font-normal mb-1">
+                        https://zasyasolutions.com
+                      </p>
+                    </a>
                   </div>
+                  {user.role_id === 2 && user.organization_id ? (
+                    <div className="m-2">
+                      <p className="text-base font-semibold mb-1 flex items-center">
+                        Applaud Limit
+                        <span className="leading-[0] ml-2">
+                          {CustomPopover(
+                            "Count of Applauds that can be given by members in a month."
+                          )}
+                        </span>
+                      </p>
+
+                      <p className="text-base font-normal mb-1 flex items-center justify-between">
+                        {applaudLimit}{" "}
+                        <span
+                          onClick={() => setOrganizationModal(true)}
+                          className="font-semibold cursor-pointer"
+                        >
+                          Edit{" "}
+                        </span>
+                      </p>
+                    </div>
+                  ) : null}
                 </div>
               </div>
             </Col>
 
             <Col md={10} xs={24}>
-              {receivedApplaudList.length > 0
-                ? receivedApplaudList.map((item, idx) => {
-                    return (
-                      <div
-                        className="bg-white rounded-sm transition-all duration-300 ease-in-out shadow-md my-8  "
-                        key={idx + "applaud"}
-                      >
-                        <div className="p-4">
-                          <div className="m-2">
-                            <Row gutter={8}>
-                              <Col md={6} xs={6}>
-                                <div className=" w-14">
-                                  {/* <Image src={userImage} alt="userImage" /> */}
-                                  <Image
-                                    src={
-                                      item?.created?.UserDetails?.image
-                                        ? item?.created?.UserDetails?.image
-                                        : userImage
-                                    }
-                                    alt="userImage"
-                                    width={60}
-                                    height={60}
-                                    className="rounded-full"
-                                  />
-                                </div>
-                              </Col>
-                              <Col md={12} xs={6}>
-                                <div>
-                                  <p className="text-base font-semibold mb-1">
-                                    {item.created.first_name}{" "}
-                                  </p>
-                                  <p className="font-medium mb-1">
-                                    {moment(item.created_date).format(
-                                      datePattern
-                                    )}
-                                  </p>
-                                </div>
-                              </Col>
-                              <Col md={6} xs={6}>
-                                <div
-                                  className="flex justify-end cursor-pointer"
-                                  onClick={() => shareLinkedinUrl(item)}
-                                >
-                                  <div className="bg-red-400 py-2 px-2 rounded-full w-10">
-                                    <ShareIcon />
+              <div className="custom-scrollbar profile-applaud-card">
+                {receivedApplaudList.length > 0
+                  ? receivedApplaudList.map((item, idx) => {
+                      return (
+                        <div
+                          className="bg-white rounded-sm transition-all duration-300 ease-in-out shadow-md mb-4  "
+                          key={idx + "applaud"}
+                        >
+                          <div className="p-4">
+                            <div className="m-2">
+                              <Row gutter={8}>
+                                <Col md={6} xs={6}>
+                                  <div className=" w-14">
+                                    <Image
+                                      src={
+                                        item?.created?.UserDetails?.image
+                                          ? item?.created?.UserDetails?.image
+                                          : userImage
+                                      }
+                                      alt="userImage"
+                                      width={60}
+                                      height={60}
+                                      className="rounded-full"
+                                    />
                                   </div>
-                                </div>
-                              </Col>
-                              <Col md={24} xs={24}>
-                                <div className="mt-4">
-                                  <p className="text-base font-normal mb-0">
-                                    {item?.comment}
-                                  </p>
-                                </div>
-                              </Col>
-                            </Row>
+                                </Col>
+                                <Col md={12} xs={6}>
+                                  <div>
+                                    <p className="text-base font-semibold mb-1">
+                                      {item.created.first_name}{" "}
+                                    </p>
+                                    <p className="font-medium mb-1">
+                                      {moment(item.created_date).format(
+                                        datePattern
+                                      )}
+                                    </p>
+                                  </div>
+                                </Col>
+                                <Col md={6} xs={6}>
+                                  <div
+                                    className="flex justify-end cursor-pointer"
+                                    onClick={() => shareLinkedinUrl(item)}
+                                  >
+                                    <div className="bg-red-400 py-2 px-2 rounded-full w-10">
+                                      <ShareIcon />
+                                    </div>
+                                  </div>
+                                </Col>
+                                <Col md={24} xs={24}>
+                                  <div className="mt-4">
+                                    <p className="text-base font-normal mb-0">
+                                      {item?.comment}
+                                    </p>
+                                  </div>
+                                </Col>
+                              </Row>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    );
-                  })
-                : null}
+                      );
+                    })
+                  : null}
+              </div>
             </Col>
           </Row>
         </div>
@@ -710,6 +872,83 @@ source=LinkedIn`);
                   type="password"
                   className="form-control block w-full px-4 py-2 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-green-500 focus:outline-none"
                   placeholder="Confirm Password"
+                />
+              </Form.Item>
+            </div>
+          </Form>
+        </div>
+      </Modal>
+      <Modal
+        title="Change Slack Email"
+        visible={showSlackEditModal}
+        onCancel={() => setShowSlackEditModal(false)}
+        footer={[
+          <>
+            <SecondaryButton
+              onClick={() => setShowSlackEditModal(false)}
+              className="rounded h-full mr-2"
+              title="Cancel"
+            />
+            <PrimaryButton
+              onClick={() => slackForm.submit()}
+              className=" h-full rounded "
+              title="Change Email"
+            />
+          </>,
+        ]}
+        wrapClassName="view_form_modal"
+      >
+        <div>
+          <Form
+            form={slackForm}
+            layout="vertical"
+            autoComplete="off"
+            onFinish={onChangeSlack}
+          >
+            <div className=" mx-2">
+              <Form.Item label="Slack Email Address " name="slack_email">
+                <Input
+                  placeholder="Slack Email Address"
+                  className="form-control block w-full px-4 py-2 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-green-500 focus:outline-none"
+                />
+              </Form.Item>
+            </div>
+          </Form>
+        </div>
+      </Modal>
+      <Modal
+        title="Change Applaud Limit"
+        visible={organizationModal}
+        onCancel={() => setOrganizationModal(false)}
+        footer={[
+          <>
+            <SecondaryButton
+              onClick={() => setOrganizationModal(false)}
+              className="rounded h-full mr-2"
+              title="Cancel"
+            />
+            <PrimaryButton
+              onClick={() => orgForm.submit()}
+              className=" h-full rounded "
+              title="Change Limit"
+            />
+          </>,
+        ]}
+        wrapClassName="view_form_modal"
+      >
+        <div>
+          <Form
+            form={orgForm}
+            layout="vertical"
+            autoComplete="off"
+            onFinish={onChangeOrgData}
+          >
+            <div className=" mx-2">
+              <Form.Item label="Applaud Limit " name="applaud_count">
+                <Input
+                  placeholder=" Applaud Limit"
+                  className="form-control block w-full px-4 py-2 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white  focus:outline-none"
+                  type="number"
                 />
               </Form.Item>
             </div>

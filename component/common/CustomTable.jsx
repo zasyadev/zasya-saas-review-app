@@ -15,7 +15,6 @@ const CustomTable = ({
       {...props}
       columns={columns}
       dataSource={dataSource}
-      // rowKey={(record, index) => (record?.id ? record.id : index)}
       rowClassName={(_, index) =>
         index % 2 === 0 ? "" : "background-color-voilet"
       }

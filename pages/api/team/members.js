@@ -1,11 +1,11 @@
-import prisma from "../../../lib/prisma";
-import { hashedPassword, randomPassword } from "../../../lib/auth";
+import { hashedPassword } from "../../../lib/auth";
 import { mailService, mailTemplate } from "../../../lib/emailservice";
+import { RequestHandler } from "../../../lib/RequestHandler";
 
-export default async (req, res) => {
+async function handle(req, res, prisma) {
   if (req.method === "POST") {
     try {
-      const resData = JSON.parse(req.body);
+      const resData = req.body;
 
       let existingData = await prisma.user.findUnique({
         where: { email: resData.email },
@@ -28,7 +28,6 @@ export default async (req, res) => {
         });
 
         if (existingOrgUser.length > 0) {
-          prisma.$disconnect();
           return res
             .status(409)
             .json({ error: "409", message: "Duplicate Employee" });
@@ -86,13 +85,6 @@ export default async (req, res) => {
             data: userobj,
           });
           if (userData.id) {
-            // const savedTagsData = await transaction.userTags.create({
-            //   data: {
-            //     user: { connect: { id: userData.id } },
-            //     tags: resData.tags,
-            //   },
-            // });
-
             let userOrgData = await transaction.userOraganizationGroups.create({
               data: {
                 user: { connect: { id: userData.id } },
@@ -102,6 +94,12 @@ export default async (req, res) => {
                 },
                 status: true,
                 tags: resData.tags,
+              },
+            });
+
+            let userDeatilsTable = await transaction.userDetails.create({
+              data: {
+                user: { connect: { id: userData.id } },
               },
             });
           }
@@ -162,8 +160,6 @@ export default async (req, res) => {
         };
       });
 
-      prisma.$disconnect();
-
       return res.status(201).json({
         message: "Member Saved Successfully",
         data: transactionData.userData,
@@ -188,7 +184,7 @@ export default async (req, res) => {
     return;
   } else if (req.method === "PUT") {
     try {
-      const resData = JSON.parse(req.body);
+      const resData = req.body;
 
       let createdUserData = await prisma.user.findUnique({
         where: { id: resData.created_by },
@@ -268,7 +264,6 @@ export default async (req, res) => {
         };
       });
 
-      prisma.$disconnect();
       if (transactionData.userData) {
         return res.status(200).json({
           message: "Members Updated Successfully.",
@@ -284,7 +279,7 @@ export default async (req, res) => {
         .json({ error: error, message: "Internal Server Error" });
     }
   } else if (req.method === "DELETE") {
-    const reqBody = JSON.parse(req.body);
+    const reqBody = req.body;
 
     if (reqBody.email) {
       let existingData = await prisma.user.findUnique({
@@ -302,7 +297,7 @@ export default async (req, res) => {
           ],
         },
       });
-      prisma.$disconnect();
+
       if (existingOrgUser) {
         const deleteData = await prisma.userOraganizationGroups.delete({
           where: { id: existingOrgUser.id },
@@ -313,23 +308,14 @@ export default async (req, res) => {
           message: "Member Deleted Successfully.",
         });
       }
-      // const transactionData = await prisma.$transaction(async (transaction) => {
-      //   const deletaData = await transaction.user.update({
-      //     where: { email: reqBody.email },
-      //     data: { status: 0, deleted_date: new Date() },
-      //   });
-
-      //   return { deletaData };
-      // });
 
       return res.status(400).json({
         status: 400,
         message: "Failed To Delete Record.",
       });
     }
-  } else {
-    return res.status(405).json({
-      message: "Method Not allowed",
-    });
   }
-};
+}
+
+export default (req, res) =>
+  RequestHandler(req, res, handle, ["POST", "GET", "PUT", "DELETE"]);

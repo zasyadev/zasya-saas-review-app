@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import AdminLayout from "../../../component/layout/AdminLayout";
 import { getSession } from "next-auth/client";
 import AddEditReviewComponent from "../../../component/Review/AddEditReviewComponent";
+import httpService from "../../../lib/httpService";
 
 function ReviewEdit({ user }) {
   const [reviewData, setReviewData] = useState({});
@@ -14,18 +15,18 @@ function ReviewEdit({ user }) {
   const fetchReviewData = async (review_id) => {
     setLoading(true);
     setReviewData({});
-    await fetch("/api/review/edit/" + review_id, {
-      method: "GET",
-    })
-      .then((response) => response.json())
-      .then((response) => {
+
+    await httpService
+      .get(`/api/review/edit/${review_id}`)
+      .then(({ data: response }) => {
         if (response.status === 200) {
           setReviewData(response.data);
         }
         setLoading(false);
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err.response.data.message);
+        setLoading(false);
       });
   };
 
