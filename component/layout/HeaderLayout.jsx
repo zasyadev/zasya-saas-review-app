@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import {
   PlusOutlined,
   DownOutlined,
@@ -11,7 +11,7 @@ import {
 
 import Link from "next/link";
 
-import { Avatar, Dropdown, Layout, Menu, Row, Badge } from "antd";
+import { Avatar, Dropdown, Layout, Menu, Badge } from "antd";
 import { signOut } from "next-auth/client";
 import { useRouter } from "next/router";
 import { openNotificationBox } from "../../component/common/notification";
@@ -20,9 +20,9 @@ import DefaultImages from "../common/DefaultImages";
 
 const { Header } = Layout;
 
-function HeaderLayout({ title, pageName, user, collapsed, setCollapsed, md }) {
+function HeaderLayout({ title, user, collapsed, setCollapsed, md }) {
   const router = useRouter();
-  const [pendingNotification, setPendingNotification] = useState(0);
+
   const [allNotification, setAllNotification] = useState([]);
 
   const logoutHandler = () => {
@@ -43,19 +43,16 @@ function HeaderLayout({ title, pageName, user, collapsed, setCollapsed, md }) {
       });
   };
 
-  const notificationHandle = async () => {
-    setAllNotification([]);
-
+  const getAllNotification = async () => {
     await httpService
       .get(`/api/notification/${user.id}`)
       .then(({ data: response }) => {
         if (response.status === 200) {
           setAllNotification(response.data);
-          let filterData = response.data.filter((item) => !item.read_at);
-          if (filterData.length) setPendingNotification(filterData.length);
         }
       })
       .catch((err) => {
+        setAllNotification([]);
         console.error(err.response.data.message);
       });
   };
@@ -67,7 +64,7 @@ function HeaderLayout({ title, pageName, user, collapsed, setCollapsed, md }) {
       })
       .then(({ data: response }) => {
         if (response.status === 200) {
-          // console.log(response, "data");
+          getAllNotification();
         }
       })
       .catch((err) => {
@@ -75,8 +72,16 @@ function HeaderLayout({ title, pageName, user, collapsed, setCollapsed, md }) {
       });
   };
 
+  const unSeenNotificationCount = useMemo(
+    () =>
+      allNotification && allNotification?.length > 0
+        ? allNotification.filter((item) => !item.read_at).length
+        : 0,
+    [allNotification]
+  );
+
   useEffect(() => {
-    notificationHandle();
+    getAllNotification();
   }, []);
 
   const userMenu = (
@@ -165,107 +170,117 @@ function HeaderLayout({ title, pageName, user, collapsed, setCollapsed, md }) {
   );
 
   const notificationMenu = (
-    <div className="notification-wrapper">
-      {allNotification.length > 0 ? (
-        allNotification.map((item, idx) => (
-          <div
-            key={idx + "notification"}
-            className={`notification-box ${
-              allNotification.length - 1 > idx
-                ? "notification-border-bottom"
-                : null
-            }`}
-            onClick={() => notificationViewed(item.id)}
+    <div className="notification-wrapper bg-white shadow-xl rounded-md">
+      <div className="flex items-center justify-between border-b border-gray-300 p-2">
+        <p className="text-sm font-bold">Notifications</p>
+        {unSeenNotificationCount > 0 && (
+          <button
+            className="font-semibold text-xs text-primary rounded-full"
+            onClick={() => notificationViewed("ALL")}
           >
-            <Badge dot={item.read_at ? false : true}>
+            Mark all as read
+          </button>
+        )}
+      </div>
+      <div className="notification-inner no-scrollbar divide-y py-1">
+        {allNotification.length > 0 ? (
+          allNotification.map((item, idx) => (
+            <div
+              key={idx + "notification"}
+              className={`notification-box ${
+                allNotification.length - 1 > idx
+                  ? "notification-border-bottom"
+                  : null
+              }`}
+              onClick={() => notificationViewed(item.id)}
+            >
               <Link href={item.data.link}>
-                <p className="notification-text mb-0">{item.data.message}</p>
+                <p
+                  className={`${
+                    item.read_at ? "text-gray-400" : "font-medium"
+                  } hover:bg-gray-50 text-sm p-2 mb-0 cursor-pointer`}
+                >
+                  {item.data.message}
+                </p>
               </Link>
-            </Badge>
+            </div>
+          ))
+        ) : (
+          <div className="p-2 mb-0">
+            <p className="text-gray-400 text-center mb-0">No notifications</p>
           </div>
-        ))
-      ) : (
-        <div className="notification-box mb-0">
-          <p className="notification-text mb-0">No Notification</p>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 
   return (
     <Header className="ant-header bg-color-dashboard border-b border-b-neutral-300 p-0">
-      <div className="flex items-center  justify-between space-y-3">
-        <div className="font-bold mx-3 md:mx-6 text-lg md:text-2xl primary-color-blue">
+      <div className="flex items-center h-full justify-between mx-4 md:mx-6">
+        <div className="font-bold text-lg md:text-2xl primary-color-blue">
           {title}
         </div>
 
-        <div className="create-header-button flex items-center justify-end md:mr-3">
-          <div className="px-2 md:px-4 ">
-            <Dropdown
-              overlay={createMenu}
-              trigger={["click"]}
-              overlayClassName="create-dropdown"
+        <div className="create-header-button flex items-center justify-end space-x-3 md:space-x-5">
+          <Dropdown
+            overlay={createMenu}
+            trigger={["click"]}
+            overlayClassName="create-dropdown"
+          >
+            <div
+              key="create"
+              type="default"
+              className="primary-bg-btn text-white text-base h-9 px-3 rounded flex  items-center justify-center cursor-pointer"
             >
-              <div
-                key="create"
-                type="default"
-                className="primary-bg-btn text-white text-base py-2 md:py-2 px-2 rounded flex  items-center justify-center cursor-pointer"
-              >
-                <div className="hidden md:flex items-center ">
-                  <div className="mx-2 ">Create</div>
-                  <div className="text-xs ">
-                    <DownOutlined />
-                  </div>
-                </div>
-
-                <div className="md:hidden mx-1 text-base ">
-                  <PlusOutlined />
-                </div>
+              <div className="hidden md:flex items-center space-x-3">
+                <span>Create</span>
+                <DownOutlined className="text-xs" />
               </div>
-            </Dropdown>
-          </div>
+
+              <div className="md:hidden mx-1 text-base ">
+                <PlusOutlined />
+              </div>
+            </div>
+          </Dropdown>{" "}
           <Dropdown
             trigger={"click"}
             overlay={notificationMenu}
-            overlayClassName="notification-dropdown "
+            overlayClassName="notification-dropdown"
             placement="bottomRight"
+            className="w-10 h-10 py-2 px-3 bg-light grid place-content-center rounded-full cursor-pointer"
           >
-            <div className="notification-icon">
-              <Badge count={pendingNotification}>
-                <BellOutlined style={{ fontSize: 22 }} />
-              </Badge>
-            </div>
+            <Badge count={unSeenNotificationCount} offset={[-5, 5]}>
+              <BellOutlined className="text-base" />
+            </Badge>
           </Dropdown>
-          <div className="w-full user-menu-wrapper cursor-pointer rounded-md py-1 md:py-1 px-2 ">
-            <div className="flex items-center">
-              <Dropdown
-                trigger={"click"}
-                overlay={userMenu}
-                overlayClassName="logout-dropdown "
-                placement="bottomRight"
-              >
-                <div className="flex items-center">
-                  <div className="pr-2">
-                    <Avatar
-                      style={{
-                        color: "#f56a00",
-                        backgroundColor: "#fde3cf",
-                      }}
-                      alt="C"
-                    >
-                      {user?.organization && user?.organization?.company_name
-                        ? user.organization.company_name.substring(0, 1)
-                        : null}
-                    </Avatar>
-                  </div>
-                  <div className="md:mt-3">
-                    <p className="user-deatils whitespace-nowrap hidden md:block">
-                      {user?.organization?.company_name}
-                    </p>
-                  </div>
-                </div>
-              </Dropdown>
-            </div>
+          <div className="w-full user-menu-wrapper cursor-pointer rounded-md ">
+            <Dropdown
+              trigger={"click"}
+              overlay={userMenu}
+              overlayClassName="logout-dropdown "
+              placement="bottomRight"
+              className="py-2 px-3"
+            >
+              <div className="flex items-center">
+                <Avatar
+                  style={{
+                    color: "#f56a00",
+                    backgroundColor: "#fde3cf",
+                  }}
+                  alt="C"
+                  className="mr-3"
+                  size="small"
+                >
+                  {user?.organization && user?.organization?.company_name
+                    ? user.organization.company_name.substring(0, 1)
+                    : null}
+                </Avatar>
+
+                <p className="user-deatils whitespace-nowrap hidden md:block">
+                  {user?.organization?.company_name}
+                </p>
+              </div>
+            </Dropdown>
           </div>
           {!md ? (
             <div onClick={() => setCollapsed(!collapsed)} className="pr-2 pl-1">
