@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from "react";
+import { Skeleton } from "antd";
 import { Col, Row } from "antd/lib/grid";
-import Image from "next/image";
+import moment from "moment";
 import dynamic from "next/dynamic";
+import Image from "next/image";
+import Link from "next/link";
+import React, { useEffect, useState } from "react";
 import {
-  SmallApplaudIcon,
   ApplaudIconSmall,
   FileLeftIcon,
   FileRightIcon,
+  SmallApplaudIcon,
 } from "../../assets/icons";
-import { Skeleton } from "antd";
-import Link from "next/link";
-import moment from "moment";
 import httpService from "../../lib/httpService";
 import CustomPopover from "../common/CustomPopover";
 import DefaultImages from "../common/DefaultImages";

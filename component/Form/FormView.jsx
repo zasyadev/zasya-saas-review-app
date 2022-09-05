@@ -1,11 +1,11 @@
 import { Skeleton } from "antd";
-import React, { useEffect, useState } from "react";
-import CustomTable from "../../component/common/CustomTable";
 import Link from "next/link";
+import React, { useEffect, useState } from "react";
 import {
   PrimaryButton,
   SecondaryButton,
 } from "../../component/common/CustomButton";
+import CustomTable from "../../component/common/CustomTable";
 import httpService from "../../lib/httpService";
 
 function FormView({ user }) {

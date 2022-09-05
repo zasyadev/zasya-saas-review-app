@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
-import { Row, Col, Skeleton, Popconfirm } from "antd";
-import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
-import { openNotificationBox } from "../../component/common/notification";
-import CustomTable from "../../component/common/CustomTable";
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import { Col, Popconfirm, Row, Skeleton } from "antd";
 import Link from "next/link";
+import React, { useEffect, useState } from "react";
 import { PrimaryButton } from "../../component/common/CustomButton";
+import CustomTable from "../../component/common/CustomTable";
+import { openNotificationBox } from "../../component/common/notification";
 import httpService from "../../lib/httpService";
 
 function TeamMembers({ user }) {

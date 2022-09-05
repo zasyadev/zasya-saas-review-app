@@ -1,11 +1,11 @@
 import { Col, Form, Input, Row, Select } from "antd";
-import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { openNotificationBox } from "../../component/common/notification";
+import React, { useEffect, useState } from "react";
 import {
   PrimaryButton,
   SecondaryButton,
 } from "../../component/common/CustomButton";
+import { openNotificationBox } from "../../component/common/notification";
 import httpService from "../../lib/httpService";
 
 function AddTeamComponent({ user, editMode, memberData }) {

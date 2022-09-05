@@ -1,13 +1,13 @@
 import { Col, DatePicker, Row, Skeleton } from "antd";
 
-import React, { useState, useEffect } from "react";
-import CustomTable from "../../component/common/CustomTable";
 import moment from "moment";
+import React, { useEffect, useState } from "react";
 import { CalanderIcon, CommentIcons, UserIcon } from "../../assets/icons";
 import { PrimaryButton } from "../../component/common/CustomButton";
+import CustomTable from "../../component/common/CustomTable";
 import httpService from "../../lib/httpService";
-import { openNotificationBox } from "../common/notification";
 import CustomPopover from "../common/CustomPopover";
+import { openNotificationBox } from "../common/notification";
 
 function Applaud({ user }) {
   const [applaudList, setApplaudList] = useState([]);

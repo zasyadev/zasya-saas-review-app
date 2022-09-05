@@ -11,11 +11,13 @@ function AuthWrapper({ FormComponent, heading }) {
         lg={12}
         className="justify-center items-center register-wrapper"
       >
-        <div className="w-full py-6 md:mb-0 px-8 lg:px-16 flex flex-col justify-center h-screen overflow-auto">
-          <div className="login-top-image"></div>
-          <h2 className="login-heading">{heading}</h2>
-          <FormComponent />
-          <div className="login-bottom-image"></div>
+        <div className="w-full  py-6 md:mb-0 px-8 lg:px-16 flex flex-col justify-center h-screen  overflow-auto">
+          <div className="h-full px-4">
+            <div className="login-top-image"></div>
+            <h2 className="login-heading">{heading}</h2>
+            <FormComponent />
+            <div className="login-bottom-image"></div>
+          </div>
         </div>
       </Col>
       <Col xs={24} md={12} lg={12}>

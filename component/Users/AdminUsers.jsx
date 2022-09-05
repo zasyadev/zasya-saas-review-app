@@ -1,17 +1,17 @@
-import React, { useState, useEffect } from "react";
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import {
   Button,
-  Layout,
-  Modal,
+  Col,
   Form,
   Input,
-  Row,
-  Col,
-  Radio,
-  Skeleton,
+  Layout,
   message,
+  Modal,
+  Radio,
+  Row,
+  Skeleton,
 } from "antd";
-import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import React, { useEffect, useState } from "react";
 
 const { Content } = Layout;
 

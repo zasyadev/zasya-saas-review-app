@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
 import { Popconfirm } from "antd";
-import { openNotificationBox } from "../../component/common/notification";
-import { AddIcon, DeleteTemplateIcon } from "../../assets/icons";
 import Link from "next/link";
+import React, { useEffect, useState } from "react";
+import { AddIcon, DeleteTemplateIcon } from "../../assets/icons";
+import { openNotificationBox } from "../../component/common/notification";
 import httpService from "../../lib/httpService";
 
 function TemplateLayout({ user }) {

@@ -1,16 +1,16 @@
+import { LoadingOutlined } from "@ant-design/icons";
 import { Col, Form, Row, Select, Spin } from "antd";
 import TextArea from "antd/lib/input/TextArea";
-import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { openNotificationBox } from "../../component/common/notification";
+import React, { useEffect, useState } from "react";
 import {
   PrimaryButton,
   SecondaryButton,
 } from "../../component/common/CustomButton";
+import { openNotificationBox } from "../../component/common/notification";
+import { ApplaudCategoryList } from "../../constants";
 import httpService from "../../lib/httpService";
 import CustomPopover from "../common/CustomPopover";
-import { ApplaudCategoryList } from "../../constants";
-import { LoadingOutlined } from "@ant-design/icons";
 
 function AddApplaud({ user }) {
   const router = useRouter();

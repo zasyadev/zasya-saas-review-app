@@ -7,9 +7,8 @@ import {
 } from "@ant-design/icons";
 import { Grid, Layout } from "antd";
 import { Content, Footer } from "antd/lib/layout/layout";
-import { Fragment, useEffect, useState, useMemo } from "react";
+import { Fragment, useEffect, useMemo, useState } from "react";
 import { HeadersComponent } from "../../component/common/HeadersComponent";
-import httpService from "../../lib/httpService";
 import HeaderLayout from "./HeaderLayout";
 import SiderLayout from "./SiderLayout";
 

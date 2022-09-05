@@ -1,12 +1,12 @@
-import { Input, Button } from "antd";
+import { Button, Input } from "antd";
 import { useRouter } from "next/router";
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { openNotificationBox } from "../../component/common/notification";
 
 import { Modal } from "antd";
-import TemplateEditor from "./TemplateEditor";
 import httpService from "../../lib/httpService";
 import { SecondaryButton } from "../common/CustomButton";
+import TemplateEditor from "./TemplateEditor";
 
 const defaultQuestionConfig = {
   questionText: "Untitled Question",

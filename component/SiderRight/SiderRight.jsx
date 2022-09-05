@@ -88,7 +88,7 @@ function SiderRight({ dashBoardData }) {
         </Col>
 
         <Col xs={24} sm={24} md={24} lg={24}>
-          <div className="py-2 px-4  my-4 rounded ">
+          <div className="py-2 px-3  my-4 rounded ">
             <div className="flex flex-wrap items-center justify-between">
               <div>
                 <ClockIcon />
@@ -110,7 +110,7 @@ function SiderRight({ dashBoardData }) {
                 <p className="primary-color-blue text-xl font-extrabold my-2 ">
                   {tempTime.minutes()}
                 </p>
-                <p className="text-gray-500 text-base mb-0">Minute(s)</p>
+                <p className="text-gray-500 text-base mb-0">Min(s).</p>
               </div>
             </div>
           </div>
