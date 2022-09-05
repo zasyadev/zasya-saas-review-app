@@ -8,6 +8,7 @@ import AuthWrapper from "../../component/auth/AuthWrapper";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 import { LoadingOutlined } from "@ant-design/icons";
 import httpService from "../../lib/httpService";
+import { PrimaryButton } from "../../component/common/CustomButton";
 
 function ResetPassword() {
   const router = useRouter();
@@ -59,65 +60,61 @@ function ResetPassword() {
         onFinish={handleSubmit}
         className="login-form"
       >
-        <div className="md:mb-6  mb-4">
-          <Form.Item
-            name="password"
-            rules={[
-              {
-                required: true,
-                message: "Please enter your password!",
-              },
-            ]}
-          >
-            <Input.Password
-              type="password"
-              className="flex form-control w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white  focus:outline-none"
-              placeholder="New Password"
-              iconRender={(visible) =>
-                visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
-              }
-            />
-          </Form.Item>
-        </div>
-        <div className="md:mb-6  mb-4">
-          <Form.Item
-            name="confirm_password"
-            rules={[
-              {
-                required: true,
-                message: "Please confirm your password!",
-              },
-              ({ getFieldValue }) => ({
-                validator(_, value) {
-                  if (!value || getFieldValue("password") === value) {
-                    return Promise.resolve();
-                  }
-                  return Promise.reject(
-                    new Error(
-                      "The password that you have entered did not match!"
-                    )
-                  );
-                },
-              }),
-            ]}
-          >
-            <Input
-              type="password"
-              className="flex form-control  w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white  focus:outline-none"
-              placeholder="Confirm Password"
-            />
-          </Form.Item>
-        </div>
+        <Form.Item
+          name="password"
+          className="mb-3 lg:mb-5"
+          rules={[
+            {
+              required: true,
+              message: "Please enter your password!",
+            },
+          ]}
+        >
+          <Input.Password
+            type="password"
+            className="flex form-control w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white  focus:outline-none"
+            placeholder="New Password"
+            iconRender={(visible) =>
+              visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+            }
+          />
+        </Form.Item>
 
-        <div className=" md:flex justify-between text-center lg:text-left">
-          <button
-            type="submit"
-            className="inline-block px-7 py-5  text-white font-medium text-lg leading-snug  rounded shadow-md  hover:shadow-lg  focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out w-full btn-blue h-16"
-            disabled={loading}
-          >
-            {loading ? <Spin indicator={antIcon} /> : "Submit"}
-          </button>
-        </div>
+        <Form.Item
+          name="confirm_password"
+          className="mb-3 lg:mb-5"
+          rules={[
+            {
+              required: true,
+              message: "Please confirm your password!",
+            },
+            ({ getFieldValue }) => ({
+              validator(_, value) {
+                if (!value || getFieldValue("password") === value) {
+                  return Promise.resolve();
+                }
+                return Promise.reject(
+                  new Error("The password that you have entered did not match!")
+                );
+              },
+            }),
+          ]}
+        >
+          <Input
+            type="password"
+            className="flex form-control  w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white  focus:outline-none"
+            placeholder="Confirm Password"
+          />
+        </Form.Item>
+
+        <PrimaryButton
+          title="Submit"
+          loading={loading}
+          className="px-4 h-12 mt-2 text-white font-medium text-base xl:text-lg leading-snug shadow-md  hover:shadow-lg rounded  focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out w-full btn-blue "
+          btnProps={{
+            type: "submit",
+          }}
+        />
 
         <div className=" md:flex justify-end text-center lg:text-left">
           <p className="text-sm font-semibold mt-2 pt-1 mb-0">

@@ -10,6 +10,7 @@ import React, { useState } from "react";
 import { HeadersComponent } from "../../component/common/HeadersComponent";
 import { openNotificationBox } from "../../component/common/notification";
 import httpService from "../../lib/httpService";
+import { PrimaryButton } from "../common/CustomButton";
 import AuthWrapper from "./AuthWrapper";
 
 function RegisterPage() {
@@ -160,19 +161,18 @@ function RegisterPage() {
           />
         </Form.Item>
 
-        <div className=" md:block justify-between text-center lg:text-left mb-2">
-          <button
-            type="submit"
-            className="inline-block px-4 py-2 h-12  text-white font-medium text-lg leading-snug  rounded shadow-md  hover:shadow-lg  focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out w-full btn-blue "
-            disabled={loading}
-          >
-            {loading ? <Spin indicator={antIcon} /> : "Register"}
-          </button>
-        </div>
+        <PrimaryButton
+          title="Register"
+          loading={loading}
+          className="px-4 h-12 mt-2 text-white font-medium text-base xl:text-lg leading-snug shadow-md  hover:shadow-lg rounded  focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out w-full btn-blue "
+          btnProps={{
+            type: "submit",
+          }}
+        />
 
         <div className=" md:flex justify-end text-center lg:text-left">
           <p className="text-sm font-semibold mt-2 pt-1 mb-0">
-            <Link href="/auth/login">
+            <Link href="/auth/login" passHref>
               <span className="primary-color-blue  font-semibold transition duration-200 ease-in-out cursor-pointer mb-2">
                 Back to Login
               </span>

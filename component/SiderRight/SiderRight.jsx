@@ -97,20 +97,26 @@ function SiderRight({ dashBoardData }) {
                 <p className="primary-color-blue text-xl font-extrabold my-2 ">
                   {tempTime.days()}
                 </p>
-                <p className="text-gray-500 text-base mb-0">Day(s)</p>
+                <p className="text-gray-500 text-sm xl:text-base mb-0">
+                  Day(s)
+                </p>
               </div>
 
               <div className="flex flex-col items-center">
                 <p className="primary-color-blue text-xl font-extrabold my-2 ">
                   {tempTime.hours()}
                 </p>
-                <p className="text-gray-500 text-base mb-0">Hour(s)</p>
+                <p className="text-gray-500 text-sm xl:text-base mb-0">
+                  Hour(s)
+                </p>
               </div>
               <div className="flex flex-col items-center">
                 <p className="primary-color-blue text-xl font-extrabold my-2 ">
                   {tempTime.minutes()}
                 </p>
-                <p className="text-gray-500 text-base mb-0">Min(s).</p>
+                <p className="text-gray-500 text-sm xl:text-base mb-0">
+                  Min(s).
+                </p>
               </div>
             </div>
           </div>
