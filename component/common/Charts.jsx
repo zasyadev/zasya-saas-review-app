@@ -1,6 +1,6 @@
-import Chart from "react-apexcharts";
 import { Skeleton } from "antd";
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import Chart from "react-apexcharts";
 import httpService from "../../lib/httpService";
 import CustomPopover from "./CustomPopover";
 

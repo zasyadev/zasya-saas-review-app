@@ -1,11 +1,11 @@
-import React from "react";
-import { Input, Row, Col } from "antd";
-import QuestionComponent from "../Form/QuestionComponent";
 import { CloseOutlined } from "@ant-design/icons";
+import { Col, Input, Row } from "antd";
+import React from "react";
 import {
   PrimaryButton,
   SecondaryButton,
 } from "../../component/common/CustomButton";
+import QuestionComponent from "../Form/QuestionComponent";
 
 function TemplateEditor({
   setFormTitle,

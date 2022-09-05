@@ -391,8 +391,8 @@ export const FileRightIcon = () => {
 export const ClockIcon = () => {
   return (
     <svg
-      width="52"
-      height="52"
+      width="50"
+      height="50"
       viewBox="0 0 52 52"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"

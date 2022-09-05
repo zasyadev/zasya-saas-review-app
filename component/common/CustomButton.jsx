@@ -1,5 +1,17 @@
+import { LoadingOutlined } from "@ant-design/icons";
+import { Spin } from "antd";
 import Link from "next/link";
 import React from "react";
+
+const antIcon = (
+  <LoadingOutlined
+    style={{
+      fontSize: 24,
+      color: "white",
+    }}
+    spin
+  />
+);
 
 export function PrimaryButton({
   title,
@@ -8,25 +20,29 @@ export function PrimaryButton({
   className,
   linkHref,
   btnProps,
+  disabled = false,
+  loading = false,
 }) {
+  const isDisabled = disabled || loading;
+
+  const btnClassName = `text-white text-center px-4 py-2  ${className} ${
+    isDisabled ? "bg-primary/70" : "bg-primary"
+  }`;
+
   return withLink ? (
     <Link href={linkHref}>
-      <button
-        className={`primary-bg-btn
-     text-white text-center px-4 py-3  ${className}`}
-        {...btnProps}
-      >
-        {title}
+      <button className={btnClassName} {...btnProps} disabled={isDisabled}>
+        {loading ? <Spin indicator={antIcon} /> : title}
       </button>
     </Link>
   ) : (
     <button
-      className={`primary-bg-btn
-     text-white text-center px-4 py-3  ${className}`}
+      className={btnClassName}
       onClick={() => onClick()}
       {...btnProps}
+      disabled={isDisabled}
     >
-      {title}
+      {loading ? <Spin indicator={antIcon} /> : title}
     </button>
   );
 }
@@ -38,25 +54,28 @@ export function SecondaryButton({
   className,
   linkHref,
   btnProps,
+  disabled = false,
+  loading = false,
 }) {
+  const isDisabled = disabled || loading;
+
+  const btnClassName = `text-white text-center px-4 py-2  ${className} ${
+    isDisabled ? "bg-secondary/70" : "bg-secondary"
+  }`;
   return withLink ? (
     <Link href={linkHref}>
-      <button
-        className={`toggle-btn-bg
-       text-white text-center px-4 py-3  ${className}`}
-        {...btnProps}
-      >
-        {title}
+      <button className={btnClassName} {...btnProps} disabled={isDisabled}>
+        {loading ? <Spin indicator={antIcon} /> : title}
       </button>
     </Link>
   ) : (
     <button
-      className={`toggle-btn-bg
-       text-white text-center px-4 py-3  ${className}`}
+      className={btnClassName}
       onClick={() => onClick()}
       {...btnProps}
+      disabled={isDisabled}
     >
-      {title}
+      {loading ? <Spin indicator={antIcon} /> : title}
     </button>
   );
 }

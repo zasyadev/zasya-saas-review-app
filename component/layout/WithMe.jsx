@@ -1,7 +1,7 @@
-import React, { useEffect } from "react";
 import { useSession } from "next-auth/client";
-import { LoadingSpinner } from "../Loader/LoadingSpinner";
 import { useRouter } from "next/router";
+import React, { useEffect } from "react";
+import { LoadingSpinner } from "../Loader/LoadingSpinner";
 const WithMe = (props) => {
   const router = useRouter();
   const [session, loading] = useSession();

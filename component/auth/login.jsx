@@ -1,15 +1,15 @@
+import {
+  EyeInvisibleOutlined,
+  EyeTwoTone,
+  LoadingOutlined,
+} from "@ant-design/icons";
 import { Form, Input, Spin } from "antd";
 import { signIn } from "next-auth/client";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
-import {
-  LoadingOutlined,
-  EyeInvisibleOutlined,
-  EyeTwoTone,
-} from "@ant-design/icons";
-import { openNotificationBox } from "../../component/common/notification";
 import { HeadersComponent } from "../../component/common/HeadersComponent";
+import { openNotificationBox } from "../../component/common/notification";
 import AuthWrapper from "./AuthWrapper";
 
 function LoginPage() {

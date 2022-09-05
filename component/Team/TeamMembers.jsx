@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
-import { Row, Col, Skeleton, Popconfirm } from "antd";
-import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
-import { openNotificationBox } from "../../component/common/notification";
-import CustomTable from "../../component/common/CustomTable";
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import { Col, Popconfirm, Row, Skeleton } from "antd";
 import Link from "next/link";
+import React, { useEffect, useState } from "react";
 import { PrimaryButton } from "../../component/common/CustomButton";
+import CustomTable from "../../component/common/CustomTable";
+import { openNotificationBox } from "../../component/common/notification";
 import httpService from "../../lib/httpService";
 
 function TeamMembers({ user }) {
@@ -119,55 +119,51 @@ function TeamMembers({ user }) {
     },
   ];
   return (
-    <>
-      <Row>
-        <Col sm={24} md={24}>
-          <div className="px-3 md:px-8 h-auto mt-5">
-            <div className="container mx-auto max-w-full">
-              <div className="grid grid-cols-1 px-4 mb-16">
-                <div className="flex justify-end">
-                  <div className="my-2 ">
-                    <PrimaryButton
-                      withLink={true}
-                      className="rounded-md  px-2 md:px-4 "
-                      linkHref="/team/add"
-                      title={"Create"}
-                    />
-                  </div>
-                </div>
+    <Row>
+      <Col sm={24} md={24}>
+        <div className="container mx-auto max-w-full">
+          <div className="grid grid-cols-1  mb-16">
+            <div className="flex justify-end">
+              <div className="my-2 ">
+                <PrimaryButton
+                  withLink={true}
+                  className="rounded-md  px-2 md:px-4 "
+                  linkHref="/team/add"
+                  title={"Create"}
+                />
+              </div>
+            </div>
 
-                <div className="w-full bg-white rounded-xl overflow-hdden shadow-md px-4 pb-4 ">
-                  <div className="p-4 ">
-                    <div className="overflow-x-auto">
-                      {loading ? (
-                        <Skeleton
-                          title={false}
-                          active={true}
-                          width={[200]}
-                          className="mt-4"
-                          rows={3}
-                        />
-                      ) : (
-                        <CustomTable
-                          dataSource={membersList}
-                          columns={columns}
-                          className="custom-table"
-                          pagination={{
-                            defaultPageSize: 10,
-                            showSizeChanger: true,
-                            pageSizeOptions: ["10", "20", "50", "100"],
-                          }}
-                        />
-                      )}
-                    </div>
-                  </div>
+            <div className="w-full bg-white rounded-xl overflow-hdden shadow-md px-4 pb-4 ">
+              <div className="p-4 ">
+                <div className="overflow-x-auto">
+                  {loading ? (
+                    <Skeleton
+                      title={false}
+                      active={true}
+                      width={[200]}
+                      className="mt-4"
+                      rows={3}
+                    />
+                  ) : (
+                    <CustomTable
+                      dataSource={membersList}
+                      columns={columns}
+                      className="custom-table"
+                      pagination={{
+                        defaultPageSize: 10,
+                        showSizeChanger: true,
+                        pageSizeOptions: ["10", "20", "50", "100"],
+                      }}
+                    />
+                  )}
                 </div>
               </div>
             </div>
           </div>
-        </Col>
-      </Row>
-    </>
+        </div>
+      </Col>
+    </Row>
   );
 }
 

@@ -1,6 +1,6 @@
+import { DislikeOutlined, EditOutlined, LikeOutlined } from "@ant-design/icons";
+import { Col, Input, Radio, Rate, Row, Slider, Space } from "antd";
 import React, { useState } from "react";
-import { LikeOutlined, DislikeOutlined, EditOutlined } from "@ant-design/icons";
-import { Col, Row, Slider, Input, Radio, Space, Rate } from "antd";
 import { DeleteSmallTemplateIcon } from "../../assets/icons";
 
 const ReviewViewComponent = ({

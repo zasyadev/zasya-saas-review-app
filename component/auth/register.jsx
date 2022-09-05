@@ -1,16 +1,16 @@
-import { Col, Form, Input, message, Row, Spin } from "antd";
+import {
+  EyeInvisibleOutlined,
+  EyeTwoTone,
+  LoadingOutlined,
+} from "@ant-design/icons";
+import { Form, Input, Spin } from "antd";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { HeadersComponent } from "../../component/common/HeadersComponent";
 import { openNotificationBox } from "../../component/common/notification";
-import {
-  LoadingOutlined,
-  EyeInvisibleOutlined,
-  EyeTwoTone,
-} from "@ant-design/icons";
-import AuthWrapper from "./AuthWrapper";
 import httpService from "../../lib/httpService";
+import AuthWrapper from "./AuthWrapper";
 
 function RegisterPage() {
   const router = useRouter();
@@ -69,7 +69,7 @@ function RegisterPage() {
         >
           <Input
             type="text"
-            className="form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white  focus:outline-none"
+            className="form-control block w-full  px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white  focus:outline-none"
             placeholder=" Name"
           />
         </Form.Item>
@@ -173,7 +173,7 @@ function RegisterPage() {
         <div className=" md:flex justify-end text-center lg:text-left">
           <p className="text-sm font-semibold mt-2 pt-1 mb-0">
             <Link href="/auth/login">
-              <span className="primary-color-blue  font-semibold transition duration-200 ease-in-out cursor-pointer">
+              <span className="primary-color-blue  font-semibold transition duration-200 ease-in-out cursor-pointer mb-2">
                 Back to Login
               </span>
             </Link>

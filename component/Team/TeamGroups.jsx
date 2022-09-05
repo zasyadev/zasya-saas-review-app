@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from "react";
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import {
   Button,
-  Modal,
+  Col,
   Form,
   Input,
-  Row,
-  Col,
-  Radio,
-  Skeleton,
   message,
+  Modal,
+  Radio,
+  Row,
+  Skeleton,
 } from "antd";
-import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import React, { useEffect, useState } from "react";
 
 function Team({ user }) {
   const [form] = Form.useForm();

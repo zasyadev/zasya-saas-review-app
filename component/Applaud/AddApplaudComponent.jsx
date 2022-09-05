@@ -1,16 +1,16 @@
+import { LoadingOutlined } from "@ant-design/icons";
 import { Col, Form, Row, Select, Spin } from "antd";
 import TextArea from "antd/lib/input/TextArea";
-import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { openNotificationBox } from "../../component/common/notification";
+import React, { useEffect, useState } from "react";
 import {
   PrimaryButton,
   SecondaryButton,
 } from "../../component/common/CustomButton";
+import { openNotificationBox } from "../../component/common/notification";
+import { ApplaudCategoryList } from "../../constants";
 import httpService from "../../lib/httpService";
 import CustomPopover from "../common/CustomPopover";
-import { ApplaudCategoryList } from "../../constants";
-import { LoadingOutlined } from "@ant-design/icons";
 
 function AddApplaud({ user }) {
   const router = useRouter();
@@ -72,6 +72,7 @@ function AddApplaud({ user }) {
 
   async function addApplaud(obj) {
     setLoadingSubmitSpin(true);
+
     await httpService
       .post("/api/applaud", obj)
       .then(({ data: response }) => {
@@ -79,7 +80,6 @@ function AddApplaud({ user }) {
           openNotificationBox("success", response.message, 3);
           router.push("/applaud");
         }
-        setLoadingSubmitSpin(false);
       })
       .catch((err) => {
         console.error(err);
@@ -126,140 +126,132 @@ function AddApplaud({ user }) {
   );
 
   return (
-    <div>
-      <div className="w-full  md:w-3/6 mx-auto">
-        <div className="w-full bg-white rounded-xl shadow-md p-4 mt-4 add-template-wrapper">
-          <div className="  rounded-t-md  mt-1">
-            <Form
-              layout="vertical"
-              form={applaudform}
-              onFinish={onFinish}
-              validateMessages={validateMessages}
-            >
-              <Row gutter={16}>
-                <Col md={24} xs={24}>
-                  <Form.Item
-                    name="user_id"
-                    label="Member Name"
-                    rules={[
-                      {
-                        required: true,
-                      },
-                    ]}
-                  >
-                    <Select
-                      size="large"
-                      placeholder="Select Member"
-                      showSearch
-                      filterOption={(input, option) =>
-                        option.children
-                          .toLowerCase()
-                          .indexOf(input.toLowerCase()) >= 0
-                      }
-                    >
-                      {membersList.map((data, index) => (
-                        <Select.Option key={index} value={data.user_id}>
-                          {data?.user?.first_name}
-                        </Select.Option>
-                      ))}
-                    </Select>
-                  </Form.Item>
-                </Col>
-
-                <Col md={24} xs={24}>
-                  <Form.Item
-                    name="category"
-                    label={
-                      <p className="flex items-center">
-                        Category{" "}
-                        <span className="leading-[0] ml-2">
-                          {CustomPopover(
-                            "Category that can  define your applaud. Hover over them to see details"
-                          )}
-                        </span>
-                      </p>
+    <div className="w-full  md:w-3/6 mx-auto">
+      <div className="w-full bg-white rounded-xl shadow-md p-4 mt-4 add-template-wrapper">
+        <div className="  rounded-t-md  mt-1">
+          <Form
+            layout="vertical"
+            form={applaudform}
+            onFinish={onFinish}
+            validateMessages={validateMessages}
+          >
+            <Row gutter={16}>
+              <Col md={24} xs={24}>
+                <Form.Item
+                  name="user_id"
+                  label="Member Name"
+                  rules={[
+                    {
+                      required: true,
+                    },
+                  ]}
+                >
+                  <Select
+                    size="large"
+                    placeholder="Select Member"
+                    showSearch
+                    filterOption={(input, option) =>
+                      option.children
+                        .toLowerCase()
+                        .indexOf(input.toLowerCase()) >= 0
                     }
-                    rules={[
-                      {
-                        required: true,
-                      },
-                    ]}
                   >
-                    <Select
-                      mode="multiple"
-                      size="large"
-                      placeholder="Category"
-                      className="select-tag tag-select-box "
-                    >
-                      {ApplaudCategoryList.length &&
-                        ApplaudCategoryList.map((item, idx) => {
-                          return (
-                            <Select.OptGroup
-                              label={item.name}
-                              key={idx + "group"}
-                            >
-                              {item.data.map((dataItem, i) => {
-                                return (
-                                  <Select.Option
-                                    key={i + dataItem.value}
-                                    value={dataItem.value}
-                                    title={dataItem.about}
-                                    className="font-medium"
-                                  >
-                                    <span title={dataItem.about}>
-                                      {dataItem.name}
-                                    </span>
-                                  </Select.Option>
-                                );
-                              })}
-                            </Select.OptGroup>
-                          );
-                        })}
-                    </Select>
-                  </Form.Item>
-                </Col>
+                    {membersList.map((data, index) => (
+                      <Select.Option key={index} value={data.user_id}>
+                        {data?.user?.first_name}
+                      </Select.Option>
+                    ))}
+                  </Select>
+                </Form.Item>
+              </Col>
 
-                <Col md={24} xs={24}>
-                  <Form.Item
-                    name="comment"
-                    label="Comment"
-                    rules={[
-                      {
-                        required: true,
-                      },
-                    ]}
+              <Col md={24} xs={24}>
+                <Form.Item
+                  name="category"
+                  label={
+                    <p className="flex items-center">
+                      Category{" "}
+                      <span className="leading-[0] ml-2">
+                        {CustomPopover(
+                          "Category that can  define your applaud. Hover over them to see details"
+                        )}
+                      </span>
+                    </p>
+                  }
+                  rules={[
+                    {
+                      required: true,
+                    },
+                  ]}
+                >
+                  <Select
+                    mode="multiple"
+                    size="large"
+                    placeholder="Category"
+                    className="select-tag tag-select-box "
                   >
-                    <TextArea />
-                  </Form.Item>
-                </Col>
+                    {ApplaudCategoryList.length &&
+                      ApplaudCategoryList.map((item, idx) => {
+                        return (
+                          <Select.OptGroup
+                            label={item.name}
+                            key={idx + "group"}
+                          >
+                            {item.data.map((dataItem, i) => {
+                              return (
+                                <Select.Option
+                                  key={i + dataItem.value}
+                                  value={dataItem.value}
+                                  title={dataItem.about}
+                                  className="font-medium"
+                                >
+                                  <span title={dataItem.about}>
+                                    {dataItem.name}
+                                  </span>
+                                </Select.Option>
+                              );
+                            })}
+                          </Select.OptGroup>
+                        );
+                      })}
+                  </Select>
+                </Form.Item>
+              </Col>
 
-                <Col md={24} xs={24}>
-                  <div className="flex justify-end  ">
-                    <SecondaryButton
-                      withLink={true}
-                      linkHref="/applaud"
-                      className="mr-2 lg:mx-4 rounded my-1"
-                      title="Cancel"
-                    />
-                    <PrimaryButton
-                      className="  my-1 rounded"
-                      title={
-                        loadingSubmitSpin ? (
-                          <Spin indicator={antIcon} />
-                        ) : (
-                          `Create`
-                        )
-                      }
-                      btnProps={{
-                        htmlType: "submit",
-                        disabled: loadingSubmitSpin,
-                      }}
-                    />
-                  </div>
-                </Col>
-              </Row>
-            </Form>
-          </div>
+              <Col md={24} xs={24}>
+                <Form.Item
+                  name="comment"
+                  label="Comment"
+                  rules={[
+                    {
+                      required: true,
+                    },
+                  ]}
+                >
+                  <TextArea />
+                </Form.Item>
+              </Col>
+
+              <Col md={24} xs={24}>
+                <div className="flex justify-end  ">
+                  <SecondaryButton
+                    withLink={true}
+                    linkHref="/applaud"
+                    className="mr-2 lg:mx-4 rounded my-1"
+                    title="Cancel"
+                  />
+                  <PrimaryButton
+                    className="  my-1 rounded"
+                    title={`Create`}
+                    btnProps={{
+                      htmlType: "submit",
+                    }}
+                    loading={loadingSubmitSpin}
+                  />
+                </div>
+              </Col>
+            </Row>
+          </Form>
         </div>
       </div>
     </div>

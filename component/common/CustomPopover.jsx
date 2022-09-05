@@ -1,6 +1,6 @@
-import React from "react";
 import { InfoCircleOutlined } from "@ant-design/icons";
 import { Popover } from "antd";
+import React from "react";
 
 function CustomPopover(text) {
   return (

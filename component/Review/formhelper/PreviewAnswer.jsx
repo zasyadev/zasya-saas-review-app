@@ -1,6 +1,6 @@
+import { Col, Row } from "antd";
 import Link from "next/link";
 import React from "react";
-import { Row, Col } from "antd";
 
 export function PreviewAnswer({ item, nextSlide, setNextSlide, length }) {
   return (

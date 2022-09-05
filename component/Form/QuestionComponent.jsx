@@ -1,8 +1,8 @@
-import { Input, Select, Radio, Rate } from "antd";
-import { Col, Row } from "antd";
+import { Col, Input, Radio, Rate, Row, Select } from "antd";
 import Image from "next/image";
 import React from "react";
 
+import { DislikeOutlined, LikeOutlined, StarOutlined } from "@ant-design/icons";
 import {
   CheckboxIcon,
   DislikeIcon,
@@ -10,7 +10,6 @@ import {
   ScaleIcon,
   TextIcon,
 } from "../../assets/icons";
-import { LikeOutlined, DislikeOutlined, StarOutlined } from "@ant-design/icons";
 
 const QuestionComponent = ({
   type,

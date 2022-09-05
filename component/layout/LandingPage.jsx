@@ -1,6 +1,6 @@
-import React from "react";
+import { Col, Row } from "antd";
 import Image from "next/image";
-import { Row, Col } from "antd";
+import React from "react";
 
 function LandingPage() {
   return (
