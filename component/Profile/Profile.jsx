@@ -13,8 +13,6 @@ import {
 import { useEffect } from "react";
 import { openNotificationBox } from "../../component/common/notification";
 import Image from "next/image";
-import profileCover from "../../assets/images/profile-cover.webp";
-import userImage from "../../assets/images/User1.png";
 import { ShareIcon } from "../../assets/icons";
 import { PlusOutlined } from "@ant-design/icons";
 import moment from "moment";
@@ -26,6 +24,7 @@ import {
 import ImgCrop from "antd-img-crop";
 import httpService from "../../lib/httpService";
 import CustomPopover from "../common/CustomPopover";
+import DefaultImages from "../common/DefaultImages";
 
 const datePattern = "DD/MM/YYYY";
 
@@ -592,7 +591,7 @@ source=LinkedIn`);
               <div className="bg-white rounded-sm transition-all duration-300 ease-in-out shadow-md ">
                 <div>
                   <Image
-                    src={profileCover}
+                    src={"/media/images/profile-cover.webp"}
                     alt="profileCover"
                     layout="responsive"
                   />
@@ -602,14 +601,10 @@ source=LinkedIn`);
                   <div className="px-2 py-2 image-absolute">
                     <div className="w-20 mx-auto ">
                       <div className="rounded-full">
-                        <Image
-                          src={
-                            userDetails?.image ? userDetails?.image : userImage
-                          }
-                          alt="userImage"
+                        <DefaultImages
+                          imageSrc={userDetails?.image}
                           width={80}
                           height={80}
-                          className="rounded-full"
                         />
                       </div>
                     </div>
@@ -725,16 +720,12 @@ source=LinkedIn`);
                               <Row gutter={8}>
                                 <Col md={6} xs={6}>
                                   <div className=" w-14">
-                                    <Image
-                                      src={
+                                    <DefaultImages
+                                      imageSrc={
                                         item?.created?.UserDetails?.image
-                                          ? item?.created?.UserDetails?.image
-                                          : userImage
                                       }
-                                      alt="userImage"
                                       width={60}
                                       height={60}
-                                      className="rounded-full"
                                     />
                                   </div>
                                 </Col>

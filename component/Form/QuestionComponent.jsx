@@ -2,8 +2,7 @@ import { Input, Select, Radio, Rate } from "antd";
 import { Col, Row } from "antd";
 import Image from "next/image";
 import React from "react";
-import CloseIcon from "../../assets/svg/close-line.svg";
-import DeleteIcon from "../../assets/svg/delete.svg";
+
 import {
   CheckboxIcon,
   DislikeIcon,
@@ -205,7 +204,7 @@ const QuestionComponent = ({
                               }}
                             >
                               <Image
-                                src={CloseIcon}
+                                src={"/media/svg/close-line.svg"}
                                 alt="Close "
                                 width={20}
                                 height={20}
@@ -344,7 +343,7 @@ const QuestionComponent = ({
                       className="cursor-pointer mx-2 w-10  pr-2"
                     >
                       <Image
-                        src={DeleteIcon}
+                        src={"/media/svg/delete.svg"}
                         alt="Delete"
                         width={20}
                         height={20}

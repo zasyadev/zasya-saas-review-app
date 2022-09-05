@@ -1,7 +1,6 @@
 import React from "react";
 import { Menu, Layout } from "antd";
 import { useRouter } from "next/router";
-import Logo from "../../assets/images/review.png";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -28,7 +27,11 @@ function SiderLayout({ collapsed, setCollapsed, items, md }) {
       <div className="flex-col items-stretch min-h-full flex-nowrap px-0 relative">
         <Link href="/dashboard">
           <div className="mt-3 text-center w-full inline-block cursor-pointer px-3">
-            <Image src={Logo} width={100} height={50} />
+            <Image
+              src={"/media/images/logos/review.png"}
+              width={100}
+              height={50}
+            />
           </div>
         </Link>
 

@@ -1,12 +1,11 @@
 import { Col, DatePicker, Row, Timeline } from "antd";
 import React, { useEffect, useMemo, useState } from "react";
-import Image from "next/image";
-import User1 from "../../assets/images/User1.png";
 import { ApplaudGiven, ApplaudIconSmall } from "../../assets/icons";
 import { ClockCircleOutlined } from "@ant-design/icons";
 import moment from "moment";
 import httpService from "../../lib/httpService";
 import { openNotificationBox } from "../common/notification";
+import DefaultImages from "../common/DefaultImages";
 
 function AllAplaud({ user }) {
   const [allApplaud, setAllApplaud] = useState([]);
@@ -119,12 +118,10 @@ function AllAplaud({ user }) {
                           <Row justify="center">
                             <Col xs={10} md={10}>
                               <div className=" flex justify-center">
-                                <Image
-                                  src={value?.image ? value?.image : User1}
-                                  alt="userImage"
+                                <DefaultImages
+                                  imageSrc={value?.image}
                                   width={80}
                                   height={80}
-                                  className="rounded-full"
                                 />
                               </div>
                             </Col>

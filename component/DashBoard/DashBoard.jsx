@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Col, Row } from "antd/lib/grid";
 import Image from "next/image";
-import threeUser from "../../assets/images/threeusers.png";
-import ReviewIcon from "../../assets/images/reviewicon.png";
-import User1 from "../../assets/images/User1.png";
 import dynamic from "next/dynamic";
 import {
   SmallApplaudIcon,
@@ -16,6 +13,7 @@ import Link from "next/link";
 import moment from "moment";
 import httpService from "../../lib/httpService";
 import CustomPopover from "../common/CustomPopover";
+import DefaultImages from "../common/DefaultImages";
 
 const SiderRight = dynamic(() => import("../SiderRight/SiderRight"), {
   ssr: false,
@@ -138,7 +136,7 @@ function DashBoard({ user }) {
                   <div className="flex flex-wrap items-center border-gray-200 ">
                     <div className="mb-4 rounded-full text-white grid items-center w-10 h-10 py-1 px-1 justify-center grd-bg-pink">
                       <Image
-                        src={ReviewIcon}
+                        src={"/media/images/reviewicon.png"}
                         alt="logo"
                         width={20}
                         height={20}
@@ -164,7 +162,7 @@ function DashBoard({ user }) {
                   <div className="flex flex-wrap  border-gray-200 ">
                     <div className="grd-bg-pink  mb-4 rounded-full text-white grid items-center w-10 h-10 py-1 px-1 justify-center shadow-lg-purple ">
                       <Image
-                        src={threeUser}
+                        src={"/media/images/threeusers.png"}
                         alt="icon"
                         width={20}
                         height={20}
@@ -226,16 +224,8 @@ function DashBoard({ user }) {
                                       <Row className="">
                                         <Col xs={7} md={10}>
                                           <div className="p-2 mt-2 flex justify-center">
-                                            <Image
-                                              src={
-                                                value?.image
-                                                  ? value?.image
-                                                  : User1
-                                              }
-                                              alt="userImage"
-                                              width={60}
-                                              height={60}
-                                              className="rounded-full"
+                                            <DefaultImages
+                                              imageSrc={value?.image}
                                             />
                                           </div>
                                         </Col>
@@ -307,14 +297,10 @@ function DashBoard({ user }) {
                                 return (
                                   <Row className="my-3" key={idx + "feedback"}>
                                     <Col xs={6} md={5}>
-                                      <Image
-                                        src={
-                                          value?.image ? value?.image : User1
-                                        }
-                                        alt="userImage"
+                                      <DefaultImages
+                                        imageSrc={value?.image}
                                         width={70}
                                         height={70}
-                                        className="rounded-full"
                                       />
                                     </Col>
 

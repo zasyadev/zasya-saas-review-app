@@ -133,7 +133,8 @@ function ReceivedReviewComponent({ user, reviewId }) {
             </Link>
           </div>
           <Form layout="vertical" className="py-4" form={answerForm}>
-            {questions.length > 0 &&
+            {questions ? (
+              questions.length > 0 &&
               questions
                 ?.filter((_, index) => index === nextSlide)
                 ?.map((question, idx) => (
@@ -147,7 +148,25 @@ function ReceivedReviewComponent({ user, reviewId }) {
                     length={questions.length}
                     handleSubmit={handleSubmit}
                   />
-                ))}
+                ))
+            ) : (
+              <>
+                <div className="text-right mt-4 mr-4">
+                  <Link href="/review/received">
+                    <button className="primary-bg-btn text-white py-2 px-4 rounded-md">
+                      Back
+                    </button>
+                  </Link>
+                </div>
+                <div className="answer-preview">
+                  <div className=" text-center bg-white rounded-xl py-10 shadow-md md:w-7/12 mx-auto">
+                    <p className="text-lg font-bold text-red-400 mt-5">
+                      Review Not Found
+                    </p>
+                  </div>
+                </div>
+              </>
+            )}
           </Form>
         </>
       )}
