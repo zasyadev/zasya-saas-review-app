@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from "react";
-import { Form, Row, Col, Select, Input, Radio, Spin } from "antd";
-import { useRouter } from "next/router";
-import { openNotificationBox } from "../../component/common/notification";
-import Link from "next/link";
-import EditorWrapperComponent from "./EditorWrapperComponent";
 import { LoadingOutlined } from "@ant-design/icons";
+import { Col, Form, Input, Radio, Row, Select, Spin } from "antd";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import React, { useEffect, useState } from "react";
 import {
   PrimaryButton,
   SecondaryButton,
 } from "../../component/common/CustomButton";
+import { openNotificationBox } from "../../component/common/notification";
 import httpService from "../../lib/httpService";
+import EditorWrapperComponent from "./EditorWrapperComponent";
 
 const defaultScaleQuestion = {
   questionText: "Rating",
@@ -37,6 +37,7 @@ function AddEditReviewComponent({
   const [formTitle, setFormTitle] = useState("");
   const [nextFormFeild, setNextFormFeild] = useState(0);
   const [loadingSpin, setLoadingSpin] = useState(false);
+  const [loadingSubmitSpin, setLoadingSubmitSpin] = useState(false);
   const [disable, setDisable] = useState({
     review_name: false,
     template_id: false,
@@ -77,6 +78,7 @@ function AddEditReviewComponent({
 
   function onPreviewSubmit() {
     let values = userForm.getFieldsValue(true);
+    setLoadingSubmitSpin(true);
 
     if (!values.frequency) {
       openNotificationBox("error", "Need to Select Frequency", 3);
@@ -114,11 +116,14 @@ function AddEditReviewComponent({
         if (response.status === 200) {
           router.push("/review");
           openNotificationBox("success", response.message, 3);
-        } else {
-          openNotificationBox("error", response.message, 3);
         }
+        // setLoadingSubmitSpin(false);
       })
-      .catch((err) => console.error(err.response.data.message));
+      .catch((err) => {
+        console.error(err.response.data.message);
+        openNotificationBox("error", err.response.data.message, 3);
+        setLoadingSubmitSpin(false);
+      });
   }
 
   async function fetchTemplateData() {
@@ -324,8 +329,17 @@ function AddEditReviewComponent({
 
                     <PrimaryButton
                       onClick={() => onPreviewSubmit()}
-                      className="  h-full rounded md:w-1/4 my-1"
-                      title="Submit"
+                      className="h-full rounded md:w-1/4 my-1"
+                      title={
+                        loadingSubmitSpin ? (
+                          <Spin indicator={antIcon} />
+                        ) : (
+                          "Submit"
+                        )
+                      }
+                      btnProps={{
+                        disabled: loadingSubmitSpin,
+                      }}
                     />
                   </div>
                 </div>

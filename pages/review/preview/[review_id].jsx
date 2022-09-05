@@ -1,6 +1,5 @@
 import React from "react";
 import { useRouter } from "next/router";
-// import { getSession } from "next-auth/client";
 import { HeadersComponent } from "../../../component/common/HeadersComponent";
 import PreviewComponent from "../../../component/Review/PreviewComponent";
 import AdminLayout from "../../../component/layout/AdminLayout";
@@ -24,19 +23,3 @@ function ReceivedPage({ user }) {
 }
 
 export default ReceivedPage;
-// export async function getServerSideProps(context) {
-//   const session = await getSession({ req: context.req });
-
-//   if (!session) {
-//     return {
-//       redirect: {
-//         destination: "/",
-//         permanent: false,
-//       },
-//     };
-//   }
-//   const { user } = session;
-//   return {
-//     props: { user },
-//   };
-// }

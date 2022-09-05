@@ -89,7 +89,7 @@ function SiderRight({ dashBoardData }) {
 
         <Col xs={24} sm={24} md={24} lg={24}>
           <div className="py-2 px-4  my-4 rounded ">
-            <div className="flex  items-center justify-between">
+            <div className="flex flex-wrap items-center justify-between">
               <div>
                 <ClockIcon />
               </div>

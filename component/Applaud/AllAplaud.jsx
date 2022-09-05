@@ -1,11 +1,11 @@
+import { ClockCircleOutlined } from "@ant-design/icons";
 import { Col, DatePicker, Row, Timeline } from "antd";
+import moment from "moment";
 import React, { useEffect, useMemo, useState } from "react";
 import { ApplaudGiven, ApplaudIconSmall } from "../../assets/icons";
-import { ClockCircleOutlined } from "@ant-design/icons";
-import moment from "moment";
 import httpService from "../../lib/httpService";
-import { openNotificationBox } from "../common/notification";
 import DefaultImages from "../common/DefaultImages";
+import { openNotificationBox } from "../common/notification";
 
 function AllAplaud({ user }) {
   const [allApplaud, setAllApplaud] = useState([]);

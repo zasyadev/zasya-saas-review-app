@@ -59,7 +59,7 @@ function AdminLayout({ user, title, children }) {
   ];
 
   const filteredMenus = useMemo(() => {
-    if (user?.role == 2 || user?.role == 3) {
+    if (user.role_id !== 4) {
       return allMenus;
     } else {
       return allMenus.filter((item) => item.label !== "Team");

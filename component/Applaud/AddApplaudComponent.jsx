@@ -1,4 +1,4 @@
-import { Col, Form, Row, Select } from "antd";
+import { Col, Form, Row, Select, Spin } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
@@ -10,12 +10,14 @@ import {
 import httpService from "../../lib/httpService";
 import CustomPopover from "../common/CustomPopover";
 import { ApplaudCategoryList } from "../../constants";
+import { LoadingOutlined } from "@ant-design/icons";
 
 function AddApplaud({ user }) {
   const router = useRouter();
   const [applaudform] = Form.useForm();
   const [membersList, setMembersList] = useState([]);
   const [applaudLimit, setApplaudLimit] = useState(0);
+  const [loadingSubmitSpin, setLoadingSubmitSpin] = useState(false);
 
   const validateMessages = {
     required: "${label} is required!",
@@ -64,12 +66,12 @@ function AddApplaud({ user }) {
         created_by: user.id,
         category: values.category,
       };
-
       addApplaud(obj);
     }
   };
 
   async function addApplaud(obj) {
+    setLoadingSubmitSpin(true);
     await httpService
       .post("/api/applaud", obj)
       .then(({ data: response }) => {
@@ -77,10 +79,12 @@ function AddApplaud({ user }) {
           openNotificationBox("success", response.message, 3);
           router.push("/applaud");
         }
+        setLoadingSubmitSpin(false);
       })
       .catch((err) => {
         console.error(err);
         openNotificationBox("error", err.response.data.message);
+        setLoadingSubmitSpin(false);
       });
   }
 
@@ -111,6 +115,15 @@ function AddApplaud({ user }) {
     fetchMember(user);
     fetchApplaudLimit(user);
   }, []);
+  const antIcon = (
+    <LoadingOutlined
+      style={{
+        fontSize: 24,
+        color: "white",
+      }}
+      spin
+    />
+  );
 
   return (
     <div>
@@ -230,9 +243,16 @@ function AddApplaud({ user }) {
                     />
                     <PrimaryButton
                       className="  my-1 rounded"
-                      title="Create"
+                      title={
+                        loadingSubmitSpin ? (
+                          <Spin indicator={antIcon} />
+                        ) : (
+                          `Create`
+                        )
+                      }
                       btnProps={{
                         htmlType: "submit",
+                        disabled: loadingSubmitSpin,
                       }}
                     />
                   </div>

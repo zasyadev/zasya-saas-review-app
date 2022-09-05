@@ -107,7 +107,6 @@ async function handle(req, res, prisma) {
             where: { id: { in: resData.assigned_to_id } },
             include: { UserDetails: true },
           });
-          console.log(assignedToData, "assignedToData");
 
           const assignedFromData = await prisma.user.findUnique({
             where: { id: transactionData.savedData.created_by },
@@ -120,7 +119,7 @@ async function handle(req, res, prisma) {
                 assigned_to_id: user.id,
               },
             });
-            console.log("heree,", user.userData);
+
             if (
               user?.UserDetails &&
               user?.UserDetails?.notification &&
@@ -203,7 +202,6 @@ async function handle(req, res, prisma) {
         });
       }
 
-      prisma.$disconnect();
       if (transactionData.savedData) {
         return res.status(201).json({
           message: "Review Assigned Successfully",

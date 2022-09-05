@@ -80,7 +80,6 @@ async function handle(req, res, prisma) {
           .json({ error: "error", message: "User Not Found" });
       }
     } catch (error) {
-      console.log(error);
       return res
         .status(500)
         .json({ error: error, message: "Internal Server Error" });

@@ -1,7 +1,11 @@
-import React, { useState } from "react";
-import { Col, Form, Input, Radio, Rate, Row, Slider } from "antd";
+import {
+  DislikeOutlined,
+  LikeOutlined,
+  LoadingOutlined,
+} from "@ant-design/icons";
+import { Col, Form, Input, Radio, Rate, Row, Slider, Spin } from "antd";
 import TextArea from "antd/lib/input/TextArea";
-import { LikeOutlined, DislikeOutlined } from "@ant-design/icons";
+import React, { useState } from "react";
 import { openNotificationBox } from "../../../component/common/notification";
 
 export function FormSlideComponent({
@@ -15,6 +19,7 @@ export function FormSlideComponent({
   setNextSlide,
   length,
   handleSubmit,
+  loadingSpin,
 }) {
   const [sliderInputValue, setSliderInputValue] = useState({
     [id]: 0,
@@ -64,6 +69,16 @@ export function FormSlideComponent({
       );
     }
   };
+
+  const antIcon = (
+    <LoadingOutlined
+      style={{
+        fontSize: 24,
+        color: "white",
+      }}
+      spin
+    />
+  );
 
   return (
     <div className="answer-preview">
@@ -297,8 +312,9 @@ export function FormSlideComponent({
                 onClick={() => {
                   handleSubmit();
                 }}
+                disabled={loadingSpin}
               >
-                Submit
+                {loadingSpin ? <Spin indicator={antIcon} /> : "Submit"}
               </button>
             ) : (
               <button

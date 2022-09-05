@@ -12,6 +12,7 @@ function ReceivedReviewComponent({ user, reviewId }) {
   const [answerForm] = Form.useForm();
   const [reviewData, setReviewData] = useState({});
   const [loading, setLoading] = useState(false);
+  const [loadingSpin, setLoadingSpin] = useState(false);
   const [formValues, setFormValues] = useState([]);
   const [questions, setQuestions] = useState([]);
   const [nextSlide, setNextSlide] = useState(0);
@@ -36,6 +37,7 @@ function ReceivedReviewComponent({ user, reviewId }) {
   };
 
   const handleSubmit = async () => {
+    setLoadingSpin(true);
     if (formValues.length <= 0) {
       openNotificationBox("error", "You have to answer all question", 3);
       return;
@@ -62,10 +64,12 @@ function ReceivedReviewComponent({ user, reviewId }) {
             openNotificationBox("success", response.message, 3);
             router.replace("/review/received");
           }
+          // setLoadingSpin(false);
         })
         .catch((err) => {
           openNotificationBox("error", err.response.data.message, 3);
           console.error(err.response.data.message);
+          setLoadingSpin(false);
         });
     }
   };
@@ -147,6 +151,7 @@ function ReceivedReviewComponent({ user, reviewId }) {
                     setNextSlide={setNextSlide}
                     length={questions.length}
                     handleSubmit={handleSubmit}
+                    loadingSpin={loadingSpin}
                   />
                 ))
             ) : (
