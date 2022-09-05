@@ -61,20 +61,6 @@ function HeaderLayout({ title, user, collapsed, setCollapsed, md }) {
     await httpService
       .post(`/api/notification`, {
         id: data,
-      })
-      .then(({ data: response }) => {
-        if (response.status === 200) {
-          getAllNotification();
-        }
-      })
-      .catch((err) => {
-        console.error(err.response.data.message);
-      });
-  };
-
-  const handleMarkAllRead = async () => {
-    await httpService
-      .put(`/api/notification`, {
         user_id: user.id,
       })
       .then(({ data: response }) => {
@@ -191,7 +177,7 @@ function HeaderLayout({ title, user, collapsed, setCollapsed, md }) {
         {unSeenNotificationCount > 0 && (
           <button
             className="font-semibold text-xs text-primary rounded-full"
-            onClick={() => handleMarkAllRead()}
+            onClick={() => notificationViewed("ALL")}
           >
             Mark all as read
           </button>
