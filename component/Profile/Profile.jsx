@@ -396,195 +396,191 @@ source=LinkedIn`);
   };
 
   return loading ? (
-    <div className="px-3 md:px-8 h-auto">
-      <div className="grid grid-cols-1 xl:grid-cols-6 mt-1">
-        <div className="xl:col-start-1 xl:col-end-7 px-4 ">
-          <div className="w-full bg-white rounded-xl  shadow-md p-4 mt-2">
-            <Row gutter={16}>
-              <Col lg={24} xs={24} className="mt-4 items-center">
-                <Skeleton active />
-              </Col>
-            </Row>
-          </div>
+    <div className="grid grid-cols-1 xl:grid-cols-6 mt-1">
+      <div className="xl:col-start-1 xl:col-end-7 px-4 ">
+        <div className="w-full bg-white rounded-xl  shadow-md p-4 mt-2">
+          <Row gutter={16}>
+            <Col lg={24} xs={24} className="mt-4 items-center">
+              <Skeleton active />
+            </Col>
+          </Row>
         </div>
       </div>
     </div>
   ) : (
     <>
       {editMode ? (
-        <div className="px-3 md:px-8 h-auto">
-          <div className="grid grid-cols-1 xl:grid-cols-6 mt-1">
-            <div className="xl:col-start-1 xl:col-end-7 px-4 ">
-              <div className="rounded-xl text-white grid items-center w-full shadow-lg-purple my-3">
-                <div className="w-full flex item-center justify-end">
-                  <div className="flex justify-end ">
-                    <div className="mr-2">
-                      <SecondaryButton
-                        onClick={() => setShowSlackEditModal(true)}
-                        className="rounded h-full md:w-full w-32 mr-2"
-                        title="Change Slack Email"
-                      />
-                    </div>
-                    <div>
-                      <PrimaryButton
-                        onClick={() => showPasswordEditModal()}
-                        className="md:px-4 px-2 rounded-md md:w-full w-24"
-                        title="Change Password"
-                      />
-                    </div>
+        <div className="grid grid-cols-1 xl:grid-cols-6 mt-1">
+          <div className="xl:col-start-1 xl:col-end-7 px-4 ">
+            <div className="rounded-xl text-white grid items-center w-full shadow-lg-purple my-3">
+              <div className="w-full flex item-center justify-end">
+                <div className="flex justify-end ">
+                  <div className="mr-2">
+                    <SecondaryButton
+                      onClick={() => setShowSlackEditModal(true)}
+                      className="rounded h-full md:w-full w-32 mr-2"
+                      title="Change Slack Email"
+                    />
+                  </div>
+                  <div>
+                    <PrimaryButton
+                      onClick={() => showPasswordEditModal()}
+                      className="md:px-4 px-2 rounded-md md:w-full w-24"
+                      title="Change Password"
+                    />
                   </div>
                 </div>
               </div>
-              <div className="w-full bg-white rounded-xl  shadow-md p-4 ">
-                <Row gutter={16}>
-                  <Col lg={24} xs={24} className="mt-4 items-center">
-                    <Form
-                      form={profileForm}
-                      layout="vertical"
-                      onFinish={onFinish}
-                      validateMessages={validateMessages}
-                      initialValues={{
-                        notification: ["mail"],
-                      }}
-                    >
-                      <Row gutter={16} justify="center">
-                        <Col md={4} xs={24}>
-                          <Row justify="center">
-                            <Col md={24} xs={24}>
-                              <ImageUpload
-                                category="profile"
-                                fileList={image}
-                                setFileList={setImage}
-                                formName="profileImage"
-                                onDelete={onDeleteImage}
+            </div>
+            <div className="w-full bg-white rounded-xl  shadow-md p-4 ">
+              <Row gutter={16}>
+                <Col lg={24} xs={24} className="mt-4 items-center">
+                  <Form
+                    form={profileForm}
+                    layout="vertical"
+                    onFinish={onFinish}
+                    validateMessages={validateMessages}
+                    initialValues={{
+                      notification: ["mail"],
+                    }}
+                  >
+                    <Row gutter={16} justify="center">
+                      <Col md={4} xs={24}>
+                        <Row justify="center">
+                          <Col md={24} xs={24}>
+                            <ImageUpload
+                              category="profile"
+                              fileList={image}
+                              setFileList={setImage}
+                              formName="profileImage"
+                              onDelete={onDeleteImage}
+                            />
+                          </Col>
+                        </Row>
+                      </Col>
+                      <Col md={12} xs={24}>
+                        <Row>
+                          <Col md={24} xs={24}>
+                            <Form.Item
+                              label="Name"
+                              name="first_name"
+                              rules={[
+                                {
+                                  required: true,
+                                },
+                              ]}
+                            >
+                              <Input
+                                placeholder="Name"
+                                className="bg-gray-100 h-12 rounded-md"
                               />
-                            </Col>
-                          </Row>
-                        </Col>
-                        <Col md={12} xs={24}>
-                          <Row>
-                            <Col md={24} xs={24}>
-                              <Form.Item
-                                label="Name"
-                                name="first_name"
-                                rules={[
-                                  {
-                                    required: true,
-                                  },
-                                ]}
-                              >
-                                <Input
-                                  placeholder="Name"
-                                  className="bg-gray-100 h-12 rounded-md"
-                                />
-                              </Form.Item>
-                            </Col>
-                            <Col md={24} sm={24} xs={24}>
-                              <Form.Item
-                                label="Address Line 1"
-                                name="address1"
-                                rules={[
-                                  {
-                                    required: true,
-                                  },
-                                ]}
-                              >
-                                <Input
-                                  placeholder="Address Line 1"
-                                  className="bg-gray-100 h-12 rounded-md"
-                                />
-                              </Form.Item>
-                            </Col>
-                            <Col md={24} sm={24} xs={24}>
-                              <Form.Item
-                                label="Address Line 2"
-                                name="address2"
-                                // rules={[
-                                //   {
-                                //     required: true,
-                                //   },
-                                // ]}
-                              >
-                                <Input
-                                  placeholder="Address Line 2"
-                                  className="bg-gray-100 h-12 rounded-md"
-                                />
-                              </Form.Item>
-                            </Col>
-                            <Col md={24} sm={24} xs={24}>
-                              <Form.Item
-                                label="Phone Number"
-                                name="mobile"
-                                rules={[
-                                  {
-                                    required: true,
-                                  },
-                                ]}
-                              >
-                                <Input
-                                  placeholder="Mobile"
-                                  className="bg-gray-100 h-12 rounded-md"
-                                />
-                              </Form.Item>
-                            </Col>
-                            <Col md={24} sm={24} xs={24}>
-                              <Form.Item
-                                label="About "
-                                name="about"
-                                rules={[
-                                  {
-                                    required: true,
-                                  },
-                                ]}
-                              >
-                                <Input
-                                  placeholder="About You"
-                                  className="bg-gray-100 h-12 rounded-md"
-                                />
-                              </Form.Item>
-                            </Col>
-                            <Col md={24} sm={24} xs={24}>
-                              <Form.Item
-                                label="Notification Method "
-                                name="notification"
-                                rules={[
-                                  {
-                                    required: true,
-                                  },
-                                ]}
-                              >
-                                <Checkbox.Group options={notificationOptions} />
-                              </Form.Item>
-                            </Col>
-                          </Row>
-                        </Col>
-                      </Row>
-                      <div className="text-center">
-                        <SecondaryButton
-                          onClick={() => setEditMode(false)}
-                          className="rounded h-full w-32 mr-2"
-                          title="Cancel"
-                        />
-                        <PrimaryButton
-                          btnProps={{ htmlType: "submit" }}
-                          className=" h-full w-32 rounded "
-                          title="Submit"
-                        />
-                      </div>
-                    </Form>
-                  </Col>
-                </Row>
-                <div className="p-4 ">
-                  <div className="border-t border-lightBlue-200 text-center px-2 ">
-                    <p className="text-blue-gray-700 text-lg font-light leading-relaxed mt-6 mb-4"></p>
-                  </div>
+                            </Form.Item>
+                          </Col>
+                          <Col md={24} sm={24} xs={24}>
+                            <Form.Item
+                              label="Address Line 1"
+                              name="address1"
+                              rules={[
+                                {
+                                  required: true,
+                                },
+                              ]}
+                            >
+                              <Input
+                                placeholder="Address Line 1"
+                                className="bg-gray-100 h-12 rounded-md"
+                              />
+                            </Form.Item>
+                          </Col>
+                          <Col md={24} sm={24} xs={24}>
+                            <Form.Item
+                              label="Address Line 2"
+                              name="address2"
+                              // rules={[
+                              //   {
+                              //     required: true,
+                              //   },
+                              // ]}
+                            >
+                              <Input
+                                placeholder="Address Line 2"
+                                className="bg-gray-100 h-12 rounded-md"
+                              />
+                            </Form.Item>
+                          </Col>
+                          <Col md={24} sm={24} xs={24}>
+                            <Form.Item
+                              label="Phone Number"
+                              name="mobile"
+                              rules={[
+                                {
+                                  required: true,
+                                },
+                              ]}
+                            >
+                              <Input
+                                placeholder="Mobile"
+                                className="bg-gray-100 h-12 rounded-md"
+                              />
+                            </Form.Item>
+                          </Col>
+                          <Col md={24} sm={24} xs={24}>
+                            <Form.Item
+                              label="About "
+                              name="about"
+                              rules={[
+                                {
+                                  required: true,
+                                },
+                              ]}
+                            >
+                              <Input
+                                placeholder="About You"
+                                className="bg-gray-100 h-12 rounded-md"
+                              />
+                            </Form.Item>
+                          </Col>
+                          <Col md={24} sm={24} xs={24}>
+                            <Form.Item
+                              label="Notification Method "
+                              name="notification"
+                              rules={[
+                                {
+                                  required: true,
+                                },
+                              ]}
+                            >
+                              <Checkbox.Group options={notificationOptions} />
+                            </Form.Item>
+                          </Col>
+                        </Row>
+                      </Col>
+                    </Row>
+                    <div className="text-center">
+                      <SecondaryButton
+                        onClick={() => setEditMode(false)}
+                        className="rounded h-full w-32 mr-2"
+                        title="Cancel"
+                      />
+                      <PrimaryButton
+                        btnProps={{ htmlType: "submit" }}
+                        className=" h-full w-32 rounded "
+                        title="Submit"
+                      />
+                    </div>
+                  </Form>
+                </Col>
+              </Row>
+              <div className="p-4 ">
+                <div className="border-t border-lightBlue-200 text-center px-2 ">
+                  <p className="text-blue-gray-700 text-lg font-light leading-relaxed mt-6 mb-4"></p>
                 </div>
               </div>
             </div>
           </div>
         </div>
       ) : (
-        <div className="px-3 md:px-8 m-4 profile-wrapper">
+        <div className=" profile-wrapper">
           <Row gutter={[16, 16]}>
             <Col md={24} xs={24}>
               <div className="bg-white rounded-sm transition-all duration-300 ease-in-out shadow-md h-64">

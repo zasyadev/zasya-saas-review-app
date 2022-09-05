@@ -101,131 +101,123 @@ function AddTeamComponent({ user, editMode, memberData }) {
   }, []);
 
   return (
-    <div>
-      <div className="w-full  md:w-3/6 mx-auto">
-        <div className="w-full bg-white rounded-xl shadow-md p-4 mt-4 add-template-wrapper">
-          <div className="  rounded-t-md  mt-1">
-            {" "}
-            <Form
-              layout="vertical"
-              form={form}
-              onFinish={onFinish}
-              validateMessages={validateMessages}
-            >
-              <Row gutter={16}>
-                <Col md={12} xs={24} lg={12}>
-                  <Form.Item
-                    name="first_name"
-                    label="Name"
-                    rules={[
-                      {
-                        required: true,
-                      },
-                    ]}
-                  >
-                    <Input size="large" />
-                  </Form.Item>
-                </Col>
+    <div className="w-full bg-white rounded-xl shadow-md p-4 mt-4 add-template-wrapper">
+      <div className="  rounded-t-md  mt-1">
+        {" "}
+        <Form
+          layout="vertical"
+          form={form}
+          onFinish={onFinish}
+          validateMessages={validateMessages}
+        >
+          <Row gutter={16}>
+            <Col md={12} xs={24} lg={12}>
+              <Form.Item
+                name="first_name"
+                label="Name"
+                rules={[
+                  {
+                    required: true,
+                  },
+                ]}
+              >
+                <Input size="large" />
+              </Form.Item>
+            </Col>
 
-                <Col md={12} xs={24} lg={12}>
-                  <Form.Item
-                    name="email"
-                    label="Email"
-                    rules={[
-                      {
-                        required: true,
-                      },
-                      {
-                        type: "email",
-                      },
-                    ]}
-                  >
-                    <Input disabled={editMode} size="large" />
-                  </Form.Item>
-                </Col>
+            <Col md={12} xs={24} lg={12}>
+              <Form.Item
+                name="email"
+                label="Email"
+                rules={[
+                  {
+                    required: true,
+                  },
+                  {
+                    type: "email",
+                  },
+                ]}
+              >
+                <Input disabled={editMode} size="large" />
+              </Form.Item>
+            </Col>
 
-                <Col md={12} xs={24} lg={12}>
-                  <Form.Item
-                    name="tags"
-                    label="Tags Name"
-                    rules={[
-                      {
-                        required: true,
-                      },
-                    ]}
-                  >
-                    <Select
-                      size="large"
-                      mode="tags"
-                      placeholder="Tags"
-                      className="select-tag tag-select-box"
-                    >
-                      <Select.Option key={"developer"} value={"Developer"}>
-                        Developer
-                      </Select.Option>
-                      {tagsList.length > 0 &&
-                        tagsList
-                          .filter((data) => data.tag_name != "Developer")
-                          .map((item, idx) => {
-                            return (
-                              <Select.Option
-                                key={idx + "tags"}
-                                value={item.tag_name}
-                              >
-                                {item.tag_name}
-                              </Select.Option>
-                            );
-                          })}
-                    </Select>
-                  </Form.Item>
-                </Col>
+            <Col md={12} xs={24} lg={12}>
+              <Form.Item
+                name="tags"
+                label="Tags Name"
+                rules={[
+                  {
+                    required: true,
+                  },
+                ]}
+              >
+                <Select
+                  size="large"
+                  mode="tags"
+                  placeholder="Tags"
+                  className="select-tag tag-select-box"
+                >
+                  <Select.Option key={"developer"} value={"Developer"}>
+                    Developer
+                  </Select.Option>
+                  {tagsList.length > 0 &&
+                    tagsList
+                      .filter((data) => data.tag_name != "Developer")
+                      .map((item, idx) => {
+                        return (
+                          <Select.Option
+                            key={idx + "tags"}
+                            value={item.tag_name}
+                          >
+                            {item.tag_name}
+                          </Select.Option>
+                        );
+                      })}
+                </Select>
+              </Form.Item>
+            </Col>
 
-                <Col md={12} xs={24} lg={12}>
-                  <Form.Item
-                    name="role"
-                    label="Roles "
-                    rules={[
-                      {
-                        required: true,
-                      },
-                    ]}
-                  >
-                    <Select
-                      placeholder="Roles"
-                      className="select-tag"
-                      size="large"
-                    >
-                      {/* <Select.Option key={"amin"} value={2} disabled>
+            <Col md={12} xs={24} lg={12}>
+              <Form.Item
+                name="role"
+                label="Roles "
+                rules={[
+                  {
+                    required: true,
+                  },
+                ]}
+              >
+                <Select placeholder="Roles" className="select-tag" size="large">
+                  {/* <Select.Option key={"amin"} value={2} disabled>
                         Admin
                       </Select.Option> */}
-                      <Select.Option key={"manager"} value={3}>
-                        Manager
-                      </Select.Option>
-                      <Select.Option key={"member"} value={4}>
-                        Member
-                      </Select.Option>
-                    </Select>
-                  </Form.Item>
-                </Col>
-                <Col md={24} xs={24}>
-                  <div className="flex justify-end">
-                    <SecondaryButton
-                      withLink={true}
-                      linkHref="/team/members"
-                      className="mx-4 rounded my-1"
-                      title="Cancel"
-                    />
-                    <PrimaryButton
-                      btnProps={{ htmlType: "submit" }}
-                      className=" my-1 rounded "
-                      title={editMode ? "Update" : "Create"}
-                    />
-                  </div>
-                </Col>
-              </Row>
-            </Form>
-          </div>
-        </div>
+                  <Select.Option key={"manager"} value={3}>
+                    Manager
+                  </Select.Option>
+                  <Select.Option key={"member"} value={4}>
+                    Member
+                  </Select.Option>
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col md={24} xs={24}>
+              <div className="flex justify-end">
+                <SecondaryButton
+                  withLink={true}
+                  linkHref="/team/members"
+                  className="mx-4 rounded my-1"
+                  title="Cancel"
+                />
+                <PrimaryButton
+                  btnProps={{ htmlType: "submit" }}
+                  className=" my-1 rounded "
+                  title={editMode ? "Update" : "Create"}
+                />
+              </div>
+            </Col>
+          </Row>
+        </Form>
       </div>
     </div>
   );

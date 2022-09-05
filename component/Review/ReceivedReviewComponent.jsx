@@ -102,14 +102,27 @@ function ReceivedReviewComponent({ user, reviewId }) {
 
   return (
     <div className="answer-bg p-4">
-      {loading ? (
-        <Skeleton
-          title={false}
-          active={true}
-          width={[200]}
-          className="mt-4"
-          rows={3}
-        />
+      {!loading ? (
+        <>
+          <div className="text-right mt-4 mr-4">
+            <Link href="/review/received">
+              <button className="primary-bg-btn text-white py-2 px-4 rounded-md">
+                Back
+              </button>
+            </Link>
+          </div>
+          <div className="answer-preview">
+            <div className=" text-center bg-white rounded-xl p-10 shadow-md md:w-7/12 mx-auto">
+              <Skeleton
+                title={false}
+                active={true}
+                width={[200]}
+                className="mt-4"
+                rows={3}
+              />
+            </div>
+          </div>
+        </>
       ) : reviewData?.status ? (
         <>
           <div className="text-right mt-4 mr-4">

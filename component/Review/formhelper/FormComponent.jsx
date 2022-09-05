@@ -297,7 +297,7 @@ export function FormSlideComponent({
           {nextSlide > 0 && (
             <div className="md:w-1/4 w-1/2 mx-2 ">
               <button
-                className="primary-bg-btn rounded-md text-lg text-white py-2  w-full"
+                className="bg-gray-400 rounded-md text-lg text-white py-2  w-full"
                 onClick={() => setNextSlide(nextSlide - 1)}
               >
                 Previous
@@ -318,7 +318,9 @@ export function FormSlideComponent({
               </button>
             ) : (
               <button
-                className="toggle-btn-bg rounded-md text-lg text-white py-2    w-full "
+                className={` rounded-md text-lg text-white py-2 w-full ${
+                  !disable[id] ? "bg-gray-400 " : "toggle-btn-bg"
+                }`}
                 onClick={() => {
                   setNextSlide(nextSlide + 1);
                 }}

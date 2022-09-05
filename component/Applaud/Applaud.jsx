@@ -92,159 +92,155 @@ function Applaud({ user }) {
   }
 
   return (
-    <div>
-      <div className="px-3 md:px-8 h-auto mt-5">
-        <div className="container mx-auto max-w-full">
-          <div className="flex justify-end">
-            <div className="bg-white rounded-md overflow-hidden shadow-md  py-2 px-4 mt-2 h-12">
-              <DatePicker
-                onChange={onDateChange}
-                picker="month"
-                bordered={false}
-                allowClear={false}
-                format="MMMM"
-                defaultValue={moment()}
-              />
-            </div>
-            <div className="my-3 mx-3 ">
-              <div>
-                <PrimaryButton
-                  withLink={true}
-                  className="rounded-md  "
-                  linkHref="/applaud/add"
-                  title={"Create"}
-                />
+    <div className="container mx-auto max-w-full">
+      <div className="flex justify-end">
+        <div className="bg-white rounded-md overflow-hidden shadow-md  py-2 px-4 mt-2 h-12">
+          <DatePicker
+            onChange={onDateChange}
+            picker="month"
+            bordered={false}
+            allowClear={false}
+            format="MMMM"
+            defaultValue={moment()}
+          />
+        </div>
+        <div className="my-3 mx-3 ">
+          <div>
+            <PrimaryButton
+              withLink={true}
+              className="rounded-md  "
+              linkHref="/applaud/add"
+              title={"Create"}
+            />
+          </div>
+        </div>
+      </div>
+
+      <Row>
+        <Col xs={24} md={12}>
+          <div className="grid grid-cols-1 px-2 w-full">
+            <div className=" bg-white rounded-xl overflow-hdden shadow-md my-3">
+              <div className="p-4 ">
+                <div className="overflow-x-auto">
+                  <p className="font-semibold text-lg primary-color-blue flex items-center">
+                    Received Applaud
+                    <span className="leading-[0] ml-2">
+                      {CustomPopover(
+                        "Applauds given to you by your team members."
+                      )}
+                    </span>
+                  </p>
+                  <div className="received-applaud-table">
+                    {loading ? (
+                      [2, 3, 4].map((loop) => (
+                        <Skeleton
+                          title={false}
+                          active={true}
+                          width={[200]}
+                          className="my-4"
+                          key={loop}
+                        />
+                      ))
+                    ) : receivedApplaudList.length > 0 ? (
+                      receivedApplaudList.map((item, idx) => {
+                        return (
+                          <div
+                            className=" border-2 rounded md:m-3 mt-2 shadow-md "
+                            key={"applaud" + idx}
+                          >
+                            <Row className="m-5 px-2">
+                              <Col xs={4} md={4}>
+                                <UserIcon className="primary-color-blue font-bold text-base mb-0 " />
+                              </Col>
+                              <Col xs={20} md={20}>
+                                <p className="ml-2 text-base mb-0 ">
+                                  <span className="uppercase ">
+                                    {item.created.first_name}
+                                  </span>{" "}
+                                  has Applauded you.
+                                </p>{" "}
+                              </Col>
+                            </Row>
+                            <Row className="m-5 px-2">
+                              <Col xs={4} md={4}>
+                                <CommentIcons className="primary-color-blue font-bold text-base" />
+                              </Col>
+
+                              <Col xs={20} md={20}>
+                                <p className="ml-2 break-all text-base mb-0">
+                                  {item.comment}
+                                </p>
+                              </Col>
+                            </Row>
+                            <Row className="m-5 px-2">
+                              <Col xs={4} md={4}>
+                                <CalanderIcon className="primary-color-blue font-bold  text-base " />
+                              </Col>
+
+                              <Col xs={20} md={20}>
+                                <p className=" ml-2 text-base mb-0">
+                                  {moment(item.created_date).format(
+                                    "DD/MM/YYYY"
+                                  )}
+                                </p>
+                              </Col>
+                            </Row>
+                          </div>
+                        );
+                      })
+                    ) : (
+                      <p className="text-center p-4 mb-0">
+                        No Applauds received.
+                      </p>
+                    )}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-
-          <Row>
-            <Col xs={24} md={12}>
-              <div className="grid grid-cols-1 px-2 w-full">
-                <div className=" bg-white rounded-xl overflow-hdden shadow-md my-3">
+        </Col>
+        <Col xs={24} md={12}>
+          <div className="px-1  h-auto ">
+            <div className="container mx-auto max-w-full ">
+              <div className="grid grid-cols-1 px-2  mb-16">
+                <div className="flex justify-end "></div>
+                <div className="w-full bg-white rounded-xl overflow-hdden shadow-md my-3">
                   <div className="p-4 ">
                     <div className="overflow-x-auto">
                       <p className="font-semibold text-lg primary-color-blue flex items-center">
-                        Received Applaud
+                        Applaud Given
                         <span className="leading-[0] ml-2">
                           {CustomPopover(
-                            "Applauds given to you by your team members."
+                            "Applauds given by you to your team members."
                           )}
                         </span>
                       </p>
-                      <div className="received-applaud-table">
-                        {loading ? (
-                          [2, 3, 4].map((loop) => (
-                            <Skeleton
-                              title={false}
-                              active={true}
-                              width={[200]}
-                              className="my-4"
-                              key={loop}
-                            />
-                          ))
-                        ) : receivedApplaudList.length > 0 ? (
-                          receivedApplaudList.map((item, idx) => {
-                            return (
-                              <div
-                                className=" border-2 rounded md:m-3 mt-2 shadow-md "
-                                key={"applaud" + idx}
-                              >
-                                <Row className="m-5 px-2">
-                                  <Col xs={4} md={4}>
-                                    <UserIcon className="primary-color-blue font-bold text-base mb-0 " />
-                                  </Col>
-                                  <Col xs={20} md={20}>
-                                    <p className="ml-2 text-base mb-0 ">
-                                      <span className="uppercase ">
-                                        {item.created.first_name}
-                                      </span>{" "}
-                                      has Applauded you.
-                                    </p>{" "}
-                                  </Col>
-                                </Row>
-                                <Row className="m-5 px-2">
-                                  <Col xs={4} md={4}>
-                                    <CommentIcons className="primary-color-blue font-bold text-base" />
-                                  </Col>
-
-                                  <Col xs={20} md={20}>
-                                    <p className="ml-2 break-all text-base mb-0">
-                                      {item.comment}
-                                    </p>
-                                  </Col>
-                                </Row>
-                                <Row className="m-5 px-2">
-                                  <Col xs={4} md={4}>
-                                    <CalanderIcon className="primary-color-blue font-bold  text-base " />
-                                  </Col>
-
-                                  <Col xs={20} md={20}>
-                                    <p className=" ml-2 text-base mb-0">
-                                      {moment(item.created_date).format(
-                                        "DD/MM/YYYY"
-                                      )}
-                                    </p>
-                                  </Col>
-                                </Row>
-                              </div>
-                            );
-                          })
-                        ) : (
-                          <p className="text-center p-4 mb-0">
-                            No Applauds received.
-                          </p>
-                        )}
-                      </div>
+                      {loading ? (
+                        [1, 2, 3].map((loop) => (
+                          <Skeleton
+                            title={false}
+                            active={true}
+                            width={[200]}
+                            className="my-4"
+                            key={loop}
+                          />
+                        ))
+                      ) : (
+                        <CustomTable
+                          dataSource={applaudList}
+                          columns={columns}
+                          pagination={true}
+                          className="custom-table"
+                        />
+                      )}
                     </div>
                   </div>
                 </div>
               </div>
-            </Col>
-            <Col xs={24} md={12}>
-              <div className="px-1  h-auto ">
-                <div className="container mx-auto max-w-full ">
-                  <div className="grid grid-cols-1 px-2  mb-16">
-                    <div className="flex justify-end "></div>
-                    <div className="w-full bg-white rounded-xl overflow-hdden shadow-md my-3">
-                      <div className="p-4 ">
-                        <div className="overflow-x-auto">
-                          <p className="font-semibold text-lg primary-color-blue flex items-center">
-                            Applaud Given
-                            <span className="leading-[0] ml-2">
-                              {CustomPopover(
-                                "Applauds given by you to your team members."
-                              )}
-                            </span>
-                          </p>
-                          {loading ? (
-                            [1, 2, 3].map((loop) => (
-                              <Skeleton
-                                title={false}
-                                active={true}
-                                width={[200]}
-                                className="my-4"
-                                key={loop}
-                              />
-                            ))
-                          ) : (
-                            <CustomTable
-                              dataSource={applaudList}
-                              columns={columns}
-                              pagination={true}
-                              className="custom-table"
-                            />
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </Col>
-          </Row>
-        </div>
-      </div>
+            </div>
+          </div>
+        </Col>
+      </Row>
     </div>
   );
 }

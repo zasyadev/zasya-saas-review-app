@@ -447,7 +447,7 @@ $bg-color: linear-gradient(90deg, #ff6968 0%, #ffa3a3 100%);
   background: #0f123f;
 }
 .toggle-btn-bg {
-  background: $bg-color !important;
+  background: $bg-color;
 }
 .toggle-btn-bg:hover {
   border-color: #0f123f;

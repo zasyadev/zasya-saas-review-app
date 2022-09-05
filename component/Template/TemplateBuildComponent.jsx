@@ -264,7 +264,7 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
   };
 
   return (
-    <div className="mx-4">
+    <>
       <TemplateEditor
         setFormTitle={setFormTitle}
         questions={questions}
@@ -319,7 +319,7 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
           </div>
         </div>
       </Modal>
-    </div>
+    </>
   );
 }
 
