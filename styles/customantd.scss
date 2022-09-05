@@ -1,5 +1,7 @@
 @import "./variableStyles.scss";
 
+$bg-color: linear-gradient(90deg, #ff6968 0%, #ffa3a3 100%);
+
 .dashboard-sider {
   // flex-direction: column;
   // list-style-type: none;
@@ -40,7 +42,7 @@
   }
   .ant-menu-submenu-active {
     .ant-menu-submenu-title {
-      background: linear-gradient(90deg, #ff6968 0%, #ffa3a3 100%);
+      background: $bg-color;
       color: #fff;
     }
   }
@@ -79,11 +81,11 @@
   }
 
   .ant-menu-item-active {
-    background: linear-gradient(90deg, #ff6968 0%, #ffa3a3 100%) !important;
+    background: $bg-color !important;
     color: #fff !important;
   }
   .ant-menu-item-selected {
-    background: linear-gradient(90deg, #ff6968 0%, #ffa3a3 100%) !important;
+    background: $bg-color !important;
     color: #fff !important;
   }
 }
@@ -445,7 +447,7 @@
   background: #0f123f;
 }
 .toggle-btn-bg {
-  background: linear-gradient(90deg, #ff6968 0%, #ffa3a3 100%) !important;
+  background: $bg-color !important;
 }
 .toggle-btn-bg:hover {
   border-color: #0f123f;
@@ -470,7 +472,17 @@
 .login-image-wrapper {
   background-color: #0f123f;
   height: 100%;
+
+  .image-wrapper {
+    width: 650px;
+    height: 480px;
+    @include tab {
+      width: 450px;
+      height: 300px;
+    }
+  }
 }
+
 .login-bottom-image {
   background-image: url("/media/images/bg/login-bottom-design.webp");
   background-repeat: no-repeat;
@@ -659,7 +671,7 @@
     font-size: 16px;
   }
   .ant-dropdown-menu-item:hover {
-    background: linear-gradient(90deg, #ff6968 0%, #ffa3a3 100%);
+    background: $bg-color;
     color: #fff;
   }
   .ant-dropdown-menu {
@@ -699,14 +711,14 @@
     }
   }
   .ant-dropdown-menu-item:hover {
-    background: linear-gradient(90deg, #ff6968 0%, #ffa3a3 100%);
+    background: $bg-color;
     color: #fff;
   }
   .ant-dropdown-menu-submenu-open {
-    background: linear-gradient(90deg, #ff6968 0%, #ffa3a3 100%);
+    background: $bg-color;
     color: #fff;
     .ant-dropdown-menu-submenu-title:hover {
-      background: linear-gradient(90deg, #ff6968 0%, #ffa3a3 100%);
+      background: $bg-color;
       color: #fff;
     }
   }
@@ -761,7 +773,7 @@
   .question-section-contents-card {
     .question-section-wrapper {
       .linear-bg {
-        background: linear-gradient(90deg, #ff6968 0%, #ffa3a3 100%);
+        background: $bg-color;
         color: #fff;
         padding: 4px 10px;
       }
@@ -794,7 +806,7 @@
   opacity: 1;
   border-radius: 0 0 14px 14px;
   .linear-bg {
-    background: linear-gradient(90deg, #ff6968 0%, #ffa3a3 100%);
+    background: $bg-color;
     color: #fff;
     padding: 4px 10px;
     border-radius: 50%;
@@ -930,48 +942,25 @@
   }
 }
 
-.notification-icon {
-  background: #f8f8ff;
-  padding: 5px;
-  margin: 0 5px;
-  border-radius: 50%;
-}
 .notification-dropdown {
-  min-width: 240px !important;
+  min-width: 300px !important;
 
   @include mobile {
-    min-width: 180px !important;
+    min-width: 200px !important;
   }
+
   .notification-wrapper {
-    position: relative;
-    margin: 0;
-    text-align: left;
-    list-style-type: none;
-    background-color: #fff;
-    background-clip: padding-box;
-    border-radius: 5px;
-    outline: none;
-    box-shadow: 0 3px 6px -4px #0000001f, 0 6px 16px 0 #0000001f,
-      0 9px 28px 8px #0000001f;
-    max-height: 219px;
-    overflow: auto;
+    .notification-inner {
+      max-height: 219px;
+      overflow: auto;
+      // .notification-border-bottom {
+      //   border-bottom: 1px solid #e3e3e3;
+      // }
 
-    .notification-border-bottom {
-      border-bottom: 1px solid #e3e3e3;
-    }
-
-    .notification-box {
-      padding: 15px 8px;
-      cursor: pointer;
-      .notification-text {
-        font-weight: 500;
-        font-size: 15px;
-      }
-    }
-    .notification-box:hover {
-      background: linear-gradient(90deg, #ff6968 0%, #ffa3a3 100%);
-      color: #fff;
-      border-radius: 5px;
+      // .notification-box:hover {
+      //   background: $bg-color;
+      //   color: #fff;
+      // }
     }
   }
 }

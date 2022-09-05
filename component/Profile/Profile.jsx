@@ -588,12 +588,12 @@ source=LinkedIn`);
         <div className="px-3 md:px-8 m-4 profile-wrapper">
           <Row gutter={[16, 16]}>
             <Col md={24} xs={24}>
-              <div className="bg-white rounded-sm transition-all duration-300 ease-in-out shadow-md ">
-                <div>
+              <div className="bg-white rounded-sm transition-all duration-300 ease-in-out shadow-md h-64">
+                <div className="relative h-48">
                   <Image
                     src={"/media/images/profile-cover.webp"}
                     alt="profileCover"
-                    layout="responsive"
+                    layout="fill"
                   />
                 </div>
 
