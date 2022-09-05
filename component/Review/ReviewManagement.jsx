@@ -156,55 +156,51 @@ function ReviewManagement({ user }) {
   ];
 
   return (
-    <div>
-      <div className="px-3 md:px-8 h-auto mt-5">
-        <div className="container mx-auto max-w-full">
-          <div className="grid grid-cols-1 px-4 mb-16">
-            <div className=" md:flex items-center justify-between mb-3  ">
-              <div className="flex w-auto">
-                <PrimaryButton
-                  withLink={true}
-                  className="rounded-r-none rounded-l-md  w-1/2 md:w-fit "
-                  linkHref="/review/received"
-                  title={"Received"}
-                />
-                <SecondaryButton
-                  withLink={false}
-                  className="rounded-l-none rounded-r-md w-1/2 md:w-fit "
-                  title={"Created"}
-                />
-              </div>
-              <div className="mt-2 md:mt-0">
-                <PrimaryButton
-                  withLink={true}
-                  className="rounded-md w-full"
-                  linkHref="/review/add"
-                  title={"Create"}
-                />
-              </div>
-            </div>
+    <div className="container mx-auto max-w-full">
+      <div className="grid grid-cols-1">
+        <div className=" md:flex items-center justify-between mb-3  ">
+          <div className="flex w-auto">
+            <PrimaryButton
+              withLink={true}
+              className="rounded-r-none rounded-l-md  w-1/2 md:w-fit "
+              linkHref="/review/received"
+              title={"Received"}
+            />
+            <SecondaryButton
+              withLink={false}
+              className="rounded-l-none rounded-r-md w-1/2 md:w-fit "
+              title={"Created"}
+            />
+          </div>
+          <div className="mt-2 md:mt-0">
+            <PrimaryButton
+              withLink={true}
+              className="rounded-md w-full"
+              linkHref="/review/add"
+              title={"Create"}
+            />
+          </div>
+        </div>
 
-            <div className="w-full bg-white rounded-xl overflow-hdden shadow-md px-4 pb-4">
-              <div className="">
-                <div className="overflow-x-auto">
-                  {loading ? (
-                    <Skeleton
-                      title={false}
-                      active={true}
-                      width={[200]}
-                      className="mt-4"
-                      rows={3}
-                    />
-                  ) : (
-                    <CustomTable
-                      dataSource={reviewAssignList}
-                      columns={columns}
-                      pagination={true}
-                      rowKey="review_id"
-                    />
-                  )}
-                </div>
-              </div>
+        <div className="w-full bg-white rounded-xl overflow-hdden shadow-md px-4 pb-4">
+          <div className="">
+            <div className="overflow-x-auto">
+              {loading ? (
+                <Skeleton
+                  title={false}
+                  active={true}
+                  width={[200]}
+                  className="mt-4"
+                  rows={3}
+                />
+              ) : (
+                <CustomTable
+                  dataSource={reviewAssignList}
+                  columns={columns}
+                  pagination={true}
+                  rowKey="review_id"
+                />
+              )}
             </div>
           </div>
         </div>

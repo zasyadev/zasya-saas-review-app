@@ -680,34 +680,12 @@ $bg-color: linear-gradient(90deg, #ff6968 0%, #ffa3a3 100%);
 }
 
 .logout-dropdown {
-  min-width: 240px !important;
-  @include mobile {
-    min-width: 180px !important;
-  }
-  .ant-dropdown-menu-title-content {
-    padding: 10px 20px;
-    font-weight: 500;
-    font-size: 16px;
-    .span-text {
-      margin-left: 5px;
-    }
-  }
+  max-width: 300px !important;
+  min-width: 150px !important;
+
   .ant-dropdown-menu-submenu-title {
-    padding: 10px;
-    font-weight: 500;
-    font-size: 16px;
-    display: flex;
-    align-items: center;
-    .ant-dropdown-menu-title-content {
-      display: flex;
-      align-items: center;
-      .switch-team-dropdown {
-        display: flex;
-        align-items: center;
-      }
-    }
     .ant-dropdown-menu-submenu-expand-icon {
-      padding: 5px 10px 10px;
+      display: none;
     }
   }
   .ant-dropdown-menu-item:hover {
@@ -943,11 +921,8 @@ $bg-color: linear-gradient(90deg, #ff6968 0%, #ffa3a3 100%);
 }
 
 .notification-dropdown {
-  min-width: 300px !important;
-
-  @include mobile {
-    min-width: 200px !important;
-  }
+  max-width: 300px !important;
+  min-width: 200px !important;
 
   .notification-wrapper {
     .notification-inner {

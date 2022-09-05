@@ -86,27 +86,23 @@ function HeaderLayout({ title, user, collapsed, setCollapsed, md }) {
   }, []);
 
   const userMenu = (
-    <Menu>
-      <div className="flex my-2 mx-2" key={"accountName"}>
-        <div className="flex mx-2 px-2">
-          <div className="rounded-full">
-            <DefaultImages
-              imageSrc={user?.UserDetails?.image}
-              width={40}
-              height={40}
-            />
-          </div>
-        </div>
+    <Menu className="divide-y">
+      <div className="flex items-start p-2 space-x-3" key={"accountName"}>
+        <DefaultImages
+          imageSrc={user?.UserDetails?.image}
+          width={40}
+          height={40}
+        />
+
         <span>
           <div className="span-text font-semibold">{user.first_name}</div>
-
           <div className="span-text">{user?.role?.name}</div>
         </span>
       </div>
 
       <Menu.Item key={"account"}>
         <Link href="/profile" passHref>
-          <div className="flex items-center">
+          <div className="flex items-center font-medium">
             <span className="span-text">My Account</span>
           </div>
         </Link>
@@ -116,18 +112,25 @@ function HeaderLayout({ title, user, collapsed, setCollapsed, md }) {
         <Menu.SubMenu
           key="org"
           title={
-            <span className="switch-team-dropdown">
+            <div className="flex items-center font-medium space-x-2">
               <UserSwitchOutlined />
               <span className="ml-1">Switch Teams</span>
-            </span>
+            </div>
           }
         >
           {user?.UserOraganizationGroups?.length > 0
             ? user?.UserOraganizationGroups.map((item) => {
                 return (
-                  <Menu.Item key={`team${item.organization_id}`}>
+                  <Menu.Item
+                    key={`team${item.organization_id}`}
+                    className={
+                      user.organization_id === item.organization_id
+                        ? "bg-gray-200"
+                        : ""
+                    }
+                  >
                     <div
-                      className="flex items-center"
+                      className="flex font-medium items-center"
                       onClick={() => {
                         changeOragnizationHandle(item.organization_id);
                       }}
@@ -144,7 +147,7 @@ function HeaderLayout({ title, user, collapsed, setCollapsed, md }) {
       ) : null}
 
       <Menu.Item key={"sign_out"} onClick={() => logoutHandler()}>
-        <div className=" flex items-center ">
+        <div className="flex items-center font-medium space-x-2">
           <LogoutOutlined /> <span className="span-text">Sign Out</span>
         </div>
       </Menu.Item>

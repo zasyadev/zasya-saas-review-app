@@ -85,7 +85,7 @@ function AdminLayout({ user, title, children }) {
               collapsed={collapsed}
               md={md}
             />
-            {children}
+            <div className="p-3 md:p-6">{children}</div>
           </Content>
           <Footer className="text-center bg-color-dashboard">
             Review App ©2022 Created by Zasya Solution
