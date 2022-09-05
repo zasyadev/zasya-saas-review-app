@@ -106,8 +106,8 @@ function DashBoard({ user }) {
   }, []);
 
   return (
-    <Row gutter={[32, 32]}>
-      <Col sm={24} md={24} lg={17}>
+    <Row gutter={[24, 24]}>
+      <Col sm={24} md={24} lg={16} xxl={18}>
         <div className="container mx-auto max-w-full">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="grd-bg-pink-hover bg-white rounded-xl transition-all duration-300 ease-in-out shadow-md ">
@@ -342,7 +342,7 @@ function DashBoard({ user }) {
           </Row>
         </div>
       </Col>
-      <Col xs={24} sm={24} md={24} lg={7} className="h-full">
+      <Col xs={24} sm={24} md={24} lg={8} xxl={6} className="h-full">
         <SiderRight dashBoardData={dashBoardData} />
       </Col>
     </Row>

@@ -10,6 +10,7 @@ import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { HeadersComponent } from "../../component/common/HeadersComponent";
 import { openNotificationBox } from "../../component/common/notification";
+import { PrimaryButton } from "../common/CustomButton";
 import AuthWrapper from "./AuthWrapper";
 
 function LoginPage() {
@@ -63,7 +64,7 @@ function LoginPage() {
         <Form.Item
           name="email"
           label="Email"
-          className="md:mb-6 mb-4"
+          className="mb-3 lg:mb-5"
           rules={[
             {
               required: true,
@@ -78,47 +79,45 @@ function LoginPage() {
           />
         </Form.Item>
 
-        <div className="md:mb-8  mb-4">
-          <Form.Item
-            name="password"
-            label="Password"
-            rules={[
-              {
-                required: true,
-                message: "Please enter your password!",
-              },
-            ]}
-          >
-            <Input.Password
-              // type="password"
-              className=" flex form-control w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white  focus:outline-none"
-              placeholder="Password"
-              iconRender={(visible) =>
-                visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
-              }
-            />
-          </Form.Item>
-        </div>
+        <Form.Item
+          className="mb-3 lg:mb-5"
+          name="password"
+          label="Password"
+          rules={[
+            {
+              required: true,
+              message: "Please enter your password!",
+            },
+          ]}
+        >
+          <Input.Password
+            // type="password"
+            className=" flex form-control w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white  focus:outline-none"
+            placeholder="Password"
+            iconRender={(visible) =>
+              visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+            }
+          />
+        </Form.Item>
 
-        <div className=" md:block justify-between text-center lg:text-left mb-6">
-          <button
-            type="submit"
-            className="inline-block px-7 py-5  text-white font-medium text-lg leading-snug  rounded shadow-md  hover:shadow-lg  focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out w-full btn-blue h-16"
-            disabled={loading}
-          >
-            {loading ? <Spin indicator={antIcon} /> : "Login"}
-          </button>
-        </div>
+        <PrimaryButton
+          title="Login"
+          loading={loading}
+          className="px-4 h-12 mt-2 text-white font-medium text-base xl:text-lg leading-snug shadow-md  hover:shadow-lg rounded  focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out w-full btn-blue "
+          btnProps={{
+            type: "submit",
+          }}
+        />
 
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex justify-between items-center mt-4 mb-6">
           <div className="form-group form-check">
-            <Link href="/forgotpassword">
+            <Link href="/forgotpassword" passHref>
               <p className="primary-color-blue  font-semibold transition duration-200 ease-in-out cursor-pointer underline">
                 Forgot password ?
               </p>
             </Link>
           </div>
-          <Link href="/auth/register">
+          <Link href="/auth/register" passHref>
             <span className="primary-color-blue  font-semibold transition duration-200 ease-in-out cursor-pointer underline">
               Register
             </span>

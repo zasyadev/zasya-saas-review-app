@@ -475,7 +475,11 @@ $bg-color: linear-gradient(90deg, #ff6968 0%, #ffa3a3 100%);
 
   .image-wrapper {
     width: 650px;
-    height: 480px;
+    height: 450px;
+    @include desktop {
+      width: 500px;
+      height: 340px;
+    }
     @include tab {
       width: 450px;
       height: 300px;
@@ -509,18 +513,18 @@ $bg-color: linear-gradient(90deg, #ff6968 0%, #ffa3a3 100%);
   right: 0;
   z-index: -1;
 }
-.login-heading {
-  font-weight: 700;
-  font-size: 35px;
-  // @include mobile {
-  //   font-size: 20px;
-  //   font-weight: 700;
-  // }
+// .login-heading {
+//   font-weight: 700;
+//   font-size: 35px;
+//   // @include mobile {
+//   //   font-size: 20px;
+//   //   font-weight: 700;
+//   // }
 
-  color: #0f123f;
-  text-transform: uppercase;
-  margin: 28px 0 40px;
-}
+//   color: #0f123f;
+//   text-transform: uppercase;
+//   margin: 28px 0 40px;
+// }
 .btn-blue {
   background-color: #0f123f;
 }
@@ -545,7 +549,6 @@ $bg-color: linear-gradient(90deg, #ff6968 0%, #ffa3a3 100%);
     font-weight: 500;
   }
   .form-control {
-    height: 52px;
     font-size: 15px;
     font-weight: 500;
   }
@@ -717,11 +720,6 @@ $bg-color: linear-gradient(90deg, #ff6968 0%, #ffa3a3 100%);
   .ant-form-item-label label {
     width: 100%;
   }
-}
-.register-wrapper {
-  display: flex !important;
-  justify-content: center !important;
-  align-items: center !important;
 }
 
 .answer-bg,
