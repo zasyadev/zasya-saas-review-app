@@ -374,9 +374,7 @@ function AddEditReviewComponent({
                           <div className="my-5">
                             <SecondaryButton
                               onClick={() => setNextFormFeild(1)}
-                              btnProps={{
-                                disabled: !disable.review_name,
-                              }}
+                              disabled={!disable.review_name}
                               className="px-14 py-2 text-base rounded-md"
                               title="Next"
                             />
@@ -437,9 +435,7 @@ function AddEditReviewComponent({
                             />
                             <SecondaryButton
                               onClick={() => setNextFormFeild(2)}
-                              btnProps={{
-                                disabled: !disable.template_id,
-                              }}
+                              disabled={!disable.template_id}
                               className="px-14 py-2 text-base rounded-md"
                               title="Next"
                             />
@@ -480,7 +476,7 @@ function AddEditReviewComponent({
                               className="px-14 py-2 text-base rounded-md mr-2"
                               title="Previous"
                             />
-                            {loadingSpin ? (
+                            {/* {loadingSpin ? (
                               <SecondaryButton
                                 btnProps={{
                                   disabled: true,
@@ -497,7 +493,17 @@ function AddEditReviewComponent({
                                 className="px-14 py-2 text-base rounded-md"
                                 title="Preview"
                               />
-                            )}
+                            )} */}
+                            <SecondaryButton
+                              onClick={() => handlePreviewForm()}
+                              // btnProps={{
+                              //   disabled: !disable.review_type,
+                              // }}
+                              loading={loadingSpin}
+                              disabled={!disable.review_type}
+                              className="px-14 py-2 text-base rounded-md"
+                              title="Preview"
+                            />
                           </div>
                         </div>
                       )}
