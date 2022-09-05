@@ -63,7 +63,7 @@ function LoginPage() {
         <Form.Item
           name="email"
           label="Email"
-          className="md:mb-6 mb-4"
+          className="mb-3 lg:mb-5"
           rules={[
             {
               required: true,
@@ -103,7 +103,7 @@ function LoginPage() {
         <div className=" md:block justify-between text-center lg:text-left mb-6">
           <button
             type="submit"
-            className="inline-block px-7 py-5  text-white font-medium text-lg leading-snug  rounded shadow-md  hover:shadow-lg  focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out w-full btn-blue h-16"
+            className="inline-block px-4 py-2 h-12  text-white font-medium text-base xl:text-lg leading-snug  rounded shadow-md  hover:shadow-lg  focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out w-full btn-blue "
             disabled={loading}
           >
             {loading ? <Spin indicator={antIcon} /> : "Login"}
@@ -112,13 +112,13 @@ function LoginPage() {
 
         <div className="flex justify-between items-center mb-6">
           <div className="form-group form-check">
-            <Link href="/forgotpassword">
+            <Link href="/forgotpassword" passHref>
               <p className="primary-color-blue  font-semibold transition duration-200 ease-in-out cursor-pointer underline">
                 Forgot password ?
               </p>
             </Link>
           </div>
-          <Link href="/auth/register">
+          <Link href="/auth/register" passHref>
             <span className="primary-color-blue  font-semibold transition duration-200 ease-in-out cursor-pointer underline">
               Register
             </span>
