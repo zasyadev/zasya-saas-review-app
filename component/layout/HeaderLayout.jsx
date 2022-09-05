@@ -72,6 +72,21 @@ function HeaderLayout({ title, user, collapsed, setCollapsed, md }) {
       });
   };
 
+  const handleMarkAllRead = async () => {
+    await httpService
+      .put(`/api/notification`, {
+        user_id: user.id,
+      })
+      .then(({ data: response }) => {
+        if (response.status === 200) {
+          getAllNotification();
+        }
+      })
+      .catch((err) => {
+        console.error(err.response.data.message);
+      });
+  };
+
   const unSeenNotificationCount = useMemo(
     () =>
       allNotification && allNotification?.length > 0
@@ -104,7 +119,7 @@ function HeaderLayout({ title, user, collapsed, setCollapsed, md }) {
       </div>
 
       <Menu.Item key={"account"}>
-        <Link href="/profile">
+        <Link href="/profile" passHref>
           <div className="flex items-center">
             <span className="span-text">My Account</span>
           </div>
@@ -176,7 +191,7 @@ function HeaderLayout({ title, user, collapsed, setCollapsed, md }) {
         {unSeenNotificationCount > 0 && (
           <button
             className="font-semibold text-xs text-primary rounded-full"
-            onClick={() => notificationViewed("ALL")}
+            onClick={() => handleMarkAllRead()}
           >
             Mark all as read
           </button>
