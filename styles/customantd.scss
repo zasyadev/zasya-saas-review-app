@@ -463,14 +463,16 @@
 .primary-border-color-blue {
   border-color: #0f123f;
 }
-
+.loaderimg,
 .login-image-wrapper {
-  background-image: url("../assets/images/banner-bg-shape.png");
+  background-image: url("/media/images/bg/banner-bg-shape.webp");
+}
+.login-image-wrapper {
   background-color: #0f123f;
   height: 100%;
 }
 .login-bottom-image {
-  background-image: url("../assets/images/login-bottom-design.png");
+  background-image: url("/media/images/bg/login-bottom-design.webp");
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
@@ -483,7 +485,7 @@
   z-index: -1;
 }
 .login-top-image {
-  background-image: url("../assets/images/login-top-design.png");
+  background-image: url("/media/images/bg/login-top-design.webp");
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
@@ -732,11 +734,21 @@
   align-items: center !important;
 }
 
-.answer-bg {
-  background-image: url("../assets/images/answerbg.webp");
-  background-repeat: repeat;
+.answer-bg,
+.review-form-bg {
+  background-image: url("/media/images/bg/answerbg.webp");
   background-size: cover;
+}
+
+.answer-bg {
+  background-repeat: repeat;
   min-height: 100vh;
+}
+
+.review-form-bg {
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 1;
 }
 
 .create-header-button {
@@ -745,13 +757,6 @@
   }
 }
 
-.review-form-bg {
-  background-image: url("../assets/images/answerbg.webp");
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center;
-  opacity: 1;
-}
 .question-section-container {
   .question-section-contents-card {
     .question-section-wrapper {
@@ -782,7 +787,7 @@
 }
 
 .bg-question-view {
-  background-image: url("../assets/images/questionview.webp");
+  background-image: url("/media/images/questionview.webp");
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
@@ -1047,7 +1052,7 @@
 
 .landing-page {
   .background-image {
-    background-image: url("../assets/images/Rectangle\ 4.png");
+    background-image: url("/media/images/bg/landing-rectangle.png");
     background-position: bottom;
     background-size: cover;
   }
@@ -1058,7 +1063,6 @@
     background: #cfcfcf;
   }
   .bg-group-img {
-    background: url(../assets/images/Group.png);
     background-size: cover;
     background-position: bottom;
     height: 50%;

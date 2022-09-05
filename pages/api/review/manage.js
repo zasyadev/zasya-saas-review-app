@@ -107,6 +107,7 @@ async function handle(req, res, prisma) {
             where: { id: { in: resData.assigned_to_id } },
             include: { UserDetails: true },
           });
+          console.log(assignedToData, "assignedToData");
 
           const assignedFromData = await prisma.user.findUnique({
             where: { id: transactionData.savedData.created_by },
@@ -119,12 +120,12 @@ async function handle(req, res, prisma) {
                 assigned_to_id: user.id,
               },
             });
-
+            console.log("heree,", user.userData);
             if (
-              user.userData?.UserDetails &&
-              user.userData?.UserDetails?.notification &&
-              user.userData?.UserDetails?.notification?.length &&
-              user.userData?.UserDetails?.notification.includes("mail")
+              user?.UserDetails &&
+              user?.UserDetails?.notification &&
+              user?.UserDetails?.notification?.length &&
+              user?.UserDetails?.notification.includes("mail")
             ) {
               const mailData = {
                 from: process.env.SMTP_USER,
@@ -157,10 +158,10 @@ async function handle(req, res, prisma) {
               },
             });
             if (
-              user.userData?.UserDetails &&
-              user.userData?.UserDetails?.notification &&
-              user.userData?.UserDetails?.notification?.length &&
-              user.userData?.UserDetails?.notification.includes("slack")
+              user?.UserDetails &&
+              user?.UserDetails?.notification &&
+              user?.UserDetails?.notification?.length &&
+              user?.UserDetails?.notification.includes("slack")
             ) {
               if (user.UserDetails.slack_id) {
                 let customText = CustomizeSlackMessage({

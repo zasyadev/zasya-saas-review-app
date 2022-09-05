@@ -13,7 +13,7 @@ function Applaud({ user }) {
   const [applaudList, setApplaudList] = useState([]);
   const [receivedApplaudList, setReceivedApplaudList] = useState([]);
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [currentMonth, setCurrentMonth] = useState({
     lte: moment().endOf("month"),
     gte: moment().startOf("month"),
@@ -30,11 +30,11 @@ function Applaud({ user }) {
   // };
 
   useEffect(() => {
-    // fetchApplaud();
     fetchApplaudData();
   }, [currentMonth]);
 
   const fetchApplaudData = async () => {
+    setLoading(true);
     setReceivedApplaudList([]);
     await httpService
       .post(`/api/applaud/${user.id}`, {
@@ -43,10 +43,12 @@ function Applaud({ user }) {
       .then(({ data: res }) => {
         setReceivedApplaudList(res.data.receivedApplaud);
         setApplaudList(res.data.givenApplaud);
+        setLoading(false);
       })
       .catch((err) => {
         openNotificationBox("error", err.response.data.message);
         setReceivedApplaudList([]);
+        setLoading(false);
       });
   };
 
@@ -131,7 +133,17 @@ function Applaud({ user }) {
                         </span>
                       </p>
                       <div className="received-applaud-table">
-                        {receivedApplaudList.length > 0 ? (
+                        {loading ? (
+                          [2, 3, 4].map((loop) => (
+                            <Skeleton
+                              title={false}
+                              active={true}
+                              width={[200]}
+                              className="my-4"
+                              key={loop}
+                            />
+                          ))
+                        ) : receivedApplaudList.length > 0 ? (
                           receivedApplaudList.map((item, idx) => {
                             return (
                               <div
@@ -206,13 +218,15 @@ function Applaud({ user }) {
                             </span>
                           </p>
                           {loading ? (
-                            <Skeleton
-                              title={false}
-                              active={true}
-                              width={[200]}
-                              className="mt-4"
-                              rows={3}
-                            />
+                            [1, 2, 3].map((loop) => (
+                              <Skeleton
+                                title={false}
+                                active={true}
+                                width={[200]}
+                                className="my-4"
+                                key={loop}
+                              />
+                            ))
                           ) : (
                             <CustomTable
                               dataSource={applaudList}

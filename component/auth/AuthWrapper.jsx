@@ -1,7 +1,6 @@
 import { Col, Row } from "antd";
 import Image from "next/image";
 import React from "react";
-import loginImage from "../../assets/images/login_img.png";
 
 function AuthWrapper({ FormComponent, heading }) {
   return (
@@ -21,8 +20,14 @@ function AuthWrapper({ FormComponent, heading }) {
       </Col>
       <Col xs={24} md={12} lg={12}>
         <div className="login-image-wrapper justify-center items-center hidden md:flex">
-          <div className="login-image-wrapper flex justify-center items-center h-screen">
-            <Image src={loginImage} alt="login" className="h-screen" />
+          <div className="flex justify-center items-center h-screen relative">
+            <div className="w-11/12 h-auto">
+              <Image
+                src={"/media/images/bg/login_img.webp"}
+                alt="login"
+                layout="fill"
+              />
+            </div>
           </div>
         </div>
       </Col>

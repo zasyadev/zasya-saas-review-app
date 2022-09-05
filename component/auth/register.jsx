@@ -4,9 +4,12 @@ import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { HeadersComponent } from "../../component/common/HeadersComponent";
 import { openNotificationBox } from "../../component/common/notification";
-import { LoadingOutlined } from "@ant-design/icons";
+import {
+  LoadingOutlined,
+  EyeInvisibleOutlined,
+  EyeTwoTone,
+} from "@ant-design/icons";
 import AuthWrapper from "./AuthWrapper";
-import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 import httpService from "../../lib/httpService";
 
 function RegisterPage() {

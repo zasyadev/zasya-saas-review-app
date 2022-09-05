@@ -1,6 +1,4 @@
 import React from "react";
-import HomeLogo from "../../assets/images/HomeLogo.png";
-import DashboardSC from "../../assets/images/dashboardSC.png";
 import Image from "next/image";
 import { Row, Col } from "antd";
 
@@ -12,7 +10,11 @@ function LandingPage() {
           <Row justify="space-between">
             <Col xs={24} md={6}>
               <div className="text-center my-4 cursor-pointer">
-                <Image src={HomeLogo} width={130} height={40} />
+                <Image
+                  src={"/media/images/logos/HomeLogo.png"}
+                  width={130}
+                  height={40}
+                />
               </div>
             </Col>
             <Col xs={24} md={14}>
@@ -53,7 +55,11 @@ function LandingPage() {
             </Col>
             <Col xs={24} md={13} className="bg-group-img ">
               <div className="text-center mt-2 mx-2">
-                <Image src={DashboardSC} width={650} height={450} />
+                <Image
+                  src={"/media/images/bg/dashboard.png"}
+                  width={650}
+                  height={450}
+                />
               </div>
             </Col>
           </Row>

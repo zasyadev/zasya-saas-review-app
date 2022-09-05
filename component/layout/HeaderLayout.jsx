@@ -8,33 +8,25 @@ import {
   MenuFoldOutlined,
   BellOutlined,
 } from "@ant-design/icons";
-import Image from "next/image";
+
 import Link from "next/link";
-import User from "../../assets/images/User.png";
+
 import { Avatar, Dropdown, Layout, Menu, Row, Badge } from "antd";
 import { signOut } from "next-auth/client";
 import { useRouter } from "next/router";
 import { openNotificationBox } from "../../component/common/notification";
 import httpService from "../../lib/httpService";
+import DefaultImages from "../common/DefaultImages";
 
 const { Header } = Layout;
 
-function HeaderLayout({
-  title,
-  pageName,
-  user,
-  fetchUserData,
-  userOrganizationData,
-  collapsed,
-  setCollapsed,
-  md,
-}) {
+function HeaderLayout({ title, pageName, user, collapsed, setCollapsed, md }) {
+  const router = useRouter();
   const [pendingNotification, setPendingNotification] = useState(0);
   const [allNotification, setAllNotification] = useState([]);
-  const router = useRouter();
+
   const logoutHandler = () => {
     signOut();
-    router.push("/auth/login");
   };
 
   const changeOragnizationHandle = async (values) => {
@@ -42,7 +34,6 @@ function HeaderLayout({
       .post(`/api/user/changeOrgId/${user.id}`, { org_id: values })
       .then(({ data: response }) => {
         if (response.status === 200) {
-          fetchUserData();
           openNotificationBox("success", response.message, 3);
           router.reload();
         }
@@ -51,6 +42,7 @@ function HeaderLayout({
         console.error(err.response.data.message);
       });
   };
+
   const notificationHandle = async () => {
     setAllNotification([]);
 
@@ -84,10 +76,7 @@ function HeaderLayout({
   };
 
   useEffect(() => {
-    if (user) {
-      // fetchUserData();
-      notificationHandle();
-    }
+    notificationHandle();
   }, []);
 
   const userMenu = (
@@ -95,23 +84,17 @@ function HeaderLayout({
       <div className="flex my-2 mx-2" key={"accountName"}>
         <div className="flex mx-2 px-2">
           <div className="rounded-full">
-            <Image
-              src={
-                userOrganizationData?.userImage
-                  ? userOrganizationData?.userImage
-                  : User
-              }
-              alt="userImage"
+            <DefaultImages
+              imageSrc={user?.UserDetails?.image}
               width={40}
               height={40}
-              className="rounded-full"
             />
           </div>
         </div>
         <span>
           <div className="span-text font-semibold">{user.first_name}</div>
 
-          <div className="span-text">{userOrganizationData?.roleId}</div>
+          <div className="span-text">{user?.role?.name}</div>
         </span>
       </div>
 
@@ -161,6 +144,7 @@ function HeaderLayout({
       </Menu.Item>
     </Menu>
   );
+
   const createMenu = (
     <Menu>
       <Menu.Item key={"Review"}>
@@ -172,37 +156,34 @@ function HeaderLayout({
       <Menu.Item key={"Applaud"}>
         <Link href="/applaud/add">Applaud</Link>
       </Menu.Item>
-      {(userOrganizationData?.role == 2 || userOrganizationData?.role == 3) && (
+      {user.role_id !== 4 && (
         <Menu.Item key={"Team"}>
           <Link href="/team/add">Team</Link>
         </Menu.Item>
       )}
     </Menu>
   );
+
   const notificationMenu = (
     <div className="notification-wrapper">
       {allNotification.length > 0 ? (
-        allNotification.map((item, idx) => {
-          // if (idx < 10) {
-          return (
-            <div
-              key={idx + "notification"}
-              className={`notification-box ${
-                allNotification.length - 1 > idx
-                  ? "notification-border-bottom"
-                  : null
-              }`}
-              onClick={() => notificationViewed(item.id)}
-            >
-              <Badge dot={item.read_at ? false : true}>
-                <Link href={item.data.link}>
-                  <p className="notification-text mb-0">{item.data.message}</p>
-                </Link>
-              </Badge>
-            </div>
-          );
-          // }
-        })
+        allNotification.map((item, idx) => (
+          <div
+            key={idx + "notification"}
+            className={`notification-box ${
+              allNotification.length - 1 > idx
+                ? "notification-border-bottom"
+                : null
+            }`}
+            onClick={() => notificationViewed(item.id)}
+          >
+            <Badge dot={item.read_at ? false : true}>
+              <Link href={item.data.link}>
+                <p className="notification-text mb-0">{item.data.message}</p>
+              </Link>
+            </Badge>
+          </div>
+        ))
       ) : (
         <div className="notification-box mb-0">
           <p className="notification-text mb-0">No Notification</p>
@@ -213,11 +194,9 @@ function HeaderLayout({
 
   return (
     <Header className="ant-header bg-color-dashboard border-b border-b-neutral-300 p-0">
-      <div className="items-center h-full flex justify-between">
-        <div className="flex  items-center mt-2">
-          <div className=" font-bold mx-3 md:mx-6 text-lg md:text-2xl primary-color-blue">
-            {title}
-          </div>
+      <div className="flex items-center  justify-between space-y-3">
+        <div className="font-bold mx-3 md:mx-6 text-lg md:text-2xl primary-color-blue">
+          {title}
         </div>
 
         <div className="create-header-button flex items-center justify-end md:mr-3">
@@ -245,6 +224,18 @@ function HeaderLayout({
               </div>
             </Dropdown>
           </div>
+          <Dropdown
+            trigger={"click"}
+            overlay={notificationMenu}
+            overlayClassName="notification-dropdown "
+            placement="bottomRight"
+          >
+            <div className="notification-icon">
+              <Badge count={pendingNotification}>
+                <BellOutlined style={{ fontSize: 22 }} />
+              </Badge>
+            </div>
+          </Dropdown>
           <div className="w-full user-menu-wrapper cursor-pointer rounded-md py-1 md:py-1 px-2 ">
             <div className="flex items-center">
               <Dropdown
@@ -262,28 +253,16 @@ function HeaderLayout({
                       }}
                       alt="C"
                     >
-                      {userOrganizationData?.orgId
-                        ? userOrganizationData?.orgId.substring(0, 1)
+                      {user?.organization && user?.organization?.company_name
+                        ? user.organization.company_name.substring(0, 1)
                         : null}
                     </Avatar>
                   </div>
                   <div className="md:mt-3">
                     <p className="user-deatils whitespace-nowrap hidden md:block">
-                      {userOrganizationData?.orgId}
+                      {user?.organization?.company_name}
                     </p>
                   </div>
-                </div>
-              </Dropdown>
-              <Dropdown
-                trigger={"click"}
-                overlay={notificationMenu}
-                overlayClassName="notification-dropdown "
-                placement="bottomRight"
-              >
-                <div className="notification-icon">
-                  <Badge count={pendingNotification}>
-                    <BellOutlined style={{ fontSize: 22 }} />
-                  </Badge>
                 </div>
               </Dropdown>
             </div>

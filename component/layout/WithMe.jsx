@@ -12,6 +12,8 @@ const WithMe = (props) => {
     }
   }, [loading, session]);
 
+  console.log("session", session);
+
   return loading ? (
     <LoadingSpinner />
   ) : !session ? (

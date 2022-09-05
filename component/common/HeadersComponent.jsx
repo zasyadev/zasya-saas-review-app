@@ -6,7 +6,7 @@ export function HeadersComponent() {
     <Head>
       <title>Review App</title>
       <meta name="description" content="Review App" />
-      <link rel="icon" href="/media/images/review-small.png" />
+      <link rel="icon" href="/media/images/logos/review-small.png" />
     </Head>
   );
 }

@@ -3,9 +3,7 @@
   -webkit-animation: spinner 1.5s linear infinite;
   animation: spinner 1.5s linear infinite;
 }
-.loaderimg {
-  background-image: url("../assets/images/banner-bg-shape.png");
-}
+
 @-webkit-keyframes spinner {
   0% {
     -webkit-transform: rotate(0deg);
