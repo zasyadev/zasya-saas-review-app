@@ -43,7 +43,7 @@ function CreateReviewComponent({ user }) {
           <Row gutter={[16, 16]}>
             <Col xs={24} md={16}>
               <div className="border shadow bg-white rounded-md p-2 mt-4 w-full mx-auto">
-                <div className="w-full  rounded-xl  p-2 mt-2 template-wrapper">
+                <div className="w-full  rounded-md  p-2 mt-2 template-wrapper">
                   <div className="animate-pulse flex space-x-4">
                     <div className="flex-1 space-y-6 py-1">
                       <div className="h-4 bg-slate-200 rounded"></div>
@@ -61,7 +61,7 @@ function CreateReviewComponent({ user }) {
             </Col>
             <Col xs={24} md={8}>
               <div className="border shadow bg-white rounded-md p-2 mt-4 w-full   mx-auto">
-                <div className="w-full  rounded-xl  p-2 mt-2 template-wrapper">
+                <div className="w-full  rounded-md  p-2 mt-2 template-wrapper">
                   <div className="animate-pulse flex space-x-4">
                     <div className="flex-1 space-y-6 py-1">
                       <div className="h-4 bg-slate-200 rounded"></div>

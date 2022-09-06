@@ -50,7 +50,7 @@ function SiderRight({ dashBoardData }) {
   return (
     <div className="mx-3 md:mx-0">
       <Row
-        className="bg-white rounded-xl shadow-md py-8 px-4"
+        className="bg-white rounded-md shadow-md py-8 px-4"
         justify="space-around"
       >
         <Col

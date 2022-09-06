@@ -205,7 +205,7 @@ function Applaud({ user }) {
             <div className="container mx-auto max-w-full ">
               <div className="grid grid-cols-1 px-2  mb-16">
                 <div className="flex justify-end "></div>
-                <div className="w-full bg-white rounded-xl overflow-hdden shadow-md my-3">
+                <div className="w-full bg-white rounded-md overflow-hdden shadow-md my-3">
                   <div className="p-4 ">
                     <div className="overflow-x-auto">
                       <p className="font-semibold text-lg primary-color-blue flex items-center">
