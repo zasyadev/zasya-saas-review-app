@@ -16,11 +16,7 @@ async function handle(req, res, prisma) {
     });
 
     const filterdata = data
-      .filter(
-        (item) =>
-          // (item.user.role_id === 4 || item.user.role_id === 3) &&
-          item.status === true
-      )
+      .filter((item) => item.status === true)
       .map((item) => {
         delete item?.user?.password;
         return item;

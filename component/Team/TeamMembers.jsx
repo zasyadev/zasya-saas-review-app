@@ -40,9 +40,7 @@ function TeamMembers({ user }) {
       .get(`/api/team/${user.id}`)
       .then(({ data: response }) => {
         if (response.status === 200) {
-          let data = response.data.filter(
-            (item) => item.user_id != user.id && item.role_id != 2
-          );
+          let data = response.data.filter((item) => item.user_id != user.id);
 
           setMembersList(data);
         }
@@ -94,28 +92,29 @@ function TeamMembers({ user }) {
     {
       title: "Action",
       key: "action",
-      render: (_, record) => (
-        <p>
-          <Link href={`/team/edit/${record.user_id}`}>
-            <EditOutlined
-              className="primary-color-blue text-xl mx-1  md:mx-2 cursor-pointer"
-              // onClick={() => onUpdate(record)}
-            />
-          </Link>
+      render: (_, record) =>
+        record.role_id === 2 ? null : (
+          <p>
+            <Link href={`/team/edit/${record.user_id}`}>
+              <EditOutlined
+                className="primary-color-blue text-xl mx-1  md:mx-2 cursor-pointer"
+                // onClick={() => onUpdate(record)}
+              />
+            </Link>
 
-          <Popconfirm
-            title={`Are you sure to delete ${
-              record?.user?.first_name + " " + record?.user?.last_name
-            }？`}
-            okText="Yes"
-            cancelText="No"
-            onConfirm={() => onDelete(record.user.email)}
-            icon={false}
-          >
-            <DeleteOutlined className="text-color-red text-xl mx-1 md:mx-2 cursor-pointer" />
-          </Popconfirm>
-        </p>
-      ),
+            <Popconfirm
+              title={`Are you sure to delete ${
+                record?.user?.first_name + " " + record?.user?.last_name
+              }？`}
+              okText="Yes"
+              cancelText="No"
+              onConfirm={() => onDelete(record.user.email)}
+              icon={false}
+            >
+              <DeleteOutlined className="text-color-red text-xl mx-1 md:mx-2 cursor-pointer" />
+            </Popconfirm>
+          </p>
+        ),
     },
   ];
   return (
