@@ -48,11 +48,8 @@ function SiderRight({ dashBoardData }) {
   const { reviewRating, averageAnswerTime, applaudCount } = dashBoardData;
   const tempTime = moment.duration(averageAnswerTime);
   return (
-    <div className="mx-3 md:mx-0">
-      <Row
-        className="bg-white rounded-md shadow-md py-8 px-4"
-        justify="space-around"
-      >
+    <div className="bg-white rounded-md shadow-md py-5 px-4">
+      <Row justify="space-around">
         <Col
           xs={12}
           sm={12}
@@ -61,9 +58,8 @@ function SiderRight({ dashBoardData }) {
           className="border-r border-slate-200"
         >
           <div className=" flex flex-col items-center justify-center">
-            <div>
-              <ApplaudIcon />
-            </div>
+            <ApplaudIcon />
+
             <div>
               <p className="text-primary text-xl font-extrabold my-2">
                 {applaudCount}
@@ -73,9 +69,8 @@ function SiderRight({ dashBoardData }) {
         </Col>
         <Col xs={12} sm={12} md={12} lg={12}>
           <div className=" flex flex-col items-center justify-center">
-            <div>
-              <StarIcon />
-            </div>
+            <StarIcon />
+
             <div>
               <p className="text-primary text-xl font-extrabold my-2">
                 {ratingHandler(reviewRating)}
@@ -88,35 +83,37 @@ function SiderRight({ dashBoardData }) {
         </Col>
 
         <Col xs={24} sm={24} md={24} lg={24}>
-          <div className="py-2 px-3  my-4 rounded ">
+          <div className="py-2 px-3">
             <div className="flex flex-wrap items-center justify-between">
-              <div>
+              <div className="flex-shrink-0 grid place-content-center">
                 <ClockIcon />
               </div>
-              <div className="flex flex-col items-center">
-                <p className="text-primary text-xl font-extrabold my-2 ">
-                  {tempTime.days()}
-                </p>
-                <p className="text-gray-500 text-sm xl:text-base mb-0">
-                  Day(s)
-                </p>
-              </div>
+              <div className="flex-1 flex items-center justify-around">
+                <div className="text-center">
+                  <p className="text-primary text-xl font-extrabold my-2 ">
+                    {tempTime.days()}
+                  </p>
+                  <p className="text-gray-500 text-sm xl:text-base mb-0">
+                    Day(s)
+                  </p>
+                </div>
 
-              <div className="flex flex-col items-center">
-                <p className="text-primary text-xl font-extrabold my-2 ">
-                  {tempTime.hours()}
-                </p>
-                <p className="text-gray-500 text-sm xl:text-base mb-0">
-                  Hour(s)
-                </p>
-              </div>
-              <div className="flex flex-col items-center">
-                <p className="text-primary text-xl font-extrabold my-2 ">
-                  {tempTime.minutes()}
-                </p>
-                <p className="text-gray-500 text-sm xl:text-base mb-0">
-                  Min(s).
-                </p>
+                <div className="text-center">
+                  <p className="text-primary text-xl font-extrabold my-2 ">
+                    {tempTime.hours()}
+                  </p>
+                  <p className="text-gray-500 text-sm xl:text-base mb-0">
+                    Hour(s)
+                  </p>
+                </div>
+                <div className="text-center">
+                  <p className="text-primary text-xl font-extrabold my-2 ">
+                    {tempTime.minutes()}
+                  </p>
+                  <p className="text-gray-500 text-sm xl:text-base mb-0">
+                    Min(s).
+                  </p>
+                </div>
               </div>
             </div>
           </div>

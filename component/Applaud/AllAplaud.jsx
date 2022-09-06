@@ -81,8 +81,8 @@ function AllAplaud({ user }) {
   return (
     <Row gutter={[16, 16]}>
       <Col xs={24} sm={24} md={24}>
-        <div className="flex justify-end w-full">
-          <div className="bg-white rounded-md overflow-hidden shadow-md  py-2 px-4  ">
+        <div className="flex justify-start w-full">
+          <div className="bg-white rounded-md overflow-hidden shadow-md  py-1 px-4 ">
             <DatePicker
               onChange={onDateChange}
               picker="month"
@@ -114,6 +114,7 @@ function AllAplaud({ user }) {
                             prev === value.user_id ? "" : value.user_id
                           );
                         }}
+                        key={key + idx}
                       >
                         <Row justify="center">
                           <Col xs={10} md={10}>

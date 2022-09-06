@@ -164,7 +164,7 @@ function ReviewManagement({ user }) {
   return (
     <div className="container mx-auto max-w-full">
       <div className="grid grid-cols-1">
-        <div className=" md:flex items-center justify-between mb-3  ">
+        <div className=" md:flex items-center justify-between mb-4 md:mb-6">
           <div className="flex w-auto">
             <PrimaryButton
               withLink={true}
