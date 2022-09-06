@@ -10,6 +10,9 @@ module.exports = {
         peach: "#fb7185",
         "peach-light": "#fda4af",
       },
+      lineHeight: {
+        0: "0",
+      },
     },
   },
   plugins: [],

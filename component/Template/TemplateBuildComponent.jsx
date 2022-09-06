@@ -9,7 +9,7 @@ import { SecondaryButton } from "../common/CustomButton";
 import TemplateEditor from "./TemplateEditor";
 
 const defaultQuestionConfig = {
-  questionText: "Untitled Question",
+  questionText: "",
   options: [{ optionText: "Option 1" }],
   open: true,
   type: "checkbox",
@@ -17,7 +17,7 @@ const defaultQuestionConfig = {
   active: true,
 };
 const defaultScaleQuestion = {
-  questionText: "Untitled Question",
+  questionText: "",
   options: [{ optionText: "low" }, { optionText: "high" }],
   lowerLabel: 0,
   higherLabel: 5,

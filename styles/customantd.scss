@@ -1019,3 +1019,6 @@ $bg-color: linear-gradient(90deg, #ff6968 0%, #ffa3a3 100%);
   cursor: default;
   font-weight: 700;
 }
+.ant-select-selector {
+  border-radius: 0.375rem !important;
+}
