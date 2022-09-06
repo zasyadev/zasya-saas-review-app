@@ -93,8 +93,8 @@ function Applaud({ user }) {
 
   return (
     <div className="container mx-auto max-w-full">
-      <div className="flex justify-end">
-        <div className="bg-white rounded-md overflow-hidden shadow-md  py-2 px-4 mt-2 h-12">
+      <div className="flex justify-end items-center">
+        <div className="bg-white rounded-md overflow-hidden shadow-md  py-1 px-2  h-11">
           <DatePicker
             onChange={onDateChange}
             picker="month"
@@ -102,9 +102,10 @@ function Applaud({ user }) {
             allowClear={false}
             format="MMMM"
             defaultValue={moment()}
+            className="font-semibold"
           />
         </div>
-        <div className="my-3 mx-3 ">
+        <div className=" mx-3 ">
           <div>
             <PrimaryButton
               withLink={true}

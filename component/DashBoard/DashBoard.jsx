@@ -182,7 +182,7 @@ function DashBoard({ user }) {
               </div>
             </div>
           </div>
-          <div className="mt-12 ">
+          <div className="my-8 ">
             <div className="w-full bg-white rounded-xl overflow-hidden shadow-md p-4 mt-5 ">
               {loading ? (
                 <Skeleton
@@ -207,7 +207,7 @@ function DashBoard({ user }) {
                     </span>
                   </h2>
 
-                  <Row>
+                  <Row gutter={[24, 24]}>
                     {allApplaud.length > 0 ? (
                       allApplaud.map((item, idx) => {
                         if (idx <= 3) {
@@ -251,7 +251,7 @@ function DashBoard({ user }) {
                     ) : (
                       <Col xs={24} md={24}>
                         <div className="flex justify-center items-center h-48">
-                          <div className="text-center  ">No Applaud Found</div>
+                          <div className="text-center">No Applaud Found</div>
                         </div>
                       </Col>
                     )}

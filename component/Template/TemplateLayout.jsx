@@ -54,10 +54,7 @@ function TemplateLayout({ user }) {
   return (
     <div className="container mx-auto max-w-full">
       <div className="grid grid-cols-1 mb-16">
-        <div className="w-full bg-white rounded-md shadow-md md:p-4 p-0 mt-6 ">
-          <h2 className="text-black text-2xl font-bold p-4 primary-color-blue">
-            Template Lists
-          </h2>
+        <div className="w-full bg-white rounded-md shadow-md md:p-4 p-0">
           <div className="p-4 ">
             <div className="container mx-auto max-w-full">
               <div className="grid grid-cols-1 lg:grid-cols-4 mb-4 items-center justify-center gap-4">

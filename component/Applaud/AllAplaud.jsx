@@ -82,7 +82,7 @@ function AllAplaud({ user }) {
     <Row gutter={[16, 16]}>
       <Col xs={24} sm={24} md={24}>
         <div className="flex justify-end w-full">
-          <div className="bg-white rounded-md overflow-hidden shadow-md  py-2 px-4 mt-2 ">
+          <div className="bg-white rounded-md overflow-hidden shadow-md  py-2 px-4  ">
             <DatePicker
               onChange={onDateChange}
               picker="month"
@@ -90,6 +90,7 @@ function AllAplaud({ user }) {
               allowClear={false}
               format="MMMM"
               defaultValue={moment()}
+              className="font-semibold"
             />
           </div>
         </div>

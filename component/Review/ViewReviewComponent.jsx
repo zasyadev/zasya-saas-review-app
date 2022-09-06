@@ -32,8 +32,7 @@ function ViewReviewComponent({ user }) {
 
   useEffect(() => {
     if (review_id) fetchReviewData(user, review_id);
-    else return;
-  }, []);
+  }, [review_id]);
   return (
     <AdminLayout user={user} title={reviewData?.review_name}>
       {loading ? (
