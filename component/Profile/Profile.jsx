@@ -398,7 +398,7 @@ source=LinkedIn`);
   return loading ? (
     <div className="grid grid-cols-1 xl:grid-cols-6 mt-1">
       <div className="xl:col-start-1 xl:col-end-7 px-4 ">
-        <div className="w-full bg-white rounded-xl  shadow-md p-4 mt-2">
+        <div className="w-full bg-white rounded-md  shadow-md p-4 mt-2">
           <Row gutter={16}>
             <Col lg={24} xs={24} className="mt-4 items-center">
               <Skeleton active />
@@ -412,7 +412,7 @@ source=LinkedIn`);
       {editMode ? (
         <div className="grid grid-cols-1 xl:grid-cols-6">
           <div className="xl:col-start-1 xl:col-end-7 px-4 ">
-            <div className="rounded-xl text-white grid items-center w-full shadow-lg-purple mb-3">
+            <div className="rounded-md text-white grid items-center w-full shadow-lg-purple mb-3">
               <div className="w-full flex item-center justify-end">
                 <div className="flex justify-end ">
                   <div className="mr-2">
@@ -432,7 +432,7 @@ source=LinkedIn`);
                 </div>
               </div>
             </div>
-            <div className="w-full bg-white rounded-xl  shadow-md px-2 py-3 md:px-4 md:py-6">
+            <div className="w-full bg-white rounded-md  shadow-md px-2 py-3 md:px-4 md:py-6">
               <Row gutter={16}>
                 <Col lg={24} xs={24} className=" items-center">
                   <Form
@@ -578,7 +578,7 @@ source=LinkedIn`);
         <div className="profile-wrapper">
           <Row gutter={[16, 16]}>
             <Col md={24} xs={24}>
-              <div className="bg-white rounded-xl overflow-hidden transition-all duration-300 ease-in-out shadow-md h-64">
+              <div className="bg-white rounded-md overflow-hidden transition-all duration-300 ease-in-out shadow-md h-64">
                 <div className="relative h-48">
                   <Image
                     src={"/media/images/profile-cover.webp"}
@@ -637,7 +637,7 @@ source=LinkedIn`);
               </div>
             </Col>
             <Col md={8} xs={24}>
-              <div className="bg-white rounded-xl transition-all duration-300 ease-in-out shadow-md p-4 space-y-4">
+              <div className="bg-white rounded-md transition-all duration-300 ease-in-out shadow-md p-4 space-y-4">
                 <div>
                   <p className="text-sm 2xl:text-base text-gray-500 font-medium mb-1">
                     About
@@ -707,7 +707,7 @@ source=LinkedIn`);
                   ? receivedApplaudList.map((item, idx) => {
                       return (
                         <div
-                          className="bg-white rounded-sm transition-all duration-300 ease-in-out shadow-md mb-4  "
+                          className="bg-white rounded-md transition-all duration-300 ease-in-out shadow-md mb-4  "
                           key={idx + "applaud"}
                         >
                           <div className="p-4">
@@ -903,7 +903,7 @@ source=LinkedIn`);
         </div>
       </Modal>
       <Modal
-        title="Change Applaud Limit"
+        title="Update Applaud Limit"
         visible={organizationModal}
         onCancel={() => setOrganizationModal(false)}
         footer={[
@@ -916,7 +916,7 @@ source=LinkedIn`);
             <PrimaryButton
               onClick={() => orgForm.submit()}
               className=" h-full rounded "
-              title="Change Limit"
+              title="Update"
             />
           </>,
         ]}

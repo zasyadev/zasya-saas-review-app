@@ -11,7 +11,7 @@ const CustomTable = ({
   return (
     <Table
       bordered={false}
-      className={"rounded-lg bg-white custom-table"}
+      className={"rounded-md bg-white custom-table"}
       {...props}
       columns={columns}
       dataSource={dataSource}

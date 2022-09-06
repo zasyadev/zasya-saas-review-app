@@ -130,8 +130,8 @@ function DashBoard({ user }) {
                 </div>
               </div>
             </div>
-            <div className="rounded-xl bg-white grd-bg-pink-hover  transition-all duration-300 ease-in-out shadow-md ">
-              <div className="w-full  rounded-xl overflow-hdden px-4 py-5  h-full flex items-center">
+            <div className="rounded-md bg-white grd-bg-pink-hover  transition-all duration-300 ease-in-out shadow-md ">
+              <div className="w-full  rounded-md overflow-hdden px-4 py-5  h-full flex items-center">
                 <div className="flex flex-wrap items-center border-gray-200 ">
                   <div className="mb-4 rounded-full text-white grid items-center w-10 h-10 py-1 px-1 justify-center grd-bg-pink">
                     <Image
@@ -156,8 +156,8 @@ function DashBoard({ user }) {
               </div>
             </div>
 
-            <div className="bg-white rounded-xl grd-bg-pink-hover  transition-all duration-300 ease-in-out shadow-md ">
-              <div className="w-full rounded-xl overflow-hdden  px-4 py-5 h-full flex items-center">
+            <div className="bg-white rounded-md grd-bg-pink-hover  transition-all duration-300 ease-in-out shadow-md ">
+              <div className="w-full rounded-md overflow-hdden  px-4 py-5 h-full flex items-center">
                 <div className="flex flex-wrap  border-gray-200 ">
                   <div className="grd-bg-pink  mb-4 rounded-full text-white grid items-center w-10 h-10 py-1 px-1 justify-center shadow-lg-purple ">
                     <Image
@@ -267,7 +267,7 @@ function DashBoard({ user }) {
               </div>
             </Col>
             <Col md={12} lg={12} xs={24}>
-              <div className="w-full bg-white rounded-xl overflow-hidden shadow-md p-4 h-full">
+              <div className="w-full bg-white rounded-md overflow-hidden shadow-md p-4 h-full">
                 <h2 className="text-xl mt-1 primary-color-blue  font-semibold mb-2 flex items-center">
                   Feedback Leaderboard
                   <span className="leading-[0] ml-2">

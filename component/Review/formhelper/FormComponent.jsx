@@ -82,7 +82,7 @@ export function FormSlideComponent({
 
   return (
     <div className="answer-preview">
-      <div className=" text-center bg-white rounded-xl py-10 shadow-md md:w-7/12 mx-auto">
+      <div className=" text-center bg-white rounded-md py-10 shadow-md md:w-7/12 mx-auto">
         <p className="text-lg font-bold text-red-400 mt-5">
           {`Question ${nextSlide + 1}`}
         </p>

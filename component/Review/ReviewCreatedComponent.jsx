@@ -238,7 +238,7 @@ function ReviewCreatedComponent({
       </div>
       <Row justify="space-between" gutter={[16, 16]}>
         <Col xs={24} md={6}>
-          <Row gutter={8} className="bg-white rounded-lg h-full py-6">
+          <Row gutter={8} className="bg-white rounded-md h-full py-6">
             <Col md={8} className="mx-auto my-auto">
               <div className="flex     ">
                 <div className="answer-bg-icon mx-auto my-auto rounded-full ">
@@ -259,7 +259,7 @@ function ReviewCreatedComponent({
           </Row>
         </Col>
         <Col xs={24} md={6}>
-          <Row gutter={8} className="bg-white rounded-lg h-full py-6 ">
+          <Row gutter={8} className="bg-white rounded-md h-full py-6 ">
             <Col md={8} className="mx-auto my-auto">
               <div className="flex     ">
                 <div className="answer-bg-icon  mx-auto my-auto rounded-full ">
@@ -294,7 +294,7 @@ function ReviewCreatedComponent({
           </Row>
         </Col>
         <Col xs={24} md={6}>
-          <Row gutter={8} className="bg-white rounded-lg h-full py-6">
+          <Row gutter={8} className="bg-white rounded-md h-full py-6">
             <Col md={8} className="mx-auto my-auto">
               <div className="flex     ">
                 <div className="answer-bg-icon mx-auto my-auto rounded-full ">

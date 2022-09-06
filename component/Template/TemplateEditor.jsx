@@ -45,7 +45,7 @@ function TemplateEditor({
             maxLength={180}
           />
         </div>
-        <div className="w-full bg-white rounded-xl shadow-md  mt-4 add-template-wrapper sider-question-wrapper overflow-auto">
+        <div className="w-full bg-white rounded-md shadow-md  mt-4 add-template-wrapper sider-question-wrapper overflow-auto">
           <div className="rounded-t-md  mt-1">
             <div className="question-section-container">
               <div className="question-section-contents">
@@ -113,7 +113,7 @@ function TemplateEditor({
         </div>
       </Col>
       <Col xs={24} md={16}>
-        <div className="w-full bg-white rounded-xl shadow-md mt-4 add-template-wrapper">
+        <div className="w-full bg-white rounded-md shadow-md mt-4 add-template-wrapper">
           <div className="rounded-t-md  mt-1">
             {questions?.length > 0 &&
               questions

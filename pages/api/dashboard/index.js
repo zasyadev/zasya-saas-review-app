@@ -132,6 +132,7 @@ async function handle(req, res, prisma) {
       return res.status(404).json({ status: 404, message: "No Record Found" });
     }
   } catch (error) {
+    console.log(error);
     return res.status(500).json({
       error: error,
       message: "Internal Server Error",

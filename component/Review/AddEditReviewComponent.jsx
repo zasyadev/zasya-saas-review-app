@@ -225,7 +225,7 @@ function AddEditReviewComponent({
       {previewForm ? (
         <>
           <div className="w-full   ">
-            <div className="w-full rounded-xl  p-4 mt-4 template-wrapper flex flex-col">
+            <div className="w-full rounded-md  p-4 mt-4 template-wrapper flex flex-col">
               <Form layout="vertical" form={userForm}>
                 <div className="primary-bg-color px-4 py-4 rounded-t-md items-center">
                   <Row gutter={[16, 16]} justify="between" align="middle">

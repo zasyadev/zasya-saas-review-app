@@ -113,7 +113,7 @@ function FormView({ user }) {
             />
           </div>
         </div>
-        <div className="w-full bg-white rounded-xl overflow-hdden shadow-md px-4 pb-4">
+        <div className="w-full bg-white rounded-md overflow-hdden shadow-md px-4 pb-4">
           <div className="p-4 ">
             <div className="overflow-x-auto">
               {loading ? (
