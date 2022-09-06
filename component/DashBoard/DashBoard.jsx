@@ -108,9 +108,9 @@ function DashBoard({ user }) {
   return (
     <Row gutter={[24, 24]}>
       <Col sm={24} md={24} lg={16} xxl={18}>
-        <div className="container mx-auto max-w-full">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="grd-bg-pink-hover bg-white rounded-xl transition-all duration-300 ease-in-out shadow-md ">
+        <div className="container mx-auto max-w-full space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 2xl:gap-6">
+            <div className=" bg-white rounded-xl shadow-md transition-all duration-300 ease-in hover:bg-gradient-to-r hover:from-peach hover:to-peach-light">
               <div className="w-full  rounded-xl overflow-hdden px-4 py-5 h-full flex items-center">
                 <div className="flex flex-wrap items-center">
                   <div className=" mb-4 grd-bg-pink text-white grid items-center w-10 h-10 py-1 px-1 justify-center shadow-lg-pink rounded-full">
@@ -182,92 +182,88 @@ function DashBoard({ user }) {
               </div>
             </div>
           </div>
-          <div className="my-8 ">
-            <div className="w-full bg-white rounded-xl overflow-hidden shadow-md p-4 mt-5 ">
-              {loading ? (
-                <Skeleton
-                  title={false}
-                  active={true}
-                  width={[200]}
-                  className="mt-4"
-                />
-              ) : (
-                <BarChart user={user} />
-              )}
-            </div>
+
+          <div className="w-full bg-white rounded-xl overflow-hidden shadow-md p-4">
+            {loading ? (
+              <Skeleton
+                title={false}
+                active={true}
+                width={[200]}
+                className="mt-4"
+              />
+            ) : (
+              <BarChart user={user} />
+            )}
           </div>
-          <Row gutter={[16, 16]}>
+          <Row gutter={[24, 24]}>
             <Col xs={24} md={12} lg={12}>
               <div className="w-full bg-white rounded-xl overflow-hidden shadow-md p-4 h-full flex flex-col justify-between">
-                <div>
-                  <h2 className="text-xl mt-1 font-semibold primary-color-blue mb-2 flex items-center">
-                    Applauds Leaderboard
-                    <span className="leading-[0] ml-2">
-                      {CustomPopover("Applauds count received by that member.")}
-                    </span>
-                  </h2>
+                <h2 className="text-xl mt-1 font-semibold primary-color-blue mb-2 flex items-center">
+                  Applauds Leaderboard
+                  <span className="leading-[0] ml-2">
+                    {CustomPopover("Applauds count received by that member.")}
+                  </span>
+                </h2>
 
-                  <Row gutter={[24, 24]}>
-                    {allApplaud.length > 0 ? (
-                      allApplaud.map((item, idx) => {
-                        if (idx <= 3) {
-                          return (
-                            <>
-                              {Object.entries(item).map(([key, value]) => {
-                                return (
-                                  <Col xs={24} md={12} key={"applaud" + idx}>
-                                    <Row className="">
-                                      <Col xs={7} md={10}>
-                                        <div className="p-2 mt-2 flex justify-center">
-                                          <DefaultImages
-                                            imageSrc={value?.image}
-                                          />
-                                        </div>
-                                      </Col>
-
-                                      <Col xs={17} md={14}>
-                                        <div className="flex  justify-between items-center">
-                                          <div className="py-2 px-3">
-                                            <p className="mb-2 primary-color-blue font-medium text-sm">
-                                              {key}
-                                            </p>
-                                            <p className="flex">
-                                              <ApplaudIconSmall />
-                                              <span className="pl-2 text-sm font-medium text-gray-500">
-                                                {value?.taken?.length}
-                                              </span>
-                                            </p>
-                                          </div>
-                                        </div>
-                                      </Col>
-                                    </Row>
-                                  </Col>
-                                );
-                              })}
-                            </>
-                          );
-                        }
-                      })
-                    ) : (
-                      <Col xs={24} md={24}>
-                        <div className="flex justify-center items-center h-48">
-                          <div className="text-center">No Applaud Found</div>
-                        </div>
-                      </Col>
-                    )}
-                  </Row>
-                </div>
-                <div>
+                <Row gutter={[24, 24]}>
                   {allApplaud.length > 0 ? (
-                    <Link href="/applaud/allapplaud">
-                      <div className="primary-color-blue text-sm  cursor-pointer font-medium hover:underline  text-center mt-2">
-                        View All
-                      </div>
-                    </Link>
+                    allApplaud.map((item, idx) => {
+                      if (idx <= 3) {
+                        return (
+                          <>
+                            {Object.entries(item).map(([key, value]) => {
+                              return (
+                                <Col xs={24} md={12} key={"applaud" + idx}>
+                                  <Row className="">
+                                    <Col xs={7} md={10}>
+                                      <div className="p-2 mt-2 flex justify-center">
+                                        <DefaultImages
+                                          imageSrc={value?.image}
+                                        />
+                                      </div>
+                                    </Col>
+
+                                    <Col xs={17} md={14}>
+                                      <div className="flex  justify-between items-center">
+                                        <div className="py-2 px-3">
+                                          <p className="mb-2 primary-color-blue font-medium text-sm">
+                                            {key}
+                                          </p>
+                                          <p className="flex">
+                                            <ApplaudIconSmall />
+                                            <span className="pl-2 text-sm font-medium text-gray-500">
+                                              {value?.taken?.length}
+                                            </span>
+                                          </p>
+                                        </div>
+                                      </div>
+                                    </Col>
+                                  </Row>
+                                </Col>
+                              );
+                            })}
+                          </>
+                        );
+                      }
+                    })
                   ) : (
-                    ""
+                    <Col xs={24} md={24}>
+                      <div className="flex justify-center items-center h-48">
+                        <div className="text-center">No Applaud Found</div>
+                      </div>
+                    </Col>
                   )}
-                </div>
+                </Row>
+
+                {allApplaud.length > 0 ? (
+                  <Link href="/applaud/allapplaud" passHref>
+                    <div className="primary-color-blue text-sm  cursor-pointer font-medium hover:underline  text-center mt-2">
+                      View All
+                    </div>
+                  </Link>
+                ) : (
+                  ""
+                )}
               </div>
             </Col>
             <Col md={12} lg={12} xs={24}>
