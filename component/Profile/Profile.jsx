@@ -580,10 +580,10 @@ source=LinkedIn`);
           </div>
         </div>
       ) : (
-        <div className=" profile-wrapper">
+        <div className="profile-wrapper">
           <Row gutter={[16, 16]}>
             <Col md={24} xs={24}>
-              <div className="bg-white rounded-sm transition-all duration-300 ease-in-out shadow-md h-64">
+              <div className="bg-white rounded-xl overflow-hidden transition-all duration-300 ease-in-out shadow-md h-64">
                 <div className="relative h-48">
                   <Image
                     src={"/media/images/profile-cover.webp"}
@@ -642,62 +642,67 @@ source=LinkedIn`);
               </div>
             </Col>
             <Col md={8} xs={24}>
-              <div className="bg-white rounded-sm transition-all duration-300 ease-in-out shadow-md ">
-                <div className="p-4">
-                  <div className="m-2">
-                    <p className="text-base font-semibold mb-1">About</p>
-                    <p className="text-base font-normal mb-1">
-                      {userDetails?.about}
-                    </p>
-                  </div>
-                  <div className="m-2">
-                    <p className="text-base font-semibold mb-1">Address</p>
-                    <p className="text-base font-normal mb-1">
-                      {userDetails?.address1} {userDetails?.address2}
-                    </p>
-                  </div>
-                  <div className="m-2">
-                    <p className="text-base font-semibold mb-1">Phone No.</p>
-                    <p className="text-base font-normal mb-1">
-                      {userDetails?.mobile}
-                    </p>
-                  </div>
-                  <div className="m-2">
-                    <p className="text-base font-semibold mb-1">Website</p>
-
-                    <a
-                      target="_blank"
-                      href="https://zasyasolutions.com/"
-                      rel="noopener noreferrer"
-                    >
-                      <p className="text-base font-normal mb-1">
-                        https://zasyasolutions.com
-                      </p>
-                    </a>
-                  </div>
-                  {user.role_id === 2 && user.organization_id ? (
-                    <div className="m-2">
-                      <p className="text-base font-semibold mb-1 flex items-center">
-                        Applaud Limit
-                        <span className="leading-[0] ml-2">
-                          {CustomPopover(
-                            "Count of Applauds that can be given by members in a month."
-                          )}
-                        </span>
-                      </p>
-
-                      <p className="text-base font-normal mb-1 flex items-center justify-between">
-                        {applaudLimit}{" "}
-                        <span
-                          onClick={() => setOrganizationModal(true)}
-                          className="font-semibold cursor-pointer"
-                        >
-                          Edit{" "}
-                        </span>
-                      </p>
-                    </div>
-                  ) : null}
+              <div className="bg-white rounded-xl transition-all duration-300 ease-in-out shadow-md p-4 space-y-4">
+                <div>
+                  <p className="text-sm 2xl:text-base text-gray-500 font-medium mb-1">
+                    About
+                  </p>
+                  <p className="text-sm 2xl:text-base font-medium text-primary mb-1">
+                    {userDetails?.about}
+                  </p>
                 </div>
+                <div>
+                  <p className="text-sm 2xl:text-base text-gray-500 font-medium mb-1">
+                    Address
+                  </p>
+                  <p className="text-base font-medium text-primary mb-1">
+                    {userDetails?.address1} {userDetails?.address2}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm 2xl:text-base text-gray-500 font-medium mb-1">
+                    Phone No.
+                  </p>
+                  <p className="text-text-sm 2xl:text-base font-medium text-primary mb-1">
+                    {userDetails?.mobile}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm 2xl:text-base text-gray-500 font-medium mb-1">
+                    Website
+                  </p>
+
+                  <a
+                    target="_blank"
+                    href="https://zasyasolutions.com/"
+                    rel="noopener noreferrer"
+                    className="text-sm 2xl:text-base font-medium text-primary mb-1"
+                  >
+                    https://zasyasolutions.com
+                  </a>
+                </div>
+                {user.role_id === 2 && user.organization_id ? (
+                  <div className="">
+                    <p className="text-sm 2xl:text-base font-medium text-gray-500 mb-1 flex items-center">
+                      Applaud Limit
+                      <span className="leading-[0] ml-2">
+                        {CustomPopover(
+                          "Count of Applauds that can be given by members in a month."
+                        )}
+                      </span>
+                    </p>
+
+                    <p className="text-sm 2xl:text-base font-medium mb-1 flex items-center justify-between">
+                      {applaudLimit}{" "}
+                      <span
+                        onClick={() => setOrganizationModal(true)}
+                        className="font-medium cursor-pointer"
+                      >
+                        Edit{" "}
+                      </span>
+                    </p>
+                  </div>
+                ) : null}
               </div>
             </Col>
 

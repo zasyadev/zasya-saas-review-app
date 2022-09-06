@@ -26,7 +26,7 @@ function SiderLayout({ collapsed, setCollapsed, items, md }) {
     >
       <div className="flex-col items-stretch min-h-full flex-nowrap px-0 relative">
         <Link href="/dashboard">
-          <div className="mt-3 text-center w-full inline-block cursor-pointer px-3">
+          <div className="mt-6 text-center w-full inline-block cursor-pointer px-3">
             <Image
               src={"/media/images/logos/review.png"}
               width={100}

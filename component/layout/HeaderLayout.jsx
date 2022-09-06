@@ -17,6 +17,7 @@ import { useRouter } from "next/router";
 import { openNotificationBox } from "../../component/common/notification";
 import httpService from "../../lib/httpService";
 import DefaultImages from "../common/DefaultImages";
+import { truncateString } from "../../helpers/truncateString";
 
 const { Header } = Layout;
 
@@ -102,7 +103,7 @@ function HeaderLayout({ title, user, collapsed, setCollapsed, md }) {
 
       <Menu.Item key={"account"}>
         <Link href="/profile" passHref>
-          <div className="flex items-center font-medium">
+          <div className="flex items-center py-1  font-medium">
             <span className="span-text">My Account</span>
           </div>
         </Link>
@@ -112,7 +113,7 @@ function HeaderLayout({ title, user, collapsed, setCollapsed, md }) {
         <Menu.SubMenu
           key="org"
           title={
-            <div className="flex items-center font-medium space-x-2">
+            <div className="flex items-center py-1  font-medium space-x-2">
               <UserSwitchOutlined />
               <span className="ml-1">Switch Teams</span>
             </div>
@@ -147,7 +148,7 @@ function HeaderLayout({ title, user, collapsed, setCollapsed, md }) {
       ) : null}
 
       <Menu.Item key={"sign_out"} onClick={() => logoutHandler()}>
-        <div className="flex items-center font-medium space-x-2">
+        <div className="flex items-center py-1  font-medium space-x-2">
           <LogoutOutlined /> <span className="span-text">Sign Out</span>
         </div>
       </Menu.Item>
@@ -176,7 +177,7 @@ function HeaderLayout({ title, user, collapsed, setCollapsed, md }) {
   const notificationMenu = (
     <div className="notification-wrapper bg-white shadow-xl rounded-md">
       <div className="flex items-center justify-between border-b border-gray-300 p-2">
-        <p className="text-sm font-bold">Notifications</p>
+        <p className="text-base font-bold mb-0">Notifications</p>
         {unSeenNotificationCount > 0 && (
           <button
             className="font-semibold text-xs text-primary rounded-full"
@@ -280,9 +281,9 @@ function HeaderLayout({ title, user, collapsed, setCollapsed, md }) {
                     : null}
                 </Avatar>
 
-                <p className="user-deatils whitespace-nowrap hidden md:block">
-                  {user?.organization?.company_name}
-                </p>
+                <div className="user-deatils hidden md:block m-0">
+                  {truncateString(user?.organization?.company_name, 16)}
+                </div>
               </div>
             </Dropdown>
           </div>

@@ -7,7 +7,7 @@ function dashboard() {
   return (
     <WithMe>
       {({ user }) => (
-        <AdminLayout user={user} title={"DashBoard"}>
+        <AdminLayout user={user} title={"Dashboard"}>
           <DashBoard user={user} />
         </AdminLayout>
       )}

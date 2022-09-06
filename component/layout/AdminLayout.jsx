@@ -35,7 +35,7 @@ function AdminLayout({ user, title, children }) {
 
   const allMenus = [
     getItem(
-      "DashBoard",
+      "Dashboard",
       "/dashboard",
       <DashboardOutlined className="sidebar-icon" />
     ),
