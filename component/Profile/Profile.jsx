@@ -252,7 +252,7 @@ source=LinkedIn`);
           </Col>
 
           <Col md={10} xs={24}>
-            <div className="custom-scrollbar profile-applaud-card">
+            <div className=" profile-applaud-card no-scrollbar">
               {receivedApplaudList.length > 0
                 ? receivedApplaudList.map((item, idx) => {
                     return (
