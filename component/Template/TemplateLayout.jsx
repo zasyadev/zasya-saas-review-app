@@ -55,11 +55,11 @@ function TemplateLayout({ user }) {
   return (
     <div className="container mx-auto max-w-full">
       {formList.length > 0 ? (
-        <div className="flex justify-end items-center mb-2">
+        <div className="flex justify-end items-center mb-4 md:mb-6">
           <PrimaryButton
             withLink={true}
             className="rounded-md  "
-            linkHref="/applaud/add"
+            linkHref="/template/add"
             title={"Create"}
           />
         </div>
@@ -70,14 +70,14 @@ function TemplateLayout({ user }) {
           <div className="p-4 ">
             <div className="container mx-auto max-w-full">
               <div className="grid grid-cols-1 lg:grid-cols-4 mb-4 items-center justify-center gap-4">
-                {formList.length > 5 ? (
+                {formList.length > 0 ? (
                   formList.map((form, idx) => {
                     return (
                       <div
                         className="template-list h-full w-full shadow-md flex  flex-col items-center justify-between p-6"
                         key={idx + "form"}
                       >
-                        <Link href={`/template/edit/${form.id}`}>
+                        <Link href={`/template/edit/${form.id}`} passHref>
                           <div className="flex flex-wrap border-gray-200 cursor-pointer item-center justify-center">
                             <div className="rounded-md grid items-center justify-center text-primary text-lg font-semibold text-center">
                               {form?.form_data?.title}

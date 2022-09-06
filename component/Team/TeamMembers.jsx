@@ -1,5 +1,5 @@
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import { Col, Popconfirm, Row, Skeleton } from "antd";
+import { Popconfirm, Skeleton } from "antd";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { PrimaryButton } from "../../component/common/CustomButton";
@@ -95,7 +95,7 @@ function TeamMembers({ user }) {
       render: (_, record) =>
         record.role_id === 2 ? null : (
           <p>
-            <Link href={`/team/edit/${record.user_id}`}>
+            <Link href={`/team/edit/${record.user_id}`} passHref>
               <EditOutlined
                 className="primary-color-blue text-xl mx-1  md:mx-2 cursor-pointer"
                 // onClick={() => onUpdate(record)}
@@ -118,51 +118,43 @@ function TeamMembers({ user }) {
     },
   ];
   return (
-    <Row>
-      <Col sm={24} md={24}>
-        <div className="container mx-auto max-w-full">
-          <div className="grid grid-cols-1  mb-16">
-            <div className="flex justify-end">
-              <div className="mb-2 ">
-                <PrimaryButton
-                  withLink={true}
-                  className="rounded-md  px-2 md:px-4 "
-                  linkHref="/team/add"
-                  title={"Create"}
-                />
-              </div>
-            </div>
+    <div className="container mx-auto max-w-full">
+      <div className="mb-4 md:mb-6 flex justify-end">
+        <PrimaryButton
+          withLink={true}
+          className="rounded-md  px-2 md:px-4 "
+          linkHref="/team/add"
+          title={"Create"}
+        />
+      </div>
 
-            <div className="w-full bg-white rounded-md overflow-hdden shadow-md px-4 pb-4 ">
-              <div className="p-4 ">
-                <div className="overflow-x-auto">
-                  {loading ? (
-                    <Skeleton
-                      title={false}
-                      active={true}
-                      width={[200]}
-                      className="mt-4"
-                      rows={3}
-                    />
-                  ) : (
-                    <CustomTable
-                      dataSource={membersList}
-                      columns={columns}
-                      className="custom-table"
-                      pagination={{
-                        defaultPageSize: 10,
-                        showSizeChanger: true,
-                        pageSizeOptions: ["10", "20", "50", "100"],
-                      }}
-                    />
-                  )}
-                </div>
-              </div>
-            </div>
+      <div className="w-full bg-white rounded-md overflow-hdden shadow-md px-4 pb-4 ">
+        <div className="p-4 ">
+          <div className="overflow-x-auto">
+            {loading ? (
+              <Skeleton
+                title={false}
+                active={true}
+                width={[200]}
+                className="mt-4"
+                rows={3}
+              />
+            ) : (
+              <CustomTable
+                dataSource={membersList}
+                columns={columns}
+                className="custom-table"
+                pagination={{
+                  defaultPageSize: 10,
+                  showSizeChanger: true,
+                  pageSizeOptions: ["10", "20", "50", "100"],
+                }}
+              />
+            )}
           </div>
         </div>
-      </Col>
-    </Row>
+      </div>
+    </div>
   );
 }
 

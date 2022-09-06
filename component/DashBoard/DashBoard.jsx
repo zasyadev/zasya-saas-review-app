@@ -32,13 +32,13 @@ function CountCard({
   tooltipText = "",
 }) {
   return (
-    <Link href={href}>
+    <Link href={href} passHref>
       <div
-        className={`bg-white rounded-xl shadow-md transition-all duration-300 ease-in hover:bg-gradient-to-r hover:from-peach hover:to-peach-light ${className}`}
+        className={`bg-white rounded-md shadow-md transition-all duration-300 ease-in hover:bg-gradient-to-r hover:from-peach hover:to-peach-light ${className}`}
       >
         <div className="px-4 py-5">
           <div className="flex flex-wrap items-start space-x-3">
-            <div className="grd-bg-pink text-white grid items-center w-10 h-10 py-1 px-1 justify-center shadow-lg-pink rounded-full">
+            <div className="bg-gradient-to-r from-peach to-peach-light text-white grid items-center w-10 h-10 py-1 px-1 justify-center shadow-lg-pink rounded-full">
               <Icon />
             </div>
             <div className="flex-1">
@@ -188,7 +188,7 @@ function DashBoard({ user }) {
             />
           </div>
 
-          <div className="w-full bg-white rounded-xl overflow-hidden shadow-md p-4">
+          <div className="w-full bg-white rounded-md overflow-hidden shadow-md p-4">
             {loading ? (
               <Skeleton
                 title={false}
@@ -202,34 +202,33 @@ function DashBoard({ user }) {
           </div>
           <Row gutter={[24, 24]}>
             <Col xs={24} md={12} lg={12}>
-              <div className="w-full bg-white rounded-xl overflow-hidden shadow-md p-4 h-full flex flex-col justify-between">
+              <div className="w-full bg-white rounded-md overflow-hidden shadow-md p-4 h-full flex flex-col">
                 <h2 className="text-xl mt-1 font-semibold text-primary mb-2 flex items-center">
                   Applauds Leaderboard
                   <span className="leading-[0] ml-2">
                     {CustomPopover("Applauds count received by that member.")}
                   </span>
                 </h2>
+                <div className="flex-1 flex flex-col justify-between">
+                  <Row gutter={[16, 24]}>
+                    {allApplaud.length > 0 ? (
+                      allApplaud.map((item, idx) => {
+                        if (idx <= 3) {
+                          return (
+                            <>
+                              {Object.entries(item).map(([key, value]) => {
+                                return (
+                                  <Col xs={24} md={12} key={"applaud" + idx}>
+                                    <Row className="">
+                                      <Col xs={7} md={10}>
+                                        <div className="p-2 flex justify-center">
+                                          <DefaultImages
+                                            imageSrc={value?.image}
+                                          />
+                                        </div>
+                                      </Col>
 
-                <Row gutter={[24, 24]}>
-                  {allApplaud.length > 0 ? (
-                    allApplaud.map((item, idx) => {
-                      if (idx <= 3) {
-                        return (
-                          <>
-                            {Object.entries(item).map(([key, value]) => {
-                              return (
-                                <Col xs={24} md={12} key={"applaud" + idx}>
-                                  <Row className="">
-                                    <Col xs={7} md={10}>
-                                      <div className="p-2 mt-2 flex justify-center">
-                                        <DefaultImages
-                                          imageSrc={value?.image}
-                                        />
-                                      </div>
-                                    </Col>
-
-                                    <Col xs={17} md={14}>
-                                      <div className="flex  justify-between items-center">
+                                      <Col xs={17} md={14}>
                                         <div className="py-2 px-3">
                                           <p className="mb-2 text-primary font-medium text-sm">
                                             {key}
@@ -241,36 +240,34 @@ function DashBoard({ user }) {
                                             </span>
                                           </p>
                                         </div>
-                                      </div>
-                                    </Col>
-                                  </Row>
-                                </Col>
-                              );
-                            })}
-                          </>
-                        );
-                      }
-                    })
-                  ) : (
-                    <Col xs={24} md={24}>
-                      <div className="flex justify-center items-center h-48">
-                        <div className="text-center">No Applaud Found</div>
-                      </div>
-                    </Col>
-                  )}
-                </Row>
+                                      </Col>
+                                    </Row>
+                                  </Col>
+                                );
+                              })}
+                            </>
+                          );
+                        }
+                      })
+                    ) : (
+                      <Col xs={24} md={24}>
+                        <div className="flex justify-center items-center h-48">
+                          <div className="text-center">No Applaud Found</div>
+                        </div>
+                      </Col>
+                    )}
+                  </Row>
 
-                {allApplaud.length > 0 ? (
-                  <div className=" text-center mt-2">
-                    <Link href="/applaud/allapplaud" passHref>
-                      <span className="text-primary text-sm inline  cursor-pointer font-medium hover:underline">
-                        View All
-                      </span>
-                    </Link>
-                  </div>
-                ) : (
-                  ""
-                )}
+                  {allApplaud.length > 0 && (
+                    <div className=" text-center mt-2">
+                      <Link href="/applaud/allapplaud" passHref>
+                        <span className="text-primary text-sm inline  cursor-pointer font-medium hover:underline">
+                          View All
+                        </span>
+                      </Link>
+                    </div>
+                  )}
+                </div>
               </div>
             </Col>
             <Col md={12} lg={12} xs={24}>

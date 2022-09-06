@@ -19,16 +19,6 @@ function Applaud({ user }) {
     gte: moment().startOf("month"),
   });
 
-  // const onUpdate = (data) => {
-  //   setEditMode(true);
-  //   setUpdateData(data);
-  //   setIsModalVisible(true);
-  //   applaudform.setFieldsValue({
-  //     user_id: data.user_id,
-  //     comment: data.comment,
-  //   });
-  // };
-
   useEffect(() => {
     fetchApplaudData();
   }, [currentMonth]);
@@ -61,27 +51,6 @@ function Applaud({ user }) {
       title: "Comment",
       dataIndex: "comment",
     },
-
-    // {
-    //   title: "Action",
-    //   key: "action",
-    //   render: (_, record) => (
-    //     <div className="flex items-center ">
-    //       <button
-    //         className="text-white text-base primary-bg-btn text-center px-3 rounded-md pb-2 mr-2  cursor-pointer"
-    //         onClick={() => onUpdate(record)}
-    //       >
-    //         <EditOutlined />
-    //       </button>
-    //       <button
-    //         className="text-white text-base primary-bg-btn text-center px-3 rounded-md pb-2 mr-2  cursor-pointer"
-    //         onClick={() => onDelete(record.id)}
-    //       >
-    //         <DeleteOutlined />
-    //       </button>
-    //     </div>
-    //   ),
-    // },
   ];
 
   function onDateChange(date, _) {
@@ -93,8 +62,8 @@ function Applaud({ user }) {
 
   return (
     <div className="container mx-auto max-w-full">
-      <div className="flex justify-end items-center">
-        <div className="bg-white rounded-md overflow-hidden shadow-md  py-1 px-2  h-11">
+      <div className="flex justify-between items-center mb-4 md:mb-6">
+        <div className="bg-white rounded-md overflow-hidden shadow-md  py-1 px-2">
           <DatePicker
             onChange={onDateChange}
             picker="month"
@@ -105,22 +74,21 @@ function Applaud({ user }) {
             className="font-semibold"
           />
         </div>
-        <div className=" mx-3 ">
-          <div>
-            <PrimaryButton
-              withLink={true}
-              className="rounded-md  "
-              linkHref="/applaud/add"
-              title={"Create"}
-            />
-          </div>
+
+        <div>
+          <PrimaryButton
+            withLink={true}
+            className="rounded-md  "
+            linkHref="/applaud/add"
+            title={"Create"}
+          />
         </div>
       </div>
 
-      <Row>
+      <Row gutter={[24, 24]}>
         <Col xs={24} md={12}>
-          <div className="grid grid-cols-1 px-2 w-full">
-            <div className=" bg-white rounded-xl overflow-hdden shadow-md my-3">
+          <div className="grid grid-cols-1 w-full">
+            <div className=" bg-white rounded-md overflow-hdden shadow-md">
               <div className="p-4 ">
                 <div className="overflow-x-auto">
                   <p className="font-semibold text-lg text-primary flex items-center">
@@ -203,9 +171,9 @@ function Applaud({ user }) {
         <Col xs={24} md={12}>
           <div className="px-1  h-auto ">
             <div className="container mx-auto max-w-full ">
-              <div className="grid grid-cols-1 px-2  mb-16">
+              <div className="grid grid-cols-1">
                 <div className="flex justify-end "></div>
-                <div className="w-full bg-white rounded-md overflow-hdden shadow-md my-3">
+                <div className="w-full bg-white rounded-md overflow-hdden shadow-md">
                   <div className="p-4 ">
                     <div className="overflow-x-auto">
                       <p className="font-semibold text-lg text-primary flex items-center">
