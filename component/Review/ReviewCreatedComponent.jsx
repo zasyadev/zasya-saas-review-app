@@ -192,7 +192,7 @@ function ReviewCreatedComponent({
     <div className="container mx-auto max-w-full">
       <div className="md:flex items-center justify-between text-base font-medium my-4 ">
         <div className="md:flex items-center ">
-          <div className="primary-color-blue capitalize">
+          <div className="text-primary capitalize">
             {reviewData?.frequency} Review
           </div>
           <div className="flex ml-2">
@@ -200,11 +200,11 @@ function ReviewCreatedComponent({
               <ShareIcon />
             </div>
           </div>
-          <div className="flex  primary-color-blue md:mx-10 my-auto">
+          <div className="flex  text-primary md:mx-10 my-auto">
             <p className="mr-1">Type:</p>
             <p className="capitalize">{reviewData?.review_type}</p>
           </div>
-          <div className="flex  primary-color-blue my-auto">
+          <div className="flex  text-primary my-auto">
             <p className="mr-1">Created Date: </p>
             <p>{moment(reviewData?.created_date).format(datePattern)}</p>
           </div>

@@ -349,7 +349,7 @@ function AddEditReviewComponent({
                     <div className="review-form-bg rounded-md h-full w-full">
                       {nextFormFeild === 0 && (
                         <div className="py-24 flex flex-col items-center justify-center">
-                          <p className="text-xl font-bold my-5 primary-color-blue">
+                          <p className="text-xl font-bold my-5 text-primary">
                             Please enter your feedback title
                           </p>
 
@@ -383,7 +383,7 @@ function AddEditReviewComponent({
                       )}
                       {nextFormFeild === 1 && (
                         <div className="py-24 flex flex-col items-center justify-center px-4">
-                          <p className="text-xl font-bold my-5 primary-color-blue">
+                          <p className="text-xl font-bold my-5 text-primary">
                             Please select your feedback template
                           </p>
 
@@ -445,7 +445,7 @@ function AddEditReviewComponent({
 
                       {nextFormFeild === 2 && (
                         <div className="py-24 flex flex-col items-center justify-center px-4">
-                          <p className="text-xl font-bold my-5 primary-color-blue">
+                          <p className="text-xl font-bold my-5 text-primary">
                             Would you like to let your team members rate you ?
                           </p>
 

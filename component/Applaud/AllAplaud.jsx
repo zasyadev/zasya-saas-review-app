@@ -128,7 +128,7 @@ function AllAplaud({ user }) {
 
                           <Col xs={14} md={14}>
                             <div>
-                              <p className="mb-2 primary-color-blue font-medium md:text-sm">
+                              <p className="mb-2 text-primary font-medium md:text-sm">
                                 {key}
                               </p>
                             </div>

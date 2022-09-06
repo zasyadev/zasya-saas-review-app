@@ -86,9 +86,7 @@ export function FormSlideComponent({
         <p className="text-lg font-bold text-red-400 mt-5">
           {`Question ${nextSlide + 1}`}
         </p>
-        <p className="text-2xl font-bold primary-color-blue mt-5">
-          {questionText}
-        </p>
+        <p className="text-2xl font-bold text-primary mt-5">{questionText}</p>
 
         {options?.length > 0 && type === "checkbox" && (
           <div className="my-10 mx-2 md:mx-10">
@@ -132,7 +130,7 @@ export function FormSlideComponent({
         )}
         {type == "input" && (
           <>
-            <div className="text-right mr-3 text-sm md:text-base primary-color-blue mt-6">
+            <div className="text-right mr-3 text-sm md:text-base text-primary mt-6">
               Text Limit
               <span className="text-sm md:text-base font-semibold mx-2 ">
                 {inputLimit[id] ?? 180}

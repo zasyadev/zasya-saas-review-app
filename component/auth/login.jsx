@@ -112,13 +112,13 @@ function LoginPage() {
         <div className="flex justify-between items-center mt-4 mb-6">
           <div className="form-group form-check">
             <Link href="/forgotpassword" passHref>
-              <p className="primary-color-blue  font-semibold transition duration-200 ease-in-out cursor-pointer underline">
+              <p className="text-primary  font-semibold transition duration-200 ease-in-out cursor-pointer underline">
                 Forgot password ?
               </p>
             </Link>
           </div>
           <Link href="/auth/register" passHref>
-            <span className="primary-color-blue  font-semibold transition duration-200 ease-in-out cursor-pointer underline">
+            <span className="text-primary  font-semibold transition duration-200 ease-in-out cursor-pointer underline">
               Register
             </span>
           </Link>

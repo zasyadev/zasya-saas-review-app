@@ -98,7 +98,7 @@ function TeamMembers({ user }) {
         <p>
           <Link href={`/team/edit/${record.user_id}`}>
             <EditOutlined
-              className="primary-color-blue text-xl mx-1  md:mx-2 cursor-pointer"
+              className="text-primary text-xl mx-1  md:mx-2 cursor-pointer"
               // onClick={() => onUpdate(record)}
             />
           </Link>

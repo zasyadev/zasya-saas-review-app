@@ -123,7 +123,7 @@ function Applaud({ user }) {
             <div className=" bg-white rounded-xl overflow-hdden shadow-md my-3">
               <div className="p-4 ">
                 <div className="overflow-x-auto">
-                  <p className="font-semibold text-lg primary-color-blue flex items-center">
+                  <p className="font-semibold text-lg text-primary flex items-center">
                     Received Applaud
                     <span className="leading-[0] ml-2">
                       {CustomPopover(
@@ -151,7 +151,7 @@ function Applaud({ user }) {
                           >
                             <Row className="m-5 px-2">
                               <Col xs={4} md={4}>
-                                <UserIcon className="primary-color-blue font-bold text-base mb-0 " />
+                                <UserIcon className="text-primary font-bold text-base mb-0 " />
                               </Col>
                               <Col xs={20} md={20}>
                                 <p className="ml-2 text-base mb-0 ">
@@ -164,7 +164,7 @@ function Applaud({ user }) {
                             </Row>
                             <Row className="m-5 px-2">
                               <Col xs={4} md={4}>
-                                <CommentIcons className="primary-color-blue font-bold text-base" />
+                                <CommentIcons className="text-primary font-bold text-base" />
                               </Col>
 
                               <Col xs={20} md={20}>
@@ -175,7 +175,7 @@ function Applaud({ user }) {
                             </Row>
                             <Row className="m-5 px-2">
                               <Col xs={4} md={4}>
-                                <CalanderIcon className="primary-color-blue font-bold  text-base " />
+                                <CalanderIcon className="text-primary font-bold  text-base " />
                               </Col>
 
                               <Col xs={20} md={20}>
@@ -208,7 +208,7 @@ function Applaud({ user }) {
                 <div className="w-full bg-white rounded-md overflow-hdden shadow-md my-3">
                   <div className="p-4 ">
                     <div className="overflow-x-auto">
-                      <p className="font-semibold text-lg primary-color-blue flex items-center">
+                      <p className="font-semibold text-lg text-primary flex items-center">
                         Applaud Given
                         <span className="leading-[0] ml-2">
                           {CustomPopover(

@@ -65,7 +65,7 @@ function SiderRight({ dashBoardData }) {
               <ApplaudIcon />
             </div>
             <div>
-              <p className="primary-color-blue text-xl font-extrabold my-2">
+              <p className="text-primary text-xl font-extrabold my-2">
                 {applaudCount}
               </p>
             </div>
@@ -77,7 +77,7 @@ function SiderRight({ dashBoardData }) {
               <StarIcon />
             </div>
             <div>
-              <p className="primary-color-blue text-xl font-extrabold my-2">
+              <p className="text-primary text-xl font-extrabold my-2">
                 {ratingHandler(reviewRating)}
               </p>
             </div>
@@ -94,7 +94,7 @@ function SiderRight({ dashBoardData }) {
                 <ClockIcon />
               </div>
               <div className="flex flex-col items-center">
-                <p className="primary-color-blue text-xl font-extrabold my-2 ">
+                <p className="text-primary text-xl font-extrabold my-2 ">
                   {tempTime.days()}
                 </p>
                 <p className="text-gray-500 text-sm xl:text-base mb-0">
@@ -103,7 +103,7 @@ function SiderRight({ dashBoardData }) {
               </div>
 
               <div className="flex flex-col items-center">
-                <p className="primary-color-blue text-xl font-extrabold my-2 ">
+                <p className="text-primary text-xl font-extrabold my-2 ">
                   {tempTime.hours()}
                 </p>
                 <p className="text-gray-500 text-sm xl:text-base mb-0">
@@ -111,7 +111,7 @@ function SiderRight({ dashBoardData }) {
                 </p>
               </div>
               <div className="flex flex-col items-center">
-                <p className="primary-color-blue text-xl font-extrabold my-2 ">
+                <p className="text-primary text-xl font-extrabold my-2 ">
                   {tempTime.minutes()}
                 </p>
                 <p className="text-gray-500 text-sm xl:text-base mb-0">
