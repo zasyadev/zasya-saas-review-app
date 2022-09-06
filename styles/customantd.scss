@@ -435,12 +435,6 @@ $bg-color: linear-gradient(90deg, #ff6968 0%, #ffa3a3 100%);
   }
 }
 
-.primary-color-blue {
-  color: #0f123f;
-}
-.primary-border-color-blue {
-  border-color: #0f123f;
-}
 .loaderimg,
 .login-image-wrapper {
   background-image: url("/media/images/bg/banner-bg-shape.webp");
@@ -493,9 +487,7 @@ $bg-color: linear-gradient(90deg, #ff6968 0%, #ffa3a3 100%);
 .btn-blue {
   background-color: #0f123f;
 }
-.grd-bg-pink-hover:hover {
-  background: linear-gradient(to right, #fb7185 0%, #fda4af 100%) !important;
-}
+
 .grd-bg-pink {
   background: linear-gradient(to right, #fb7185 0%, #fda4af 100%) !important;
 }
@@ -785,9 +777,7 @@ $bg-color: linear-gradient(90deg, #ff6968 0%, #ffa3a3 100%);
     background-color: #0f123f;
   }
 }
-.chart-data {
-  // filter: blur(3px);
-}
+
 .tooltip_chart {
   padding: 5px 15px;
 }

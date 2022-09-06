@@ -135,7 +135,7 @@ function ReviewManagement({ user }) {
           {record.is_published != "published" && (
             <Link href={`/review/edit/${record.id}`}>
               <span
-                className="primary-color-blue text-xl mr-4 cursor-pointer"
+                className="text-primary text-xl mr-4 cursor-pointer"
                 title="Assign"
               >
                 <EditOutlined />

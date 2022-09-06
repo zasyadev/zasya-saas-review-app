@@ -306,7 +306,7 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
         }
       >
         <div>
-          <div className="primary-color-blue text-base text-center mb-2 font-bold ">
+          <div className="text-primary text-base text-center mb-2 font-bold ">
             Template Title
           </div>
           <div>

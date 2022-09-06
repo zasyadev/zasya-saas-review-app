@@ -79,12 +79,12 @@ function TemplateLayout({ user }) {
                       >
                         <Link href={`/template/edit/${form.id}`}>
                           <div className="flex flex-wrap border-gray-200 cursor-pointer item-center justify-center">
-                            <div className="rounded-md grid items-center justify-center primary-color-blue text-lg font-semibold text-center">
+                            <div className="rounded-md grid items-center justify-center text-primary text-lg font-semibold text-center">
                               {form?.form_data?.title}
                             </div>
                           </div>
                         </Link>
-                        <div className="text-sm primary-color-blue  flex items-center  justify-center my-3">
+                        <div className="text-sm text-primary  flex items-center  justify-center my-3">
                           <Popconfirm
                             title={`Are you sure to delete ${form.form_data.title} ？`}
                             okText="Yes"

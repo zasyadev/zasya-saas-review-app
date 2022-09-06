@@ -75,7 +75,7 @@ function FormView({ user }) {
           {!record.status ? (
             <Link href={`/review/id/${record.id}`}>
               <span
-                className="primary-color-blue text-lg  cursor-pointer"
+                className="text-primary text-lg  cursor-pointer"
                 title="Attempt"
               >
                 Attempt

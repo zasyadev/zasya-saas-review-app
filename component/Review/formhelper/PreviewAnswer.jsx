@@ -11,7 +11,7 @@ export function PreviewAnswer({ item, nextSlide, setNextSlide, length }) {
             <div className="text-xl font-bold text-red-400 mt-5 px-2 text-center">
               {item.questionText}
             </div>
-            <div className="text-lg primary-color-blue mt-5 text-center px-2">
+            <div className="text-lg text-primary mt-5 text-center px-2">
               {item.option}
             </div>
             <div className="flex items-center justify-center px-3 my-6">

@@ -18,7 +18,7 @@ function LandingPage() {
               </div>
             </Col>
             <Col xs={24} md={14}>
-              <div className="hidden md:flex items-center justify-between primary-color-blue text-base font-medium px-4">
+              <div className="hidden md:flex items-center justify-between text-primary text-base font-medium px-4">
                 <div className="px-2 my-4">HOME</div>
                 <div className="px-2 my-4">ABOUT US</div>
                 <div className="px-2 my-4">FEATURES</div>
@@ -29,13 +29,13 @@ function LandingPage() {
 
             <Col xs={24} md={11}>
               <div className="md:pl-20 px-2 mt-8 ">
-                <div className="text-xl md:text-4xl primary-color-blue font-bold mt-2 md:mt-4">
+                <div className="text-xl md:text-4xl text-primary font-bold mt-2 md:mt-4">
                   Capture feedback easily
                 </div>
-                <div className="text-xl md:text-4xl primary-color-blue font-bold md:mt-2">
+                <div className="text-xl md:text-4xl text-primary font-bold md:mt-2">
                   Get more insights and
                 </div>
-                <div className="text-xl md:text-4xl primary-color-blue font-bold md:mt-2">
+                <div className="text-xl md:text-4xl text-primary font-bold md:mt-2">
                   confidence
                 </div>
                 <div className="text-sm md:text-lg font-normal mt-2">
@@ -67,10 +67,10 @@ function LandingPage() {
         <Row justify="space-around">
           <Col xs={24} md={9}>
             <div className="py-6 mx-2">
-              <div className="text-lg md:text-xl font-semibold primary-color-blue mt-4">
+              <div className="text-lg md:text-xl font-semibold text-primary mt-4">
                 Build surveys
               </div>
-              <div className="text-lg md:text-2xl  font-semibold primary-color-blue mt-2">
+              <div className="text-lg md:text-2xl  font-semibold text-primary mt-2">
                 Make on-brand surveys in minutes
               </div>
               <div className="text-base md:text-lg font-medium mt-4">
@@ -97,10 +97,10 @@ function LandingPage() {
           </Col>
           <Col xs={24} md={9}>
             <div className="py-6 mx-2">
-              <div className="text-xl font-semibold primary-color-blue mt-6 ">
+              <div className="text-xl font-semibold text-primary mt-6 ">
                 Distribute surveys
               </div>
-              <div className="text-lg md:text-2xl  font-semibold primary-color-blue mt-2">
+              <div className="text-lg md:text-2xl  font-semibold text-primary mt-2">
                 Run email, link, web and mobile surveys
               </div>
               <div className="text-base md:text-lg font-medium mt-4">
@@ -118,7 +118,7 @@ function LandingPage() {
         <Row>
           <Col xs={24} md={24}>
             <div className="backgroung-color-purple my-6 py-12 px-2">
-              <div className="text-lg md:text-4xl font-semibold primary-color-blue text-center mt-4">
+              <div className="text-lg md:text-4xl font-semibold text-primary text-center mt-4">
                 Deliver better experiences across the customer lifecycle
               </div>
               <div className="text-base md:text-xl font-medium text-center mt-4">
@@ -131,10 +131,10 @@ function LandingPage() {
         <Row>
           <Col xs={24} md={24}>
             <div>
-              <div className="text-xl font-semibold primary-color-blue text-center mt-6 ">
+              <div className="text-xl font-semibold text-primary text-center mt-6 ">
                 Features
               </div>
-              <div className="text-lg md:text-2xl font-semibold text-center my-4 primary-color-blue mx-2">
+              <div className="text-lg md:text-2xl font-semibold text-center my-4 text-primary mx-2">
                 Manage the customer experience at all touchpoints with one tool
               </div>
             </div>
@@ -177,10 +177,10 @@ function LandingPage() {
         <Row className="backgroung-color-purple py-8 ">
           <Col xs={24} md={24}>
             <div className="my-6">
-              <div className="text-xl font-semibold primary-color-blue text-center mt-6">
+              <div className="text-xl font-semibold text-primary text-center mt-6">
                 Blog
               </div>
-              <div className="text-lg md:text-2xl font-semibold text-center mt-4 primary-color-blue">
+              <div className="text-lg md:text-2xl font-semibold text-center mt-4 text-primary">
                 Lorem Ipsum is simply dummy text of the printing and typesetting
                 industry
               </div>
@@ -208,7 +208,7 @@ function LandingPage() {
         </Row>
         <Row className="background-color-grey" justify="center" align="middle">
           <Col xs={24} md={24}>
-            <div className="text-center primary-color-blue mt-8 mx-2">
+            <div className="text-center text-primary mt-8 mx-2">
               <div className="text-xl md:text-4xl font-medium">
                 Collect feedback,
               </div>

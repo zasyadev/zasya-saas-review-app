@@ -32,13 +32,13 @@ const ReviewViewComponent = ({
                   onPressEnter={() => setInputQuestion(!inputOuestion)}
                 />
               ) : (
-                <p className="ml-0 primary-color-blue font-medium text-base">
+                <p className="ml-0 text-primary font-medium text-base">
                   {`(${idx + 1})`} {questionText}
                 </p>
               )}
               {editableFeedback ? (
                 <p
-                  className="ml-3 primary-color-blue  text-sm cursor-pointer"
+                  className="ml-3 text-primary  text-sm cursor-pointer"
                   onClick={() => {
                     setInputQuestion(!inputOuestion);
                   }}

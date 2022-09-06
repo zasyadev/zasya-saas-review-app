@@ -7,6 +7,8 @@ module.exports = {
         primary: "#0f123f",
         secondary: "#ff7473",
         light: "#f8f8ff",
+        peach: "#fb7185",
+        "peach-light": "#fda4af",
       },
     },
   },

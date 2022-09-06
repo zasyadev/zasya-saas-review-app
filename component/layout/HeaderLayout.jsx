@@ -222,7 +222,7 @@ function HeaderLayout({ title, user, collapsed, setCollapsed, md }) {
   return (
     <Header className="ant-header bg-color-dashboard border-b border-b-neutral-300 p-0">
       <div className="flex items-center h-full justify-between mx-4 md:mx-6">
-        <div className="font-bold text-lg md:text-2xl primary-color-blue">
+        <div className="font-bold text-lg md:text-2xl text-primary">
           {title}
         </div>
 
