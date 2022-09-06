@@ -179,7 +179,7 @@ source=LinkedIn`);
                   <SecondaryButton
                     withLink={true}
                     linkHref={"/profile/edit"}
-                    className="text-md px-8 rounded-md"
+                    className="text-md px-8 lg:ml-2 rounded-md"
                     title="Edit Profile"
                   />
                 </div>

@@ -12,7 +12,7 @@ import {
 } from "antd";
 import ImgCrop from "antd-img-crop";
 import { useS3Upload } from "next-s3-upload";
-import Image from "next/image";
+
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import {
@@ -50,9 +50,6 @@ const ImageUpload = ({
   limitSize = 1,
 }) => {
   const [isUploading, setIsUploading] = useState(false);
-  // const [previewVisible, setPreviewVisible] = useState(false);
-  // const [previewImage, setPreviewImage] = useState("");
-  // const [previewTitle, setPreviewTitle] = useState("");
 
   const uploadImageButton = !isUploading ? (
     <div>
@@ -80,15 +77,6 @@ const ImageUpload = ({
     return checkJpgOrPng && checkFileSize;
   }
 
-  // function getImages(file) {
-  //   return new Promise((resolve, reject) => {
-  //     const reader = new FileReader();
-  //     reader.readAsDataURL(file);
-  //     reader.onload = () => resolve(reader.result);
-  //     reader.onerror = (error) => reject(error);
-  //   });
-  // }
-
   function handleChange(info) {
     if (info.file.status === "uploading") {
       setFileList(info.fileList);
@@ -108,26 +96,12 @@ const ImageUpload = ({
     }
   }
 
-  // const handlePreview = async (file) => {
-  //   if (!file.url && !file.preview) {
-  //     file.preview = await getImages(file.originFileObj);
-  //   }
-  //   setPreviewVisible(true);
-  //   setPreviewImage(file.url || file.preview);
-
-  //   setPreviewTitle(file.name);
-  // };
-
   const onPreview = async (file) => {
-    const src = file.url || (await getSrcFromFile(file));
-    const imgWindow = window.open(src);
-
-    if (imgWindow) {
-      const image = new Image();
-      image.src = src;
-      imgWindow.document.write(image.outerHTML);
-    } else {
-      window.location.href = src;
+    try {
+      const src = file.url || (await getSrcFromFile(file));
+      window.open(src);
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -167,7 +141,17 @@ function EditProfile({ user }) {
   const { uploadToS3 } = useS3Upload();
   const [passwordForm] = Form.useForm();
   const [slackForm] = Form.useForm();
-  const [profileForm] = Form.useForm();
+  const [apiLoading, setApiLoading] = useState(false);
+  const [userDetails, setUserDetails] = useState({
+    first_name: "",
+    address1: "",
+    about: "",
+    address2: "",
+    mobile: "",
+    pin_code: "",
+    notification: [],
+    slack_email: "",
+  });
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [showSlackEditModal, setShowSlackEditModal] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -202,18 +186,17 @@ function EditProfile({ user }) {
   };
 
   const profileUpdate = async (data) => {
+    setApiLoading(true);
     await httpService
       .post(`/api/profile/${user.id}`, data)
       .then(({ data: response }) => {
         if (response.status === 200) {
-          profileForm.resetFields();
           openNotificationBox("success", response.message, 3);
-          getProfileData();
-        } else {
-          openNotificationBox("error", response.message, 3);
+          router.push("/profile");
+          return;
         }
       })
-      .catch((err) => console.error(err.response.data.message));
+      .catch((err) => setApiLoading(false));
   };
 
   const validateMessages = {
@@ -226,7 +209,7 @@ function EditProfile({ user }) {
       .get(`/api/profile/${user.id}`)
       .then(({ data: response }) => {
         if (response.status === 200) {
-          profileForm.setFieldsValue({
+          setUserDetails({
             first_name: response.data.user.first_name,
             address1: response.data.address1 ?? "",
             about: response.data.about ?? "",
@@ -234,14 +217,11 @@ function EditProfile({ user }) {
             mobile: response.data.mobile ?? "",
             pin_code: response.data.pin_code ?? "",
             notification: response.data.notification ?? [],
-          });
-          slackForm.setFieldsValue({
             slack_email: response.data.slack_email ?? "",
           });
           setImageHandler(response.data.image);
-
-          setLoading(false);
         }
+        setLoading(false);
       })
       .catch((err) => console.error(err?.response?.data?.message));
   };
@@ -313,6 +293,13 @@ function EditProfile({ user }) {
       });
   };
 
+  function handleEditSlack() {
+    slackForm.setFieldsValue({
+      slack_email: userDetails.slack_email,
+    });
+    setShowSlackEditModal(true);
+  }
+
   return loading ? (
     <div className="grid grid-cols-1 xl:grid-cols-6 mt-1">
       <div className="xl:col-start-1 xl:col-end-7 px-4 ">
@@ -329,12 +316,12 @@ function EditProfile({ user }) {
     <>
       <div className="grid grid-cols-1 xl:grid-cols-6">
         <div className="xl:col-start-1 xl:col-end-7 px-4 ">
-          <div className="rounded-md text-white grid items-center w-full shadow-lg-purple mb-3">
+          <div className="rounded-md text-white grid items-center w-full shadow-lg-purple mb-4 md:mb-6">
             <div className="w-full flex item-center justify-end">
               <div className="flex justify-end ">
-                <div className="mr-2">
+                <div className="mr-4">
                   <SecondaryButton
-                    onClick={() => setShowSlackEditModal(true)}
+                    onClick={() => handleEditSlack()}
                     className="rounded h-full md:w-full w-32 mr-2"
                     title="Change Slack Email"
                   />
@@ -353,12 +340,17 @@ function EditProfile({ user }) {
             <Row gutter={16}>
               <Col lg={24} xs={24} className=" items-center">
                 <Form
-                  form={profileForm}
                   layout="vertical"
                   onFinish={onFinish}
                   validateMessages={validateMessages}
                   initialValues={{
-                    notification: ["mail"],
+                    first_name: userDetails?.first_name,
+                    address1: userDetails?.address1,
+                    about: userDetails?.about,
+                    address2: userDetails?.address2,
+                    mobile: userDetails?.mobile,
+                    pin_code: userDetails?.pin_code,
+                    notification: userDetails?.notification,
                   }}
                 >
                   <Row gutter={16} justify="center">
@@ -410,15 +402,7 @@ function EditProfile({ user }) {
                           </Form.Item>
                         </Col>
                         <Col md={24} sm={24} xs={24}>
-                          <Form.Item
-                            label="Address Line 2"
-                            name="address2"
-                            // rules={[
-                            //   {
-                            //     required: true,
-                            //   },
-                            // ]}
-                          >
+                          <Form.Item label="Address Line 2" name="address2">
                             <Input
                               placeholder="Address Line 2"
                               className="bg-gray-100 h-12 rounded-md"
@@ -473,15 +457,16 @@ function EditProfile({ user }) {
                       </Row>
                     </Col>
                   </Row>
-                  <div className="text-center">
+                  <div className="text-center space-x-4">
                     <SecondaryButton
                       withLink={true}
-                      className="rounded h-full w-32 mr-2"
+                      className="rounded h-full w-32"
                       linkHref={"/profile"}
                       title="Cancel"
                     />
                     <PrimaryButton
-                      btnProps={{ htmlType: "submit" }}
+                      btnProps={{ type: "submit" }}
+                      disabled={apiLoading}
                       className=" h-full w-32 rounded "
                       title="Submit"
                     />
@@ -611,23 +596,31 @@ function EditProfile({ user }) {
         ]}
         wrapClassName="view_form_modal"
       >
-        <div>
-          <Form
-            form={slackForm}
-            layout="vertical"
-            autoComplete="off"
-            onFinish={onChangeSlack}
+        <Form
+          form={slackForm}
+          layout="vertical"
+          autoComplete="off"
+          initialValues={{
+            slack_email: userDetails?.slack_email,
+          }}
+          onFinish={onChangeSlack}
+        >
+          <Form.Item
+            label="Slack Email Address "
+            name="slack_email"
+            rules={[
+              {
+                required: true,
+                message: "Required",
+              },
+            ]}
           >
-            <div className=" mx-2">
-              <Form.Item label="Slack Email Address " name="slack_email">
-                <Input
-                  placeholder="Slack Email Address"
-                  className="form-control block w-full px-4 py-2 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-green-500 focus:outline-none"
-                />
-              </Form.Item>
-            </div>
-          </Form>
-        </div>
+            <Input
+              placeholder="Slack Email Address"
+              className="form-control block w-full px-4 py-2 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-green-500 focus:outline-none"
+            />
+          </Form.Item>
+        </Form>
       </Modal>
     </>
   );
