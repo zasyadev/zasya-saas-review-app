@@ -25,17 +25,18 @@ function SiderLayout({ collapsed, setCollapsed, items, md }) {
       width={250}
     >
       <div className="flex-col items-stretch min-h-full flex-nowrap px-0 relative">
-        <Link href="/dashboard">
-          <div className="mt-6 text-center w-full inline-block cursor-pointer px-3">
+        <Link href="/dashboard" passHref>
+          <div className="h-28 2xl:h-32 grid place-content-center text-center w-full cursor-pointer px-3">
             <Image
               src={"/media/images/logos/review.png"}
               width={100}
-              height={50}
+              height={51}
+              alt="review logo"
             />
           </div>
         </Link>
 
-        <div className=" flex flex-col py-4 px-2">
+        <div className="px-2">
           <Menu
             onClick={onClickSideTab}
             mode="inline"

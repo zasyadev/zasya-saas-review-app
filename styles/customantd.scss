@@ -8,14 +8,16 @@ $bg-color: linear-gradient(90deg, #ff6968 0%, #ffa3a3 100%);
     border-radius: 0.5rem;
     color: #fff;
     .ant-menu-submenu-title {
-      height: 66px;
+      height: 60px;
       font-weight: 600;
       font-size: 17px;
       grid-gap: 2rem;
-
       border-radius: 0.5rem;
       display: flex;
       align-items: center;
+      @include mobile {
+        height: 50px;
+      }
     }
     .ant-menu-submenu-arrow {
       color: #fff !important;
@@ -30,6 +32,9 @@ $bg-color: linear-gradient(90deg, #ff6968 0%, #ffa3a3 100%);
         padding-left: 68px !important;
         display: flex;
         align-items: center;
+        @include mobile {
+          height: 50px;
+        }
       }
     }
   }
@@ -54,7 +59,6 @@ $bg-color: linear-gradient(90deg, #ff6968 0%, #ffa3a3 100%);
     font-weight: 600;
     box-shadow: rgba(0, 0, 0, 0.06);
     font-size: 17px;
-
     padding: 5px 10px;
     border-radius: 0.5rem;
     grid-gap: 2rem;
@@ -63,6 +67,7 @@ $bg-color: linear-gradient(90deg, #ff6968 0%, #ffa3a3 100%);
     align-items: center;
 
     @include mobile {
+      height: 50px;
       padding-left: 5px;
     }
   }
@@ -835,19 +840,6 @@ $bg-color: linear-gradient(90deg, #ff6968 0%, #ffa3a3 100%);
 .dashboard-feedback {
   max-height: 220px;
   overflow: auto;
-}
-
-.profile-wrapper {
-  .image-absolute {
-    position: absolute;
-    bottom: 0;
-    left: 45px;
-    @include mobile {
-      position: relative;
-      bottom: 0;
-      left: 5px;
-    }
-  }
 }
 
 .notification-dropdown {

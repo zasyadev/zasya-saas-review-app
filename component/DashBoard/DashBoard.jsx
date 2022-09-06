@@ -34,7 +34,7 @@ function CountCard({
   return (
     <Link href={href} passHref>
       <div
-        className={`bg-white rounded-xl shadow-md transition-all duration-300 ease-in hover:bg-gradient-to-r hover:from-peach hover:to-peach-light ${className}`}
+        className={`bg-white rounded-md shadow-md transition-all duration-300 ease-in hover:bg-gradient-to-r hover:from-peach hover:to-peach-light ${className}`}
       >
         <div className="px-4 py-5">
           <div className="flex flex-wrap items-start space-x-3">
@@ -188,7 +188,7 @@ function DashBoard({ user }) {
             />
           </div>
 
-          <div className="w-full bg-white rounded-xl overflow-hidden shadow-md p-4">
+          <div className="w-full bg-white rounded-md overflow-hidden shadow-md p-4">
             {loading ? (
               <Skeleton
                 title={false}
@@ -202,7 +202,7 @@ function DashBoard({ user }) {
           </div>
           <Row gutter={[24, 24]}>
             <Col xs={24} md={12} lg={12}>
-              <div className="w-full bg-white rounded-xl overflow-hidden shadow-md p-4 h-full flex flex-col">
+              <div className="w-full bg-white rounded-md overflow-hidden shadow-md p-4 h-full flex flex-col">
                 <h2 className="text-xl mt-1 font-semibold text-primary mb-2 flex items-center">
                   Applauds Leaderboard
                   <span className="leading-[0] ml-2">

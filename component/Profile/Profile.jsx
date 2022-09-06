@@ -578,7 +578,7 @@ source=LinkedIn`);
         <div className="profile-wrapper">
           <Row gutter={[16, 16]}>
             <Col md={24} xs={24}>
-              <div className="bg-white rounded-md overflow-hidden transition-all duration-300 ease-in-out shadow-md h-64">
+              <div className="bg-white relative rounded-md overflow-hidden transition-all duration-300 ease-in-out shadow-md h-auto lg:h-64">
                 <div className="relative h-48">
                   <Image
                     src={"/media/images/profile-cover.webp"}
@@ -586,52 +586,48 @@ source=LinkedIn`);
                     layout="fill"
                   />
                 </div>
-
-                <div className=" block md:flex justify-end items-center">
-                  <div className="px-2 py-2 image-absolute">
-                    <div className="w-20 mx-auto ">
-                      <div className="rounded-full">
-                        <DefaultImages
-                          imageSrc={userDetails?.image}
-                          width={80}
-                          height={80}
-                        />
-                      </div>
-                    </div>
-                    <div>
-                      <p className="text-lg font-semibold text-center md:text-left mb-0">
-                        {userDetails?.user?.first_name}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className=" block md:flex justify-between items-center pb-2 md:pb-0">
-                    <div className="flex px-4 py-2">
-                      <div className="text-center mx-2">
-                        <p className="text-xl font-extrabold mb-0">
-                          {givenApplaudList?.length}
-                        </p>
-                        <p className="text-base font-medium mb-0">
-                          Appalud Given
-                        </p>
-                      </div>
-                      <div className="text-center mx-2">
-                        <p className="text-xl font-extrabold mb-0">
-                          {receivedApplaudList?.length}
-                        </p>
-                        <p className="text-base font-medium mb-0">
-                          Appalud Received
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex  justify-center md:mx-4">
-                      <SecondaryButton
-                        withLink={false}
-                        onClick={() => setEditMode(true)}
-                        className="text-md px-8 rounded-md"
-                        title="Edit Profile"
+                <div className="px-2 py-2 text-center absolute top-5 right-0 left-0 lg:-bottom-1 lg:top-auto lg:right-auto lg:left-12">
+                  <div className="w-20 mx-auto ">
+                    <div className="rounded-full">
+                      <DefaultImages
+                        imageSrc={userDetails?.image}
+                        width={80}
+                        height={80}
                       />
                     </div>
+                  </div>
+                  <div>
+                    <span className="text-lg font-semibold text-center text-white lg:text-primary md:text-left mb-0">
+                      {userDetails?.user?.first_name}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="md:flex justify-end items-center px-2 md:px-4">
+                  <div className="flex flex-wrap justify-between items-center pb-2 md:pb-0">
+                    <div className="text-center m-2">
+                      <p className="text-xl font-extrabold mb-0">
+                        {givenApplaudList?.length}
+                      </p>
+                      <p className="text-sm md:text-base font-medium mb-0">
+                        Appalud Given
+                      </p>
+                    </div>
+                    <div className="text-center m-2">
+                      <p className="text-xl font-extrabold mb-0">
+                        {receivedApplaudList?.length}
+                      </p>
+                      <p className="text-sm md:text-base font-medium mb-0">
+                        Appalud Received
+                      </p>
+                    </div>
+
+                    <SecondaryButton
+                      withLink={false}
+                      onClick={() => setEditMode(true)}
+                      className="text-md px-8 m-2 rounded-md"
+                      title="Edit Profile"
+                    />
                   </div>
                 </div>
               </div>

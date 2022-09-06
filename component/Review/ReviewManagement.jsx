@@ -164,7 +164,7 @@ function ReviewManagement({ user }) {
   return (
     <div className="container mx-auto max-w-full">
       <div className="grid grid-cols-1">
-        <div className=" md:flex items-center justify-between mb-4 md:mb-6">
+        <div className="flex flex-col-reverse md:flex-row md:items-center md:justify-between  mb-4 md:mb-6">
           <div className="flex w-auto">
             <PrimaryButton
               withLink={true}
@@ -178,10 +178,10 @@ function ReviewManagement({ user }) {
               title={"Created"}
             />
           </div>
-          <div className="mt-2 md:mt-0">
+          <div className="mb-4 md:mb-0 text-right">
             <PrimaryButton
               withLink={true}
-              className="rounded-md w-full"
+              className="rounded-md"
               linkHref="/review/add"
               title={"Create"}
             />

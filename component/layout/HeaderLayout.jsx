@@ -177,7 +177,7 @@ function HeaderLayout({ title, user, collapsed, setCollapsed, md }) {
   const notificationMenu = (
     <div className="notification-wrapper bg-white shadow-xl rounded-md">
       <div className="flex items-center justify-between border-b border-gray-300 p-2">
-        <p className="text-base font-bold mb-0">Notifications</p>
+        <p className="text-sm lg:text-base font-bold mb-0">Notifications</p>
         {unSeenNotificationCount > 0 && (
           <button
             className="font-semibold text-xs text-primary rounded-full"
@@ -242,11 +242,9 @@ function HeaderLayout({ title, user, collapsed, setCollapsed, md }) {
                 <DownOutlined className="text-xs" />
               </div>
 
-              <div className="md:hidden mx-1 text-base ">
-                <PlusOutlined />
-              </div>
+              <PlusOutlined className="md:hidden text-sm " />
             </div>
-          </Dropdown>{" "}
+          </Dropdown>
           <Dropdown
             trigger={"click"}
             overlay={notificationMenu}
@@ -288,11 +286,14 @@ function HeaderLayout({ title, user, collapsed, setCollapsed, md }) {
             </Dropdown>
           </div>
           {!md ? (
-            <div onClick={() => setCollapsed(!collapsed)} className="pr-2 pl-1">
+            <div
+              onClick={() => setCollapsed(!collapsed)}
+              className="w-10 h-10 py-2 px-3 bg-white grid place-content-center rounded-md cursor-pointer"
+            >
               {collapsed ? (
-                <MenuUnfoldOutlined className="text-base" />
+                <MenuUnfoldOutlined className="text-lg" />
               ) : (
-                <MenuFoldOutlined className="text-base" />
+                <MenuFoldOutlined className="text-lg" />
               )}
             </div>
           ) : null}
