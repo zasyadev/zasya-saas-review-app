@@ -124,7 +124,7 @@ function TeamMembers({ user }) {
         <div className="container mx-auto max-w-full">
           <div className="grid grid-cols-1  mb-16">
             <div className="flex justify-end">
-              <div className="my-2 ">
+              <div className="mb-2 ">
                 <PrimaryButton
                   withLink={true}
                   className="rounded-md  px-2 md:px-4 "

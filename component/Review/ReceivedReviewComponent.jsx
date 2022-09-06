@@ -102,7 +102,7 @@ function ReceivedReviewComponent({ user, reviewId }) {
 
   return (
     <div className="answer-bg p-4">
-      {!loading ? (
+      {loading ? (
         <>
           <div className="text-right mt-4 mr-4">
             <Link href="/review/received">

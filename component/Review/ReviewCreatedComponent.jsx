@@ -80,7 +80,7 @@ function ReviewCreatedComponent({
   //       to: answer_date,
   //     }),
   // };
-
+  console.log(reviewData, "reviewData");
   useEffect(() => {
     let headersData = [];
     if (reviewData?.form?.form_data.length) {
@@ -100,8 +100,7 @@ function ReviewCreatedComponent({
         };
       });
     }
-
-    headersData.unshift(nameTitle);
+    if (headersData?.length) headersData.unshift(nameTitle);
 
     // headersData.push(reactivityTimeColoum);
 

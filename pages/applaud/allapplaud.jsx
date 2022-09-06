@@ -7,7 +7,7 @@ function Allapplaud() {
   return (
     <WithMe>
       {({ user }) => (
-        <AdminLayout user={user} title="View All Applaud">
+        <AdminLayout user={user} title="All Applauds">
           <AllAplaud user={user} />
         </AdminLayout>
       )}

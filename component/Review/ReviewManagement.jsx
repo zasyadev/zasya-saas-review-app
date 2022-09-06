@@ -73,11 +73,15 @@ function ReviewManagement({ user }) {
       key: "review_name",
       render: (_, record) => (
         <div className="flex">
-          <Link href={`/review/${record.id}`}>
-            <p className="cursor-pointer underline text-gray-500">
-              {record.review_name}
-            </p>
-          </Link>
+          {record.is_published != "published" ? (
+            <p className=" text-gray-500">{record.review_name}</p>
+          ) : (
+            <Link href={`/review/${record.id}`}>
+              <p className="cursor-pointer underline text-gray-500">
+                {record.review_name}
+              </p>
+            </Link>
+          )}
         </div>
       ),
     },
@@ -85,7 +89,9 @@ function ReviewManagement({ user }) {
       title: "Frequency",
       key: "frequency ",
       dataIndex: "frequency",
-      render: (frequency) => <p className={`capitalize `}>{frequency}</p>,
+      render: (frequency) => (
+        <p className={`capitalize `}>{frequency ?? "-"}</p>
+      ),
     },
     {
       title: "Type",

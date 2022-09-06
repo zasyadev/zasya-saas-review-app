@@ -410,9 +410,9 @@ source=LinkedIn`);
   ) : (
     <>
       {editMode ? (
-        <div className="grid grid-cols-1 xl:grid-cols-6 mt-1">
+        <div className="grid grid-cols-1 xl:grid-cols-6">
           <div className="xl:col-start-1 xl:col-end-7 px-4 ">
-            <div className="rounded-xl text-white grid items-center w-full shadow-lg-purple my-3">
+            <div className="rounded-xl text-white grid items-center w-full shadow-lg-purple mb-3">
               <div className="w-full flex item-center justify-end">
                 <div className="flex justify-end ">
                   <div className="mr-2">
@@ -432,9 +432,9 @@ source=LinkedIn`);
                 </div>
               </div>
             </div>
-            <div className="w-full bg-white rounded-xl  shadow-md p-4 ">
+            <div className="w-full bg-white rounded-xl  shadow-md px-2 py-3 md:px-4 md:py-6">
               <Row gutter={16}>
-                <Col lg={24} xs={24} className="mt-4 items-center">
+                <Col lg={24} xs={24} className=" items-center">
                   <Form
                     form={profileForm}
                     layout="vertical"
@@ -571,11 +571,6 @@ source=LinkedIn`);
                   </Form>
                 </Col>
               </Row>
-              <div className="p-4 ">
-                <div className="border-t border-lightBlue-200 text-center px-2 ">
-                  <p className="text-blue-gray-700 text-lg font-light leading-relaxed mt-6 mb-4"></p>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -935,11 +930,24 @@ source=LinkedIn`);
             onFinish={onChangeOrgData}
           >
             <div className=" mx-2">
-              <Form.Item label="Applaud Limit " name="applaud_count">
+              <Form.Item
+                label="Applaud Limit "
+                name="applaud_count"
+                rules={[
+                  {
+                    validator: (_, value) => {
+                      if (Number(value) > 0 && Number(value) < 1000) {
+                        return Promise.resolve();
+                      } else {
+                        return Promise.reject("Please Enter valid Limit");
+                      }
+                    },
+                  },
+                ]}
+              >
                 <Input
                   placeholder=" Applaud Limit"
                   className="form-control block w-full px-4 py-2 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white  focus:outline-none"
-                  type="number"
                 />
               </Form.Item>
             </div>
