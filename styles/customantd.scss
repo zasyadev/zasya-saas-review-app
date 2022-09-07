@@ -390,16 +390,6 @@ $bg-color: linear-gradient(90deg, #ff6968 0%, #ffa3a3 100%);
       width: 90%;
     }
   }
-  .question-type-bg {
-    background-color: #eeeeee;
-    padding: 10px 25px;
-    border-radius: 5px;
-    cursor: pointer;
-    p {
-      font-size: 18px;
-      font-weight: 500;
-    }
-  }
 }
 
 .ant-collapse-item-active {
@@ -712,7 +702,6 @@ $bg-color: linear-gradient(90deg, #ff6968 0%, #ffa3a3 100%);
   background-size: cover;
   background-position: center;
   opacity: 1;
-  border-radius: 0 0 14px 14px;
   .linear-bg {
     background: $bg-color;
     color: #fff;

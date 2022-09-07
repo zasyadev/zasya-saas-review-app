@@ -46,51 +46,51 @@ function TemplateEditor({
           />
         </div>
         <div className="w-full bg-white rounded-md shadow-md  mt-4 add-template-wrapper sider-question-wrapper overflow-auto">
-          <div className="rounded-t-md  mt-1">
-            <div className="question-section-container">
-              <div className="question-section-contents">
-                <div className="question-section-contents-card">
-                  {questions?.length > 0 &&
-                    questions?.map((question, idx) => (
-                      <div
-                        className={` question-section-wrapper my-1 px-4 py-3 cursor-pointer ${
-                          idx == questions?.length - 1 ? null : "border-bottom"
-                        }`}
-                        key={idx + "side que"}
-                      >
-                        <div className="flex justify-between">
-                          <div className="w-full">
-                            <div
-                              className="flex items-center"
-                              onClick={() => {
-                                setActiveQuestionIndex(idx);
-                                setSelectTypeFeild(false);
-                              }}
-                            >
-                              <span className=" rounded-full linear-bg">
-                                {idx + 1}
-                              </span>
+          <div className="question-section-container">
+            <div className="question-section-contents">
+              <div className="question-section-contents-card">
+                {questions?.length > 0 &&
+                  questions?.map((question, idx) => (
+                    <div
+                      className={` question-section-wrapper p-4 cursor-pointer ${
+                        idx == questions?.length - 1 ? null : "border-bottom"
+                      }  ${
+                        idx === activeQuestionIndex
+                          ? "border-l-primary border-l-2"
+                          : ""
+                      }`}
+                      key={idx + "side que"}
+                    >
+                      <div className="flex justify-between">
+                        <div className="w-full">
+                          <div
+                            className="flex items-center"
+                            onClick={() => {
+                              setActiveQuestionIndex(idx);
+                              setSelectTypeFeild(false);
+                            }}
+                          >
+                            <span className=" rounded-full linear-bg">
+                              {idx + 1}
+                            </span>
 
-                              <span className=" px-2 py-1 ">
-                                <span className="">
-                                  {question?.questionText}
-                                </span>
-                              </span>
-                            </div>
-                          </div>
-
-                          <div className="">
-                            <span
-                              className=" dark-blue-bg cursor-pointer"
-                              onClick={() => removeElement(idx)}
-                            >
-                              <CloseOutlined className="text-xs" />
+                            <span className=" px-2 py-1 ">
+                              <span className="">{question?.questionText}</span>
                             </span>
                           </div>
                         </div>
+
+                        <div className="">
+                          <span
+                            className=" dark-blue-bg cursor-pointer"
+                            onClick={() => removeElement(idx)}
+                          >
+                            <CloseOutlined className="text-xs" />
+                          </span>
+                        </div>
                       </div>
-                    ))}
-                </div>
+                    </div>
+                  ))}
               </div>
             </div>
           </div>
@@ -114,7 +114,7 @@ function TemplateEditor({
       </Col>
       <Col xs={24} md={16}>
         <div className="w-full bg-white rounded-md shadow-md mt-4 add-template-wrapper">
-          <div className="rounded-t-md  mt-1">
+          <div className="rounded-md overflow-hidden  mt-1">
             {questions?.length > 0 &&
               questions
                 ?.filter((_, index) => index === activeQuestionIndex)

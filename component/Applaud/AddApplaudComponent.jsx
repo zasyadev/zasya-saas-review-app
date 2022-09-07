@@ -1,4 +1,3 @@
-import { LoadingOutlined } from "@ant-design/icons";
 import { Col, Form, Row, Select, Spin } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import { useRouter } from "next/router";
@@ -88,42 +87,10 @@ function AddApplaud({ user }) {
       });
   }
 
-  // async function updateApplaud(obj) {
-  //   if (updateData.id) {
-  //     obj.id = updateData.id;
-  //   }
-  //   await fetch("/api/applaud", {
-  //     method: "PUT",
-  //     body: JSON.stringify(obj),
-  //   })
-  //     .then((response) => response.json())
-  //     .then((response) => {
-  //       if (response.status === 200) {
-  //         applaudform.resetFields();
-  //         // fetchApplaud();
-  //         setIsModalVisible(false);
-  //         setEditMode(false);
-  //         openNotificationBox("success", response.message, 3);
-  //       } else {
-  //         openNotificationBox("error", response.message, 3);
-  //       }
-  //     })
-  //     .catch((err) => fetchApplaud([]));
-  // }
-
   useEffect(() => {
     fetchMember(user);
     fetchApplaudLimit(user);
   }, []);
-  const antIcon = (
-    <LoadingOutlined
-      style={{
-        fontSize: 24,
-        color: "white",
-      }}
-      spin
-    />
-  );
 
   return (
     <div className="w-full  md:w-3/6 mx-auto">
