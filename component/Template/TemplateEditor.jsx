@@ -101,7 +101,7 @@ function TemplateEditor({
           <PrimaryButton
             onClick={() => addMoreQuestionField()}
             className=" px-1 md:px-4 h-full rounded w-3/4 md:w-1/2 my-1 mr-1"
-            title="git New Question"
+            title="Add New Question"
           />
 
           {saveWrapper && (
