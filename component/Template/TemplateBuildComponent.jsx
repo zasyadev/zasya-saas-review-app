@@ -1,12 +1,11 @@
-import { Button, Input } from "antd";
+import { Input } from "antd";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { openNotificationBox } from "../../component/common/notification";
-
-import { Modal } from "antd";
 import httpService from "../../lib/httpService";
-import { SecondaryButton } from "../common/CustomButton";
+import { PrimaryButton, SecondaryButton } from "../common/CustomButton";
 import TemplateEditor from "./TemplateEditor";
+import CustomModal from "../common/CustomModal";
 
 const defaultQuestionConfig = {
   questionText: "",
@@ -289,8 +288,10 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
         saveWrapper={true}
       />
 
-      <Modal
+      <CustomModal
         visible={modalTitleopen}
+        title=""
+        customFooter
         footer={
           <>
             <SecondaryButton
@@ -299,11 +300,14 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
               className="mx-4 rounded my-1"
               title="Cancel"
             />
-            <Button key="add" type="primary" onClick={handleOk}>
-              Create Template
-            </Button>
+            <PrimaryButton
+              onClick={() => handleOk()}
+              title="Create"
+              className=" rounded"
+            />
           </>
         }
+        modalProps={{ maskClosable: false }}
       >
         <div>
           <div className="text-primary text-base text-center mb-2 font-bold ">
@@ -318,7 +322,7 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
             />
           </div>
         </div>
-      </Modal>
+      </CustomModal>
     </>
   );
 }

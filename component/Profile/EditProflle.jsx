@@ -5,7 +5,6 @@ import {
   Form,
   Input,
   message,
-  Modal,
   Row,
   Skeleton,
   Upload,
@@ -21,6 +20,7 @@ import {
 } from "../../component/common/CustomButton";
 import { openNotificationBox } from "../../component/common/notification";
 import httpService from "../../lib/httpService";
+import CustomModal from "../common/CustomModal";
 
 const getSrcFromFile = (file) => {
   return new Promise((resolve) => {
@@ -478,10 +478,11 @@ function EditProfile({ user }) {
         </div>
       </div>
 
-      <Modal
+      <CustomModal
         title="Change Password"
         visible={isModalVisible}
         onCancel={() => setIsModalVisible(false)}
+        customFooter
         footer={[
           <>
             <SecondaryButton
@@ -496,7 +497,7 @@ function EditProfile({ user }) {
             />
           </>,
         ]}
-        wrapClassName="view_form_modal"
+        modalProps={{ wrapClassName: "view_form_modal" }}
       >
         <div>
           <Form
@@ -575,11 +576,13 @@ function EditProfile({ user }) {
             </div>
           </Form>
         </div>
-      </Modal>
-      <Modal
+      </CustomModal>
+
+      <CustomModal
         title="Change Slack Email"
         visible={showSlackEditModal}
         onCancel={() => setShowSlackEditModal(false)}
+        customFooter
         footer={[
           <>
             <SecondaryButton
@@ -594,7 +597,7 @@ function EditProfile({ user }) {
             />
           </>,
         ]}
-        wrapClassName="view_form_modal"
+        modalProps={{ wrapClassName: "view_form_modal" }}
       >
         <Form
           form={slackForm}
@@ -621,7 +624,7 @@ function EditProfile({ user }) {
             />
           </Form.Item>
         </Form>
-      </Modal>
+      </CustomModal>
     </>
   );
 }

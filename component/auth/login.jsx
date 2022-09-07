@@ -3,7 +3,7 @@ import {
   EyeTwoTone,
   LoadingOutlined,
 } from "@ant-design/icons";
-import { Form, Input, Spin } from "antd";
+import { Form, Input } from "antd";
 import { signIn } from "next-auth/client";
 import Link from "next/link";
 import { useRouter } from "next/router";

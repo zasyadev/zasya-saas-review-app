@@ -5,8 +5,15 @@ async function handle(req, res, prisma) {
   const { userId } = req.body;
 
   if (review_id && userId) {
-    const data = await prisma.reviewAssignee.findUnique({
-      where: { id: review_id },
+    const data = await prisma.reviewAssignee.findFirst({
+      where: {
+        AND: [
+          { id: review_id },
+          {
+            assigned_to_id: userId,
+          },
+        ],
+      },
       include: {
         review: {
           include: {

@@ -287,11 +287,11 @@ const QuestionComponent = ({
                               <Select.Option value={0}>0</Select.Option>
                               <Select.Option value={1}>1</Select.Option>
                             </Select>{" "}
-                            <p className="ml-2 mr-4">label </p>
+                            <p className="ml-2 mr-4 mb-0">label </p>
                           </div>
                           {options.length > 1 && (
                             <Input
-                              placeholder="Scale Text"
+                              placeholder="E.g. Low"
                               className="question-border text-base mt-2 rounded-md placeholder-gray-500"
                               onChange={(e) => {
                                 handleOptionValue(e.target.value, idx, 0);
@@ -316,11 +316,11 @@ const QuestionComponent = ({
                               <Select.Option value={5}>5</Select.Option>
                               <Select.Option value={10}>10</Select.Option>
                             </Select>
-                            <p className="ml-2 mr-4">label </p>
+                            <p className="ml-2 mr-4 mb-0">label </p>
                           </div>
                           {options.length > 1 && (
                             <Input
-                              placeholder="Scale Text"
+                              placeholder="E.g. High"
                               className="question-border text-base mt-2 rounded-md placeholder-gray-500"
                               onChange={(e) => {
                                 handleOptionValue(e.target.value, idx, 1);

@@ -79,8 +79,7 @@ function ReviewCreatedComponent({
   //       from: reviewData.created_date,
   //       to: answer_date,
   //     }),
-  // };
-  console.log(reviewData, "reviewData");
+
   useEffect(() => {
     let headersData = [];
     if (reviewData?.form?.form_data.length) {

@@ -1,6 +1,5 @@
-import { Col, Form, Input, Modal, Row, Skeleton } from "antd";
+import { Col, Form, Input, Row, Skeleton } from "antd";
 import moment from "moment";
-import { useS3Upload } from "next-s3-upload";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { ShareIcon } from "../../assets/icons";
@@ -10,6 +9,7 @@ import {
 } from "../../component/common/CustomButton";
 import { openNotificationBox } from "../../component/common/notification";
 import httpService from "../../lib/httpService";
+import CustomModal from "../common/CustomModal";
 import CustomPopover from "../common/CustomPopover";
 import DefaultImages from "../common/DefaultImages";
 
@@ -313,7 +313,7 @@ source=LinkedIn`);
         </Row>
       </div>
 
-      <Modal
+      <CustomModal
         title="Update Applaud Limit"
         visible={organizationModal}
         onCancel={() => setOrganizationModal(false)}
@@ -331,7 +331,8 @@ source=LinkedIn`);
             />
           </>,
         ]}
-        wrapClassName="view_form_modal"
+        customFooter
+        modalProps={{ wrapClassName: "view_form_modal" }}
       >
         <div>
           <Form
@@ -364,7 +365,7 @@ source=LinkedIn`);
             </div>
           </Form>
         </div>
-      </Modal>
+      </CustomModal>
     </>
   );
 }

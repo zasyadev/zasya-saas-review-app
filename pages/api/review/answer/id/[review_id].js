@@ -5,7 +5,7 @@ async function handle(req, res, prisma) {
   const { userId } = req.body;
 
   if (review_id && userId) {
-    const data = await prisma.reviewAssigneeAnswers.findMany({
+    const data = await prisma.reviewAssigneeAnswers.findFirst({
       where: {
         AND: [{ user_id: userId }, { review_assignee_id: review_id }],
       },

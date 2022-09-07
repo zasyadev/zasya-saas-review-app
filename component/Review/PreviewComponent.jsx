@@ -1,3 +1,4 @@
+import { data } from "autoprefixer";
 import React, { useEffect, useState } from "react";
 import httpService from "../../lib/httpService";
 
@@ -15,7 +16,9 @@ function PreviewComponent({ user, reviewId }) {
           userId: user.id,
         })
         .then(({ data: response }) => {
-          setAnswers(response.data[0].ReviewAssigneeAnswerOption);
+          if (response.status === 200 && response.data) {
+            setAnswers(response.data.ReviewAssigneeAnswerOption);
+          }
         })
         .catch((err) => {
           console.error(err.response.data.message);
@@ -76,7 +79,7 @@ function PreviewComponent({ user, reviewId }) {
 
   return (
     <div className="preview-answer">
-      {previewData.length > 0 &&
+      {previewData.length > 0 ? (
         previewData
           ?.filter((_, index) => index === nextSlide)
           ?.map((item) => (
@@ -88,7 +91,14 @@ function PreviewComponent({ user, reviewId }) {
                 length={previewData.length}
               />
             </>
-          ))}
+          ))
+      ) : (
+        <div className="answer-bg  pt-8">
+          <div className=" bg-white rounded-md shadow-md mx-auto w-2/3 ">
+            <p className="p-4 ">This review is not found</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

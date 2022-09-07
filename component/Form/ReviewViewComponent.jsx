@@ -12,7 +12,8 @@ const ReviewViewComponent = ({
   editableFeedback = false,
   onHandleReviewChange,
 }) => {
-  const [sliderInputValue, setSliderInputValue] = useState(0);
+  const sliderInputValue = 0;
+
   const [inputOuestion, setInputQuestion] = useState(false);
 
   return (

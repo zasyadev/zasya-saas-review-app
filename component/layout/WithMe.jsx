@@ -8,7 +8,11 @@ const WithMe = (props) => {
 
   useEffect(() => {
     if (!loading && !session) {
-      router.push("/auth/login");
+      let back_url = "";
+      if (router.asPath) {
+        back_url = `?back_url=${router.asPath}`;
+      }
+      router.push(`/auth/login${back_url}`);
     }
   }, [loading, session]);
 
