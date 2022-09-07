@@ -1,17 +1,19 @@
 import React, { useState } from "react";
 import TemplateEditor from "../Template/TemplateEditor";
 
+const defaultOption = { optionText: "", error: "" };
+
 const defaultQuestionConfig = {
-  questionText: "Untitled Question",
-  options: [{ optionText: "Option 1" }],
+  questionText: "",
+  options: [defaultOption],
   open: true,
   type: "checkbox",
   error: "",
   active: true,
 };
 const defaultScaleQuestion = {
-  questionText: "Untitled Question",
-  options: [{ optionText: "low" }, { optionText: "high" }],
+  questionText: "",
+  options: [defaultOption, defaultOption],
   lowerLabel: 0,
   higherLabel: 5,
   open: true,
@@ -86,10 +88,7 @@ function EditorWrapperComponent({
         i === idx && item.options.length < 5
           ? {
               ...item,
-              options: [
-                ...item.options,
-                { optionText: `Option ${Number(item.options.length + 1)}` },
-              ],
+              options: [...item.options, defaultOption],
             }
           : item
       )
@@ -109,14 +108,18 @@ function EditorWrapperComponent({
     );
   }
 
-  function handleOptionValue(text, idx, j) {
+  function handleOptionValue(text, idx, j, isRequired = false) {
+    let error = "";
+    if (isRequired && !text && !text.trim()) {
+      error = "Option field required!";
+    }
     setQuestionList((prev) =>
       prev.map((item, i) =>
         i === idx
           ? {
               ...item,
               options: item.options.map((option, jdx) =>
-                jdx === j ? { ...option, optionText: text } : option
+                jdx === j ? { ...option, optionText: text, error } : option
               ),
             }
           : item

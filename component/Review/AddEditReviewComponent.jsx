@@ -78,7 +78,6 @@ function AddEditReviewComponent({
 
   function onPreviewSubmit() {
     let values = userForm.getFieldsValue(true);
-    setLoadingSubmitSpin(true);
 
     if (!values.frequency) {
       openNotificationBox("error", "Need to Select Frequency", 3);
@@ -94,6 +93,52 @@ function AddEditReviewComponent({
     }
 
     if (Object.keys(reviewFormData).length && reviewId) {
+      let newQuestionData = questionList.map((item) => {
+        let error = "";
+        if (!item.questionText || item.questionText.trim() === "") {
+          error = "Question field required!";
+        }
+        let errorOptions = item.options;
+        if (
+          item.options.length &&
+          (item.type === "checkbox" || item.type === "scale")
+        ) {
+          errorOptions = item.options.map((option) => {
+            let error = "";
+            if (!option.optionText) {
+              error = "Option field required!";
+            }
+            return {
+              ...option,
+              error: error,
+            };
+          });
+        }
+
+        return {
+          ...item,
+          open: true,
+          error: error,
+          options: errorOptions,
+        };
+      });
+
+      setQuestionList(newQuestionData);
+
+      if (newQuestionData.filter((item) => item.error).length > 0) {
+        openNotificationBox("error", "Field(s) Required", 3);
+        return;
+      }
+      if (
+        newQuestionData.filter(
+          (item) =>
+            item.options.filter((option) => option.error).length > 0 ?? false
+        ).length > 0
+      ) {
+        openNotificationBox("error", "Option Field(s) Required", 3);
+        return;
+      }
+
       addReviewAssign({
         created_by: user.id,
         assigned_to_id: values.assigned_to_id,
@@ -103,13 +148,14 @@ function AddEditReviewComponent({
         frequency: values.frequency,
         role_id: user.role_id,
         is_published: "published",
-        templateData: questionList,
+        templateData: newQuestionData,
         review_id: reviewId,
       });
     }
   }
 
   async function addReviewAssign(obj) {
+    setLoadingSubmitSpin(true);
     await httpService
       .post(`/api/review/manage`, obj)
       .then(({ data: response }) => {
