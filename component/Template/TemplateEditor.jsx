@@ -80,14 +80,16 @@ function TemplateEditor({
                           </div>
                         </div>
 
-                        <div className="">
-                          <span
-                            className=" dark-blue-bg cursor-pointer"
-                            onClick={() => removeElement(idx)}
-                          >
-                            <CloseOutlined className="text-xs" />
-                          </span>
-                        </div>
+                        {idx !== 0 && (
+                          <div className="">
+                            <span
+                              className=" dark-blue-bg cursor-pointer"
+                              onClick={() => removeElement(idx)}
+                            >
+                              <CloseOutlined className="text-xs" />
+                            </span>
+                          </div>
+                        )}
                       </div>
                     </div>
                   ))}
@@ -99,7 +101,7 @@ function TemplateEditor({
           <PrimaryButton
             onClick={() => addMoreQuestionField()}
             className=" px-1 md:px-4 h-full rounded w-3/4 md:w-1/2 my-1 mr-1"
-            title="Add New Question"
+            title="git New Question"
           />
 
           {saveWrapper && (
@@ -120,6 +122,7 @@ function TemplateEditor({
                 ?.filter((_, index) => index === activeQuestionIndex)
                 ?.map((question) => (
                   <QuestionComponent
+                    key={activeQuestionIndex + "QuestionComponent"}
                     {...question}
                     editMode={editMode}
                     idx={activeQuestionIndex}
