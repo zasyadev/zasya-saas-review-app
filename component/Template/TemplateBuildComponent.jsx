@@ -7,9 +7,11 @@ import { PrimaryButton, SecondaryButton } from "../common/CustomButton";
 import TemplateEditor from "./TemplateEditor";
 import CustomModal from "../common/CustomModal";
 
+const defaultOption = { optionText: "", error: "" };
+
 const defaultQuestionConfig = {
   questionText: "",
-  options: [{ optionText: "Option 1" }],
+  options: [defaultOption],
   open: true,
   type: "checkbox",
   error: "",
@@ -17,7 +19,7 @@ const defaultQuestionConfig = {
 };
 const defaultScaleQuestion = {
   questionText: "",
-  options: [{ optionText: "low" }, { optionText: "high" }],
+  options: [defaultOption, defaultOption],
   lowerLabel: 0,
   higherLabel: 5,
   open: true,
@@ -100,10 +102,7 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
         i === idx && item.options.length < 5
           ? {
               ...item,
-              options: [
-                ...item.options,
-                { optionText: `Option ${Number(item.options.length + 1)}` },
-              ],
+              options: [...item.options, defaultOption],
             }
           : item
       )
@@ -123,14 +122,18 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
     );
   }
 
-  function handleOptionValue(text, idx, j) {
+  function handleOptionValue(text, idx, j, isRequired = false) {
+    let error = "";
+    if (isRequired && !text && !text.trim()) {
+      error = "Option field required!";
+    }
     setQuestions((prev) =>
       prev.map((item, i) =>
         i === idx
           ? {
               ...item,
               options: item.options.map((option, jdx) =>
-                jdx === j ? { ...option, optionText: text } : option
+                jdx === j ? { ...option, optionText: text, error } : option
               ),
             }
           : item
@@ -176,11 +179,28 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
       if (!item.questionText || item.questionText.trim() === "") {
         error = "Question field required!";
       }
+      let errorOptions = item.options;
+      if (
+        item.options.length &&
+        (item.type === "checkbox" || item.type === "scale")
+      ) {
+        errorOptions = item.options.map((option) => {
+          let error = "";
+          if (!option.optionText) {
+            error = "Option field required!";
+          }
+          return {
+            ...option,
+            error: error,
+          };
+        });
+      }
 
       return {
         ...item,
         open: true,
         error: error,
+        options: errorOptions,
       };
     });
 
@@ -190,6 +210,16 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
       openNotificationBox("error", "Field(s) Required", 3);
       return;
     }
+    if (
+      newQuestionData.filter(
+        (item) =>
+          item.options.filter((option) => option.error).length > 0 ?? false
+      ).length > 0
+    ) {
+      openNotificationBox("error", "Option Field(s) Required", 3);
+      return;
+    }
+
     if (formTitle) {
       let quesArray = newQuestionData.map((item) => ({ ...item, open: false }));
 

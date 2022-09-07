@@ -218,30 +218,31 @@ function DashBoard({ user }) {
                             <>
                               {Object.entries(item).map(([key, value]) => {
                                 return (
-                                  <Col xs={24} md={12} key={"applaud" + idx}>
-                                    <Row className="">
-                                      <Col xs={7} md={10}>
-                                        <div className="p-2 flex justify-center">
-                                          <DefaultImages
-                                            imageSrc={value?.image}
-                                          />
-                                        </div>
-                                      </Col>
+                                  <Col
+                                    xs={24}
+                                    sm={12}
+                                    md={12}
+                                    key={"applaud" + idx}
+                                  >
+                                    <div className="flex items-center space-x-4 ">
+                                      <div className="shrink-0">
+                                        <DefaultImages
+                                          imageSrc={value?.image}
+                                        />
+                                      </div>
 
-                                      <Col xs={17} md={14}>
-                                        <div className="py-2 px-3">
-                                          <p className="mb-2 text-primary font-medium text-sm">
-                                            {key}
-                                          </p>
-                                          <p className="flex">
-                                            <ApplaudIconSmall />
-                                            <span className="pl-2 text-sm font-medium text-gray-500">
-                                              {value?.taken?.length}
-                                            </span>
-                                          </p>
-                                        </div>
-                                      </Col>
-                                    </Row>
+                                      <div className="flex-1">
+                                        <p className="mb-2 text-primary font-medium text-sm">
+                                          {key}
+                                        </p>
+                                        <p className="flex">
+                                          <ApplaudIconSmall />
+                                          <span className="pl-2 text-sm font-medium text-gray-500">
+                                            {value?.taken?.length}
+                                          </span>
+                                        </p>
+                                      </div>
+                                    </div>
                                   </Col>
                                 );
                               })}

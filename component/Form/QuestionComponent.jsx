@@ -195,15 +195,22 @@ const QuestionComponent = ({
                       {options.map((op, j) => (
                         <div key={j}>
                           <div className="flex flex-row  items-center py-2">
-                            <Input
-                              placeholder="Option Text "
-                              className="question-border h-12 rounded-md placeholder-gray-500 w-40 xl:w-64 "
-                              onChange={(e) => {
-                                handleOptionValue(e.target.value, idx, j);
-                              }}
-                              value={op.optionText}
-                              maxLength={180}
-                            />
+                            <div>
+                              <Input
+                                placeholder={`E.g. Option ${j + 1}`}
+                                className="question-border h-12 rounded-md placeholder-gray-500 w-40 xl:w-64 "
+                                onChange={(e) => {
+                                  handleOptionValue(e.target.value, idx, j);
+                                }}
+                                value={op.optionText}
+                                maxLength={180}
+                              />
+                              {op?.error && (
+                                <p className="text-red-600 text-sm my-2">
+                                  {op?.error}
+                                </p>
+                              )}
+                            </div>
 
                             <button
                               onClick={() => {
@@ -290,15 +297,22 @@ const QuestionComponent = ({
                             <p className="ml-2 mr-4 mb-0">label </p>
                           </div>
                           {options.length > 1 && (
-                            <Input
-                              placeholder="E.g. Low"
-                              className="question-border text-base mt-2 rounded-md placeholder-gray-500"
-                              onChange={(e) => {
-                                handleOptionValue(e.target.value, idx, 0);
-                              }}
-                              value={options[0].optionText}
-                              maxLength={180}
-                            />
+                            <>
+                              <Input
+                                placeholder="E.g. Low"
+                                className="question-border text-base mt-2 rounded-md placeholder-gray-500"
+                                onChange={(e) => {
+                                  handleOptionValue(e.target.value, idx, 0);
+                                }}
+                                value={options[0].optionText}
+                                maxLength={180}
+                              />
+                              {options[0]?.error && (
+                                <p className="text-red-600 text-sm my-2">
+                                  {options[0]?.error}
+                                </p>
+                              )}
+                            </>
                           )}
                         </div>
 
@@ -319,15 +333,22 @@ const QuestionComponent = ({
                             <p className="ml-2 mr-4 mb-0">label </p>
                           </div>
                           {options.length > 1 && (
-                            <Input
-                              placeholder="E.g. High"
-                              className="question-border text-base mt-2 rounded-md placeholder-gray-500"
-                              onChange={(e) => {
-                                handleOptionValue(e.target.value, idx, 1);
-                              }}
-                              value={options[1].optionText}
-                              maxLength={180}
-                            />
+                            <>
+                              <Input
+                                placeholder="E.g. High"
+                                className="question-border text-base mt-2 rounded-md placeholder-gray-500"
+                                onChange={(e) => {
+                                  handleOptionValue(e.target.value, idx, 1);
+                                }}
+                                value={options[1].optionText}
+                                maxLength={180}
+                              />
+                              {options[1]?.error && (
+                                <p className="text-red-600 text-sm my-2">
+                                  {options[1]?.error}
+                                </p>
+                              )}
+                            </>
                           )}
                         </div>
                       </div>
@@ -389,7 +410,7 @@ const QuestionComponent = ({
           key={idx + "close"}
         >
           <div className="flex flex-col  mx-auto py-5 w-9/12">
-            <p className="ml-0 text-white text-5xl text-center mb-0">
+            <p className="ml-0 text-white text-4xl text-center mb-0">
               {questionText}
             </p>
 
@@ -399,16 +420,16 @@ const QuestionComponent = ({
                 options?.map((op, j) => (
                   <div
                     key={j + "op"}
-                    className="bg-white text-black px-2 py-1 text-left rounded-md"
+                    className="bg-white text-black px-2 py-1 text-left rounded-md flex flex-col justify-center"
                   >
-                    <p className=" text-2xl mb-0">{op.optionText}</p>
+                    <p className=" text-xl mb-0">{op.optionText}</p>
                   </div>
                 ))}
             </div>
 
             {type == "input" || type === "textarea" ? (
               <div className="mt-2">
-                <p className="text-white text-2xl border-b border-white">
+                <p className="text-white text-xl border-b border-white">
                   {" "}
                   {type == "input" ? "Short Text" : "Long Text"}
                 </p>
@@ -416,7 +437,7 @@ const QuestionComponent = ({
             ) : null}
             {type == "rating" ? (
               <div className="mt-2 question-view-rating ">
-                <div className="text-white text-2xl ">
+                <div className="text-white text-xl ">
                   <Rate disabled />
                 </div>
               </div>
@@ -424,7 +445,7 @@ const QuestionComponent = ({
 
             {type === "scale" && options?.length > 1 && (
               <div className="flex items-baseline w-full justify-around mt-2">
-                <p className="text-white text-2xl">{options[0]?.optionText}</p>
+                <p className="text-white text-xl">{options[0]?.optionText}</p>
                 <Radio.Group
                   name="scale"
                   className="px-4 flex justify-between text-white question-view-radio-wrapper"
@@ -439,7 +460,7 @@ const QuestionComponent = ({
                       </Radio>
                     ))}
                 </Radio.Group>
-                <p className="text-white text-2xl">{options[1]?.optionText}</p>
+                <p className="text-white text-xl">{options[1]?.optionText}</p>
               </div>
             )}
 
@@ -447,11 +468,11 @@ const QuestionComponent = ({
               <div className="mt-2">
                 <div className="flex items-center justify-center">
                   <div className="p-8 md:p-10 border mx-2 rounded-sm">
-                    <LikeOutlined style={{ fontSize: "64px", color: "#fff" }} />
+                    <LikeOutlined style={{ fontSize: "58px", color: "#fff" }} />
                   </div>
                   <div className="p-8 md:p-10 border mx-2 rounded-sm">
                     <DislikeOutlined
-                      style={{ fontSize: "64px", color: "#fff" }}
+                      style={{ fontSize: "58px", color: "#fff" }}
                     />
                   </div>
                 </div>
