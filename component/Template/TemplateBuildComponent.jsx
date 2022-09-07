@@ -211,6 +211,12 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
       return;
     }
     if (
+      newQuestionData.filter((item) => item.options.length === 0).length > 0
+    ) {
+      openNotificationBox("error", "Options Required", 3);
+      return;
+    }
+    if (
       newQuestionData.filter(
         (item) =>
           item.options.filter((option) => option.error).length > 0 ?? false

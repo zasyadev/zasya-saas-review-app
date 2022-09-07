@@ -78,15 +78,16 @@ function TemplateEditor({
                               </span>
                             </div>
                           </div>
-
-                          <div className="">
-                            <span
-                              className=" dark-blue-bg cursor-pointer"
-                              onClick={() => removeElement(idx)}
-                            >
-                              <CloseOutlined className="text-xs" />
-                            </span>
-                          </div>
+                          {idx !== 0 && (
+                            <div className="">
+                              <span
+                                className=" dark-blue-bg cursor-pointer"
+                                onClick={() => removeElement(idx)}
+                              >
+                                <CloseOutlined className="text-xs" />
+                              </span>
+                            </div>
+                          )}
                         </div>
                       </div>
                     ))}
