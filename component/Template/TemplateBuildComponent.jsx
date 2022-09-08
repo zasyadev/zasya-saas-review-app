@@ -44,7 +44,6 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
   }
 
   function addMoreQuestionField() {
-    // expandCloseAll();
     setQuestions((prev) => [...prev, defaultQuestionConfig]);
     setActiveQuestionIndex(questions.length);
     setSelectTypeFeild(true);
@@ -83,12 +82,6 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
       prev.map((item, i) => (i === index ? { ...item, open: false } : item))
     );
   }
-
-  //   function expandCloseAll() {
-  //     setQuestions((prev) =>
-  //       prev.map((item) => (item ? { ...item, open: false } : item))
-  //     );
-  //   }
 
   function handleExpand(idx) {
     setQuestions((prev) =>
@@ -297,6 +290,7 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
   const handleOk = () => {
     if (formTitle) setModalTitleOpen(false);
   };
+  console.log(questions, "questions");
 
   return (
     <>
@@ -322,6 +316,7 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
         saveFormField={saveFormField}
         formTitle={formTitle}
         saveWrapper={true}
+        setQuestions={setQuestions}
       />
 
       <CustomModal

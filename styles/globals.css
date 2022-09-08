@@ -81,6 +81,13 @@ body {
   font-weight: 600;
 }
 
+.single-line-clamp {
+  -webkit-line-clamp: 1;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
 @-webkit-keyframes spinner {
   0% {
     -webkit-transform: rotate(0deg);

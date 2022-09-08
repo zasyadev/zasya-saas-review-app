@@ -1,15 +1,20 @@
+import { Skeleton } from "antd";
 import { data } from "autoprefixer";
 import React, { useEffect, useState } from "react";
 import httpService from "../../lib/httpService";
 
 import { PreviewAnswer } from "./formhelper/PreviewAnswer";
+
+const defaultLoading = { questionLoading: false, answerLoading: false };
 function PreviewComponent({ user, reviewId }) {
   const [questions, setQuestions] = useState([]);
   const [answers, setAnswers] = useState([]);
   const [previewData, setPreviewData] = useState([]);
+  const [loading, setLoading] = useState(defaultLoading);
   const [nextSlide, setNextSlide] = useState(0);
 
   const fetchAnswer = async () => {
+    setLoading((prev) => ({ ...prev, answerLoading: true }));
     if (reviewId) {
       await httpService
         .post(`/api/review/answer/id/${reviewId}`, {
@@ -19,9 +24,11 @@ function PreviewComponent({ user, reviewId }) {
           if (response.status === 200 && response.data) {
             setAnswers(response.data.ReviewAssigneeAnswerOption);
           }
+          setLoading((prev) => ({ ...prev, answerLoading: false }));
         })
         .catch((err) => {
           console.error(err.response.data.message);
+          setLoading((prev) => ({ ...prev, answerLoading: false }));
         });
     }
   };
@@ -51,6 +58,7 @@ function PreviewComponent({ user, reviewId }) {
     }
   };
   const fetchReviewData = async (user, reviewId) => {
+    setLoading((prev) => ({ ...prev, questionLoading: true }));
     await httpService
       .post(`/api/review/received/${reviewId}`, {
         userId: user.id,
@@ -59,16 +67,17 @@ function PreviewComponent({ user, reviewId }) {
         if (response.status === 200) {
           setQuestions(response.data?.review?.form?.questions);
         }
+        setLoading((prev) => ({ ...prev, questionLoading: false }));
       })
       .catch((err) => {
         console.error(err.response.data.message);
+        setLoading((prev) => ({ ...prev, questionLoading: false }));
       });
   };
 
   useEffect(() => {
     if (reviewId) {
       fetchReviewData(user, reviewId);
-
       fetchAnswer();
     }
   }, []);
@@ -79,7 +88,13 @@ function PreviewComponent({ user, reviewId }) {
 
   return (
     <div className="preview-answer">
-      {previewData.length > 0 ? (
+      {loading.questionLoading && loading.answerLoading ? (
+        <div className="answer-bg  pt-8">
+          <div className=" bg-white rounded-md shadow-md mx-auto w-2/3 p-4">
+            <Skeleton active />
+          </div>
+        </div>
+      ) : previewData.length > 0 ? (
         previewData
           ?.filter((_, index) => index === nextSlide)
           ?.map((item) => (

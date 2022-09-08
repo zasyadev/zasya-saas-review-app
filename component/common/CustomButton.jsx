@@ -59,7 +59,7 @@ export function SecondaryButton({
 }) {
   const isDisabled = disabled || loading;
 
-  const btnClassName = `text-white text-center px-4 py-2  ${className} ${
+  const btnClassName = `rounded-md text-white text-center px-4 py-2  ${className} ${
     isDisabled ? "bg-secondary/70" : "bg-secondary"
   }`;
   return withLink ? (

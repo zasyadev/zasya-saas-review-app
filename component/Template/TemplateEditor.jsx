@@ -1,10 +1,12 @@
-import { CloseOutlined } from "@ant-design/icons";
+import { CloseOutlined, HolderOutlined } from "@ant-design/icons";
 import { Col, Input, Row } from "antd";
 import React from "react";
 import {
   PrimaryButton,
   SecondaryButton,
 } from "../../component/common/CustomButton";
+import { truncateString } from "../../helpers/truncateString";
+import DragableComponent from "../common/DragableComponent";
 import QuestionComponent from "../Form/QuestionComponent";
 
 function TemplateEditor({
@@ -29,89 +31,105 @@ function TemplateEditor({
   saveFormField,
   formTitle,
   saveWrapper = false,
+  setQuestions,
 }) {
   return (
     <Row gutter={16}>
       <Col xs={24} md={8}>
-        <div className="mb-2 px-1 template-title-input">
-          <Input
-            placeholder="Template Title"
-            value={formTitle}
-            onChange={(e) => {
-              setFormTitle(e.target.value);
-            }}
-            className="input-box text-2xl template-title px-4 py-3"
-            bordered={false}
-            maxLength={180}
-          />
-        </div>
-        <div className="w-full bg-white rounded-md shadow-md  mt-4 add-template-wrapper sider-question-wrapper overflow-auto">
-          <div className="question-section-container">
-            <div className="question-section-contents">
-              <div className="question-section-contents-card">
-                {questions?.length > 0 &&
-                  questions?.map((question, idx) => (
-                    <div
-                      className={` question-section-wrapper p-4 cursor-pointer ${
-                        idx == questions?.length - 1 ? null : "border-bottom"
-                      }  ${
-                        idx === activeQuestionIndex
-                          ? "border-l-primary border-l-2"
-                          : ""
-                      }`}
-                      key={idx + "side que"}
+        <div className="w-full ">
+          <div className="mb-2 px-1 template-title-input">
+            <Input
+              placeholder="E.g. Template Title"
+              value={formTitle}
+              onChange={(e) => {
+                setFormTitle(e.target.value);
+              }}
+              className="input-box text-2xl  px-4 py-3"
+              bordered={false}
+              maxLength={180}
+            />
+          </div>
+          <div className="w-full bg-white rounded-md shadow-md  mt-4 sider-question-wrapper overflow-y-auto">
+            <div className="question-section-container">
+              <div className="question-section-contents">
+                <div className="question-section-contents-card">
+                  {questions?.length > 0 && (
+                    <DragableComponent
+                      stateData={questions}
+                      handleChange={(newStateData) =>
+                        setQuestions(newStateData)
+                      }
                     >
-                      <div className="flex justify-between">
-                        <div className="w-full">
-                          <div
-                            className="flex items-center"
-                            onClick={() => {
-                              setActiveQuestionIndex(idx);
-                              setSelectTypeFeild(false);
-                            }}
-                          >
-                            <span className=" rounded-full linear-bg">
-                              {idx + 1}
-                            </span>
+                      {questions?.map((question, idx) => (
+                        <div
+                          className={`dragable-div question-section-wrapper cursor-pointer ${
+                            idx == questions?.length - 1
+                              ? null
+                              : "border-bottom"
+                          }  ${
+                            idx === activeQuestionIndex
+                              ? "border-l-primary border-l-2"
+                              : ""
+                          }`}
+                          key={idx + "side_que"}
+                        >
+                          <div className="flex items-center">
+                            <div className=" dragable-content cursor-move py-3 px-1 leading-0">
+                              <HolderOutlined className="text-lg  lg:text-xl " />
+                            </div>
 
-                            <span className=" px-2 py-1 ">
-                              <span className="">{question?.questionText}</span>
-                            </span>
+                            <div
+                              className="flex flex-1 items-center space-x-3 py-3 pr-3 pl-1 justify-between"
+                              onClick={() => {
+                                setActiveQuestionIndex(idx);
+                                setSelectTypeFeild(false);
+                              }}
+                            >
+                              <div className="flex space-x-2 items-center flex-1">
+                                <p className=" rounded-full w-6 h-6 bg-primary text-white grid place-content-center mb-0">
+                                  {idx + 1}
+                                </p>
+
+                                <p className="mb-0 flex-1 font-medium text-primary single-line-clamp">
+                                  {question?.questionText}
+                                </p>
+                              </div>
+
+                              {idx !== 0 && (
+                                <div
+                                  className="border  hover:border-red-600 w-6 h-6 rounded-full  grid place-content-center text-red-600  cursor-pointer leading-0"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    removeElement(idx);
+                                  }}
+                                >
+                                  <CloseOutlined />
+                                </div>
+                              )}
+                            </div>
                           </div>
                         </div>
-
-                        {idx !== 0 && (
-                          <div className="">
-                            <span
-                              className=" dark-blue-bg cursor-pointer"
-                              onClick={() => removeElement(idx)}
-                            >
-                              <CloseOutlined className="text-xs" />
-                            </span>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  ))}
+                      ))}
+                    </DragableComponent>
+                  )}
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <div className="mt-3 flex justify-between ">
-          <PrimaryButton
-            onClick={() => addMoreQuestionField()}
-            className=" px-1 md:px-4 h-full rounded w-3/4 md:w-1/2 my-1 mr-1"
-            title="Add New Question"
-          />
-
-          {saveWrapper && (
-            <SecondaryButton
-              withLink={true}
-              linkHref="/template"
-              className="h-full rounded w-1/3  my-1"
-              title="Cancel"
+          <div className="mt-3 flex flex-wrap justify-between space-x-3">
+            <PrimaryButton
+              onClick={() => addMoreQuestionField()}
+              title="Add New Question"
             />
-          )}
+
+            {saveWrapper && (
+              <SecondaryButton
+                withLink={true}
+                linkHref="/template"
+                title="Cancel"
+              />
+            )}
+          </div>
         </div>
       </Col>
       <Col xs={24} md={16}>

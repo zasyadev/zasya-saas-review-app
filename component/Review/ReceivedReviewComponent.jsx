@@ -158,6 +158,7 @@ function ReceivedReviewComponent({ user, reviewId }) {
                   <FormSlideComponent
                     {...question}
                     idx={idx}
+                    key={idx + "quesSlid"}
                     open={false}
                     nextSlide={nextSlide}
                     handleAnswerChange={handleAnswerChange}

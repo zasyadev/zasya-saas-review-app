@@ -76,10 +76,10 @@ function DashBoard({ user }) {
   const [loading, setLoading] = useState(false);
   const [feedbackList, setFeedbackList] = useState([]);
   const [allApplaud, setAllApplaud] = useState([]);
-  const [currentMonth, setCurrentMonth] = useState({
+  const currentMonth = {
     lte: moment().endOf("month"),
     gte: moment().startOf("month"),
-  });
+  };
 
   async function fetchDashboardData() {
     await httpService

@@ -271,7 +271,7 @@ function HeaderLayout({ title, user, collapsed, setCollapsed, md }) {
                     backgroundColor: "#fde3cf",
                   }}
                   alt="C"
-                  className="mr-3"
+                  className="md:mr-3"
                   size="small"
                 >
                   {user?.organization && user?.organization?.company_name

@@ -9,7 +9,7 @@ export function LoadingSpinner() {
           Loading...
         </h2>
         <p className="text-center text-gray-800 text-sm">
-          This may take a few seconds, please donot close this page.
+          This may take a few seconds, please do not close this page.
         </p>
       </div>
     </div>

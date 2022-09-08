@@ -2,6 +2,10 @@ import { DislikeOutlined, EditOutlined, LikeOutlined } from "@ant-design/icons";
 import { Col, Input, Radio, Rate, Row, Slider, Space } from "antd";
 import React, { useState } from "react";
 import { DeleteSmallTemplateIcon } from "../../assets/icons";
+import {
+  checkInputOrTextarea,
+  INPUT_TYPE,
+} from "./questioncomponents/constants";
 
 const ReviewViewComponent = ({
   type,
@@ -49,7 +53,7 @@ const ReviewViewComponent = ({
               ) : null}
             </div>
 
-            {options?.length > 0 && type === "checkbox" && (
+            {options?.length > 0 && type === MULTIPLECHOICE_TYPE && (
               <div className="ml-2 my-2">
                 <Radio.Group
                   name="checkbox_option"
@@ -59,7 +63,11 @@ const ReviewViewComponent = ({
                   <Space direction="vertical">
                     {options?.map((op, j) => (
                       <>
-                        <Radio value={op.optionText} disabled>
+                        <Radio
+                          key={j + "option"}
+                          value={op.optionText}
+                          disabled
+                        >
                           {op.optionText}
                         </Radio>
                       </>
@@ -68,24 +76,24 @@ const ReviewViewComponent = ({
                 </Radio.Group>
               </div>
             )}
-            {type == "input" || type === "textarea" ? (
+            {checkInputOrTextarea(type) ? (
               <div className="review-view-input-wrraper">
                 <Input
                   fullWidth={true}
-                  placeholder={type == "input" ? "Short Text" : "Long Text"}
+                  placeholder={type == INPUT_TYPE ? "Short Text" : "Long Text"}
                   rows={1}
                   disabled
                 />
               </div>
             ) : null}
-            {type == "rating" && (
+            {type == RATING_TYPE && (
               <div className="mt-2 review-question-rating">
                 <div className="text-white text-2xl ">
                   <Rate disabled defaultValue={3} />
                 </div>
               </div>
             )}
-            {type == "yesno" ? (
+            {type == YESNO_TYPE ? (
               <div className="mt-2">
                 <div className="flex items-center justify-center">
                   <div className="p-4  border mx-2 rounded-sm">
@@ -102,7 +110,7 @@ const ReviewViewComponent = ({
               </div>
             ) : null}
 
-            {type === "scale" && options?.length > 1 && (
+            {type === SCALE_TYPE && options?.length > 1 && (
               <div className="flex w-full justify-center items-center">
                 <p>{options[0]?.optionText}</p>
                 <p className="w-full text-center mx-2 md:ml-4">
@@ -112,7 +120,6 @@ const ReviewViewComponent = ({
                     max={Number(options[0]?.higherLabel)}
                     step={1}
                     disabled
-                    // value={typeof inputValue === "number" ? inputValue : 0}
                   />
                 </p>
 

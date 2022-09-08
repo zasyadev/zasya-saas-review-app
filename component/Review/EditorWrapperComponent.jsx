@@ -175,6 +175,7 @@ function EditorWrapperComponent({
       handleScaleOptionValue={handleScaleOptionValue}
       addNextQuestionField={addNextQuestionField}
       selectTypeFeild={selectTypeFeild}
+      setQuestions={setQuestionList}
     />
   );
 }
