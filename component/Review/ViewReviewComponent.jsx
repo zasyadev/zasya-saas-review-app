@@ -7,16 +7,19 @@ import ReviewCreatedComponent from "./ReviewCreatedComponent";
 function ViewReviewComponent({ user }) {
   const router = useRouter();
   const { review_id } = router.query;
-  const [reviewData, setReviewData] = useState({});
+  const [reviewData, setReviewData] = useState({
+    questionData: {},
+    answerData: [],
+  });
   const [loading, setLoading] = useState(false);
 
-  const fetchReviewData = async (user, reviewId) => {
+  const fetchReviewData = async (reviewId) => {
     setLoading(true);
     setReviewData({});
 
     await httpService
-      .post(`/api/review/created/${reviewId}`, {
-        userId: user.id,
+      .post(`/api/review/get_que_ans`, {
+        review_id: reviewId,
       })
       .then(({ data: response }) => {
         if (response.status === 200) {
@@ -25,13 +28,13 @@ function ViewReviewComponent({ user }) {
         setLoading(false);
       })
       .catch((err) => {
-        console.error(err.response.data.message);
+        console.error(err.response.data?.message);
         setLoading(false);
       });
   };
 
   useEffect(() => {
-    if (review_id) fetchReviewData(user, review_id);
+    if (review_id) fetchReviewData(review_id);
   }, [review_id]);
   return (
     <AdminLayout user={user} title={reviewData?.review_name}>
@@ -54,13 +57,16 @@ function ViewReviewComponent({ user }) {
             </div>
           </div>
         </div>
-      ) : reviewData ? (
-        Object.keys(reviewData).length ? (
+      ) : reviewData &&
+        reviewData?.questionData &&
+        typeof reviewData.questionData === "object" ? (
+        Object.keys(reviewData.questionData).length ? (
           <ReviewCreatedComponent
             user={user}
-            reviewData={reviewData}
+            reviewData={reviewData.questionData}
             reviewId={review_id}
             fetchReviewData={fetchReviewData}
+            answerData={reviewData.answerData}
           />
         ) : null
       ) : null}

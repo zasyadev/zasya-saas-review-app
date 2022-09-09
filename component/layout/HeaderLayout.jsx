@@ -40,7 +40,7 @@ function HeaderLayout({ title, user, collapsed, setCollapsed, md }) {
         }
       })
       .catch((err) => {
-        console.error(err.response.data.message);
+        console.error(err.response.data?.message);
       });
   };
 
@@ -54,7 +54,7 @@ function HeaderLayout({ title, user, collapsed, setCollapsed, md }) {
       })
       .catch((err) => {
         setAllNotification([]);
-        console.error(err.response.data.message);
+        console.error(err.response.data?.message);
       });
   };
 
@@ -70,7 +70,7 @@ function HeaderLayout({ title, user, collapsed, setCollapsed, md }) {
         }
       })
       .catch((err) => {
-        console.error(err.response.data.message);
+        console.error(err.response.data?.message);
       });
   };
 

@@ -5,7 +5,6 @@ import {
   PrimaryButton,
   SecondaryButton,
 } from "../../component/common/CustomButton";
-import { truncateString } from "../../helpers/truncateString";
 import DragableComponent from "../common/DragableComponent";
 import QuestionComponent from "../Form/QuestionComponent";
 
@@ -49,6 +48,7 @@ function TemplateEditor({
               maxLength={180}
             />
           </div>
+
           <div className="w-full bg-white rounded-md shadow-md  mt-4 sider-question-wrapper overflow-y-auto">
             <div className="question-section-container">
               <div className="question-section-contents">
@@ -56,9 +56,12 @@ function TemplateEditor({
                   {questions?.length > 0 && (
                     <DragableComponent
                       stateData={questions}
-                      handleChange={(newStateData) =>
-                        setQuestions(newStateData)
-                      }
+                      handleChange={(newStateData, fromIndex, toIndex) => {
+                        setQuestions(newStateData);
+
+                        if (fromIndex === activeQuestionIndex)
+                          setActiveQuestionIndex(toIndex);
+                      }}
                     >
                       {questions?.map((question, idx) => (
                         <div
@@ -74,7 +77,12 @@ function TemplateEditor({
                           key={idx + "side_que"}
                         >
                           <div className="flex items-center">
-                            <div className=" dragable-content cursor-move py-3 px-1 leading-0">
+                            <div
+                              className=" dragable-content cursor-move py-3 px-2 leading-0"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                              }}
+                            >
                               <HolderOutlined className="text-lg  lg:text-xl " />
                             </div>
 

@@ -31,9 +31,9 @@ function AllAplaud({ user }) {
       })
 
       .catch((err) => {
-        console.log(err.response.data.message);
+        console.log(err.response.data?.message);
         setAllApplaud([]);
-        openNotificationBox("error", err.response.data.message);
+        openNotificationBox("error", err.response.data?.message);
       });
   }
   async function fetchAllOrgData() {
@@ -46,8 +46,8 @@ function AllAplaud({ user }) {
       })
 
       .catch((err) => {
-        console.log(err.response.data.message);
-        openNotificationBox("error", err.response.data.message);
+        console.log(err.response.data?.message);
+        openNotificationBox("error", err.response.data?.message);
         setAllOrgApplaud([]);
       });
   }

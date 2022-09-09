@@ -254,8 +254,8 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
           }
         })
         .catch((err) => {
-          console.error(err.response.data.message);
-          openNotificationBox("error", err.response.data.message);
+          console.error(err.response.data?.message);
+          openNotificationBox("error", err.response.data?.message);
         });
     }
   }
@@ -270,9 +270,9 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
         }
       })
       .catch((err) => {
-        console.error(err.response.data.message);
+        console.error(err.response.data?.message);
 
-        openNotificationBox("error", err.response.data.message);
+        openNotificationBox("error", err.response.data?.message);
       });
   }
 
@@ -290,7 +290,6 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
   const handleOk = () => {
     if (formTitle) setModalTitleOpen(false);
   };
-  console.log(questions, "questions");
 
   return (
     <>

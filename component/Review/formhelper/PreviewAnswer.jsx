@@ -1,6 +1,7 @@
 import { Col, Row } from "antd";
 import Link from "next/link";
 import React from "react";
+import { PrimaryButton, SecondaryButton } from "../../common/CustomButton";
 
 export function PreviewAnswer({ item, nextSlide, setNextSlide, length }) {
   return (
@@ -19,32 +20,29 @@ export function PreviewAnswer({ item, nextSlide, setNextSlide, length }) {
                 ""
               ) : (
                 <div className="md:w-1/4 w-1/2 mx-2 ">
-                  <button
-                    className="primary-bg-btn rounded-md text-lg text-white py-2 w-full"
-                    onClick={() => {
-                      setNextSlide(nextSlide - 1);
-                    }}
-                  >
-                    Previous
-                  </button>
+                  <SecondaryButton
+                    onClick={() => setNextSlide(nextSlide - 1)}
+                    className="px-14 py-2 text-lg text-white w-full"
+                    title="Previous"
+                  />
                 </div>
               )}
               <div className="md:w-1/4 w-1/2 mx-2">
                 {length - 1 === nextSlide ? (
-                  <Link href="/review/received">
-                    <button className="toggle-btn-bg rounded-md text-lg text-white py-2    w-full ">
-                      Back
-                    </button>
-                  </Link>
+                  <PrimaryButton
+                    withLink={true}
+                    className="rounded-md text-lg text-white w-full"
+                    linkHref={"/review/received"}
+                    title="Back"
+                  />
                 ) : (
-                  <button
-                    className="toggle-btn-bg rounded-md text-lg text-white py-2    w-full "
+                  <PrimaryButton
+                    className="rounded-md text-lg text-white w-full"
+                    title="Next"
                     onClick={() => {
                       setNextSlide(nextSlide + 1);
                     }}
-                  >
-                    Next
-                  </button>
+                  />
                 )}
               </div>
             </div>

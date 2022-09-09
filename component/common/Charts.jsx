@@ -127,7 +127,7 @@ const BarChart = ({ user }) => {
       })
       .catch((err) => {
         setChartData(defaultChartSeries);
-        console.error(err.response.data.message);
+        console.error(err.response.data?.message);
       });
   }
 

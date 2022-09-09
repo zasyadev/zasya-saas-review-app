@@ -1,4 +1,3 @@
-import { getSession } from "next-auth/client";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import AdminLayout from "../../component/layout/AdminLayout";
@@ -25,7 +24,7 @@ function EditReviewComponent({ user }) {
         setLoading(false);
       })
       .catch((err) => {
-        console.error(err.response.data.message);
+        console.error(err.response.data?.message);
         setLoading(false);
       });
   };
@@ -68,20 +67,3 @@ function EditReviewComponent({ user }) {
 }
 
 export default EditReviewComponent;
-
-export async function getServerSideProps(context) {
-  const session = await getSession({ req: context.req });
-
-  if (!session) {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-    };
-  }
-  const { user } = session;
-  return {
-    props: { user },
-  };
-}

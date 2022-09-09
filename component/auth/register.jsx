@@ -35,7 +35,7 @@ function RegisterPage() {
         setLoading(false);
       })
       .catch((err) => {
-        openNotificationBox("error", err.response.data.message);
+        openNotificationBox("error", err.response.data?.message);
       });
   }
   const antIcon = (

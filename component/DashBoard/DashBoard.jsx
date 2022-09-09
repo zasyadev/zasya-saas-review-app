@@ -93,7 +93,7 @@ function DashBoard({ user }) {
         }
       })
       .catch((err) => {
-        console.error(err.response.data.message);
+        console.error(err.response.data?.message);
         setDashboardData(defaultDashboardData);
       });
   }
@@ -111,7 +111,7 @@ function DashBoard({ user }) {
       })
       .catch((err) => {
         setFeedbackList([]);
-        console.error(err.response.data.message);
+        console.error(err.response.data?.message);
       });
   }
 
@@ -133,7 +133,7 @@ function DashBoard({ user }) {
       })
 
       .catch((err) => {
-        console.error(err.response.data.message);
+        console.error(err.response.data?.message);
       });
   }
 

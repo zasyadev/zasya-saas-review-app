@@ -33,8 +33,8 @@ function AddTeamComponent({ user, editMode, memberData }) {
           }
         })
         .catch((err) => {
-          console.error(err.response.data.message);
-          openNotificationBox("error", err.response.data.message, 3);
+          console.error(err.response.data?.message);
+          openNotificationBox("error", err.response.data?.message, 3);
         });
   }
   async function updatingMember(obj) {
@@ -54,8 +54,8 @@ function AddTeamComponent({ user, editMode, memberData }) {
             }
           })
           .catch((err) => {
-            console.error(err.response.data.message);
-            openNotificationBox("error", err.response.data.message);
+            console.error(err.response.data?.message);
+            openNotificationBox("error", err.response.data?.message);
           });
     }
   }
@@ -70,7 +70,7 @@ function AddTeamComponent({ user, editMode, memberData }) {
           }
         })
         .catch((err) => {
-          console.error(err.response.data.message);
+          console.error(err.response.data?.message);
           setTagsList([]);
         });
     }

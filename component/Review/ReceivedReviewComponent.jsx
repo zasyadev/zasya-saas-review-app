@@ -3,7 +3,6 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { openNotificationBox } from "../../component/common/notification";
-
 import httpService from "../../lib/httpService";
 import { FormSlideComponent } from "./formhelper/FormComponent";
 
@@ -67,8 +66,8 @@ function ReceivedReviewComponent({ user, reviewId }) {
           // setLoadingSpin(false);
         })
         .catch((err) => {
-          openNotificationBox("error", err.response.data.message, 3);
-          console.error(err.response.data.message);
+          openNotificationBox("error", err.response.data?.message, 3);
+          console.error(err.response.data?.message);
           setLoadingSpin(false);
         });
     }
@@ -90,8 +89,8 @@ function ReceivedReviewComponent({ user, reviewId }) {
         setLoading(false);
       })
       .catch((err) => {
-        openNotificationBox("error", err.response.data.message);
-        console.log(err.response.data.message);
+        openNotificationBox("error", err.response.data?.message);
+        console.log(err.response.data?.message);
       });
   };
 

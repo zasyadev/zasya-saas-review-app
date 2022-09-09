@@ -32,8 +32,8 @@ function AddApplaud({ user }) {
         }
       })
       .catch((err) => {
-        console.log(err.response.data.message);
-        openNotificationBox("error", err.response.data.message);
+        console.log(err.response.data?.message);
+        openNotificationBox("error", err.response.data?.message);
         setMembersList([]);
       });
   }
@@ -49,8 +49,8 @@ function AddApplaud({ user }) {
         }
       })
       .catch((err) => {
-        console.log(err.response.data.message);
-        openNotificationBox("error", err.response.data.message);
+        console.log(err.response.data?.message);
+        openNotificationBox("error", err.response.data?.message);
         setApplaudLimit(0);
       });
   }
@@ -82,7 +82,7 @@ function AddApplaud({ user }) {
       })
       .catch((err) => {
         console.error(err);
-        openNotificationBox("error", err.response.data.message);
+        openNotificationBox("error", err.response.data?.message);
         setLoadingSubmitSpin(false);
       });
   }

@@ -2,7 +2,6 @@ import { CalendarOutlined } from "@ant-design/icons";
 import { Col, Collapse, Grid, Popconfirm, Row, Table, Tooltip } from "antd";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
-
 import Link from "next/link";
 import {
   CalanderIcon,
@@ -13,6 +12,7 @@ import {
 import { openNotificationBox } from "../../component/common/notification";
 import { calculateDuration } from "../../helpers/momentHelper";
 import httpService from "../../lib/httpService";
+
 const { useBreakpoint } = Grid;
 
 function ReviewCreatedComponent({
@@ -20,22 +20,14 @@ function ReviewCreatedComponent({
   reviewData,
   reviewId,
   fetchReviewData,
+  answerData,
 }) {
   const { xs } = useBreakpoint();
   const { Panel } = Collapse;
   const datePattern = "DD-MM-YYYY";
-
   const [headersData, setHeadersData] = useState([]);
-
-  const [loading, setLoading] = useState(false);
-  const [dataSource, setDataSource] = useState([]);
-  const [fixed, setFixed] = useState(false);
+  const [dataSource, setDataSource] = useState({});
   const [totalRating, setTotalRating] = useState(0);
-
-  useEffect(() => {
-    if (xs) setFixed(xs);
-    else setFixed(xs);
-  }, [xs]);
 
   const applyFilters = (object) => {
     if (object.length > 0) {
@@ -47,13 +39,14 @@ function ReviewCreatedComponent({
       }, {});
 
       setDataSource(result);
-    } else setDataSource([]);
+    } else setDataSource({});
   };
 
   let nameTitle = {
     title: "Name",
     dataIndex: "name",
-    fixed: fixed ? false : true,
+    width: 250,
+    fixed: xs ? false : true,
     sorter: (a, b) => a.name?.localeCompare(b.name),
     render: (_, record) => (
       <div>
@@ -104,48 +97,37 @@ function ReviewCreatedComponent({
     // headersData.push(reactivityTimeColoum);
 
     setHeadersData(headersData);
-    fetchAnswer(reviewData.id);
+    handleAnswerChange(answerData);
   }, []);
 
-  const columns = [...headersData];
+  const handleAnswerChange = (answerData) => {
+    let data = answerData.map((item) => ({
+      user: item.user,
+      answers: item.ReviewAssigneeAnswerOption,
+      created_date: item.created_assignee_date ?? item.created_date,
+      answer_date: item.created_date,
+    }));
 
-  const fetchAnswer = async (id) => {
-    setDataSource([]);
-    setLoading(true);
-    await httpService
-      .get(`/api/review/answer/${id}`)
-      .then(({ data: response }) => {
-        if (response.status === 200) {
-          let data = response.data.map((item) => ({
-            user: item.user,
-            answers: item.ReviewAssigneeAnswerOption.reverse(),
-            created_date: item.created_assignee_date ?? item.created_date,
-            answer_date: item.created_date,
-          }));
+    let dataobj = data.map((item) => {
+      let optionObj = {};
 
-          let dataobj = data.map((item) => {
-            let optionObj = {};
+      item.answers.forEach((data, i) => {
+        optionObj[`option${i}`] = data.option;
+      });
 
-            item.answers.forEach((data, i) => {
-              optionObj[`option${i}`] = data.option;
-            });
+      return {
+        name: item.user.first_name + " " + item.user.last_name,
+        created_date: item.created_date,
+        answer_date: item.answer_date,
+        ...optionObj,
+      };
+    });
+    applyFilters(dataobj);
 
-            return {
-              name: item.user.first_name + " " + item.user.last_name,
-              created_date: item.created_date,
-              answer_date: item.answer_date,
-              ...optionObj,
-            };
-          });
-          applyFilters(dataobj);
-
-          if (reviewData?.review_type == "feedback")
-            totalRatingFunction(response.data);
-        }
-        setLoading(false);
-      })
-      .catch((err) => console.log(err.response.data.message));
+    if (reviewData?.review_type == "feedback") totalRatingFunction(answerData);
   };
+
+  const columns = [...headersData];
 
   const totalRatingFunction = (data) => {
     let sum = 0;
@@ -177,19 +159,16 @@ function ReviewCreatedComponent({
         if (response.status === 200) {
           openNotificationBox("success", response.message, 3);
           fetchReviewData(user, reviewId);
-        } else {
-          openNotificationBox("error", response.message, 3);
         }
       })
       .catch((err) => {
-        fetchReviewAssignList([]);
-        console.error(err.response.data.message);
+        console.error(err.response.data?.message);
       });
   };
 
   return (
     <div className="container mx-auto max-w-full">
-      <div className="md:flex items-center justify-between text-base font-medium my-4 ">
+      <div className="md:flex items-center justify-between text-base font-medium mb-4 ">
         <div className="md:flex items-center ">
           <div className="text-primary capitalize">
             {reviewData?.frequency} Review
@@ -202,10 +181,6 @@ function ReviewCreatedComponent({
           <div className="flex  text-primary md:mx-10 my-auto">
             <p className="mr-1">Type:</p>
             <p className="capitalize">{reviewData?.review_type}</p>
-          </div>
-          <div className="flex  text-primary my-auto">
-            <p className="mr-1">Created Date: </p>
-            <p>{moment(reviewData?.created_date).format(datePattern)}</p>
           </div>
         </div>
 
@@ -239,7 +214,7 @@ function ReviewCreatedComponent({
         <Col xs={24} md={6}>
           <Row gutter={8} className="bg-white rounded-md h-full py-6">
             <Col md={8} className="mx-auto my-auto">
-              <div className="flex     ">
+              <div className="flex">
                 <div className="answer-bg-icon mx-auto my-auto rounded-full ">
                   <div className="px-3 py-3">
                     <StarSmallIcon />
@@ -271,22 +246,10 @@ function ReviewCreatedComponent({
             <Col md={16} className="mx-auto my-auto">
               <div className="flex flex-col my-auto">
                 <div className="text-sm md:text-base font-medium">
-                  Next Due Date
+                  Created Date
                 </div>
                 <div className="text-lg font-medium">
-                  {reviewData?.frequency === "monthly"
-                    ? moment(reviewData?.created_date)
-                        .add(30, "days")
-                        .format(datePattern)
-                    : reviewData?.frequency === "weekly"
-                    ? moment(reviewData?.created_date)
-                        .add(7, "days")
-                        .format(datePattern)
-                    : reviewData?.frequency === "daily"
-                    ? moment(reviewData?.created_date)
-                        .add(1, "days")
-                        .format(datePattern)
-                    : null}
+                  {moment(reviewData?.created_date).format(datePattern)}
                 </div>
               </div>
             </Col>
@@ -320,15 +283,16 @@ function ReviewCreatedComponent({
       <Row gutter={[16, 16]}>
         <Col xs={24} md={24}>
           <div className="overflow-x-auto mt-4">
-            <Collapse
-              accordion
-              defaultActiveKey={["1"]}
-              className="review-collapse"
-              expandIconPosition="right"
-            >
-              {Object.entries(dataSource)
-                .reverse()
-                .map(([key, value], idx) => {
+            {dataSource &&
+            typeof dataSource === "object" &&
+            Object.keys(dataSource).length ? (
+              <Collapse
+                accordion
+                defaultActiveKey={["1"]}
+                className="review-collapse"
+                expandIconPosition="right"
+              >
+                {Object.entries(dataSource).map(([key, value], idx) => {
                   return (
                     <>
                       <Panel
@@ -350,7 +314,7 @@ function ReviewCreatedComponent({
                             x: 1300,
                           }}
                           rowClassName={(_, index) =>
-                            index % 2 === 0 ? "" : "background-color-voilet"
+                            index % 2 === 0 ? "" : "bg-violet-50"
                           }
                           bordered={true}
                           pagination={false}
@@ -359,7 +323,12 @@ function ReviewCreatedComponent({
                     </>
                   );
                 })}
-            </Collapse>
+              </Collapse>
+            ) : (
+              <div className="bg-white p-4 rounded-md text-base font-medium">
+                <p>No answers yet</p>
+              </div>
+            )}
           </div>
         </Col>
       </Row>

@@ -1,6 +1,4 @@
-import { LoadingOutlined } from "@ant-design/icons";
-import { Col, Form, Input, Radio, Row, Select, Spin } from "antd";
-import Link from "next/link";
+import { Col, Form, Row, Select } from "antd";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import {
@@ -9,6 +7,7 @@ import {
 } from "../../component/common/CustomButton";
 import { openNotificationBox } from "../../component/common/notification";
 import httpService from "../../lib/httpService";
+import GetReviewSteps from "../common/GetReviewSteps";
 import EditorWrapperComponent from "./EditorWrapperComponent";
 
 const defaultScaleQuestion = {
@@ -35,32 +34,19 @@ function AddEditReviewComponent({
   const [questionList, setQuestionList] = useState([]);
   const [reviewFormData, setReviewFormData] = useState({});
   const [formTitle, setFormTitle] = useState("");
-  const [nextFormFeild, setNextFormFeild] = useState(0);
+  const [activeReviewStep, setActiveReviewStep] = useState(0);
   const [loadingSpin, setLoadingSpin] = useState(false);
   const [loadingSubmitSpin, setLoadingSubmitSpin] = useState(false);
   const [disable, setDisable] = useState({
-    review_name: false,
-    template_id: false,
-    review_type: false,
+    0: false,
+    1: false,
+    2: false,
   });
 
-  const antIcon = (
-    <LoadingOutlined
-      style={{
-        fontSize: 24,
-        color: "white",
-      }}
-      spin
-    />
-  );
-
-  const onInputChange = (value, name) => {
-    if (value && name) {
-      setDisable((prev) => ({ ...prev, [`${name}`]: true }));
-    } else {
-      setDisable((prev) => ({ ...prev, [`${name}`]: false }));
-    }
+  const onInputChange = (value, type) => {
+    setDisable((prev) => ({ ...prev, [type]: value ? true : false }));
   };
+
   const onBarInputChange = (value, name) => {
     if (value && name) {
       if ((name = "assigned_to_id" && userList.length > 0)) {
@@ -166,8 +152,8 @@ function AddEditReviewComponent({
         // setLoadingSubmitSpin(false);
       })
       .catch((err) => {
-        console.error(err.response.data.message);
-        openNotificationBox("error", err.response.data.message, 3);
+        console.error(err.response.data?.message);
+        openNotificationBox("error", err.response.data?.message, 3);
         setLoadingSubmitSpin(false);
       });
   }
@@ -184,7 +170,7 @@ function AddEditReviewComponent({
       })
       .catch((err) => {
         setFormList([]);
-        console.error(err.response.data.message);
+        console.error(err.response.data?.message);
       });
   }
 
@@ -202,7 +188,7 @@ function AddEditReviewComponent({
       })
       .catch((err) => {
         setUserList([]);
-        console.error(err.response.data.message);
+        console.error(err.response.data?.message);
       });
   }
 
@@ -258,7 +244,7 @@ function AddEditReviewComponent({
             }
           })
           .catch((err) => {
-            console.error(err.response.data.message);
+            console.error(err.response.data?.message);
           });
       } else {
         openNotificationBox("error", "Need to Select Template", 3);
@@ -393,166 +379,42 @@ function AddEditReviewComponent({
                 <Row gutter={16}>
                   <Col md={24} xs={24}>
                     <div className="review-form-bg rounded-md h-full w-full">
-                      {nextFormFeild === 0 && (
-                        <div className="py-24 flex flex-col items-center justify-center">
-                          <p className="text-xl font-bold my-5 text-primary">
-                            Please enter your feedback title
-                          </p>
-
-                          <div className=" text-left w-96">
-                            <Form.Item
-                              name="review_name"
-                              rules={[
-                                {
-                                  required: true,
-                                  message: "Please enter your feedback title",
-                                },
-                              ]}
-                            >
-                              <Input
-                                placeholder="for eg: Monthly feedback , Lastest trip review , weekly feedback ... "
-                                onChange={(e) =>
-                                  onInputChange(e.target.value, "review_name")
-                                }
-                              />
-                            </Form.Item>
-                          </div>
-                          <div className="my-5">
+                      <div className="py-24 flex flex-col items-center justify-center px-4">
+                        {GetReviewSteps({
+                          onInputChange,
+                          formList,
+                          type: activeReviewStep,
+                        })}
+                        <div className="mt-5 space-x-5">
+                          {activeReviewStep !== 0 && (
                             <SecondaryButton
-                              onClick={() => setNextFormFeild(1)}
-                              disabled={!disable.review_name}
-                              className="px-14 py-2 text-base rounded-md"
+                              onClick={() =>
+                                setActiveReviewStep(activeReviewStep - 1)
+                              }
+                              disabled={loadingSpin}
+                              title="Previous"
+                              className="bg-gray-400"
+                            />
+                          )}
+
+                          {activeReviewStep !== 2 ? (
+                            <PrimaryButton
+                              onClick={() =>
+                                setActiveReviewStep(activeReviewStep + 1)
+                              }
+                              disabled={!disable[activeReviewStep]}
                               title="Next"
                             />
-                          </div>
-                        </div>
-                      )}
-                      {nextFormFeild === 1 && (
-                        <div className="py-24 flex flex-col items-center justify-center px-4">
-                          <p className="text-xl font-bold my-5 text-primary">
-                            Please select your feedback template
-                          </p>
-
-                          <div className=" text-left w-96">
-                            <Form.Item
-                              name="template_id"
-                              rules={[
-                                {
-                                  required: true,
-                                  message:
-                                    "Please select your feedback template",
-                                },
-                              ]}
-                            >
-                              <Select
-                                placeholder="Select Template"
-                                showSearch
-                                filterOption={(input, option) =>
-                                  option.children
-                                    .toLowerCase()
-                                    .indexOf(input.toLowerCase()) >= 0
-                                }
-                                size="large"
-                                onChange={(e) =>
-                                  onInputChange(e, "template_id")
-                                }
-                              >
-                                {formList.map((data, index) => (
-                                  <Select.Option
-                                    key={index + "form"}
-                                    value={data.id}
-                                  >
-                                    {data.form_title}
-                                  </Select.Option>
-                                ))}
-                              </Select>
-                            </Form.Item>
-                            <Link href="/template/add" passHref>
-                              <a target="_blank">
-                                <p className="text-right">Create</p>
-                              </a>
-                            </Link>
-                          </div>
-                          <div className="my-5">
+                          ) : (
                             <PrimaryButton
-                              onClick={() => setNextFormFeild(0)}
-                              className="px-14 py-2 text-base rounded-md mr-2"
-                              title="Previous"
-                            />
-                            <SecondaryButton
-                              onClick={() => setNextFormFeild(2)}
-                              disabled={!disable.template_id}
-                              className="px-14 py-2 text-base rounded-md"
-                              title="Next"
-                            />
-                          </div>
-                        </div>
-                      )}
-
-                      {nextFormFeild === 2 && (
-                        <div className="py-24 flex flex-col items-center justify-center px-4">
-                          <p className="text-xl font-bold my-5 text-primary">
-                            Would you like to let your team members rate you ?
-                          </p>
-
-                          <div className=" text-left w-96">
-                            <Form.Item
-                              name="review_type"
-                              rules={[
-                                {
-                                  required: true,
-                                  message: "Please select your review type",
-                                },
-                              ]}
-                            >
-                              <Radio.Group
-                                placeholder="Select Type"
-                                onChange={(e) =>
-                                  onInputChange(e.target.value, "review_type")
-                                }
-                              >
-                                <Radio value="feedback">Yes</Radio>
-                                <Radio value="other">No</Radio>
-                              </Radio.Group>
-                            </Form.Item>
-                          </div>
-                          <div className="my-5">
-                            <PrimaryButton
-                              onClick={() => setNextFormFeild(1)}
-                              className="px-14 py-2 text-base rounded-md mr-2"
-                              title="Previous"
-                            />
-                            {/* {loadingSpin ? (
-                              <SecondaryButton
-                                btnProps={{
-                                  disabled: true,
-                                }}
-                                className="px-14 py-2 text-base rounded-md"
-                                title={<Spin indicator={antIcon} />}
-                              />
-                            ) : (
-                              <SecondaryButton
-                                onClick={() => handlePreviewForm()}
-                                btnProps={{
-                                  disabled: !disable.review_type,
-                                }}
-                                className="px-14 py-2 text-base rounded-md"
-                                title="Preview"
-                              />
-                            )} */}
-                            <SecondaryButton
                               onClick={() => handlePreviewForm()}
-                              // btnProps={{
-                              //   disabled: !disable.review_type,
-                              // }}
                               loading={loadingSpin}
-                              disabled={!disable.review_type}
-                              className="px-14 py-2 text-base rounded-md"
+                              disabled={!disable[activeReviewStep]}
                               title="Preview"
                             />
-                          </div>
+                          )}
                         </div>
-                      )}
+                      </div>
                     </div>
                   </Col>
                 </Row>

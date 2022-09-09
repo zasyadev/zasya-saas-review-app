@@ -34,8 +34,8 @@ function ResetPassword() {
           setLoading(false);
         })
         .catch((err) => {
-          console.error(err.response.data.message);
-          openNotificationBox("error", err.response.data.message);
+          console.error(err.response.data?.message);
+          openNotificationBox("error", err.response.data?.message);
           setLoading(false);
         });
     }

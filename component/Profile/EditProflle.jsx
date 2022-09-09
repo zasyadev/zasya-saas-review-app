@@ -268,7 +268,7 @@ function EditProfile({ user }) {
         }
       })
       .catch((err) => {
-        openNotificationBox("error", err.response.data.message);
+        openNotificationBox("error", err.response.data?.message);
       });
   }
 
@@ -288,8 +288,8 @@ function EditProfile({ user }) {
         }
       })
       .catch((err) => {
-        console.log(err.response.data.message);
-        openNotificationBox("error", err.response.data.message, 3);
+        console.log(err.response.data?.message);
+        openNotificationBox("error", err.response.data?.message, 3);
       });
   };
 

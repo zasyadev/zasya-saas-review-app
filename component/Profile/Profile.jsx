@@ -52,7 +52,7 @@ function Profile({ user }) {
       })
       .catch((err) => {
         setGivenApplaudList([]);
-        console.error(err.response.data.message);
+        console.error(err.response.data?.message);
       });
   }
 
@@ -92,8 +92,8 @@ source=LinkedIn`);
         }
       })
       .catch((err) => {
-        console.log(err.response.data.message);
-        openNotificationBox("error", err.response.data.message, 3);
+        console.log(err.response.data?.message);
+        openNotificationBox("error", err.response.data?.message, 3);
       });
   };
   const fetchOrgData = async () => {
@@ -110,8 +110,8 @@ source=LinkedIn`);
         }
       })
       .catch((err) => {
-        console.log(err.response.data.message);
-        openNotificationBox("error", err.response.data.message, 3);
+        console.log(err.response.data?.message);
+        openNotificationBox("error", err.response.data?.message, 3);
       });
   };
 

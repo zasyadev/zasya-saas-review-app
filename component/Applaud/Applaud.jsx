@@ -1,5 +1,4 @@
 import { Col, DatePicker, Row, Skeleton } from "antd";
-
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { CalanderIcon, CommentIcons, UserIcon } from "../../assets/icons";
@@ -36,7 +35,7 @@ function Applaud({ user }) {
         setLoading(false);
       })
       .catch((err) => {
-        openNotificationBox("error", err.response.data.message);
+        openNotificationBox("error", err.response.data?.message);
         setReceivedApplaudList([]);
         setLoading(false);
       });

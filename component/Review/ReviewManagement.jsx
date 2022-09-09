@@ -27,7 +27,7 @@ function ReviewManagement({ user }) {
         setLoading(false);
       })
       .catch((err) => {
-        console.error(err.response.data.message);
+        console.error(err.response.data?.message);
       });
   }
 
@@ -49,7 +49,7 @@ function ReviewManagement({ user }) {
         })
         .catch((err) => {
           fetchReviewAssignList([]);
-          console.error(err.response.data.message);
+          console.error(err.response.data?.message);
         });
     }
   }

@@ -1,8 +1,6 @@
 import { Skeleton } from "antd";
-import { data } from "autoprefixer";
 import React, { useEffect, useState } from "react";
 import httpService from "../../lib/httpService";
-
 import { PreviewAnswer } from "./formhelper/PreviewAnswer";
 
 const defaultLoading = { questionLoading: false, answerLoading: false };
@@ -27,7 +25,7 @@ function PreviewComponent({ user, reviewId }) {
           setLoading((prev) => ({ ...prev, answerLoading: false }));
         })
         .catch((err) => {
-          console.error(err.response.data.message);
+          console.error(err.response.data?.message);
           setLoading((prev) => ({ ...prev, answerLoading: false }));
         });
     }
@@ -70,7 +68,7 @@ function PreviewComponent({ user, reviewId }) {
         setLoading((prev) => ({ ...prev, questionLoading: false }));
       })
       .catch((err) => {
-        console.error(err.response.data.message);
+        console.error(err.response.data?.message);
         setLoading((prev) => ({ ...prev, questionLoading: false }));
       });
   };

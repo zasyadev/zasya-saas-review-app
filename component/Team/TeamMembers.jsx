@@ -27,8 +27,8 @@ function TeamMembers({ user }) {
           }
         })
         .catch((err) => {
-          console.error(err.response.data.message);
-          openNotificationBox("error", err.response.data.message);
+          console.error(err.response.data?.message);
+          openNotificationBox("error", err.response.data?.message);
         });
     }
   }
@@ -47,7 +47,7 @@ function TeamMembers({ user }) {
         setLoading(false);
       })
       .catch((err) => {
-        console.error(err.response.data.message);
+        console.error(err.response.data?.message);
         setMembersList([]);
         setLoading(false);
       });
