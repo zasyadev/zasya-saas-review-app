@@ -158,17 +158,25 @@ function HeaderLayout({ title, user, collapsed, setCollapsed, md }) {
   const createMenu = (
     <Menu>
       <Menu.Item key={"Review"}>
-        <Link href="/review/add">Review</Link>
+        <Link href="/review/add" passHref>
+          Review
+        </Link>
       </Menu.Item>
       <Menu.Item key={"Template"}>
-        <Link href="/template/add">Template</Link>
+        <Link href="/template/add" passHref>
+          Template
+        </Link>
       </Menu.Item>
       <Menu.Item key={"Applaud"}>
-        <Link href="/applaud/add">Applaud</Link>
+        <Link href="/applaud/add" passHref>
+          Applaud
+        </Link>
       </Menu.Item>
       {user.role_id !== 4 && (
         <Menu.Item key={"Team"}>
-          <Link href="/team/add">Team</Link>
+          <Link href="/team/add" passHref>
+            Team
+          </Link>
         </Menu.Item>
       )}
     </Menu>

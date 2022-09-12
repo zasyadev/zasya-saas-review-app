@@ -50,7 +50,7 @@ async function handle(req, res) {
         if (
           item.UserDetails &&
           item.UserDetails.slack_id &&
-          item.applaudBy.length < 3
+          item.applaudBy.length < 2
         ) {
           let customText = CustomizeCronSlackMessage({
             header: "Need to Add New Applaud",

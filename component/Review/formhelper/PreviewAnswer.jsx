@@ -15,36 +15,33 @@ export function PreviewAnswer({ item, nextSlide, setNextSlide, length }) {
             <div className="text-lg text-primary mt-5 text-center px-2">
               {item.option}
             </div>
-            <div className="flex items-center justify-center px-3 my-6">
+            <div className="flex items-center justify-center px-3 my-6 space-x-3">
               {nextSlide === 0 ? (
                 ""
               ) : (
-                <div className="md:w-1/4 w-1/2 mx-2 ">
-                  <SecondaryButton
-                    onClick={() => setNextSlide(nextSlide - 1)}
-                    className="px-14 py-2 text-lg text-white w-full"
-                    title="Previous"
-                  />
-                </div>
+                <SecondaryButton
+                  onClick={() => setNextSlide(nextSlide - 1)}
+                  className="bg-gray-400"
+                  title="Previous"
+                />
               )}
-              <div className="md:w-1/4 w-1/2 mx-2">
-                {length - 1 === nextSlide ? (
-                  <PrimaryButton
-                    withLink={true}
-                    className="rounded-md text-lg text-white w-full"
-                    linkHref={"/review/received"}
-                    title="Back"
-                  />
-                ) : (
-                  <PrimaryButton
-                    className="rounded-md text-lg text-white w-full"
-                    title="Next"
-                    onClick={() => {
-                      setNextSlide(nextSlide + 1);
-                    }}
-                  />
-                )}
-              </div>
+
+              {length - 1 === nextSlide ? (
+                <PrimaryButton
+                  withLink={true}
+                  className=""
+                  linkHref={"/review/received"}
+                  title="Back"
+                />
+              ) : (
+                <PrimaryButton
+                  className=""
+                  title="Next"
+                  onClick={() => {
+                    setNextSlide(nextSlide + 1);
+                  }}
+                />
+              )}
             </div>
           </div>
         </Col>

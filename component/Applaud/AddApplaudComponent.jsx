@@ -210,10 +210,8 @@ function AddApplaud({ user }) {
                   <PrimaryButton
                     className="  my-1 rounded"
                     title={`Create`}
-                    btnProps={{
-                      htmlType: "submit",
-                    }}
                     loading={loadingSubmitSpin}
+                    type="submit"
                   />
                 </div>
               </Col>

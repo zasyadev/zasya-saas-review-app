@@ -38,14 +38,13 @@ async function handle(req, res, prisma) {
       });
 
       if (!transactionData.formdata || !transactionData) {
-        prisma.$disconnect();
         return res.status(500).json({
           status: 500,
           message: "Internal Server Error!",
           data: {},
         });
       }
-      prisma.$disconnect();
+
       return res.status(201).json({
         message: "Form Saved Sucessfully.",
         data: transactionData.formdata,

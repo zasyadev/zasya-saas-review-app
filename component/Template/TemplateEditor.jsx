@@ -36,7 +36,7 @@ function TemplateEditor({
     <Row gutter={16}>
       <Col xs={24} md={8}>
         <div className="w-full ">
-          <div className="mb-2 px-1 template-title-input">
+          {/* <div className="mb-2 px-1 template-title-input">
             <Input
               placeholder="E.g. Template Title"
               value={formTitle}
@@ -47,7 +47,7 @@ function TemplateEditor({
               bordered={false}
               maxLength={180}
             />
-          </div>
+          </div> */}
 
           <div className="w-full bg-white rounded-md shadow-md  mt-4 sider-question-wrapper overflow-y-auto">
             <div className="question-section-container">
@@ -130,13 +130,13 @@ function TemplateEditor({
               title="Add New Question"
             />
 
-            {saveWrapper && (
+            {/* {saveWrapper && (
               <SecondaryButton
                 withLink={true}
                 linkHref="/template"
                 title="Cancel"
               />
-            )}
+            )} */}
           </div>
         </div>
       </Col>
@@ -168,7 +168,7 @@ function TemplateEditor({
                 ))}
           </div>
         </div>
-        {saveWrapper && (
+        {/* {saveWrapper && (
           <div className="block lg:flex justify-end items-end my-4  lg:pl-56 ">
             <PrimaryButton
               onClick={() => saveFormField()}
@@ -176,7 +176,7 @@ function TemplateEditor({
               title="Save"
             />
           </div>
-        )}
+        )} */}
       </Col>
     </Row>
   );

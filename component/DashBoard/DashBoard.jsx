@@ -1,5 +1,4 @@
-import { Skeleton } from "antd";
-import { Col, Row } from "antd/lib/grid";
+import { Skeleton, Col, Row } from "antd";
 import moment from "moment";
 import dynamic from "next/dynamic";
 import Image from "next/image";
@@ -209,7 +208,7 @@ function DashBoard({ user }) {
                     {CustomPopover("Applauds count received by that member.")}
                   </span>
                 </h2>
-                <div className="flex-1 flex flex-col justify-between">
+                <div className="flex-1 flex flex-col justify-between mt-1 md:mt-3">
                   <Row gutter={[16, 24]}>
                     {allApplaud.length > 0 ? (
                       allApplaud.map((item, idx) => {

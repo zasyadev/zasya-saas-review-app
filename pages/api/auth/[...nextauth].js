@@ -69,6 +69,7 @@ export default NextAuth({
           UserDetails: true,
         },
       });
+      if (session.user) delete session.user.password;
 
       return Promise.resolve(session);
     },

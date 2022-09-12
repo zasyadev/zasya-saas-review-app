@@ -1,4 +1,10 @@
+import moment from "moment";
 import { RequestHandler } from "../../../../lib/RequestHandler";
+
+const currentMonth = {
+  lte: moment().endOf("month").format(),
+  gte: moment().startOf("month").format(),
+};
 
 async function handle(req, res, prisma) {
   try {
@@ -27,7 +33,12 @@ async function handle(req, res, prisma) {
       });
 
       const reviewAssignedData = await prisma.review.findMany({
-        where: { organization_id: userTableData.organization_id },
+        where: {
+          AND: [
+            { organization_id: userTableData.organization_id },
+            { created_date: currentMonth },
+          ],
+        },
         include: {
           created: {
             select: {
@@ -44,7 +55,12 @@ async function handle(req, res, prisma) {
       });
 
       const reviewAnsweredData = await prisma.reviewAssigneeAnswers.findMany({
-        where: { organization_id: userTableData.organization_id },
+        where: {
+          AND: [
+            { organization_id: userTableData.organization_id },
+            { created_date: currentMonth },
+          ],
+        },
         include: {
           user: {
             select: {
@@ -60,7 +76,7 @@ async function handle(req, res, prisma) {
       });
 
       let fetchData = {};
-      if (orgData.length > 0 && reviewAnsweredData.length > 0) {
+      if (orgData.length > 0) {
         let takefilterData = reviewAnsweredData.filter(({ user_id: id1 }) =>
           orgData.some(({ user_id: id2 }) => id2 === id1)
         );

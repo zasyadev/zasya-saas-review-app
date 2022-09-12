@@ -165,9 +165,7 @@ function RegisterPage() {
           title="Register"
           loading={loading}
           className="px-4 h-12 mt-2 text-white font-medium text-base xxl:text-lg leading-snug shadow-md  hover:shadow-lg rounded  focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out w-full btn-blue "
-          btnProps={{
-            type: "submit",
-          }}
+          type="submit"
         />
 
         <div className=" md:flex justify-end text-center lg:text-left">

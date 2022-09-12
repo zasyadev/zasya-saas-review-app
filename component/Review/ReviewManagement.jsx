@@ -76,7 +76,7 @@ function ReviewManagement({ user }) {
           {record.is_published != "published" ? (
             <p className=" text-gray-500">{record.review_name}</p>
           ) : (
-            <Link href={`/review/${record.id}`}>
+            <Link href={`/review/${record.id}`} passHref>
               <p className="cursor-pointer underline text-gray-500">
                 {record.review_name}
               </p>
@@ -133,7 +133,7 @@ function ReviewManagement({ user }) {
       render: (_, record) => (
         <p>
           {record.is_published != "published" && (
-            <Link href={`/review/edit/${record.id}`}>
+            <Link href={`/review/edit/${record.id}`} passHref>
               <span
                 className="text-primary text-xl mr-4 cursor-pointer"
                 title="Assign"

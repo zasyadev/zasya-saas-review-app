@@ -72,7 +72,9 @@ function TemplateLayout({ user }) {
         <div className="container mx-auto max-w-full">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-5 gap-4 2xl:gap-10 ">
             {loading ? (
-              [...Array(3)].map((item) => <SkeletonTemplateCard key={item} />)
+              [...Array(3)].map((_, idx) => (
+                <SkeletonTemplateCard key={idx + "temp"} />
+              ))
             ) : formList.length > 0 ? (
               formList.map((form) => (
                 <TemplateCard

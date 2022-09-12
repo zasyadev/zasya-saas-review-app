@@ -16,8 +16,6 @@ async function handle(req, res, prisma) {
         data: dataObj,
       });
 
-      prisma.$disconnect();
-
       return res.status(201).json({
         message: "Assigned Successfully",
         data: savedData,
@@ -61,7 +59,6 @@ async function handle(req, res, prisma) {
           status: resData.status,
         },
       });
-      prisma.$disconnect();
 
       return res.status(200).json({
         message: "Assign Updated Successfully.",
@@ -80,7 +77,7 @@ async function handle(req, res, prisma) {
       const deletaData = await prisma.formAssign.delete({
         where: { id: reqBody.id },
       });
-      prisma.$disconnect();
+
       if (deletaData) {
         return res.status(200).json({
           status: 200,

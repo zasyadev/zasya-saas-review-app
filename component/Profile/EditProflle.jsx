@@ -465,7 +465,7 @@ function EditProfile({ user }) {
                       title="Cancel"
                     />
                     <PrimaryButton
-                      btnProps={{ type: "submit" }}
+                      type="submit"
                       disabled={apiLoading}
                       className=" h-full w-32 rounded "
                       title="Submit"

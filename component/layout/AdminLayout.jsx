@@ -6,13 +6,13 @@ import {
   SettingOutlined,
 } from "@ant-design/icons";
 import { Grid, Layout } from "antd";
-import { Content, Footer } from "antd/lib/layout/layout";
-import { Fragment, useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { HeadersComponent } from "../../component/common/HeadersComponent";
 import HeaderLayout from "./HeaderLayout";
 import SiderLayout from "./SiderLayout";
 
 const { useBreakpoint } = Grid;
+const { Content, Footer } = Layout;
 
 function getItem(label, key, icon, children, type) {
   return {
@@ -40,7 +40,11 @@ function AdminLayout({ user, title, children }) {
       <DashboardOutlined className="sidebar-icon" />
     ),
 
-    getItem("Reviews", "/review", <FormOutlined className="sidebar-icon " />),
+    getItem(
+      "Reviews",
+      "/review/received",
+      <FormOutlined className="sidebar-icon " />
+    ),
 
     getItem(
       "Team",
@@ -66,7 +70,7 @@ function AdminLayout({ user, title, children }) {
   }, [user]);
 
   return (
-    <Fragment>
+    <>
       <HeadersComponent />
       <Layout>
         <SiderLayout
@@ -91,7 +95,7 @@ function AdminLayout({ user, title, children }) {
           </Footer>
         </Layout>
       </Layout>
-    </Fragment>
+    </>
   );
 }
 

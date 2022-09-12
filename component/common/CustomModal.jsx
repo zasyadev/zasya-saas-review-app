@@ -44,10 +44,8 @@ const CustomModal = ({
                   title={submitText}
                   className="ml-4"
                   onClick={() => onSubmit()}
-                  btnProps={{
-                    type: "submit",
-                    ...submitBtnProps,
-                  }}
+                  type="submit"
+                  {...submitBtnProps}
                 />
               ),
             ]

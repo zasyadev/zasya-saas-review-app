@@ -215,7 +215,7 @@ function AddTeamComponent({ user, editMode, memberData }) {
                     title="Cancel"
                   />
                   <PrimaryButton
-                    btnProps={{ htmlType: "submit" }}
+                    type="submit"
                     className=" my-1 rounded "
                     title={editMode ? "Update" : "Create"}
                   />

@@ -19,9 +19,9 @@ export function PrimaryButton({
   withLink,
   className = "",
   linkHref,
-  btnProps,
   disabled = false,
   loading = false,
+  ...restProp
 }) {
   const isDisabled = disabled || loading;
 
@@ -31,7 +31,7 @@ export function PrimaryButton({
 
   return withLink ? (
     <Link href={linkHref} passHref>
-      <button className={btnClassName} {...btnProps} disabled={isDisabled}>
+      <button className={btnClassName} {...restProp} disabled={isDisabled}>
         {loading ? <Spin indicator={antIcon} /> : title}
       </button>
     </Link>
@@ -39,7 +39,7 @@ export function PrimaryButton({
     <button
       className={btnClassName}
       onClick={() => onClick()}
-      {...btnProps}
+      {...restProp}
       disabled={isDisabled}
     >
       {loading ? <Spin indicator={antIcon} /> : title}
@@ -53,9 +53,10 @@ export function SecondaryButton({
   withLink,
   className = "",
   linkHref,
-  btnProps,
+
   disabled = false,
   loading = false,
+  ...restProp
 }) {
   const isDisabled = disabled || loading;
 
@@ -64,7 +65,7 @@ export function SecondaryButton({
   }`;
   return withLink ? (
     <Link href={linkHref} passHref>
-      <button className={btnClassName} {...btnProps} disabled={isDisabled}>
+      <button className={btnClassName} {...restProp} disabled={isDisabled}>
         {loading ? <Spin indicator={antIcon} /> : title}
       </button>
     </Link>
@@ -72,7 +73,7 @@ export function SecondaryButton({
     <button
       className={btnClassName}
       onClick={() => onClick()}
-      {...btnProps}
+      {...restProp}
       disabled={isDisabled}
     >
       {loading ? <Spin indicator={antIcon} /> : title}

@@ -104,7 +104,7 @@ function ReceivedReviewComponent({ user, reviewId }) {
       {loading ? (
         <>
           <div className="text-right mt-4 mr-4">
-            <Link href="/review/received">
+            <Link href="/review/received" passHref>
               <button className="primary-bg-btn text-white py-2 px-4 rounded-md">
                 Back
               </button>
@@ -125,7 +125,7 @@ function ReceivedReviewComponent({ user, reviewId }) {
       ) : reviewData?.status ? (
         <>
           <div className="text-right mt-4 mr-4">
-            <Link href="/review/received">
+            <Link href="/review/received" passHref>
               <button className="primary-bg-btn text-white py-2 px-4 rounded-md">
                 Back
               </button>
@@ -142,7 +142,7 @@ function ReceivedReviewComponent({ user, reviewId }) {
       ) : (
         <>
           <div className="text-right mt-4 mr-4">
-            <Link href="/review/received">
+            <Link href="/review/received" passHref>
               <button className="primary-bg-btn text-white py-2 px-4 rounded-md">
                 Back
               </button>
@@ -170,7 +170,7 @@ function ReceivedReviewComponent({ user, reviewId }) {
             ) : (
               <>
                 <div className="text-right mt-4 mr-4">
-                  <Link href="/review/received">
+                  <Link href="/review/received" passHref>
                     <button className="primary-bg-btn text-white py-2 px-4 rounded-md">
                       Back
                     </button>

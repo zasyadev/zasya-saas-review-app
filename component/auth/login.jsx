@@ -104,9 +104,7 @@ function LoginPage() {
           title="Login"
           loading={loading}
           className="px-4 h-12 mt-2 text-white font-medium text-base xl:text-lg leading-snug shadow-md  hover:shadow-lg rounded  focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out w-full btn-blue "
-          btnProps={{
-            type: "submit",
-          }}
+          type="submit"
         />
 
         <div className="flex justify-between items-center mt-4 mb-6">

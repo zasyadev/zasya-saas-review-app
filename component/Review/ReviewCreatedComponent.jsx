@@ -185,7 +185,7 @@ function ReviewCreatedComponent({
         </div>
 
         <div className="flex items-end justify-between ">
-          <Link href="/review">
+          <Link href="/review" passHref>
             <button className="primary-bg-btn text-white text-sm py-3 text-center px-4 rounded-md ">
               Back
             </button>

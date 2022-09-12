@@ -1,13 +1,13 @@
-import React, { useState } from "react";
-import { Form, Input, Spin } from "antd";
-import { useRouter } from "next/router";
-import Link from "next/link";
-import { openNotificationBox } from "../../component/common/notification";
-import { HeadersComponent } from "../../component/common/HeadersComponent";
-import AuthWrapper from "../../component/auth/AuthWrapper";
 import { LoadingOutlined } from "@ant-design/icons";
-import httpService from "../../lib/httpService";
+import { Form, Input } from "antd";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import React, { useState } from "react";
+import AuthWrapper from "../../component/auth/AuthWrapper";
 import { PrimaryButton } from "../../component/common/CustomButton";
+import { HeadersComponent } from "../../component/common/HeadersComponent";
+import { openNotificationBox } from "../../component/common/notification";
+import httpService from "../../lib/httpService";
 
 function ForgotPassword() {
   const router = useRouter();
@@ -76,14 +76,12 @@ function ForgotPassword() {
           title="Submit"
           loading={loading}
           className="px-4 h-12 mt-2 text-white font-medium text-base xl:text-lg leading-snug shadow-md  hover:shadow-lg rounded  focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out w-full btn-blue "
-          btnProps={{
-            type: "submit",
-          }}
+          type="submit"
         />
 
         <div className=" md:flex justify-end text-center lg:text-left">
           <p className="text-sm font-semibold mt-2 pt-1 mb-0">
-            <Link href="/auth/login">
+            <Link href="/auth/login" passHref>
               <span className="text-primary  font-semibold transition duration-200 ease-in-out cursor-pointer">
                 Back to Login
               </span>
