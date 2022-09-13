@@ -235,7 +235,7 @@ function HeaderLayout({ title, user, collapsed, setCollapsed, md }) {
         </div>
 
         <div className="create-header-button flex items-center justify-end space-x-3 md:space-x-5">
-          <Dropdown
+          {/* <Dropdown
             overlay={createMenu}
             trigger={["click"]}
             overlayClassName="create-dropdown"
@@ -252,7 +252,7 @@ function HeaderLayout({ title, user, collapsed, setCollapsed, md }) {
 
               <PlusOutlined className="md:hidden text-sm " />
             </div>
-          </Dropdown>
+          </Dropdown> */}
           <Dropdown
             trigger={"click"}
             overlay={notificationMenu}

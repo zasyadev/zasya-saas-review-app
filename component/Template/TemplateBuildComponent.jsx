@@ -4,11 +4,13 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { openNotificationBox } from "../../component/common/notification";
 import httpService from "../../lib/httpService";
-import { PrimaryButton, SecondaryButton } from "../common/CustomButton";
+import { PrimaryButton } from "../common/CustomButton";
 import TemplateEditor from "./TemplateEditor";
-import CustomModal from "../common/CustomModal";
-import CustomSteps from "../common/CustomSteps";
-import { FormSlideComponent } from "../Review/formhelper/FormComponent";
+import {
+  CustomStepsHeaderWrapper,
+  CustomStepsWrapper,
+} from "../common/CustomSteps";
+import { TemplatePreviewComponent } from "./TemplatePreviewComponent";
 
 const defaultOption = { optionText: "", error: "" };
 
@@ -38,12 +40,10 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
   const [activeQuestionIndex, setActiveQuestionIndex] = useState(0);
   const [activeStepState, setActiveStepState] = useState(0);
   const [selectTypeFeild, setSelectTypeFeild] = useState(false);
-  const [modalTitleopen, setModalTitleOpen] = useState(false);
   const [nextSlide, setNextSlide] = useState(0);
   const [templateSaveLoading, setTemplateSaveLoading] = useState(false);
 
   const handleAnswerChange = () => {};
-  const handleSubmit = () => {};
 
   function removeElement(idx) {
     setQuestions((prev) => prev.filter((_, i) => i != idx));
@@ -292,7 +292,7 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
       setQuestions(editFormData?.form_data?.questions);
       setFormTitle(editFormData?.form_data?.title);
       setFormDes(editFormData?.form_data?.description);
-      setModalTitleOpen(false);
+      // setModalTitleOpen(false);
     }
   }, []);
 
@@ -320,23 +320,16 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
 
   return (
     <div className="px-4 md:px-6 pb-28 pt-20 md:pt-24 md:pb-24  bg-color-dashboard min-h-screen">
-      <div className="fixed top-0 left-0 bg-white px-6 py-4 rounded-md w-full">
-        <div className="flex justify-between items-center">
-          <p className="text-lg text-primary font-semibold">Create Template </p>
-          <PrimaryButton
-            withLink={true}
-            linkHref="/template"
-            className="leading-0"
-            title={<CloseOutlined />}
-          />
-        </div>
-      </div>
+      <CustomStepsHeaderWrapper
+        title={"Create Template"}
+        backUrl={"/template"}
+      />
       {activeStepState === 0 && (
-        <div className="w-full md:w-1/2 bg-white p-10 rounded-md lg:absolute top-1/3 left-1/4">
-          <div className="text-primary text-base text-center mb-2 font-bold ">
+        <div className="w-full md:w-1/2 bg-white p-10 rounded-md mx-auto">
+          <div className="text-primary text-base md:text-lg mb-2 font-bold ">
             Template Title
           </div>
-          <div className="w-full md:w-1/2 mx-auto">
+          <div className="">
             <Input
               placeholder="Template Title"
               onChange={(e) => {
@@ -379,7 +372,7 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
         questions
           ?.filter((_, index) => index === nextSlide)
           ?.map((question, idx) => (
-            <FormSlideComponent
+            <TemplatePreviewComponent
               {...question}
               idx={idx}
               key={idx + "quesSlid"}
@@ -388,11 +381,19 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
               handleAnswerChange={handleAnswerChange}
               setNextSlide={setNextSlide}
               length={questions.length}
-              handleSubmit={handleSubmit}
-              // loadingSpin={loadingSpin}
             />
           ))}
-      <div className="fixed bottom-0 left-0 right-0">
+
+      <CustomStepsWrapper
+        activeStepState={activeStepState}
+        setActiveStepState={setActiveStepState}
+        stepsArray={stepsArray}
+        lastStep={2}
+        previewStep={1}
+        submitLoading={templateSaveLoading}
+        submitHandle={saveFormField}
+      />
+      {/* <div className="fixed bottom-0 left-0 right-0">
         <div className=" bg-white p-5 rounded-md w-full">
           <div className="flex justify-between  items-center">
             <div className="w-full md:w-1/2 mx-auto hidden md:block">
@@ -407,7 +408,6 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
               {activeStepState ? (
                 <span
                   onClick={() => {
-                    // handleOk();
                     setActiveStepState(activeStepState - 1);
                   }}
                 >
@@ -425,7 +425,6 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
                     : "Continue"
                 }
                 onClick={() => {
-                  // handleOk();
                   setActiveStepState(activeStepState + 1);
                   if (activeStepState === 2) saveFormField();
                 }}
@@ -434,43 +433,7 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
             </div>
           </div>
         </div>
-      </div>
-
-      <CustomModal
-        visible={modalTitleopen}
-        title=""
-        customFooter
-        footer={
-          <>
-            <SecondaryButton
-              withLink={true}
-              linkHref="/template"
-              className="mx-4 rounded my-1"
-              title="Cancel"
-            />
-            <PrimaryButton
-              onClick={() => handleOk()}
-              title="Create"
-              className=" rounded"
-            />
-          </>
-        }
-        modalProps={{ maskClosable: false }}
-      >
-        <div>
-          <div className="text-primary text-base text-center mb-2 font-bold ">
-            Template Title
-          </div>
-          <div>
-            <Input
-              placeholder="Template Title"
-              onChange={(e) => {
-                setFormTitle(e.target.value);
-              }}
-            />
-          </div>
-        </div>
-      </CustomModal>
+      </div> */}
     </div>
   );
 }

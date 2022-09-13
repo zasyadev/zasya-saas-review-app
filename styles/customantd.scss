@@ -984,3 +984,8 @@ $primary: #0f123f;
   .ant-steps-icon-dot {
   background-color: $primary;
 }
+.ant-input:focus,
+.ant-input:hover {
+  border-color: $primary !important;
+  box-shadow: 0 0 0 1.5px rgba(0, 5, 204, 0.35) !important;
+}

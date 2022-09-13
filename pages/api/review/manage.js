@@ -10,7 +10,8 @@ async function handle(req, res, prisma) {
     try {
       const resData = req.body;
       let transactionData = {};
-      if (resData.is_published === "published" && resData.review_id) {
+
+      if (resData.is_published === "published") {
         transactionData = await prisma.$transaction(async (transaction) => {
           let userOrgData = await transaction.user.findUnique({
             where: { id: resData.created_by },
@@ -44,10 +45,10 @@ async function handle(req, res, prisma) {
           const formdata = await transaction.reviewAssignTemplate.create({
             data: {
               user: { connect: { id: resData.created_by } },
-              form_title: resData.templateData.form_title,
-              form_description: resData.templateData.form_description,
+              form_title: resData.review_name,
+              form_description: resData?.review_description ?? "",
               form_data: resData.templateData,
-              status: resData?.templateData?.status ?? true,
+              status: true,
               questions: {
                 create: questionData,
               },
@@ -65,6 +66,7 @@ async function handle(req, res, prisma) {
             role: { connect: { id: resData.role_id } },
             parent_id: resData.created_by,
             is_published: resData.is_published,
+            template_data: resData.template_data,
           };
 
           if (resData.is_published === "published") {
@@ -78,8 +80,8 @@ async function handle(req, res, prisma) {
               create: assigneeData,
             };
 
-            let savedData = await transaction.review.update({
-              where: { id: resData.review_id },
+            let savedData = await transaction.review.create({
+              // where: { id: resData.review_id },
               data: dataObj,
             });
 
@@ -178,29 +180,30 @@ async function handle(req, res, prisma) {
             }
           });
         }
-      } else {
-        transactionData = await prisma.$transaction(async (transaction) => {
-          let userOrgData = await transaction.user.findUnique({
-            where: { id: resData.created_by },
-          });
-
-          let savedData = await transaction.review.create({
-            data: {
-              created: { connect: { id: resData.created_by } },
-              review_name: resData.review_name,
-              status: resData.status,
-
-              review_type: resData.review_type,
-              organization: { connect: { id: userOrgData.organization_id } },
-              role: { connect: { id: resData.role_id } },
-              parent_id: resData.created_by,
-              is_published: resData.is_published,
-              template_data: resData.template_data,
-            },
-          });
-          return { savedData };
-        });
       }
+      // else {
+      //   transactionData = await prisma.$transaction(async (transaction) => {
+      //     let userOrgData = await transaction.user.findUnique({
+      //       where: { id: resData.created_by },
+      //     });
+
+      //     let savedData = await transaction.review.create({
+      //       data: {
+      //         created: { connect: { id: resData.created_by } },
+      //         review_name: resData.review_name,
+      //         status: resData.status,
+
+      //         review_type: resData.review_type,
+      //         organization: { connect: { id: userOrgData.organization_id } },
+      //         role: { connect: { id: resData.role_id } },
+      //         parent_id: resData.created_by,
+      //         is_published: resData.is_published,
+      //         template_data: resData.template_data,
+      //       },
+      //     });
+      //     return { savedData };
+      //   });
+      // }
 
       if (transactionData.savedData) {
         return res.status(201).json({

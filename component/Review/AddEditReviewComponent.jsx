@@ -1,14 +1,20 @@
 import { Col, Form, Row, Select } from "antd";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   PrimaryButton,
   SecondaryButton,
 } from "../../component/common/CustomButton";
 import { openNotificationBox } from "../../component/common/notification";
 import httpService from "../../lib/httpService";
+import {
+  CustomStepsHeaderWrapper,
+  CustomStepsWrapper,
+} from "../common/CustomSteps";
 import GetReviewSteps from "../common/GetReviewSteps";
 import EditorWrapperComponent from "./EditorWrapperComponent";
+
+const defaultOption = { optionText: "", error: "" };
 
 const defaultScaleQuestion = {
   questionText: "Rating",
@@ -19,19 +25,46 @@ const defaultScaleQuestion = {
   type: "scale",
   editableFeedback: true,
 };
+const defaultQuestionConfig = {
+  questionText: "",
+  options: [defaultOption],
+  open: true,
+  type: "checkbox",
+  error: "",
+  active: true,
+};
+
+const stepsArray = [
+  {
+    step: 0,
+    key: "review_title",
+    title: "Review Title",
+  },
+  {
+    step: 1,
+    key: "template_preview",
+    title: "View Your Template",
+  },
+  {
+    step: 2,
+    key: "select_members",
+    title: "Select Your Members",
+  },
+];
 
 function AddEditReviewComponent({
   user,
   previewForm = false,
   reviewPreviewData,
   reviewId,
+  pageTitle,
 }) {
   const router = useRouter();
   const [form] = Form.useForm();
   const [userForm] = Form.useForm();
   const [formList, setFormList] = useState([]);
   const [userList, setUserList] = useState([]);
-  const [questionList, setQuestionList] = useState([]);
+  const [questionList, setQuestionList] = useState([defaultQuestionConfig]);
   const [reviewFormData, setReviewFormData] = useState({});
   const [formTitle, setFormTitle] = useState("");
   const [activeReviewStep, setActiveReviewStep] = useState(0);
@@ -42,6 +75,8 @@ function AddEditReviewComponent({
     1: false,
     2: false,
   });
+
+  const [templateSaveLoading, setTemplateSaveLoading] = useState(false);
 
   const onInputChange = (value, type) => {
     setDisable((prev) => ({ ...prev, [type]: value ? true : false }));
@@ -54,7 +89,7 @@ function AddEditReviewComponent({
           let allUsers = userList.map((item) => {
             return item.user.id;
           });
-          userForm.setFieldsValue({
+          form.setFieldsValue({
             assigned_to_id: allUsers,
           });
         }
@@ -63,7 +98,7 @@ function AddEditReviewComponent({
   };
 
   function onPreviewSubmit() {
-    let values = userForm.getFieldsValue(true);
+    let values = form.getFieldsValue(true);
 
     if (!values.frequency) {
       openNotificationBox("error", "Need to Select Frequency", 3);
@@ -78,66 +113,72 @@ function AddEditReviewComponent({
       return;
     }
 
-    if (Object.keys(reviewFormData).length && reviewId) {
-      let newQuestionData = questionList.map((item) => {
-        let error = "";
-        if (!item.questionText || item.questionText.trim() === "") {
-          error = "Question field required!";
-        }
-        let errorOptions = item.options;
-        if (
-          item.options.length &&
-          (item.type === "checkbox" || item.type === "scale")
-        ) {
-          errorOptions = item.options.map((option) => {
-            let error = "";
-            if (!option.optionText) {
-              error = "Option field required!";
-            }
-            return {
-              ...option,
-              error: error,
-            };
-          });
-        }
-
-        return {
-          ...item,
-          open: true,
-          error: error,
-          options: errorOptions,
-        };
-      });
-
-      setQuestionList(newQuestionData);
-
-      if (newQuestionData.filter((item) => item.error).length > 0) {
-        openNotificationBox("error", "Field(s) Required", 3);
-        return;
+    // if (Object.keys(reviewFormData).length) {
+    let newQuestionData = questionList.map((item) => {
+      let error = "";
+      if (!item.questionText || item.questionText.trim() === "") {
+        error = "Question field required!";
       }
+      let errorOptions = item.options;
       if (
-        newQuestionData.filter(
-          (item) =>
-            item.options.filter((option) => option.error).length > 0 ?? false
-        ).length > 0
+        item.options.length &&
+        (item.type === "checkbox" || item.type === "scale")
       ) {
-        openNotificationBox("error", "Option Field(s) Required", 3);
-        return;
+        errorOptions = item.options.map((option) => {
+          let error = "";
+          if (!option.optionText) {
+            error = "Option field required!";
+          }
+          return {
+            ...option,
+            error: error,
+          };
+        });
       }
 
-      addReviewAssign({
-        created_by: user.id,
-        assigned_to_id: values.assigned_to_id,
-        review_type: reviewFormData.review_type,
-        review_name: reviewFormData.review_name,
-        status: reviewFormData.status ?? "pending",
-        frequency: values.frequency,
-        role_id: user.role_id,
-        is_published: "published",
-        templateData: newQuestionData,
-        review_id: reviewId,
-      });
+      return {
+        ...item,
+        open: true,
+        error: error,
+        options: errorOptions,
+      };
+    });
+
+    setQuestionList(newQuestionData);
+
+    if (newQuestionData.filter((item) => item.error).length > 0) {
+      openNotificationBox("error", "Field(s) Required", 3);
+      return;
     }
+    if (
+      newQuestionData.filter(
+        (item) =>
+          item.options.filter((option) => option.error).length > 0 ?? false
+      ).length > 0
+    ) {
+      openNotificationBox("error", "Option Field(s) Required", 3);
+      return;
+    }
+
+    if (values.review_type === "feedback") {
+      newQuestionData.length > 0
+        ? newQuestionData.push(defaultScaleQuestion)
+        : null;
+    }
+
+    addReviewAssign({
+      created_by: user.id,
+      assigned_to_id: values.assigned_to_id,
+      review_type: values.review_type,
+      review_name: values.review_name,
+      status: values.status ?? "pending",
+      frequency: values.frequency,
+      role_id: user.role_id,
+      is_published: "published",
+      templateData: newQuestionData,
+      // review_id: reviewId,
+    });
+    // }
   }
 
   async function addReviewAssign(obj) {
@@ -193,9 +234,10 @@ function AddEditReviewComponent({
   }
 
   const initialData = (data) => {
-    setFormTitle(data.template_data.form_title);
-    setQuestionList(data.template_data.form_data.questions);
-    setReviewFormData(data);
+    setQuestionList(data.form_data.questions);
+    form.setFieldsValue({
+      review_name: data?.form_title,
+    });
   };
 
   useEffect(() => {
@@ -211,181 +253,73 @@ function AddEditReviewComponent({
     }
   }, []);
 
-  const handlePreviewForm = async () => {
-    setReviewFormData({});
-    setQuestionList([]);
-    setLoadingSpin(true);
+  // const templateFormData = useMemo(() => {
+  //   let values = form.getFieldsValue(true);
 
-    let values = form.getFieldsValue(true);
+  //   let data = formList.find((item) => item.id == values.template_id);
+  //   setQuestionList(data ? data.form_data.questions : []);
+  // }, [form.getFieldsValue(true)]);
 
-    if (values) {
-      let templateData = {};
-      if (values.template_id) {
-        templateData = formList.find((item) => item.id == values.template_id);
+  // const handlePreviewForm = async () => {
+  //   setReviewFormData({});
+  //   setQuestionList([]);
+  //   setLoadingSpin(true);
 
-        if (values.review_type === "feedback") {
-          templateData.form_data.questions.length > 0
-            ? templateData.form_data.questions.push(defaultScaleQuestion)
-            : null;
-        }
+  //   let values = form.getFieldsValue(true);
 
-        await httpService
-          .post(`/api/review/manage`, {
-            ...values,
-            template_data: templateData,
-            is_published: "draft",
-            status: values.status ?? "pending",
-            role_id: user.role_id,
-            created_by: user.id,
-          })
-          .then(({ data: response }) => {
-            if (response.status === 200 && response.data.id) {
-              router.push(`/review/edit/${response.data.id}`);
-            }
-          })
-          .catch((err) => {
-            console.error(err.response.data?.message);
-          });
-      } else {
-        openNotificationBox("error", "Need to Select Template", 3);
-      }
-    }
-  };
+  //   if (values) {
+  //     let templateData = {};
+  //     if (values.template_id) {
+  //       templateData = formList.find((item) => item.id == values.template_id);
+
+  //       if (values.review_type === "feedback") {
+  //         templateData.form_data.questions.length > 0
+  //           ? templateData.form_data.questions.push(defaultScaleQuestion)
+  //           : null;
+  //       }
+
+  //       await httpService
+  //         .post(`/api/review/manage`, {
+  //           ...values,
+  //           template_data: templateData,
+  //           is_published: "draft",
+  //           status: values.status ?? "pending",
+  //           role_id: user.role_id,
+  //           created_by: user.id,
+  //         })
+  //         .then(({ data: response }) => {
+  //           if (response.status === 200 && response.data.id) {
+  //             router.push(`/review/edit/${response.data.id}`);
+  //           }
+  //         })
+  //         .catch((err) => {
+  //           console.error(err.response.data?.message);
+  //         });
+  //     } else {
+  //       openNotificationBox("error", "Need to Select Template", 3);
+  //     }
+  //   }
+  // };
 
   return (
-    <>
-      {previewForm ? (
-        <>
-          <div className="w-full   ">
-            <div className="w-full rounded-md  p-4 mt-4 template-wrapper flex flex-col">
-              <Form layout="vertical" form={userForm}>
-                <div className="primary-bg-color px-4 py-4 rounded-t-md items-center">
-                  <Row gutter={[16, 16]} justify="between" align="middle">
-                    <Col md={6} xs={24}>
-                      <div className="text-center md:text-left">
-                        <p className="text-white text-base font-medium mb-1">
-                          Name : {reviewFormData.review_name}
-                        </p>
-                      </div>
-                    </Col>
-                    <Col md={6} xs={24}>
-                      <div className="h-full w-11/12">
-                        <Form.Item name="frequency" className="mb-0 margin-b-0">
-                          <Select
-                            placeholder="Select Frequency"
-                            showSearch
-                            filterOption={(input, option) =>
-                              option.children
-                                .toLowerCase()
-                                .indexOf(input.toLowerCase()) >= 0
-                            }
-                            onChange={(e) => onBarInputChange(e, "frequency")}
-                            size="large"
-                          >
-                            <Select.Option value="once">Once</Select.Option>
-                            <Select.Option value="daily">Daily</Select.Option>
-                            <Select.Option value="weekly">Weekly</Select.Option>
-                            <Select.Option value="monthly">
-                              Monthly
-                            </Select.Option>
-                          </Select>
-                        </Form.Item>
-                      </div>
-                    </Col>
-                    <Col md={6} xs={24}>
-                      <div className="w-11/12 h-full">
-                        <Form.Item
-                          name="assigned_to_id"
-                          className="mb-0 margin-b-0"
-                        >
-                          <Select
-                            mode="multiple"
-                            placeholder="Select Member"
-                            showSearch
-                            filterOption={(input, option) =>
-                              option.children
-                                .toLowerCase()
-                                .indexOf(input.toLowerCase()) >= 0
-                            }
-                            onChange={(e) =>
-                              onBarInputChange(e, "assigned_to_id")
-                            }
-                            size="large"
-                            className="w-full"
-                            maxTagCount="responsive"
-                          >
-                            <Select.Option key="all" value="all">
-                              ---SELECT ALL---
-                            </Select.Option>
-                            {userList.map((data, index) => (
-                              <Select.Option
-                                key={index + "users"}
-                                value={data?.user?.id}
-                              >
-                                {data?.user?.first_name}
-                              </Select.Option>
-                            ))}
-                          </Select>
-                        </Form.Item>
-                      </div>
-                    </Col>
-                    <Col md={6} xs={24}>
-                      <div className="text-center md:text-right">
-                        <p className="text-white text-base font-medium mb-1 capitalize">
-                          Type : {reviewFormData.review_type}
-                        </p>
-                      </div>
-                    </Col>
-                  </Row>
-                </div>
-              </Form>
-              <div className="bg-white px-4 rounded-b-md">
-                <EditorWrapperComponent
-                  questions={questionList}
-                  setQuestionList={setQuestionList}
-                  setFormTitle={setFormTitle}
-                  formTitle={formTitle}
-                />
+    <div className="px-4 md:px-6 pb-28 pt-20 md:pt-20 md:pb-24  bg-color-dashboard min-h-screen">
+      <CustomStepsHeaderWrapper title={pageTitle} backUrl={"/review"} />
 
-                <div>
-                  <div className="flex justify-end my-5">
-                    <SecondaryButton
-                      onClick={() => {
-                        setReviewFormData({});
-                        setQuestionList([]);
-                        router.back();
-                      }}
-                      className="h-full rounded mr-2 lg:mx-4 md:w-1/4 my-1"
-                      title="Cancel"
-                    />
-
-                    <PrimaryButton
-                      onClick={() => onPreviewSubmit()}
-                      className="h-full rounded md:w-1/4 my-1"
-                      title={"Submit"}
-                      loading={loadingSubmitSpin}
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </>
-      ) : (
-        <div className="w-full bg-white rounded-md shadow-md mt-4 add-template-wrapper">
-          <div className=" mt-1">
-            <div className=" w-full flex flex-col items-start">
-              <Form layout="vertical" form={form} className="w-full">
-                <Row gutter={16}>
-                  <Col md={24} xs={24}>
-                    <div className="review-form-bg rounded-md h-full w-full">
-                      <div className="py-24 flex flex-col items-center justify-center px-4">
-                        {GetReviewSteps({
-                          onInputChange,
-                          formList,
-                          type: activeReviewStep,
-                        })}
-                        <div className="mt-5 space-x-5">
+      <div className="">
+        <Form layout="vertical" form={form} className="w-full">
+          <Row gutter={16}>
+            <Col md={24} xs={24}>
+              <div className=" w-full">
+                {GetReviewSteps({
+                  onInputChange,
+                  formList,
+                  type: activeReviewStep,
+                  questionList,
+                  setQuestionList,
+                  onBarInputChange,
+                  userList,
+                })}
+                {/* <div className="mt-5 space-x-5">
                           {activeReviewStep !== 0 && (
                             <SecondaryButton
                               onClick={() =>
@@ -413,17 +347,66 @@ function AddEditReviewComponent({
                               title="Preview"
                             />
                           )}
-                        </div>
-                      </div>
-                    </div>
-                  </Col>
-                </Row>
-              </Form>
+                        </div> */}
+              </div>
+            </Col>
+          </Row>
+        </Form>
+      </div>
+
+      <CustomStepsWrapper
+        activeStepState={activeReviewStep}
+        setActiveStepState={setActiveReviewStep}
+        stepsArray={stepsArray}
+        lastStep={2}
+        previewStep={5}
+        submitLoading={templateSaveLoading}
+        submitHandle={onPreviewSubmit}
+      />
+
+      {/* <div className="fixed bottom-0 left-0 right-0">
+        <div className=" bg-white p-5 rounded-md w-full">
+          <div className="flex justify-between  items-center">
+            <div className="w-full md:w-1/2 mx-auto hidden md:block">
+              <CustomSteps
+                activeStepState={activeReviewStep}
+                setActiveStepState={setActiveReviewStep}
+                stepsArray={stepsArray}
+                responsive={false}
+              />
+            </div>
+            <div className="w-full md:w-1/2 mx-auto md:hidden block">
+              {activeReviewStep ? (
+                <span
+                  onClick={() => {
+                    setActiveReviewStep(activeReviewStep - 1);
+                  }}
+                >
+                  <LeftOutlined style={{ fontSize: "28px" }} />
+                </span>
+              ) : null}
+            </div>
+            <div className="text-primary ">
+              <PrimaryButton
+                title={
+                  activeReviewStep === 3
+                    ? "Submit"
+                    : activeReviewStep === 1
+                    ? "Preview"
+                    : "Continue"
+                }
+                onClick={() => {
+                  setActiveReviewStep(activeReviewStep + 1);
+                  // if (activeReviewStep === 2) saveFormField();
+                }}
+                loading={templateSaveLoading}
+                disabled={!disable[activeReviewStep]}
+              />
             </div>
           </div>
         </div>
-      )}
-    </>
+      </div> */}
+    </div>
   );
 }
 
