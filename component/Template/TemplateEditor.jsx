@@ -35,7 +35,7 @@ function TemplateEditor({
   return (
     <Row gutter={16}>
       <Col xs={24} md={8}>
-        <div className="w-full ">
+        <div className="w-full pb-2">
           {/* <div className="mb-2 px-1 template-title-input">
             <Input
               placeholder="E.g. Template Title"
@@ -49,7 +49,7 @@ function TemplateEditor({
             />
           </div> */}
 
-          <div className="w-full bg-white rounded-md shadow-md  mt-4 sider-question-wrapper overflow-y-auto">
+          <div className="w-full bg-white rounded-md shadow-md   sider-question-wrapper overflow-y-auto">
             <div className="question-section-container">
               <div className="question-section-contents">
                 <div className="question-section-contents-card">
@@ -141,8 +141,8 @@ function TemplateEditor({
         </div>
       </Col>
       <Col xs={24} md={16}>
-        <div className="w-full bg-white rounded-md shadow-md mt-4 add-template-wrapper">
-          <div className="rounded-md overflow-hidden  mt-1">
+        <div className="w-full bg-white rounded-md shadow-md  add-template-wrapper">
+          <div className="rounded-md overflow-hidden  ">
             {questions?.length > 0 &&
               questions
                 ?.filter((_, index) => index === activeQuestionIndex)

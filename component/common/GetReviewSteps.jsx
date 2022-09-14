@@ -1,9 +1,11 @@
-import { Col, Form, Input, Radio, Row, Select } from "antd";
-import Link from "next/link";
+import { Form, Radio, Select } from "antd";
+
 import React from "react";
 import EditorWrapperComponent from "../Review/EditorWrapperComponent";
+import { TemplatePreviewComponent } from "../Template/TemplatePreviewComponent";
+import { CustomInput } from "./CustomFormFeilds";
 
-const FeedbackTitleStep = ({ onInputChange, type }) => {
+const FeedbackTitleStep = () => {
   return (
     <div className="w-full md:w-1/2 bg-white py-4 px-6 mx-auto rounded-md">
       <p className="text-xl font-bold my-5 text-primary">
@@ -19,10 +21,7 @@ const FeedbackTitleStep = ({ onInputChange, type }) => {
           },
         ]}
       >
-        <Input
-          placeholder="for eg: Monthly feedback , Lastest trip review , weekly feedback ... "
-          onChange={(e) => onInputChange(e.target.value, type)}
-        />
+        <CustomInput placeholder="for eg: Monthly feedback , Lastest trip review , weekly feedback ... " />
       </Form.Item>
     </div>
   );
@@ -157,17 +156,16 @@ const FeedbackMemberStep = ({ onInputChange, type, userList }) => {
 };
 
 export default function GetReviewSteps({
-  onInputChange,
-  formList,
   type,
   questionList,
   setQuestionList,
   onBarInputChange,
   userList,
+  formTitle,
 }) {
   switch (type) {
     case 0:
-      return <FeedbackTitleStep onInputChange={onInputChange} type={type} />;
+      return <FeedbackTitleStep type={type} />;
 
     // case 1:
     //   return (
@@ -191,6 +189,14 @@ export default function GetReviewSteps({
           onInputChange={onBarInputChange}
           type={type}
           userList={userList}
+        />
+      );
+    case 3:
+      return (
+        <TemplatePreviewComponent
+          length={questionList.length}
+          formTitle={formTitle}
+          questions={questionList}
         />
       );
 

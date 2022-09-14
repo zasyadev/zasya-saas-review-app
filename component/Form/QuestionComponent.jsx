@@ -21,6 +21,7 @@ import {
   RatingType,
   YesNoType,
 } from "./questioncomponents/QuestionTypes";
+import { CustomInput } from "../common/CustomFormFeilds";
 
 const QuestionEditViewComponent = ({
   idx,
@@ -49,8 +50,7 @@ const QuestionEditViewComponent = ({
               <p className="font-medium text-base mb-0">
                 What would you like to ask?
               </p>
-              <Input
-                className="question-border h-12 rounded-md placeholder-gray-500"
+              <CustomInput
                 placeholder="E.g. What whould you like to ask from a person."
                 onChange={(e) => {
                   handleQuestionValue(e.target.value, idx, true);
@@ -72,7 +72,7 @@ const QuestionEditViewComponent = ({
                   addOption={addOption}
                 />
               )}
-              {checkInputOrTextarea(type) && <InputType type={type} />}
+              {/* {checkInputOrTextarea(type) && <InputType type={type} />} */}
               {type === YESNO_TYPE && <YesNoType />}
               {type == RATING_TYPE && <RatingType />}
               {type === SCALE_TYPE && (

@@ -60,3 +60,23 @@ export const QuestionTypeList = [
     type: RATING_TYPE,
   },
 ];
+
+export const QuestiontypeText = (key) => {
+  switch (key) {
+    case "input":
+      return "Text Answer";
+    case "textarea":
+      return "Paragraph Answer";
+    case "checkbox":
+      return "Multiple Choice";
+    case "scale":
+      return "Opinion Scale";
+    case "yesno":
+      return "Yes Or No Answer";
+    case "rating":
+      return "Rating Star";
+
+    default:
+      return null;
+  }
+};

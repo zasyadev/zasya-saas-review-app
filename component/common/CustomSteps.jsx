@@ -45,12 +45,19 @@ export function LineSteps({
       <Steps
         current={activeStepState}
         progressDot={CustomDot}
-        onChange={onChangeStep}
+        // onChange={onChangeStep}
         className="my-1 md:mt-4 text-primary"
         {...restProps}
       >
         {stepsArray.map((data) => {
-          return <Step key={data.key} />;
+          return (
+            <Step
+              key={data.key}
+              {...(activeStepState > data.step
+                ? { onStepClick: onChangeStep }
+                : {})}
+            />
+          );
         })}
       </Steps>
     </>
@@ -63,13 +70,12 @@ export function CustomStepsWrapper({
   lastStep,
   previewStep,
   submitLoading,
-  disable,
+  nextStepHandller,
   stepsArray = [],
-  submitHandle = () => {},
 }) {
   return (
     <div className="fixed bottom-0 left-0 right-0">
-      <div className=" bg-white p-5 rounded-md w-full">
+      <div className=" bg-white p-2 md:p-5 rounded-md w-full">
         <div className="flex justify-between  items-center">
           <div className="w-full md:w-1/2 mx-auto hidden md:block">
             <LineSteps
@@ -79,14 +85,14 @@ export function CustomStepsWrapper({
               responsive={false}
             />
           </div>
-          <div className="w-full md:w-1/2 mx-auto md:hidden block">
+          <div className="px-2 md:hidden block">
             {activeStepState ? (
               <span
                 onClick={() => {
                   setActiveStepState(activeStepState - 1);
                 }}
               >
-                <LeftOutlined style={{ fontSize: "28px" }} />
+                <LeftOutlined className="text-base " />
               </span>
             ) : null}
           </div>
@@ -100,11 +106,7 @@ export function CustomStepsWrapper({
                   : "Continue"
               }
               onClick={() => {
-                if (activeStepState === lastStep) {
-                  submitHandle();
-                } else {
-                  setActiveStepState(activeStepState + 1);
-                }
+                nextStepHandller(activeStepState);
               }}
               loading={submitLoading}
               // disabled={!disable[activeStepState]}

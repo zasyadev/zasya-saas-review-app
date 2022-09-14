@@ -3,6 +3,7 @@ import Image from "next/image";
 import React from "react";
 import { PrimaryButton } from "../../common/CustomButton";
 import { DislikeOutlined, LikeOutlined } from "@ant-design/icons";
+import { CustomInput } from "../../common/CustomFormFeilds";
 
 export function MultipleChoiceType({
   idx,
@@ -17,9 +18,9 @@ export function MultipleChoiceType({
       {options.map((op, j) => (
         <div key={"Multiple choice" + j}>
           <div className="flex flex-row  items-center">
-            <Input
+            <CustomInput
               placeholder={`E.g. Option ${j + 1}`}
-              className="question-border h-12 rounded-md placeholder-gray-500 w-40 xl:w-64 "
+              customclassname="w-60 xl:w-64"
               onChange={(e) => {
                 handleOptionValue(e.target.value, idx, j);
               }}
@@ -126,9 +127,9 @@ export function OpinionScaleType({
           </div>
           {options.length > 1 && (
             <>
-              <Input
+              <CustomInput
                 placeholder="E.g. Low"
-                className="question-border text-base mt-2 h-10 rounded-md placeholder-gray-500"
+                customclassname="w-60 xl:w-64"
                 onChange={(e) => {
                   handleOptionValue(e.target.value, idx, 0);
                 }}
@@ -160,9 +161,9 @@ export function OpinionScaleType({
           </div>
           {options.length > 1 && (
             <>
-              <Input
+              <CustomInput
                 placeholder="E.g. High"
-                className="question-border text-base h-10 mt-2 rounded-md placeholder-gray-500"
+                customclassname="w-60 xl:w-64"
                 onChange={(e) => {
                   handleOptionValue(e.target.value, idx, 1);
                 }}

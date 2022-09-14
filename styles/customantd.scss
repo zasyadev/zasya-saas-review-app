@@ -335,11 +335,7 @@ $primary: #0f123f;
       width: 100% !important;
     }
   }
-  .question-border:focus,
-  .question-border:hover {
-    border-color: $primary;
-    box-shadow: 0 0 0 0px rgba(0, 5, 204, 0.35) !important;
-  }
+
   .ant-select-selector:focus,
   .ant-select-selector:hover {
     border-color: $primary !important;

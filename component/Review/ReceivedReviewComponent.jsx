@@ -169,13 +169,6 @@ function ReceivedReviewComponent({ user, reviewId }) {
                 ))
             ) : (
               <>
-                <div className="text-right mt-4 mr-4">
-                  <Link href="/review/received" passHref>
-                    <button className="primary-bg-btn text-white py-2 px-4 rounded-md">
-                      Back
-                    </button>
-                  </Link>
-                </div>
                 <div className="answer-preview">
                   <div className=" text-center bg-white rounded-md py-10 shadow-md md:w-7/12 mx-auto">
                     <p className="text-lg font-bold text-red-400 mt-5">

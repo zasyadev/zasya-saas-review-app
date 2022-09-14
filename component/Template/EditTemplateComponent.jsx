@@ -59,7 +59,7 @@ function EditTemplateComponent({ user }) {
         </div>
       </div>
     </>
-  ) : Object.keys(formData).length ? (
+  ) : formData && Object.keys(formData).length ? (
     <TemplateBuildComponent
       user={user}
       editFormData={formData}

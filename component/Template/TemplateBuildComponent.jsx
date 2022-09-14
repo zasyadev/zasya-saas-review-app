@@ -1,16 +1,14 @@
-import { Input } from "antd";
-import { CloseOutlined, LeftOutlined } from "@ant-design/icons";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { openNotificationBox } from "../../component/common/notification";
 import httpService from "../../lib/httpService";
-import { PrimaryButton } from "../common/CustomButton";
 import TemplateEditor from "./TemplateEditor";
 import {
   CustomStepsHeaderWrapper,
   CustomStepsWrapper,
 } from "../common/CustomSteps";
 import { TemplatePreviewComponent } from "./TemplatePreviewComponent";
+import { CustomInput } from "../common/CustomFormFeilds";
 
 const defaultOption = { optionText: "", error: "" };
 
@@ -40,10 +38,7 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
   const [activeQuestionIndex, setActiveQuestionIndex] = useState(0);
   const [activeStepState, setActiveStepState] = useState(0);
   const [selectTypeFeild, setSelectTypeFeild] = useState(false);
-  const [nextSlide, setNextSlide] = useState(0);
   const [templateSaveLoading, setTemplateSaveLoading] = useState(false);
-
-  const handleAnswerChange = () => {};
 
   function removeElement(idx) {
     setQuestions((prev) => prev.filter((_, i) => i != idx));
@@ -176,79 +171,23 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
       id = editFormData.id;
     }
 
-    let newQuestionData = questions.map((item) => {
-      let error = "";
-      if (!item.questionText || item.questionText.trim() === "") {
-        error = "Question field required!";
-      }
-      let errorOptions = item.options;
-      if (
-        item.options.length &&
-        (item.type === "checkbox" || item.type === "scale")
-      ) {
-        errorOptions = item.options.map((option) => {
-          let error = "";
-          if (!option.optionText) {
-            error = "Option field required!";
-          }
-          return {
-            ...option,
-            error: error,
-          };
-        });
-      }
+    let quesArray = questions.map((item) => ({ ...item, open: false }));
 
-      return {
-        ...item,
-        open: true,
-        error: error,
-        options: errorOptions,
-      };
-    });
-
-    setQuestions(newQuestionData);
-
-    if (newQuestionData.filter((item) => item.error).length > 0) {
-      openNotificationBox("error", "Field(s) Required", 3);
-      return;
-    }
-    if (
-      newQuestionData.filter((item) => item.options.length === 0).length > 0
-    ) {
-      openNotificationBox("error", "Options Required", 3);
-      return;
-    }
-    if (
-      newQuestionData.filter(
-        (item) =>
-          item.options.filter((option) => option.error).length > 0 ?? false
-      ).length > 0
-    ) {
-      openNotificationBox("error", "Option Field(s) Required", 3);
-      return;
-    }
-
-    if (formTitle) {
-      let quesArray = newQuestionData.map((item) => ({ ...item, open: false }));
-
-      let obj = {
-        user_id: user.id,
-        form_data: {
-          title: formTitle ?? "",
-          description: formDes ?? "",
-          questions: quesArray,
-        },
-        form_title: formTitle ?? "",
-        form_description: formDes ?? "",
-        status: true,
+    let obj = {
+      user_id: user.id,
+      form_data: {
+        title: formTitle ?? "",
+        description: formDes ?? "",
         questions: quesArray,
-      };
-      setTemplateSaveLoading(true);
+      },
+      form_title: formTitle ?? "",
+      form_description: formDes ?? "",
+      status: true,
+      questions: quesArray,
+    };
+    setTemplateSaveLoading(true);
 
-      editMode ? updateFormData(obj, id) : addNewForm(obj);
-    } else {
-      openNotificationBox("error", "Template Title Required", 3);
-    }
+    editMode ? updateFormData(obj, id) : addNewForm(obj);
   }
 
   async function updateFormData(obj, id) {
@@ -300,6 +239,83 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
   //   if (formTitle) setModalTitleOpen(false);
   // };
 
+  const nextTitleStep = (type) => {
+    if (formTitle) {
+      setActiveStepState(type + 1);
+    } else {
+      openNotificationBox("error", "Template Title Required", 3);
+    }
+  };
+  const nextQuestionListStep = (type) => {
+    let newQuestionData = questions.map((item) => {
+      let error = "";
+      if (!item.questionText || item.questionText.trim() === "") {
+        error = "Question field required!";
+      }
+      let errorOptions = item.options;
+      if (
+        item.options.length &&
+        (item.type === "checkbox" || item.type === "scale")
+      ) {
+        errorOptions = item.options.map((option) => {
+          let error = "";
+          if (!option.optionText) {
+            error = "Option field required!";
+          }
+          return {
+            ...option,
+            error: error,
+          };
+        });
+      }
+
+      return {
+        ...item,
+        open: true,
+        error: error,
+        options: errorOptions,
+      };
+    });
+    setQuestions(newQuestionData);
+    if (newQuestionData.filter((item) => item.error).length > 0) {
+      openNotificationBox("error", "Field(s) Required", 3);
+
+      return;
+    }
+    if (
+      newQuestionData.filter((item) => item.options.length === 0).length > 0
+    ) {
+      openNotificationBox("error", "Options Required", 3);
+
+      return;
+    }
+    if (
+      newQuestionData.filter(
+        (item) =>
+          item.options.filter((option) => option.error).length > 0 ?? false
+      ).length > 0
+    ) {
+      openNotificationBox("error", "Option Field(s) Required", 3);
+
+      return;
+    }
+    setActiveStepState(type + 1);
+  };
+
+  const nextStepHandller = (key) => {
+    switch (key) {
+      case 0:
+        return nextTitleStep(key);
+      case 1:
+        return nextQuestionListStep(key);
+      case 2:
+        return saveFormField();
+
+      default:
+        return null;
+    }
+  };
+
   const stepsArray = [
     {
       step: 0,
@@ -319,25 +335,29 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
   ];
 
   return (
-    <div className="px-4 md:px-6 pb-28 pt-20 md:pt-24 md:pb-24  bg-color-dashboard min-h-screen">
+    <div className="px-4 md:px-6 pb-28 pt-20 md:pt-20 md:pb-24  bg-color-dashboard min-h-screen">
       <CustomStepsHeaderWrapper
         title={"Create Template"}
         backUrl={"/template"}
       />
       {activeStepState === 0 && (
-        <div className="w-full md:w-1/2 bg-white p-10 rounded-md mx-auto">
-          <div className="text-primary text-base md:text-lg mb-2 font-bold ">
-            Template Title
+        <div className="w-full md:w-1/2 bg-white p-2 md:px-5 md:pt-5 md:pb-6 rounded-md mx-auto space-y-6">
+          <div className="text-primary text-base md:text-lg  font-bold border-b border-gray-200 pb-2">
+            Create a Custom Template
           </div>
-          <div className="">
-            <Input
-              placeholder="Template Title"
-              onChange={(e) => {
-                setFormTitle(e.target.value);
-              }}
-              value={formTitle}
-              size="large"
-            />
+          <div className="space-y-2">
+            <div className="text-primary text-base font-bold ">Title</div>
+            <div className="">
+              <CustomInput
+                placeholder="Template Title"
+                customclassname="w-full"
+                onChange={(e) => {
+                  setFormTitle(e.target.value);
+                }}
+                value={formTitle}
+                size="large"
+              />
+            </div>
           </div>
         </div>
       )}
@@ -367,22 +387,13 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
           setQuestions={setQuestions}
         />
       )}
-      {activeStepState === 2 &&
-        questions.length > 0 &&
-        questions
-          ?.filter((_, index) => index === nextSlide)
-          ?.map((question, idx) => (
-            <TemplatePreviewComponent
-              {...question}
-              idx={idx}
-              key={idx + "quesSlid"}
-              open={false}
-              nextSlide={nextSlide}
-              handleAnswerChange={handleAnswerChange}
-              setNextSlide={setNextSlide}
-              length={questions.length}
-            />
-          ))}
+      {activeStepState === 2 && questions.length && (
+        <TemplatePreviewComponent
+          length={questions.length}
+          formTitle={formTitle}
+          questions={questions}
+        />
+      )}
 
       <CustomStepsWrapper
         activeStepState={activeStepState}
@@ -391,49 +402,9 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
         lastStep={2}
         previewStep={1}
         submitLoading={templateSaveLoading}
-        submitHandle={saveFormField}
+        // submitHandle={saveFormField}
+        nextStepHandller={nextStepHandller}
       />
-      {/* <div className="fixed bottom-0 left-0 right-0">
-        <div className=" bg-white p-5 rounded-md w-full">
-          <div className="flex justify-between  items-center">
-            <div className="w-full md:w-1/2 mx-auto hidden md:block">
-              <CustomSteps
-                activeStepState={activeStepState}
-                setActiveStepState={setActiveStepState}
-                stepsArray={stepsArray}
-                responsive={false}
-              />
-            </div>
-            <div className="w-full md:w-1/2 mx-auto md:hidden block">
-              {activeStepState ? (
-                <span
-                  onClick={() => {
-                    setActiveStepState(activeStepState - 1);
-                  }}
-                >
-                  <LeftOutlined style={{ fontSize: "28px" }} />
-                </span>
-              ) : null}
-            </div>
-            <div className="text-primary ">
-              <PrimaryButton
-                title={
-                  activeStepState === 2
-                    ? "Save"
-                    : activeStepState === 1
-                    ? "Preview"
-                    : "Continue"
-                }
-                onClick={() => {
-                  setActiveStepState(activeStepState + 1);
-                  if (activeStepState === 2) saveFormField();
-                }}
-                loading={templateSaveLoading}
-              />
-            </div>
-          </div>
-        </div>
-      </div> */}
     </div>
   );
 }

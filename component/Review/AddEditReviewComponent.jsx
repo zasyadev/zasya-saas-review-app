@@ -1,10 +1,6 @@
-import { Col, Form, Row, Select } from "antd";
+import { Col, Form, Row } from "antd";
 import { useRouter } from "next/router";
-import React, { useEffect, useMemo, useState } from "react";
-import {
-  PrimaryButton,
-  SecondaryButton,
-} from "../../component/common/CustomButton";
+import React, { useEffect, useState } from "react";
 import { openNotificationBox } from "../../component/common/notification";
 import httpService from "../../lib/httpService";
 import {
@@ -12,7 +8,6 @@ import {
   CustomStepsWrapper,
 } from "../common/CustomSteps";
 import GetReviewSteps from "../common/GetReviewSteps";
-import EditorWrapperComponent from "./EditorWrapperComponent";
 
 const defaultOption = { optionText: "", error: "" };
 
@@ -50,6 +45,11 @@ const stepsArray = [
     key: "select_members",
     title: "Select Your Members",
   },
+  {
+    step: 3,
+    key: "preview_review",
+    title: "Preview Your Review",
+  },
 ];
 
 function AddEditReviewComponent({
@@ -61,26 +61,14 @@ function AddEditReviewComponent({
 }) {
   const router = useRouter();
   const [form] = Form.useForm();
-  const [userForm] = Form.useForm();
+
   const [formList, setFormList] = useState([]);
   const [userList, setUserList] = useState([]);
   const [questionList, setQuestionList] = useState([defaultQuestionConfig]);
-  const [reviewFormData, setReviewFormData] = useState({});
-  const [formTitle, setFormTitle] = useState("");
+
   const [activeReviewStep, setActiveReviewStep] = useState(0);
-  const [loadingSpin, setLoadingSpin] = useState(false);
+
   const [loadingSubmitSpin, setLoadingSubmitSpin] = useState(false);
-  const [disable, setDisable] = useState({
-    0: false,
-    1: false,
-    2: false,
-  });
-
-  const [templateSaveLoading, setTemplateSaveLoading] = useState(false);
-
-  const onInputChange = (value, type) => {
-    setDisable((prev) => ({ ...prev, [type]: value ? true : false }));
-  };
 
   const onBarInputChange = (value, name) => {
     if (value && name) {
@@ -100,72 +88,6 @@ function AddEditReviewComponent({
   function onPreviewSubmit() {
     let values = form.getFieldsValue(true);
 
-    if (!values.frequency) {
-      openNotificationBox("error", "Need to Select Frequency", 3);
-      return;
-    }
-    if (!values.assigned_to_id) {
-      openNotificationBox("error", "Need to Select Members", 3);
-      return;
-    }
-    if (values.assigned_to_id && values.assigned_to_id.length == 0) {
-      openNotificationBox("error", "Need to Select Members", 3);
-      return;
-    }
-
-    // if (Object.keys(reviewFormData).length) {
-    let newQuestionData = questionList.map((item) => {
-      let error = "";
-      if (!item.questionText || item.questionText.trim() === "") {
-        error = "Question field required!";
-      }
-      let errorOptions = item.options;
-      if (
-        item.options.length &&
-        (item.type === "checkbox" || item.type === "scale")
-      ) {
-        errorOptions = item.options.map((option) => {
-          let error = "";
-          if (!option.optionText) {
-            error = "Option field required!";
-          }
-          return {
-            ...option,
-            error: error,
-          };
-        });
-      }
-
-      return {
-        ...item,
-        open: true,
-        error: error,
-        options: errorOptions,
-      };
-    });
-
-    setQuestionList(newQuestionData);
-
-    if (newQuestionData.filter((item) => item.error).length > 0) {
-      openNotificationBox("error", "Field(s) Required", 3);
-      return;
-    }
-    if (
-      newQuestionData.filter(
-        (item) =>
-          item.options.filter((option) => option.error).length > 0 ?? false
-      ).length > 0
-    ) {
-      openNotificationBox("error", "Option Field(s) Required", 3);
-      return;
-    }
-
-    if (values.review_type === "feedback") {
-      newQuestionData.length > 0
-        ? newQuestionData.push(defaultScaleQuestion)
-        : null;
-    }
-
     addReviewAssign({
       created_by: user.id,
       assigned_to_id: values.assigned_to_id,
@@ -175,10 +97,8 @@ function AddEditReviewComponent({
       frequency: values.frequency,
       role_id: user.role_id,
       is_published: "published",
-      templateData: newQuestionData,
-      // review_id: reviewId,
+      templateData: questionList,
     });
-    // }
   }
 
   async function addReviewAssign(obj) {
@@ -190,7 +110,6 @@ function AddEditReviewComponent({
           router.push("/review");
           openNotificationBox("success", response.message, 3);
         }
-        // setLoadingSubmitSpin(false);
       })
       .catch((err) => {
         console.error(err.response.data?.message);
@@ -253,13 +172,6 @@ function AddEditReviewComponent({
     }
   }, []);
 
-  // const templateFormData = useMemo(() => {
-  //   let values = form.getFieldsValue(true);
-
-  //   let data = formList.find((item) => item.id == values.template_id);
-  //   setQuestionList(data ? data.form_data.questions : []);
-  // }, [form.getFieldsValue(true)]);
-
   // const handlePreviewForm = async () => {
   //   setReviewFormData({});
   //   setQuestionList([]);
@@ -301,6 +213,98 @@ function AddEditReviewComponent({
   //   }
   // };
 
+  const nextTitleStep = (type) => {
+    let values = form.getFieldsValue(true);
+
+    if (values.review_name) {
+      setActiveReviewStep(type + 1);
+    } else {
+      openNotificationBox("error", "Feedback Title Required", 3);
+    }
+  };
+  const nextMembersListStep = (type) => {
+    let values = form.getFieldsValue(true);
+
+    if (!values.frequency) {
+      openNotificationBox("error", "Need to Select Frequency", 3);
+      return;
+    }
+    if (!values.assigned_to_id) {
+      openNotificationBox("error", "Need to Select Members", 3);
+      return;
+    }
+
+    if (values.review_type === "feedback") {
+      questionList.length > 0 ? questionList.push(defaultScaleQuestion) : null;
+    }
+
+    setActiveReviewStep(type + 1);
+  };
+  const nextQuestionListStep = (type) => {
+    let newQuestionData = questionList.map((item) => {
+      let error = "";
+      if (!item.questionText || item.questionText.trim() === "") {
+        error = "Question field required!";
+      }
+      let errorOptions = item.options;
+      if (
+        item.options.length &&
+        (item.type === "checkbox" || item.type === "scale")
+      ) {
+        errorOptions = item.options.map((option) => {
+          let error = "";
+          if (!option.optionText) {
+            error = "Option field required!";
+          }
+          return {
+            ...option,
+            error: error,
+          };
+        });
+      }
+
+      return {
+        ...item,
+        open: true,
+        error: error,
+        options: errorOptions,
+      };
+    });
+
+    setQuestionList(newQuestionData);
+
+    if (newQuestionData.filter((item) => item.error).length > 0) {
+      openNotificationBox("error", "Field(s) Required", 3);
+      return;
+    }
+    if (
+      newQuestionData.filter(
+        (item) =>
+          item.options.filter((option) => option.error).length > 0 ?? false
+      ).length > 0
+    ) {
+      openNotificationBox("error", "Option Field(s) Required", 3);
+      return;
+    }
+    setActiveReviewStep(type + 1);
+  };
+
+  const nextStepHandller = (key) => {
+    switch (key) {
+      case 0:
+        return nextTitleStep(key);
+      case 1:
+        return nextQuestionListStep(key);
+      case 2:
+        return nextMembersListStep(key);
+      case 3:
+        return onPreviewSubmit();
+
+      default:
+        return null;
+    }
+  };
+
   return (
     <div className="px-4 md:px-6 pb-28 pt-20 md:pt-20 md:pb-24  bg-color-dashboard min-h-screen">
       <CustomStepsHeaderWrapper title={pageTitle} backUrl={"/review"} />
@@ -311,43 +315,14 @@ function AddEditReviewComponent({
             <Col md={24} xs={24}>
               <div className=" w-full">
                 {GetReviewSteps({
-                  onInputChange,
                   formList,
                   type: activeReviewStep,
                   questionList,
                   setQuestionList,
                   onBarInputChange,
                   userList,
+                  formTitle: form.getFieldsValue(true)?.review_name,
                 })}
-                {/* <div className="mt-5 space-x-5">
-                          {activeReviewStep !== 0 && (
-                            <SecondaryButton
-                              onClick={() =>
-                                setActiveReviewStep(activeReviewStep - 1)
-                              }
-                              disabled={loadingSpin}
-                              title="Previous"
-                              className="bg-gray-400"
-                            />
-                          )}
-
-                          {activeReviewStep !== 2 ? (
-                            <PrimaryButton
-                              onClick={() =>
-                                setActiveReviewStep(activeReviewStep + 1)
-                              }
-                              disabled={!disable[activeReviewStep]}
-                              title="Next"
-                            />
-                          ) : (
-                            <PrimaryButton
-                              onClick={() => handlePreviewForm()}
-                              loading={loadingSpin}
-                              disabled={!disable[activeReviewStep]}
-                              title="Preview"
-                            />
-                          )}
-                        </div> */}
               </div>
             </Col>
           </Row>
@@ -358,54 +333,11 @@ function AddEditReviewComponent({
         activeStepState={activeReviewStep}
         setActiveStepState={setActiveReviewStep}
         stepsArray={stepsArray}
-        lastStep={2}
-        previewStep={5}
-        submitLoading={templateSaveLoading}
-        submitHandle={onPreviewSubmit}
+        lastStep={3}
+        previewStep={2}
+        submitLoading={loadingSubmitSpin}
+        nextStepHandller={nextStepHandller}
       />
-
-      {/* <div className="fixed bottom-0 left-0 right-0">
-        <div className=" bg-white p-5 rounded-md w-full">
-          <div className="flex justify-between  items-center">
-            <div className="w-full md:w-1/2 mx-auto hidden md:block">
-              <CustomSteps
-                activeStepState={activeReviewStep}
-                setActiveStepState={setActiveReviewStep}
-                stepsArray={stepsArray}
-                responsive={false}
-              />
-            </div>
-            <div className="w-full md:w-1/2 mx-auto md:hidden block">
-              {activeReviewStep ? (
-                <span
-                  onClick={() => {
-                    setActiveReviewStep(activeReviewStep - 1);
-                  }}
-                >
-                  <LeftOutlined style={{ fontSize: "28px" }} />
-                </span>
-              ) : null}
-            </div>
-            <div className="text-primary ">
-              <PrimaryButton
-                title={
-                  activeReviewStep === 3
-                    ? "Submit"
-                    : activeReviewStep === 1
-                    ? "Preview"
-                    : "Continue"
-                }
-                onClick={() => {
-                  setActiveReviewStep(activeReviewStep + 1);
-                  // if (activeReviewStep === 2) saveFormField();
-                }}
-                loading={templateSaveLoading}
-                disabled={!disable[activeReviewStep]}
-              />
-            </div>
-          </div>
-        </div>
-      </div> */}
     </div>
   );
 }
