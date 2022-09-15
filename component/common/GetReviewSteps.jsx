@@ -1,5 +1,4 @@
 import { Form, Radio, Select } from "antd";
-
 import React from "react";
 import EditorWrapperComponent from "../Review/EditorWrapperComponent";
 import { TemplatePreviewComponent } from "../Template/TemplatePreviewComponent";
@@ -8,7 +7,10 @@ import { CustomInput } from "./CustomFormFeilds";
 const FeedbackTitleStep = () => {
   return (
     <div className="w-full md:w-1/2 bg-white py-4 px-6 mx-auto rounded-md">
-      <p className="text-xl font-bold my-5 text-primary">
+      <div className="text-primary text-base md:text-lg  font-bold border-b border-gray-200 pb-2">
+        Assign a review
+      </div>
+      <p className="text-base font-bold my-5 text-primary">
         Please enter your feedback title
       </p>
 
@@ -70,7 +72,7 @@ const FeedbackTitleStep = () => {
 const FeedbackMemberStep = ({ onInputChange, type, userList }) => {
   return (
     <div className="w-full md:w-1/2 bg-white py-4 px-6 mx-auto rounded-md">
-      <p className="text-xl font-bold my-5 text-primary">
+      <p className="text-base font-bold my-5 text-primary">
         Please enter your feedback frequency
       </p>
 
@@ -91,7 +93,7 @@ const FeedbackMemberStep = ({ onInputChange, type, userList }) => {
         </Select>
       </Form.Item>
 
-      <p className="text-xl font-bold my-5 text-primary">
+      <p className="text-base font-bold my-5 text-primary">
         Please select your feedback members
       </p>
 
@@ -119,7 +121,7 @@ const FeedbackMemberStep = ({ onInputChange, type, userList }) => {
         </Select>
       </Form.Item>
 
-      <p className="text-xl font-bold my-5 text-primary">
+      <p className="text-base font-bold my-5 text-primary">
         Would you like to let your team members rate you ?
       </p>
       <div className="  flex justify-center">

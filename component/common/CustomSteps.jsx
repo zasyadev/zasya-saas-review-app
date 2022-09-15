@@ -2,6 +2,7 @@ import React from "react";
 import { Popover, Steps } from "antd";
 import { CloseOutlined, LeftOutlined } from "@ant-design/icons";
 import { PrimaryButton } from "./CustomButton";
+import { useRouter } from "next/router";
 // import {
 //   CheckOutlined,
 //   ClockCircleOutlined,
@@ -119,16 +120,17 @@ export function CustomStepsWrapper({
 }
 
 export function CustomStepsHeaderWrapper({ backUrl, title }) {
+  const router = useRouter();
   return (
     <div className="fixed top-0 left-0 right-0 bg-white px-6 py-4 rounded-md z-10">
       <div className="flex justify-between items-center">
         <p className="text-lg text-primary font-semibold">{title} </p>
-        <PrimaryButton
-          withLink={true}
-          linkHref={backUrl}
-          className="leading-0"
-          title={<CloseOutlined />}
-        />
+        <div
+          className=" rounded-full leading-0 cursor-pointer hover:text-red-400"
+          onClick={() => router.back()}
+        >
+          <CloseOutlined className="text-lg" />
+        </div>
       </div>
     </div>
   );

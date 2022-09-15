@@ -1,5 +1,5 @@
 import { CalendarOutlined } from "@ant-design/icons";
-import { Col, Collapse, Grid, Popconfirm, Row, Table, Tooltip } from "antd";
+import { Col, Collapse, Grid, Popconfirm, Row, Tooltip } from "antd";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
@@ -12,6 +12,8 @@ import {
 import { openNotificationBox } from "../../component/common/notification";
 import { calculateDuration } from "../../helpers/momentHelper";
 import httpService from "../../lib/httpService";
+import CustomTable from "../common/CustomTable";
+import { ResizableTitle } from "./ResizableTitle";
 
 const { useBreakpoint } = Grid;
 
@@ -25,9 +27,9 @@ function ReviewCreatedComponent({
   const { xs } = useBreakpoint();
   const { Panel } = Collapse;
   const datePattern = "DD-MM-YYYY";
-  const [headersData, setHeadersData] = useState([]);
   const [dataSource, setDataSource] = useState({});
   const [totalRating, setTotalRating] = useState(0);
+  const [columns, setColumns] = useState([]);
 
   const applyFilters = (object) => {
     if (object.length > 0) {
@@ -72,6 +74,11 @@ function ReviewCreatedComponent({
   //       from: reviewData.created_date,
   //       to: answer_date,
   //     }),
+  const getWidthLength = (item) => {
+    const width =
+      item?.questionText && item?.questionText?.length > 40 ? 400 : 300;
+    return width;
+  };
 
   useEffect(() => {
     let headersData = [];
@@ -80,6 +87,7 @@ function ReviewCreatedComponent({
         return {
           title: item.questionText,
           dataIndex: "option" + i,
+          width: getWidthLength(item),
           sorter: (a, b) => a[`option${i}`]?.localeCompare(b[`option${i}`]),
         };
       });
@@ -88,16 +96,15 @@ function ReviewCreatedComponent({
         return {
           title: item.questionText,
           dataIndex: "option" + i,
+          width: getWidthLength(item),
           sorter: (a, b) => a[`option${i}`]?.localeCompare(b[`option${i}`]),
         };
       });
     }
     if (headersData?.length) headersData.unshift(nameTitle);
 
-    // headersData.push(reactivityTimeColoum);
-
-    setHeadersData(headersData);
     handleAnswerChange(answerData);
+    setColumns([...headersData]);
   }, []);
 
   const handleAnswerChange = (answerData) => {
@@ -126,8 +133,6 @@ function ReviewCreatedComponent({
 
     if (reviewData?.review_type == "feedback") totalRatingFunction(answerData);
   };
-
-  const columns = [...headersData];
 
   const totalRatingFunction = (data) => {
     let sum = 0;
@@ -165,6 +170,22 @@ function ReviewCreatedComponent({
         console.error(err.response.data?.message);
       });
   };
+
+  const handleResize =
+    (index) =>
+    (_, { size }) => {
+      const newColumns = [...columns];
+      newColumns[index] = { ...newColumns[index], width: size.width };
+      setColumns(newColumns);
+    };
+
+  const mergeColumns = columns.map((col, index) => ({
+    ...col,
+    onHeaderCell: (column) => ({
+      width: column.width,
+      onResize: handleResize(index),
+    }),
+  }));
 
   return (
     <div className="container mx-auto max-w-full">
@@ -280,58 +301,57 @@ function ReviewCreatedComponent({
         </Col>
       </Row>
 
-      <Row gutter={[16, 16]}>
-        <Col xs={24} md={24}>
-          <div className="overflow-x-auto mt-4">
-            {dataSource &&
-            typeof dataSource === "object" &&
-            Object.keys(dataSource).length ? (
-              <Collapse
-                accordion
-                defaultActiveKey={["1"]}
-                className="review-collapse"
-                expandIconPosition="right"
-              >
-                {Object.entries(dataSource).map(([key, value], idx) => {
-                  return (
-                    <>
-                      <Panel
-                        header={
-                          <div className="flex items-center">
-                            <CalendarOutlined />
-                            <p className="ml-3 my-auto">
-                              {moment(key, "YYYY-MM-DD").format(datePattern)}
-                            </p>
-                          </div>
-                        }
-                        key={1 + idx}
-                      >
-                        <Table
-                          className="review-question-table"
-                          columns={columns}
-                          dataSource={value}
-                          scroll={{
-                            x: 1300,
-                          }}
-                          rowClassName={(_, index) =>
-                            index % 2 === 0 ? "" : "bg-violet-50"
-                          }
-                          bordered={true}
-                          pagination={false}
-                        />
-                      </Panel>
-                    </>
-                  );
-                })}
-              </Collapse>
-            ) : (
-              <div className="bg-white p-4 rounded-md text-base font-medium">
-                <p>No answers yet</p>
-              </div>
-            )}
+      <div className="overflow-x-auto mt-4 md:mt-6">
+        {dataSource &&
+        typeof dataSource === "object" &&
+        Object.keys(dataSource).length ? (
+          <Collapse
+            accordion
+            defaultActiveKey={["1"]}
+            className="review-collapse"
+            expandIconPosition="end"
+          >
+            {Object.entries(dataSource).map(([key, value], idx) => {
+              return (
+                <>
+                  <Panel
+                    header={
+                      <div className="flex items-center">
+                        <CalendarOutlined />
+                        <p className="ml-3 my-auto">
+                          {moment(key, "YYYY-MM-DD").format(datePattern)}
+                        </p>
+                      </div>
+                    }
+                    key={1 + idx}
+                  >
+                    <CustomTable
+                      // className="review-question-table"
+                      components={{
+                        header: {
+                          cell: ResizableTitle,
+                        },
+                      }}
+                      columns={mergeColumns}
+                      dataSource={value}
+                      scroll={{
+                        x: 1500,
+                        y: 500,
+                      }}
+                      bordered={true}
+                      pagination={false}
+                    />
+                  </Panel>
+                </>
+              );
+            })}
+          </Collapse>
+        ) : (
+          <div className="bg-white p-4 rounded-md text-base font-medium">
+            <p>No answers yet</p>
           </div>
-        </Col>
-      </Row>
+        )}
+      </div>
     </div>
   );
 }

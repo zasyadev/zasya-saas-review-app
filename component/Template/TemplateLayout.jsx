@@ -82,6 +82,7 @@ function TemplateLayout({ user }) {
                   id={form.id}
                   title={form?.form_data?.title}
                   deleteTemplate={deleteTemplate}
+                  linkHref={`/template/edit/${form.id}`}
                 />
               ))
             ) : (
