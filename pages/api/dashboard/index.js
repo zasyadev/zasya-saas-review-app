@@ -41,6 +41,9 @@ async function handle(req, res, prisma) {
             {
               organization_id: userTableData.organization_id,
             },
+            {
+              review_type: "feedback",
+            },
           ],
         },
         include: {

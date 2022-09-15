@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import { openNotificationBox } from "../../component/common/notification";
 import httpService from "../../lib/httpService";
 import { FormSlideComponent } from "./formhelper/FormComponent";
+import { motion, AnimatePresence } from "framer-motion";
 
 function ReceivedReviewComponent({ user, reviewId }) {
   const router = useRouter();
@@ -149,35 +150,45 @@ function ReceivedReviewComponent({ user, reviewId }) {
             </Link>
           </div>
           <Form layout="vertical" className="py-4" form={answerForm}>
-            {questions ? (
-              questions.length > 0 &&
-              questions
-                ?.filter((_, index) => index === nextSlide)
-                ?.map((question, idx) => (
-                  <FormSlideComponent
-                    {...question}
-                    idx={idx}
-                    key={idx + "quesSlid"}
-                    open={false}
-                    nextSlide={nextSlide}
-                    handleAnswerChange={handleAnswerChange}
-                    setNextSlide={setNextSlide}
-                    length={questions.length}
-                    handleSubmit={handleSubmit}
-                    loadingSpin={loadingSpin}
-                  />
-                ))
-            ) : (
-              <>
-                <div className="answer-preview">
-                  <div className=" text-center bg-white rounded-md py-10 shadow-md md:w-7/12 mx-auto">
-                    <p className="text-lg font-bold text-red-400 mt-5">
-                      Review Not Found
-                    </p>
+            <AnimatePresence>
+              {questions ? (
+                questions.length > 0 &&
+                questions
+                  ?.filter((_, index) => index === nextSlide)
+                  ?.map((question, idx) => (
+                    <FormSlideComponent
+                      {...question}
+                      idx={idx}
+                      key={idx + "quesSlid"}
+                      open={false}
+                      nextSlide={nextSlide}
+                      handleAnswerChange={handleAnswerChange}
+                      setNextSlide={setNextSlide}
+                      length={questions.length}
+                      handleSubmit={handleSubmit}
+                      loadingSpin={loadingSpin}
+                    />
+                  ))
+              ) : (
+                <>
+                  <div className="answer-preview">
+                    <motion.div
+                      key={"loaderquesSlid"}
+                      initial={{ y: 20, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      exit={{ y: -10, opacity: 0 }}
+                      transition={{ duration: 0.8 }}
+                    >
+                      <div className=" text-center bg-white rounded-md py-10 shadow-md md:w-7/12 mx-auto">
+                        <p className="text-lg font-bold text-red-400 mt-5">
+                          Review Not Found
+                        </p>
+                      </div>
+                    </motion.div>
                   </div>
-                </div>
-              </>
-            )}
+                </>
+              )}
+            </AnimatePresence>
           </Form>
         </>
       )}

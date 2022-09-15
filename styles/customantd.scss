@@ -680,24 +680,6 @@ $primary: #0f123f;
   }
 }
 
-.bg-question-view {
-  background-image: url("/media/images/questionview.webp");
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center;
-  opacity: 1;
-  .linear-bg {
-    background: $bg-color;
-    color: #fff;
-    padding: 4px 10px;
-    border-radius: 50%;
-    font-size: 18px;
-  }
-  .MuiRadio-root {
-    color: #fff;
-  }
-}
-
 .template {
   .ant-input {
     border-bottom: 1px solid #d9d9d9;

@@ -37,7 +37,7 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
   const [formDes, setFormDes] = useState("");
   const [activeQuestionIndex, setActiveQuestionIndex] = useState(0);
   const [activeStepState, setActiveStepState] = useState(0);
-  const [selectTypeFeild, setSelectTypeFeild] = useState(false);
+  const [selectTypeFeild, setSelectTypeFeild] = useState(true);
   const [templateSaveLoading, setTemplateSaveLoading] = useState(false);
 
   function removeElement(idx) {

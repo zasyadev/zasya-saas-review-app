@@ -78,7 +78,7 @@ function TemplateEditor({
                         >
                           <div className="flex items-center">
                             <div
-                              className=" dragable-content cursor-move py-3 px-2 leading-0"
+                              className=" dragable-content cursor-grab py-3 px-2 leading-0"
                               onClick={(e) => {
                                 e.stopPropagation();
                               }}

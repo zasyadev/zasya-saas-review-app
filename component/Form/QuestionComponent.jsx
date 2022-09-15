@@ -143,7 +143,7 @@ const QuestionPreViewComponent = ({
     [...Array(max - min + 1).keys()].map((i) => i + min);
   return (
     <div
-      className="shadow-lg px-2 py-5 cursor-pointer bg-question-view"
+      className="shadow-lg px-2 py-5 cursor-pointer  bg-primary"
       onClick={() => handleExpand(idx)}
     >
       <div className="flex flex-col  mx-auto py-5 w-9/12 space-y-6">
