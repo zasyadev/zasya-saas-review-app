@@ -11,13 +11,13 @@ const TypeComponent = ({ type, questionText, options }) => {
         </p>
       </div>
       <div className="p-3 bg-gray-200 rounded-md space-y-3">
-        <p>{questionText}</p>
+        <p className="mb-0">{questionText}</p>
         {type === "checkbox" && options.length && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {options.map((option, idx) => {
               return (
                 <p
-                  className="  bg-white py-2 px-4 rounded-md flex flex-col justify-center"
+                  className="  bg-white py-2 px-4 rounded-md flex flex-col justify-center mb-0"
                   key={idx + "mcop"}
                 >
                   {option.optionText}
@@ -31,7 +31,7 @@ const TypeComponent = ({ type, questionText, options }) => {
             {options.map((option, idx) => {
               return (
                 <p
-                  className="  bg-white py-2 px-4 rounded-md flex flex-col justify-center"
+                  className="  bg-white py-2 px-4 rounded-md flex flex-col justify-center mb-0"
                   key={idx + "scop"}
                 >
                   {option.optionText}
@@ -56,8 +56,8 @@ export function TemplatePreviewComponent({ length, formTitle, questions }) {
   return (
     <div className="answer-preview space-y-4">
       <div className=" bg-white rounded-md p-2 md:px-5 md:py-5 shadow-md md:w-7/12 mx-auto space-y-3">
-        <p className="text-lg font-bold text-primary">{formTitle}</p>
-        <p>{length} Questions</p>
+        <p className="text-lg font-bold text-primary mb-1">{formTitle}</p>
+        <p className="mb-1">{length} Questions</p>
       </div>
 
       <div className=" bg-white rounded-md p-2 md:px-5 md:py-5 shadow-md md:w-7/12 mx-auto space-y-3">

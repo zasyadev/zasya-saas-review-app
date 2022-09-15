@@ -175,7 +175,10 @@ function ReviewCreatedComponent({
     (index) =>
     (_, { size }) => {
       const newColumns = [...columns];
-      newColumns[index] = { ...newColumns[index], width: size.width };
+
+      if (size.width > 130) {
+        newColumns[index] = { ...newColumns[index], width: size.width };
+      }
       setColumns(newColumns);
     };
 
