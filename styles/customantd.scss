@@ -327,12 +327,8 @@ $primary: #0f123f;
     box-shadow: 0 0 0 0px rgba(0, 5, 204, 0.35) !important ;
   }
   .question-select-box {
-    .ant-select-selector {
-      background-color: #f3f4f6 !important;
-      height: 3.2rem !important;
-      display: flex !important;
-      align-items: center !important;
-      width: 100% !important;
+    .ant-select-selection-item {
+      font-weight: 600;
     }
   }
 
@@ -374,12 +370,6 @@ $primary: #0f123f;
     .active-tab {
       border-bottom: 3px solid #ff6968;
       color: #ff6968;
-    }
-  }
-  .options-wrapper {
-    width: 96%;
-    @include mobile {
-      width: 90%;
     }
   }
 }
@@ -757,9 +747,6 @@ $primary: #0f123f;
   }
 }
 
-.border-b-e3e3e3 {
-  border-bottom: 1px solid #e3e3e3;
-}
 .ant-layout-sider-zero-width-trigger-left {
   display: none;
 }

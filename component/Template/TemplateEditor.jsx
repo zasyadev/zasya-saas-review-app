@@ -23,7 +23,6 @@ function TemplateEditor({
   handleScaleOptionValue,
   addNextQuestionField,
   selectTypeFeild,
-
   setQuestions,
   ratingState = false,
 }) {
@@ -31,19 +30,6 @@ function TemplateEditor({
     <Row gutter={16}>
       <Col xs={24} md={8}>
         <div className="w-full pb-2">
-          {/* <div className="mb-2 px-1 template-title-input">
-            <Input
-              placeholder="E.g. Template Title"
-              value={formTitle}
-              onChange={(e) => {
-                setFormTitle(e.target.value);
-              }}
-              className="input-box text-2xl  px-4 py-3"
-              bordered={false}
-              maxLength={180}
-            />
-          </div> */}
-
           <div className="w-full bg-white rounded-md shadow-md   sider-question-wrapper overflow-y-auto">
             <div className="question-section-container">
               <div className="question-section-contents">
@@ -87,14 +73,6 @@ function TemplateEditor({
               onClick={() => addMoreQuestionField()}
               title="Add New Question"
             />
-
-            {/* {saveWrapper && (
-              <SecondaryButton
-                withLink={true}
-                linkHref="/template"
-                title="Cancel"
-              />
-            )} */}
           </div>
         </div>
       </Col>
@@ -123,19 +101,11 @@ function TemplateEditor({
                     selectTypeFeild={selectTypeFeild}
                     setSelectTypeFeild={setSelectTypeFeild}
                     ratingState={ratingState}
+                    totalQuestionCount={questions?.length}
                   />
                 ))}
           </div>
         </div>
-        {/* {saveWrapper && (
-          <div className="block lg:flex justify-end items-end my-4  lg:pl-56 ">
-            <PrimaryButton
-              onClick={() => saveFormField()}
-              className=" my-1 ml-2 rounded"
-              title="Save"
-            />
-          </div>
-        )} */}
       </Col>
     </Row>
   );

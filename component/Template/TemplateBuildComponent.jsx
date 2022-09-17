@@ -14,6 +14,8 @@ import {
   RATING_TYPE,
   SCALE_TYPE,
 } from "../Form/questioncomponents/constants";
+import ErrorBox from "../common/ErrorBox";
+import isEmptyStr from "../../helpers/isEmptyStr";
 
 const defaultOption = { optionText: "", error: "" };
 
@@ -38,7 +40,10 @@ const defaultScaleQuestion = {
 function TemplateBuildComponent({ user, editMode, editFormData }) {
   const router = useRouter();
   const [questions, setQuestions] = useState([defaultQuestionConfig]);
-  const [formTitle, setFormTitle] = useState("");
+  const [formTitle, setFormTitle] = useState({
+    value: "",
+    error: "",
+  });
   const [formDes, setFormDes] = useState("");
   const [activeQuestionIndex, setActiveQuestionIndex] = useState(0);
   const [activeStepState, setActiveStepState] = useState(0);
@@ -55,6 +60,15 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
 
     if (idx > 0) setActiveQuestionIndex(idx - 1);
     else setActiveQuestionIndex(idx);
+  }
+
+  function handleTitle(value) {
+    let error = "";
+
+    if (isEmptyStr(value)) {
+      error = "Required!";
+    }
+    setFormTitle({ value: value, error });
   }
 
   function addMoreQuestionField() {
@@ -190,11 +204,11 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
     let obj = {
       user_id: user.id,
       form_data: {
-        title: formTitle ?? "",
+        title: formTitle.value ?? "",
         description: formDes ?? "",
         questions: quesArray,
       },
-      form_title: formTitle ?? "",
+      form_title: formTitle.value ?? "",
       form_description: formDes ?? "",
       status: true,
       questions: quesArray,
@@ -243,25 +257,22 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
   useEffect(() => {
     if (editMode) {
       setQuestions(editFormData?.form_data?.questions);
-      setFormTitle(editFormData?.form_data?.title);
+      setFormTitle({ value: editFormData?.form_data?.title, error: "" });
       setFormDes(editFormData?.form_data?.description);
       // setModalTitleOpen(false);
     }
   }, []);
 
-  // const handleOk = () => {
-  //   if (formTitle) setModalTitleOpen(false);
-  // };
-
   const nextTitleStep = (type) => {
-    if (formTitle) {
+    if (!isEmptyStr(formTitle.value)) {
       setActiveStepState(type + 1);
     } else {
-      openNotificationBox("error", "Template Title Required", 3);
+      setFormTitle((prev) => ({ ...prev, error: "Required" }));
     }
   };
   const nextQuestionListStep = (type) => {
     let firstErrorQuestion = -1;
+
     let newQuestionData = questions.map((item, idx) => {
       let error = "";
       if (!item.questionText || item.questionText.trim() === "") {
@@ -365,29 +376,28 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
         backUrl={"/template"}
       />
       {activeStepState === 0 && (
-        <div className="w-full md:w-1/2 bg-white p-2 md:px-5 md:pt-5 md:pb-6 rounded-md mx-auto space-y-6">
+        <div className="w-full md:w-1/2 bg-white p-2 md:px-5 md:pt-5 md:pb-6 xl:p-8 xl:pt-6 rounded-md mx-auto space-y-6">
           <div className="text-primary text-base md:text-lg  font-bold border-b border-gray-200 pb-2">
             Create a Custom Template
           </div>
           <div className="space-y-2">
-            <div className="text-primary text-base font-bold ">Title</div>
-            <div className="">
-              <CustomInput
-                placeholder="Template Title"
-                customclassname="w-full"
-                onChange={(e) => {
-                  setFormTitle(e.target.value);
-                }}
-                value={formTitle}
-                size="large"
-              />
-            </div>
+            <div className="text-primary text-base font-semibold">Title</div>
+
+            <CustomInput
+              placeholder="E.g. Template Title"
+              customclassname="w-full"
+              onChange={(e) => {
+                handleTitle(e.target.value);
+              }}
+              value={formTitle.value}
+              size="large"
+            />
+            <ErrorBox error={formTitle?.error} />
           </div>
         </div>
       )}
       {activeStepState === 1 && (
         <TemplateEditor
-          setFormTitle={setFormTitle}
           questions={questions}
           setActiveQuestionIndex={setActiveQuestionIndex}
           setSelectTypeFeild={setSelectTypeFeild}
@@ -406,8 +416,6 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
           addNextQuestionField={addNextQuestionField}
           selectTypeFeild={selectTypeFeild}
           saveFormField={saveFormField}
-          formTitle={formTitle}
-          saveWrapper={true}
           setQuestions={setQuestions}
           ratingState={ratingState}
         />
@@ -415,7 +423,7 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
       {activeStepState === 2 && questions.length && (
         <TemplatePreviewComponent
           length={questions.length}
-          formTitle={formTitle}
+          formTitle={formTitle.value}
           questions={questions}
         />
       )}

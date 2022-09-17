@@ -1,9 +1,10 @@
 import { Input, Rate, Select } from "antd";
 import Image from "next/image";
 import React from "react";
-import { PrimaryButton } from "../../common/CustomButton";
+import { PrimaryButton, SecondaryButton } from "../../common/CustomButton";
 import { DislikeOutlined, LikeOutlined } from "@ant-design/icons";
 import { CustomInput } from "../../common/CustomFormFeilds";
+import ErrorBox from "../../common/ErrorBox";
 
 export function MultipleChoiceType({
   idx,
@@ -43,21 +44,18 @@ export function MultipleChoiceType({
               </button>
             )}
           </div>
-          {op?.error && (
-            <p className="text-red-600 text-sm my-2">{op?.error}</p>
-          )}
+
+          <ErrorBox error={op?.error} />
         </div>
       ))}
-      {options.length < 5 ? (
-        <PrimaryButton
+      {options.length < 5 && (
+        <SecondaryButton
           onClick={() => {
             addOption(idx);
           }}
-          className=" rounded-md w-1/2 md:w-fit mt-2"
+          className="bg-gray-50 border font-medium border-gray-200 text-gray-500 hover:bg-gray-100 shadow-sm"
           title={"Add a choice"}
         />
-      ) : (
-        ""
       )}
     </>
   );
@@ -136,9 +134,8 @@ export function OpinionScaleType({
                 value={options[0].optionText}
                 maxLength={180}
               />
-              {options[0]?.error && (
-                <p className="text-red-600 text-sm my-2">{options[0]?.error}</p>
-              )}
+
+              <ErrorBox error={options[0]?.error} />
             </>
           )}
         </div>
@@ -170,9 +167,8 @@ export function OpinionScaleType({
                 value={options[1].optionText}
                 maxLength={180}
               />
-              {options[1]?.error && (
-                <p className="text-red-600 text-sm my-2">{options[1]?.error}</p>
-              )}
+
+              <ErrorBox error={options[1]?.error} />
             </>
           )}
         </div>
@@ -188,11 +184,7 @@ export function QuestionTypeCard({
   type,
   defineType,
   setSelectTypeFeild,
-
 }) {
-
-
-
   return (
     <div
       className="flex items-center bg-gray-100 hover:bg-gray-200 px-4 lg:px-5 py-4 rounded-md cursor-pointer space-x-3 shadow-sm"
@@ -203,7 +195,9 @@ export function QuestionTypeCard({
     >
       <Icon />
 
-      <p className="mb-0 text-base font-semibold text-primary">{title}</p>
+      <p className="mb-0 text-sm 2xl:text-base font-semibold text-primary">
+        {title}
+      </p>
     </div>
   );
 }
