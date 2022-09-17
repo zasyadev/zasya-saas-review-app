@@ -9,6 +9,11 @@ import {
 } from "../common/CustomSteps";
 import { TemplatePreviewComponent } from "./TemplatePreviewComponent";
 import { CustomInput } from "../common/CustomFormFeilds";
+import {
+  MULTIPLECHOICE_TYPE,
+  RATING_TYPE,
+  SCALE_TYPE,
+} from "../Form/questioncomponents/constants";
 
 const defaultOption = { optionText: "", error: "" };
 
@@ -16,7 +21,7 @@ const defaultQuestionConfig = {
   questionText: "",
   options: [defaultOption],
   open: true,
-  type: "checkbox",
+  type: MULTIPLECHOICE_TYPE,
   error: "",
   active: true,
 };
@@ -26,7 +31,7 @@ const defaultScaleQuestion = {
   lowerLabel: 0,
   higherLabel: 5,
   open: true,
-  type: "scale",
+  type: SCALE_TYPE,
   error: "",
 };
 
@@ -38,9 +43,14 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
   const [activeQuestionIndex, setActiveQuestionIndex] = useState(0);
   const [activeStepState, setActiveStepState] = useState(0);
   const [selectTypeFeild, setSelectTypeFeild] = useState(true);
+  const [ratingState, setRatingState] = useState(false);
   const [templateSaveLoading, setTemplateSaveLoading] = useState(false);
 
-  function removeElement(idx) {
+  function removeElement(idx, type) {
+    if (type === RATING_TYPE) {
+      setRatingState(false);
+    }
+
     setQuestions((prev) => prev.filter((_, i) => i != idx));
 
     if (idx > 0) setActiveQuestionIndex(idx - 1);
@@ -63,10 +73,14 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
   }
 
   function defineType(type, index) {
+    if (type === RATING_TYPE) {
+      setRatingState(true);
+    }
+
     setQuestions((prev) =>
       prev.map((item, i) =>
         i === index
-          ? type === "scale"
+          ? type === SCALE_TYPE
             ? {
                 ...defaultScaleQuestion,
                 questionText: item.questionText,
@@ -247,20 +261,27 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
     }
   };
   const nextQuestionListStep = (type) => {
-    let newQuestionData = questions.map((item) => {
+    let firstErrorQuestion = -1;
+    let newQuestionData = questions.map((item, idx) => {
       let error = "";
       if (!item.questionText || item.questionText.trim() === "") {
         error = "Question field required!";
+        if (firstErrorQuestion === -1) {
+          firstErrorQuestion = idx;
+        }
       }
       let errorOptions = item.options;
       if (
         item.options.length &&
-        (item.type === "checkbox" || item.type === "scale")
+        (item.type === MULTIPLECHOICE_TYPE || item.type === SCALE_TYPE)
       ) {
         errorOptions = item.options.map((option) => {
           let error = "";
           if (!option.optionText) {
             error = "Option field required!";
+            if (firstErrorQuestion === -1) {
+              firstErrorQuestion = idx;
+            }
           }
           return {
             ...option,
@@ -276,6 +297,9 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
         options: errorOptions,
       };
     });
+    if (firstErrorQuestion !== -1) {
+      setActiveQuestionIndex(firstErrorQuestion);
+    }
     setQuestions(newQuestionData);
     if (newQuestionData.filter((item) => item.error).length > 0) {
       openNotificationBox("error", "Field(s) Required", 3);
@@ -385,6 +409,7 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
           formTitle={formTitle}
           saveWrapper={true}
           setQuestions={setQuestions}
+          ratingState={ratingState}
         />
       )}
       {activeStepState === 2 && questions.length && (

@@ -1,15 +1,11 @@
-import { CloseOutlined, HolderOutlined } from "@ant-design/icons";
-import { Col, Input, Row } from "antd";
+import { Col, Row } from "antd";
 import React from "react";
-import {
-  PrimaryButton,
-  SecondaryButton,
-} from "../../component/common/CustomButton";
+import { PrimaryButton } from "../../component/common/CustomButton";
 import DragableComponent from "../common/DragableComponent";
 import QuestionComponent from "../Form/QuestionComponent";
+import TemplateSidebarQuestionCard from "./TemplateSidebarQuestionCard";
 
 function TemplateEditor({
-  setFormTitle,
   questions,
   setActiveQuestionIndex,
   setSelectTypeFeild,
@@ -27,10 +23,9 @@ function TemplateEditor({
   handleScaleOptionValue,
   addNextQuestionField,
   selectTypeFeild,
-  saveFormField,
-  formTitle,
-  saveWrapper = false,
+
   setQuestions,
+  ratingState = false,
 }) {
   return (
     <Row gutter={16}>
@@ -63,61 +58,24 @@ function TemplateEditor({
                           setActiveQuestionIndex(toIndex);
                       }}
                     >
-                      {questions?.map((question, idx) => (
-                        <div
-                          className={`dragable-div question-section-wrapper cursor-pointer ${
-                            idx == questions?.length - 1
-                              ? null
-                              : "border-bottom"
-                          }  ${
-                            idx === activeQuestionIndex
-                              ? "border-l-primary border-l-2"
-                              : ""
-                          }`}
-                          key={idx + "side_que"}
-                        >
-                          <div className="flex items-center">
-                            <div
-                              className=" dragable-content cursor-grab py-3 px-2 leading-0"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                              }}
-                            >
-                              <HolderOutlined className="text-lg  lg:text-xl " />
-                            </div>
-
-                            <div
-                              className="flex flex-1 items-center space-x-3 py-3 pr-3 pl-1 justify-between"
-                              onClick={() => {
-                                setActiveQuestionIndex(idx);
-                                setSelectTypeFeild(false);
-                              }}
-                            >
-                              <div className="flex space-x-2 items-center flex-1">
-                                <p className=" rounded-full w-6 h-6 bg-primary text-white grid place-content-center mb-0">
-                                  {idx + 1}
-                                </p>
-
-                                <p className="mb-0 flex-1 font-medium text-primary single-line-clamp">
-                                  {question?.questionText}
-                                </p>
-                              </div>
-
-                              {idx !== 0 && (
-                                <div
-                                  className="border  hover:border-red-600 w-6 h-6 rounded-full  grid place-content-center text-red-600  cursor-pointer leading-0"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    removeElement(idx);
-                                  }}
-                                >
-                                  <CloseOutlined />
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      ))}
+                      <div className="divide-y">
+                        {questions?.map((question, idx) => (
+                          <TemplateSidebarQuestionCard
+                            isActive={idx === activeQuestionIndex}
+                            idx={idx}
+                            key={idx + "side_que"}
+                            handleSelect={() => {
+                              setActiveQuestionIndex(idx);
+                              setSelectTypeFeild(false);
+                            }}
+                            handleRemove={(e) => {
+                              e.stopPropagation();
+                              removeElement(idx, question.type);
+                            }}
+                            question={question}
+                          />
+                        ))}
+                      </div>
                     </DragableComponent>
                   )}
                 </div>
@@ -164,6 +122,7 @@ function TemplateEditor({
                     addNextQuestionField={addNextQuestionField}
                     selectTypeFeild={selectTypeFeild}
                     setSelectTypeFeild={setSelectTypeFeild}
+                    ratingState={ratingState}
                   />
                 ))}
           </div>

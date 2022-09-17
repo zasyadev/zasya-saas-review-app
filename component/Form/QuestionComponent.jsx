@@ -39,6 +39,7 @@ const QuestionEditViewComponent = ({
   removeElement,
   questionText,
   options,
+  ratingState,
 }) => {
   return (
     <div className="rounded-l-md mt-1">
@@ -101,12 +102,14 @@ const QuestionEditViewComponent = ({
                 <Select.Option value={TEXTAREA_TYPE}>Paragraph</Select.Option>
                 <Select.Option value={SCALE_TYPE}>Opinion Scale</Select.Option>
                 <Select.Option value={YESNO_TYPE}>Yes or No</Select.Option>
-                <Select.Option value={RATING_TYPE}>Rating</Select.Option>
+                {!ratingState && (
+                  <Select.Option value={RATING_TYPE}>Rating</Select.Option>
+                )}
               </Select>
 
               <div className="flex justify-end items-center space-x-3">
                 <div
-                  onClick={() => removeElement(idx)}
+                  onClick={() => removeElement(idx, type)}
                   className="cursor-pointer mx-2 w-10 h-10  border rounded-full grid place-content-center hover:bg-gray-100 hover:border-red-500"
                 >
                   <Image
@@ -240,6 +243,7 @@ const QuestionComponent = ({
   addNextQuestionField,
   selectTypeFeild,
   setSelectTypeFeild,
+  ratingState,
 }) => {
   return selectTypeFeild ? (
     <div className="py-4 ">
@@ -248,7 +252,9 @@ const QuestionComponent = ({
       </div>
       <div className="my-4 mx-6">
         <Row gutter={[16, 16]}>
-          {QuestionTypeList.map((quesType) => (
+          {QuestionTypeList.filter((queType) =>
+            ratingState ? (queType.type === "rating" ? false : true) : queType
+          ).map((quesType) => (
             <Col md={8} xs={12} key={quesType.title}>
               <QuestionTypeCard
                 idx={idx}
@@ -266,7 +272,7 @@ const QuestionComponent = ({
     </div>
   ) : (
     <>
-      <div className="flex items-center justify-center question-edit-view">
+      {/* <div className="flex items-center justify-center question-edit-view">
         <span
           className={`mx-2 ${open ? "active-tab" : null}`}
           onClick={() => handleExpand(idx)}
@@ -279,26 +285,27 @@ const QuestionComponent = ({
         >
           View{" "}
         </span>
-      </div>
-      {open ? (
-        <QuestionEditViewComponent
-          idx={idx}
-          handleQuestionValue={handleQuestionValue}
-          error={error}
-          type={type}
-          handleOptionValue={handleOptionValue}
-          removeOption={removeOption}
-          addOption={addOption}
-          lowerLabel={lowerLabel}
-          higherLabel={higherLabel}
-          handleScaleOptionValue={handleScaleOptionValue}
-          defineType={defineType}
-          addNextQuestionField={addNextQuestionField}
-          removeElement={removeElement}
-          questionText={questionText}
-          options={options}
-        />
-      ) : (
+      </div> */}
+      {/* {open ? ( */}
+      <QuestionEditViewComponent
+        idx={idx}
+        handleQuestionValue={handleQuestionValue}
+        error={error}
+        type={type}
+        handleOptionValue={handleOptionValue}
+        removeOption={removeOption}
+        addOption={addOption}
+        lowerLabel={lowerLabel}
+        higherLabel={higherLabel}
+        handleScaleOptionValue={handleScaleOptionValue}
+        defineType={defineType}
+        addNextQuestionField={addNextQuestionField}
+        removeElement={removeElement}
+        questionText={questionText}
+        options={options}
+        ratingState={ratingState}
+      />
+      {/* ) : (
         <QuestionPreViewComponent
           idx={idx}
           handleExpand={handleExpand}
@@ -308,7 +315,7 @@ const QuestionComponent = ({
           higherLabel={higherLabel}
           lowerLabel={lowerLabel}
         />
-      )}
+      )} */}
     </>
   );
 };
