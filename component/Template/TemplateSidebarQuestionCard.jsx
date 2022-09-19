@@ -1,9 +1,10 @@
 import React, { useMemo } from "react";
-import { CloseOutlined, HolderOutlined } from "@ant-design/icons";
+import { DeleteOutlined, HolderOutlined } from "@ant-design/icons";
 import {
   MULTIPLECHOICE_TYPE,
   SCALE_TYPE,
 } from "../Form/questioncomponents/constants";
+import { Tooltip } from "antd";
 
 function TemplateSidebarQuestionCard({
   isActive,
@@ -55,12 +56,14 @@ ${isValidQuestion ? "border-x border-x-red-500 bg-red-50" : ""}
           </div>
 
           {idx !== 0 && (
-            <div
-              className="border  hover:border-red-600 w-6 h-6 rounded-full  grid place-content-center text-red-600  cursor-pointer leading-0"
-              onClick={(e) => handleRemove(e)}
-            >
-              <CloseOutlined />
-            </div>
+            <Tooltip placement="top" title={"Delete"}>
+              <div
+                className="border   hover:border-red-600 w-6 h-6 rounded-full  grid place-content-center text-red-500  hover:text-red-600  cursor-pointer leading-0"
+                onClick={(e) => handleRemove(e)}
+              >
+                <DeleteOutlined />
+              </div>
+            </Tooltip>
           )}
         </div>
       </div>

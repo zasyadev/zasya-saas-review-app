@@ -3,11 +3,10 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { openNotificationBox } from "../../component/common/notification";
 import httpService from "../../lib/httpService";
-import {
-  CustomStepsHeaderWrapper,
-  CustomStepsWrapper,
-} from "../common/CustomSteps";
 import GetReviewSteps from "../common/GetReviewSteps";
+import StepFixedHeader from "../common/StepFixedHeader";
+import StepsBottomFixedBar from "../common/StepsBottomFixedBar";
+import { ReviewStepsArray } from "./constants";
 
 const defaultOption = { optionText: "", error: "" };
 
@@ -28,29 +27,6 @@ const defaultQuestionConfig = {
   error: "",
   active: true,
 };
-
-const stepsArray = [
-  {
-    step: 0,
-    key: "review_title",
-    title: "Review Title",
-  },
-  {
-    step: 1,
-    key: "template_preview",
-    title: "View Your Template",
-  },
-  {
-    step: 2,
-    key: "select_members",
-    title: "Select Your Members",
-  },
-  {
-    step: 3,
-    key: "preview_review",
-    title: "Preview Your Review",
-  },
-];
 
 function AddEditReviewComponent({
   user,
@@ -307,7 +283,7 @@ function AddEditReviewComponent({
 
   return (
     <div className="px-4 md:px-6 pb-28 pt-20 md:pt-20 md:pb-24  bg-color-dashboard min-h-screen">
-      <CustomStepsHeaderWrapper title={pageTitle} backUrl={"/review"} />
+      <StepFixedHeader title={pageTitle} backUrl={"/review"} />
 
       <div className="">
         <Form layout="vertical" form={form} className="w-full">
@@ -329,10 +305,10 @@ function AddEditReviewComponent({
         </Form>
       </div>
 
-      <CustomStepsWrapper
+      <StepsBottomFixedBar
         activeStepState={activeReviewStep}
         setActiveStepState={setActiveReviewStep}
-        stepsArray={stepsArray}
+        stepsArray={ReviewStepsArray}
         lastStep={3}
         previewStep={2}
         submitLoading={loadingSubmitSpin}

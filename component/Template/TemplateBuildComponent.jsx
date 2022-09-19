@@ -1,21 +1,19 @@
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { openNotificationBox } from "../../component/common/notification";
+import isEmptyStr from "../../helpers/isEmptyStr";
 import httpService from "../../lib/httpService";
-import TemplateEditor from "./TemplateEditor";
-import {
-  CustomStepsHeaderWrapper,
-  CustomStepsWrapper,
-} from "../common/CustomSteps";
-import { TemplatePreviewComponent } from "./TemplatePreviewComponent";
 import { CustomInput } from "../common/CustomFormFeilds";
+import ErrorBox from "../common/ErrorBox";
+import StepFixedHeader from "../common/StepFixedHeader";
+import StepsBottomFixedBar from "../common/StepsBottomFixedBar";
 import {
   MULTIPLECHOICE_TYPE,
-  RATING_TYPE,
   SCALE_TYPE,
 } from "../Form/questioncomponents/constants";
-import ErrorBox from "../common/ErrorBox";
-import isEmptyStr from "../../helpers/isEmptyStr";
+import { TemplateStepsArray } from "./constants";
+import TemplateEditor from "./TemplateEditor";
+import { TemplatePreviewComponent } from "./TemplatePreviewComponent";
 
 const defaultOption = { optionText: "", error: "" };
 
@@ -351,33 +349,15 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
     }
   };
 
-  const stepsArray = [
-    {
-      step: 0,
-      key: "template_title",
-      title: "Template Title",
-    },
-    {
-      step: 1,
-      key: "template_question",
-      title: "Create Your Questions",
-    },
-    {
-      step: 2,
-      key: "template_preview",
-      title: "Preview Your Questions",
-    },
-  ];
-
   return (
     <div className="px-4 md:px-6 pb-28 pt-20 md:pt-20 md:pb-24  bg-color-dashboard min-h-screen">
-      <CustomStepsHeaderWrapper
+      <StepFixedHeader
         title={`${editMode ? "Edit" : "Create"} Template`}
         backUrl={"/template"}
       />
       {activeStepState === 0 && (
         <div className="w-full md:w-1/2 bg-white p-2 md:px-5 md:pt-5 md:pb-6 xl:p-8 xl:pt-6 rounded-md mx-auto space-y-6">
-          <div className="text-primary text-base md:text-lg  font-bold border-b border-gray-200 pb-2">
+          <div className="text-primary text-base md:text-lg xl:text-xl font-bold border-b border-gray-200 pb-2">
             Create a Custom Template
           </div>
           <div className="space-y-2">
@@ -428,10 +408,10 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
         />
       )}
 
-      <CustomStepsWrapper
+      <StepsBottomFixedBar
         activeStepState={activeStepState}
         setActiveStepState={setActiveStepState}
-        stepsArray={stepsArray}
+        stepsArray={TemplateStepsArray}
         lastStep={2}
         previewStep={1}
         submitLoading={templateSaveLoading}

@@ -1,7 +1,7 @@
-import { Col, Row, Select } from "antd";
+import { Col, Row, Select, Tooltip } from "antd";
 import Image from "next/image";
 import React from "react";
-import { PrimaryButton, SecondaryButton } from "../common/CustomButton";
+import { ButtonGray } from "../common/CustomButton";
 import { CustomInput } from "../common/CustomFormFeilds";
 import ErrorBox from "../common/ErrorBox";
 import {
@@ -42,29 +42,34 @@ const QuestionEditViewComponent = ({
 }) => {
   return (
     <div className="divide-y">
-      <div className="p-2 md:py-3 md:px-5  flex flex-wrap items-center justify-between space-x-4">
-        <h2 className="font-semibold text-base ">Question {idx + 1}</h2>
+      <div className="p-2 md:py-3 md:px-5 xl:py-4 flex flex-wrap items-center justify-between space-x-4">
+        <h2 className="font-semibold text-base xl:text-lg">
+          Question {idx + 1}
+        </h2>
         <div>
-          <Select
-            value={type}
-            onChange={(e) => defineType(e, idx)}
-            className="question-select-box w-40"
-          >
-            <Select.Option value={INPUT_TYPE}>Text</Select.Option>
-            <Select.Option value={TEXTAREA_TYPE}>Paragraph</Select.Option>
-            <Select.Option value={MULTIPLECHOICE_TYPE}>
-              Multiple Choice
-            </Select.Option>
-            <Select.Option value={SCALE_TYPE}>Opinion Scale</Select.Option>
-            <Select.Option value={YESNO_TYPE}>Yes or No</Select.Option>
-            {!ratingState && (
-              <Select.Option value={RATING_TYPE}>Rating</Select.Option>
-            )}
-          </Select>
+          <Tooltip placement="leftTop" title="Change Question Type">
+            <Select
+              value={type}
+              size="large"
+              onChange={(e) => defineType(e, idx)}
+              className="question-select-box w-44"
+            >
+              <Select.Option value={INPUT_TYPE}>Text</Select.Option>
+              <Select.Option value={TEXTAREA_TYPE}>Paragraph</Select.Option>
+              <Select.Option value={MULTIPLECHOICE_TYPE}>
+                Multiple Choice
+              </Select.Option>
+              <Select.Option value={SCALE_TYPE}>Opinion Scale</Select.Option>
+              <Select.Option value={YESNO_TYPE}>Yes or No</Select.Option>
+              {!ratingState && (
+                <Select.Option value={RATING_TYPE}>Rating</Select.Option>
+              )}
+            </Select>
+          </Tooltip>
         </div>
       </div>
 
-      <div className="p-2 md:py-3 md:px-5 mb-1 space-y-4">
+      <div className="p-2 md:py-3 md:px-5 xl:py-4  mb-1 xl:mb-3 space-y-4">
         <div className="space-y-3">
           <p className="font-medium text-base mb-0">
             What would you like to ask?
@@ -128,9 +133,9 @@ const QuestionEditViewComponent = ({
           </div>
         )}
 
-        <SecondaryButton
+        <ButtonGray
           title={"Add Question"}
-          className="bg-gray-50 border font-medium border-gray-200 text-primary hover:bg-gray-100 shadow-sm"
+          className="shadow-sm"
           onClick={() => addNextQuestionField(idx + 1)}
         />
       </div>
@@ -253,12 +258,12 @@ const QuestionComponent = ({
 }) => {
   return selectTypeFeild ? (
     <>
-      <div className="p-2 md:py-3 md:px-5 border-b border-gray-200">
+      <div className="p-2 md:py-3 md:px-5 xl:py-4  border-b border-gray-200">
         <p className="text-base 2xl:text-lg font-semibold">
           Choose Question Type
         </p>
       </div>
-      <div className="my-4 mx-6">
+      <div className="my-4 mx-6 xl:py-4">
         <Row gutter={[16, 16]}>
           {QuestionTypeList.filter((queType) =>
             ratingState ? (queType.type === "rating" ? false : true) : queType
