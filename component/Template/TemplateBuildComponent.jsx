@@ -52,9 +52,9 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
   const [templateSaveLoading, setTemplateSaveLoading] = useState(false);
 
   function removeElement(idx, type) {
-    if (type === RATING_TYPE) {
-      setRatingState(false);
-    }
+    // if (type === RATING_TYPE) {
+    //   setRatingState(false);
+    // }
 
     setQuestions((prev) => prev.filter((_, i) => i != idx));
 
@@ -87,9 +87,9 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
   }
 
   function defineType(type, index) {
-    if (type === RATING_TYPE) {
-      setRatingState(true);
-    }
+    // if (type === RATING_TYPE) {
+    //   setRatingState(true);
+    // }
 
     setQuestions((prev) =>
       prev.map((item, i) =>
