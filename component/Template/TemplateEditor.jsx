@@ -25,12 +25,13 @@ function TemplateEditor({
   selectTypeFeild,
   setQuestions,
   ratingState = false,
+  myRefs = [],
 }) {
   return (
     <Row gutter={16}>
       <Col xs={24} md={8}>
         <div className="w-full pb-2">
-          <div className="w-full bg-white rounded-md shadow-md   sider-question-wrapper overflow-y-auto">
+          <div className="w-full bg-white rounded-md shadow-md   sider-question-wrapper overflow-y-auto flex flex-col-reverse">
             <div className="question-section-container">
               <div className="question-section-contents">
                 <div className="question-section-contents-card">
@@ -59,6 +60,7 @@ function TemplateEditor({
                               removeElement(idx, question.type);
                             }}
                             question={question}
+                            myRefs={myRefs}
                           />
                         ))}
                       </div>

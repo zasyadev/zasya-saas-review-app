@@ -1,38 +1,35 @@
 import {
   BellOutlined,
-  DownOutlined,
   LogoutOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
-  PlusOutlined,
   UserSwitchOutlined,
 } from "@ant-design/icons";
 import React, { useEffect, useMemo, useState } from "react";
-
 import Link from "next/link";
-
 import { Avatar, Badge, Dropdown, Layout, Menu } from "antd";
 import { signOut } from "next-auth/client";
 import { useRouter } from "next/router";
 import { openNotificationBox } from "../../component/common/notification";
+import { truncateString } from "../../helpers/truncateString";
 import httpService from "../../lib/httpService";
 import DefaultImages from "../common/DefaultImages";
-import { truncateString } from "../../helpers/truncateString";
 
 const { Header } = Layout;
 
 function HeaderLayout({ title, user, collapsed, setCollapsed, md }) {
   const router = useRouter();
-
   const [allNotification, setAllNotification] = useState([]);
-
   const logoutHandler = () => {
     signOut();
   };
 
-  const changeOragnizationHandle = async (values) => {
+  const changeOragnizationHandle = async ({ orgId, roleId }) => {
     await httpService
-      .post(`/api/user/changeOrgId/${user.id}`, { org_id: values })
+      .post(`/api/user/changeOrgId/${user.id}`, {
+        org_id: orgId,
+        roleId: roleId,
+      })
       .then(({ data: response }) => {
         if (response.status === 200) {
           openNotificationBox("success", response.message, 3);
@@ -133,7 +130,10 @@ function HeaderLayout({ title, user, collapsed, setCollapsed, md }) {
                     <div
                       className="flex font-medium items-center"
                       onClick={() => {
-                        changeOragnizationHandle(item.organization_id);
+                        changeOragnizationHandle({
+                          orgId: item.organization_id,
+                          roleId: item.role_id,
+                        });
                       }}
                     >
                       <span className="span-text capitalize">
@@ -152,33 +152,6 @@ function HeaderLayout({ title, user, collapsed, setCollapsed, md }) {
           <LogoutOutlined /> <span className="span-text">Sign Out</span>
         </div>
       </Menu.Item>
-    </Menu>
-  );
-
-  const createMenu = (
-    <Menu>
-      <Menu.Item key={"Review"}>
-        <Link href="/review/add" passHref>
-          Review
-        </Link>
-      </Menu.Item>
-      <Menu.Item key={"Template"}>
-        <Link href="/template/add" passHref>
-          Template
-        </Link>
-      </Menu.Item>
-      <Menu.Item key={"Applaud"}>
-        <Link href="/applaud/add" passHref>
-          Applaud
-        </Link>
-      </Menu.Item>
-      {user.role_id !== 4 && (
-        <Menu.Item key={"Team"}>
-          <Link href="/team/add" passHref>
-            Team
-          </Link>
-        </Menu.Item>
-      )}
     </Menu>
   );
 
@@ -203,7 +176,7 @@ function HeaderLayout({ title, user, collapsed, setCollapsed, md }) {
               className={`notification-box ${
                 allNotification.length - 1 > idx
                   ? "notification-border-bottom"
-                  : null
+                  : ""
               }`}
               onClick={() => notificationViewed(item.id)}
             >
@@ -235,24 +208,6 @@ function HeaderLayout({ title, user, collapsed, setCollapsed, md }) {
         </div>
 
         <div className="create-header-button flex items-center justify-end space-x-3 md:space-x-5">
-          {/* <Dropdown
-            overlay={createMenu}
-            trigger={["click"]}
-            overlayClassName="create-dropdown"
-          >
-            <div
-              key="create"
-              type="default"
-              className="primary-bg-btn text-white text-base h-9 px-3 rounded flex  items-center justify-center cursor-pointer"
-            >
-              <div className="hidden md:flex items-center space-x-3">
-                <span>Create</span>
-                <DownOutlined className="text-xs" />
-              </div>
-
-              <PlusOutlined className="md:hidden text-sm " />
-            </div>
-          </Dropdown> */}
           <Dropdown
             trigger={"click"}
             overlay={notificationMenu}

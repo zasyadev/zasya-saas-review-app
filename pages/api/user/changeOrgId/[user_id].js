@@ -4,11 +4,12 @@ async function handle(req, res, prisma) {
   const { user_id } = req.query;
   const reqBody = req.body;
 
-  if (user_id && reqBody.org_id) {
+  if (user_id && reqBody.org_id && reqBody.roleId) {
     let userData = await prisma.user.update({
       where: { id: user_id },
       data: {
         organization_id: reqBody.org_id,
+        role_id: reqBody.roleId,
       },
     });
 
@@ -21,7 +22,6 @@ async function handle(req, res, prisma) {
     }
     return res.status(400).json({
       status: 400,
-
       message: "Organization Not Updated",
     });
   }

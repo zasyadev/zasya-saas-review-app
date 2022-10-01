@@ -12,6 +12,7 @@ function TemplateSidebarQuestionCard({
   handleSelect,
   handleRemove,
   question,
+  myRefs,
 }) {
   const isValidQuestion = useMemo(() => {
     let optionErrors = [];

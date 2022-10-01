@@ -1,25 +1,6 @@
-import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import httpService from "../../lib/httpService";
-
 import { SkeletonTemplateCard, TemplateCard } from "./TemplateCard";
-
-// const TemplateCard = ({ id, title }) => {
-//   return (
-//     <div
-//       className="template-list h-full w-full shadow-md cursor-pointer"
-//       key={id + "form"}
-//     >
-//       <Link href={`/review/edit/${id}`} passHref>
-//         <div className="flex flex-wrap border-gray-200 items-center justify-between py-4 px-4 space-x-3">
-//           <p className="text-base xl:text-lg text-primary font-semibold mb-0 flex-1 ">
-//             {title}
-//           </p>
-//         </div>
-//       </Link>
-//     </div>
-//   );
-// };
 
 function TemplateListView({ user }) {
   const [formList, setFormList] = useState(false);

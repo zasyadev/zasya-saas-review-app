@@ -1,9 +1,5 @@
-import {
-  EyeInvisibleOutlined,
-  EyeTwoTone,
-  LoadingOutlined,
-} from "@ant-design/icons";
-import { Form, Input, Spin } from "antd";
+import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
+import { Form, Input } from "antd";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
@@ -38,15 +34,6 @@ function RegisterPage() {
         openNotificationBox("error", err.response.data?.message);
       });
   }
-  const antIcon = (
-    <LoadingOutlined
-      style={{
-        fontSize: 24,
-        color: "white",
-      }}
-      spin
-    />
-  );
 
   const FormComponent = () => {
     return (

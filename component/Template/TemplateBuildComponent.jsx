@@ -9,6 +9,7 @@ import StepFixedHeader from "../common/StepFixedHeader";
 import StepsBottomFixedBar from "../common/StepsBottomFixedBar";
 import {
   MULTIPLECHOICE_TYPE,
+  RATING_TYPE,
   SCALE_TYPE,
 } from "../Form/questioncomponents/constants";
 import { TemplateStepsArray } from "./constants";

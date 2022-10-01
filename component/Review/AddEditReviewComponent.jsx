@@ -32,7 +32,6 @@ function AddEditReviewComponent({
   user,
   previewForm = false,
   reviewPreviewData,
-  reviewId,
   pageTitle,
 }) {
   const router = useRouter();
