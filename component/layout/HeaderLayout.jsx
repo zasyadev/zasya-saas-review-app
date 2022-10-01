@@ -270,7 +270,7 @@ function HeaderLayout({ title, user, collapsed, setCollapsed, md }) {
               overlay={userMenu}
               overlayClassName="logout-dropdown "
               placement="bottomRight"
-              className="py-2 px-3"
+              className="py-2 px-3 leading-0"
             >
               <div className="flex items-center">
                 <Avatar

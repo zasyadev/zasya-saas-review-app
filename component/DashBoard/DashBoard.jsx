@@ -99,9 +99,9 @@ function DashBoard({ user }) {
 
   async function fetchFeedbackData() {
     await httpService
-      .get(`/api/feedback/all/${user.id}`, {
+      .post(`/api/feedback/all`, {
+        currentMonth: currentMonth,
         userId: user.id,
-        role: user.role_id,
       })
       .then(({ data: response }) => {
         if (response.status === 200) {

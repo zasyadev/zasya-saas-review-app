@@ -987,4 +987,8 @@ $primary: #0f123f;
     border-color: $primary !important;
     line-height: 27px !important;
   }
+  .ant-steps-item-finish .ant-steps-item-icon {
+    border-color: $primary !important;
+    line-height: 24px !important;
+  }
 }

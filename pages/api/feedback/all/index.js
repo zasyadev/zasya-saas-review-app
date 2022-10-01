@@ -1,14 +1,8 @@
-import moment from "moment";
 import { RequestHandler } from "../../../../lib/RequestHandler";
-
-const currentMonth = {
-  lte: moment().endOf("month").format(),
-  gte: moment().startOf("month").format(),
-};
 
 async function handle(req, res, prisma) {
   try {
-    const { userId } = req.query;
+    const { userId, currentMonth } = req.body;
 
     if (userId) {
       const userTableData = await prisma.user.findUnique({
@@ -196,4 +190,4 @@ async function handle(req, res, prisma) {
   }
 }
 
-export default (req, res) => RequestHandler(req, res, handle, ["GET"]);
+export default (req, res) => RequestHandler(req, res, handle, ["POST"]);
