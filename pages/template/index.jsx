@@ -7,7 +7,7 @@ function templatePage() {
   return (
     <WithMe>
       {({ user }) => (
-        <AdminLayout user={user} title={"All Templates "}>
+        <AdminLayout user={user} title={"Templates"}>
           <TemplateLayout user={user} />
         </AdminLayout>
       )}

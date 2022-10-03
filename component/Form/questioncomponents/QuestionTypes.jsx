@@ -187,17 +187,22 @@ export function QuestionTypeCard({
 }) {
   return (
     <div
-      className="flex items-center border border-gray-200 bg-gray-50 hover:bg-gray-100 px-4 lg:px-5 py-4 rounded-md cursor-pointer space-x-3 shadow-sm"
+      className="flex items-center border border-gray-200 bg-white hover:bg-gray-100  rounded-md cursor-pointer space-x-3 shadow-sm"
       onClick={(e) => {
         defineType(type, idx);
         setSelectTypeFeild(false);
       }}
     >
-      <Icon />
+      <div className="px-4 lg:px-5 py-4 bg-gray-50 w-14 2xl:w-16">
+        <Icon />
+      </div>
 
-      <p className="mb-0 text-sm 2xl:text-base font-semibold text-primary">
-        {title}
-      </p>
+      <div className="px-4 lg:px-5 py-4 ">
+        {" "}
+        <p className="mb-0 text-sm 2xl:text-base font-semibold text-primary">
+          {title}
+        </p>
+      </div>
     </div>
   );
 }

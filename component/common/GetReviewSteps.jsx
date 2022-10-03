@@ -2,7 +2,7 @@ import { Form, Radio, Select } from "antd";
 import React from "react";
 import EditorWrapperComponent from "../Review/EditorWrapperComponent";
 import { TemplatePreviewComponent } from "../Template/TemplatePreviewComponent";
-import { CustomInput } from "./CustomFormFeilds";
+import { CustomInput, CustomTextArea } from "./CustomFormFeilds";
 
 const FeedbackTitleStep = () => {
   return (
@@ -24,6 +24,25 @@ const FeedbackTitleStep = () => {
         ]}
       >
         <CustomInput placeholder="for eg: Monthly feedback , Lastest trip review , weekly feedback ... " />
+      </Form.Item>
+
+      <p className="text-base font-bold my-5 text-primary">
+        Please enter your feedback description
+      </p>
+      <Form.Item
+        name="review_des"
+        rules={[
+          {
+            required: true,
+            message: "Please enter your feedback title",
+          },
+        ]}
+      >
+        <CustomTextArea
+          placeholder="E.g. Feedback Description"
+          customclassname="w-full"
+          rows={5}
+        />
       </Form.Item>
     </div>
   );

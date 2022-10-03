@@ -12,6 +12,7 @@ async function handle(req, res, prisma) {
         form_description: resData.form_description,
         form_data: resData.form_data,
         status: resData.status,
+        default_template: resData.default_template,
         // questions: {
         //   create: questionData,
         // },
@@ -66,6 +67,7 @@ async function handle(req, res, prisma) {
         where: { id: reqBody.id },
         data: {
           status: false,
+          delete_date: new Date(),
         },
       });
 

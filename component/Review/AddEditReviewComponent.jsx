@@ -37,7 +37,6 @@ function AddEditReviewComponent({
   const router = useRouter();
   const [form] = Form.useForm();
 
-  const [formList, setFormList] = useState([]);
   const [userList, setUserList] = useState([]);
   const [questionList, setQuestionList] = useState([defaultQuestionConfig]);
 
@@ -93,22 +92,6 @@ function AddEditReviewComponent({
       });
   }
 
-  async function fetchTemplateData() {
-    setFormList([]);
-    await httpService
-      .get(`/api/template/${user.id}`)
-      .then(({ data: response }) => {
-        if (response.status === 200) {
-          let filterData = response.data.filter((item) => item.status);
-          setFormList(filterData);
-        }
-      })
-      .catch((err) => {
-        setFormList([]);
-        console.error(err.response.data?.message);
-      });
-  }
-
   async function fetchUserData() {
     setUserList([]);
     await httpService
@@ -131,12 +114,12 @@ function AddEditReviewComponent({
     setQuestionList(data.form_data.questions);
     form.setFieldsValue({
       review_name: data?.form_title,
+      review_des: data?.form_description,
     });
   };
 
   useEffect(() => {
     fetchUserData();
-    fetchTemplateData();
 
     if (
       reviewPreviewData &&
@@ -290,7 +273,6 @@ function AddEditReviewComponent({
             <Col md={24} xs={24}>
               <div className=" w-full">
                 {GetReviewSteps({
-                  formList,
                   type: activeReviewStep,
                   questionList,
                   setQuestionList,

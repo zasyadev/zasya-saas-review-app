@@ -3,7 +3,11 @@ import React, { useEffect, useState } from "react";
 import { openNotificationBox } from "../../component/common/notification";
 import isEmptyStr from "../../helpers/isEmptyStr";
 import httpService from "../../lib/httpService";
-import { CustomInput } from "../common/CustomFormFeilds";
+import {
+  CustomCheckbox,
+  CustomInput,
+  CustomTextArea,
+} from "../common/CustomFormFeilds";
 import ErrorBox from "../common/ErrorBox";
 import StepFixedHeader from "../common/StepFixedHeader";
 import StepsBottomFixedBar from "../common/StepsBottomFixedBar";
@@ -44,6 +48,7 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
     error: "",
   });
   const [formDes, setFormDes] = useState("");
+  const [defaultTemplate, setDefaultTemplate] = useState(false);
   const [activeQuestionIndex, setActiveQuestionIndex] = useState(0);
   const [activeStepState, setActiveStepState] = useState(0);
   const [selectTypeFeild, setSelectTypeFeild] = useState(true);
@@ -211,6 +216,7 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
       form_description: formDes ?? "",
       status: true,
       questions: quesArray,
+      default_template: defaultTemplate,
     };
     setTemplateSaveLoading(true);
 
@@ -258,6 +264,7 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
       setQuestions(editFormData?.form_data?.questions);
       setFormTitle({ value: editFormData?.form_data?.title, error: "" });
       setFormDes(editFormData?.form_data?.description);
+      setSelectTypeFeild(false);
       // setModalTitleOpen(false);
     }
   }, []);
@@ -375,6 +382,29 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
             />
             <ErrorBox error={formTitle?.error} />
           </div>
+          <div className="text-primary text-base font-semibold">
+            Description
+          </div>
+
+          <CustomTextArea
+            placeholder="E.g. Template Description"
+            customclassname="w-full"
+            rows={5}
+            onChange={(e) => {
+              setFormDes(e.target.value);
+            }}
+            value={formDes}
+          />
+          {user?.role_id === 1 && (
+            <CustomCheckbox
+              title="Check if you want to make this a Default Template"
+              onChange={(e) => {
+                setDefaultTemplate(e.target.checked);
+              }}
+              className="font-medium text-sm"
+              value={defaultTemplate}
+            />
+          )}
         </div>
       )}
       {activeStepState === 1 && (

@@ -5,7 +5,13 @@ async function handle(req, res, prisma) {
 
   if (userId) {
     const data = await prisma.reviewTemplate.findMany({
-      where: { user_id: userId },
+      where: {
+        AND: [
+          { user_id: userId },
+          { status: true },
+          { default_template: false },
+        ],
+      },
     });
 
     if (data) {

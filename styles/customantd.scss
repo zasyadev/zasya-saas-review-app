@@ -992,3 +992,13 @@ $primary: #0f123f;
     line-height: 24px !important;
   }
 }
+
+.ant-tabs-tab:hover {
+  color: $primary !important;
+}
+.ant-tabs-tab-active {
+  color: $primary !important;
+  .ant-tabs-tab-btn {
+    color: $primary !important;
+  }
+}

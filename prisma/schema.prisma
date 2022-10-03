@@ -217,6 +217,7 @@ model ReviewTemplate {
   form_description String?
   form_data        Json?
   status           Boolean
+  default_template Boolean   @default(false)
   created_date     DateTime  @default(now())
   modified_date    DateTime  @default(now())
   delete_date      DateTime?
@@ -338,8 +339,6 @@ model UserNotification {
 
   @@map("user_notification")
 }
-
-
 
 enum RoleEnum {
   SuperAdmin

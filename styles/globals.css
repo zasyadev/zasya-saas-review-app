@@ -87,6 +87,12 @@ body {
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+.two-line-clamp {
+  -webkit-line-clamp: 2;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
 
 .react-resizable {
   position: relative;
