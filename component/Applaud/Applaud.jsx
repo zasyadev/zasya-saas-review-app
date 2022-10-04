@@ -15,8 +15,8 @@ const ApplaudCard = ({ applaud, type }) => {
       <div className="relative h-auto p-4 bg-teal-100 space-y-4 rounded-md">
         <p className="py-2 mb-0 font-medium">{applaud.comment}</p>
         <p className="mb-0 flex flex-wrap gap-2">
-          {applaud.category.length > 0 &&
-            applaud.category.map((item, idx) => {
+          {applaud?.category?.length > 0 &&
+            applaud?.category.map((item, idx) => {
               return (
                 <span
                   key={idx + "cat"}
