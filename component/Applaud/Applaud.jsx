@@ -1,16 +1,56 @@
-import { Col, DatePicker, Row, Skeleton } from "antd";
+import { DatePicker, Skeleton } from "antd";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
-import { CalanderIcon, CommentIcons, UserIcon } from "../../assets/icons";
-import { PrimaryButton } from "../../component/common/CustomButton";
-import CustomTable from "../../component/common/CustomTable";
+import {
+  ButtonGray,
+  PrimaryButton,
+  SecondaryButton,
+} from "../../component/common/CustomButton";
 import httpService from "../../lib/httpService";
-import CustomPopover from "../common/CustomPopover";
 import { openNotificationBox } from "../common/notification";
+
+const ApplaudCard = ({ applaud, type }) => {
+  return (
+    <div className="template-list h-full w-full rounded-md shadow-md bg-white space-y-2 p-4">
+      <div className="relative h-auto p-4 bg-teal-100 space-y-4 rounded-md">
+        <p className="py-2 mb-0 font-medium">{applaud.comment}</p>
+        <p className="mb-0 flex flex-wrap gap-2">
+          {applaud.category.length > 0 &&
+            applaud.category.map((item, idx) => {
+              return (
+                <span
+                  key={idx + "cat"}
+                  className=" px-3 py-1 rounded-full bg-teal-200 text-xs "
+                >
+                  {item}
+                </span>
+              );
+            })}
+        </p>
+      </div>
+
+      <div className=" border-gray-200  p-3 space-y-2">
+        <p className="text-sm xl:text-base text-primary mb-0 flex-1">
+          {type === "received" ? "From" : "Sent To "}
+
+          <span className="font-semibold">
+            {type === "received"
+              ? applaud.created.first_name
+              : applaud.user.first_name}{" "}
+          </span>
+        </p>
+        <p className="text-sm 2xl:text-base text-primary mb-0 flex-1">
+          {moment(applaud.created_date).format("MMMM DD, YYYY")}
+        </p>
+      </div>
+    </div>
+  );
+};
 
 function Applaud({ user }) {
   const [applaudList, setApplaudList] = useState([]);
   const [receivedApplaudList, setReceivedApplaudList] = useState([]);
+  const [changeReceivedView, setChangeReceivedView] = useState(true);
 
   const [loading, setLoading] = useState(true);
   const [currentMonth, setCurrentMonth] = useState({
@@ -25,6 +65,7 @@ function Applaud({ user }) {
   const fetchApplaudData = async () => {
     setLoading(true);
     setReceivedApplaudList([]);
+    setApplaudList([]);
     await httpService
       .post(`/api/applaud/${user.id}`, {
         currentMonth: currentMonth,
@@ -40,18 +81,6 @@ function Applaud({ user }) {
         setLoading(false);
       });
   };
-
-  const columns = [
-    {
-      title: "Name",
-      render: (_, record) => record.user.first_name,
-    },
-    {
-      title: "Comment",
-      dataIndex: "comment",
-    },
-  ];
-
   function onDateChange(date, _) {
     setCurrentMonth({
       lte: moment(date).endOf("month"),
@@ -61,7 +90,41 @@ function Applaud({ user }) {
 
   return (
     <div className="container mx-auto max-w-full">
-      <div className="flex justify-between items-center mb-4 md:mb-6">
+      <div className="flex flex-col-reverse md:flex-row md:items-center md:justify-between  mb-4 md:mb-6 gap-3">
+        <div className="flex w-auto">
+          {changeReceivedView ? (
+            <>
+              <PrimaryButton
+                withLink={false}
+                className="rounded-r-none rounded-l-md  w-1/2 md:w-fit"
+                onClick={() => setChangeReceivedView(true)}
+                title={"Received"}
+              />
+              <ButtonGray
+                withLink={false}
+                className="rounded-l-none rounded-r-md w-1/2 md:w-fit "
+                onClick={() => setChangeReceivedView(false)}
+                title={"Sent"}
+              />
+            </>
+          ) : (
+            <>
+              <ButtonGray
+                withLink={false}
+                className="rounded-r-none rounded-l-md  w-1/2 md:w-fit"
+                onClick={() => setChangeReceivedView(true)}
+                title={"Received"}
+              />
+              <PrimaryButton
+                withLink={false}
+                className="rounded-l-none rounded-r-md w-1/2 md:w-fit "
+                onClick={() => setChangeReceivedView(false)}
+                title={"Sent"}
+              />
+            </>
+          )}
+        </div>
+
         <div className="bg-white rounded-md overflow-hidden shadow-md  py-1 px-2">
           <DatePicker
             onChange={onDateChange}
@@ -70,145 +133,69 @@ function Applaud({ user }) {
             allowClear={false}
             format="MMMM"
             defaultValue={moment()}
-            className="font-semibold"
+            className="font-semibold w-full md:w-auto"
           />
         </div>
 
-        <div>
+        <div className="mx-auto md:mx-0">
+          <SecondaryButton
+            withLink={true}
+            className="rounded-md mr-3"
+            linkHref="/applaud/allapplaud"
+            title={"View All"}
+          />
+
           <PrimaryButton
             withLink={true}
-            className="rounded-md  "
+            className="rounded-md "
             linkHref="/applaud/add"
             title={"Create"}
           />
         </div>
       </div>
-
-      <Row gutter={[24, 24]}>
-        <Col xs={24} md={12}>
-          <div className="grid grid-cols-1 w-full">
-            <div className=" bg-white rounded-md overflow-hdden shadow-md">
-              <div className="p-4 ">
-                <div className="overflow-x-auto">
-                  <p className="font-semibold text-lg text-primary flex items-center">
-                    Received Applaud
-                    <span className="leading-[0] ml-2">
-                      {CustomPopover(
-                        "Applauds given to you by your team members."
-                      )}
-                    </span>
-                  </p>
-                  <div className="received-applaud-table">
-                    {loading ? (
-                      [2, 3, 4].map((loop) => (
-                        <Skeleton
-                          title={false}
-                          active={true}
-                          width={[200]}
-                          className="my-4"
-                          key={loop}
-                        />
-                      ))
-                    ) : receivedApplaudList.length > 0 ? (
-                      receivedApplaudList.map((item, idx) => {
-                        return (
-                          <div
-                            className=" border-2 rounded md:m-3 mt-2 shadow-md "
-                            key={"applaud" + idx}
-                          >
-                            <Row className="m-5 px-2">
-                              <Col xs={4} md={4}>
-                                <UserIcon className="text-primary font-bold text-base mb-0 " />
-                              </Col>
-                              <Col xs={20} md={20}>
-                                <p className="ml-2 text-base mb-0 ">
-                                  <span className="uppercase ">
-                                    {item.created.first_name}
-                                  </span>{" "}
-                                  has Applauded you.
-                                </p>{" "}
-                              </Col>
-                            </Row>
-                            <Row className="m-5 px-2">
-                              <Col xs={4} md={4}>
-                                <CommentIcons className="text-primary font-bold text-base" />
-                              </Col>
-
-                              <Col xs={20} md={20}>
-                                <p className="ml-2 break-all text-base mb-0">
-                                  {item.comment}
-                                </p>
-                              </Col>
-                            </Row>
-                            <Row className="m-5 px-2">
-                              <Col xs={4} md={4}>
-                                <CalanderIcon className="text-primary font-bold  text-base " />
-                              </Col>
-
-                              <Col xs={20} md={20}>
-                                <p className=" ml-2 text-base mb-0">
-                                  {moment(item.created_date).format(
-                                    "DD/MM/YYYY"
-                                  )}
-                                </p>
-                              </Col>
-                            </Row>
-                          </div>
-                        );
-                      })
-                    ) : (
-                      <p className="text-center p-4 mb-0">
-                        No Applauds received.
-                      </p>
-                    )}
-                  </div>
+      <div className="container mx-auto max-w-full">
+        <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-8 2xl:gap-12 ">
+          {changeReceivedView ? (
+            loading ? (
+              [2, 3, 4].map((loop) => (
+                <div className="template-list h-full w-full rounded-md shadow-md bg-white space-y-2">
+                  <Skeleton
+                    title={false}
+                    active={true}
+                    width={[200]}
+                    className="my-4"
+                    key={loop}
+                  />
                 </div>
+              ))
+            ) : receivedApplaudList.length > 0 ? (
+              receivedApplaudList.map((item, idx) => {
+                return (
+                  <ApplaudCard
+                    applaud={item}
+                    key={idx + "received"}
+                    type={"received"}
+                  />
+                );
+              })
+            ) : (
+              <div className="template-list h-full w-full rounded-md shadow-md bg-white space-y-2">
+                <p className="p-6 mb-0 ">No Applaud Received</p>
               </div>
+            )
+          ) : applaudList.length > 0 ? (
+            applaudList.map((item, idx) => {
+              return (
+                <ApplaudCard applaud={item} key={idx + "sent"} type={"sent"} />
+              );
+            })
+          ) : (
+            <div className="template-list h-full w-full rounded-md shadow-md bg-white space-y-2">
+              <p className="p-6 mb-0 ">No Applaud Received</p>
             </div>
-          </div>
-        </Col>
-        <Col xs={24} md={12}>
-          <div className="px-1  h-auto ">
-            <div className="container mx-auto max-w-full ">
-              <div className="grid grid-cols-1">
-                <div className="flex justify-end "></div>
-                <div className="w-full bg-white rounded-md overflow-hdden shadow-md">
-                  <div className="p-4 ">
-                    <div className="overflow-x-auto">
-                      <p className="font-semibold text-lg text-primary flex items-center">
-                        Applaud Given
-                        <span className="leading-[0] ml-2">
-                          {CustomPopover(
-                            "Applauds given by you to your team members."
-                          )}
-                        </span>
-                      </p>
-                      {loading ? (
-                        [1, 2, 3].map((loop) => (
-                          <Skeleton
-                            title={false}
-                            active={true}
-                            width={[200]}
-                            className="my-4"
-                            key={loop}
-                          />
-                        ))
-                      ) : (
-                        <CustomTable
-                          dataSource={applaudList}
-                          columns={columns}
-                          pagination={true}
-                          className="custom-table"
-                        />
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </Col>
-      </Row>
+          )}
+        </div>
+      </div>
     </div>
   );
 }

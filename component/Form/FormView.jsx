@@ -7,10 +7,11 @@ import {
 } from "../../component/common/CustomButton";
 import CustomTable from "../../component/common/CustomTable";
 import httpService from "../../lib/httpService";
+import { TempateSelectWrapper } from "../Review/TempateSelectWrapper";
 
 function FormView({ user }) {
   const [loading, setLoading] = useState(false);
-
+  const [createReviewModal, setCreateReviewModal] = useState(false);
   const [formAssignList, setFormAssignList] = useState([]);
 
   async function fetchFormAssignList() {
@@ -112,6 +113,14 @@ function FormView({ user }) {
               title={"Created"}
             />
           </div>
+          <div className="mb-4 md:mb-0 text-right">
+            <PrimaryButton
+              withLink={false}
+              className="rounded-md"
+              onClick={() => setCreateReviewModal(true)}
+              title={"Create"}
+            />
+          </div>
         </div>
         <div className="w-full bg-white rounded-md overflow-hdden shadow-md px-4 pb-4">
           <div className="p-4 ">
@@ -135,6 +144,10 @@ function FormView({ user }) {
           </div>
         </div>
       </div>
+      <TempateSelectWrapper
+        createReviewModal={createReviewModal}
+        setCreateReviewModal={setCreateReviewModal}
+      />
     </div>
   );
 }

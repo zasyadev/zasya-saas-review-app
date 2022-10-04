@@ -1,17 +1,20 @@
-import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import TemplateBuildComponent from "../Template/TemplateBuildComponent";
-import httpService from "../../lib/httpService";
+import React, { useEffect, useState } from "react";
+import { PrimaryButton } from "../../../component/common/CustomButton";
+import AdminLayout from "../../../component/layout/AdminLayout";
+import WithMe from "../../../component/layout/WithMe";
+import { TemplatePreviewComponent } from "../../../component/Template/TemplatePreviewComponent";
+import httpService from "../../../lib/httpService";
 
-function EditTemplateComponent({ user }) {
+const PreviewWrraper = ({ user }) => {
   const router = useRouter();
   const { template_id } = router.query;
-  const [formData, setFormData] = useState({});
+  const [templateData, setTemplateData] = useState({});
   const [loading, setLoading] = useState(false);
 
   async function fetchTemplateData() {
     setLoading(true);
-    setFormData([]);
+    setTemplateData([]);
 
     await httpService
       .post(`/api/template/edit/${template_id}`, {
@@ -19,17 +22,13 @@ function EditTemplateComponent({ user }) {
       })
       .then(({ data: response }) => {
         if (response.status === 200) {
-          setFormData(response.data);
-          if (response.data.default_template) {
-            router.push(`/template/preview/${response.data.id}`);
-          } else {
-            setLoading(false);
-          }
+          setTemplateData(response.data);
         }
+        setLoading(false);
       })
       .catch((err) => {
         console.error(err.response.data?.message);
-        setFormData([]);
+        setTemplateData([]);
         setLoading(false);
       });
   }
@@ -37,6 +36,7 @@ function EditTemplateComponent({ user }) {
   useEffect(() => {
     fetchTemplateData();
   }, []);
+
   return loading ? (
     <>
       <div className="border shadow bg-white rounded-md p-2 mt-4 w-full  md:w-4/6 mx-auto">
@@ -63,13 +63,39 @@ function EditTemplateComponent({ user }) {
         </div>
       </div>
     </>
-  ) : formData && Object.keys(formData).length ? (
-    <TemplateBuildComponent
-      user={user}
-      editFormData={formData}
-      editMode={true}
-    />
-  ) : null;
+  ) : (
+    templateData.form_data?.questions?.length && (
+      <>
+        <TemplatePreviewComponent
+          length={templateData.form_data.questions.length}
+          formTitle={templateData.form_data.title}
+          questions={templateData.form_data.questions}
+        />
+        <div className="flex justify-center mt-3">
+          <PrimaryButton
+            withLink={true}
+            className="rounded-md  mr-4"
+            linkHref={`/review/edit/${templateData.id}`}
+            title={"Use This Template"}
+          />
+        </div>
+      </>
+    )
+  );
+};
+
+function TemplatePreviewPage() {
+  return (
+    <div>
+      <WithMe>
+        {({ user }) => (
+          <AdminLayout user={user} title={""}>
+            <PreviewWrraper user={user} />
+          </AdminLayout>
+        )}
+      </WithMe>
+    </div>
+  );
 }
 
-export default EditTemplateComponent;
+export default TemplatePreviewPage;

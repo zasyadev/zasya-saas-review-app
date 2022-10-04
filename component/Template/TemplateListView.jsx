@@ -49,11 +49,11 @@ function TemplateListView({ user }) {
 
   return (
     <div className="container mx-auto max-w-full">
-      <div className="w-full bg-white rounded-md shadow-md p-4 lg:p-6">
+      <div className="w-full  p-4 lg:p-6">
         <Tabs defaultActiveKey="myTemplates" type="card">
           <Tabs.TabPane tab="My Templates" key="myTemplates">
             <div className="container mx-auto max-w-full">
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-5 gap-4 2xl:gap-10 ">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-5 gap-8 2xl:gap-12 ">
                 {loading
                   ? [...Array(3)].map((_, idx) => (
                       <SkeletonTemplateCard key={idx + "temp"} />
@@ -77,7 +77,7 @@ function TemplateListView({ user }) {
           {defaultTemplateList.length > 0 && (
             <Tabs.TabPane tab="Default Templates" key="defaultTemplates">
               <div className="container mx-auto max-w-full">
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-5 gap-4 2xl:gap-10 ">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-5 gap-8 2xl:gap-12 ">
                   {defaultTemplateList.map((form) => (
                     <TemplateCard
                       key={form.id}

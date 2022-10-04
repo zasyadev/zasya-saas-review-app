@@ -9,7 +9,7 @@ export const TemplateCard = ({
   title,
   deleteTemplate,
   linkHref,
-  isDelete = true,
+  isDelete = false,
   description = "",
   questionLength = 0,
 }) => {
@@ -84,12 +84,12 @@ export const SkeletonTemplateCard = () => {
 
 export const CreateTemplateCard = () => (
   <Link href="/template/add" passHref>
-    <div className="template  template-list flex bg-white items-center justify-center flex-col  w-full rounded-md overflow-hdden shadow-md p-5  cursor-pointer my-2 h-56">
+    <div className="template  template-list flex bg-white items-center justify-center flex-col  w-full rounded-md overflow-hdden shadow-md p-5  cursor-pointer  h-56 sm:h-full">
       <div className="cursor-pointer">
         <AddIcon className="text-center " />
       </div>
       <div className="text-primary text-center text-base font-medium mt-5">
-        Create Template
+        Create Template From Scratch
       </div>
     </div>
   </Link>
