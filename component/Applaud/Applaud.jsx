@@ -31,7 +31,7 @@ const ApplaudCard = ({ applaud, type }) => {
 
       <div className=" border-gray-200  p-3 space-y-2">
         <p className="text-sm xl:text-base text-primary mb-0 flex-1">
-          {type === "received" ? "From" : "Sent To "}
+          {type === "received" ? "From " : "Sent To "}
 
           <span className="font-semibold">
             {type === "received"
@@ -96,13 +96,13 @@ function Applaud({ user }) {
             <>
               <PrimaryButton
                 withLink={false}
-                className="rounded-r-none rounded-l-md  w-1/2 md:w-fit"
+                className="rounded-r-none rounded-l-md w-1/2  md:w-fit"
                 onClick={() => setChangeReceivedView(true)}
                 title={"Received"}
               />
               <ButtonGray
                 withLink={false}
-                className="rounded-l-none rounded-r-md w-1/2 md:w-fit "
+                className="rounded-l-none rounded-r-md w-1/2  md:w-fit "
                 onClick={() => setChangeReceivedView(false)}
                 title={"Sent"}
               />
@@ -158,7 +158,7 @@ function Applaud({ user }) {
           {changeReceivedView ? (
             loading ? (
               [2, 3, 4].map((loop) => (
-                <div className="template-list h-full w-full rounded-md shadow-md bg-white space-y-2">
+                <div className="template-list h-full w-full rounded-md shadow-md bg-white space-y-2 p-4">
                   <Skeleton
                     title={false}
                     active={true}

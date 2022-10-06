@@ -47,46 +47,6 @@ const FeedbackTitleStep = () => {
     </div>
   );
 };
-// const FeedbackTemplateStep = ({ onInputChange, formList, type }) => {
-//   return (
-//     <div className="w-full md:w-1/2 bg-white py-4 px-6 mx-auto rounded-md">
-//       <p className="text-xl font-bold my-5 text-primary">
-//         Please select your feedback template
-//       </p>
-
-//       <Form.Item
-//         name="template_id"
-//         rules={[
-//           {
-//             required: true,
-//             message: "Please select your feedback template",
-//           },
-//         ]}
-//       >
-//         <Select
-//           placeholder="Select Template"
-//           showSearch
-//           filterOption={(input, option) =>
-//             option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-//           }
-//           size="large"
-//           onChange={(e) => onInputChange(e, type)}
-//         >
-//           {formList.map((data, index) => (
-//             <Select.Option type={index + "form"} value={data.id}>
-//               {data.form_title}
-//             </Select.Option>
-//           ))}
-//         </Select>
-//       </Form.Item>
-//       <Link href="/template/add" passHref>
-//         <a target="_blank">
-//           <p className="text-right font-semibold">Create</p>
-//         </a>
-//       </Link>
-//     </div>
-//   );
-// };
 
 const FeedbackMemberStep = ({ onInputChange, type, userList }) => {
   return (
@@ -187,16 +147,6 @@ export default function GetReviewSteps({
   switch (type) {
     case 0:
       return <FeedbackTitleStep type={type} />;
-
-    // case 1:
-    //   return (
-    //     <FeedbackTemplateStep
-    //       onInputChange={onInputChange}
-    //       formList={formList}
-    //       type={type}
-    //     />
-    //   );
-
     case 1:
       return (
         <EditorWrapperComponent

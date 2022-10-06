@@ -1,4 +1,4 @@
-import { Skeleton, Col, Row } from "antd";
+import { Col, Row, Skeleton } from "antd";
 import moment from "moment";
 import dynamic from "next/dynamic";
 import Image from "next/image";
@@ -13,10 +13,7 @@ import {
 import httpService from "../../lib/httpService";
 import CustomPopover from "../common/CustomPopover";
 import DefaultImages from "../common/DefaultImages";
-
-const SiderRight = dynamic(() => import("../SiderRight/SiderRight"), {
-  ssr: false,
-});
+import SiderRight from "../SiderRight/SiderRight";
 
 const BarChart = dynamic(() => import("../../component/common/Charts"), {
   ssr: false,

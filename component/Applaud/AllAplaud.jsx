@@ -186,6 +186,7 @@ function AllAplaud({ user }) {
                       />
                     }
                     key={idx + "timeline"}
+                    className="pb-0"
                   >
                     <p className="font-semibold mb-1 text-base">
                       <span className="capitalize  ">

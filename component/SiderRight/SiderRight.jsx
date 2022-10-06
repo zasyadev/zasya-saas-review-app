@@ -50,13 +50,7 @@ function SiderRight({ dashBoardData }) {
   return (
     <div className="bg-white rounded-md shadow-md py-5 px-4">
       <Row justify="space-around">
-        <Col
-          xs={12}
-          sm={12}
-          md={12}
-          lg={12}
-          className="border-r border-slate-200"
-        >
+        <Col xs={12} md={12} className="border-r border-slate-200">
           <div className=" flex flex-col items-center justify-center">
             <ApplaudIcon />
 
@@ -67,7 +61,7 @@ function SiderRight({ dashBoardData }) {
             </div>
           </div>
         </Col>
-        <Col xs={12} sm={12} md={12} lg={12}>
+        <Col xs={12} md={12}>
           <div className=" flex flex-col items-center justify-center">
             <StarIcon />
 
@@ -78,11 +72,11 @@ function SiderRight({ dashBoardData }) {
             </div>
           </div>
         </Col>
-        <Col xs={24} sm={24} md={24} lg={24}>
+        <Col xs={24} md={24}>
           <hr className="my-3" />
         </Col>
 
-        <Col xs={24} sm={24} md={24} lg={24}>
+        <Col xs={24} md={24}>
           <div className="py-2 px-3">
             <div className="flex flex-wrap items-center justify-between">
               <div className="flex-shrink-0 grid place-content-center">
