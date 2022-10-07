@@ -1,12 +1,13 @@
-import { Tabs } from "antd";
 import React, { useEffect, useState } from "react";
 import httpService from "../../lib/httpService";
+import { ToggleButton } from "../common/CustomButton";
 import { SkeletonTemplateCard, TemplateCard } from "./TemplateCard";
 
 function TemplateListView({ user }) {
   const [userTemplateList, setUserTemplateList] = useState([]);
   const [defaultTemplateList, setDefaultTemplateList] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [changeTemaplateView, setChangeTemaplateView] = useState(true);
 
   async function fetchUserTemplateList() {
     setLoading(true);
@@ -50,10 +51,31 @@ function TemplateListView({ user }) {
   return (
     <div className="container mx-auto max-w-full">
       <div className="w-full  p-4 lg:p-6">
-        <Tabs defaultActiveKey="myTemplates" type="card">
-          <Tabs.TabPane tab="My Templates" key="myTemplates">
-            <div className="container mx-auto max-w-full">
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-5 gap-8 2xl:gap-12 ">
+        <div className="flex w-auto">
+          <ToggleButton
+            className={`rounded-r-none rounded-l-md w-1/2  md:w-fit ${
+              changeTemaplateView
+                ? "bg-primary text-white"
+                : " bg-gray-50 hover:bg-gray-100 border-gray-300 text-gray-600"
+            }`}
+            onClick={() => setChangeTemaplateView(true)}
+            title={"My Templates"}
+          />
+          <ToggleButton
+            className={`rounded-l-none rounded-r-md w-1/2  md:w-fit ${
+              changeTemaplateView
+                ? "bg-gray-50 hover:bg-gray-100 border-gray-300 text-gray-600 "
+                : "bg-primary text-white"
+            } `}
+            onClick={() => setChangeTemaplateView(false)}
+            title={"Default Templates"}
+          />
+        </div>
+
+        <div className="container mx-auto max-w-full mt-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-5 gap-8 2xl:gap-12 ">
+            {changeTemaplateView ? (
+              <>
                 {loading
                   ? [...Array(3)].map((_, idx) => (
                       <SkeletonTemplateCard key={idx + "temp"} />
@@ -71,30 +93,24 @@ function TemplateListView({ user }) {
                         // deleteTemplate={deleteTemplate}
                       />
                     ))}
-              </div>
-            </div>
-          </Tabs.TabPane>
-          {defaultTemplateList.length > 0 && (
-            <Tabs.TabPane tab="Default Templates" key="defaultTemplates">
-              <div className="container mx-auto max-w-full">
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-5 gap-8 2xl:gap-12 ">
-                  {defaultTemplateList.map((form) => (
-                    <TemplateCard
-                      key={form.id}
-                      id={form.id}
-                      title={form?.form_data?.title}
-                      description={form?.form_data?.description}
-                      questionLength={form?.form_data?.questions?.length}
-                      isDelete={false}
-                      linkHref={`/review/edit/${form.id}`}
-                      // deleteTemplate={deleteTemplate}
-                    />
-                  ))}
-                </div>
-              </div>
-            </Tabs.TabPane>
-          )}
-        </Tabs>
+              </>
+            ) : (
+              defaultTemplateList.length > 0 &&
+              defaultTemplateList.map((form) => (
+                <TemplateCard
+                  key={form.id}
+                  id={form.id}
+                  title={form?.form_data?.title}
+                  description={form?.form_data?.description}
+                  questionLength={form?.form_data?.questions?.length}
+                  isDelete={false}
+                  linkHref={`/review/edit/${form.id}`}
+                  // deleteTemplate={deleteTemplate}
+                />
+              ))
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );

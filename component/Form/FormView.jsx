@@ -1,10 +1,7 @@
 import { Skeleton } from "antd";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-import {
-  PrimaryButton,
-  SecondaryButton,
-} from "../../component/common/CustomButton";
+import { ButtonGray, PrimaryButton } from "../../component/common/CustomButton";
 import CustomTable from "../../component/common/CustomTable";
 import httpService from "../../lib/httpService";
 import { TempateSelectWrapper } from "../Review/TempateSelectWrapper";
@@ -101,12 +98,12 @@ function FormView({ user }) {
       <div className="grid grid-cols-1 mb-16">
         <div className="md:flex items-center justify-between mb-3">
           <div className="flex w-auto">
-            <SecondaryButton
+            <PrimaryButton
               withLink={false}
               className="rounded-r-none rounded-l-md rounded-md w-1/2 md:w-fit "
               title={"Received"}
             />
-            <PrimaryButton
+            <ButtonGray
               withLink={true}
               className="rounded-r-md rounded-l-none w-1/2 md:w-fit "
               linkHref="/review"

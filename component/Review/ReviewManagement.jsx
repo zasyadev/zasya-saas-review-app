@@ -2,10 +2,7 @@ import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { Popconfirm, Skeleton } from "antd";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-import {
-  PrimaryButton,
-  SecondaryButton,
-} from "../../component/common/CustomButton";
+import { ButtonGray, PrimaryButton } from "../../component/common/CustomButton";
 import CustomTable from "../../component/common/CustomTable";
 import { openNotificationBox } from "../../component/common/notification";
 import httpService from "../../lib/httpService";
@@ -169,13 +166,13 @@ function ReviewManagement({ user }) {
       <div className="grid grid-cols-1">
         <div className="flex flex-col-reverse md:flex-row md:items-center md:justify-between  mb-4 md:mb-6">
           <div className="flex w-auto">
-            <PrimaryButton
+            <ButtonGray
               withLink={true}
               className="rounded-r-none rounded-l-md  w-1/2 md:w-fit "
               linkHref="/review/received"
               title={"Received"}
             />
-            <SecondaryButton
+            <PrimaryButton
               withLink={false}
               className="rounded-l-none rounded-r-md w-1/2 md:w-fit "
               title={"Created"}

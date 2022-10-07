@@ -5,6 +5,7 @@ import {
   ButtonGray,
   PrimaryButton,
   SecondaryButton,
+  ToggleButton,
 } from "../../component/common/CustomButton";
 import httpService from "../../lib/httpService";
 import { openNotificationBox } from "../common/notification";
@@ -92,37 +93,24 @@ function Applaud({ user }) {
     <div className="container mx-auto max-w-full">
       <div className="flex flex-col-reverse md:flex-row md:items-center md:justify-between  mb-4 md:mb-6 gap-3">
         <div className="flex w-auto">
-          {changeReceivedView ? (
-            <>
-              <PrimaryButton
-                withLink={false}
-                className="rounded-r-none rounded-l-md w-1/2  md:w-fit"
-                onClick={() => setChangeReceivedView(true)}
-                title={"Received"}
-              />
-              <ButtonGray
-                withLink={false}
-                className="rounded-l-none rounded-r-md w-1/2  md:w-fit "
-                onClick={() => setChangeReceivedView(false)}
-                title={"Sent"}
-              />
-            </>
-          ) : (
-            <>
-              <ButtonGray
-                withLink={false}
-                className="rounded-r-none rounded-l-md  w-1/2 md:w-fit"
-                onClick={() => setChangeReceivedView(true)}
-                title={"Received"}
-              />
-              <PrimaryButton
-                withLink={false}
-                className="rounded-l-none rounded-r-md w-1/2 md:w-fit "
-                onClick={() => setChangeReceivedView(false)}
-                title={"Sent"}
-              />
-            </>
-          )}
+          <ToggleButton
+            className={`rounded-r-none rounded-l-md w-1/2  md:w-fit ${
+              changeReceivedView
+                ? "bg-primary text-white"
+                : " bg-gray-50 hover:bg-gray-100 border-gray-300 text-gray-600"
+            }`}
+            onClick={() => setChangeReceivedView(true)}
+            title={"Received"}
+          />
+          <ToggleButton
+            className={`rounded-l-none rounded-r-md w-1/2  md:w-fit ${
+              changeReceivedView
+                ? "bg-gray-50 hover:bg-gray-100 border-gray-300 text-gray-600 "
+                : "bg-primary text-white"
+            } `}
+            onClick={() => setChangeReceivedView(false)}
+            title={"Sent"}
+          />
         </div>
 
         <div className="bg-white rounded-md overflow-hidden shadow-md  py-1 px-2">

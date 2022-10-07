@@ -114,3 +114,12 @@ export function ButtonGray({
     </button>
   );
 }
+
+export function ToggleButton({ title, onClick = () => {}, className = "" }) {
+  const btnClassName = `rounded-md text-center px-4 py-2 border font-medium   ${className}`;
+  return (
+    <button className={btnClassName} onClick={() => onClick()}>
+      {title}
+    </button>
+  );
+}

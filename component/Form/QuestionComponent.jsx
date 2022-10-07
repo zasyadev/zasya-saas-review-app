@@ -143,95 +143,6 @@ const QuestionEditViewComponent = ({
   );
 };
 
-// const QuestionPreViewComponent = ({
-//   idx,
-//   handleExpand,
-//   questionText,
-//   options,
-//   type,
-//   higherLabel,
-//   lowerLabel,
-// }) => {
-//   const range = (min, max) =>
-//     [...Array(max - min + 1).keys()].map((i) => i + min);
-//   return (
-//     <div
-//       className="shadow-lg px-2 py-5 cursor-pointer  bg-primary"
-//       onClick={() => handleExpand(idx)}
-//     >
-//       <div className="flex flex-col  mx-auto py-5 w-9/12 space-y-6">
-//         <p className="ml-0 text-white text-base md:text-xl 2xl:text-2xl text-center mb-0">
-//           {questionText}
-//         </p>
-
-//         {options?.length > 0 && type === MULTIPLECHOICE_TYPE && (
-//           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 ">
-//             {options?.map((op, j) => (
-//               <div
-//                 key={j + "op"}
-//                 className="bg-white text-black px-2 py-1 text-left rounded-md flex flex-col justify-center"
-//               >
-//                 <p className="text-sm lg:text-base 2xl:text-lg mb-0">
-//                   {op.optionText}
-//                 </p>
-//               </div>
-//             ))}
-//           </div>
-//         )}
-
-//         {checkInputOrTextarea(type) && (
-//           <p className="text-white text-sm lg:text-base 2xl:text-lg border-b border-white">
-//             {type == INPUT_TYPE ? "Short Text" : "Long Text"}
-//           </p>
-//         )}
-
-//         {type == RATING_TYPE && (
-//           <div className="question-view-rating ">
-//             <div className="text-white text-sm lg:text-base 2xl:text-lg ">
-//               <Rate disabled />
-//             </div>
-//           </div>
-//         )}
-
-//         {type === SCALE_TYPE && options?.length > 1 && (
-//           <div className="flex items-baseline w-full justify-around">
-//             <p className="text-white text-sm lg:text-base 2xl:text-lg">
-//               {options[0]?.optionText}
-//             </p>
-//             <Radio.Group
-//               className="px-4 flex justify-between text-white question-view-radio-wrapper"
-//               row
-//             >
-//               {higherLabel &&
-//                 lowerLabel > -1 &&
-//                 range.length > 0 &&
-//                 range(lowerLabel, higherLabel).map((rg, index) => (
-//                   <Radio key={index + rg} value={rg} className="text-white">
-//                     {rg}
-//                   </Radio>
-//                 ))}
-//             </Radio.Group>
-//             <p className="text-white text-sm lg:text-base 2xl:text-lg">
-//               {options[1]?.optionText}
-//             </p>
-//           </div>
-//         )}
-
-//         {type === YESNO_TYPE && (
-//           <div className="flex items-center justify-center">
-//             <div className="p-8 md:p-10 border mx-2 rounded-sm">
-//               <LikeOutlined style={{ fontSize: "58px", color: "#fff" }} />
-//             </div>
-//             <div className="p-8 md:p-10 border mx-2 rounded-sm">
-//               <DislikeOutlined style={{ fontSize: "58px", color: "#fff" }} />
-//             </div>
-//           </div>
-//         )}
-//       </div>
-//     </div>
-//   );
-// };
-
 const QuestionComponent = ({
   type,
   idx,
@@ -239,10 +150,7 @@ const QuestionComponent = ({
   defineType,
   questionText,
   options,
-  open,
   error = "",
-  showAsQuestion,
-  handleExpand,
   addOption,
   handleQuestionValue,
   handleOptionValue,
@@ -284,53 +192,25 @@ const QuestionComponent = ({
       </div>
     </>
   ) : (
-    <>
-      {/* <div className="flex items-center justify-center question-edit-view">
-        <span
-          className={`mx-2 ${open ? "active-tab" : null}`}
-          onClick={() => handleExpand(idx)}
-        >
-          Edit{" "}
-        </span>
-        <span
-          className={`mx-2 ${!open ? "active-tab" : null}`}
-          onClick={() => showAsQuestion(idx)}
-        >
-          View{" "}
-        </span>
-      </div> */}
-      {/* {open ? ( */}
-      <QuestionEditViewComponent
-        idx={idx}
-        handleQuestionValue={handleQuestionValue}
-        error={error}
-        type={type}
-        handleOptionValue={handleOptionValue}
-        removeOption={removeOption}
-        addOption={addOption}
-        lowerLabel={lowerLabel}
-        higherLabel={higherLabel}
-        handleScaleOptionValue={handleScaleOptionValue}
-        defineType={defineType}
-        addNextQuestionField={addNextQuestionField}
-        removeElement={removeElement}
-        questionText={questionText}
-        options={options}
-        ratingState={ratingState}
-        totalQuestionCount={totalQuestionCount}
-      />
-      {/* ) : (
-        <QuestionPreViewComponent
-          idx={idx}
-          handleExpand={handleExpand}
-          questionText={questionText}
-          options={options}
-          type={type}
-          higherLabel={higherLabel}
-          lowerLabel={lowerLabel}
-        />
-      )} */}
-    </>
+    <QuestionEditViewComponent
+      idx={idx}
+      handleQuestionValue={handleQuestionValue}
+      error={error}
+      type={type}
+      handleOptionValue={handleOptionValue}
+      removeOption={removeOption}
+      addOption={addOption}
+      lowerLabel={lowerLabel}
+      higherLabel={higherLabel}
+      handleScaleOptionValue={handleScaleOptionValue}
+      defineType={defineType}
+      addNextQuestionField={addNextQuestionField}
+      removeElement={removeElement}
+      questionText={questionText}
+      options={options}
+      ratingState={ratingState}
+      totalQuestionCount={totalQuestionCount}
+    />
   );
 };
 

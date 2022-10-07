@@ -130,7 +130,7 @@ source=LinkedIn`);
   ) : (
     <>
       <div className="profile-wrapper">
-        <Row gutter={[16, 16]}>
+        <Row gutter={[32, 32]}>
           <Col md={24} xs={24}>
             <div className="bg-white relative rounded-md overflow-hidden transition-all duration-300 ease-in-out shadow-md h-auto lg:h-64">
               <div className="relative h-48">
@@ -186,34 +186,30 @@ source=LinkedIn`);
               </div>
             </div>
           </Col>
-          <Col md={8} xs={24}>
-            <div className="bg-white rounded-md transition-all duration-300 ease-in-out shadow-md p-4 space-y-4">
+          <Col md={10} xs={24}>
+            <div className="bg-white rounded-md transition-all duration-300 ease-in-out shadow-md p-6 xl:p-8 space-y-4">
+              <p className="mb-2 text-lg text-primary font-semibold">
+                General Information
+              </p>
+
               <div>
-                <p className="text-sm 2xl:text-base text-gray-500 font-medium mb-1">
-                  About
-                </p>
-                <p className="text-sm 2xl:text-base font-medium text-primary mb-1">
-                  {userDetails?.about}
-                </p>
-              </div>
-              <div>
-                <p className="text-sm 2xl:text-base text-gray-500 font-medium mb-1">
+                <p className="text-sm 2xl:text-base text-primary font-semibold mb-1">
                   Address
                 </p>
-                <p className="text-base font-medium text-primary mb-1">
+                <p className="text-base font-medium text-gray-600 mb-1">
                   {userDetails?.address1} {userDetails?.address2}
                 </p>
               </div>
               <div>
-                <p className="text-sm 2xl:text-base text-gray-500 font-medium mb-1">
+                <p className="text-sm 2xl:text-base text-primary font-semibold mb-1">
                   Phone No.
                 </p>
-                <p className="text-text-sm 2xl:text-base font-medium text-primary mb-1">
+                <p className="text-text-sm 2xl:text-base font-medium text-gray-600 mb-1">
                   {userDetails?.mobile}
                 </p>
               </div>
               <div>
-                <p className="text-sm 2xl:text-base text-gray-500 font-medium mb-1">
+                <p className="text-sm 2xl:text-base text-primary font-semibold mb-1">
                   Website
                 </p>
 
@@ -221,14 +217,28 @@ source=LinkedIn`);
                   target="_blank"
                   href="https://zasyasolutions.com/"
                   rel="noopener noreferrer"
-                  className="text-sm 2xl:text-base font-medium text-primary mb-1"
+                  className="text-sm 2xl:text-base font-medium text-gray-600 mb-1"
                 >
                   https://zasyasolutions.com
                 </a>
               </div>
-              {user.role_id === 2 && user.organization_id ? (
+              <div>
+                <p className="text-sm 2xl:text-base text-primary font-semibold mb-1">
+                  About
+                </p>
+                <p className="text-sm 2xl:text-base font-medium text-gray-600 mb-1">
+                  {userDetails?.about}
+                </p>
+              </div>
+            </div>
+
+            {user.role_id === 2 && user.organization_id ? (
+              <div className="bg-white rounded-md transition-all duration-300 ease-in-out shadow-md p-6 xl:p-8 space-y-4 mt-4">
+                <p className="mb-2 text-lg text-primary font-semibold">
+                  Applaud Information
+                </p>
                 <div className="">
-                  <p className="text-sm 2xl:text-base font-medium text-gray-500 mb-1 flex items-center">
+                  <p className="text-sm 2xl:text-base text-primary font-semibold mb-1 flex items-center">
                     Applaud Limit
                     <span className="leading-[0] ml-2">
                       {CustomPopover(
@@ -237,7 +247,7 @@ source=LinkedIn`);
                     </span>
                   </p>
 
-                  <p className="text-sm 2xl:text-base font-medium mb-1 flex items-center justify-between">
+                  <p className="text-sm 2xl:text-base font-medium mb-1 flex items-center justify-between text-gray-600">
                     {applaudLimit}{" "}
                     <span
                       onClick={() => setOrganizationModal(true)}
@@ -247,11 +257,11 @@ source=LinkedIn`);
                     </span>
                   </p>
                 </div>
-              ) : null}
-            </div>
+              </div>
+            ) : null}
           </Col>
 
-          <Col md={10} xs={24}>
+          <Col md={14} xs={24}>
             <div className=" profile-applaud-card no-scrollbar">
               {receivedApplaudList.length > 0
                 ? receivedApplaudList.map((item, idx) => {
@@ -260,7 +270,7 @@ source=LinkedIn`);
                         className="bg-white rounded-md transition-all duration-300 ease-in-out shadow-md mb-4  "
                         key={idx + "applaud"}
                       >
-                        <div className="p-4">
+                        <div className="p-6 xl:p-8">
                           <div className="m-2">
                             <Row gutter={8}>
                               <Col md={6} xs={6}>

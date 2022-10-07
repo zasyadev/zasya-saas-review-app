@@ -73,10 +73,10 @@ export const TemplateCard = ({
 export const SkeletonTemplateCard = () => {
   return (
     <div className="template-list h-full w-full shadow-md">
-      <Skeleton.Image active className="w-full h-48" />
+      <Skeleton.Image active className="w-full h-40" />
 
       <div className="flex flex-wrap border-gray-200 items-center justify-between py-4 px-4 space-x-3">
-        <Skeleton active title={false} className="w-full" />
+        <Skeleton active title={false} className="w-full h-32" />
       </div>
     </div>
   );
