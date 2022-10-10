@@ -6,13 +6,11 @@ import { ButtonGray, PrimaryButton } from "../../component/common/CustomButton";
 import CustomTable from "../../component/common/CustomTable";
 import { openNotificationBox } from "../../component/common/notification";
 import httpService from "../../lib/httpService";
-
 import { TempateSelectWrapper } from "./TempateSelectWrapper";
 
 function ReviewManagement({ user }) {
   const [loading, setLoading] = useState(false);
   const [createReviewModal, setCreateReviewModal] = useState(false);
-
   const [reviewAssignList, setReviewAssignList] = useState([]);
 
   async function fetchReviewAssignList() {
@@ -36,7 +34,6 @@ function ReviewManagement({ user }) {
       let obj = {
         id: id,
       };
-
       await httpService
         .delete(`/api/review/manage`, { data: obj })
         .then(({ data: response }) => {
@@ -152,7 +149,7 @@ function ReviewManagement({ user }) {
                 onConfirm={() => onDelete(record.id)}
                 icon={false}
               >
-                <DeleteOutlined className="text-color-red text-xl" />
+                <DeleteOutlined className="text-red-500 text-xl" />
               </Popconfirm>
             </>
           )}

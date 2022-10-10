@@ -15,10 +15,6 @@ body {
 #__next {
   height: 100%;
 }
-.text-color-red {
-  color: rgb(255, 0, 0) !important;
-}
-
 /* width */
 .add-template-wrapper ::-webkit-scrollbar,
 .dashboard-feedback::-webkit-scrollbar,
@@ -124,4 +120,8 @@ body {
   100% {
     transform: rotate(360deg);
   }
+}
+
+::selection {
+  background: #6f75b3;
 }

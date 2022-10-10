@@ -1,8 +1,9 @@
+import { EditOutlined, ShareAltOutlined } from "@ant-design/icons";
 import { Col, Form, Input, Row, Skeleton } from "antd";
 import moment from "moment";
 import Image from "next/image";
+import Link from "next/link";
 import React, { useEffect, useState } from "react";
-import { ShareIcon } from "../../assets/icons";
 import {
   PrimaryButton,
   SecondaryButton,
@@ -13,7 +14,7 @@ import CustomModal from "../common/CustomModal";
 import CustomPopover from "../common/CustomPopover";
 import DefaultImages from "../common/DefaultImages";
 
-const datePattern = "DD/MM/YYYY";
+const datePattern = "MMM DD, YYYY";
 
 const BASE = process.env.NEXT_PUBLIC_APP_URL;
 
@@ -132,34 +133,32 @@ source=LinkedIn`);
       <div className="profile-wrapper">
         <Row gutter={[32, 32]}>
           <Col md={24} xs={24}>
-            <div className="bg-white relative rounded-md overflow-hidden transition-all duration-300 ease-in-out shadow-md h-auto lg:h-64">
-              <div className="relative h-48">
+            <div className="bg-white relative rounded-md overflow-hidden transition-all duration-300 ease-in-out shadow-md">
+              <div className="relative h-28 lg:h-48">
                 <Image
                   src={"/media/images/profile-cover.webp"}
                   alt="profileCover"
                   layout="fill"
                 />
               </div>
-              <div className="px-2 py-2 text-center absolute top-5 right-0 left-0 lg:-bottom-1 lg:top-auto lg:right-auto lg:left-12">
-                <div className="w-20 mx-auto ">
-                  <div className="rounded-full">
-                    <DefaultImages
-                      imageSrc={userDetails?.image}
-                      width={80}
-                      height={80}
-                    />
-                  </div>
+              <div className="px-2 py-2 text-center absolute bottom-16 right-0 left-0 lg:bottom-0 lg:top-auto lg:right-auto lg:left-12 ">
+                <div className="rounded-full w-20 h-20 overflow-hidden border-white border-4 mx-auto">
+                  <DefaultImages
+                    imageSrc={userDetails?.image}
+                    width={80}
+                    height={80}
+                  />
                 </div>
                 <div>
-                  <span className="text-lg font-semibold text-center text-white lg:text-primary md:text-left mb-0">
+                  <span className="text-lg font-semibold text-center  text-primary md:text-left mb-0">
                     {userDetails?.user?.first_name}
                   </span>
                 </div>
               </div>
 
-              <div className="md:flex justify-end items-center px-2 md:px-4">
-                <div className="flex flex-wrap justify-between items-center pb-2 md:pb-0">
-                  <div className="text-center m-2">
+              <div className="md:flex justify-end items-center pt-16 px-4 md:px-6 lg:pt-2 pb-3">
+                <div className="flex flex-wrap justify-around lg:justify-between items-center pb-2 md:pb-0 gap-3">
+                  <div className="text-center ">
                     <p className="text-xl font-extrabold mb-0">
                       {givenApplaudList?.length}
                     </p>
@@ -167,7 +166,7 @@ source=LinkedIn`);
                       Appalud Given
                     </p>
                   </div>
-                  <div className="text-center m-2">
+                  <div className="text-center">
                     <p className="text-xl font-extrabold mb-0">
                       {receivedApplaudList?.length}
                     </p>
@@ -175,22 +174,22 @@ source=LinkedIn`);
                       Appalud Received
                     </p>
                   </div>
-
-                  <SecondaryButton
-                    withLink={true}
-                    linkHref={"/profile/edit"}
-                    className="text-md px-8 lg:ml-2 rounded-md"
-                    title="Edit Profile"
-                  />
                 </div>
               </div>
             </div>
           </Col>
           <Col md={10} xs={24}>
-            <div className="bg-white rounded-md transition-all duration-300 ease-in-out shadow-md p-6 xl:p-8 space-y-4">
-              <p className="mb-2 text-lg text-primary font-semibold">
-                General Information
-              </p>
+            <div className="bg-white rounded-md transition-all duration-300 ease-in-out shadow-md px-6 py-5 xl:py-7  xl:px-8 space-y-4">
+              <div className="flex justify-between items-center gap-4 flex-wrap">
+                <p className="mb-0 text-lg md:text-xl text-primary font-semibold">
+                  General Information
+                </p>
+                <Link href="/profile/edit " passHref>
+                  <div className="hover:bg-gray-100 border border-gray-300  py-1 px-2 rounded-full cursor-pointer">
+                    <EditOutlined className="text-base text-primary" />
+                  </div>
+                </Link>
+              </div>
 
               <div>
                 <p className="text-sm 2xl:text-base text-primary font-semibold mb-1">
@@ -208,20 +207,7 @@ source=LinkedIn`);
                   {userDetails?.mobile}
                 </p>
               </div>
-              <div>
-                <p className="text-sm 2xl:text-base text-primary font-semibold mb-1">
-                  Website
-                </p>
 
-                <a
-                  target="_blank"
-                  href="https://zasyasolutions.com/"
-                  rel="noopener noreferrer"
-                  className="text-sm 2xl:text-base font-medium text-gray-600 mb-1"
-                >
-                  https://zasyasolutions.com
-                </a>
-              </div>
               <div>
                 <p className="text-sm 2xl:text-base text-primary font-semibold mb-1">
                   About
@@ -233,11 +219,11 @@ source=LinkedIn`);
             </div>
 
             {user.role_id === 2 && user.organization_id ? (
-              <div className="bg-white rounded-md transition-all duration-300 ease-in-out shadow-md p-6 xl:p-8 space-y-4 mt-4">
-                <p className="mb-2 text-lg text-primary font-semibold">
+              <div className="bg-white rounded-md transition-all duration-300 ease-in-out shadow-md px-6 py-5 xl:py-7  xl:px-8 space-y-4 mt-8">
+                <p className=" text-lg md:text-xl text-primary font-semibold mb-0">
                   Applaud Information
                 </p>
-                <div className="">
+                <div>
                   <p className="text-sm 2xl:text-base text-primary font-semibold mb-1 flex items-center">
                     Applaud Limit
                     <span className="leading-[0] ml-2">
@@ -270,48 +256,41 @@ source=LinkedIn`);
                         className="bg-white rounded-md transition-all duration-300 ease-in-out shadow-md mb-4  "
                         key={idx + "applaud"}
                       >
-                        <div className="p-6 xl:p-8">
-                          <div className="m-2">
-                            <Row gutter={8}>
-                              <Col md={6} xs={6}>
-                                <div className=" w-14">
-                                  <DefaultImages
-                                    imageSrc={item?.created?.UserDetails?.image}
-                                    width={60}
-                                    height={60}
-                                  />
-                                </div>
-                              </Col>
-                              <Col md={12} xs={6}>
-                                <div>
-                                  <p className="text-base font-semibold mb-1">
-                                    {item.created.first_name}{" "}
-                                  </p>
-                                  <p className="font-medium mb-1">
-                                    {moment(item.created_date).format(
-                                      datePattern
-                                    )}
-                                  </p>
-                                </div>
-                              </Col>
-                              <Col md={6} xs={6}>
-                                <div
-                                  className="flex justify-end cursor-pointer"
-                                  onClick={() => shareLinkedinUrl(item)}
-                                >
-                                  <div className="bg-red-400 py-2 px-2 rounded-full w-10">
-                                    <ShareIcon />
-                                  </div>
-                                </div>
-                              </Col>
-                              <Col md={24} xs={24}>
-                                <div className="mt-4">
-                                  <p className="text-base font-normal mb-0">
-                                    {item?.comment}
-                                  </p>
-                                </div>
-                              </Col>
-                            </Row>
+                        <div className="px-6 py-5 xl:py-7  xl:px-8">
+                          <div className="flex justify-between items-start">
+                            <div className="flex items-center gap-4">
+                              <DefaultImages
+                                imageSrc={item?.created?.UserDetails?.image}
+                                width={40}
+                                height={40}
+                              />
+
+                              <div>
+                                <p className="text-base font-semibold mb-0">
+                                  {item.created.first_name}{" "}
+                                </p>
+                                <p className="font-medium text-xs mb-0">
+                                  {moment(item.created_date).format(
+                                    datePattern
+                                  )}
+                                </p>
+                              </div>
+                            </div>
+
+                            <div
+                              className="flex justify-end cursor-pointer"
+                              onClick={() => shareLinkedinUrl(item)}
+                            >
+                              <div className="hover:bg-gray-100 border border-gray-300  py-1 px-2 rounded-full cursor-pointer">
+                                <ShareAltOutlined className="text-base text-primary" />
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="mt-4">
+                            <p className="text-base font-normal mb-0">
+                              {item?.comment}
+                            </p>
                           </div>
                         </div>
                       </div>

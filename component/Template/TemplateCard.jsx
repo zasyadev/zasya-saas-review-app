@@ -14,10 +14,7 @@ export const TemplateCard = ({
   questionLength = 0,
 }) => {
   return (
-    <div
-      className="template-list h-full w-full rounded-md shadow-md bg-white"
-      key={id + "form"}
-    >
+    <div className="template-list rounded-md shadow-md bg-white flex flex-col">
       <Link href={linkHref} passHref>
         <div className="relative w-full h-40 cursor-pointer ">
           <Image
@@ -29,13 +26,13 @@ export const TemplateCard = ({
         </div>
       </Link>
 
-      <div className=" border-gray-200  p-3 space-y-2">
+      <div className=" border-gray-200  p-3 space-y-2 flex flex-1 flex-col">
         <Link href={linkHref} passHref>
-          <div className=" space-y-2 cursor-pointer">
+          <div className=" space-y-2 cursor-pointer flex-1">
             <p className="text-base xl:text-lg text-primary font-semibold mb-0 flex-1">
               {title}
             </p>
-            <p className="text-sm xl:text-base text-primary  mb-0 flex-1  two-line-clamp sm:h-14 xl:h-16">
+            <p className="text-sm xl:text-base text-primary  mb-0 flex-1  two-line-clamp ">
               {description}
             </p>
           </div>

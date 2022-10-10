@@ -5,13 +5,24 @@ async function handle(req, res, prisma) {
 
   if (req.method === "GET") {
     if (userId) {
+      const userData = await prisma.user.findUnique({
+        where: {
+          id: userId,
+        },
+      });
+
       const givenData = await prisma.userApplaud.findMany({
         orderBy: [
           {
             created_date: "desc",
           },
         ],
-        where: { created_by: userId },
+        where: {
+          AND: [
+            { created_by: userId },
+            { organization_id: userData.organization_id },
+          ],
+        },
         include: {
           user: {
             select: {
@@ -42,7 +53,12 @@ async function handle(req, res, prisma) {
             created_date: "desc",
           },
         ],
-        where: { user_id: userId },
+        where: {
+          AND: [
+            { user_id: userId },
+            { organization_id: userData.organization_id },
+          ],
+        },
         include: {
           user: {
             select: {
@@ -83,8 +99,19 @@ async function handle(req, res, prisma) {
   } else if (req.method === "POST") {
     const { currentMonth } = req.body;
     if (userId) {
+      const userData = await prisma.user.findUnique({
+        where: {
+          id: userId,
+        },
+      });
       const receivedData = await prisma.userApplaud.findMany({
-        where: { AND: [{ user_id: userId }, { created_date: currentMonth }] },
+        where: {
+          AND: [
+            { user_id: userId },
+            { created_date: currentMonth },
+            { organization_id: userData.organization_id },
+          ],
+        },
         include: {
           user: {
             select: {
@@ -116,7 +143,11 @@ async function handle(req, res, prisma) {
           },
         ],
         where: {
-          AND: [{ created_by: userId }, { created_date: currentMonth }],
+          AND: [
+            { created_by: userId },
+            { created_date: currentMonth },
+            { organization_id: userData.organization_id },
+          ],
         },
         include: {
           user: {

@@ -1,10 +1,5 @@
-import {
-  DislikeOutlined,
-  LikeOutlined,
-  LoadingOutlined,
-} from "@ant-design/icons";
+import { DislikeOutlined, LikeOutlined } from "@ant-design/icons";
 import { Col, Form, Input, Radio, Rate, Row, Slider } from "antd";
-import TextArea from "antd/lib/input/TextArea";
 import React, { useState } from "react";
 import { openNotificationBox } from "../../../component/common/notification";
 import { motion } from "framer-motion";
@@ -30,7 +25,7 @@ export function FormSlideComponent({
     [id]: 0,
   });
   const [inputLimit, setInputLimit] = useState({
-    [id]: 0,
+    [id]: 180,
   });
   const [disable, setDisable] = useState({
     [id]: false,
@@ -72,16 +67,6 @@ export function FormSlideComponent({
     }
   };
 
-  const antIcon = (
-    <LoadingOutlined
-      style={{
-        fontSize: 24,
-        color: "white",
-      }}
-      spin
-    />
-  );
-
   return (
     <div className="answer-preview">
       <motion.div
@@ -92,7 +77,7 @@ export function FormSlideComponent({
         transition={{ duration: 0.8 }}
       >
         <div className=" text-center bg-white rounded-md py-10 shadow-md md:w-7/12 mx-auto">
-          <p className="text-lg font-bold text-red-400 mt-5">
+          <p className="text-lg font-bold text-gray-400 ">
             {`Question ${nextSlide + 1}`}
           </p>
           <p className="text-2xl font-bold text-primary mt-5">{questionText}</p>
@@ -124,7 +109,7 @@ export function FormSlideComponent({
                       return (
                         <Col xs={24} md={12} lg={8} key={j + "option"}>
                           <Radio.Button
-                            className="text-center answer-radio-button w-full flex items-center justify-center"
+                            className="text-center answer-radio-button w-full flex items-center justify-center px-2 py-1 rounded-md"
                             value={op.optionText}
                           >
                             {op.optionText}
@@ -139,12 +124,6 @@ export function FormSlideComponent({
           )}
           {type == "input" && (
             <>
-              <div className="text-right mr-3 text-sm md:text-base text-primary mt-6">
-                Text Limit
-                <span className="text-sm md:text-base font-semibold mx-2 ">
-                  {inputLimit[id] ?? 180}
-                </span>
-              </div>
               <div className="mt-2 md:my-6 md:mx-8 mx-2 ">
                 <Form.Item name={"ques" + id}>
                   <Input
@@ -155,9 +134,16 @@ export function FormSlideComponent({
                       handleAnswerChange(id, e.target.value);
                       handleInputLimit(id, e.target.value);
                     }}
+                    className="rounded-md"
                     maxLength={180}
                   />
                 </Form.Item>
+              </div>
+              <div className="text-right md:mx-8 mx-2  text-xs md:text-base text-primary">
+                Text Limit
+                <span className="text-xs md:text-sm font-semibold mx-2 ">
+                  {inputLimit[id] ?? 180}
+                </span>
               </div>
             </>
           )}
@@ -173,11 +159,12 @@ export function FormSlideComponent({
                   },
                 ]}
               >
-                <TextArea
+                <Input.TextArea
                   size="large"
                   fullWidth={true}
+                  className="rounded-md"
                   placeholder={type == "textarea" ? "Long Text" : ""}
-                  rows={1}
+                  rows={4}
                   onChange={(e) => {
                     handleAnswerChange(id, e.target.value);
                     answerHandle(id, e.target.value);
@@ -279,7 +266,7 @@ export function FormSlideComponent({
                         // className="rounded-sm cursor-pointer m-8 "
                         value={"yes"}
                         size="large"
-                        className="text-center cursor-pointer answer-radio-button  "
+                        className="text-center cursor-pointer answer-radio-button  py-2 px-3 rounded-md"
                       >
                         <LikeOutlined style={{ fontSize: "34px" }} />
                       </Radio.Button>
@@ -288,7 +275,7 @@ export function FormSlideComponent({
                       <Radio.Button
                         // className=" rounded-sm cursor-pointer"
                         size="large"
-                        className="text-center cursor-pointer answer-radio-button  "
+                        className="text-center cursor-pointer answer-radio-button  py-2 px-3 rounded-md"
                         value={"no"}
                       >
                         <DislikeOutlined style={{ fontSize: "34px" }} />

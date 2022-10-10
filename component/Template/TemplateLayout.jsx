@@ -76,69 +76,67 @@ function TemplateLayout({ user }) {
 
   return (
     <div className="container mx-auto max-w-full">
-      <div className="w-full pt-0 px-2 lg:px-4 pb-2 lg:pb-4">
-        <div className="flex w-auto">
-          <ToggleButton
-            className={`rounded-r-none rounded-l-md w-1/2  md:w-fit ${
-              changeTemaplateView
-                ? "bg-primary text-white"
-                : " bg-gray-50 hover:bg-gray-100 border-gray-300 text-gray-600"
-            }`}
-            onClick={() => setChangeTemaplateView(true)}
-            title={"My Templates"}
-          />
-          <ToggleButton
-            className={`rounded-l-none rounded-r-md w-1/2  md:w-fit ${
-              changeTemaplateView
-                ? "bg-gray-50 hover:bg-gray-100 border-gray-300 text-gray-600 "
-                : "bg-primary text-white"
-            } `}
-            onClick={() => setChangeTemaplateView(false)}
-            title={"Default Templates"}
-          />
-        </div>
+      <div className="flex w-auto">
+        <ToggleButton
+          className={`rounded-r-none rounded-l-md w-1/2  md:w-fit ${
+            changeTemaplateView
+              ? "bg-primary text-white"
+              : " bg-gray-50 hover:bg-gray-100 border-gray-300 text-gray-600"
+          }`}
+          onClick={() => setChangeTemaplateView(true)}
+          title={"My Templates"}
+        />
+        <ToggleButton
+          className={`rounded-l-none rounded-r-md w-1/2  md:w-fit ${
+            changeTemaplateView
+              ? "bg-gray-50 hover:bg-gray-100 border-gray-300 text-gray-600 "
+              : "bg-primary text-white"
+          } `}
+          onClick={() => setChangeTemaplateView(false)}
+          title={"Default Templates"}
+        />
+      </div>
 
-        <div className="container mx-auto max-w-full mt-3">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-5 gap-8 2xl:gap-12 ">
-            {changeTemaplateView ? (
-              <>
-                <CreateTemplateCard />
-                {loading
-                  ? [...Array(3)].map((_, idx) => (
-                      <SkeletonTemplateCard key={idx + "temp"} />
-                    ))
-                  : templateList.length > 0 &&
-                    templateList.map((template) => (
-                      <TemplateCard
-                        key={template.id}
-                        id={template.id}
-                        title={template?.form_data?.title}
-                        description={template?.form_data?.description}
-                        questionLength={template?.form_data?.questions?.length}
-                        deleteTemplate={deleteTemplate}
-                        linkHref={`/template/edit/${template.id}`}
-                        isDelete={true}
-                      />
-                    ))}
-              </>
-            ) : (
-              <>
-                {defaultTemplateList.length > 0 &&
-                  defaultTemplateList.map((template) => (
+      <div className="container mx-auto max-w-full mt-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-5 gap-8 2xl:gap-12 ">
+          {changeTemaplateView ? (
+            <>
+              <CreateTemplateCard />
+              {loading
+                ? [...Array(3)].map((_, idx) => (
+                    <SkeletonTemplateCard key={idx + "temp"} />
+                  ))
+                : templateList.length > 0 &&
+                  templateList.map((template) => (
                     <TemplateCard
-                      key={template.id}
+                      key={template.id + "template"}
                       id={template.id}
                       title={template?.form_data?.title}
                       description={template?.form_data?.description}
                       questionLength={template?.form_data?.questions?.length}
                       deleteTemplate={deleteTemplate}
-                      linkHref={`/template/preview/${template.id}`}
-                      isDelete={false}
+                      linkHref={`/template/edit/${template.id}`}
+                      isDelete={true}
                     />
                   ))}
-              </>
-            )}
-          </div>
+            </>
+          ) : (
+            <>
+              {defaultTemplateList.length > 0 &&
+                defaultTemplateList.map((template) => (
+                  <TemplateCard
+                    key={template.id + "default"}
+                    id={template.id}
+                    title={template?.form_data?.title}
+                    description={template?.form_data?.description}
+                    questionLength={template?.form_data?.questions?.length}
+                    deleteTemplate={deleteTemplate}
+                    linkHref={`/template/preview/${template.id}`}
+                    isDelete={false}
+                  />
+                ))}
+            </>
+          )}
         </div>
       </div>
     </div>
