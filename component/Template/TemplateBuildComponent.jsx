@@ -358,7 +358,7 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
   };
 
   return (
-    <div className="px-4 md:px-6 pb-28 pt-20 md:pt-20 md:pb-24  bg-color-dashboard min-h-screen">
+    <div className="px-4 md:px-6 pb-28 pt-20 md:pt-20 md:pb-24  bg-gray-100 min-h-screen">
       <StepFixedHeader
         title={`${editMode ? "Edit" : "Create"} Template`}
         backUrl={"/template"}

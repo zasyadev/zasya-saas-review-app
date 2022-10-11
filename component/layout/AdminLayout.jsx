@@ -80,7 +80,7 @@ function AdminLayout({ user, title, children }) {
           md={md}
         />
         <Layout>
-          <Content className="bg-color-dashboard ">
+          <Content className="bg-primary-gray ">
             <HeaderLayout
               title={title}
               user={user}
@@ -90,8 +90,8 @@ function AdminLayout({ user, title, children }) {
             />
             <div className="p-3 md:p-6">{children}</div>
           </Content>
-          <Footer className="text-center bg-color-dashboard">
-            Review App ©2022 Created by Zasya Solution
+          <Footer className="text-center bg-white p-3 font-medium text-primary">
+            Review App © 2022 Created By Zasya Solution
           </Footer>
         </Layout>
       </Layout>

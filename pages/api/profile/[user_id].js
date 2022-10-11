@@ -11,6 +11,8 @@ async function handle(req, res, prisma) {
           user: {
             select: {
               first_name: true,
+              organization: true,
+              role: true,
             },
           },
         },
@@ -35,7 +37,7 @@ async function handle(req, res, prisma) {
       if (user_id && reqBody.first_name) {
         const transactionData = await prisma.$transaction(
           async (transaction) => {
-            const userTable = await transaction.user.update({
+            await transaction.user.update({
               where: { id: user_id },
               data: {
                 first_name: reqBody.first_name,

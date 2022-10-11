@@ -6,14 +6,28 @@ function DefaultImages({
   className = "rounded-full",
   width = 60,
   height = 60,
+  layout = "",
+  objectFit = "cover",
 }) {
+  let props = {};
+  if (layout) {
+    props = {
+      layout,
+      objectFit,
+    };
+  } else {
+    props = {
+      width,
+      height,
+    };
+  }
+
   return (
     <Image
       src={imageSrc ? imageSrc : "/media/images/User.png"}
       alt="userImage"
-      width={width}
-      height={height}
       className={className}
+      {...props}
     />
   );
 }

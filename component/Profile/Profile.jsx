@@ -9,6 +9,7 @@ import {
   SecondaryButton,
 } from "../../component/common/CustomButton";
 import { openNotificationBox } from "../../component/common/notification";
+import getApplaudCategoryName from "../../helpers/getApplaudCategoryName";
 import httpService from "../../lib/httpService";
 import CustomModal from "../common/CustomModal";
 import CustomPopover from "../common/CustomPopover";
@@ -141,36 +142,34 @@ source=LinkedIn`);
                   layout="fill"
                 />
               </div>
-              <div className="px-2 py-2 text-center absolute bottom-16 right-0 left-0 lg:bottom-0 lg:top-auto lg:right-auto lg:left-12 ">
-                <div className="rounded-full w-20 h-20 overflow-hidden border-white border-4 mx-auto">
-                  <DefaultImages
-                    imageSrc={userDetails?.image}
-                    width={80}
-                    height={80}
-                  />
-                </div>
-                <div>
-                  <span className="text-lg font-semibold text-center  text-primary md:text-left mb-0">
-                    {userDetails?.user?.first_name}
-                  </span>
+              <div className="px-2 py-2 text-center absolute bottom-32 right-0 left-0 lg:bottom-2 lg:top-auto lg:right-auto lg:left-12 ">
+                <div className="relative rounded-full w-24 h-24 overflow-hidden  mx-auto">
+                  <DefaultImages imageSrc={userDetails?.image} layout="fill" />
                 </div>
               </div>
 
-              <div className="md:flex justify-end items-center pt-16 px-4 md:px-6 lg:pt-2 pb-3">
+              <div className="md:flex justify-between items-center pt-14 px-4 md:px-6 lg:pt-2 pb-3 gap-4">
+                <div className="lg:ml-36 mb-2 lg:mb-0">
+                  <p className="text-base font-semibold text-center  text-primary md:text-left mb-0">
+                    {userDetails?.user?.first_name}
+                  </p>
+                  <p className="text-sm font-medium text-center  text-gray-600 md:text-left mb-0">
+                    {userDetails?.user?.role?.name},{" "}
+                    {userDetails?.user?.organization?.company_name}
+                  </p>
+                </div>
                 <div className="flex flex-wrap justify-around lg:justify-between items-center pb-2 md:pb-0 gap-3">
                   <div className="text-center ">
-                    <p className="text-xl font-extrabold mb-0">
+                    <p className="text-xl font-semibold mb-0">
                       {givenApplaudList?.length}
                     </p>
-                    <p className="text-sm md:text-base font-medium mb-0">
-                      Appalud Given
-                    </p>
+                    <p className="text-sm  font-medium mb-0">Appalud Given</p>
                   </div>
                   <div className="text-center">
-                    <p className="text-xl font-extrabold mb-0">
+                    <p className="text-xl font-semibold mb-0">
                       {receivedApplaudList?.length}
                     </p>
-                    <p className="text-sm md:text-base font-medium mb-0">
+                    <p className="text-sm  font-medium mb-0">
                       Appalud Received
                     </p>
                   </div>
@@ -179,13 +178,13 @@ source=LinkedIn`);
             </div>
           </Col>
           <Col md={10} xs={24}>
-            <div className="bg-white rounded-md transition-all duration-300 ease-in-out shadow-md px-6 py-5 xl:py-7  xl:px-8 space-y-4">
+            <div className="bg-white rounded-md transition-all duration-300 ease-in-out shadow-md px-6 py-4 xl:py-5  xl:px-8 space-y-4">
               <div className="flex justify-between items-center gap-4 flex-wrap">
                 <p className="mb-0 text-lg md:text-xl text-primary font-semibold">
                   General Information
                 </p>
                 <Link href="/profile/edit " passHref>
-                  <div className="hover:bg-gray-100 border border-gray-300  py-1 px-2 rounded-full cursor-pointer">
+                  <div className="hover:bg-gray-100 border border-gray-300  py-1 px-2 rounded-full cursor-pointer transition-all  duration-300 ease-in-out">
                     <EditOutlined className="text-base text-primary" />
                   </div>
                 </Link>
@@ -219,28 +218,30 @@ source=LinkedIn`);
             </div>
 
             {user.role_id === 2 && user.organization_id ? (
-              <div className="bg-white rounded-md transition-all duration-300 ease-in-out shadow-md px-6 py-5 xl:py-7  xl:px-8 space-y-4 mt-8">
+              <div className="bg-white rounded-md transition-all duration-300 ease-in-out shadow-md px-6 py-4 xl:py-5  xl:px-8 space-y-4 mt-8">
                 <p className=" text-lg md:text-xl text-primary font-semibold mb-0">
                   Applaud Information
                 </p>
-                <div>
-                  <p className="text-sm 2xl:text-base text-primary font-semibold mb-1 flex items-center">
-                    Applaud Limit
-                    <span className="leading-[0] ml-2">
-                      {CustomPopover(
-                        "Count of Applauds that can be given by members in a month."
-                      )}
-                    </span>
-                  </p>
+                <div className="flex justify-between items-center">
+                  <div>
+                    <p className="text-sm 2xl:text-base text-primary font-semibold mb-1 flex items-center">
+                      Applaud Limit
+                      <span className="leading-[0] ml-2">
+                        {CustomPopover(
+                          "Count of Applauds that can be given by members in a month."
+                        )}
+                      </span>
+                    </p>
 
-                  <p className="text-sm 2xl:text-base font-medium mb-1 flex items-center justify-between text-gray-600">
-                    {applaudLimit}{" "}
-                    <span
-                      onClick={() => setOrganizationModal(true)}
-                      className="font-medium cursor-pointer"
-                    >
-                      Edit{" "}
-                    </span>
+                    <p className="text-sm 2xl:text-base font-medium mb-1 flex items-center justify-between text-gray-600">
+                      {applaudLimit}{" "}
+                    </p>
+                  </div>
+                  <p
+                    onClick={() => setOrganizationModal(true)}
+                    className="hover:bg-gray-100 border border-gray-300  py-1 px-2 rounded-full cursor-pointer transition-all  duration-300 ease-in-out"
+                  >
+                    <EditOutlined className="text-base text-primary " />
                   </p>
                 </div>
               </div>
@@ -249,54 +250,69 @@ source=LinkedIn`);
 
           <Col md={14} xs={24}>
             <div className=" profile-applaud-card no-scrollbar">
-              {receivedApplaudList.length > 0
-                ? receivedApplaudList.map((item, idx) => {
+              <div className="bg-white rounded-md transition-all duration-300 ease-in-out shadow-md mb-4  px-6 py-4 xl:py-5  xl:px-8 space-y-4 md:space-y-6">
+                <p className=" text-lg md:text-xl text-primary font-semibold mb-0">
+                  Applaud Recieved
+                </p>
+                {receivedApplaudList.length > 0 ? (
+                  receivedApplaudList.map((item, idx) => {
                     return (
-                      <div
-                        className="bg-white rounded-md transition-all duration-300 ease-in-out shadow-md mb-4  "
-                        key={idx + "applaud"}
-                      >
-                        <div className="px-6 py-5 xl:py-7  xl:px-8">
-                          <div className="flex justify-between items-start">
-                            <div className="flex items-center gap-4">
-                              <DefaultImages
-                                imageSrc={item?.created?.UserDetails?.image}
-                                width={40}
-                                height={40}
-                              />
+                      <div key={idx + "applaud"}>
+                        <div className="flex justify-between items-start">
+                          <div className="flex items-center gap-4">
+                            <DefaultImages
+                              imageSrc={item?.created?.UserDetails?.image}
+                              width={40}
+                              height={40}
+                            />
 
-                              <div>
-                                <p className="text-base font-semibold mb-0">
-                                  {item.created.first_name}{" "}
-                                </p>
-                                <p className="font-medium text-xs mb-0">
-                                  {moment(item.created_date).format(
-                                    datePattern
-                                  )}
-                                </p>
-                              </div>
-                            </div>
-
-                            <div
-                              className="flex justify-end cursor-pointer"
-                              onClick={() => shareLinkedinUrl(item)}
-                            >
-                              <div className="hover:bg-gray-100 border border-gray-300  py-1 px-2 rounded-full cursor-pointer">
-                                <ShareAltOutlined className="text-base text-primary" />
-                              </div>
+                            <div>
+                              <p className="text-base font-semibold mb-0">
+                                {item.created.first_name}{" "}
+                              </p>
+                              <p className="font-medium text-xs mb-0">
+                                {moment(item.created_date).format(datePattern)}
+                              </p>
                             </div>
                           </div>
 
-                          <div className="mt-4">
-                            <p className="text-base font-normal mb-0">
-                              {item?.comment}
-                            </p>
+                          <div
+                            className="flex justify-end cursor-pointer"
+                            onClick={() => shareLinkedinUrl(item)}
+                          >
+                            <div className="hover:bg-gray-100 border border-gray-300  py-1 px-2 rounded-full cursor-pointer transition-all  duration-300 ease-in-out">
+                              <ShareAltOutlined className="text-base text-primary" />
+                            </div>
                           </div>
+                        </div>
+
+                        <div className="mt-3">
+                          <p className="text-base font-normal mb-2">
+                            {item?.comment}
+                          </p>
+                          <p className="mb-0 flex flex-wrap gap-2">
+                            {item?.category?.length > 0 &&
+                              item?.category.map((category, idx) => {
+                                return (
+                                  <span
+                                    key={idx + "cat"}
+                                    className=" px-2 py-1 rounded-full bg-gray-100 text-xs "
+                                  >
+                                    {getApplaudCategoryName(category)}
+                                  </span>
+                                );
+                              })}
+                          </p>
                         </div>
                       </div>
                     );
                   })
-                : null}
+                ) : (
+                  <p className="text-base font-normal mb-2">
+                    No Applauds Recieved Yet
+                  </p>
+                )}
+              </div>
             </div>
           </Col>
         </Row>

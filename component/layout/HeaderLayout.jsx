@@ -4,14 +4,14 @@ import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   UserSwitchOutlined,
+  UserOutlined,
 } from "@ant-design/icons";
 import React, { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { Avatar, Badge, Dropdown, Layout, Menu } from "antd";
+import { Badge, Dropdown, Layout, Menu } from "antd";
 import { signOut } from "next-auth/client";
 import { useRouter } from "next/router";
 import { openNotificationBox } from "../../component/common/notification";
-import { truncateString } from "../../helpers/truncateString";
 import httpService from "../../lib/httpService";
 import DefaultImages from "../common/DefaultImages";
 
@@ -84,24 +84,21 @@ function HeaderLayout({ title, user, collapsed, setCollapsed, md }) {
   }, []);
 
   const userMenu = (
-    <Menu className="divide-y">
-      <div className="flex items-start p-2 space-x-3" key={"accountName"}>
-        <DefaultImages
-          imageSrc={user?.UserDetails?.image}
-          width={40}
-          height={40}
-        />
-
-        <span>
-          <div className="span-text font-semibold">{user.first_name}</div>
-          <div className="span-text">{user?.role?.name}</div>
-        </span>
+    <Menu className="divide-y border border-gray-100">
+      <div className=" py-2 px-3 " key={"accountName"}>
+        <p className=" font-semibold mb-0 text-gray-700 text-base capitalize">
+          {user.organization?.company_name}
+        </p>
+        <p className="mb-0 text-sm text-gray-600 font-medium">
+          {user.role?.name}
+        </p>
       </div>
 
       <Menu.Item key={"account"}>
         <Link href="/profile" passHref>
-          <div className="flex items-center py-1  font-medium">
-            <span className="span-text">My Account</span>
+          <div className="flex items-center py-1  text-base font-medium space-x-2">
+            <UserOutlined />
+            <span className="ml-1">My Account</span>
           </div>
         </Link>
       </Menu.Item>
@@ -110,9 +107,9 @@ function HeaderLayout({ title, user, collapsed, setCollapsed, md }) {
         <Menu.SubMenu
           key="org"
           title={
-            <div className="flex items-center py-1  font-medium space-x-2">
+            <div className="flex items-center py-1  text-base font-medium space-x-2">
               <UserSwitchOutlined />
-              <span className="ml-1">Switch Teams</span>
+              <span className="ml-1">Switch Organization</span>
             </div>
           }
         >
@@ -136,7 +133,7 @@ function HeaderLayout({ title, user, collapsed, setCollapsed, md }) {
                         });
                       }}
                     >
-                      <span className="span-text capitalize">
+                      <span className="text-base capitalize">
                         {item?.organization?.company_name}
                       </span>
                     </div>
@@ -148,15 +145,15 @@ function HeaderLayout({ title, user, collapsed, setCollapsed, md }) {
       ) : null}
 
       <Menu.Item key={"sign_out"} onClick={() => logoutHandler()}>
-        <div className="flex items-center py-1  font-medium space-x-2">
-          <LogoutOutlined /> <span className="span-text">Sign Out</span>
+        <div className="flex items-center py-1  font-medium space-x-2 text-base">
+          <LogoutOutlined /> <span>Sign Out</span>
         </div>
       </Menu.Item>
     </Menu>
   );
 
   const notificationMenu = (
-    <div className="notification-wrapper bg-white shadow-xl rounded-md">
+    <div className="notification-wrapper border border-gray-100 bg-white shadow-xl rounded-md">
       <div className="flex items-center justify-between border-b border-gray-300 p-2">
         <p className="text-sm lg:text-base font-bold mb-0">Notifications</p>
         {unSeenNotificationCount > 0 && (
@@ -201,7 +198,7 @@ function HeaderLayout({ title, user, collapsed, setCollapsed, md }) {
   );
 
   return (
-    <Header className="ant-header bg-color-dashboard border-b border-b-neutral-300 p-0">
+    <Header className="ant-header bg-white border-b border-b-neutral-300 p-0">
       <div className="flex items-center h-full justify-between mx-4 md:mx-6">
         <div className="font-bold text-lg md:text-2xl text-primary">
           {title}
@@ -213,38 +210,29 @@ function HeaderLayout({ title, user, collapsed, setCollapsed, md }) {
             overlay={notificationMenu}
             overlayClassName="notification-dropdown"
             placement="bottomRight"
-            className="w-10 h-10 py-2 px-3 bg-white grid place-content-center rounded-full cursor-pointer"
+            className=" bg-white  grid place-content-center  cursor-pointer transition-all  duration-300 hover:bg-gray-100 rounded-full w-11 h-11"
           >
-            <Badge count={unSeenNotificationCount} offset={[-5, 5]}>
-              <BellOutlined className="text-base" />
+            <Badge count={unSeenNotificationCount} offset={[-5, 8]}>
+              <BellOutlined className="text-xl text-gray-600 hover:text-primary " />
             </Badge>
           </Dropdown>
-          <div className="w-full user-menu-wrapper cursor-pointer rounded-md ">
+          <div className="flex-1 bg-white   cursor-pointer   transition-all  duration-300 hover:bg-gray-100 rounded-full">
             <Dropdown
               trigger={"click"}
               overlay={userMenu}
               overlayClassName="logout-dropdown "
               placement="bottomRight"
-              className="py-2 px-3 leading-0"
+              className="py-1 px-2 leading-0"
             >
-              <div className="flex items-center">
-                <Avatar
-                  style={{
-                    color: "#f56a00",
-                    backgroundColor: "#fde3cf",
-                  }}
-                  alt="C"
-                  className="md:mr-3"
-                  size="small"
-                >
-                  {user?.organization && user?.organization?.company_name
-                    ? user.organization.company_name.substring(0, 1)
-                    : null}
-                </Avatar>
-
-                <div className="user-deatils hidden md:block m-0">
-                  {truncateString(user?.organization?.company_name, 16)}
+              <div className="flex items-center space-x-3">
+                <div className="user-deatils hidden md:block m-0 text-base font-semibold text-primary">
+                  {user.first_name}
                 </div>
+                <DefaultImages
+                  imageSrc={user?.UserDetails?.image}
+                  width={38}
+                  height={38}
+                />
               </div>
             </Dropdown>
           </div>

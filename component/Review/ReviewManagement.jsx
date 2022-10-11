@@ -186,26 +186,24 @@ function ReviewManagement({ user }) {
           </div>
         </div>
 
-        <div className="w-full bg-white rounded-md overflow-hdden shadow-md px-4 pb-4">
-          <div className="">
-            <div className="overflow-x-auto">
-              {loading ? (
-                <Skeleton
-                  title={false}
-                  active={true}
-                  width={[200]}
-                  className="mt-4"
-                  rows={3}
-                />
-              ) : (
-                <CustomTable
-                  dataSource={reviewAssignList}
-                  columns={columns}
-                  pagination={true}
-                  rowKey="review_id"
-                />
-              )}
-            </div>
+        <div className="w-full bg-white rounded-md overflow-hdden shadow-md">
+          <div className="px-4">
+            {loading ? (
+              <Skeleton
+                title={false}
+                active={true}
+                width={[200]}
+                className="mt-4"
+                rows={3}
+              />
+            ) : (
+              <CustomTable
+                dataSource={reviewAssignList}
+                columns={columns}
+                pagination={true}
+                rowKey="review_id"
+              />
+            )}
           </div>
         </div>
       </div>

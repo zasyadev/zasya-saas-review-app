@@ -9,6 +9,7 @@ module.exports = {
         light: "#f8f8ff",
         peach: "#fb7185",
         "peach-light": "#fda4af",
+        "primary-gray": "#f3f3fc",
       },
       lineHeight: {
         0: "0",

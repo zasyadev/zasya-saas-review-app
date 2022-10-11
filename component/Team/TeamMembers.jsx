@@ -128,30 +128,28 @@ function TeamMembers({ user }) {
         />
       </div>
 
-      <div className="w-full bg-white rounded-md overflow-hdden shadow-md px-4 pb-4 ">
-        <div className="p-4 ">
-          <div className="overflow-x-auto">
-            {loading ? (
-              <Skeleton
-                title={false}
-                active={true}
-                width={[200]}
-                className="mt-4"
-                rows={3}
-              />
-            ) : (
-              <CustomTable
-                dataSource={membersList}
-                columns={columns}
-                className="custom-table"
-                pagination={{
-                  defaultPageSize: 10,
-                  showSizeChanger: true,
-                  pageSizeOptions: ["10", "20", "50", "100"],
-                }}
-              />
-            )}
-          </div>
+      <div className="w-full bg-white rounded-md overflow-hdden shadow-md">
+        <div className="px-4 ">
+          {loading ? (
+            <Skeleton
+              title={false}
+              active={true}
+              width={[200]}
+              className="mt-4"
+              rows={3}
+            />
+          ) : (
+            <CustomTable
+              dataSource={membersList}
+              columns={columns}
+              className="custom-table"
+              pagination={{
+                defaultPageSize: 10,
+                showSizeChanger: true,
+                pageSizeOptions: ["10", "20", "50", "100"],
+              }}
+            />
+          )}
         </div>
       </div>
     </div>

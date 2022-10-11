@@ -119,25 +119,23 @@ function FormView({ user }) {
             />
           </div>
         </div>
-        <div className="w-full bg-white rounded-md overflow-hdden shadow-md px-4 pb-4">
-          <div className="p-4 ">
-            <div className="overflow-x-auto">
-              {loading ? (
-                <Skeleton
-                  title={false}
-                  active={true}
-                  width={[200]}
-                  className="mt-4"
-                  rows={3}
-                />
-              ) : (
-                <CustomTable
-                  dataSource={formAssignList}
-                  columns={columns}
-                  rowKey="form_view"
-                />
-              )}
-            </div>
+        <div className="w-full bg-white rounded-md overflow-hdden shadow-md">
+          <div className="px-4 ">
+            {loading ? (
+              <Skeleton
+                title={false}
+                active={true}
+                width={[200]}
+                className="mt-4"
+                rows={3}
+              />
+            ) : (
+              <CustomTable
+                dataSource={formAssignList}
+                columns={columns}
+                rowKey="form_view"
+              />
+            )}
           </div>
         </div>
       </div>

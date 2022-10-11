@@ -29,7 +29,7 @@ export const ApplaudCategoryList = [
         about: "The one which provides critical analysis.",
       },
       {
-        name: "Information seekers",
+        name: "Information Seekers",
         value: "informationseekers",
         about: "The one who gives information and data.",
       },
