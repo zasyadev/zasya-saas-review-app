@@ -9,7 +9,7 @@ import {
 import React, { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { Badge, Dropdown, Layout, Menu } from "antd";
-import { signOut } from "next-auth/client";
+import { signOut } from "next-auth/react";
 import { useRouter } from "next/router";
 import { openNotificationBox } from "../../component/common/notification";
 import httpService from "../../lib/httpService";
