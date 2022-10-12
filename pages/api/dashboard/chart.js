@@ -10,7 +10,7 @@ async function handle(req, res, prisma) {
       });
 
       let query =
-        await prisma.$queryRaw`SELECT     COUNT(*) as count,MONTH( created_date) as month 
+        await prisma.$queryRawUnsafe`SELECT     COUNT(*) as count,MONTH( created_date) as month 
         FROM      review 
         WHERE     YEAR(created_date) =  YEAR(CURDATE()) AND organization_id = ${userTableData.organization_id}
         GROUP BY  MONTH(created_date)`;
@@ -18,7 +18,7 @@ async function handle(req, res, prisma) {
       const chartData = [...Array(12)].map((_, indx) => {
         const checkMonth = query.find((i) => i.month == indx + 1);
         if (checkMonth) {
-          return checkMonth.count;
+          return Number(checkMonth.count);
         }
         return 0;
       });

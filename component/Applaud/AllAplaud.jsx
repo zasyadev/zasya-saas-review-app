@@ -77,6 +77,10 @@ function AllAplaud({ user }) {
 
     [filterByUserId, allOrgApplaud]
   );
+  const disabledDate = (current) => {
+    // Can not select days after today and today
+    return current && current > moment().endOf("month");
+  };
 
   return (
     <Row gutter={[16, 16]}>
@@ -91,6 +95,7 @@ function AllAplaud({ user }) {
               format="MMMM"
               defaultValue={moment()}
               className="font-semibold"
+              disabledDate={disabledDate}
             />
           </div>
         </div>

@@ -88,6 +88,10 @@ function Applaud({ user }) {
       gte: moment(date).startOf("month"),
     });
   }
+  const disabledDate = (current) => {
+    // Can not select days before today and today
+    return current && current > moment().endOf("month");
+  };
 
   return (
     <div className="container mx-auto max-w-full">
@@ -122,6 +126,7 @@ function Applaud({ user }) {
             format="MMMM"
             defaultValue={moment()}
             className="font-semibold w-full md:w-auto"
+            disabledDate={disabledDate}
           />
         </div>
 
