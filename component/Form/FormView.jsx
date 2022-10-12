@@ -71,22 +71,19 @@ function FormView({ user }) {
       render: (_, record) => (
         <>
           {!record.status ? (
-            <Link href={`/review/id/${record.id}`} passHref>
-              <span
-                className="text-primary text-lg  cursor-pointer"
-                title="Attempt"
-              >
-                Attempt
-              </span>
-            </Link>
+            <PrimaryButton
+              withLink={true}
+              className="rounded-md text-sm"
+              linkHref={`/review/id/${record.id}`}
+              title={"Attempt"}
+            />
           ) : (
-            <div>
-              <Link href={`/review/preview/${record.id}`} passHref>
-                <button className="primary-bg-btn text-white px-2 py-1 rounded-md mx-2">
-                  View
-                </button>
-              </Link>
-            </div>
+            <PrimaryButton
+              withLink={true}
+              className="rounded-md text-sm"
+              linkHref={`/review/preview/${record.id}`}
+              title={"View"}
+            />
           )}
         </>
       ),
