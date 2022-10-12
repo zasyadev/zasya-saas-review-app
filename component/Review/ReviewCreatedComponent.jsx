@@ -197,11 +197,7 @@ function ReviewCreatedComponent({
           <div className="text-primary capitalize">
             {reviewData?.frequency} Review
           </div>
-          <div className="flex ml-2">
-            <div className="bg-red-400 py-2 px-2 rounded-full ">
-              <ShareIcon />
-            </div>
-          </div>
+
           <div className="flex  text-primary md:mx-10 my-auto">
             <p className="mr-1">Type:</p>
             <p className="capitalize">{reviewData?.review_type}</p>
@@ -236,7 +232,7 @@ function ReviewCreatedComponent({
       </div>
       <Row justify="space-between" gutter={[16, 16]}>
         <Col xs={24} md={6}>
-          <Row gutter={8} className="bg-white rounded-md h-full py-6">
+          <Row gutter={8} className="bg-white rounded-md h-full py-3">
             <Col md={8} className="mx-auto my-auto">
               <div className="flex">
                 <div className="answer-bg-icon mx-auto my-auto rounded-full ">
@@ -297,6 +293,29 @@ function ReviewCreatedComponent({
                 </div>
                 <div className="text-lg font-medium">
                   {reviewData?.ReviewAssignee?.length}
+                </div>
+              </div>
+            </Col>
+          </Row>
+        </Col>
+        <Col xs={24} md={6}>
+          <Row gutter={8} className="bg-white rounded-md h-full py-6 ">
+            <Col md={8} className="mx-auto my-auto">
+              <div className="flex     ">
+                <div className="answer-bg-icon  mx-auto my-auto rounded-full ">
+                  <div className="px-3 py-3">
+                    <CalanderIcon />
+                  </div>
+                </div>
+              </div>
+            </Col>
+            <Col md={16} className="mx-auto my-auto">
+              <div className="flex flex-col my-auto">
+                <div className="text-sm md:text-base font-medium">
+                  Created Date
+                </div>
+                <div className="text-lg font-medium">
+                  {moment(reviewData?.created_date).format(datePattern)}
                 </div>
               </div>
             </Col>

@@ -76,26 +76,32 @@ function TemplateListView({ user }) {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-5 gap-8 2xl:gap-12 ">
             {changeTemaplateView ? (
               <>
-                {loading
-                  ? [...Array(3)].map((_, idx) => (
-                      <SkeletonTemplateCard key={idx + "temp"} />
-                    ))
-                  : userTemplateList.length > 0 &&
-                    userTemplateList.map((form) => (
-                      <TemplateCard
-                        key={form.id}
-                        id={form.id}
-                        title={form?.form_data?.title}
-                        description={form?.form_data?.description}
-                        questionLength={form?.form_data?.questions?.length}
-                        isDelete={false}
-                        linkHref={`/review/edit/${form.id}`}
-                        // deleteTemplate={deleteTemplate}
-                      />
-                    ))}
+                {loading ? (
+                  [...Array(3)].map((_, idx) => (
+                    <SkeletonTemplateCard key={idx + "temp"} />
+                  ))
+                ) : userTemplateList.length > 0 ? (
+                  userTemplateList.map((form) => (
+                    <TemplateCard
+                      key={form.id}
+                      id={form.id}
+                      title={form?.form_data?.title}
+                      description={form?.form_data?.description}
+                      questionLength={form?.form_data?.questions?.length}
+                      isDelete={false}
+                      linkHref={`/review/edit/${form.id}`}
+                      // deleteTemplate={deleteTemplate}
+                    />
+                  ))
+                ) : (
+                  <div className="template  template-list flex bg-white items-center justify-center rounded-md  shadow-md p-5 ">
+                    <p className="text-gray-600 text-center text-sm font-medium  mb-0">
+                      No Templates Found
+                    </p>
+                  </div>
+                )}
               </>
-            ) : (
-              defaultTemplateList.length > 0 &&
+            ) : defaultTemplateList.length > 0 ? (
               defaultTemplateList.map((form) => (
                 <TemplateCard
                   key={form.id}
@@ -108,6 +114,12 @@ function TemplateListView({ user }) {
                   // deleteTemplate={deleteTemplate}
                 />
               ))
+            ) : (
+              <div className="template  template-list flex bg-white items-center justify-center rounded-md  shadow-md p-5 ">
+                <p className="text-gray-600 text-center text-sm font-medium  mb-0">
+                  No Templates Found
+                </p>
+              </div>
             )}
           </div>
         </div>

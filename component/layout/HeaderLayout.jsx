@@ -197,6 +197,8 @@ function HeaderLayout({ title, user, collapsed, setCollapsed, md }) {
     </div>
   );
 
+  console.log(user?.UserDetails?.image, "user?.UserDetails?.image");
+
   return (
     <Header className="ant-header bg-white border-b border-b-neutral-300 p-0">
       <div className="flex items-center h-full justify-between mx-4 md:mx-6">

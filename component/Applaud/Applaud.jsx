@@ -11,25 +11,6 @@ import getApplaudCategoryName from "../../helpers/getApplaudCategoryName";
 import httpService from "../../lib/httpService";
 import { openNotificationBox } from "../common/notification";
 
-const container = {
-  enter: {
-    transition: {
-      when: "beforeChildren",
-      staggerChildren: 0.3,
-    },
-  },
-};
-const varientItem = {
-  initial: {
-    y: 20,
-    opacity: 0,
-  },
-  enter: {
-    y: 0,
-    opacity: 1,
-  },
-};
-
 const ApplaudCard = ({ applaud, type }) => {
   return (
     <div className="flex flex-col template-list h-full w-full rounded-md shadow-md bg-white space-y-4 p-4">
