@@ -193,8 +193,7 @@ function EditProfile({ user }) {
       .then(({ data: response }) => {
         if (response.status === 200) {
           openNotificationBox("success", response.message, 3);
-          router.push("/profile");
-          return;
+          window.location.href = process.env.NEXT_PUBLIC_APP_URL + "/profile";
         }
       })
       .catch((err) => setApiLoading(false));
@@ -289,7 +288,7 @@ function EditProfile({ user }) {
         }
       })
       .catch((err) => {
-        console.log(err.response.data?.message);
+      
         openNotificationBox("error", err.response.data?.message, 3);
       });
   };

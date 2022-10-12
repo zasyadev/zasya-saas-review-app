@@ -9,13 +9,12 @@ import {
   SecondaryButton,
 } from "../../component/common/CustomButton";
 import { openNotificationBox } from "../../component/common/notification";
+import { MONTH_DATE_FORMAT } from "../../helpers/dateHelper";
 import getApplaudCategoryName from "../../helpers/getApplaudCategoryName";
 import httpService from "../../lib/httpService";
 import CustomModal from "../common/CustomModal";
 import CustomPopover from "../common/CustomPopover";
 import DefaultImages from "../common/DefaultImages";
-
-const datePattern = "MMM DD, YYYY";
 
 const BASE = process.env.NEXT_PUBLIC_APP_URL;
 
@@ -94,7 +93,7 @@ source=LinkedIn`);
         }
       })
       .catch((err) => {
-        console.log(err.response.data?.message);
+        
         openNotificationBox("error", err.response.data?.message, 3);
       });
   };
@@ -112,7 +111,7 @@ source=LinkedIn`);
         }
       })
       .catch((err) => {
-        console.log(err.response.data?.message);
+        
         openNotificationBox("error", err.response.data?.message, 3);
       });
   };
@@ -271,7 +270,9 @@ source=LinkedIn`);
                                 {item.created.first_name}{" "}
                               </p>
                               <p className="font-medium text-xs mb-0">
-                                {moment(item.created_date).format(datePattern)}
+                                {moment(item.created_date).format(
+                                  MONTH_DATE_FORMAT
+                                )}
                               </p>
                             </div>
                           </div>

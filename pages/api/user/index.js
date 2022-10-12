@@ -78,8 +78,8 @@ async function handle(req, res, prisma) {
     };
 
     await mailService.sendMail(mailData, function (err, info) {
-      if (err) console.log("failed");
-      else console.log("successfull");
+      // if (err) console.log("failed");
+      // else console.log("successfull");
     });
 
     return res.status(201).json({

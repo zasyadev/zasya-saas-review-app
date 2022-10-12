@@ -91,7 +91,7 @@ function ReceivedReviewComponent({ user, reviewId }) {
       })
       .catch((err) => {
         openNotificationBox("error", err.response.data?.message);
-        console.log(err.response.data?.message);
+
       });
   };
 

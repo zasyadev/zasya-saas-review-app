@@ -117,7 +117,7 @@ function AdminUsers({ user }) {
         setLoading(false);
       })
       .catch((err) => {
-        console.log(err);
+       
         setUserList([]);
       });
   }

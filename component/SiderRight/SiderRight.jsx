@@ -48,7 +48,7 @@ function SiderRight({ dashBoardData }) {
   const { reviewRating, averageAnswerTime, applaudCount } = dashBoardData;
   const tempTime = moment.duration(averageAnswerTime);
   return (
-    <div className="bg-white rounded-md shadow-md py-5 px-4">
+    <div className="bg-white rounded-md shadow-md p-4">
       <Row justify="space-around">
         <Col xs={12} md={12} className="border-r border-slate-200">
           <div className=" flex flex-col items-center justify-center">

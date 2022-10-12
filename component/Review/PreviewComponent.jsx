@@ -7,9 +7,9 @@ const defaultLoading = { questionLoading: false, answerLoading: false };
 function PreviewComponent({ user, reviewId }) {
   const [questions, setQuestions] = useState([]);
   const [answers, setAnswers] = useState([]);
+  const [reviewTitle, setReviewTitle] = useState("");
   const [previewData, setPreviewData] = useState([]);
   const [loading, setLoading] = useState(defaultLoading);
-  const [nextSlide, setNextSlide] = useState(0);
 
   const fetchAnswer = async () => {
     setLoading((prev) => ({ ...prev, answerLoading: true }));
@@ -64,6 +64,7 @@ function PreviewComponent({ user, reviewId }) {
       .then(({ data: response }) => {
         if (response.status === 200) {
           setQuestions(response.data?.review?.form?.questions);
+          setReviewTitle(response.data?.review?.review_name);
         }
         setLoading((prev) => ({ ...prev, questionLoading: false }));
       })
@@ -93,18 +94,11 @@ function PreviewComponent({ user, reviewId }) {
           </div>
         </div>
       ) : previewData.length > 0 ? (
-        previewData
-          ?.filter((_, index) => index === nextSlide)
-          ?.map((item) => (
-            <>
-              <PreviewAnswer
-                item={item}
-                nextSlide={nextSlide}
-                setNextSlide={setNextSlide}
-                length={previewData.length}
-              />
-            </>
-          ))
+        <PreviewAnswer
+          length={previewData.length}
+          formTitle={reviewTitle}
+          questions={previewData}
+        />
       ) : (
         <div className="answer-bg  pt-8">
           <div className=" bg-white rounded-md shadow-md mx-auto w-2/3 ">

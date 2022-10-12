@@ -38,9 +38,6 @@ function Team({ user }) {
     await fetch("/api/team/groups", {
       method: "POST",
       body: JSON.stringify(obj),
-      // headers: {
-      //   "Content-Type": "application/json",
-      // },
     })
       .then((response) => response.json())
       .then((response) => {

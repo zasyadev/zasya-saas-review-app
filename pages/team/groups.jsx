@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { getSession } from "next-auth/client";
+import { getSession } from "next-auth/react";
 
 import TeamGroups from "../../component/Team/TeamGroups";
 import AdminLayout from "../../component/layout/AdminLayout";

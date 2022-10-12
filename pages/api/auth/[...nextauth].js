@@ -1,6 +1,6 @@
 import prisma from "../../../lib/prisma";
 import NextAuth from "next-auth";
-import Providers from "next-auth/providers";
+import CredentialsProvider from "next-auth/providers/credentials";
 import { compareHashedPassword } from "../../../lib/auth";
 
 export default NextAuth({
@@ -11,7 +11,8 @@ export default NextAuth({
     updateAge: 30 * 24 * 60 * 60,
   },
   providers: [
-    Providers.Credentials({
+    CredentialsProvider({
+      name: "Credentials",
       async authorize(credentials) {
         const user = await prisma.user.findUnique({
           where: {
@@ -45,31 +46,32 @@ export default NextAuth({
     }),
   ],
   callbacks: {
-    jwt: async (token, user, account, profile, isNewUser) => {
-      user && (token.user = user);
-
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+      }
       return Promise.resolve(token);
     },
-    session: async (session, user, sessionToken) => {
-      session.user = user.user;
-      session.user.temp = 1;
-
-      session.user = await prisma.user.findUnique({
-        where: {
-          id: session.user.id,
-        },
-        include: {
-          UserOraganizationGroups: {
-            include: {
-              organization: true,
-            },
+    async session({ session, token }) {
+      if (token) {
+        session.user.id = token.id;
+        session.user = await prisma.user.findUnique({
+          where: {
+            id: session.user.id,
           },
-          organization: true,
-          role: true,
-          UserDetails: true,
-        },
-      });
-      if (session.user) delete session.user.password;
+          include: {
+            UserOraganizationGroups: {
+              include: {
+                organization: true,
+              },
+            },
+            organization: true,
+            role: true,
+            UserDetails: true,
+          },
+        });
+        if (session.user) delete session.user.password;
+      }
 
       return Promise.resolve(session);
     },

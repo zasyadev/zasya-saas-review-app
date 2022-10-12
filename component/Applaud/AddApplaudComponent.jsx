@@ -9,6 +9,7 @@ import {
 import { openNotificationBox } from "../../component/common/notification";
 import { ApplaudCategoryList } from "../../constants";
 import httpService from "../../lib/httpService";
+import { CustomTextArea } from "../common/CustomFormFeilds";
 import CustomPopover from "../common/CustomPopover";
 
 function AddApplaud({ user }) {
@@ -32,7 +33,6 @@ function AddApplaud({ user }) {
         }
       })
       .catch((err) => {
-        console.log(err.response.data?.message);
         openNotificationBox("error", err.response.data?.message);
         setMembersList([]);
       });
@@ -49,7 +49,6 @@ function AddApplaud({ user }) {
         }
       })
       .catch((err) => {
-        console.log(err.response.data?.message);
         openNotificationBox("error", err.response.data?.message);
         setApplaudLimit(0);
       });
@@ -95,7 +94,7 @@ function AddApplaud({ user }) {
   return (
     <div className="w-full  md:w-3/6 mx-auto">
       <div className="w-full bg-white rounded-md shadow-md p-4 mt-4 add-template-wrapper">
-        <div className="  rounded-t-md  mt-1">
+        <div className=" rounded-t-md  mt-1">
           <Form
             layout="vertical"
             form={applaudform}
@@ -195,12 +194,12 @@ function AddApplaud({ user }) {
                     },
                   ]}
                 >
-                  <TextArea />
+                  <CustomTextArea rows={2} customclassname="shadow-none" />
                 </Form.Item>
               </Col>
 
               <Col md={24} xs={24}>
-                <div className="flex justify-end  ">
+                <div className="flex justify-end shad  ">
                   <SecondaryButton
                     withLink={true}
                     linkHref="/applaud"

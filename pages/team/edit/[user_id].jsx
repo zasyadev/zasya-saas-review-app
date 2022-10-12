@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import AdminLayout from "../../../component/layout/AdminLayout";
-import { getSession } from "next-auth/client";
+import { getSession } from "next-auth/react";
 import AddTeamComponent from "../../../component/Team/AddTeamComponent";
 import { useRouter } from "next/router";
 import httpService from "../../../lib/httpService";

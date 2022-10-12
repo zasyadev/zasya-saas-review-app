@@ -18,6 +18,7 @@ const defaultScaleQuestion = {
   open: false,
   type: "scale",
   editableFeedback: true,
+  ratingFeedback: true,
 };
 const defaultQuestionConfig = {
   questionText: "",
@@ -36,17 +37,14 @@ function AddEditReviewComponent({
 }) {
   const router = useRouter();
   const [form] = Form.useForm();
-
   const [userList, setUserList] = useState([]);
   const [questionList, setQuestionList] = useState([defaultQuestionConfig]);
-
   const [activeReviewStep, setActiveReviewStep] = useState(0);
-
   const [loadingSubmitSpin, setLoadingSubmitSpin] = useState(false);
 
   const onBarInputChange = (value, name) => {
     if (value && name) {
-      if ((name = "assigned_to_id" && userList.length > 0)) {
+      if (name == "assigned_to_id" && userList.length > 0) {
         if (value.includes("all")) {
           let allUsers = userList.map((item) => {
             return item.user.id;
@@ -54,6 +52,15 @@ function AddEditReviewComponent({
           form.setFieldsValue({
             assigned_to_id: allUsers,
           });
+        }
+      }
+      if (name == "rating") {
+        if (value === "feedback") {
+          setQuestionList((prev) => [...prev, defaultScaleQuestion]);
+        } else {
+          setQuestionList((prev) =>
+            prev.filter((item) => !item.ratingFeedback)
+          );
         }
       }
     }
@@ -191,13 +198,9 @@ function AddEditReviewComponent({
       openNotificationBox("error", "Need to Select Members", 3);
       return;
     }
-
-    if (values.review_type === "feedback") {
-      questionList.length > 0 ? questionList.push(defaultScaleQuestion) : null;
-    }
-
     setActiveReviewStep(type + 1);
   };
+
   const nextQuestionListStep = (type) => {
     let newQuestionData = questionList.map((item) => {
       let error = "";

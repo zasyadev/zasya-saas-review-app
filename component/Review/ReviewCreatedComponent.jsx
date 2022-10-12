@@ -1,21 +1,45 @@
-import { CalendarOutlined } from "@ant-design/icons";
-import { Col, Collapse, Grid, Popconfirm, Row, Tooltip } from "antd";
+import {
+  CalendarOutlined,
+  FileTextOutlined,
+  HistoryOutlined,
+  StarOutlined,
+  StopOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
+import { Collapse, Grid, Popconfirm, Tooltip } from "antd";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
-import Link from "next/link";
-import {
-  CalanderIcon,
-  ShareIcon,
-  StarSmallIcon,
-  UserIcon,
-} from "../../assets/icons";
 import { openNotificationBox } from "../../component/common/notification";
 import { calculateDuration } from "../../helpers/momentHelper";
 import httpService from "../../lib/httpService";
 import CustomTable from "../common/CustomTable";
 import { ResizableTitle } from "./ResizableTitle";
+import { MONTH_DATE_FORMAT, YEAR_DATE_FORMAT } from "../../helpers/dateHelper";
 
 const { useBreakpoint } = Grid;
+
+function InfoCard({ count, title, Icon, className = "", ActionButton }) {
+  return (
+    <div className={`bg-white p-4 rounded-md  ${className}`}>
+      <div className="flex flex-wrap items-stretch h-full gap-3">
+        <div className="bg-primary-gray text-primary grid items-center w-10 h-10 py-1 px-1 justify-center shadow-lg-pink rounded-full">
+          <Icon />
+        </div>
+        <div className="flex-1">
+          <div className="text-primary font-semibold capitalize tracking-wide text-sm mb-2">
+            {title}
+          </div>
+          <div className="flex flex-wrap items-center">
+            <span className="flex-1 text-lg 2xl:text-xl capitalize text-primary font-semibold leading-6">
+              {count}
+            </span>
+            {ActionButton && <ActionButton />}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function ReviewCreatedComponent({
   user,
@@ -26,7 +50,7 @@ function ReviewCreatedComponent({
 }) {
   const { xs } = useBreakpoint();
   const { Panel } = Collapse;
-  const datePattern = "DD-MM-YYYY";
+
   const [dataSource, setDataSource] = useState({});
   const [totalRating, setTotalRating] = useState(0);
   const [columns, setColumns] = useState([]);
@@ -47,7 +71,7 @@ function ReviewCreatedComponent({
   let nameTitle = {
     title: "Name",
     dataIndex: "name",
-    width: 250,
+    width: 180,
     fixed: xs ? false : true,
     sorter: (a, b) => a.name?.localeCompare(b.name),
     render: (_, record) => (
@@ -65,15 +89,6 @@ function ReviewCreatedComponent({
     ),
   };
 
-  // let reactivityTimeColoum = {
-  //   title: "Reactivity Time",
-  //   dataIndex: "answer_date",
-
-  //   render: (answer_date) =>
-  //     calculateDuration({
-  //       from: reviewData.created_date,
-  //       to: answer_date,
-  //     }),
   const getWidthLength = (item) => {
     const width =
       item?.questionText && item?.questionText?.length > 40 ? 400 : 300;
@@ -163,7 +178,7 @@ function ReviewCreatedComponent({
       .then(({ data: response }) => {
         if (response.status === 200) {
           openNotificationBox("success", response.message, 3);
-          fetchReviewData(user, reviewId);
+          fetchReviewData(reviewId);
         }
       })
       .catch((err) => {
@@ -192,117 +207,54 @@ function ReviewCreatedComponent({
 
   return (
     <div className="container mx-auto max-w-full">
-      <div className="md:flex items-center justify-between text-base font-medium mb-4 ">
-        <div className="md:flex items-center ">
-          <div className="text-primary capitalize">
-            {reviewData?.frequency} Review
-          </div>
-          <div className="flex ml-2">
-            <div className="bg-red-400 py-2 px-2 rounded-full ">
-              <ShareIcon />
-            </div>
-          </div>
-          <div className="flex  text-primary md:mx-10 my-auto">
-            <p className="mr-1">Type:</p>
-            <p className="capitalize">{reviewData?.review_type}</p>
-          </div>
-        </div>
-
-        <div className="flex items-end justify-between ">
-          <Link href="/review" passHref>
-            <button className="primary-bg-btn text-white text-sm py-3 text-center px-4 rounded-md ">
-              Back
-            </button>
-          </Link>
-          {reviewData.frequency != "once" &&
+      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 2xl:gap-6">
+        <InfoCard
+          title={`Review Created At`}
+          count={moment(reviewData?.created_date).format(MONTH_DATE_FORMAT)}
+          Icon={() => <FileTextOutlined className="text-xl leading-0" />}
+        />
+        <InfoCard
+          title={`Review Frequency`}
+          count={reviewData?.frequency}
+          Icon={() => <HistoryOutlined className="text-xl leading-0" />}
+          ActionButton={() =>
+            reviewData.frequency != "once" &&
             reviewId &&
             !reviewData.frequency_status && (
               <Popconfirm
-                title="Are you sure you want to stop the frequency of this review?"
+                title={
+                  <p className="font-medium mb-0">
+                    Are you sure you want to stop the frequency of this review?
+                  </p>
+                }
                 okText="Yes"
                 cancelText="No"
-                icon={false}
                 onConfirm={() => jobChangeHandler(reviewId)}
-                placement="bottomRight"
+                placement="topRight"
+                overlayClassName="max-w-sm"
               >
-                <div className="ml-2">
-                  <button className="primary-bg-btn text-white text-sm py-3 text-center px-4 rounded-md ">
-                    Stop
-                  </button>
-                </div>
+                <Tooltip
+                  placement="bottom"
+                  title={"To stop the frequency of this review"}
+                >
+                  <StopOutlined className="text-base p-1 leading-0 bg-gray-100  text-center rounded-full mx-2" />
+                </Tooltip>
               </Popconfirm>
-            )}
-        </div>
+            )
+          }
+        />
+        <InfoCard
+          title={"Total Rating"}
+          count={totalRating ?? 0}
+          Icon={() => <StarOutlined className="text-xl leading-0" />}
+        />
+
+        <InfoCard
+          title={"Assign Count"}
+          count={reviewData?.ReviewAssignee?.length}
+          Icon={() => <UserOutlined className="text-xl leading-0" />}
+        />
       </div>
-      <Row justify="space-between" gutter={[16, 16]}>
-        <Col xs={24} md={6}>
-          <Row gutter={8} className="bg-white rounded-md h-full py-6">
-            <Col md={8} className="mx-auto my-auto">
-              <div className="flex">
-                <div className="answer-bg-icon mx-auto my-auto rounded-full ">
-                  <div className="px-3 py-3">
-                    <StarSmallIcon />
-                  </div>
-                </div>
-              </div>
-            </Col>
-            <Col md={16} className="mx-auto my-auto">
-              <div className="flex flex-col my-auto">
-                <div className="text-sm md:text-base font-medium">
-                  Total Rating
-                </div>
-                <div className="text-lg font-medium">{totalRating ?? 0}</div>
-              </div>
-            </Col>
-          </Row>
-        </Col>
-        <Col xs={24} md={6}>
-          <Row gutter={8} className="bg-white rounded-md h-full py-6 ">
-            <Col md={8} className="mx-auto my-auto">
-              <div className="flex     ">
-                <div className="answer-bg-icon  mx-auto my-auto rounded-full ">
-                  <div className="px-3 py-3">
-                    <CalanderIcon />
-                  </div>
-                </div>
-              </div>
-            </Col>
-            <Col md={16} className="mx-auto my-auto">
-              <div className="flex flex-col my-auto">
-                <div className="text-sm md:text-base font-medium">
-                  Created Date
-                </div>
-                <div className="text-lg font-medium">
-                  {moment(reviewData?.created_date).format(datePattern)}
-                </div>
-              </div>
-            </Col>
-          </Row>
-        </Col>
-        <Col xs={24} md={6}>
-          <Row gutter={8} className="bg-white rounded-md h-full py-6">
-            <Col md={8} className="mx-auto my-auto">
-              <div className="flex     ">
-                <div className="answer-bg-icon mx-auto my-auto rounded-full ">
-                  <div className="px-3 py-3">
-                    <UserIcon />
-                  </div>
-                </div>
-              </div>
-            </Col>
-            <Col md={16} className="mx-auto my-auto">
-              <div className="flex flex-col my-auto">
-                <div className="text-sm md:text-base font-medium">
-                  Assign Count
-                </div>
-                <div className="text-lg font-medium">
-                  {reviewData?.ReviewAssignee?.length}
-                </div>
-              </div>
-            </Col>
-          </Row>
-        </Col>
-      </Row>
 
       <div className="overflow-x-auto mt-4 md:mt-6">
         {dataSource &&
@@ -322,7 +274,9 @@ function ReviewCreatedComponent({
                       <div className="flex items-center">
                         <CalendarOutlined />
                         <p className="ml-3 my-auto">
-                          {moment(key, "YYYY-MM-DD").format(datePattern)}
+                          {moment(key, YEAR_DATE_FORMAT).format(
+                            MONTH_DATE_FORMAT
+                          )}
                         </p>
                       </div>
                     }

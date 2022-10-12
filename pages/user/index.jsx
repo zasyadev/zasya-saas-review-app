@@ -1,5 +1,5 @@
 import React from "react";
-import { getSession } from "next-auth/client";
+import { getSession } from "next-auth/react";
 import AdminLayout from "../../component/layout/AdminLayout";
 import AdminUsers from "../../component/Users/AdminUsers";
 

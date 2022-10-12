@@ -36,12 +36,6 @@ const defaultOptions = {
             columnWidth: "90%",
           },
         },
-        // title: {
-        //   text: "Comapny Rating ",
-        //   style: {
-        //     fontSize: "14px",
-        //   },
-        // },
       },
     },
   ],
@@ -79,15 +73,6 @@ const defaultOptions = {
       show: false,
     },
   },
-  // title: {
-  //   text: "Feedback  ",
-  //   style: {
-  //     fontSize: "20",
-  //     fontWeight: "600",
-  //     fontFamily: "Montserrat",
-  //     color: "#0f123f",
-  //   },
-  // },
 
   colors: ["#0F123F"],
   grid: {
@@ -126,6 +111,7 @@ const BarChart = ({ user }) => {
         }
       })
       .catch((err) => {
+        setLoading(false);
         setChartData(defaultChartSeries);
         console.error(err.response.data?.message);
       });
@@ -147,8 +133,7 @@ const BarChart = ({ user }) => {
       </p>
       {loading ? (
         <>
-          {" "}
-          <Skeleton active className="mb-2" />
+          <Skeleton active className="mt-4 mb-2" />
           <Skeleton active />
         </>
       ) : (
