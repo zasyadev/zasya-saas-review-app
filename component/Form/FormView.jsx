@@ -34,18 +34,18 @@ function FormView({ user }) {
 
   const columns = [
     {
+      title: "Review Name",
+      dataIndex: "review",
+      key: "review",
+      width: 250,
+      render: (review) => review.review_name,
+    },
+    {
       title: "Assign By",
       dataIndex: "review",
       key: "Assign_By",
       render: (review) =>
         review.created.first_name + " " + review.created.last_name,
-    },
-
-    {
-      title: "Review Name",
-      dataIndex: "review",
-      key: "review",
-      render: (review) => review.review_name,
     },
     {
       title: "Frequency",

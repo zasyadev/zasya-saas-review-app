@@ -68,6 +68,7 @@ function ReviewManagement({ user }) {
     {
       title: "Review Name",
       key: "review_name",
+      width: 250,
       render: (_, record) => (
         <div className="flex">
           {record.is_published != "published" ? (

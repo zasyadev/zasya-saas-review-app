@@ -3,6 +3,7 @@ import { Col, DatePicker, Row, Timeline } from "antd";
 import moment from "moment";
 import React, { useEffect, useMemo, useState } from "react";
 import { ApplaudGiven, ApplaudIconSmall } from "../../assets/icons";
+import { disableDates, MONTH_FORMAT } from "../../helpers/dateHelper";
 import httpService from "../../lib/httpService";
 import DefaultImages from "../common/DefaultImages";
 import { openNotificationBox } from "../common/notification";
@@ -86,9 +87,10 @@ function AllAplaud({ user }) {
               picker="month"
               bordered={false}
               allowClear={false}
-              format="MMMM"
+              format={MONTH_FORMAT}
               defaultValue={moment()}
               className="font-semibold"
+              disabledDate={disableDates}
             />
           </div>
         </div>

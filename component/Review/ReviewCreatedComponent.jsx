@@ -14,6 +14,7 @@ import { calculateDuration } from "../../helpers/momentHelper";
 import httpService from "../../lib/httpService";
 import CustomTable from "../common/CustomTable";
 import { ResizableTitle } from "./ResizableTitle";
+import { MONTH_DATE_FORMAT, YEAR_DATE_FORMAT } from "../../helpers/dateHelper";
 
 const { useBreakpoint } = Grid;
 
@@ -49,7 +50,7 @@ function ReviewCreatedComponent({
 }) {
   const { xs } = useBreakpoint();
   const { Panel } = Collapse;
-  const datePattern = "DD-MM-YYYY";
+
   const [dataSource, setDataSource] = useState({});
   const [totalRating, setTotalRating] = useState(0);
   const [columns, setColumns] = useState([]);
@@ -209,7 +210,7 @@ function ReviewCreatedComponent({
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 2xl:gap-6">
         <InfoCard
           title={`Review Created At`}
-          count={moment(reviewData?.created_date).format(datePattern)}
+          count={moment(reviewData?.created_date).format(MONTH_DATE_FORMAT)}
           Icon={() => <FileTextOutlined className="text-xl leading-0" />}
         />
         <InfoCard
@@ -273,7 +274,9 @@ function ReviewCreatedComponent({
                       <div className="flex items-center">
                         <CalendarOutlined />
                         <p className="ml-3 my-auto">
-                          {moment(key, "YYYY-MM-DD").format(datePattern)}
+                          {moment(key, YEAR_DATE_FORMAT).format(
+                            MONTH_DATE_FORMAT
+                          )}
                         </p>
                       </div>
                     }

@@ -7,6 +7,11 @@ import {
   SecondaryButton,
   ToggleButton,
 } from "../../component/common/CustomButton";
+import {
+  disableDates,
+  MONTH_DATE_FORMAT,
+  MONTH_FORMAT,
+} from "../../helpers/dateHelper";
 import getApplaudCategoryName from "../../helpers/getApplaudCategoryName";
 import httpService from "../../lib/httpService";
 import { openNotificationBox } from "../common/notification";
@@ -41,7 +46,7 @@ const ApplaudCard = ({ applaud, type }) => {
           </span>
         </p>
         <p className="text-sm  text-gray-500 font-medium mb-0 ">
-          {moment(applaud.created_date).format("MMMM DD, YYYY")}
+          {moment(applaud.created_date).format(MONTH_DATE_FORMAT)}
         </p>
       </div>
     </div>
@@ -119,9 +124,10 @@ function Applaud({ user }) {
             picker="month"
             bordered={false}
             allowClear={false}
-            format="MMMM"
+            format={MONTH_FORMAT}
             defaultValue={moment()}
             className="font-semibold w-full md:w-auto"
+            disabledDate={disableDates}
           />
         </div>
 
