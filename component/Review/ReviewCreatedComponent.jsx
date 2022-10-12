@@ -14,6 +14,7 @@ import { calculateDuration } from "../../helpers/momentHelper";
 import httpService from "../../lib/httpService";
 import CustomTable from "../common/CustomTable";
 import { ResizableTitle } from "./ResizableTitle";
+import { MONTH_DATE_FORMAT, YEAR_DATE_FORMAT } from "../../helpers/dateHelper";
 
 const { useBreakpoint } = Grid;
 
@@ -26,7 +27,7 @@ function ReviewCreatedComponent({
 }) {
   const { xs } = useBreakpoint();
   const { Panel } = Collapse;
-  const datePattern = "DD-MM-YYYY";
+
   const [dataSource, setDataSource] = useState({});
   const [totalRating, setTotalRating] = useState(0);
   const [columns, setColumns] = useState([]);
@@ -269,7 +270,7 @@ function ReviewCreatedComponent({
                   Created Date
                 </div>
                 <div className="text-lg font-medium">
-                  {moment(reviewData?.created_date).format(datePattern)}
+                  {moment(reviewData?.created_date).format(MONTH_DATE_FORMAT)}
                 </div>
               </div>
             </Col>
@@ -315,7 +316,7 @@ function ReviewCreatedComponent({
                   Created Date
                 </div>
                 <div className="text-lg font-medium">
-                  {moment(reviewData?.created_date).format(datePattern)}
+                  {moment(reviewData?.created_date).format(MONTH_DATE_FORMAT)}
                 </div>
               </div>
             </Col>
@@ -341,7 +342,9 @@ function ReviewCreatedComponent({
                       <div className="flex items-center">
                         <CalendarOutlined />
                         <p className="ml-3 my-auto">
-                          {moment(key, "YYYY-MM-DD").format(datePattern)}
+                          {moment(key, YEAR_DATE_FORMAT).format(
+                            MONTH_DATE_FORMAT
+                          )}
                         </p>
                       </div>
                     }
