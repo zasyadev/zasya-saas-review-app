@@ -89,14 +89,18 @@ const FeedbackMemberStep = ({ onInputChange, type, userList }) => {
           className="w-full"
           maxTagCount="responsive"
         >
-          <Select.Option key="all" value="all">
-            ---SELECT ALL---
-          </Select.Option>
-          {userList.map((data, index) => (
-            <Select.Option key={index + "users"} value={data?.user?.id}>
-              {data?.user?.first_name}
-            </Select.Option>
-          ))}
+          {userList.length > 0 && (
+            <>
+              <Select.Option key="all" value="all">
+                ---SELECT ALL---
+              </Select.Option>
+              {userList.map((data, index) => (
+                <Select.Option key={index + "users"} value={data?.user?.id}>
+                  {data?.user?.first_name}
+                </Select.Option>
+              ))}
+            </>
+          )}
         </Select>
       </Form.Item>
 
@@ -115,7 +119,7 @@ const FeedbackMemberStep = ({ onInputChange, type, userList }) => {
         >
           <Radio.Group
             placeholder="Select Type"
-            onChange={(e) => onInputChange(e.target.value, type)}
+            onChange={(e) => onInputChange(e.target.value, "rating")}
           >
             <Radio.Button
               value="feedback"

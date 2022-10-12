@@ -60,7 +60,7 @@ export function TemplatePreviewComponent({ length, formTitle, questions }) {
         <p className="mb-1">{length} Questions</p>
       </div>
 
-      <div className=" bg-white rounded-md p-2 md:px-5 md:py-5 shadow-md md:w-7/12 mx-auto space-y-3">
+      <div className=" bg-white rounded-md p-2 md:px-5 md:py-5 shadow-md md:w-7/12 mx-auto space-y-5">
         {questions.length &&
           questions.map((ques, idx) => {
             return <TypeComponent key={idx + "ques"} {...ques} />;
