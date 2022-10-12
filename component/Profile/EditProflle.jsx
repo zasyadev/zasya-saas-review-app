@@ -20,6 +20,7 @@ import {
 import { openNotificationBox } from "../../component/common/notification";
 import httpService from "../../lib/httpService";
 import CustomModal from "../common/CustomModal";
+const ActionURL = process.env.NEXT_PUBLIC_APP_URL + "api/profile/noop";
 
 const getSrcFromFile = (file) => {
   return new Promise((resolve) => {
@@ -47,6 +48,7 @@ const ImageUpload = ({
   formName,
   limit = true,
   limitSize = 1,
+  // handleFileChange
 }) => {
   const [isUploading, setIsUploading] = useState(false);
 
@@ -117,7 +119,7 @@ const ImageUpload = ({
             name="image"
             listType="picture-card"
             fileList={fileList}
-            // action={handleFileChange}
+            action={ActionURL}
             onChange={handleChange}
             onPreview={onPreview}
             data={{ category: category }}

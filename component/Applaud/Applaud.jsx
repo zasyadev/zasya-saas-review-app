@@ -34,20 +34,19 @@ const ApplaudCard = ({ applaud, type }) => {
   return (
     <div className="flex flex-col template-list h-full w-full rounded-md shadow-md bg-white space-y-4 p-4">
       <div className="relative h-auto p-4 bg-teal-100 space-y-4 rounded-md flex flex-col flex-1">
-        <p className="py-2 mb-0 font-medium flex-1">{applaud.comment}</p>
-        <p className="mb-0 flex flex-wrap gap-2">
-          {applaud?.category?.length > 0 &&
-            applaud?.category.map((item, idx) => {
-              return (
-                <span
-                  key={idx + "cat"}
-                  className=" px-3 py-1 rounded-full bg-teal-200 text-xs "
-                >
-                  {getApplaudCategoryName(item)}
-                </span>
-              );
-            })}
-        </p>
+        <p className="mb-0 font-medium flex-1">{applaud.comment}</p>
+        {applaud?.category?.length > 0 && (
+          <p className="mb-0 flex flex-wrap gap-2">
+            {applaud?.category.map((item, idx) => (
+              <span
+                key={idx + "cat"}
+                className=" px-3 py-1 rounded-full bg-teal-200 text-xs "
+              >
+                {getApplaudCategoryName(item)}
+              </span>
+            ))}
+          </p>
+        )}
       </div>
 
       <div className=" border-gray-200  px-2 ">
