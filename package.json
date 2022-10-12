@@ -32,7 +32,6 @@
     "react-apexcharts": "^1.4.0",
     "react-dom": "18.2.0",
     "react-drag-listview": "^0.2.1",
-    "react-html-parser": "^2.0.2",
     "react-resizable": "^3.0.4",
     "sass": "^1.55.0"
   },
