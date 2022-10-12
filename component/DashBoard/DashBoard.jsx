@@ -1,4 +1,4 @@
-import { Col, Row, Skeleton } from "antd";
+import { Col, Row } from "antd";
 import moment from "moment";
 import dynamic from "next/dynamic";
 import Image from "next/image";
@@ -30,26 +30,22 @@ function CountCard({
   return (
     <Link href={href} passHref>
       <div
-        className={`bg-white rounded-md shadow-md transition-all duration-300 ease-in hover:bg-gradient-to-r hover:from-peach hover:to-peach-light ${className}`}
+        className={`bg-white p-4 rounded-md shadow-md transition-all duration-300 ease-in hover:bg-gradient-to-r hover:from-peach hover:to-peach-light ${className}`}
       >
-        <div className="px-4 py-5">
-          <div className="flex flex-wrap items-start space-x-3">
-            <div className="bg-gradient-to-r from-peach to-peach-light text-white grid items-center w-10 h-10 py-1 px-1 justify-center shadow-lg-pink rounded-full">
-              <Icon />
+        <div className="flex flex-wrap items-stretch h-full gap-3">
+          <div className="bg-gradient-to-r from-peach to-peach-light text-white grid items-center w-10 h-10 py-1 px-1 justify-center shadow-lg-pink rounded-full">
+            <Icon />
+          </div>
+          <div className="flex-1">
+            <div className="text-primary flex items-start justify-between font-semibold tracking-wide text-sm gap-2 mb-2">
+              <span className="flex-1">{title}</span>
+              {tooltipText && (
+                <span className="leading-4">{CustomPopover(tooltipText)}</span>
+              )}
             </div>
-            <div className="flex-1">
-              <div className="text-primary font-semibold tracking-wide text-sm  mb-1 flex items-center">
-                {title}
-                {tooltipText && (
-                  <span className="leading-[0] ml-2">
-                    {CustomPopover(tooltipText)}
-                  </span>
-                )}
-              </div>
-              <span className="text-2xl text-primary font-semibold ">
-                {count}
-              </span>
-            </div>
+            <span className="text-lg xl:text-xl 2xl:text-2xl text-primary font-semibold leading-6">
+              {count}
+            </span>
           </div>
         </div>
       </div>
@@ -69,7 +65,6 @@ function DashBoard({ user }) {
 
   const [dashBoardData, setDashboardData] = useState(defaultDashboardData);
 
-  const [loading, setLoading] = useState(false);
   const [feedbackList, setFeedbackList] = useState([]);
   const [allApplaud, setAllApplaud] = useState([]);
   const currentMonth = {
@@ -185,23 +180,14 @@ function DashBoard({ user }) {
           </div>
 
           <div className="w-full bg-white rounded-md overflow-hidden shadow-md p-4">
-            {loading ? (
-              <Skeleton
-                title={false}
-                active={true}
-                width={[200]}
-                className="mt-4"
-              />
-            ) : (
-              <BarChart user={user} />
-            )}
+            <BarChart user={user} />
           </div>
           <Row gutter={[24, 24]}>
             <Col xs={24} md={12} lg={12}>
               <div className="w-full bg-white rounded-md overflow-hidden shadow-md p-4 h-full flex flex-col">
-                <h2 className="text-xl mt-1 font-semibold text-primary mb-2 flex items-center">
-                  Applauds Leaderboard
-                  <span className="leading-[0] ml-2">
+                <h2 className="text-xl font-semibold text-primary mb-2 flex items-center justify-between gap-3">
+                  <span className="flex-1"> Applauds Leaderboard</span>
+                  <span className="leading-4 text-base  text-gray-900">
                     {CustomPopover("Applauds count received by that member.")}
                   </span>
                 </h2>
@@ -269,9 +255,9 @@ function DashBoard({ user }) {
             </Col>
             <Col md={12} lg={12} xs={24}>
               <div className="w-full bg-white rounded-md overflow-hidden shadow-md p-4 h-full">
-                <h2 className="text-xl mt-1 text-primary  font-semibold mb-2 flex items-center">
-                  Feedback Leaderboard
-                  <span className="leading-[0] ml-2">
+                <h2 className="text-xl text-primary  font-semibold mb-2 flex items-center gap-3 justify-between">
+                  <span className="flex-1"> Feedback Leaderboard</span>
+                  <span className="leading-4 text-base  text-gray-900">
                     {CustomPopover(
                       "Feedback received and given count by your team members"
                     )}

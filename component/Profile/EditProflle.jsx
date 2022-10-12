@@ -288,7 +288,7 @@ function EditProfile({ user }) {
         }
       })
       .catch((err) => {
-        console.log(err.response.data?.message);
+      
         openNotificationBox("error", err.response.data?.message, 3);
       });
   };

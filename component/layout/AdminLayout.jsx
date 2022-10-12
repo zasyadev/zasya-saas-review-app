@@ -24,7 +24,7 @@ function getItem(label, key, icon, children, type) {
   };
 }
 
-function AdminLayout({ user, title, children }) {
+function AdminLayout({ user, title, isBack = false, children }) {
   const { md } = useBreakpoint();
   const [collapsed, setCollapsed] = useState(false);
 
@@ -82,6 +82,7 @@ function AdminLayout({ user, title, children }) {
         <Layout>
           <Content className="bg-primary-gray ">
             <HeaderLayout
+              isBack={isBack}
               title={title}
               user={user}
               setCollapsed={setCollapsed}

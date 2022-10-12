@@ -94,7 +94,7 @@ source=LinkedIn`);
         }
       })
       .catch((err) => {
-        console.log(err.response.data?.message);
+        
         openNotificationBox("error", err.response.data?.message, 3);
       });
   };
@@ -112,7 +112,7 @@ source=LinkedIn`);
         }
       })
       .catch((err) => {
-        console.log(err.response.data?.message);
+        
         openNotificationBox("error", err.response.data?.message, 3);
       });
   };

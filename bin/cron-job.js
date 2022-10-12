@@ -44,7 +44,7 @@ async function cronJobStart() {
     //   });
     // });
   } catch (error) {
-    console.log(error);
+    // console.log(error);
   }
 }
 cronJobStart();

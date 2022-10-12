@@ -77,8 +77,8 @@ async function handle(req, res, prisma) {
           };
 
           await mailService.sendMail(mailData, function (err, info) {
-            if (err) console.log("failed");
-            else console.log("successfull");
+            // if (err) console.log("failed");
+            // else console.log("successfull");
           });
         } else {
           userData = await transaction.user.create({
@@ -120,8 +120,8 @@ async function handle(req, res, prisma) {
           };
 
           await mailService.sendMail(mailData, function (err, info) {
-            if (err) console.log("failed");
-            else console.log("successfull");
+            // if (err) console.log("failed");
+            // else console.log("successfull");
           });
         }
         let newTags = [];
