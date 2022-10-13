@@ -7,7 +7,7 @@ function TemplateView() {
   return (
     <WithMe>
       {({ user }) => (
-        <AdminLayout user={user} title={"Template View "}>
+        <AdminLayout user={user} title={"Template View "} isBack>
           <TemplateListView user={user} />
         </AdminLayout>
       )}

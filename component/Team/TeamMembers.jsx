@@ -72,7 +72,6 @@ function TeamMembers({ user }) {
     },
     {
       title: "Tags",
-
       render: (_, record) => (
         <div className="grid grid-cols-1  md:grid-cols-3 gap-2">
           {" "}
@@ -122,7 +121,7 @@ function TeamMembers({ user }) {
       <div className="mb-4 md:mb-6 flex justify-end">
         <PrimaryButton
           withLink={true}
-          className="rounded-md  px-2 md:px-4 "
+          className="px-2 md:px-4 "
           linkHref="/team/add"
           title={"Create"}
         />

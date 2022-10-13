@@ -288,7 +288,6 @@ function EditProfile({ user }) {
         }
       })
       .catch((err) => {
-      
         openNotificationBox("error", err.response.data?.message, 3);
       });
   };
@@ -322,14 +321,14 @@ function EditProfile({ user }) {
                 <div className="mr-4">
                   <SecondaryButton
                     onClick={() => handleEditSlack()}
-                    className="rounded h-full md:w-full w-32 mr-2"
+                    className="h-full md:w-full w-32 mr-2"
                     title="Change Slack Email"
                   />
                 </div>
                 <div>
                   <PrimaryButton
                     onClick={() => showPasswordEditModal()}
-                    className="md:px-4 px-2 rounded-md md:w-full w-24"
+                    className="md:px-4 px-2 md:w-full w-24"
                     title="Change Password"
                   />
                 </div>
@@ -460,14 +459,14 @@ function EditProfile({ user }) {
                   <div className="text-center space-x-4">
                     <SecondaryButton
                       withLink={true}
-                      className="rounded h-full w-32"
+                      className=" h-full w-32"
                       linkHref={"/profile"}
                       title="Cancel"
                     />
                     <PrimaryButton
                       type="submit"
                       disabled={apiLoading}
-                      className=" h-full w-32 rounded "
+                      className=" h-full w-32  "
                       title="Submit"
                     />
                   </div>
@@ -487,12 +486,12 @@ function EditProfile({ user }) {
           <>
             <SecondaryButton
               onClick={() => setIsModalVisible(false)}
-              className="rounded h-full mr-2"
+              className=" h-full mr-2"
               title="Cancel"
             />
             <PrimaryButton
               onClick={() => passwordForm.submit()}
-              className=" h-full rounded "
+              className=" h-full  "
               title="Change Password"
             />
           </>,
@@ -587,12 +586,12 @@ function EditProfile({ user }) {
           <>
             <SecondaryButton
               onClick={() => setShowSlackEditModal(false)}
-              className="rounded h-full mr-2"
+              className=" h-full mr-2"
               title="Cancel"
             />
             <PrimaryButton
               onClick={() => slackForm.submit()}
-              className=" h-full rounded "
+              className=" h-full  "
               title="Change Email"
             />
           </>,

@@ -211,12 +211,12 @@ function AddTeamComponent({ user, editMode, memberData }) {
                   <SecondaryButton
                     withLink={true}
                     linkHref="/team/members"
-                    className="mx-4 rounded my-1"
+                    className="mx-4 my-1"
                     title="Cancel"
                   />
                   <PrimaryButton
                     type="submit"
-                    className=" my-1 rounded "
+                    className=" my-1 "
                     title={editMode ? "Update" : "Create"}
                   />
                 </div>

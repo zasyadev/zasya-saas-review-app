@@ -7,7 +7,7 @@ function EditProfilePage() {
   return (
     <WithMe>
       {({ user }) => (
-        <AdminLayout user={user} title={"Edit Profile"}>
+        <AdminLayout user={user} title={"Edit Profile"} isBack>
           <EditProfile user={user} />
         </AdminLayout>
       )}

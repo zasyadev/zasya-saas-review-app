@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { openNotificationBox } from "../../component/common/notification";
 import httpService from "../../lib/httpService";
-import { FormSlideComponent } from "./formhelper/FormComponent";
+import { FormSlideComponent } from "./formhelper/FormSlideComponent";
 import { motion, AnimatePresence } from "framer-motion";
 
 function ReceivedReviewComponent({ user, reviewId }) {
@@ -91,7 +91,6 @@ function ReceivedReviewComponent({ user, reviewId }) {
       })
       .catch((err) => {
         openNotificationBox("error", err.response.data?.message);
-
       });
   };
 
