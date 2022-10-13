@@ -42,7 +42,6 @@ function InfoCard({ count, title, Icon, className = "", ActionButton }) {
 }
 
 function ReviewCreatedComponent({
-  user,
   reviewData,
   reviewId,
   fetchReviewData,

@@ -37,7 +37,7 @@ function FormView({ user }) {
       title: "Review Name",
       dataIndex: "review",
       key: "review",
-      width: 250,
+      // width: 250,
       render: (review) => review.review_name,
     },
     {
@@ -73,14 +73,14 @@ function FormView({ user }) {
           {!record.status ? (
             <PrimaryButton
               withLink={true}
-              className="rounded-md text-sm"
+              className=" text-sm"
               linkHref={`/review/id/${record.id}`}
               title={"Attempt"}
             />
           ) : (
-            <PrimaryButton
+            <ButtonGray
               withLink={true}
-              className="rounded-md text-sm"
+              className=" text-sm"
               linkHref={`/review/preview/${record.id}`}
               title={"View"}
             />
@@ -110,7 +110,6 @@ function FormView({ user }) {
           <div className="mb-4 md:mb-0 text-right">
             <PrimaryButton
               withLink={false}
-              className="rounded-md"
               onClick={() => setCreateReviewModal(true)}
               title={"Create"}
             />

@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
 import { openNotificationBox } from "../../component/common/notification";
 import httpService from "../../lib/httpService";
@@ -98,13 +99,31 @@ function TemplateLayout({ user }) {
       </div>
 
       <div className="container mx-auto max-w-full mt-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-5 gap-8 2xl:gap-12 ">
+        <motion.div
+          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-5 gap-8 2xl:gap-12 "
+          variants={{
+            hidden: { opacity: 0 },
+            show: {
+              opacity: 1,
+              transition: {
+                duration: 0.3,
+                staggerChildren: 0.5,
+                delayChildren: 0.5,
+              },
+            },
+          }}
+          initial="hidden"
+          animate="show"
+        >
           {changeTemaplateView ? (
             <>
               <CreateTemplateCard />
               {loading ? (
                 [...Array(3)].map((_, idx) => (
-                  <SkeletonTemplateCard key={idx + "temp"} />
+                  <SkeletonTemplateCard
+                    key={idx + "temp"}
+                    index={idx + "temp"}
+                  />
                 ))
               ) : templateList.length > 0 ? (
                 templateList.map((template) => (
@@ -151,7 +170,7 @@ function TemplateLayout({ user }) {
               )}
             </>
           )}
-        </div>
+        </motion.div>
       </div>
     </div>
   );

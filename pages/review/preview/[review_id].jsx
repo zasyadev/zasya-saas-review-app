@@ -13,7 +13,7 @@ function ReceivedPage({ user }) {
       {({ user }) => (
         <>
           <HeadersComponent />
-          <AdminLayout user={user} title="Preview Answer">
+          <AdminLayout user={user} title="Preview Answer" isBack>
             <PreviewComponent user={user} reviewId={review_id} />
           </AdminLayout>
         </>

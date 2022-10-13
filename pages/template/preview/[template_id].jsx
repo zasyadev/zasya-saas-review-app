@@ -74,7 +74,7 @@ const PreviewWrraper = ({ user }) => {
         <div className="flex justify-center mt-3">
           <PrimaryButton
             withLink={true}
-            className="rounded-md  mr-4"
+            className="mr-4"
             linkHref={`/review/edit/${templateData.id}`}
             title={"Use This Template"}
           />

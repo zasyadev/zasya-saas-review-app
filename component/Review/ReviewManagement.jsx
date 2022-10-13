@@ -179,8 +179,6 @@ function ReviewManagement({ user }) {
           <div className="mb-4 md:mb-0 text-right">
             <PrimaryButton
               withLink={false}
-              className="rounded-md"
-              // linkHref="/review/add"
               onClick={() => setCreateReviewModal(true)}
               title={"Create"}
             />

@@ -1,7 +1,7 @@
 import { DislikeOutlined, LikeOutlined } from "@ant-design/icons";
 import { Col, Form, Input, Radio, Rate, Row, Slider } from "antd";
 import React, { useState } from "react";
-import { openNotificationBox } from "../../../component/common/notification";
+import { openNotificationBox } from "../../common/notification";
 import { motion } from "framer-motion";
 import { PrimaryButton, SecondaryButton } from "../../common/CustomButton";
 
@@ -109,7 +109,7 @@ export function FormSlideComponent({
                       return (
                         <Col xs={24} md={12} lg={8} key={j + "option"}>
                           <Radio.Button
-                            className="text-center answer-radio-button w-full flex items-center justify-center px-2 py-1 rounded-md"
+                            className="text-center answer-radio-button w-full flex items-center justify-center p-2 lg:p-3 rounded-md"
                             value={op.optionText}
                           >
                             {op.optionText}
@@ -263,19 +263,17 @@ export function FormSlideComponent({
                   <Row gutter={[32, 32]} justify="center">
                     <Col>
                       <Radio.Button
-                        // className="rounded-sm cursor-pointer m-8 "
                         value={"yes"}
                         size="large"
-                        className="text-center cursor-pointer answer-radio-button  py-2 px-3 rounded-md"
+                        className="text-center cursor-pointer answer-radio-button  p-2 lg:p-4 rounded-md"
                       >
                         <LikeOutlined style={{ fontSize: "34px" }} />
                       </Radio.Button>
                     </Col>
                     <Col>
                       <Radio.Button
-                        // className=" rounded-sm cursor-pointer"
                         size="large"
-                        className="text-center cursor-pointer answer-radio-button  py-2 px-3 rounded-md"
+                        className="text-center cursor-pointer answer-radio-button  p-2 lg:p-4 rounded-md"
                         value={"no"}
                       >
                         <DislikeOutlined style={{ fontSize: "34px" }} />

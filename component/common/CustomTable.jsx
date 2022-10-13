@@ -8,14 +8,16 @@ const CustomTable = ({
   ...props
 }) => {
   return (
-    <Table
-      bordered={false}
-      className={`rounded-md bg-white custom-table ${className}`}
-      {...props}
-      rowClassName={(_, index) =>
-        index % 2 === 0 ? "" : "background-color-voilet"
-      }
-    />
+    <div className="overflow-auto">
+      <Table
+        bordered={false}
+        className={`rounded-md bg-white custom-table ${className}`}
+        {...props}
+        rowClassName={(_, index) =>
+          index % 2 === 0 ? "" : "background-color-voilet"
+        }
+      />
+    </div>
   );
 };
 

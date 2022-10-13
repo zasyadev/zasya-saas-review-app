@@ -1,8 +1,26 @@
 import { Popconfirm, Skeleton } from "antd";
+import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import { AddIcon, DeleteTemplateIcon } from "../../assets/icons";
+
+const motionVariants = {
+  hidden: { y: 20, opacity: 0 },
+  show: { y: 0, opacity: 1 },
+};
+export const CreateTemplateCard = () => (
+  <Link href="/template/add" passHref>
+    <div className="template  template-list flex bg-white items-center justify-center flex-col  w-full rounded-md overflow-hdden shadow-md p-5  cursor-pointer  h-56 sm:h-full">
+      <div className="cursor-pointer">
+        <AddIcon className="text-center " />
+      </div>
+      <div className="text-primary text-center text-base font-medium mt-5">
+        Create Template From Scratch
+      </div>
+    </div>
+  </Link>
+);
 
 export const TemplateCard = ({
   id,
@@ -14,7 +32,11 @@ export const TemplateCard = ({
   questionLength = 0,
 }) => {
   return (
-    <div className="template-list rounded-md shadow-md bg-white flex flex-col">
+    <motion.div
+      key={id}
+      variants={motionVariants}
+      className="template-list rounded-md shadow-md bg-white flex flex-col"
+    >
       <Link href={linkHref} passHref>
         <div className="relative w-full h-40 cursor-pointer ">
           <Image
@@ -63,31 +85,22 @@ export const TemplateCard = ({
           )}
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
-export const SkeletonTemplateCard = () => {
+export const SkeletonTemplateCard = ({ index }) => {
   return (
-    <div className="template-list h-full w-full shadow-md">
+    <motion.div
+      key={index}
+      variants={motionVariants}
+      className="template-list h-full w-full shadow-md"
+    >
       <Skeleton.Image active className="w-full h-40" />
 
       <div className="flex flex-wrap border-gray-200 items-center justify-between py-4 px-4 space-x-3">
         <Skeleton active title={false} className="w-full h-32" />
       </div>
-    </div>
+    </motion.div>
   );
 };
-
-export const CreateTemplateCard = () => (
-  <Link href="/template/add" passHref>
-    <div className="template  template-list flex bg-white items-center justify-center flex-col  w-full rounded-md overflow-hdden shadow-md p-5  cursor-pointer  h-56 sm:h-full">
-      <div className="cursor-pointer">
-        <AddIcon className="text-center " />
-      </div>
-      <div className="text-primary text-center text-base font-medium mt-5">
-        Create Template From Scratch
-      </div>
-    </div>
-  </Link>
-);

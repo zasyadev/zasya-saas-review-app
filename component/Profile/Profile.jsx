@@ -93,7 +93,6 @@ source=LinkedIn`);
         }
       })
       .catch((err) => {
-        
         openNotificationBox("error", err.response.data?.message, 3);
       });
   };
@@ -111,7 +110,6 @@ source=LinkedIn`);
         }
       })
       .catch((err) => {
-        
         openNotificationBox("error", err.response.data?.message, 3);
       });
   };
@@ -327,12 +325,12 @@ source=LinkedIn`);
           <>
             <SecondaryButton
               onClick={() => setOrganizationModal(false)}
-              className="rounded h-full mr-2"
+              className=" h-full mr-2"
               title="Cancel"
             />
             <PrimaryButton
               onClick={() => orgForm.submit()}
-              className=" h-full rounded "
+              className=" h-full  "
               title="Update"
             />
           </>,
