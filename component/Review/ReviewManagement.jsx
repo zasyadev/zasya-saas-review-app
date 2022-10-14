@@ -162,7 +162,7 @@ function ReviewManagement({ user }) {
   return (
     <div className="container mx-auto max-w-full">
       <div className="grid grid-cols-1">
-        <div className="flex flex-col-reverse md:flex-row md:items-center md:justify-between  mb-4 md:mb-6">
+        <div className="md:flex  md:flex-row md:items-center md:justify-between  mb-4 md:mb-6 ">
           <div className="flex w-auto">
             <ButtonGray
               withLink={true}
@@ -176,7 +176,7 @@ function ReviewManagement({ user }) {
               title={"Created"}
             />
           </div>
-          <div className="mb-4 md:mb-0 text-right">
+          <div className="mb-4 md:mb-0 text-right mt-2 md:mt-0">
             <PrimaryButton
               withLink={false}
               onClick={() => setCreateReviewModal(true)}

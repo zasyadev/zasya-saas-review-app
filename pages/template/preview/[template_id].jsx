@@ -1,6 +1,5 @@
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import { PrimaryButton } from "../../../component/common/CustomButton";
 import AdminLayout from "../../../component/layout/AdminLayout";
 import WithMe from "../../../component/layout/WithMe";
 import { TemplatePreviewComponent } from "../../../component/Template/TemplatePreviewComponent";
@@ -65,21 +64,11 @@ const PreviewWrraper = ({ user }) => {
     </>
   ) : (
     templateData.form_data?.questions?.length && (
-      <>
-        <TemplatePreviewComponent
-          length={templateData.form_data.questions.length}
-          formTitle={templateData.form_data.title}
-          questions={templateData.form_data.questions}
-        />
-        <div className="flex justify-center mt-3">
-          <PrimaryButton
-            withLink={true}
-            className="mr-4"
-            linkHref={`/review/edit/${templateData.id}`}
-            title={"Use This Template"}
-          />
-        </div>
-      </>
+      <TemplatePreviewComponent
+        length={templateData.form_data.questions.length}
+        formTitle={templateData.form_data.title}
+        questions={templateData.form_data.questions}
+      />
     )
   );
 };
@@ -89,7 +78,7 @@ function TemplatePreviewPage() {
     <div>
       <WithMe>
         {({ user }) => (
-          <AdminLayout user={user} title={""}>
+          <AdminLayout user={user} title={""} isBack>
             <PreviewWrraper user={user} />
           </AdminLayout>
         )}

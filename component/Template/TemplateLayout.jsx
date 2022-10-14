@@ -77,7 +77,7 @@ function TemplateLayout({ user }) {
 
   return (
     <div className="container mx-auto max-w-full">
-      <div className="flex w-auto">
+      <div className="flex w-auto  mb-4 md:mb-6">
         <ToggleButton
           className={`rounded-r-none rounded-l-md w-1/2  md:w-fit ${
             changeTemaplateView
@@ -88,7 +88,7 @@ function TemplateLayout({ user }) {
           title={"My Templates"}
         />
         <ToggleButton
-          className={`rounded-l-none rounded-r-md w-1/2  md:w-fit ${
+          className={`rounded-l-none border-l-0 rounded-r-md w-1/2  md:w-fit ${
             changeTemaplateView
               ? "bg-gray-50 hover:bg-gray-100 border-gray-300 text-gray-600 "
               : "bg-primary text-white"
@@ -98,7 +98,7 @@ function TemplateLayout({ user }) {
         />
       </div>
 
-      <div className="container mx-auto max-w-full mt-4">
+      <div className="container mx-auto max-w-full">
         <motion.div
           className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-5 gap-8 2xl:gap-12 "
           variants={{
