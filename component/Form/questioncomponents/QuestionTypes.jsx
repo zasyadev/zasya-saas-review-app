@@ -16,38 +16,42 @@ export function MultipleChoiceType({
   return (
     <>
       <p className="font-medium text-base">Multiple choice</p>
-      {options.map((op, j) => (
-        <div key={"Multiple choice" + j}>
-          <div className="flex flex-row  items-center">
-            <CustomInput
-              placeholder={`E.g. Option ${j + 1}`}
-              customclassname="w-60 xl:w-64"
-              onChange={(e) => {
-                handleOptionValue(e.target.value, idx, j);
-              }}
-              value={op.optionText}
-              maxLength={180}
-            />
-            {j !== 0 && (
-              <button
-                onClick={() => {
-                  removeOption(idx, j);
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        {options.map((op, j) => (
+          <div key={"Multiple choice" + j}>
+            <div className="flex flex-row  items-center">
+              <CustomInput
+                placeholder={`E.g. Option ${j + 1}`}
+                customclassname="w-60 xl:w-64 flex-1"
+                onChange={(e) => {
+                  handleOptionValue(e.target.value, idx, j);
                 }}
-                className="p-2 bg-gray-100 ml-4 rounded-full leading-0"
-              >
-                <Image
-                  src={"/media/svg/close-line.svg"}
-                  alt="Close "
-                  width={20}
-                  height={20}
-                />
-              </button>
-            )}
-          </div>
+                value={op.optionText}
+                maxLength={180}
+              />
+              {j !== 0 ? (
+                <button
+                  onClick={() => {
+                    removeOption(idx, j);
+                  }}
+                  className="p-2 bg-gray-100 ml-4 rounded-full leading-0"
+                >
+                  <Image
+                    src={"/media/svg/close-line.svg"}
+                    alt="Close "
+                    width={20}
+                    height={20}
+                  />
+                </button>
+              ) : (
+                <div className="opacity-0 w-8 h-8 ml-4"></div>
+              )}
+            </div>
 
-          <ErrorBox error={op?.error} />
-        </div>
-      ))}
+            <ErrorBox error={op?.error} />
+          </div>
+        ))}
+      </div>
       {options.length < 5 && (
         <ButtonGray
           onClick={() => {

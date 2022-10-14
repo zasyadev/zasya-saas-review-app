@@ -62,7 +62,7 @@ function TemplateListView({ user }) {
           title={"My Templates"}
         />
         <ToggleButton
-          className={`rounded-l-none rounded-r-md w-1/2  md:w-fit ${
+          className={`rounded-l-none border-l-0 rounded-r-md w-1/2  md:w-fit ${
             changeTemaplateView
               ? "bg-gray-50 hover:bg-gray-100 border-gray-300 text-gray-600 "
               : "bg-primary text-white"
@@ -108,7 +108,6 @@ function TemplateListView({ user }) {
                     questionLength={form?.form_data?.questions?.length}
                     isDelete={false}
                     linkHref={`/review/edit/${form.id}`}
-                    // deleteTemplate={deleteTemplate}
                   />
                 ))
               ) : (
@@ -129,7 +128,6 @@ function TemplateListView({ user }) {
                 questionLength={form?.form_data?.questions?.length}
                 isDelete={false}
                 linkHref={`/review/edit/${form.id}`}
-                // deleteTemplate={deleteTemplate}
               />
             ))
           ) : (

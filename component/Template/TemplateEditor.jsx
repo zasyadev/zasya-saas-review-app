@@ -25,7 +25,6 @@ function TemplateEditor({
   selectTypeFeild,
   setQuestions,
   ratingState = false,
-  myRefs = [],
 }) {
   return (
     <Row gutter={16}>
@@ -60,7 +59,6 @@ function TemplateEditor({
                               removeElement(idx, question.type);
                             }}
                             question={question}
-                            myRefs={myRefs}
                           />
                         ))}
                       </div>

@@ -7,12 +7,10 @@ function ReviewAdd() {
   return (
     <WithMe>
       {({ user }) => (
-        // <AdminLayout user={user} title="Create Review">
         <>
           <HeadersComponent />
           <AddEditReviewComponent user={user} pageTitle="Create Review" />
         </>
-        // </AdminLayout>
       )}
     </WithMe>
   );

@@ -104,7 +104,7 @@ function Applaud({ user }) {
 
   return (
     <div className="container mx-auto max-w-full">
-      <div className="flex flex-col-reverse md:flex-row md:items-center md:justify-between  mb-4 md:mb-6 gap-3">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between  mb-4 md:mb-6 gap-3">
         <div className="flex w-auto">
           <ToggleButton
             className={`rounded-r-none rounded-l-md w-1/2  md:w-fit ${
@@ -116,7 +116,7 @@ function Applaud({ user }) {
             title={"Received"}
           />
           <ToggleButton
-            className={`rounded-l-none rounded-r-md w-1/2  md:w-fit ${
+            className={`rounded-l-none border-l-0 rounded-r-md w-1/2  md:w-fit ${
               changeReceivedView
                 ? "bg-gray-50 hover:bg-gray-100 border-gray-300 text-gray-600 "
                 : "bg-primary text-white"

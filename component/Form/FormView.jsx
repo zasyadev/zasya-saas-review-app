@@ -1,5 +1,4 @@
 import { Skeleton } from "antd";
-import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { ButtonGray, PrimaryButton } from "../../component/common/CustomButton";
 import CustomTable from "../../component/common/CustomTable";
@@ -107,7 +106,7 @@ function FormView({ user }) {
               title={"Created"}
             />
           </div>
-          <div className="mb-4 md:mb-0 text-right">
+          <div className="mb-4 md:mb-0 text-right mt-2 md:mt-0">
             <PrimaryButton
               withLink={false}
               onClick={() => setCreateReviewModal(true)}
