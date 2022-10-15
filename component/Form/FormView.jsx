@@ -58,9 +58,9 @@ function FormView({ user }) {
       dataIndex: "status",
       render: (status) =>
         status ? (
-          <p className="text-green-400">Answered</p>
+          <p className="text-green-400 mb-0">Answered</p>
         ) : (
-          <p className="text-red-400">Pending</p>
+          <p className="text-red-400 mb-0">Pending</p>
         ),
     },
 

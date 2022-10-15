@@ -102,7 +102,7 @@ function HeaderLayout({ isBack, title, user, collapsed, setCollapsed, md }) {
           </p>
         </div>
 
-        <div className="create-header-button flex items-center justify-end space-x-3 md:space-x-5">
+        <div className="create-header-button flex items-center justify-end">
           <Dropdown
             trigger={"click"}
             overlay={
@@ -134,7 +134,7 @@ function HeaderLayout({ isBack, title, user, collapsed, setCollapsed, md }) {
               placement="bottomRight"
               className="py-1 px-2 leading-0"
             >
-              <div className="flex items-center space-x-3">
+              <div className="flex items-center md:space-x-3">
                 <div className="user-deatils hidden md:block m-0 text-base font-semibold text-primary">
                   {user.first_name}
                 </div>

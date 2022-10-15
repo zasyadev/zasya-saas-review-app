@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
 import httpService from "../../lib/httpService";
 import { ToggleButton } from "../common/CustomButton";
+import NoRecordFound from "../common/NoRecordFound";
 import { SkeletonTemplateCard, TemplateCard } from "./TemplateCard";
 
 function TemplateListView({ user }) {
@@ -111,11 +112,7 @@ function TemplateListView({ user }) {
                   />
                 ))
               ) : (
-                <div className="template  template-list flex bg-white items-center justify-center rounded-md  shadow-md p-5 ">
-                  <p className="text-gray-600 text-center text-sm font-medium  mb-0">
-                    No Templates Found
-                  </p>
-                </div>
+                <NoRecordFound title="No Templates Found" />
               )}
             </>
           ) : defaultTemplateList.length > 0 ? (
@@ -131,11 +128,7 @@ function TemplateListView({ user }) {
               />
             ))
           ) : (
-            <div className="template  template-list flex bg-white items-center justify-center rounded-md  shadow-md p-5 ">
-              <p className="text-gray-600 text-center text-sm font-medium  mb-0">
-                No Templates Found
-              </p>
-            </div>
+            <NoRecordFound title="No Templates Found" />
           )}
         </motion.div>
       </div>

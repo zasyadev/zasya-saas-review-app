@@ -1,9 +1,14 @@
-import { DislikeOutlined, LikeOutlined } from "@ant-design/icons";
-import { Col, Form, Input, Radio, Rate, Row, Slider } from "antd";
-import React, { useState } from "react";
-import { openNotificationBox } from "../../common/notification";
+import {
+  CloseOutlined,
+  DislikeOutlined,
+  LikeOutlined,
+} from "@ant-design/icons";
+import { Col, Form, Input, Popconfirm, Radio, Rate, Row, Slider } from "antd";
 import { motion } from "framer-motion";
+import { useRouter } from "next/router";
+import React, { useState } from "react";
 import { PrimaryButton, SecondaryButton } from "../../common/CustomButton";
+import { openNotificationBox } from "../../common/notification";
 
 export function FormSlideComponent({
   type,
@@ -16,8 +21,8 @@ export function FormSlideComponent({
   setNextSlide,
   length,
   handleSubmit,
-  loadingSpin,
 }) {
+  const router = useRouter();
   const [sliderInputValue, setSliderInputValue] = useState({
     [id]: 0,
   });
@@ -76,229 +81,260 @@ export function FormSlideComponent({
         exit={{ y: -10, opacity: 0 }}
         transition={{ duration: 0.8 }}
       >
-        <div className=" text-center bg-white rounded-md py-6 lg:py-10 shadow-md md:w-10/12 2xl:w-8/12 mx-auto px-4 lg:px-6 space-y-6">
-          <p className="text-lg font-bold text-gray-400 ">
-            {`Question ${nextSlide + 1}`}
-          </p>
-          <p className="text-lg  lg:text-2xl font-bold text-primary ">
-            {questionText}
-          </p>
-
-          {options?.length > 0 && type === "checkbox" && (
-            <Form.Item
-              name={"ques" + id}
-              rules={[
-                {
-                  required: true,
-                  message: "",
-                },
-              ]}
-              className="w-full h-full"
+        <div className=" text-center bg-white rounded-md shadow-md md:w-10/12 2xl:w-8/12 mx-auto px-4 lg:px-6">
+          <p className="relative text-lg font-bold text-gray-400 py-4 lg:py-6 ">
+            {`Question ${nextSlide + 1}/${length}`}
+            <Popconfirm
+              title={
+                <p className="font-medium mb-0">
+                  Are you sure you want to close review?
+                </p>
+              }
+              okText="Yes"
+              cancelText="No"
+              onConfirm={() => router.back()}
+              placement="right"
+              overlayClassName="max-w-sm"
             >
-              <Radio.Group
-                onChange={(e) => {
-                  handleAnswerChange(id, e.target.value, "input_box");
+              <span className="absolute top-2 lg:top-3 right-0  p-2 lg:p-3 leading-0 cursor-pointer rounded-full hover:bg-gray-100">
+                <CloseOutlined />
+              </span>
+            </Popconfirm>
+          </p>
 
-                  answerHandle(id, e.target.value);
-                }}
-                className="w-full h-full "
-                required={true}
-                size="large"
+          <div className="pb-4 lg:pb-6 space-y-4 lg:space-y-8">
+            <p className="text-lg  lg:text-2xl font-bold text-primary">
+              {questionText}
+            </p>
+            {options?.length > 0 && type === "checkbox" && (
+              <Form.Item
+                name={"ques" + id}
+                rules={[
+                  {
+                    required: true,
+                    message: "",
+                  },
+                ]}
+                className="w-full h-full lg:max-w-2xl mx-auto"
               >
-                <Row gutter={[32, 32]} justify="center">
-                  {options?.map((op, j) => {
-                    return (
-                      <Col xs={24} md={12} lg={8} key={j + "option"}>
-                        <Radio.Button
-                          className="text-center answer-radio-button w-full flex items-center justify-center p-2 lg:p-3 rounded-md"
-                          value={op.optionText}
-                        >
-                          {op.optionText}
-                        </Radio.Button>
-                      </Col>
-                    );
-                  })}
-                </Row>
-              </Radio.Group>
-            </Form.Item>
-          )}
-          {type == "input" && (
-            <div>
-              <div className="text-right  text-xs md:text-base text-primary mb-1 ">
-                Text Limit :{" "}
-                <span className=" font-semibold ">{inputLimit[id] ?? 180}</span>
-              </div>
-              <Form.Item name={"ques" + id}>
-                <Input
-                  size="large"
-                  placeholder={type == "input" ? "Short Text" : ""}
+                <Radio.Group
                   onChange={(e) => {
+                    handleAnswerChange(id, e.target.value, "input_box");
+
                     answerHandle(id, e.target.value);
-                    handleAnswerChange(id, e.target.value);
-                    handleInputLimit(id, e.target.value);
                   }}
+                  className="w-full h-full "
+                  required={true}
+                  size="large"
+                >
+                  <Row gutter={[32, 32]} justify="center">
+                    {options?.map((op, j) => {
+                      return (
+                        <Col xs={24} md={12} lg={8} key={j + "option"}>
+                          <Radio.Button
+                            className="text-center answer-radio-button w-full flex items-center justify-center p-2 lg:p-3 rounded-md"
+                            value={op.optionText}
+                          >
+                            {op.optionText}
+                          </Radio.Button>
+                        </Col>
+                      );
+                    })}
+                  </Row>
+                </Radio.Group>
+              </Form.Item>
+            )}
+            {type == "input" && (
+              <div className="lg:max-w-2xl mx-auto">
+                <div className="text-right  text-xs md:text-base text-primary mb-1 ">
+                  Text Limit :{" "}
+                  <span className=" font-semibold ">
+                    {inputLimit[id] ?? 180}
+                  </span>
+                </div>
+                <Form.Item name={"ques" + id}>
+                  <Input.TextArea
+                    size="large"
+                    placeholder={type == "input" ? "Short Text" : ""}
+                    rows={2}
+                    onChange={(e) => {
+                      answerHandle(id, e.target.value);
+                      handleAnswerChange(id, e.target.value);
+                      handleInputLimit(id, e.target.value);
+                    }}
+                    className="rounded-md"
+                    maxLength={180}
+                  />
+                </Form.Item>
+              </div>
+            )}
+
+            {type === "textarea" && (
+              <Form.Item
+                name={"ques" + id}
+                rules={[
+                  {
+                    required: true,
+                    message: "",
+                  },
+                ]}
+                className="lg:max-w-2xl mx-auto"
+              >
+                <Input.TextArea
+                  size="large"
+                  fullWidth={true}
                   className="rounded-md"
-                  maxLength={180}
+                  placeholder={type == "textarea" ? "Long Text" : ""}
+                  rows={4}
+                  onChange={(e) => {
+                    handleAnswerChange(id, e.target.value);
+                    answerHandle(id, e.target.value);
+                  }}
                 />
               </Form.Item>
-            </div>
-          )}
+            )}
 
-          {type === "textarea" && (
-            <Form.Item
-              name={"ques" + id}
-              rules={[
-                {
-                  required: true,
-                  message: "",
-                },
-              ]}
-            >
-              <Input.TextArea
-                size="large"
-                fullWidth={true}
-                className="rounded-md"
-                placeholder={type == "textarea" ? "Long Text" : ""}
-                rows={4}
-                onChange={(e) => {
-                  handleAnswerChange(id, e.target.value);
-                  answerHandle(id, e.target.value);
-                }}
-              />
-            </Form.Item>
-          )}
-
-          {type === "rating" && (
-            <Form.Item
-              name={"ques" + id}
-              rules={[
-                {
-                  required: true,
-                  message: "",
-                },
-              ]}
-            >
-              <div className="question-view-rating">
-                <Rate
-                  onChange={(e) => {
-                    handleAnswerChange(id, e.toString());
-                    answerHandle(id, e.toString());
-                    handleRateInput(id, e);
-                  }}
-                  value={rateInputValue[id] ?? 0}
-                />
-              </div>
-            </Form.Item>
-          )}
-
-          {type === "scale" && options?.length > 1 && (
-            <div className=" text-left  ">
-              <div className="flex w-full justify-center items-center">
-                <p>{options[0]?.optionText}</p>
-                <p className="w-full text-center mx-2 md:ml-4">
-                  <Form.Item
-                    name={"ques" + id}
-                    rules={[
-                      {
-                        required: true,
-                        message: "",
-                      },
-                    ]}
-                  >
-                    <Slider
-                      className="rating-slider"
-                      min={Number(options[0]?.lowerLabel)}
-                      max={Number(options[0]?.higherLabel)}
-                      step={1}
-                      onChange={(e) => {
-                        handleAnswerChange(id, e.toString());
-
-                        handleSliderInput(id, e);
-                        answerHandle(id, e.toString());
-                      }}
-                    />
-                  </Form.Item>
-                </p>
-
-                <p className="rounded-full bg-violet-400 text-white text-center mr-2 md:mr-3  py-1 md:py-2 px-1 md:px-3">
-                  {sliderInputValue[id] ?? 0}
-                </p>
-
-                <p>{options[1]?.optionText}</p>
-              </div>
-              {error && <p className="text-red-600 text-sm my-2">{error}</p>}
-            </div>
-          )}
-          {type === "yesno" && (
-            <Form.Item
-              name={"ques" + id}
-              rules={[
-                {
-                  required: true,
-                  message: "",
-                },
-              ]}
-              className="w-full"
-            >
-              <Radio.Group
-                onChange={(e) => {
-                  handleAnswerChange(id, e.target.value);
-                  answerHandle(id, e.target.value);
-                }}
-                size="large"
-                className="w-full  "
+            {type === "rating" && (
+              <Form.Item
+                name={"ques" + id}
+                rules={[
+                  {
+                    required: true,
+                    message: "",
+                  },
+                ]}
               >
-                <Row gutter={[32, 32]} justify="center">
-                  <Col>
-                    <Radio.Button
-                      value={"yes"}
-                      size="large"
-                      className="text-center cursor-pointer answer-radio-button  p-2 lg:p-4 rounded-md"
-                    >
-                      <LikeOutlined style={{ fontSize: "34px" }} />
-                    </Radio.Button>
-                  </Col>
-                  <Col>
-                    <Radio.Button
-                      size="large"
-                      className="text-center cursor-pointer answer-radio-button  p-2 lg:p-4 rounded-md"
-                      value={"no"}
-                    >
-                      <DislikeOutlined style={{ fontSize: "34px" }} />
-                    </Radio.Button>
-                  </Col>
-                </Row>
-              </Radio.Group>
-            </Form.Item>
-          )}
-
-          <div className="flex items-center justify-center px-3 space-x-3">
-            {nextSlide > 0 && (
-              <SecondaryButton
-                title={"Previous"}
-                className="bg-gray-400"
-                onClick={() => setNextSlide(nextSlide - 1)}
-              />
+                <div className="question-view-rating lg:max-w-2xl mx-auto">
+                  <Rate
+                    onChange={(e) => {
+                      handleAnswerChange(id, e.toString());
+                      answerHandle(id, e.toString());
+                      handleRateInput(id, e);
+                    }}
+                    value={rateInputValue[id] ?? 0}
+                  />
+                </div>
+              </Form.Item>
             )}
 
-            {length - 1 === nextSlide ? (
-              <PrimaryButton
-                title={"Submit"}
-                loading={loadingSpin}
-                disabled={loadingSpin}
-                onClick={() => {
-                  handleSubmit();
-                }}
-              />
-            ) : (
-              <PrimaryButton
-                title={"Next"}
-                disabled={!disable[id]}
-                onClick={() => {
-                  setNextSlide(nextSlide + 1);
-                }}
-              />
+            {type === "scale" && options?.length > 1 && (
+              <div className=" text-left  lg:max-w-2xl mx-auto">
+                <div className="flex w-full justify-center items-center">
+                  <p>{options[0]?.optionText}</p>
+                  <p className="w-full text-center mx-2 md:ml-4">
+                    <Form.Item
+                      name={"ques" + id}
+                      rules={[
+                        {
+                          required: true,
+                          message: "",
+                        },
+                      ]}
+                    >
+                      <Slider
+                        className="rating-slider"
+                        min={Number(options[0]?.lowerLabel)}
+                        max={Number(options[0]?.higherLabel)}
+                        step={1}
+                        onChange={(e) => {
+                          handleAnswerChange(id, e.toString());
+
+                          handleSliderInput(id, e);
+                          answerHandle(id, e.toString());
+                        }}
+                      />
+                    </Form.Item>
+                  </p>
+
+                  <p className="rounded-full bg-violet-400 text-white text-center mr-2 md:mr-3  py-1 md:py-2 px-1 md:px-3">
+                    {sliderInputValue[id] ?? 0}
+                  </p>
+
+                  <p>{options[1]?.optionText}</p>
+                </div>
+                {error && <p className="text-red-600 text-sm my-2">{error}</p>}
+              </div>
             )}
+            {type === "yesno" && (
+              <Form.Item
+                name={"ques" + id}
+                rules={[
+                  {
+                    required: true,
+                    message: "",
+                  },
+                ]}
+                className="w-full lg:max-w-2xl mx-auto"
+              >
+                <Radio.Group
+                  onChange={(e) => {
+                    handleAnswerChange(id, e.target.value);
+                    answerHandle(id, e.target.value);
+                  }}
+                  size="large"
+                  className="w-full  "
+                >
+                  <Row gutter={[32, 32]} justify="center">
+                    <Col>
+                      <Radio.Button
+                        value={"yes"}
+                        size="large"
+                        className="text-center cursor-pointer answer-radio-button  p-2 lg:p-4 rounded-md"
+                      >
+                        <LikeOutlined style={{ fontSize: "34px" }} />
+                      </Radio.Button>
+                    </Col>
+                    <Col>
+                      <Radio.Button
+                        size="large"
+                        className="text-center cursor-pointer answer-radio-button  p-2 lg:p-4 rounded-md"
+                        value={"no"}
+                      >
+                        <DislikeOutlined style={{ fontSize: "34px" }} />
+                      </Radio.Button>
+                    </Col>
+                  </Row>
+                </Radio.Group>
+              </Form.Item>
+            )}
+            <div className="flex items-center justify-center px-3 space-x-3">
+              {nextSlide > 0 && (
+                <SecondaryButton
+                  title={"Previous"}
+                  className="bg-gray-400"
+                  onClick={() => setNextSlide(nextSlide - 1)}
+                />
+              )}
+
+              {length - 1 === nextSlide ? (
+                <Popconfirm
+                  title={
+                    <p className="font-medium mb-0">
+                      Are you sure you want to submit your review?
+                    </p>
+                  }
+                  okText="Yes"
+                  cancelText="No"
+                  onConfirm={() => handleSubmit()}
+                  placement="topRight"
+                  overlayClassName="max-w-sm"
+                >
+                  <PrimaryButton
+                    title={"Submit"}
+                    // loading={loadingSpin}
+                    // disabled={loadingSpin}
+                  />
+                </Popconfirm>
+              ) : (
+                <PrimaryButton
+                  title={"Next"}
+                  disabled={!disable[id]}
+                  onClick={() => {
+                    setNextSlide(nextSlide + 1);
+                  }}
+                />
+              )}
+            </div>
           </div>
         </div>
       </motion.div>

@@ -1,3 +1,4 @@
+import { CloseOutlined } from "@ant-design/icons";
 import { Form, Skeleton } from "antd";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -96,40 +97,33 @@ function ReceivedReviewComponent({ user, reviewId }) {
 
   useEffect(() => {
     if (reviewId) fetchReviewData(user, reviewId);
-    // else return;
   }, []);
 
   return (
-    <div className="answer-bg px-2 py-4 md:p-4">
-      <div className="text-right mt-4">
-        <Link href="/review/received" passHref>
-          <button className="primary-bg-btn text-white py-2 px-4 rounded-md">
-            Back
-          </button>
-        </Link>
-      </div>
+    <div className="answer-bg px-2 py-4 md:p-4 flex items-center justify-center">
       {loading ? (
-        <div className="answer-preview">
-          <div className=" text-center bg-white rounded-md p-10 shadow-md md:w-10/12 2xl:w-8/12 mx-auto">
-            <Skeleton
-              title={false}
-              active={true}
-              width={[200]}
-              className="mt-4"
-              rows={3}
-            />
-          </div>
+        <div className=" text-center bg-white rounded-md p-10 shadow-md md:w-10/12 2xl:w-8/12 mx-auto">
+          <Skeleton
+            title={false}
+            active={true}
+            width={[200]}
+            className="mt-4"
+            rows={3}
+          />
         </div>
       ) : reviewData?.status ? (
-        <div className="answer-preview">
-          <div className=" text-center bg-white rounded-md py-10 shadow-md md:w-10/12 2xl:w-8/12 mx-auto">
-            <p className="text-lg font-bold text-red-400 mt-5">
-              Already Submitted This Review
-            </p>
-          </div>
+        <div className="relative  text-center bg-white rounded-md py-10 shadow-md md:w-10/12 2xl:w-8/12 mx-auto">
+          <Link href="/review/received" passHref>
+            <span className="absolute top-2 right-2 p-3 leading-0 cursor-pointer rounded-full hover:bg-gray-100">
+              <CloseOutlined />
+            </span>
+          </Link>
+          <p className="text-lg font-bold text-red-400 mt-5">
+            Already Submitted This Review
+          </p>
         </div>
       ) : (
-        <Form layout="vertical" className="py-4" form={answerForm}>
+        <Form layout="vertical" className="py-4 w-11/12" form={answerForm}>
           <AnimatePresence>
             {questions ? (
               questions.length > 0 &&
@@ -159,7 +153,12 @@ function ReceivedReviewComponent({ user, reviewId }) {
                     exit={{ y: -10, opacity: 0 }}
                     transition={{ duration: 0.8 }}
                   >
-                    <div className=" text-center bg-white rounded-md py-10 shadow-md md:w-10/12 2xl:w-8/12 mx-auto">
+                    <div className="relative text-center bg-white rounded-md py-10 shadow-md md:w-10/12 2xl:w-8/12 mx-auto">
+                      <Link href="/review/received" passHref>
+                        <span className="absolute top-2 right-2 p-3 leading-0 cursor-pointer rounded-full hover:bg-gray-100">
+                          <CloseOutlined />
+                        </span>
+                      </Link>
                       <p className="text-lg font-bold text-red-400 mt-5">
                         Review Not Found
                       </p>

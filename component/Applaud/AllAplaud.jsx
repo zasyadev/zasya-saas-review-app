@@ -6,6 +6,7 @@ import { ApplaudGiven, ApplaudIconSmall } from "../../assets/icons";
 import { disableDates, MONTH_FORMAT } from "../../helpers/dateHelper";
 import httpService from "../../lib/httpService";
 import DefaultImages from "../common/DefaultImages";
+import NoRecordFound from "../common/NoRecordFound";
 import { openNotificationBox } from "../common/notification";
 
 function AllAplaud({ user }) {
@@ -204,7 +205,7 @@ function AllAplaud({ user }) {
                 );
               })
             ) : (
-              <div className="text-center  ">No Applaud Found</div>
+              <NoRecordFound title={"No Applaud Found"} />
             )}
           </Timeline>
         </div>

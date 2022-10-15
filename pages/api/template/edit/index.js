@@ -1,27 +1,19 @@
 import { RequestHandler } from "../../../../lib/RequestHandler";
 
 async function handle(req, res, prisma) {
-  const { template_id } = req.query;
-  const { userId } = req.body;
+  const { template_id } = req.body;
 
-  if (userId && template_id) {
-    const data = await prisma.reviewTemplate.findMany({
+  if (template_id) {
+    const data = await prisma.reviewTemplate.findUnique({
       where: {
-        AND: [
-          {
-            id: template_id,
-          },
-          {
-            user_id: userId,
-          },
-        ],
+        id: template_id,
       },
     });
 
     if (data) {
       return res.status(200).json({
         status: 200,
-        data: data[0],
+        data: data,
         message: "Templates Retrieved",
       });
     }

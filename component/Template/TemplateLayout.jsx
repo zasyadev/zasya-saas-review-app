@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { openNotificationBox } from "../../component/common/notification";
 import httpService from "../../lib/httpService";
 import { ToggleButton } from "../common/CustomButton";
+import NoRecordFound from "../common/NoRecordFound";
 import {
   CreateTemplateCard,
   SkeletonTemplateCard,
@@ -118,37 +119,30 @@ function TemplateLayout({ user }) {
           {changeTemaplateView ? (
             <>
               <CreateTemplateCard />
-              {loading ? (
-                [...Array(3)].map((_, idx) => (
-                  <SkeletonTemplateCard
-                    key={idx + "temp"}
-                    index={idx + "temp"}
-                  />
-                ))
-              ) : templateList.length > 0 ? (
-                templateList.map((template) => (
-                  <TemplateCard
-                    key={template.id + "template"}
-                    id={template.id}
-                    title={template?.form_data?.title}
-                    description={template?.form_data?.description}
-                    questionLength={template?.form_data?.questions?.length}
-                    deleteTemplate={deleteTemplate}
-                    linkHref={`/template/edit/${template.id}`}
-                    isDelete={true}
-                  />
-                ))
-              ) : (
-                <div className="template  template-list flex bg-white items-center justify-center rounded-md  shadow-md p-5 ">
-                  <p className="text-gray-600 text-center text-sm font-medium  mb-0">
-                    No Templates Found
-                  </p>
-                </div>
-              )}
+              {loading
+                ? [...Array(3)].map((_, idx) => (
+                    <SkeletonTemplateCard
+                      key={idx + "temp"}
+                      index={idx + "temp"}
+                    />
+                  ))
+                : templateList.length > 5 &&
+                  templateList.map((template) => (
+                    <TemplateCard
+                      key={template.id + "template"}
+                      id={template.id}
+                      title={template?.form_data?.title}
+                      description={template?.form_data?.description}
+                      questionLength={template?.form_data?.questions?.length}
+                      deleteTemplate={deleteTemplate}
+                      linkHref={`/template/edit/${template.id}`}
+                      isDelete={true}
+                    />
+                  ))}
             </>
           ) : (
             <>
-              {defaultTemplateList.length > 0 ? (
+              {defaultTemplateList.length > 5 ? (
                 defaultTemplateList.map((template) => (
                   <TemplateCard
                     key={template.id + "default"}
@@ -162,11 +156,7 @@ function TemplateLayout({ user }) {
                   />
                 ))
               ) : (
-                <div className="template  template-list flex bg-white items-center justify-center rounded-md  shadow-md p-5 ">
-                  <p className="text-gray-600 text-center text-sm font-medium  mb-0">
-                    No Templates Found
-                  </p>
-                </div>
+                <NoRecordFound title="No Templates Found" />
               )}
             </>
           )}
