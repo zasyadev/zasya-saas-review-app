@@ -9,6 +9,14 @@ import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { PrimaryButton, SecondaryButton } from "../../common/CustomButton";
 import { openNotificationBox } from "../../common/notification";
+import {
+  INPUT_TYPE,
+  MULTIPLECHOICE_TYPE,
+  RATING_TYPE,
+  SCALE_TYPE,
+  TEXTAREA_TYPE,
+  YESNO_TYPE,
+} from "../../Form/questioncomponents/constants";
 
 export function FormSlideComponent({
   type,
@@ -63,7 +71,7 @@ export function FormSlideComponent({
     } else {
       setInputLimit((prev) => ({ ...prev, [`${queId}`]: 0 }));
     }
-    if (type === "input" && value.length > 179) {
+    if (type === INPUT_TYPE && value.length > 179) {
       openNotificationBox(
         "error",
         "You can't write more than 180 character",
@@ -106,7 +114,7 @@ export function FormSlideComponent({
             <p className="text-lg  lg:text-2xl font-bold text-primary">
               {questionText}
             </p>
-            {options?.length > 0 && type === "checkbox" && (
+            {options?.length > 0 && type === MULTIPLECHOICE_TYPE && (
               <Form.Item
                 name={"ques" + id}
                 rules={[
@@ -120,7 +128,6 @@ export function FormSlideComponent({
                 <Radio.Group
                   onChange={(e) => {
                     handleAnswerChange(id, e.target.value, "input_box");
-
                     answerHandle(id, e.target.value);
                   }}
                   className="w-full h-full "
@@ -128,23 +135,21 @@ export function FormSlideComponent({
                   size="large"
                 >
                   <Row gutter={[32, 32]} justify="center">
-                    {options?.map((op, j) => {
-                      return (
-                        <Col xs={24} md={12} lg={8} key={j + "option"}>
-                          <Radio.Button
-                            className="text-center answer-radio-button w-full flex items-center justify-center p-2 lg:p-3 rounded-md"
-                            value={op.optionText}
-                          >
-                            {op.optionText}
-                          </Radio.Button>
-                        </Col>
-                      );
-                    })}
+                    {options?.map((op, j) => (
+                      <Col xs={24} md={12} lg={8} key={op.optionText}>
+                        <Radio.Button
+                          className="text-center answer-radio-button w-full flex items-center justify-center p-2 lg:p-3 rounded-md"
+                          value={op.optionText}
+                        >
+                          {op.optionText}
+                        </Radio.Button>
+                      </Col>
+                    ))}
                   </Row>
                 </Radio.Group>
               </Form.Item>
             )}
-            {type == "input" && (
+            {type == INPUT_TYPE && (
               <div className="lg:max-w-2xl mx-auto">
                 <div className="text-right  text-xs md:text-base text-primary mb-1 ">
                   Text Limit :{" "}
@@ -155,7 +160,7 @@ export function FormSlideComponent({
                 <Form.Item name={"ques" + id}>
                   <Input.TextArea
                     size="large"
-                    placeholder={type == "input" ? "Short Text" : ""}
+                    placeholder={type == INPUT_TYPE ? "Short Text" : ""}
                     rows={2}
                     onChange={(e) => {
                       answerHandle(id, e.target.value);
@@ -169,7 +174,7 @@ export function FormSlideComponent({
               </div>
             )}
 
-            {type === "textarea" && (
+            {type === TEXTAREA_TYPE && (
               <Form.Item
                 name={"ques" + id}
                 rules={[
@@ -184,7 +189,7 @@ export function FormSlideComponent({
                   size="large"
                   fullWidth={true}
                   className="rounded-md"
-                  placeholder={type == "textarea" ? "Long Text" : ""}
+                  placeholder={type == TEXTAREA_TYPE ? "Long Text" : ""}
                   rows={4}
                   onChange={(e) => {
                     handleAnswerChange(id, e.target.value);
@@ -194,7 +199,7 @@ export function FormSlideComponent({
               </Form.Item>
             )}
 
-            {type === "rating" && (
+            {type === RATING_TYPE && (
               <Form.Item
                 name={"ques" + id}
                 rules={[
@@ -217,7 +222,7 @@ export function FormSlideComponent({
               </Form.Item>
             )}
 
-            {type === "scale" && options?.length > 1 && (
+            {type === SCALE_TYPE && options?.length > 1 && (
               <div className=" text-left  lg:max-w-2xl mx-auto">
                 <div className="flex w-full justify-center items-center">
                   <p>{options[0]?.optionText}</p>
@@ -255,7 +260,7 @@ export function FormSlideComponent({
                 {error && <p className="text-red-600 text-sm my-2">{error}</p>}
               </div>
             )}
-            {type === "yesno" && (
+            {type === YESNO_TYPE && (
               <Form.Item
                 name={"ques" + id}
                 rules={[
@@ -319,11 +324,7 @@ export function FormSlideComponent({
                   placement="topRight"
                   overlayClassName="max-w-sm"
                 >
-                  <PrimaryButton
-                    title={"Submit"}
-                    // loading={loadingSpin}
-                    // disabled={loadingSpin}
-                  />
+                  <PrimaryButton title={"Submit"} />
                 </Popconfirm>
               ) : (
                 <PrimaryButton
