@@ -1,11 +1,15 @@
 import { Skeleton } from "antd";
+import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { ButtonGray, PrimaryButton } from "../../component/common/CustomButton";
 import CustomTable from "../../component/common/CustomTable";
 import httpService from "../../lib/httpService";
+import ToggleButton from "../common/ToggleButton";
+import { ReviewToggleList, REVIEW_RECEIVED_KEY } from "../Review/constants";
 import { TempateSelectWrapper } from "../Review/TempateSelectWrapper";
 
 function FormView({ user }) {
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [createReviewModal, setCreateReviewModal] = useState(false);
   const [formAssignList, setFormAssignList] = useState([]);
@@ -58,9 +62,9 @@ function FormView({ user }) {
       dataIndex: "status",
       render: (status) =>
         status ? (
-          <p className="text-green-400">Answered</p>
+          <p className="text-green-400 mb-0">Answered</p>
         ) : (
-          <p className="text-red-400">Pending</p>
+          <p className="text-red-400 mb-0">Pending</p>
         ),
     },
 
@@ -92,27 +96,20 @@ function FormView({ user }) {
   return (
     <div className="container mx-auto max-w-full">
       <div className="grid grid-cols-1 mb-16">
-        <div className="md:flex items-center justify-between mb-4 md:mb-6">
-          <div className="flex w-auto">
-            <PrimaryButton
-              withLink={false}
-              className="rounded-r-none rounded-l-md rounded-md w-1/2 md:w-fit "
-              title={"Received"}
-            />
-            <ButtonGray
-              withLink={true}
-              className="rounded-r-md rounded-l-none w-1/2 md:w-fit "
-              linkHref="/review"
-              title={"Created"}
-            />
-          </div>
-          <div className="mb-4 md:mb-0 text-right mt-2 md:mt-0">
-            <PrimaryButton
-              withLink={false}
-              onClick={() => setCreateReviewModal(true)}
-              title={"Create"}
-            />
-          </div>
+        <div className="flex flex-row items-center justify-between flex-wrap gap-4  mb-4 md:mb-6 ">
+          <ToggleButton
+            arrayList={ReviewToggleList}
+            handleToggle={(activeKey) => {
+              if (activeKey !== REVIEW_RECEIVED_KEY) router.push("/review");
+            }}
+            activeKey={REVIEW_RECEIVED_KEY}
+          />
+
+          <PrimaryButton
+            withLink={false}
+            onClick={() => setCreateReviewModal(true)}
+            title={"Create"}
+          />
         </div>
         <div className="w-full bg-white rounded-md overflow-hdden shadow-md">
           <div className="px-4 ">

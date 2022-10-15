@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
+import NoRecordFound from "../../../component/common/NoRecordFound";
 import AdminLayout from "../../../component/layout/AdminLayout";
 import WithMe from "../../../component/layout/WithMe";
 import { TemplatePreviewComponent } from "../../../component/Template/TemplatePreviewComponent";
@@ -13,11 +14,11 @@ const PreviewWrraper = ({ user }) => {
 
   async function fetchTemplateData() {
     setLoading(true);
-    setTemplateData([]);
+    setTemplateData({});
 
     await httpService
-      .post(`/api/template/edit/${template_id}`, {
-        userId: user.id,
+      .post(`/api/template/edit`, {
+        template_id: template_id,
       })
       .then(({ data: response }) => {
         if (response.status === 200) {
@@ -27,7 +28,7 @@ const PreviewWrraper = ({ user }) => {
       })
       .catch((err) => {
         console.error(err.response.data?.message);
-        setTemplateData([]);
+        setTemplateData({});
         setLoading(false);
       });
   }
@@ -62,14 +63,14 @@ const PreviewWrraper = ({ user }) => {
         </div>
       </div>
     </>
+  ) : templateData?.form_data?.questions?.length ? (
+    <TemplatePreviewComponent
+      length={templateData.form_data.questions.length}
+      formTitle={templateData.form_data.title}
+      questions={templateData.form_data.questions}
+    />
   ) : (
-    templateData.form_data?.questions?.length && (
-      <TemplatePreviewComponent
-        length={templateData.form_data.questions.length}
-        formTitle={templateData.form_data.title}
-        questions={templateData.form_data.questions}
-      />
-    )
+    <NoRecordFound />
   );
 };
 

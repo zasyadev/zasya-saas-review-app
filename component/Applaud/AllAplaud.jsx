@@ -6,6 +6,7 @@ import { ApplaudGiven, ApplaudIconSmall } from "../../assets/icons";
 import { disableDates, MONTH_FORMAT } from "../../helpers/dateHelper";
 import httpService from "../../lib/httpService";
 import DefaultImages from "../common/DefaultImages";
+import NoRecordFound from "../common/NoRecordFound";
 import { openNotificationBox } from "../common/notification";
 
 function AllAplaud({ user }) {
@@ -81,7 +82,7 @@ function AllAplaud({ user }) {
     <Row gutter={[16, 16]}>
       <Col xs={24} sm={24} md={24}>
         <div className="flex justify-start w-full">
-          <div className="bg-white rounded-md overflow-hidden shadow-md  py-1 px-4 ">
+          <div className="bg-white rounded-md py-1 px-4 ">
             <DatePicker
               onChange={onDateChange}
               picker="month"
@@ -204,7 +205,7 @@ function AllAplaud({ user }) {
                 );
               })
             ) : (
-              <div className="text-center  ">No Applaud Found</div>
+              <NoRecordFound title={"No Applaud Found"} />
             )}
           </Timeline>
         </div>

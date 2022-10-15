@@ -2,18 +2,20 @@ import { motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
 import { openNotificationBox } from "../../component/common/notification";
 import httpService from "../../lib/httpService";
-import { ToggleButton } from "../common/CustomButton";
+import ToggleButton from "../common/ToggleButton";
+import NoRecordFound from "../common/NoRecordFound";
 import {
   CreateTemplateCard,
   SkeletonTemplateCard,
   TemplateCard,
 } from "./TemplateCard";
+import { MY_TEMPLATE_KEY, TemplateToggleList } from "./constants";
 
 function TemplateLayout({ user }) {
   const [templateList, setTemplateList] = useState([]);
   const [defaultTemplateList, setDefaultTemplateList] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [changeTemaplateView, setChangeTemaplateView] = useState(true);
+  const [changeTemplateView, setChangeTemplateView] = useState(MY_TEMPLATE_KEY);
 
   async function fetchUserTemplateList() {
     setLoading(true);
@@ -77,24 +79,11 @@ function TemplateLayout({ user }) {
 
   return (
     <div className="container mx-auto max-w-full">
-      <div className="flex w-auto  mb-4 md:mb-6">
+      <div className="  mb-4 md:mb-6">
         <ToggleButton
-          className={`rounded-r-none rounded-l-md w-1/2  md:w-fit ${
-            changeTemaplateView
-              ? "bg-primary text-white"
-              : " bg-gray-50 hover:bg-gray-100 border-gray-300 text-gray-600"
-          }`}
-          onClick={() => setChangeTemaplateView(true)}
-          title={"My Templates"}
-        />
-        <ToggleButton
-          className={`rounded-l-none border-l-0 rounded-r-md w-1/2  md:w-fit ${
-            changeTemaplateView
-              ? "bg-gray-50 hover:bg-gray-100 border-gray-300 text-gray-600 "
-              : "bg-primary text-white"
-          } `}
-          onClick={() => setChangeTemaplateView(false)}
-          title={"Default Templates"}
+          arrayList={TemplateToggleList}
+          handleToggle={(activeKey) => setChangeTemplateView(activeKey)}
+          activeKey={changeTemplateView}
         />
       </div>
 
@@ -115,36 +104,29 @@ function TemplateLayout({ user }) {
           initial="hidden"
           animate="show"
         >
-          {changeTemaplateView ? (
+          {changeTemplateView === MY_TEMPLATE_KEY ? (
             <>
               <CreateTemplateCard />
-              {loading ? (
-                [...Array(3)].map((_, idx) => (
-                  <SkeletonTemplateCard
-                    key={idx + "temp"}
-                    index={idx + "temp"}
-                  />
-                ))
-              ) : templateList.length > 0 ? (
-                templateList.map((template) => (
-                  <TemplateCard
-                    key={template.id + "template"}
-                    id={template.id}
-                    title={template?.form_data?.title}
-                    description={template?.form_data?.description}
-                    questionLength={template?.form_data?.questions?.length}
-                    deleteTemplate={deleteTemplate}
-                    linkHref={`/template/edit/${template.id}`}
-                    isDelete={true}
-                  />
-                ))
-              ) : (
-                <div className="template  template-list flex bg-white items-center justify-center rounded-md  shadow-md p-5 ">
-                  <p className="text-gray-600 text-center text-sm font-medium  mb-0">
-                    No Templates Found
-                  </p>
-                </div>
-              )}
+              {loading
+                ? [...Array(3)].map((_, idx) => (
+                    <SkeletonTemplateCard
+                      key={idx + "temp"}
+                      index={idx + "temp"}
+                    />
+                  ))
+                : templateList.length > 0 &&
+                  templateList.map((template) => (
+                    <TemplateCard
+                      key={template.id + "template"}
+                      id={template.id}
+                      title={template?.form_data?.title}
+                      description={template?.form_data?.description}
+                      questionLength={template?.form_data?.questions?.length}
+                      deleteTemplate={deleteTemplate}
+                      linkHref={`/template/edit/${template.id}`}
+                      isDelete={true}
+                    />
+                  ))}
             </>
           ) : (
             <>
@@ -162,11 +144,7 @@ function TemplateLayout({ user }) {
                   />
                 ))
               ) : (
-                <div className="template  template-list flex bg-white items-center justify-center rounded-md  shadow-md p-5 ">
-                  <p className="text-gray-600 text-center text-sm font-medium  mb-0">
-                    No Templates Found
-                  </p>
-                </div>
+                <NoRecordFound title="No Templates Found" />
               )}
             </>
           )}

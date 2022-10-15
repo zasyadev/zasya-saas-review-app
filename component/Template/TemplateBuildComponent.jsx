@@ -381,19 +381,22 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
             />
             <ErrorBox error={formTitle?.error} />
           </div>
-          <div className="text-primary text-base font-semibold">
-            Description
+          <div>
+            <div className="text-primary text-base font-semibold mb-2">
+              Description
+            </div>
+
+            <CustomTextArea
+              placeholder="E.g. Template Description"
+              customclassname="w-full"
+              rows={5}
+              onChange={(e) => {
+                setFormDes(e.target.value);
+              }}
+              value={formDes}
+            />
           </div>
 
-          <CustomTextArea
-            placeholder="E.g. Template Description"
-            customclassname="w-full"
-            rows={5}
-            onChange={(e) => {
-              setFormDes(e.target.value);
-            }}
-            value={formDes}
-          />
           {user?.role_id === 1 && (
             <CustomCheckbox
               title="Check if you want to make this a Default Template"

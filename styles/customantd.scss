@@ -321,21 +321,6 @@ $primary: #0f123f;
       height: 44px;
     }
   }
-  .ant-select-focused:not(.ant-select-disabled).ant-select:not(.ant-select-customize-input)
-    .ant-select-selector {
-    border-color: $primary !important;
-    box-shadow: 0 0 0 0px rgba(0, 5, 204, 0.35) !important ;
-  }
-  .question-select-box {
-    .ant-select-selection-item {
-      font-weight: 600;
-    }
-  }
-
-  .ant-select-selector:focus,
-  .ant-select-selector:hover {
-    border-color: $primary !important;
-  }
 
   .ant-radio:focus,
   .ant-radio:hover {
@@ -523,12 +508,6 @@ $primary: #0f123f;
   }
 }
 
-.template-list {
-  border: 1px solid #dadada;
-  box-shadow: 0px 4px 4px rgba(171, 171, 171, 0.25);
-  border-radius: 5px;
-}
-
 .ant-form-item-control-input {
   .ant-input:hover,
   .ant-input:focus {
@@ -656,11 +635,6 @@ $primary: #0f123f;
   }
 }
 
-.template {
-  .ant-input {
-    border-bottom: 1px solid #d9d9d9;
-  }
-}
 .review-answer {
   .ant-space-item:focus {
     .ant-radio-inner {
@@ -987,4 +961,19 @@ $primary: #0f123f;
   .ant-tabs-tab-btn {
     color: $primary !important;
   }
+}
+.question-select-box {
+  .ant-select-selection-item {
+    font-weight: 600;
+  }
+  .ant-select-selector:focus,
+  .ant-select-selector:hover {
+    border-color: $primary !important;
+  }
+}
+
+.question-select-box.ant-select-focused:not(.ant-select-disabled).ant-select:not(.ant-select-customize-input)
+  .ant-select-selector {
+  border-color: $primary !important;
+  box-shadow: 0 0 0 0px rgba(0, 5, 204, 0.35) !important ;
 }

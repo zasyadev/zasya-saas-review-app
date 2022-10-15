@@ -1,14 +1,18 @@
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { Popconfirm, Skeleton } from "antd";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { ButtonGray, PrimaryButton } from "../../component/common/CustomButton";
 import CustomTable from "../../component/common/CustomTable";
 import { openNotificationBox } from "../../component/common/notification";
 import httpService from "../../lib/httpService";
+import ToggleButton from "../common/ToggleButton";
+import { ReviewToggleList, REVIEW_CREATED_KEY } from "./constants";
 import { TempateSelectWrapper } from "./TempateSelectWrapper";
 
 function ReviewManagement({ user }) {
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [createReviewModal, setCreateReviewModal] = useState(false);
   const [reviewAssignList, setReviewAssignList] = useState([]);
@@ -162,27 +166,21 @@ function ReviewManagement({ user }) {
   return (
     <div className="container mx-auto max-w-full">
       <div className="grid grid-cols-1">
-        <div className="md:flex  md:flex-row md:items-center md:justify-between  mb-4 md:mb-6 ">
-          <div className="flex w-auto">
-            <ButtonGray
-              withLink={true}
-              className="rounded-r-none rounded-l-md  w-1/2 md:w-fit "
-              linkHref="/review/received"
-              title={"Received"}
-            />
-            <PrimaryButton
-              withLink={false}
-              className="rounded-l-none rounded-r-md w-1/2 md:w-fit "
-              title={"Created"}
-            />
-          </div>
-          <div className="mb-4 md:mb-0 text-right mt-2 md:mt-0">
-            <PrimaryButton
-              withLink={false}
-              onClick={() => setCreateReviewModal(true)}
-              title={"Create"}
-            />
-          </div>
+        <div className="flex flex-row items-center justify-between flex-wrap gap-4  mb-4 md:mb-6 ">
+          <ToggleButton
+            arrayList={ReviewToggleList}
+            handleToggle={(activeKey) => {
+              if (activeKey !== REVIEW_CREATED_KEY)
+                router.push("/review/received");
+            }}
+            activeKey={REVIEW_CREATED_KEY}
+          />
+
+          <PrimaryButton
+            withLink={false}
+            onClick={() => setCreateReviewModal(true)}
+            title={"Create"}
+          />
         </div>
 
         <div className="w-full bg-white rounded-md overflow-hdden shadow-md">
