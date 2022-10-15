@@ -15,3 +15,15 @@ export const TemplateStepsArray = [
     title: "Preview and launch",
   },
 ];
+
+export const MY_TEMPLATE_KEY = "My Template";
+export const DEFAULT_TEMPLATE_KEY = "Default Template";
+
+export const TemplateToggleList = [
+  {
+    label: MY_TEMPLATE_KEY,
+  },
+  {
+    label: DEFAULT_TEMPLATE_KEY,
+  },
+];

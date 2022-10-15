@@ -5,8 +5,8 @@ import React, { useEffect, useState } from "react";
 import {
   PrimaryButton,
   SecondaryButton,
-  ToggleButton,
 } from "../../component/common/CustomButton";
+import ToggleButton from "../../component/common/ToggleButton";
 import {
   disableDates,
   MONTH_DATE_FORMAT,
@@ -15,6 +15,9 @@ import {
 import getApplaudCategoryName from "../../helpers/getApplaudCategoryName";
 import httpService from "../../lib/httpService";
 import { openNotificationBox } from "../common/notification";
+
+const APPLAUD_RECEIVED_KEY = "Received";
+const APPLAUD_SENT_KEY = "Sent";
 
 const ApplaudCard = ({ applaud, type }) => {
   return (
@@ -64,7 +67,8 @@ const ApplaudCard = ({ applaud, type }) => {
 function Applaud({ user }) {
   const [applaudList, setApplaudList] = useState([]);
   const [receivedApplaudList, setReceivedApplaudList] = useState([]);
-  const [changeReceivedView, setChangeReceivedView] = useState(true);
+  const [changeReceivedView, setChangeReceivedView] =
+    useState(APPLAUD_RECEIVED_KEY);
 
   const [loading, setLoading] = useState(true);
   const [currentMonth, setCurrentMonth] = useState({
@@ -104,42 +108,32 @@ function Applaud({ user }) {
 
   return (
     <div className="container mx-auto max-w-full">
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between  mb-4 md:mb-6 gap-3">
-        <div className="flex w-auto">
+      <div className="flex flex-col-reverse md:flex-row flex-wrap items-center justify-between  mb-4 md:mb-6 gap-3">
+        <div className="w-full justify-between md:justify-start md:w-auto flex items-center gap-4">
           <ToggleButton
-            className={`rounded-r-none rounded-l-md w-1/2  md:w-fit ${
-              changeReceivedView
-                ? "bg-primary text-white"
-                : " bg-gray-50 hover:bg-gray-100 border-gray-300 text-gray-600"
-            }`}
-            onClick={() => setChangeReceivedView(true)}
-            title={"Received"}
+            arrayList={[
+              { label: APPLAUD_RECEIVED_KEY },
+              { label: APPLAUD_SENT_KEY },
+            ]}
+            handleToggle={(activeKey) => setChangeReceivedView(activeKey)}
+            activeKey={changeReceivedView}
           />
-          <ToggleButton
-            className={`rounded-l-none border-l-0 rounded-r-md w-1/2  md:w-fit ${
-              changeReceivedView
-                ? "bg-gray-50 hover:bg-gray-100 border-gray-300 text-gray-600 "
-                : "bg-primary text-white"
-            } `}
-            onClick={() => setChangeReceivedView(false)}
-            title={"Sent"}
-          />
+
+          <div className="bg-white rounded-md shrink-0 py-1 px-2">
+            <DatePicker
+              onChange={onDateChange}
+              picker="month"
+              bordered={false}
+              allowClear={false}
+              format={MONTH_FORMAT}
+              defaultValue={moment()}
+              className="font-semibold w-full md:w-auto"
+              disabledDate={disableDates}
+            />
+          </div>
         </div>
 
-        <div className="bg-white rounded-md overflow-hidden shadow-md  py-1 px-2">
-          <DatePicker
-            onChange={onDateChange}
-            picker="month"
-            bordered={false}
-            allowClear={false}
-            format={MONTH_FORMAT}
-            defaultValue={moment()}
-            className="font-semibold w-full md:w-auto"
-            disabledDate={disableDates}
-          />
-        </div>
-
-        <div className="mx-auto md:mx-0">
+        <div className="w-full md:w-auto flex items-center justify-end flex-shrink-0">
           <SecondaryButton
             withLink={true}
             className="mr-3"
@@ -191,7 +185,7 @@ function Applaud({ user }) {
                 </div>
               </motion.div>
             ))
-          ) : changeReceivedView ? (
+          ) : changeReceivedView === APPLAUD_RECEIVED_KEY ? (
             receivedApplaudList.length > 0 ? (
               receivedApplaudList.map((item, idx) => (
                 <ApplaudCard applaud={item} type={"received"} />
