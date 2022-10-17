@@ -71,10 +71,10 @@ async function handle(req, res, prisma) {
     const mailData = {
       from: process.env.SMTP_USER,
       to: transactionData.savedData.email,
-      subject: `Successfully Registered on Zasya Review App`,
+      subject: `Successfully Registered on Review App`,
 
       html: mailTemplate({
-        body: `You have successfull registered on Review App. Please login to get started.`,
+        body: `You have successfully registered on Review App. Please login to get started.`,
         name: transactionData.savedData.first_name,
         btnLink: `${process.env.NEXT_APP_URL}/auth/login`,
         btnText: "Get Started",

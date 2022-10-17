@@ -70,10 +70,10 @@ async function handle(req, res, prisma) {
           let mailData = {
             from: process.env.SMTP_USER,
             to: userData.email,
-            subject: `Successfully Registered on Zasya Review App`,
+            subject: `Successfully Registered on Review App`,
 
             html: mailTemplate({
-              body: `You have successfull registered on Review App. Please login to get started.`,
+              body: `You have successfully registered on Review App. Please login to get started.`,
               name: userData.first_name,
               btnLink: `${process.env.NEXT_APP_URL}/auth/login`,
               btnText: "Get Started",
@@ -120,7 +120,7 @@ async function handle(req, res, prisma) {
             subject: `Invitation to collaborate on Review App`,
 
             html: mailTemplate({
-              body: `You have been invited to collaborate on Review app.`,
+              body: `You have been invited to collaborate on the Review app.`,
               name: userData.first_name,
               btnLink: `${process.env.NEXT_APP_URL}/resetpassword?passtoken=${passwordResetData.token}&email=${userData.email}`,
               btnText: "Get Started",
