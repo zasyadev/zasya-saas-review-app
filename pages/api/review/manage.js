@@ -132,9 +132,12 @@ async function handle(req, res, prisma) {
                 from: process.env.SMTP_USER,
                 to: user.email,
                 subject: `New review assigned by ${assignedFromData.first_name}`,
-                html: mailTemplate(
-                  `${assignedFromData.first_name} has assigned you new review , please <a href= ${process.env.NEXT_APP_URL}review/id/${assigneeData.id}>click here </a> to help them now.`
-                ),
+                html: mailTemplate({
+                  body: `Will you take a moment to complete this review assigned by <b>${assignedFromData.first_name}</b>.`,
+                  name: user.first_name,
+                  btnLink: `${process.env.NEXT_APP_URL}review/id/${assigneeData.id}`,
+                  btnText: "Get Started",
+                }),
               };
 
               await mailService.sendMail(mailData, function (err, info) {
