@@ -47,9 +47,13 @@ async function handle(req, res, prisma) {
         from: process.env.SMTP_USER,
         to: assignedByUser.email,
         subject: ` ${assignedUser.first_name} has filled your review`,
-        html: mailTemplate(
-          ` ${assignedUser.first_name} has just filled your review , click here to see their response now .`
-        ),
+
+        html: mailTemplate({
+          body: `<b>${assignedUser.first_name}</b> has filled your review.`,
+          name: assignedByUser.first_name,
+          btnLink: `${process.env.NEXT_APP_URL}review`,
+          btnText: "See Response",
+        }),
       };
       const assigneeData = await prisma.reviewAssignee.findFirst({
         where: {

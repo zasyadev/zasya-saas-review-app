@@ -38,11 +38,11 @@ async function handle(req, res, prisma) {
             from: process.env.SMTP_USER,
             to: createdData.email,
             subject: `${updateData.first_name} has accepted your Invitation to collaborate on Review App`,
-            html: mailTemplate(`
-  
-                ${updateData.first_name} has accepted your Invitation to collaborate on Review App.
-                
-                `),
+
+            html: mailTemplate({
+              body: `<b>${updateData.first_name}</b> has accepted your Invitation to collaborate on Review App.`,
+              name: createdData.first_name,
+            }),
           };
 
           await mailService.sendMail(mailData, function (err, info) {

@@ -71,9 +71,13 @@ async function handle(req, res, prisma) {
             from: process.env.SMTP_USER,
             to: userData.email,
             subject: `Successfully Registered on Zasya Review App`,
-            html: mailTemplate(
-              `You have successfull registered on Review App . Please <a href= ${process.env.NEXT_APP_URL}/auth/login>Login</a> in to continue with your Profile.`
-            ),
+
+            html: mailTemplate({
+              body: `You have successfull registered on Review App. Please login to get started.`,
+              name: userData.first_name,
+              btnLink: `${process.env.NEXT_APP_URL}/auth/login`,
+              btnText: "Get Started",
+            }),
           };
 
           await mailService.sendMail(mailData, function (err, info) {
@@ -114,9 +118,13 @@ async function handle(req, res, prisma) {
             from: process.env.SMTP_USER,
             to: userData.email,
             subject: `Invitation to collaborate on Review App`,
-            html: mailTemplate(`
-            You have been invited to collaborate on Review app . Please <a href= ${process.env.NEXT_APP_URL}/resetpassword?passtoken=${passwordResetData.token}&email=${userData.email}>click here</a> to collaborate with them now .
-            `),
+
+            html: mailTemplate({
+              body: `You have been invited to collaborate on Review app.`,
+              name: userData.first_name,
+              btnLink: `${process.env.NEXT_APP_URL}/resetpassword?passtoken=${passwordResetData.token}&email=${userData.email}`,
+              btnText: "Get Started",
+            }),
           };
 
           await mailService.sendMail(mailData, function (err, info) {
