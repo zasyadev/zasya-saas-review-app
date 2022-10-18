@@ -8,11 +8,10 @@ async function handle(req, res, prisma) {
     });
 
     const allApplaudData = await prisma.userApplaud.findMany({
-      orderBy: [
-        {
-          created_date: "desc",
-        },
-      ],
+      orderBy: {
+        created_date: "desc",
+      },
+
       where: {
         AND: [
           { organization_id: userTableData.organization_id },

@@ -62,8 +62,15 @@ function DashBoard({ user }) {
     reviewRating: [],
     averageAnswerTime: 0,
   };
+  const defaultMonthlyLeaderboardData = {
+    applaudData: [],
+    reviewRating: [],
+  };
 
   const [dashBoardData, setDashboardData] = useState(defaultDashboardData);
+  const [monthlyLeaderBoardData, setMonthlyLeaderBoardData] = useState(
+    defaultMonthlyLeaderboardData
+  );
 
   const [feedbackList, setFeedbackList] = useState([]);
   const [allApplaud, setAllApplaud] = useState([]);
@@ -86,6 +93,21 @@ function DashBoard({ user }) {
       .catch((err) => {
         console.error(err.response.data?.message);
         setDashboardData(defaultDashboardData);
+      });
+  }
+  async function fetchMonthlyLeaderBoardData() {
+    await httpService
+      .post(`/api/dashboard/monthly_leaderboard`, {
+        date: currentMonth,
+        userId: user.id,
+      })
+      .then(({ data: response }) => {
+        if (response.status === 200) {
+          setMonthlyLeaderBoardData(response.data);
+        }
+      })
+      .catch((err) => {
+        console.error(err.response.data?.message);
       });
   }
 
@@ -132,6 +154,7 @@ function DashBoard({ user }) {
     fetchDashboardData();
     fetchFeedbackData();
     fetchApplaudData();
+    fetchMonthlyLeaderBoardData();
   }, []);
 
   return (
@@ -267,51 +290,42 @@ function DashBoard({ user }) {
                   <Col xs={24} md={24}>
                     {feedbackList.length > 0 ? (
                       feedbackList.map((feedback, idx) => {
-                        return (
-                          <>
-                            {Object.entries(feedback).map(([key, value]) => {
-                              return (
-                                <Row className="my-3" key={idx + "feedback"}>
-                                  <Col xs={6} md={5}>
-                                    <DefaultImages
-                                      imageSrc={value?.image}
-                                      width={70}
-                                      height={70}
-                                    />
-                                  </Col>
+                        return Object.entries(feedback).map(([key, value]) => (
+                          <Row className="my-3" key={idx + key + "feedback"}>
+                            <Col xs={6} md={5}>
+                              <DefaultImages
+                                imageSrc={value?.image}
+                                width={70}
+                                height={70}
+                              />
+                            </Col>
 
-                                  <Col xs={18} md={19}>
-                                    <div className="px-4">
-                                      <p className="mb-2 text-primary font-medium text-sm">
-                                        {key}
-                                      </p>
-                                      <p className="flex justify-between mr-0 md:mr-3">
-                                        <span
-                                          className="flex"
-                                          title="Feedback given"
-                                        >
-                                          <FileRightIcon />
-                                          <span className="pl-2 text-sm font-medium text-gray-500">
-                                            {value.feedbackGiven ?? 0}
-                                          </span>
-                                        </span>
-                                        <span
-                                          className="flex"
-                                          title="Feedback received"
-                                        >
-                                          <FileLeftIcon />
-                                          <span className="pl-2 text-sm font-medium text-gray-500">
-                                            {value.feedbackTaken ?? 0}
-                                          </span>
-                                        </span>
-                                      </p>
-                                    </div>
-                                  </Col>
-                                </Row>
-                              );
-                            })}
-                          </>
-                        );
+                            <Col xs={18} md={19}>
+                              <div className="px-4">
+                                <p className="mb-2 text-primary font-medium text-sm">
+                                  {key}
+                                </p>
+                                <p className="flex justify-between mr-0 md:mr-3">
+                                  <span className="flex" title="Feedback given">
+                                    <FileRightIcon />
+                                    <span className="pl-2 text-sm font-medium text-gray-500">
+                                      {value.feedbackGiven ?? 0}
+                                    </span>
+                                  </span>
+                                  <span
+                                    className="flex"
+                                    title="Feedback received"
+                                  >
+                                    <FileLeftIcon />
+                                    <span className="pl-2 text-sm font-medium text-gray-500">
+                                      {value.feedbackTaken ?? 0}
+                                    </span>
+                                  </span>
+                                </p>
+                              </div>
+                            </Col>
+                          </Row>
+                        ));
                       })
                     ) : (
                       <div className="flex justify-center items-center h-48 ">
@@ -326,7 +340,10 @@ function DashBoard({ user }) {
         </div>
       </Col>
       <Col xs={24} sm={24} md={24} lg={8} xxl={6} className="h-full">
-        <SiderRight dashBoardData={dashBoardData} />
+        <SiderRight
+          dashBoardData={dashBoardData}
+          monthlyLeaderBoardData={monthlyLeaderBoardData}
+        />
       </Col>
     </Row>
   );

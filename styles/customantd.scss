@@ -977,3 +977,17 @@ $primary: #0f123f;
   border-color: $primary !important;
   box-shadow: 0 0 0 0px rgba(0, 5, 204, 0.35) !important ;
 }
+.slider-radio {
+  .ant-radio-wrapper-checked {
+    .ant-radio-inner {
+      background: $primary;
+      border-color: $primary;
+    }
+    .ant-radio-inner::after {
+      background: transparent;
+    }
+  }
+  .ant-radio:hover .ant-radio-inner {
+    border-color: $primary;
+  }
+}
