@@ -168,16 +168,18 @@ function SiderRight({ dashBoardData, monthlyLeaderBoardData }) {
                       </div>
                     </div>
                   </div>
-                  <div className="text-center slider-radio">
-                    <Radio.Group
-                      onChange={onChangeRadioHandler}
-                      value={activeMonthlyIndex}
-                      buttonStyle={"solid"}
-                    >
-                      <Radio value={0} />
-                      <Radio value={1} />
-                    </Radio.Group>
-                  </div>
+                  {monthlyLeaderBoardData.applaudData.length > 1 && (
+                    <div className="text-center slider-radio">
+                      <Radio.Group
+                        onChange={onChangeRadioHandler}
+                        value={activeMonthlyIndex}
+                        buttonStyle={"solid"}
+                      >
+                        <Radio value={0} />
+                        <Radio value={1} />
+                      </Radio.Group>
+                    </div>
+                  )}
                 </div>
               ));
             }
