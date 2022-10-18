@@ -9,11 +9,10 @@ async function handle(req, res, prisma) {
       });
 
       const data = await prisma.reviewAssignee.findMany({
-        orderBy: [
-          {
-            modified_date: "desc",
-          },
-        ],
+        orderBy: {
+          modified_date: "desc",
+        },
+
         where: {
           AND: [
             {

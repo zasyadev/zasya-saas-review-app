@@ -1,5 +1,4 @@
 import { Layout, Menu } from "antd";
-import { AnimatePresence, motion, useMotionValue } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -9,7 +8,6 @@ const { Sider } = Layout;
 
 function SiderLayout({ collapsed, setCollapsed, items, md }) {
   const router = useRouter();
-
   const onClickSideTab = (e) => {
     if (e.key.includes("/")) {
       router.push(e.key);
