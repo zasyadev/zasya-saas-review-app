@@ -1,9 +1,21 @@
+import dynamic from "next/dynamic";
 import React from "react";
+import SuspenceWrapper from "../../component/common/SuspenceWrapper";
 import WithMe from "../../component/layout/WithMe";
-import ViewReviewComponent from "../../component/Review/ViewReviewComponent";
+
+const ViewReviewComponent = dynamic(
+  () => import("../../component/Review/ViewReviewComponent"),
+  {
+    suspense: true,
+  }
+);
 
 function ViewReview() {
-  return <WithMe>{({ user }) => <ViewReviewComponent user={user} />}</WithMe>;
+  return (
+    <SuspenceWrapper>
+      <WithMe>{({ user }) => <ViewReviewComponent user={user} />}</WithMe>
+    </SuspenceWrapper>
+  );
 }
 
 export default ViewReview;

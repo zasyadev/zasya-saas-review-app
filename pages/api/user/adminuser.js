@@ -1,6 +1,6 @@
 import prisma from "../../../lib/prisma";
 
-export default async (req, res) => {
+export default functionHandle = async (req, res) => {
   if (req.method === "POST") {
     try {
       const resData = JSON.parse(req.body);

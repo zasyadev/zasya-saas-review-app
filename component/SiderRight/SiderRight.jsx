@@ -162,22 +162,23 @@ function SiderRight({ dashBoardData, monthlyLeaderBoardData }) {
                         <p className="flex mb-2 text-primary font-medium text-sm">
                           <ApplaudIconSmall />
                           <span className="pl-2 text-sm font-medium ">
-                            {value?.count} Applauds
+                            {value?.count} Applaud(s)
                           </span>
                         </p>
                       </div>
                     </div>
                   </div>
-                  <div className="text-center slider-radio">
-                    <Radio.Group
-                      onChange={onChangeRadioHandler}
-                      value={activeMonthlyIndex}
-                      buttonStyle={"solid"}
-                    >
-                      <Radio value={0} />
-                      <Radio value={1} />
-                    </Radio.Group>
-                  </div>
+                  {monthlyLeaderBoardData.applaudData.length > 1 && (
+                    <div className="text-center slider-radio">
+                      <Radio.Group
+                        onChange={onChangeRadioHandler}
+                        value={activeMonthlyIndex}
+                      >
+                        <Radio value={0} />
+                        <Radio value={1} />
+                      </Radio.Group>
+                    </div>
+                  )}
                 </div>
               ));
             }

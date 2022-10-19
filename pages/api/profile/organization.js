@@ -60,4 +60,7 @@ async function handle(req, res, prisma) {
   }
 }
 
-export default (req, res) => RequestHandler(req, res, handle, ["POST", "PUT"]);
+const functionHandle = (req, res) =>
+  RequestHandler(req, res, handle, ["POST", "PUT"]);
+
+export default functionHandle;
