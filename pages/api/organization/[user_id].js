@@ -33,5 +33,6 @@ async function handle(req, res, prisma) {
     message: "All Data Retrieved",
   });
 }
+const functionHandle = (req, res) => RequestHandler(req, res, handle, ["GET"]);
 
-export default (req, res) => RequestHandler(req, res, handle, ["GET"]);
+export default functionHandle;

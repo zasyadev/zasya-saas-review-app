@@ -1,9 +1,21 @@
+import dynamic from "next/dynamic";
 import React from "react";
+import SuspenceWrapper from "../../../component/common/SuspenceWrapper";
 import WithMe from "../../../component/layout/WithMe";
-import EditReviewComponent from "../../../component/Review/EditReviewComponent";
+
+const EditReviewComponent = dynamic(
+  () => import("../../../component/Review/EditReviewComponent"),
+  {
+    suspense: true,
+  }
+);
 
 function ReviewEdit() {
-  return <WithMe>{({ user }) => <EditReviewComponent user={user} />}</WithMe>;
+  return (
+    <SuspenceWrapper>
+      <WithMe>{({ user }) => <EditReviewComponent user={user} />}</WithMe>
+    </SuspenceWrapper>
+  );
 }
 
 export default ReviewEdit;

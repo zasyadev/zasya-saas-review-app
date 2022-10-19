@@ -1,21 +1,31 @@
-import React from "react";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import ReceivedReviewComponent from "../../../component/Review/ReceivedReviewComponent";
+import React from "react";
 import { HeadersComponent } from "../../../component/common/HeadersComponent";
+import SuspenceWrapper from "../../../component/common/SuspenceWrapper";
 import WithMe from "../../../component/layout/WithMe";
+
+const ReceivedReviewComponent = dynamic(
+  () => import("../../../component/Review/ReceivedReviewComponent"),
+  {
+    suspense: true,
+  }
+);
 
 function ReceivedPage() {
   const router = useRouter();
   const { review_id } = router.query;
   return (
-    <WithMe>
-      {({ user }) => (
-        <>
-          <HeadersComponent />
-          <ReceivedReviewComponent user={user} reviewId={review_id} />
-        </>
-      )}
-    </WithMe>
+    <SuspenceWrapper>
+      <WithMe>
+        {({ user }) => (
+          <>
+            <HeadersComponent />
+            <ReceivedReviewComponent user={user} reviewId={review_id} />
+          </>
+        )}
+      </WithMe>
+    </SuspenceWrapper>
   );
 }
 

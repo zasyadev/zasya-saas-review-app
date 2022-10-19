@@ -79,5 +79,5 @@ async function handle(req, res) {
     status: 401,
   });
 }
-
-export default (req, res) => RequestHandler(req, res, handle, ["POST"]);
+const functionHandle = (req, res) => RequestHandler(req, res, handle, ["POST"]);
+export default functionHandle;

@@ -63,5 +63,6 @@ async function handle(req, res, prisma) {
     return res.status(400).json({ status: 400, message: "Invalid token " });
   }
 }
+const functionHandle = (req, res) => RequestHandler(req, res, handle, ["POST"]);
 
-export default (req, res) => RequestHandler(req, res, handle, ["POST"]);
+export default functionHandle;

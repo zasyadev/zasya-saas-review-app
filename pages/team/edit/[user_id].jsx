@@ -1,12 +1,20 @@
-import React, { useEffect, useState } from "react";
-
-import AdminLayout from "../../../component/layout/AdminLayout";
-import { getSession } from "next-auth/react";
-import AddTeamComponent from "../../../component/Team/AddTeamComponent";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
+import React, { useEffect, useState } from "react";
+import SuspenceWrapper from "../../../component/common/SuspenceWrapper";
+import AdminLayout from "../../../component/layout/AdminLayout";
+import WithMe from "../../../component/layout/WithMe";
+
 import httpService from "../../../lib/httpService";
 
-function EditTeam({ user }) {
+const AddTeamComponent = dynamic(
+  () => import("../../../component/Team/AddTeamComponent"),
+  {
+    suspense: true,
+  }
+);
+
+function EditTeam() {
   const router = useRouter();
   const { user_id } = router.query;
   const [memberData, setMemberData] = useState({});
@@ -16,7 +24,7 @@ function EditTeam({ user }) {
 
     await httpService
       .post(`/api/team/edit/${id}`, {
-        org_user: user.id,
+        org_user: id,
       })
       .then(({ data: response }) => {
         if (response.status === 200) {
@@ -31,31 +39,25 @@ function EditTeam({ user }) {
 
   useEffect(() => {
     if (user_id) fetchTeamData(user_id);
-  }, []);
+  }, [user_id]);
 
   return (
-    <AdminLayout user={user} title="">
-      {Object.keys(memberData).length > 0 && (
-        <AddTeamComponent user={user} memberData={memberData} editMode={true} />
-      )}
-    </AdminLayout>
+    <SuspenceWrapper>
+      <WithMe>
+        {({ user }) => (
+          <AdminLayout user={user} title="">
+            {Object.keys(memberData).length > 0 && (
+              <AddTeamComponent
+                user={user}
+                memberData={memberData}
+                editMode={true}
+              />
+            )}
+          </AdminLayout>
+        )}
+      </WithMe>
+    </SuspenceWrapper>
   );
 }
 
 export default EditTeam;
-export async function getServerSideProps(context) {
-  const session = await getSession({ req: context.req });
-
-  if (!session) {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-    };
-  }
-  const { user } = session;
-  return {
-    props: { user },
-  };
-}

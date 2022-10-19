@@ -1,6 +1,6 @@
 import React from "react";
 
-export function LoadingSpinner() {
+export default function LoadingSpinner() {
   return (
     <div className="loaderimg bg-no-repeat bg-cover fixed inset-0 w-full h-screen z-40 overflow-hidden bg-gray-300 opacity-600 grid place-content-center">
       <div className="px-4 max-w-md space-y-3 mb-4">

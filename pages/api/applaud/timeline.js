@@ -46,5 +46,6 @@ async function handle(req, res, prisma) {
     });
   }
 }
+const functionHandle = (req, res) => RequestHandler(req, res, handle, ["POST"]);
 
-export default (req, res) => RequestHandler(req, res, handle, ["POST"]);
+export default functionHandle;

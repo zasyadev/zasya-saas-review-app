@@ -102,4 +102,6 @@ async function handle(req, res, prisma) {
       .json({ error: error, message: "Internal Server Error" });
   }
 }
-export default (req, res) => RequestHandler(req, res, handle, ["POST"]);
+
+const functionHandle = (req, res) => RequestHandler(req, res, handle, ["POST"]);
+export default functionHandle;
