@@ -11,7 +11,7 @@ import {
 } from "antd";
 import ImgCrop from "antd-img-crop";
 import { useS3Upload } from "next-s3-upload";
-import { useRouter } from "next/router";
+
 import React, { useEffect, useState } from "react";
 import {
   PrimaryButton,
@@ -48,7 +48,6 @@ const ImageUpload = ({
   formName,
   limit = true,
   limitSize = 1,
-  // handleFileChange
 }) => {
   const [isUploading, setIsUploading] = useState(false);
 
@@ -123,7 +122,6 @@ const ImageUpload = ({
             onChange={handleChange}
             onPreview={onPreview}
             data={{ category: category }}
-            // onRemove={(val) => deleteBanner(val.uid)}
             beforeUpload={beforeUpload}
           >
             {limit
@@ -138,7 +136,6 @@ const ImageUpload = ({
   );
 };
 function EditProfile({ user }) {
-  const router = useRouter();
   const { uploadToS3 } = useS3Upload();
   const [passwordForm] = Form.useForm();
   const [slackForm] = Form.useForm();
@@ -591,7 +588,7 @@ function EditProfile({ user }) {
             />
             <PrimaryButton
               onClick={() => slackForm.submit()}
-              className=" h-full  "
+              className="h-full"
               title="Change Email"
             />
           </>,

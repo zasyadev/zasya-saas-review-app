@@ -3,7 +3,7 @@ import AdminLayout from "../../component/layout/AdminLayout";
 import Profile from "../../component/Profile/Profile";
 import WithMe from "../../component/layout/WithMe";
 
-function profilePage() {
+function ProfilePage() {
   return (
     <WithMe>
       {({ user }) => (
@@ -15,4 +15,4 @@ function profilePage() {
   );
 }
 
-export default profilePage;
+export default ProfilePage;
