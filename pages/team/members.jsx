@@ -1,11 +1,9 @@
 import React from "react";
-
 import AdminLayout from "../../component/layout/AdminLayout";
 import WithMe from "../../component/layout/WithMe";
-
 import TeamMembers from "../../component/Team/TeamMembers";
 
-function membersPage({ user }) {
+function MembersPage() {
   return (
     <WithMe>
       {({ user }) => (
@@ -17,4 +15,4 @@ function membersPage({ user }) {
   );
 }
 
-export default membersPage;
+export default MembersPage;

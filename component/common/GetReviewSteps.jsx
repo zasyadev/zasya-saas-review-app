@@ -48,7 +48,7 @@ const FeedbackTitleStep = () => {
   );
 };
 
-const FeedbackMemberStep = ({ onInputChange, type, userList }) => {
+const FeedbackMemberStep = ({ onInputChange, userList }) => {
   return (
     <div className="w-full md:w-1/2 bg-white py-4 px-6 mx-auto rounded-md">
       <p className="text-base font-bold my-5 text-primary">
@@ -162,7 +162,6 @@ export default function GetReviewSteps({
       return (
         <FeedbackMemberStep
           onInputChange={onBarInputChange}
-          type={type}
           userList={userList}
         />
       );

@@ -3,7 +3,7 @@ import { getSession } from "next-auth/react";
 import AdminLayout from "../../component/layout/AdminLayout";
 import AdminUsers from "../../component/Users/AdminUsers";
 
-function userPage({ user }) {
+function UserPage({ user }) {
   return (
     <AdminLayout user={user}>
       <AdminUsers user={user} />
@@ -11,7 +11,7 @@ function userPage({ user }) {
   );
 }
 
-export default userPage;
+export default UserPage;
 
 export async function getServerSideProps(context) {
   const session = await getSession({ req: context.req });

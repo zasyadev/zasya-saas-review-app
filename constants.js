@@ -65,4 +65,14 @@ export const ApplaudCategoryList = [
       },
     ],
   },
+  {
+    name: "Others",
+    data: [
+      {
+        name: "Other",
+        value: "other",
+        about: "Anything else than above",
+      },
+    ],
+  },
 ];

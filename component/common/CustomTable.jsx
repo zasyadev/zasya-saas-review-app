@@ -1,12 +1,7 @@
 import { Table } from "antd";
 import React from "react";
 
-const CustomTable = ({
-  className = "",
-  rowClassName,
-
-  ...props
-}) => {
+const CustomTable = ({ className = "", ...props }) => {
   return (
     <div className="overflow-auto">
       <Table

@@ -30,7 +30,7 @@ function SiderLayout({ collapsed, setCollapsed, items, md }) {
               src={"/media/images/logos/review.png"}
               width={100}
               height={51}
-              alt="review logo"
+              alt="review_logo"
             />
           </div>
         </Link>

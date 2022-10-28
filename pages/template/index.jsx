@@ -3,7 +3,7 @@ import AdminLayout from "../../component/layout/AdminLayout";
 import WithMe from "../../component/layout/WithMe";
 import TemplateLayout from "../../component/Template/TemplateLayout";
 
-function templatePage() {
+function TemplatePage() {
   return (
     <WithMe>
       {({ user }) => (
@@ -15,4 +15,4 @@ function templatePage() {
   );
 }
 
-export default templatePage;
+export default TemplatePage;

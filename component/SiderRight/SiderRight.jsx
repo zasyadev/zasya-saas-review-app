@@ -136,7 +136,7 @@ function SiderRight({ dashBoardData, monthlyLeaderBoardData }) {
           {monthlyLeaderBoardData.applaudData.map((item, idx) => {
             if (idx === activeMonthlyIndex) {
               return Object.entries(item).map(([key, value]) => (
-                <div key={idx + "applaud"}>
+                <div key={idx + "monthlyapplaud"}>
                   <img
                     src={`/media/images/${
                       activeMonthlyIndex === 0
@@ -147,7 +147,7 @@ function SiderRight({ dashBoardData, monthlyLeaderBoardData }) {
                   />
                   <div className="space-y-4">
                     <p className="mb-3 text-primary font-semibold  text-base  pr-10 md:pr-14">
-                      Congratulations 🎉 <span className=" "> {key} !</span>
+                      Congratulations 🎉 {key} !
                     </p>
                     <div className="flex items-center space-x-4 ">
                       <div className="shrink-0">

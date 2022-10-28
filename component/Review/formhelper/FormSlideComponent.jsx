@@ -251,7 +251,7 @@ export function FormSlideComponent({
                     </Form.Item>
                   </p>
 
-                  <p className="rounded-full bg-violet-400 text-white text-center mr-2 md:mr-3  py-1 md:py-2 px-1 md:px-3">
+                  <p className="rounded-full bg-primary text-white text-center mr-2 md:mr-3  py-1 md:py-2 px-1 md:px-3">
                     {sliderInputValue[id] ?? 0}
                   </p>
 

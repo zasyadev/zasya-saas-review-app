@@ -55,10 +55,6 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
   const [templateSaveLoading, setTemplateSaveLoading] = useState(false);
 
   function removeElement(idx, type) {
-    // if (type === RATING_TYPE) {
-    //   setRatingState(false);
-    // }
-
     setQuestions((prev) => prev.filter((_, i) => i != idx));
 
     if (idx > 0) setActiveQuestionIndex(idx - 1);
@@ -90,10 +86,6 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
   }
 
   function defineType(type, index) {
-    // if (type === RATING_TYPE) {
-    //   setRatingState(true);
-    // }
-
     setQuestions((prev) =>
       prev.map((item, i) =>
         i === index
@@ -264,7 +256,6 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
       setFormTitle({ value: editFormData?.form_data?.title, error: "" });
       setFormDes(editFormData?.form_data?.description);
       setSelectTypeFeild(false);
-      // setModalTitleOpen(false);
     }
   }, []);
 
@@ -448,7 +439,6 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
         lastStep={2}
         previewStep={1}
         submitLoading={templateSaveLoading}
-        // submitHandle={saveFormField}
         nextStepHandller={nextStepHandller}
       />
     </div>

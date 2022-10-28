@@ -5,7 +5,7 @@ import PreviewComponent from "../../../component/Review/PreviewComponent";
 import AdminLayout from "../../../component/layout/AdminLayout";
 import WithMe from "../../../component/layout/WithMe";
 
-function ReceivedPage({ user }) {
+function PreviewPage() {
   const router = useRouter();
   const { review_id } = router.query;
   return (
@@ -22,4 +22,4 @@ function ReceivedPage({ user }) {
   );
 }
 
-export default ReceivedPage;
+export default PreviewPage;
