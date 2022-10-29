@@ -45,7 +45,7 @@ function ViewReviewComponent({ user }) {
       title={reviewData?.questionData?.review_name}
     >
       {loading ? (
-        <div className="container bg-white rounded-md p-4 mx-auto max-w-full">
+        <div className="container bg-white rounded-md p-5 mx-auto max-w-full">
           <Skeleton active />
         </div>
       ) : reviewData &&

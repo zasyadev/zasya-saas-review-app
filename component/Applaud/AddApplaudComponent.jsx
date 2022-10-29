@@ -92,7 +92,7 @@ function AddApplaud({ user }) {
 
   return (
     <div className="w-full  md:w-3/6 mx-auto">
-      <div className="w-full bg-white rounded-md shadow-md p-4 mt-4 add-template-wrapper">
+      <div className="w-full bg-white rounded-md shadow-md p-5 mt-4 add-template-wrapper">
         <div className=" rounded-t-md  mt-1">
           <Form
             layout="vertical"
@@ -135,7 +135,7 @@ function AddApplaud({ user }) {
                   name="category"
                   label={
                     <p className="flex items-center">
-                      Category{" "}
+                      Category
                       <span className="leading-[0] ml-2">
                         {CustomPopover(
                           "Category that can  define your applaud. Hover over them to see details"

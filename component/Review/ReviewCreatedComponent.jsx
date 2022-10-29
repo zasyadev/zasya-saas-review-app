@@ -20,7 +20,7 @@ const { useBreakpoint } = Grid;
 
 function InfoCard({ count, title, Icon, className = "", ActionButton }) {
   return (
-    <div className={`bg-white p-4 rounded-md  ${className}`}>
+    <div className={`bg-white p-5 rounded-md  ${className}`}>
       <div className="flex flex-wrap items-stretch h-full gap-3">
         <div className="bg-primary-gray text-primary grid items-center w-10 h-10 py-1 px-1 justify-center shadow-lg-pink rounded-full">
           <Icon />
@@ -82,7 +82,7 @@ function ReviewCreatedComponent({
               from: reviewData.created_date,
               to: record.answer_date,
             })}
-          </Tooltip>{" "}
+          </Tooltip>
         </p>
       </div>
     ),
@@ -303,7 +303,7 @@ function ReviewCreatedComponent({
             })}
           </Collapse>
         ) : (
-          <div className="bg-white p-4 rounded-md text-base font-medium">
+          <div className="bg-white p-5 rounded-md text-base font-medium">
             <p>No answers yet</p>
           </div>
         )}

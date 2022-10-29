@@ -12,7 +12,7 @@ export const TemplateStepsArray = [
   {
     id: 2,
     key: "template_preview",
-    title: "Preview and launch",
+    title: "Preview And Launch",
   },
 ];
 
@@ -27,3 +27,15 @@ export const TemplateToggleList = [
     label: DEFAULT_TEMPLATE_KEY,
   },
 ];
+
+export const DefaultMotionVarient = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: {
+      duration: 0.3,
+      staggerChildren: 0.5,
+      delayChildren: 0.5,
+    },
+  },
+};

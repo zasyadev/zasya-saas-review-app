@@ -15,20 +15,19 @@ import {
 import getApplaudCategoryName from "../../helpers/getApplaudCategoryName";
 import httpService from "../../lib/httpService";
 import { openNotificationBox } from "../common/notification";
+import { DefaultMotionVarient } from "../Template/constants";
 
 const APPLAUD_RECEIVED_KEY = "Received";
 const APPLAUD_SENT_KEY = "Sent";
+const applaudCardVarient = {
+  hidden: { y: 20, opacity: 0 },
+  show: { y: 0, opacity: 1 },
+};
 
 const ApplaudCard = ({ applaud, type }) => {
   return (
-    <motion.div
-      key={applaud.id}
-      variants={{
-        hidden: { y: 20, opacity: 0 },
-        show: { y: 0, opacity: 1 },
-      }}
-    >
-      <div className="flex flex-col template-list h-full w-full rounded-md shadow-md bg-white space-y-4 p-4">
+    <motion.div key={applaud.id} variants={applaudCardVarient}>
+      <div className="flex flex-col template-list h-full w-full rounded-md shadow-md bg-white space-y-4 p-5">
         <div className="relative h-auto p-4 bg-teal-100 space-y-4 rounded-md flex flex-col flex-1">
           <p className="mb-0 font-medium flex-1">{applaud.comment}</p>
           {applaud?.category?.length > 0 && (
@@ -52,7 +51,7 @@ const ApplaudCard = ({ applaud, type }) => {
             <span className="font-semibold">
               {type === "received"
                 ? applaud.created.first_name
-                : applaud.user.first_name}{" "}
+                : applaud.user.first_name}
             </span>
           </p>
           <p className="text-sm  text-gray-500 font-medium mb-0 ">
@@ -151,17 +150,7 @@ function Applaud({ user }) {
       <div className="container mx-auto max-w-full">
         <motion.div
           className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-8 2xl:gap-12 "
-          variants={{
-            hidden: { opacity: 0 },
-            show: {
-              opacity: 1,
-              transition: {
-                duration: 0.3,
-                staggerChildren: 0.5,
-                delayChildren: 0.5,
-              },
-            },
-          }}
+          variants={DefaultMotionVarient}
           initial="hidden"
           animate="show"
         >
@@ -169,12 +158,9 @@ function Applaud({ user }) {
             [2, 3, 4].map((loop) => (
               <motion.div
                 key={"loaderquesSlid" + loop}
-                variants={{
-                  hidden: { y: 20, opacity: 0 },
-                  show: { y: 0, opacity: 1 },
-                }}
+                variants={applaudCardVarient}
               >
-                <div className="template-list h-full w-full rounded-md shadow-md bg-white space-y-2 p-4">
+                <div className="template-list h-full w-full rounded-md shadow-md bg-white space-y-2 p-5">
                   <Skeleton
                     title={false}
                     active={true}
@@ -188,7 +174,11 @@ function Applaud({ user }) {
           ) : changeReceivedView === APPLAUD_RECEIVED_KEY ? (
             receivedApplaudList.length > 0 ? (
               receivedApplaudList.map((item, idx) => (
-                <ApplaudCard applaud={item} type={"received"} />
+                <ApplaudCard
+                  applaud={item}
+                  type={"received"}
+                  key={"rec" + idx}
+                />
               ))
             ) : (
               <div className="template-list h-full w-full rounded-md shadow-md bg-white space-y-2">
@@ -197,7 +187,7 @@ function Applaud({ user }) {
             )
           ) : applaudList.length > 0 ? (
             applaudList.map((item, idx) => (
-              <ApplaudCard applaud={item} type={"sent"} />
+              <ApplaudCard applaud={item} type={"sent"} key={"sen" + idx} />
             ))
           ) : (
             <div className="template-list h-full w-full rounded-md shadow-md bg-white space-y-2">

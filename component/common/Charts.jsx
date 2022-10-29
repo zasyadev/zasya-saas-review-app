@@ -124,7 +124,7 @@ const BarChart = ({ user }) => {
   return (
     <div>
       <p className="chart-title text-primary flex items-center justify-between">
-        Feedback{" "}
+        Feedback
         <span className="leading-0 text-base text-gray-900 ml-2">
           {CustomPopover(
             "Count of Feedback given by the organization monthly."

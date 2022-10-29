@@ -105,7 +105,7 @@ function AllAplaud({ user }) {
                   {Object.entries(item).map(([key, value]) => {
                     return (
                       <div
-                        className={`bg-white rounded-md overflow-hidden shadow-md  py-3 px-1 mb-3 cursor-pointer ${
+                        className={`bg-white rounded-md overflow-hidden shadow-md  py-4 px-2 mb-3 cursor-pointer ${
                           filterByUserId === value.user_id
                             ? "border border-blue-800"
                             : ""
@@ -162,7 +162,7 @@ function AllAplaud({ user }) {
             })
           ) : (
             <Col xs={24} md={24}>
-              <div className="bg-white rounded-md overflow-hidden shadow-md mx-4 my-3 py-3 px-1">
+              <div className="bg-white rounded-md overflow-hidden shadow-md mx-4 my-3 py-4 px-2">
                 <div className="flex justify-center items-center h-48">
                   <div className="text-center  ">No Applaud Found</div>
                 </div>
@@ -172,7 +172,7 @@ function AllAplaud({ user }) {
         </div>
       </Col>
       <Col xs={24} sm={24} md={16}>
-        <div className="received--all-applaud bg-white rounded-md  shadow-md  p-4">
+        <div className="received--all-applaud bg-white rounded-md  shadow-md  p-5">
           <Timeline className="py-2 mt-1 px-4">
             {allFilterOrgApplaud.length ? (
               allFilterOrgApplaud.map((item, idx) => {
@@ -192,7 +192,7 @@ function AllAplaud({ user }) {
                     <p className="font-semibold mb-1 text-base">
                       <span className="capitalize  ">
                         {item.created.first_name}
-                      </span>{" "}
+                      </span>
                       has Applauded {item.user.first_name}.
                     </p>
                     <p className=" mb-0 text-base">{item.comment}</p>

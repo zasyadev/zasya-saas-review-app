@@ -61,7 +61,7 @@ function SiderRight({ dashBoardData, monthlyLeaderBoardData }) {
 
   return (
     <>
-      <div className="bg-white rounded-md shadow-md p-4">
+      <div className="bg-white rounded-md shadow-md p-5 md:p-6">
         <Row justify="space-around">
           <Col xs={12} md={12} className="border-r border-slate-200">
             <div className=" flex flex-col items-center justify-center">
@@ -128,7 +128,7 @@ function SiderRight({ dashBoardData, monthlyLeaderBoardData }) {
         </Row>
       </div>
       {monthlyLeaderBoardData.applaudData.length > 0 && (
-        <div className="relative bg-white rounded-md shadow-md p-4 md:p-6 mt-6 ">
+        <div className="relative bg-white rounded-md shadow-md p-5 md:p-6 mt-6 ">
           <p className="mb-4 text-primary text-xl font-semibold pr-10 md:pr-14">
             Monthly Leaderboard
           </p>
@@ -144,6 +144,7 @@ function SiderRight({ dashBoardData, monthlyLeaderBoardData }) {
                         : "badge_silver.png"
                     }`}
                     className="absolute top-0 right-4 w-10 md:w-14 "
+                    alt="badge"
                   />
                   <div className="space-y-4">
                     <p className="mb-3 text-primary font-semibold  text-base  pr-10 md:pr-14">

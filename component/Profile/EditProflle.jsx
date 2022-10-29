@@ -299,7 +299,7 @@ function EditProfile({ user }) {
   return loading ? (
     <div className="grid grid-cols-1 xl:grid-cols-6 mt-1">
       <div className="xl:col-start-1 xl:col-end-7 px-4 ">
-        <div className="w-full bg-white rounded-md  shadow-md p-4 mt-2">
+        <div className="w-full bg-white rounded-md  shadow-md p-5 mt-2">
           <Row gutter={16}>
             <Col lg={24} xs={24} className="mt-4 items-center">
               <Skeleton active />
@@ -314,25 +314,23 @@ function EditProfile({ user }) {
         <div className="xl:col-start-1 xl:col-end-7 px-4 ">
           <div className="rounded-md text-white grid items-center w-full shadow-lg-purple mb-4 md:mb-6">
             <div className="w-full flex item-center justify-end">
-              <div className="flex justify-end ">
-                <div className="mr-4">
-                  <SecondaryButton
-                    onClick={() => handleEditSlack()}
-                    className="h-full md:w-full w-32 mr-2"
-                    title="Change Slack Email"
-                  />
-                </div>
-                <div>
-                  <PrimaryButton
-                    onClick={() => showPasswordEditModal()}
-                    className="md:px-4 px-2 md:w-full w-24"
-                    title="Change Password"
-                  />
-                </div>
+              <div className="mr-2 md:mr-4 w-1/2 md:w-fit">
+                <SecondaryButton
+                  onClick={() => handleEditSlack()}
+                  className="h-full w-full "
+                  title="Edit Slack Email"
+                />
+              </div>
+              <div className="w-1/2 md:w-fit">
+                <PrimaryButton
+                  onClick={() => showPasswordEditModal()}
+                  className="md:px-4 px-2 w-full"
+                  title="Edit Password"
+                />
               </div>
             </div>
           </div>
-          <div className="w-full bg-white rounded-md  shadow-md px-2 py-3 md:px-4 md:py-6">
+          <div className="w-full bg-white rounded-md  shadow-md p-4 md:px-4 md:py-6">
             <Row gutter={16}>
               <Col lg={24} xs={24} className=" items-center">
                 <Form
