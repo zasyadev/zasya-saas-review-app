@@ -31,9 +31,6 @@ async function handle(req, res, prisma) {
           first_name: userData.first_name,
 
           last_name: "",
-          address: "",
-          pin_code: "",
-          mobile: "",
 
           status: userData.status,
           role: { connect: { id: userData.role } },

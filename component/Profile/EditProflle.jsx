@@ -330,7 +330,7 @@ function EditProfile({ user }) {
               </div>
             </div>
           </div>
-          <div className="w-full bg-white rounded-md  shadow-md p-4 md:px-4 md:py-6">
+          <div className="w-full bg-white rounded-md  shadow-md p-4 md:py-6">
             <Row gutter={16}>
               <Col lg={24} xs={24} className=" items-center">
                 <Form
