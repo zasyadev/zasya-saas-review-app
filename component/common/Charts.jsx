@@ -98,7 +98,7 @@ const BarChart = ({ user }) => {
 
   async function fetchChartData() {
     setLoading(true);
-    setChartData([]);
+    setChartData(defaultChartSeries);
 
     await httpService
       .post(`/api/dashboard/chart`, {
@@ -145,7 +145,6 @@ const BarChart = ({ user }) => {
           className="chart-data "
         />
       )}
-      {/* <div className="bar-chart-text">No Data Found</div> */}
     </div>
   );
 };

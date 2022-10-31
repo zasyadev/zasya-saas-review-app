@@ -757,10 +757,13 @@ $primary: #0f123f;
   overflow: auto;
 }
 .received--all-applaud {
-  max-height: 600px;
+  max-height: 750px;
   overflow: auto;
+  @include desktop {
+    max-height: 650px;
+  }
   @include tab {
-    max-height: 500px;
+    max-height: 550px;
   }
 }
 

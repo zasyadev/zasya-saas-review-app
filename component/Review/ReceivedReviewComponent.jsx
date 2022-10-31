@@ -103,13 +103,7 @@ function ReceivedReviewComponent({ user, reviewId }) {
     <div className="answer-bg px-2 py-4 md:p-4 flex items-center justify-center">
       {loading ? (
         <div className=" text-center bg-white rounded-md p-10 shadow-md md:w-10/12 2xl:w-8/12 mx-auto">
-          <Skeleton
-            title={false}
-            active={true}
-            width={[200]}
-            className="mt-4"
-            rows={3}
-          />
+          <Skeleton title={false} active={true} className="mt-4" />
         </div>
       ) : reviewData?.status ? (
         <div className="relative  text-center bg-white rounded-md py-10 shadow-md md:w-10/12 2xl:w-8/12 mx-auto">

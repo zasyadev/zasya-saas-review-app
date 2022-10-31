@@ -20,9 +20,7 @@ const BASE = process.env.NEXT_PUBLIC_APP_URL;
 
 function Profile({ user }) {
   const [orgForm] = Form.useForm();
-
   const [loading, setLoading] = useState(false);
-
   const [organizationModal, setOrganizationModal] = useState(false);
   const [userDetails, setUserDetails] = useState({});
   const [applaudLimit, setApplaudLimit] = useState(0);
@@ -103,15 +101,19 @@ source=LinkedIn`);
       })
       .then(({ data: response }) => {
         if (response.status === 200) {
-          orgForm.setFieldsValue({
-            applaud_count: response.data.organization.applaud_count ?? 0,
-          });
           setApplaudLimit(response.data.organization.applaud_count);
         }
       })
       .catch((err) => {
         openNotificationBox("error", err.response.data?.message, 3);
       });
+  };
+
+  const handleEditApplaudLimit = (applaud_count) => {
+    setOrganizationModal(true);
+    orgForm.setFieldsValue({
+      applaud_count: applaud_count ?? 0,
+    });
   };
 
   return loading ? (
@@ -172,7 +174,7 @@ source=LinkedIn`);
           </div>
         </Col>
         <Col md={10} xs={24}>
-          <div className="bg-white rounded-md transition-all duration-300 ease-in-out shadow-md px-6 py-4 xl:py-5  xl:px-8 space-y-4">
+          <div className="bg-white rounded-md transition-all duration-300 ease-in-out shadow-md p-5 xl:py-5  xl:px-8 space-y-4">
             <div className="flex justify-between items-center gap-4 flex-wrap">
               <p className="mb-0 text-lg md:text-xl text-primary font-semibold">
                 General Information
@@ -212,7 +214,7 @@ source=LinkedIn`);
           </div>
 
           {user.role_id === 2 && user.organization_id ? (
-            <div className="bg-white rounded-md transition-all duration-300 ease-in-out shadow-md px-6 py-4 xl:py-5  xl:px-8 space-y-4 mt-8">
+            <div className="bg-white rounded-md transition-all duration-300 ease-in-out shadow-md p-5 py-4 xl:py-5  xl:px-8 space-y-4 mt-8">
               <p className=" text-lg md:text-xl text-primary font-semibold mb-0">
                 Applaud Information
               </p>
@@ -232,7 +234,7 @@ source=LinkedIn`);
                   </p>
                 </div>
                 <p
-                  onClick={() => setOrganizationModal(true)}
+                  onClick={() => handleEditApplaudLimit(applaudLimit)}
                   className="hover:bg-gray-100 border border-gray-300  py-1 px-2 rounded-full cursor-pointer transition-all  duration-300 ease-in-out"
                 >
                   <EditOutlined className="text-base text-primary " />
@@ -244,7 +246,7 @@ source=LinkedIn`);
 
         <Col md={14} xs={24}>
           <div className=" profile-applaud-card no-scrollbar">
-            <div className="bg-white rounded-md transition-all duration-300 ease-in-out shadow-md mb-4  px-6 py-4 xl:py-5  xl:px-8 space-y-4 md:space-y-6">
+            <div className="bg-white rounded-md transition-all duration-300 ease-in-out shadow-md mb-4  p-5  xl:py-5  xl:px-8 space-y-4 md:space-y-6">
               <p className=" text-lg md:text-xl text-primary font-semibold mb-0">
                 Applaud Recieved
               </p>
@@ -318,53 +320,51 @@ source=LinkedIn`);
         visible={organizationModal}
         onCancel={() => setOrganizationModal(false)}
         footer={[
-          <>
-            <SecondaryButton
-              onClick={() => setOrganizationModal(false)}
-              className=" h-full mr-2"
-              title="Cancel"
-            />
-            <PrimaryButton
-              onClick={() => orgForm.submit()}
-              className=" h-full  "
-              title="Update"
-            />
-          </>,
+          <SecondaryButton
+            onClick={() => setOrganizationModal(false)}
+            className=" h-full mr-2"
+            title="Cancel"
+            key="cancel_btn"
+          />,
+          <PrimaryButton
+            onClick={() => orgForm.submit()}
+            className=" h-full  "
+            title="Update"
+            key="update_btn"
+          />,
         ]}
         customFooter
         modalProps={{ wrapClassName: "view_form_modal" }}
       >
-        <div>
-          <Form
-            form={orgForm}
-            layout="vertical"
-            autoComplete="off"
-            onFinish={onChangeOrgData}
-          >
-            <div className=" mx-2">
-              <Form.Item
-                label="Applaud Limit "
-                name="applaud_count"
-                rules={[
-                  {
-                    validator: (_, value) => {
-                      if (Number(value) > 0 && Number(value) < 1000) {
-                        return Promise.resolve();
-                      } else {
-                        return Promise.reject("Please Enter valid Limit");
-                      }
-                    },
+        <Form
+          form={orgForm}
+          layout="vertical"
+          autoComplete="off"
+          onFinish={onChangeOrgData}
+        >
+          <div className=" mx-2">
+            <Form.Item
+              label="Applaud Limit "
+              name="applaud_count"
+              rules={[
+                {
+                  validator: (_, value) => {
+                    if (Number(value) > 0 && Number(value) < 1000) {
+                      return Promise.resolve();
+                    } else {
+                      return Promise.reject("Please Enter valid Limit");
+                    }
                   },
-                ]}
-              >
-                <Input
-                  placeholder=" Applaud Limit"
-                  className="form-control block w-full px-4 py-2 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white  focus:outline-none"
-                />
-              </Form.Item>
-            </div>
-          </Form>
-        </div>
+                },
+              ]}
+            >
+              <Input
+                placeholder=" Applaud Limit"
+                className="form-control block w-full px-4 py-2 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white  focus:outline-none"
+              />
+            </Form.Item>
+          </div>
+        </Form>
       </CustomModal>
     </>
   );

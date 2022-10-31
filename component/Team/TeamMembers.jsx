@@ -125,13 +125,7 @@ function TeamMembers({ user }) {
       <div className="w-full bg-white rounded-md overflow-hdden shadow-md">
         <div className="px-4 ">
           {loading ? (
-            <Skeleton
-              title={false}
-              active={true}
-              width={[200]}
-              className="mt-4"
-              rows={3}
-            />
+            <Skeleton title={false} active={true} className="my-4" />
           ) : (
             <CustomTable
               dataSource={membersList}

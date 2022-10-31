@@ -208,7 +208,7 @@ function DashBoard({ user }) {
             />
           </div>
 
-          <div className="w-full bg-white rounded-md overflow-hidden shadow-md p-5">
+          <div className="w-full bg-white rounded-md overflow-hidden shadow-md p-5 ">
             <BarChart user={user} />
           </div>
           <Row gutter={[24, 24]}>
@@ -225,40 +225,27 @@ function DashBoard({ user }) {
                     {allApplaud.length > 0 ? (
                       allApplaud.map((item, idx) => {
                         if (idx <= 3) {
-                          return (
-                            <>
-                              {Object.entries(item).map(([key, value]) => {
-                                return (
-                                  <Col
-                                    xs={24}
-                                    sm={12}
-                                    md={12}
-                                    key={"applaud" + idx}
-                                  >
-                                    <div className="flex items-center space-x-4 ">
-                                      <div className="shrink-0">
-                                        <DefaultImages
-                                          imageSrc={value?.image}
-                                        />
-                                      </div>
+                          return Object.entries(item).map(([key, value]) => (
+                            <Col xs={24} sm={12} md={12} key={"applaud" + idx}>
+                              <div className="flex items-center space-x-4 ">
+                                <div className="shrink-0">
+                                  <DefaultImages imageSrc={value?.image} />
+                                </div>
 
-                                      <div className="flex-1">
-                                        <p className="mb-2 text-primary font-medium text-sm">
-                                          {key}
-                                        </p>
-                                        <p className="flex">
-                                          <ApplaudIconSmall />
-                                          <span className="pl-2 text-sm font-medium text-gray-500">
-                                            {value?.taken?.length}
-                                          </span>
-                                        </p>
-                                      </div>
-                                    </div>
-                                  </Col>
-                                );
-                              })}
-                            </>
-                          );
+                                <div className="flex-1">
+                                  <p className="mb-2 text-primary font-medium text-sm">
+                                    {key}
+                                  </p>
+                                  <p className="flex">
+                                    <ApplaudIconSmall />
+                                    <span className="pl-2 text-sm font-medium text-gray-500">
+                                      {value?.taken?.length}
+                                    </span>
+                                  </p>
+                                </div>
+                              </div>
+                            </Col>
+                          ));
                         }
                       })
                     ) : (

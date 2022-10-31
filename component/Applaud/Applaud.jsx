@@ -164,7 +164,6 @@ function Applaud({ user }) {
                   <Skeleton
                     title={false}
                     active={true}
-                    width={[200]}
                     className="my-4"
                     key={loop}
                   />
@@ -173,12 +172,8 @@ function Applaud({ user }) {
             ))
           ) : changeReceivedView === APPLAUD_RECEIVED_KEY ? (
             receivedApplaudList.length > 0 ? (
-              receivedApplaudList.map((item, idx) => (
-                <ApplaudCard
-                  applaud={item}
-                  type={"received"}
-                  key={"rec" + idx}
-                />
+              receivedApplaudList.map((item) => (
+                <ApplaudCard applaud={item} type={"received"} key={item.id} />
               ))
             ) : (
               <div className="template-list h-full w-full rounded-md shadow-md bg-white space-y-2">
@@ -186,8 +181,8 @@ function Applaud({ user }) {
               </div>
             )
           ) : applaudList.length > 0 ? (
-            applaudList.map((item, idx) => (
-              <ApplaudCard applaud={item} type={"sent"} key={"sen" + idx} />
+            applaudList.map((item) => (
+              <ApplaudCard applaud={item} type={"sent"} key={item.id} />
             ))
           ) : (
             <div className="template-list h-full w-full rounded-md shadow-md bg-white space-y-2">
