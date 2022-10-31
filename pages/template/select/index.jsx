@@ -16,7 +16,7 @@ function TemplateView() {
     <SuspenceWrapper>
       <WithMe>
         {({ user }) => (
-          <AdminLayout user={user} title={"Template View "} isBack>
+          <AdminLayout user={user} title={"Select Template"} isBack>
             <TemplateListView user={user} />
           </AdminLayout>
         )}

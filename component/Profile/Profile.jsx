@@ -20,12 +20,14 @@ const BASE = process.env.NEXT_PUBLIC_APP_URL;
 
 function Profile({ user }) {
   const [orgForm] = Form.useForm();
+  const [slackForm] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [organizationModal, setOrganizationModal] = useState(false);
   const [userDetails, setUserDetails] = useState({});
   const [applaudLimit, setApplaudLimit] = useState(0);
   const [receivedApplaudList, setReceivedApplaudList] = useState([]);
   const [givenApplaudList, setGivenApplaudList] = useState([]);
+  const [showSlackEditModal, setShowSlackEditModal] = useState(false);
 
   const getProfileData = async () => {
     setUserDetails({});
@@ -114,6 +116,29 @@ source=LinkedIn`);
     orgForm.setFieldsValue({
       applaud_count: applaud_count ?? 0,
     });
+  };
+
+  function handleEditSlack() {
+    setShowSlackEditModal(true);
+    slackForm.setFieldsValue({
+      slack_email: userDetails?.slack_email,
+    });
+  }
+
+  const onChangeSlack = async (values) => {
+    await httpService
+      .post(`/api/profile/slack/${user.id}`, values)
+      .then(({ data: response }) => {
+        if (response.status === 200) {
+          slackForm.resetFields();
+          setShowSlackEditModal(false);
+          openNotificationBox("success", response.message, 3);
+          getProfileData();
+        }
+      })
+      .catch((err) => {
+        openNotificationBox("error", err.response.data?.message, 3);
+      });
   };
 
   return loading ? (
@@ -213,35 +238,60 @@ source=LinkedIn`);
             </div>
           </div>
 
-          {user.role_id === 2 && user.organization_id ? (
-            <div className="bg-white rounded-md transition-all duration-300 ease-in-out shadow-md p-5 py-4 xl:py-5  xl:px-8 space-y-4 mt-8">
-              <p className=" text-lg md:text-xl text-primary font-semibold mb-0">
-                Applaud Information
+          <div className="bg-white rounded-md transition-all duration-300 ease-in-out shadow-md p-5 py-4 xl:py-5  xl:px-8 space-y-4 mt-8">
+            <div className="flex justify-between items-center gap-4 flex-wrap">
+              <p className="mb-0 text-lg md:text-xl text-primary font-semibold">
+                Slack Information
               </p>
-              <div className="flex justify-between items-center">
-                <div>
-                  <p className="text-sm 2xl:text-base text-primary font-semibold mb-1 flex items-center">
-                    Applaud Limit
-                    <span className="leading-[0] ml-2">
-                      {CustomPopover(
-                        "Count of Applauds that can be given by members in a month."
-                      )}
-                    </span>
-                  </p>
 
-                  <p className="text-sm 2xl:text-base font-medium mb-1 flex items-center justify-between text-gray-600">
-                    {applaudLimit}
-                  </p>
-                </div>
-                <p
-                  onClick={() => handleEditApplaudLimit(applaudLimit)}
+              <div
+                className="hover:bg-gray-100 border border-gray-300  py-1 px-2 rounded-full cursor-pointer transition-all  duration-300 ease-in-out"
+                onClick={() => handleEditSlack()}
+              >
+                <EditOutlined className="text-base text-primary" />
+              </div>
+            </div>
+
+            <div>
+              <p className="text-sm 2xl:text-base text-primary font-semibold mb-1">
+                Slack Email
+              </p>
+              <p className="text-base font-medium text-gray-600 mb-1">
+                {userDetails?.slack_email}
+              </p>
+            </div>
+          </div>
+
+          {user.role_id === 2 && user.organization_id && (
+            <div className="bg-white rounded-md transition-all duration-300 ease-in-out shadow-md p-5 py-4 xl:py-5  xl:px-8 space-y-4 mt-8">
+              <div className="flex justify-between items-center gap-4 flex-wrap">
+                <p className="mb-0 text-lg md:text-xl text-primary font-semibold">
+                  Applaud Information
+                </p>
+
+                <div
                   className="hover:bg-gray-100 border border-gray-300  py-1 px-2 rounded-full cursor-pointer transition-all  duration-300 ease-in-out"
+                  onClick={() => handleEditApplaudLimit(applaudLimit)}
                 >
-                  <EditOutlined className="text-base text-primary " />
+                  <EditOutlined className="text-base text-primary" />
+                </div>
+              </div>
+              <div>
+                <p className="text-sm 2xl:text-base text-primary font-semibold mb-1 flex items-center">
+                  Applaud Limit
+                  <span className="leading-[0] ml-2">
+                    {CustomPopover(
+                      "Count of Applauds that can be given by members in a month."
+                    )}
+                  </span>
+                </p>
+
+                <p className="text-base font-medium text-gray-600 mb-1">
+                  {applaudLimit}
                 </p>
               </div>
             </div>
-          ) : null}
+          )}
         </Col>
 
         <Col md={14} xs={24}>
@@ -364,6 +414,54 @@ source=LinkedIn`);
               />
             </Form.Item>
           </div>
+        </Form>
+      </CustomModal>
+
+      <CustomModal
+        title="Update Slack Email"
+        visible={showSlackEditModal}
+        onCancel={() => setShowSlackEditModal(false)}
+        customFooter
+        footer={[
+          <>
+            <SecondaryButton
+              onClick={() => setShowSlackEditModal(false)}
+              className=" h-full mr-2"
+              title="Cancel"
+            />
+            <PrimaryButton
+              onClick={() => slackForm.submit()}
+              className="h-full"
+              title="Update"
+            />
+          </>,
+        ]}
+        modalProps={{ wrapClassName: "view_form_modal" }}
+      >
+        <Form
+          form={slackForm}
+          layout="vertical"
+          autoComplete="off"
+          initialValues={{
+            slack_email: userDetails?.slack_email,
+          }}
+          onFinish={onChangeSlack}
+        >
+          <Form.Item
+            label="Slack Email Address "
+            name="slack_email"
+            rules={[
+              {
+                required: true,
+                message: "Required",
+              },
+            ]}
+          >
+            <Input
+              placeholder="Slack Email Address"
+              className="form-control block w-full px-4 py-2 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-green-500 focus:outline-none"
+            />
+          </Form.Item>
         </Form>
       </CustomModal>
     </>

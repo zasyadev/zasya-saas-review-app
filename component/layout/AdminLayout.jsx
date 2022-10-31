@@ -25,13 +25,13 @@ function getItem(label, key, icon, children, type) {
 }
 
 function AdminLayout({ user, title, isBack = false, children }) {
-  const { md } = useBreakpoint();
+  const { md, lg } = useBreakpoint();
   const [collapsed, setCollapsed] = useState(false);
 
   useEffect(() => {
-    if (md) setCollapsed(false);
+    if (lg) setCollapsed(false);
     else setCollapsed(true);
-  }, [md]);
+  }, [lg]);
 
   const allMenus = [
     getItem(
@@ -77,7 +77,7 @@ function AdminLayout({ user, title, isBack = false, children }) {
           collapsed={collapsed}
           setCollapsed={setCollapsed}
           items={filteredMenus}
-          md={md}
+          lg={lg}
         />
         <Layout className="min-h-screen">
           <Content className="bg-primary-gray ">
@@ -87,7 +87,7 @@ function AdminLayout({ user, title, isBack = false, children }) {
               user={user}
               setCollapsed={setCollapsed}
               collapsed={collapsed}
-              md={md}
+              lg={lg}
             />
             <div className="p-3 md:p-6">{children}</div>
           </Content>

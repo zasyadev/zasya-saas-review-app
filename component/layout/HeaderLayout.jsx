@@ -16,7 +16,7 @@ import UserMenus from "./components/UserMenus";
 
 const { Header } = Layout;
 
-function HeaderLayout({ isBack, title, user, collapsed, setCollapsed, md }) {
+function HeaderLayout({ isBack, title, user, collapsed, setCollapsed, lg }) {
   const router = useRouter();
   const [allNotification, setAllNotification] = useState([]);
   const logoutHandler = () => {
@@ -146,7 +146,7 @@ function HeaderLayout({ isBack, title, user, collapsed, setCollapsed, md }) {
               </div>
             </Dropdown>
           </div>
-          {!md ? (
+          {!lg ? (
             <div
               onClick={() => setCollapsed(!collapsed)}
               className="w-10 h-10 py-2 px-3 bg-white grid place-content-center rounded-md cursor-pointer"

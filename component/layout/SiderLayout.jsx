@@ -6,7 +6,7 @@ import React from "react";
 
 const { Sider } = Layout;
 
-function SiderLayout({ collapsed, setCollapsed, items, md }) {
+function SiderLayout({ collapsed, setCollapsed, items, lg }) {
   const router = useRouter();
   const onClickSideTab = (e) => {
     if (e.key.includes("/")) {
@@ -17,7 +17,7 @@ function SiderLayout({ collapsed, setCollapsed, items, md }) {
   return (
     <Sider
       collapsible
-      collapsedWidth={md ? "80" : "0"}
+      collapsedWidth={lg ? "80" : "0"}
       collapsed={collapsed}
       className="sider min-h-screen "
       onCollapse={(value) => setCollapsed(value)}
