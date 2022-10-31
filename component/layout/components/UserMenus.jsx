@@ -28,7 +28,7 @@ const UserMenus = ({ user, changeOragnizationHandle, logoutHandler }) => {
         </Link>
       </Menu.Item>
 
-      {user?.UserOraganizationGroups?.length > 1 ? (
+      {user?.UserOraganizationGroups?.length > 1 && (
         <Menu.SubMenu
           key="org"
           title={
@@ -38,36 +38,35 @@ const UserMenus = ({ user, changeOragnizationHandle, logoutHandler }) => {
             </div>
           }
         >
-          {user?.UserOraganizationGroups?.length > 0
-            ? user?.UserOraganizationGroups.map((item) => {
-                return (
-                  <Menu.Item
-                    key={`team${item.organization_id}`}
-                    className={
-                      user.organization_id === item.organization_id
-                        ? "bg-gray-200"
-                        : ""
-                    }
+          {user?.UserOraganizationGroups?.length > 0 &&
+            user?.UserOraganizationGroups.map((item) => {
+              return (
+                <Menu.Item
+                  key={`team${item.organization_id}`}
+                  className={
+                    user.organization_id === item.organization_id
+                      ? "bg-gray-200"
+                      : ""
+                  }
+                >
+                  <div
+                    className="flex font-medium items-center"
+                    onClick={() => {
+                      changeOragnizationHandle({
+                        orgId: item.organization_id,
+                        roleId: item.role_id,
+                      });
+                    }}
                   >
-                    <div
-                      className="flex font-medium items-center"
-                      onClick={() => {
-                        changeOragnizationHandle({
-                          orgId: item.organization_id,
-                          roleId: item.role_id,
-                        });
-                      }}
-                    >
-                      <span className="text-base capitalize">
-                        {item?.organization?.company_name}
-                      </span>
-                    </div>
-                  </Menu.Item>
-                );
-              })
-            : null}
+                    <span className="text-base capitalize">
+                      {item?.organization?.company_name}
+                    </span>
+                  </div>
+                </Menu.Item>
+              );
+            })}
         </Menu.SubMenu>
-      ) : null}
+      )}
 
       <Menu.Item key={"sign_out"} onClick={() => logoutHandler()}>
         <div className="flex items-center py-1  font-medium space-x-2 text-base">

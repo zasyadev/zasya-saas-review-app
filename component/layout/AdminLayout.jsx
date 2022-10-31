@@ -79,7 +79,7 @@ function AdminLayout({ user, title, isBack = false, children }) {
           items={filteredMenus}
           md={md}
         />
-        <Layout>
+        <Layout className="min-h-screen">
           <Content className="bg-primary-gray ">
             <HeaderLayout
               isBack={isBack}

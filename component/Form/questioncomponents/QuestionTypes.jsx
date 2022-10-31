@@ -124,7 +124,7 @@ export function OpinionScaleType({
             >
               <Select.Option value={0}>0</Select.Option>
               <Select.Option value={1}>1</Select.Option>
-            </Select>{" "}
+            </Select>
             <p className="ml-4 font-medium mb-0">label </p>
           </div>
           {options.length > 1 && (
@@ -202,7 +202,6 @@ export function QuestionTypeCard({
       </div>
 
       <div className="px-4 lg:px-5 py-4 ">
-        {" "}
         <p className="mb-0 text-sm 2xl:text-base font-semibold text-primary">
           {title}
         </p>

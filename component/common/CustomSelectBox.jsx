@@ -17,8 +17,11 @@ export default function CustomSelectBox({
       className={`question-select-box ${className}`}
       {...rest}
     >
-      {arrayList.map((item) => (
-        <Select.Option value={valueInLabel ? item.label : item.value}>
+      {arrayList.map((item, idx) => (
+        <Select.Option
+          value={valueInLabel ? item.label : item.value}
+          key={value + idx}
+        >
           {item.label}
         </Select.Option>
       ))}

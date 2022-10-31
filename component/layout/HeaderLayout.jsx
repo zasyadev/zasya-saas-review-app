@@ -83,7 +83,7 @@ function HeaderLayout({ isBack, title, user, collapsed, setCollapsed, md }) {
   }, []);
 
   return (
-    <Header className="ant-header bg-white border-b border-b-neutral-300 p-0">
+    <Header className=" bg-white border-b border-b-neutral-300 p-0">
       <div className="flex items-center h-full justify-between mx-4 md:mx-6">
         <div className="flex items-center">
           {isBack && (
@@ -102,7 +102,7 @@ function HeaderLayout({ isBack, title, user, collapsed, setCollapsed, md }) {
           </p>
         </div>
 
-        <div className="create-header-button flex items-center justify-end">
+        <div className="flex items-center justify-end">
           <Dropdown
             trigger={"click"}
             overlay={

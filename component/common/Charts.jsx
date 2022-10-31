@@ -98,7 +98,7 @@ const BarChart = ({ user }) => {
 
   async function fetchChartData() {
     setLoading(true);
-    setChartData([]);
+    setChartData(defaultChartSeries);
 
     await httpService
       .post(`/api/dashboard/chart`, {
@@ -124,7 +124,7 @@ const BarChart = ({ user }) => {
   return (
     <div>
       <p className="chart-title text-primary flex items-center justify-between">
-        Feedback{" "}
+        Feedback
         <span className="leading-0 text-base text-gray-900 ml-2">
           {CustomPopover(
             "Count of Feedback given by the organization monthly."
@@ -145,7 +145,6 @@ const BarChart = ({ user }) => {
           className="chart-data "
         />
       )}
-      {/* <div className="bar-chart-text">No Data Found</div> */}
     </div>
   );
 };

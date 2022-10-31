@@ -73,18 +73,16 @@ function TeamMembers({ user }) {
     {
       title: "Tags",
       render: (_, record) => (
-        <div className="grid grid-cols-1  md:grid-cols-3 gap-2">
-          {" "}
-          {record?.tags?.length > 0
-            ? record?.tags.map((item, index) => (
-                <span
-                  className="text-sm text-center bg-sky-300  text-white rounded px-2 py-1"
-                  key={index + "tags"}
-                >
-                  {item}
-                </span>
-              ))
-            : null}
+        <div className="grid grid-cols-1  lg:grid-cols-3 gap-2 w-40 lg:w-full">
+          {record?.tags?.length > 0 &&
+            record?.tags.map((item, index) => (
+              <span
+                className="text-sm text-center bg-sky-300  text-white rounded px-2 py-1"
+                key={index + "tags"}
+              >
+                {item}
+              </span>
+            ))}
         </div>
       ),
     },
@@ -95,10 +93,7 @@ function TeamMembers({ user }) {
         record.role_id === 2 ? null : (
           <p>
             <Link href={`/team/edit/${record.user_id}`} passHref>
-              <EditOutlined
-                className="primary-color-blue text-xl mx-1  md:mx-2 cursor-pointer"
-                // onClick={() => onUpdate(record)}
-              />
+              <EditOutlined className="primary-color-blue text-xl mx-1  md:mx-2 cursor-pointer" />
             </Link>
 
             <Popconfirm
@@ -130,13 +125,7 @@ function TeamMembers({ user }) {
       <div className="w-full bg-white rounded-md overflow-hdden shadow-md">
         <div className="px-4 ">
           {loading ? (
-            <Skeleton
-              title={false}
-              active={true}
-              width={[200]}
-              className="mt-4"
-              rows={3}
-            />
+            <Skeleton title={false} active={true} className="my-4" />
           ) : (
             <CustomTable
               dataSource={membersList}

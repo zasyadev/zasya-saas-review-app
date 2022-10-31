@@ -18,7 +18,7 @@ const TypeComponent = ({ type, questionText, options }) => {
             {options.map((option, idx) => {
               return (
                 <p
-                  className=" bg-white py-2 px-4 rounded-md flex flex-col justify-center mb-0"
+                  className="bg-white py-2 px-4 rounded-md flex flex-col justify-center mb-0"
                   key={idx + "mcop"}
                 >
                   {option.optionText}

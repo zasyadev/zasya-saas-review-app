@@ -61,7 +61,7 @@ function SiderRight({ dashBoardData, monthlyLeaderBoardData }) {
 
   return (
     <>
-      <div className="bg-white rounded-md shadow-md p-4">
+      <div className="bg-white rounded-md shadow-md p-5">
         <Row justify="space-around">
           <Col xs={12} md={12} className="border-r border-slate-200">
             <div className=" flex flex-col items-center justify-center">
@@ -90,37 +90,35 @@ function SiderRight({ dashBoardData, monthlyLeaderBoardData }) {
           </Col>
 
           <Col xs={24} md={24}>
-            <div className="py-2 px-3">
-              <div className="flex flex-wrap items-center justify-between">
-                <div className="flex-shrink-0 grid place-content-center">
-                  <ClockIcon />
+            <div className="flex flex-wrap items-center justify-between">
+              <div className="flex-shrink-0 grid place-content-center">
+                <ClockIcon />
+              </div>
+              <div className="flex-1 flex items-center justify-around">
+                <div className="text-center">
+                  <p className="text-primary text-xl font-extrabold my-2 ">
+                    {tempTime.days()}
+                  </p>
+                  <p className="text-gray-500 text-sm xl:text-base mb-0">
+                    Day(s)
+                  </p>
                 </div>
-                <div className="flex-1 flex items-center justify-around">
-                  <div className="text-center">
-                    <p className="text-primary text-xl font-extrabold my-2 ">
-                      {tempTime.days()}
-                    </p>
-                    <p className="text-gray-500 text-sm xl:text-base mb-0">
-                      Day(s)
-                    </p>
-                  </div>
 
-                  <div className="text-center">
-                    <p className="text-primary text-xl font-extrabold my-2 ">
-                      {tempTime.hours()}
-                    </p>
-                    <p className="text-gray-500 text-sm xl:text-base mb-0">
-                      Hour(s)
-                    </p>
-                  </div>
-                  <div className="text-center">
-                    <p className="text-primary text-xl font-extrabold my-2 ">
-                      {tempTime.minutes()}
-                    </p>
-                    <p className="text-gray-500 text-sm xl:text-base mb-0">
-                      Min(s).
-                    </p>
-                  </div>
+                <div className="text-center">
+                  <p className="text-primary text-xl font-extrabold my-2 ">
+                    {tempTime.hours()}
+                  </p>
+                  <p className="text-gray-500 text-sm xl:text-base mb-0">
+                    Hour(s)
+                  </p>
+                </div>
+                <div className="text-center">
+                  <p className="text-primary text-xl font-extrabold my-2 ">
+                    {tempTime.minutes()}
+                  </p>
+                  <p className="text-gray-500 text-sm xl:text-base mb-0">
+                    Min(s).
+                  </p>
                 </div>
               </div>
             </div>
@@ -128,7 +126,7 @@ function SiderRight({ dashBoardData, monthlyLeaderBoardData }) {
         </Row>
       </div>
       {monthlyLeaderBoardData.applaudData.length > 0 && (
-        <div className="relative bg-white rounded-md shadow-md p-4 md:p-6 mt-6 ">
+        <div className="relative bg-white rounded-md shadow-md p-5  mt-6 ">
           <p className="mb-4 text-primary text-xl font-semibold pr-10 md:pr-14">
             Monthly Leaderboard
           </p>
@@ -144,6 +142,7 @@ function SiderRight({ dashBoardData, monthlyLeaderBoardData }) {
                         : "badge_silver.png"
                     }`}
                     className="absolute top-0 right-4 w-10 md:w-14 "
+                    alt="badge"
                   />
                   <div className="space-y-4">
                     <p className="mb-3 text-primary font-semibold  text-base  pr-10 md:pr-14">

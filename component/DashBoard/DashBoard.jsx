@@ -30,7 +30,7 @@ function CountCard({
   return (
     <Link href={href} passHref>
       <div
-        className={`bg-white p-4 rounded-md shadow-md transition-all duration-300 ease-in hover:bg-gradient-to-r hover:from-peach hover:to-peach-light ${className}`}
+        className={`bg-white p-5 rounded-md shadow-md transition-all duration-300 ease-in hover:bg-gradient-to-r hover:from-peach hover:to-peach-light ${className}`}
       >
         <div className="flex flex-wrap items-stretch h-full gap-3">
           <div className="bg-gradient-to-r from-peach to-peach-light text-white grid items-center w-10 h-10 py-1 px-1 justify-center shadow-lg-pink rounded-full">
@@ -201,13 +201,19 @@ function DashBoard({ user }) {
               tooltipText="Count of Members in your organization."
             />
           </div>
+          <div className="md:hidden">
+            <SiderRight
+              dashBoardData={dashBoardData}
+              monthlyLeaderBoardData={monthlyLeaderBoardData}
+            />
+          </div>
 
-          <div className="w-full bg-white rounded-md overflow-hidden shadow-md p-4">
+          <div className="w-full bg-white rounded-md overflow-hidden shadow-md p-5 ">
             <BarChart user={user} />
           </div>
           <Row gutter={[24, 24]}>
             <Col xs={24} md={12} lg={12}>
-              <div className="w-full bg-white rounded-md overflow-hidden shadow-md p-4 h-full flex flex-col">
+              <div className="w-full bg-white rounded-md overflow-hidden shadow-md p-5 h-full flex flex-col">
                 <h2 className="text-xl font-semibold text-primary mb-2 flex items-center justify-between gap-3">
                   <span className="flex-1"> Applauds Leaderboard</span>
                   <span className="leading-4 text-base  text-gray-900">
@@ -219,40 +225,27 @@ function DashBoard({ user }) {
                     {allApplaud.length > 0 ? (
                       allApplaud.map((item, idx) => {
                         if (idx <= 3) {
-                          return (
-                            <>
-                              {Object.entries(item).map(([key, value]) => {
-                                return (
-                                  <Col
-                                    xs={24}
-                                    sm={12}
-                                    md={12}
-                                    key={"applaud" + idx}
-                                  >
-                                    <div className="flex items-center space-x-4 ">
-                                      <div className="shrink-0">
-                                        <DefaultImages
-                                          imageSrc={value?.image}
-                                        />
-                                      </div>
+                          return Object.entries(item).map(([key, value]) => (
+                            <Col xs={24} sm={12} md={12} key={"applaud" + idx}>
+                              <div className="flex items-center space-x-4 ">
+                                <div className="shrink-0">
+                                  <DefaultImages imageSrc={value?.image} />
+                                </div>
 
-                                      <div className="flex-1">
-                                        <p className="mb-2 text-primary font-medium text-sm">
-                                          {key}
-                                        </p>
-                                        <p className="flex">
-                                          <ApplaudIconSmall />
-                                          <span className="pl-2 text-sm font-medium text-gray-500">
-                                            {value?.taken?.length}
-                                          </span>
-                                        </p>
-                                      </div>
-                                    </div>
-                                  </Col>
-                                );
-                              })}
-                            </>
-                          );
+                                <div className="flex-1">
+                                  <p className="mb-2 text-primary font-medium text-sm">
+                                    {key}
+                                  </p>
+                                  <p className="flex">
+                                    <ApplaudIconSmall />
+                                    <span className="pl-2 text-sm font-medium text-gray-500">
+                                      {value?.taken?.length}
+                                    </span>
+                                  </p>
+                                </div>
+                              </div>
+                            </Col>
+                          ));
                         }
                       })
                     ) : (
@@ -277,7 +270,7 @@ function DashBoard({ user }) {
               </div>
             </Col>
             <Col md={12} lg={12} xs={24}>
-              <div className="w-full bg-white rounded-md overflow-hidden shadow-md p-4 h-full">
+              <div className="w-full bg-white rounded-md overflow-hidden shadow-md p-5 h-full">
                 <h2 className="text-xl text-primary  font-semibold mb-2 flex items-center gap-3 justify-between">
                   <span className="flex-1"> Feedback Leaderboard</span>
                   <span className="leading-4 text-base  text-gray-900">
@@ -339,7 +332,7 @@ function DashBoard({ user }) {
           </Row>
         </div>
       </Col>
-      <Col xs={24} sm={24} md={24} lg={8} xxl={6} className="h-full">
+      <Col xs={24} md={24} lg={8} xxl={6} className="h-full hidden md:block">
         <SiderRight
           dashBoardData={dashBoardData}
           monthlyLeaderBoardData={monthlyLeaderBoardData}

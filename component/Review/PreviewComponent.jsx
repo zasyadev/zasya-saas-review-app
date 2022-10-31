@@ -89,7 +89,7 @@ function PreviewComponent({ user, reviewId }) {
     <div className="preview-answer">
       {loading.questionLoading && loading.answerLoading ? (
         <div className="answer-bg  pt-8">
-          <div className=" bg-white rounded-md shadow-md mx-auto w-2/3 p-4">
+          <div className=" bg-white rounded-md shadow-md mx-auto w-2/3 p-5">
             <Skeleton active />
           </div>
         </div>
@@ -102,7 +102,7 @@ function PreviewComponent({ user, reviewId }) {
       ) : (
         <div className="answer-bg  pt-8">
           <div className=" bg-white rounded-md shadow-md mx-auto w-2/3 ">
-            <p className="p-4 ">This review is not found</p>
+            <p className="p-5 ">This review is not found</p>
           </div>
         </div>
       )}

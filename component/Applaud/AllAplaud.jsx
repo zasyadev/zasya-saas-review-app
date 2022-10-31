@@ -79,138 +79,136 @@ function AllAplaud({ user }) {
   );
 
   return (
-    <Row gutter={[16, 16]}>
-      <Col xs={24} sm={24} md={24}>
-        <div className="flex justify-start w-full">
-          <div className="bg-white rounded-md py-1 px-4 ">
-            <DatePicker
-              onChange={onDateChange}
-              picker="month"
-              bordered={false}
-              allowClear={false}
-              format={MONTH_FORMAT}
-              defaultValue={moment()}
-              className="font-semibold"
-              disabledDate={disableDates}
-            />
-          </div>
+    <>
+      <div className="flex justify-start w-full mb-4 md:mb-6">
+        <div className="bg-white rounded-md py-1 px-4 ">
+          <DatePicker
+            onChange={onDateChange}
+            picker="month"
+            bordered={false}
+            allowClear={false}
+            format={MONTH_FORMAT}
+            defaultValue={moment()}
+            className="font-semibold"
+            disabledDate={disableDates}
+          />
         </div>
-      </Col>
-      <Col xs={24} sm={12} md={8}>
-        <div className="received--all-applaud">
-          {allApplaud.length > 0 ? (
-            allApplaud.map((item, idx) => {
-              return (
-                <>
-                  {Object.entries(item).map(([key, value]) => {
-                    return (
-                      <div
-                        className={`bg-white rounded-md overflow-hidden shadow-md  py-3 px-1 mb-3 cursor-pointer ${
-                          filterByUserId === value.user_id
-                            ? "border border-blue-800"
-                            : ""
-                        }`}
-                        onClick={() => {
-                          setFilterByUserId((prev) =>
-                            prev === value.user_id ? "" : value.user_id
-                          );
-                        }}
-                        key={key + idx}
-                      >
-                        <Row justify="center">
-                          <Col xs={10} md={10}>
-                            <div className=" flex justify-center">
-                              <DefaultImages
-                                imageSrc={value?.image}
-                                width={80}
-                                height={80}
-                              />
-                            </div>
-                          </Col>
+      </div>
+      <div className="flex flex-col lg:flex-row gap-4 2xl:gap-6 w-full">
+        <div className="lg:max-w-xs w-full  overflow-x-auto received--all-applaud">
+          <div className="flex flex-row lg:flex-col space-x-4 lg:space-x-0 lg:w-full ">
+            {allApplaud.length > 0 ? (
+              allApplaud.map((item, idx) =>
+                Object.entries(item).map(([key, value]) => (
+                  <div
+                    className={`bg-white rounded-md overflow-hidden shadow-md  p-4 mb-3 cursor-pointer flex gap-4 shrink-0 items-center ${
+                      filterByUserId === value.user_id
+                        ? "border border-blue-800"
+                        : ""
+                    }`}
+                    onClick={() => {
+                      setFilterByUserId((prev) =>
+                        prev === value.user_id ? "" : value.user_id
+                      );
+                    }}
+                    key={key + idx}
+                  >
+                    <div className="shrink-0  lg:hidden">
+                      <DefaultImages
+                        imageSrc={value?.image}
+                        width={50}
+                        height={50}
+                      />
+                    </div>
+                    <div className="shrink-0 hidden lg:block">
+                      <DefaultImages
+                        imageSrc={value?.image}
+                        width={60}
+                        height={60}
+                      />
+                    </div>
 
-                          <Col xs={14} md={14}>
-                            <div>
-                              <p className="mb-2 text-primary font-medium md:text-sm">
-                                {key}
-                              </p>
-                            </div>
-                            <div className="flex justify-between items-center">
-                              <p className="flex" title="Applaud Taken">
-                                <div className="flex ">
-                                  <ApplaudIconSmall />
-                                </div>
-                                <div className="flex items-end pl-2 md:text-sm font-medium text-gray-500">
-                                  {value?.taken?.length}
-                                </div>
-                              </p>
-                              <p className="flex mx-3" title="Applaud Given">
-                                <div className="flex">
-                                  <ApplaudGiven />
-                                </div>
-                                <div className="flex items-end pl-2 md:text-sm font-medium text-gray-500">
-                                  {value?.given?.length}
-                                </div>
-                              </p>
-                            </div>
-                          </Col>
-                        </Row>
+                    <div className="flex-1 space-y-2 ">
+                      <p className=" text-primary font-semibold text-sm md:text-base">
+                        {key}
+                      </p>
+
+                      <div className="flex justify-between items-center shrink-0">
+                        <div className="flex" title="Applaud Taken">
+                          <div className="flex ">
+                            <ApplaudIconSmall />
+                          </div>
+                          <div className="flex items-end pl-2 text-sm md:text-base font-medium text-gray-600">
+                            {value?.taken?.length}
+                          </div>
+                        </div>
+                        <div className="flex mx-3" title="Applaud Given">
+                          <div className="flex">
+                            <ApplaudGiven />
+                          </div>
+                          <div className="flex items-end pl-2 text-sm md:text-base font-medium text-gray-600">
+                            {value?.given?.length}
+                          </div>
+                        </div>
                       </div>
-                    );
-                  })}
-                </>
-              );
-            })
-          ) : (
-            <Col xs={24} md={24}>
-              <div className="bg-white rounded-md overflow-hidden shadow-md mx-4 my-3 py-3 px-1">
+                    </div>
+                  </div>
+                ))
+              )
+            ) : (
+              <div className="bg-white rounded-md overflow-hidden shadow-md mx-4 my-3 py-4 px-2">
                 <div className="flex justify-center items-center h-48">
                   <div className="text-center  ">No Applaud Found</div>
                 </div>
               </div>
-            </Col>
-          )}
-        </div>
-      </Col>
-      <Col xs={24} sm={24} md={16}>
-        <div className="received--all-applaud bg-white rounded-md  shadow-md  p-4">
-          <Timeline className="py-2 mt-1 px-4">
-            {allFilterOrgApplaud.length ? (
-              allFilterOrgApplaud.map((item, idx) => {
-                return (
-                  <Timeline.Item
-                    dot={
-                      <ClockCircleOutlined
-                        style={{
-                          fontSize: "16px",
-                          color: "#0f123f",
-                        }}
-                      />
-                    }
-                    key={idx + "timeline"}
-                    className="pb-0"
-                  >
-                    <p className="font-semibold mb-1 text-base">
-                      <span className="capitalize  ">
-                        {item.created.first_name}
-                      </span>{" "}
-                      has Applauded {item.user.first_name}.
-                    </p>
-                    <p className=" mb-0 text-base">{item.comment}</p>
-                    {item.created_date && (
-                      <p className=" mb-1  text-gray-400  text-sm text-right">
-                        {moment(item.created_date).fromNow()}
-                      </p>
-                    )}
-                  </Timeline.Item>
-                );
-              })
-            ) : (
-              <NoRecordFound title={"No Applaud Found"} />
             )}
-          </Timeline>
+          </div>
         </div>
-      </Col>
-    </Row>
+        <div className="flex-1">
+          <div className=" bg-white rounded-md  shadow-md flex-1 p-4  lg:p-5 received--all-applaud">
+            <Timeline className="pl-1 py-2">
+              {allFilterOrgApplaud?.length ? (
+                allFilterOrgApplaud.map((item) => {
+                  return (
+                    <Timeline.Item
+                      dot={
+                        <ClockCircleOutlined
+                          style={{
+                            fontSize: "16px",
+                            color: "#0f123f",
+                          }}
+                        />
+                      }
+                      key={item.id}
+                    >
+                      <div className="flex items-start gap-2">
+                        <p className="flex-1 font-semibold mb-1 text-sm md:text-base">
+                          <span className="capitalize  ">
+                            {item.created.first_name}
+                          </span>{" "}
+                          has Applauded {item.user.first_name}.
+                        </p>
+                        {item.created_date && (
+                          <p className=" mb-0  text-gray-400  text-xs leading-6 ">
+                            {moment(item.created_date).fromNow()}
+                          </p>
+                        )}
+                      </div>
+
+                      <p className=" mb-0 text-sm md:text-base">
+                        {item.comment}
+                      </p>
+                    </Timeline.Item>
+                  );
+                })
+              ) : (
+                <NoRecordFound title={"No Applaud Found"} />
+              )}
+            </Timeline>
+          </div>
+        </div>
+      </div>
+    </>
   );
 }
 

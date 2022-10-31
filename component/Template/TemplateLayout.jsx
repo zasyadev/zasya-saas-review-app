@@ -9,7 +9,11 @@ import {
   SkeletonTemplateCard,
   TemplateCard,
 } from "./TemplateCard";
-import { MY_TEMPLATE_KEY, TemplateToggleList } from "./constants";
+import {
+  MY_TEMPLATE_KEY,
+  TemplateToggleList,
+  DefaultMotionVarient,
+} from "./constants";
 
 function TemplateLayout({ user }) {
   const [templateList, setTemplateList] = useState([]);
@@ -90,17 +94,7 @@ function TemplateLayout({ user }) {
       <div className="container mx-auto max-w-full">
         <motion.div
           className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-5 gap-8 2xl:gap-12 "
-          variants={{
-            hidden: { opacity: 0 },
-            show: {
-              opacity: 1,
-              transition: {
-                duration: 0.3,
-                staggerChildren: 0.5,
-                delayChildren: 0.5,
-              },
-            },
-          }}
+          variants={DefaultMotionVarient}
           initial="hidden"
           animate="show"
         >

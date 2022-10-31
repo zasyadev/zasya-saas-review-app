@@ -1,7 +1,7 @@
 import { Table } from "antd";
 import React from "react";
 
-const CustomTable = ({ className = "", ...props }) => {
+const CustomTable = ({ className = "", rowKeyLabel = "id", ...props }) => {
   return (
     <div className="overflow-auto">
       <Table
@@ -11,6 +11,7 @@ const CustomTable = ({ className = "", ...props }) => {
         rowClassName={(_, index) =>
           index % 2 === 0 ? "" : "background-color-voilet"
         }
+        rowKey={(record) => record[rowKeyLabel]}
       />
     </div>
   );
