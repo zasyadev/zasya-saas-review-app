@@ -113,7 +113,7 @@ function FormView({ user }) {
         </div>
         <div className="w-full bg-white rounded-md overflow-hdden shadow-md">
           <div className="px-4 ">
-            {!loading ? (
+            {loading ? (
               <Skeleton title={false} active={true} className="my-4" />
             ) : (
               <CustomTable dataSource={formAssignList} columns={columns} />
