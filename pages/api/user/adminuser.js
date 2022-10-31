@@ -63,9 +63,6 @@ export default functionHandle = async (req, res) => {
           email: resData.email,
           first_name: resData.first_name,
           last_name: resData.last_name,
-          address: "",
-          pin_code: "",
-          mobile: "",
           status: resData.status,
           role: { connect: { id: resData.role } },
         },
@@ -95,9 +92,7 @@ export default functionHandle = async (req, res) => {
           first_name: reqBody.first_name,
 
           last_name: reqBody.last_name,
-          address: "",
-          pin_code: "",
-          mobile: "",
+
           status: 0,
           role: { connect: { id: reqBody.role_id } },
         },

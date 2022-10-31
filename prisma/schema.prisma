@@ -17,9 +17,6 @@ model User {
   password                String?
   first_name              String?                   @db.VarChar(50)
   last_name               String?                   @db.VarChar(50)
-  address                 String?                   @db.LongText
-  pin_code                String?                   @db.VarChar(20)
-  mobile                  String?                   @db.VarChar(15)
   status                  Int
   role                    Role                      @relation(fields: [role_id], references: [id])
   role_id                 Int
@@ -28,13 +25,10 @@ model User {
   createdDate             DateTime?                 @default(now())
   modified_date           DateTime?                 @default(now())
   deleted_date            DateTime?
-  Groups                  Groups[]
-  GroupsEmployees         GroupsEmployees?
   ReviewAssignTemplate    ReviewAssignTemplate[]
   taskReviewBy            Review[]                  @relation("taskReviewBy")
   ReviewTemplate          ReviewTemplate[]
   ReviewAssigneeAnswers   ReviewAssigneeAnswers[]
-  UserImage               UserImage?
   userEmail               PasswordReset?            @relation("userEmail")
   createdBy               PasswordReset[]           @relation("createdBy")
   userCreated             UserApplaud[]             @relation("userCreated")
@@ -58,33 +52,6 @@ model Role {
   UserOraganizationGroups UserOraganizationGroups[]
 
   @@map("users_role")
-}
-
-model Groups {
-  id              Int               @id @default(autoincrement())
-  name            String?
-  category        String?
-  status          Boolean
-  user            User              @relation(fields: [user_id], references: [id])
-  user_id         String
-  created_date    DateTime          @default(now())
-  modified_date   DateTime          @default(now())
-  GroupsEmployees GroupsEmployees[]
-
-  @@map("users_groups")
-}
-
-model GroupsEmployees {
-  id            Int      @id @default(autoincrement())
-  group         Groups   @relation(fields: [group_id], references: [id])
-  group_id      Int
-  employee      User     @relation(fields: [employee_id], references: [id])
-  employee_id   String   @unique
-  is_manager    Boolean
-  created_date  DateTime @default(now())
-  modified_date DateTime @default(now())
-
-  @@map("users_group_member")
 }
 
 model ReviewAssignTemplate {
@@ -242,16 +209,6 @@ model UserOrganization {
   @@map("user_organization")
 }
 
-model UserImage {
-  id            Int      @id @default(autoincrement())
-  user          User     @relation(fields: [user_id], references: [id])
-  user_id       String   @unique
-  image         String?
-  created_date  DateTime @default(now())
-  modified_date DateTime @default(now())
-
-  @@map("user_image")
-}
 
 model PasswordReset {
   id            Int      @id @default(autoincrement())
