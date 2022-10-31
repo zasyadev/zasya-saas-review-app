@@ -34,7 +34,7 @@ export function TempateSelectWrapper({
           </p>
           <PrimaryButton
             withLink={true}
-            linkHref="/template/view"
+            linkHref="/template/select"
             title={"From Template"}
           />
         </div>
