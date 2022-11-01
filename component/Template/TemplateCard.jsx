@@ -11,7 +11,7 @@ const motionVariants = {
 };
 export const CreateTemplateCard = () => (
   <Link href="/template/add" passHref>
-    <div className="template  template-list flex bg-white items-center justify-center flex-col  w-full rounded-md overflow-hdden shadow-md p-5  cursor-pointer  h-56 sm:h-full">
+    <div className="template  template-list flex bg-white items-center justify-center flex-col  w-full rounded-md overflow-hdden shadow-md p-5  cursor-pointer  h-56 sm:h-full add-template-card">
       <div className="cursor-pointer">
         <AddIcon className="text-center " />
       </div>
@@ -94,7 +94,7 @@ export const SkeletonTemplateCard = ({ index }) => {
     <motion.div
       key={index}
       variants={motionVariants}
-      className="template-list h-full w-full shadow-md"
+      className="template-list h-full w-full shadow-md add-template-card"
     >
       <Skeleton.Image active className="w-full h-40" />
 
