@@ -15,30 +15,26 @@ const TypeComponent = ({ type, questionText, options }) => {
         <p className="mb-0 text-base">{questionText}</p>
         {type === "checkbox" && options.length && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {options.map((option, idx) => {
-              return (
-                <p
-                  className="bg-white py-2 px-4 rounded-md flex flex-col justify-center mb-0"
-                  key={idx + "mcop"}
-                >
-                  {option.optionText}
-                </p>
-              );
-            })}
+            {options.map((option, idx) => (
+              <p
+                className="bg-white py-2 px-4 rounded-md flex flex-col justify-center mb-0"
+                key={idx + "mcop"}
+              >
+                {option.optionText}
+              </p>
+            ))}
           </div>
         )}
         {type === "scale" && options.length && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {options.map((option, idx) => {
-              return (
-                <p
-                  className="  bg-white py-2 px-4 rounded-md flex flex-col justify-center mb-0"
-                  key={idx + "scop"}
-                >
-                  {option.optionText}
-                </p>
-              );
-            })}
+            {options.map((option, idx) => (
+              <p
+                className="  bg-white py-2 px-4 rounded-md flex flex-col justify-center mb-0"
+                key={idx + "scop"}
+              >
+                {option.optionText}
+              </p>
+            ))}
           </div>
         )}
         {type === "rating" && (
@@ -53,7 +49,13 @@ const TypeComponent = ({ type, questionText, options }) => {
   );
 };
 
-export function TemplatePreviewComponent({ length, formTitle, questions }) {
+export function TemplatePreviewComponent({
+  length,
+  formTitle,
+  questions,
+  previewMode = false,
+  templateId = "",
+}) {
   return (
     <div className="answer-preview space-y-4">
       <div className="bg-white p-2 md:px-5 md:py-5 shadow-md md:w-10/12 2xl:w-8/12 mx-auto rounded-md flex items-start justify-between gap-3">
@@ -61,11 +63,13 @@ export function TemplatePreviewComponent({ length, formTitle, questions }) {
           <p className="text-lg font-bold text-primary mb-1">{formTitle}</p>
           <p className="mb-1 font-medium">{length} Questions</p>
         </div>
-        <PrimaryButton
-          withLink={true}
-          linkHref={`/review/edit/${questions.id}`}
-          title={"Use template"}
-        />
+        {previewMode && (
+          <PrimaryButton
+            withLink={true}
+            linkHref={`/review/edit/${templateId}`}
+            title={"Use template"}
+          />
+        )}
       </div>
 
       <div className=" bg-white rounded-md p-2 md:px-5 md:py-5 shadow-md  md:w-10/12 2xl:w-8/12  mx-auto space-y-5">

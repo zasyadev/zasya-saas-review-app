@@ -23,12 +23,10 @@ function TemplateSidebarQuestionCard({
 
   return (
     <div
-      className={`dragable-div question-section-wrapper cursor-pointer    ${
+      className={`dragable-div question-section-wrapper cursor-pointer ${
         isActive ? "border-l-primary border-l-2" : ""
       }
-${isValidQuestion ? "border-x border-x-red-500 bg-red-50" : ""}
-
-
+      ${isValidQuestion ? "border-x border-x-red-500 bg-red-50" : ""}
     `}
     >
       <div className="flex items-center">
