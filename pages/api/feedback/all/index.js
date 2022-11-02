@@ -1,193 +1,181 @@
 import { RequestHandler } from "../../../../lib/RequestHandler";
 
 async function handle(req, res, prisma) {
-  try {
-    const { userId, currentMonth } = req.body;
+  const { userId, currentMonth } = req.body;
+  if (!userId) {
+    return res.status(401).json({ status: 401, message: "No User found" });
+  }
 
-    if (userId) {
-      const userTableData = await prisma.user.findUnique({
-        where: { id: userId },
-      });
+  const userTableData = await prisma.user.findUnique({
+    where: { id: userId },
+  });
 
-      const orgData = await prisma.userOraganizationGroups.findMany({
-        where: { organization_id: userTableData.organization_id },
+  const orgData = await prisma.userOraganizationGroups.findMany({
+    where: { organization_id: userTableData.organization_id },
 
-        include: {
-          user: {
+    include: {
+      user: {
+        select: {
+          first_name: true,
+          UserDetails: {
             select: {
-              first_name: true,
-              UserDetails: {
-                select: {
-                  image: true,
-                },
-              },
+              image: true,
             },
           },
         },
-      });
+      },
+    },
+  });
 
-      const reviewAssignedData = await prisma.review.findMany({
-        where: {
-          AND: [
-            { organization_id: userTableData.organization_id },
-            { created_date: currentMonth },
-          ],
-        },
-        include: {
-          created: {
+  const reviewAssignedData = await prisma.review.findMany({
+    where: {
+      AND: [
+        { organization_id: userTableData.organization_id },
+        { created_date: currentMonth },
+      ],
+    },
+    include: {
+      created: {
+        select: {
+          first_name: true,
+
+          UserDetails: {
             select: {
-              first_name: true,
-
-              UserDetails: {
-                select: {
-                  image: true,
-                },
-              },
+              image: true,
             },
           },
         },
-      });
+      },
+    },
+  });
 
-      const reviewAnsweredData = await prisma.reviewAssigneeAnswers.findMany({
-        where: {
-          AND: [
-            { organization_id: userTableData.organization_id },
-            { created_date: currentMonth },
-          ],
-        },
-        include: {
-          user: {
+  const reviewAnsweredData = await prisma.reviewAssigneeAnswers.findMany({
+    where: {
+      AND: [
+        { organization_id: userTableData.organization_id },
+        { created_date: currentMonth },
+      ],
+    },
+    include: {
+      user: {
+        select: {
+          first_name: true,
+          UserDetails: {
             select: {
-              first_name: true,
-              UserDetails: {
-                select: {
-                  image: true,
-                },
-              },
+              image: true,
             },
           },
         },
-      });
+      },
+    },
+  });
 
-      let fetchData = {};
-      if (orgData.length > 0) {
-        let takefilterData = reviewAnsweredData.filter(({ user_id: id1 }) =>
-          orgData.some(({ user_id: id2 }) => id2 === id1)
-        );
-        let takeleftOverData = orgData.filter(
-          ({ user_id: id1 }) =>
-            !reviewAnsweredData.some(({ user_id: id2 }) => id2 === id1)
-        );
+  let fetchData = {};
+  if (orgData.length > 0) {
+    let takefilterData = reviewAnsweredData.filter(({ user_id: id1 }) =>
+      orgData.some(({ user_id: id2 }) => id2 === id1)
+    );
+    let takeleftOverData = orgData.filter(
+      ({ user_id: id1 }) =>
+        !reviewAnsweredData.some(({ user_id: id2 }) => id2 === id1)
+    );
 
-        let takeresults = takefilterData?.reduce(function (obj, key) {
-          obj[key.user.first_name] = obj[key.user.first_name] || {};
+    let takeresults = takefilterData?.reduce(function (obj, key) {
+      obj[key.user.first_name] = obj[key.user.first_name] || {};
 
-          if (!obj[key.user.first_name]?.taken) {
-            obj[key.user.first_name].taken = [];
-          }
-          obj[key.user.first_name].taken.push(key);
-          if (key.user.UserDetails && key.user.UserDetails.image) {
-            obj[key.user.first_name].userImg = key.user.UserDetails.image;
-          } else {
-            obj[key.user.first_name].userImg = "";
-          }
-          return obj;
-        }, {});
+      if (!obj[key.user.first_name]?.taken) {
+        obj[key.user.first_name].taken = [];
+      }
+      obj[key.user.first_name].taken.push(key);
+      if (key.user.UserDetails && key.user.UserDetails.image) {
+        obj[key.user.first_name].userImg = key.user.UserDetails.image;
+      } else {
+        obj[key.user.first_name].userImg = "";
+      }
+      return obj;
+    }, {});
 
-        let takeleftOutResults = takeleftOverData?.reduce(function (obj, key) {
-          obj[key.user.first_name] = obj[key.user.first_name] || {};
-          if (!obj[key.user.first_name]?.taken) {
-            obj[key.user.first_name].taken = [];
-          }
-          if (key.user.UserDetails && key.user.UserDetails.image) {
-            obj[key.user.first_name].userImg = key.user.UserDetails.image;
-          } else {
-            obj[key.user.first_name].userImg = "";
-          }
-          return obj;
-        }, {});
+    let takeleftOutResults = takeleftOverData?.reduce(function (obj, key) {
+      obj[key.user.first_name] = obj[key.user.first_name] || {};
+      if (!obj[key.user.first_name]?.taken) {
+        obj[key.user.first_name].taken = [];
+      }
+      if (key.user.UserDetails && key.user.UserDetails.image) {
+        obj[key.user.first_name].userImg = key.user.UserDetails.image;
+      } else {
+        obj[key.user.first_name].userImg = "";
+      }
+      return obj;
+    }, {});
 
-        let takeObj = { ...takeresults, ...takeleftOutResults };
+    let takeObj = { ...takeresults, ...takeleftOutResults };
 
-        let givenFilterData = reviewAssignedData.filter(({ created_by: id1 }) =>
-          orgData.some(({ user_id: id2 }) => id2 === id1)
-        );
-        let givenleftOutMember = orgData.filter(
-          ({ user_id: id1 }) =>
-            !reviewAssignedData.some(({ created_by: id2 }) => id2 === id1)
-        );
+    let givenFilterData = reviewAssignedData.filter(({ created_by: id1 }) =>
+      orgData.some(({ user_id: id2 }) => id2 === id1)
+    );
+    let givenleftOutMember = orgData.filter(
+      ({ user_id: id1 }) =>
+        !reviewAssignedData.some(({ created_by: id2 }) => id2 === id1)
+    );
 
-        let givenResults = givenFilterData?.reduce(function (obj, key) {
-          obj[key.created.first_name] = obj[key.created.first_name] || {};
+    let givenResults = givenFilterData?.reduce(function (obj, key) {
+      obj[key.created.first_name] = obj[key.created.first_name] || {};
 
-          if (!obj[key.created.first_name]?.feedbackAssigned) {
-            obj[key.created.first_name].feedbackAssigned = [];
-          }
-          obj[key.created.first_name].feedbackAssigned.push(key);
+      if (!obj[key.created.first_name]?.feedbackAssigned) {
+        obj[key.created.first_name].feedbackAssigned = [];
+      }
+      obj[key.created.first_name].feedbackAssigned.push(key);
 
-          return obj;
-        }, {});
+      return obj;
+    }, {});
 
-        let givenLeftOutResults = givenleftOutMember?.reduce(function (
-          obj,
-          key
-        ) {
-          obj[key.user.first_name] = obj[key.user.first_name] || {};
-          if (!obj[key.user.first_name]?.feedbackAssigned) {
-            obj[key.user.first_name].feedbackAssigned = [];
-          }
-
-          return obj;
-        },
-        {});
-
-        let givenObj = { ...givenResults, ...givenLeftOutResults };
-
-        let conbinedData = Object.entries(takeObj).map(([key, value]) => {
-          let feedbackTakenObj = {
-            feedbackTaken: takeObj[key]?.taken?.length,
-            image: value.userImg ?? "",
-          };
-          let feedbackGivenObj = {
-            feedbackGiven: givenObj[key]?.feedbackAssigned?.length,
-          };
-
-          return {
-            [key]: {
-              ...feedbackTakenObj,
-              ...feedbackGivenObj,
-            },
-          };
-        });
-
-        if (conbinedData.length > 0) {
-          let data = conbinedData?.sort(
-            (a, b) =>
-              b[Object.keys(b)]?.feedbackGiven -
-              a[Object.keys(a)]?.feedbackGiven
-          );
-
-          fetchData = conbinedData;
-        }
+    let givenLeftOutResults = givenleftOutMember?.reduce(function (obj, key) {
+      obj[key.user.first_name] = obj[key.user.first_name] || {};
+      if (!obj[key.user.first_name]?.feedbackAssigned) {
+        obj[key.user.first_name].feedbackAssigned = [];
       }
 
-      if (Object.keys(fetchData).length) {
-        return res.status(200).json({
-          status: 200,
-          data: fetchData,
-          message: "Feeback Data Received",
-        });
-      }
+      return obj;
+    }, {});
 
-      return res.status(404).json({ status: 404, message: "No Record Found" });
+    let givenObj = { ...givenResults, ...givenLeftOutResults };
+
+    let conbinedData = Object.entries(takeObj).map(([key, value]) => {
+      let feedbackTakenObj = {
+        feedbackTaken: takeObj[key]?.taken?.length,
+        image: value.userImg ?? "",
+      };
+      let feedbackGivenObj = {
+        feedbackGiven: givenObj[key]?.feedbackAssigned?.length,
+      };
+
+      return {
+        [key]: {
+          ...feedbackTakenObj,
+          ...feedbackGivenObj,
+        },
+      };
+    });
+
+    if (conbinedData.length > 0) {
+      let data = conbinedData?.sort(
+        (a, b) =>
+          b[Object.keys(b)]?.feedbackGiven - a[Object.keys(a)]?.feedbackGiven
+      );
+
+      fetchData = conbinedData;
     }
-  } catch (error) {
-    res.status(500).json({
-      status: 500,
-      error: error,
-      message: "Internal Server Error",
+  }
+
+  if (Object.keys(fetchData).length) {
+    return res.status(200).json({
+      status: 200,
+      data: fetchData,
+      message: "Feeback Data Received",
     });
   }
+
+  return res.status(404).json({ status: 404, message: "No Record Found" });
 }
 const functionHandle = (req, res) => RequestHandler(req, res, handle, ["POST"]);
 

@@ -1,8 +1,4 @@
-import {
-  EyeInvisibleOutlined,
-  EyeTwoTone,
-  LoadingOutlined,
-} from "@ant-design/icons";
+import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 import { Form, Input } from "antd";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -43,16 +39,6 @@ function ResetPassword() {
         });
     }
   }
-
-  const antIcon = (
-    <LoadingOutlined
-      style={{
-        fontSize: 24,
-        color: "white",
-      }}
-      spin
-    />
-  );
 
   const ResetPasswordComponent = () => {
     return (

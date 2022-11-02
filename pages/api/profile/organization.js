@@ -21,7 +21,6 @@ async function handle(req, res, prisma) {
     } else {
       return res.status(400).json({
         status: 400,
-
         message: "Internal Server Error",
       });
     }

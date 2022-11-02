@@ -1,16 +1,16 @@
 import moment from "moment";
 import { RequestHandler } from "../../../lib/RequestHandler";
 
+const currentMonth = {
+  lte: moment().endOf("month").format(),
+  gte: moment().startOf("month").format(),
+};
+
 async function handle(req, res, prisma) {
   const { userId } = req.body;
-  const currentMonth = {
-    lte: moment().endOf("month").format(),
-    gte: moment().startOf("month").format(),
-  };
-  if (!req.method === "POST") {
-    return res.status(405).json({
-      message: "Method Not allowed",
-    });
+
+  if (!userId) {
+    return res.status(401).json({ status: 401, message: "No User found" });
   }
 
   const userData = await prisma.user.findUnique({

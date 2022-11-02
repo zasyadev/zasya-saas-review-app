@@ -90,7 +90,8 @@ function TemplateListView({ user }) {
                     description={form?.form_data?.description}
                     questionLength={form?.form_data?.questions?.length}
                     isDelete={false}
-                    linkHref={`/review/edit/${form.id}`}
+                    linkHref={`/template/preview/${form.id}`}
+                    // linkHref={`/review/edit/${form.id}`}
                   />
                 ))
               ) : (
@@ -106,7 +107,8 @@ function TemplateListView({ user }) {
                 description={form?.form_data?.description}
                 questionLength={form?.form_data?.questions?.length}
                 isDelete={false}
-                linkHref={`/review/edit/${form.id}`}
+                // linkHref={`/review/edit/${form.id}`}
+                linkHref={`/template/preview/${form.id}`}
               />
             ))
           ) : (
