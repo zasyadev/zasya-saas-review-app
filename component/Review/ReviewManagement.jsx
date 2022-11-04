@@ -13,6 +13,8 @@ import { TempateSelectWrapper } from "./TempateSelectWrapper";
 
 function ReviewManagement({ user }) {
   const router = useRouter();
+
+  const { create: showCreateModal } = router.query;
   const [loading, setLoading] = useState(false);
   const [createReviewModal, setCreateReviewModal] = useState(false);
   const [reviewAssignList, setReviewAssignList] = useState([]);
@@ -58,6 +60,17 @@ function ReviewManagement({ user }) {
   useEffect(() => {
     fetchReviewAssignList();
   }, []);
+  useEffect(() => {
+    let timeOutId = null;
+    if (showCreateModal) {
+      timeOutId = setTimeout(() => {
+        setCreateReviewModal(true);
+      }, 500);
+      return () => {
+        if (timeOutId) clearTimeout(timeOutId);
+      };
+    }
+  }, [showCreateModal]);
 
   const answerAssignee = (data) => {
     if (data.length > 0) {

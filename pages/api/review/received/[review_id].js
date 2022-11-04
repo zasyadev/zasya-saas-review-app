@@ -5,7 +5,7 @@ async function handle(req, res, prisma) {
   const { userId } = req.body;
 
   if (!userId && !review_id) {
-    return res.status(401).json({ status: 401, message: "No User found" });
+    return res.status(401).json({ status: 401, message: "No Record found" });
   }
 
   const data = await prisma.reviewAssignee.findFirst({

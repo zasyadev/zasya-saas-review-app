@@ -27,7 +27,6 @@ export const TemplateCard = ({
   id,
   title,
   deleteTemplate,
-  linkHref,
   isDelete = false,
   description = "",
   questionLength = 0,
@@ -36,15 +35,16 @@ export const TemplateCard = ({
     <motion.div
       key={id}
       variants={motionVariants}
-      className="template-list rounded-md shadow-md bg-white flex flex-col relative group
+      className="template-list rounded-md shadow-md bg-white flex flex-col relative group overflow-hidden
       "
     >
       <Link href={`/template/${isDelete ? "edit" : "preview"}/${id}`} passHref>
-        <div className="relative w-full h-40 cursor-pointer ">
+        <div className="relative w-full h-40 cursor-pointer  ">
           <Image
             src={"/media/images/template_dummy.png"}
             layout="fill"
             alt="template"
+            objectFit="cover"
           />
         </div>
       </Link>
