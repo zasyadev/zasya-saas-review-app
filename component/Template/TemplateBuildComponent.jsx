@@ -12,7 +12,7 @@ import ErrorBox from "../common/ErrorBox";
 import StepFixedHeader from "../common/StepFixedHeader";
 import StepsBottomFixedBar from "../common/StepsBottomFixedBar";
 import {
-  MULTIPLECHOICE_TYPE,
+  MULTIPLE_CHOICE_TYPE,
   SCALE_TYPE,
 } from "../Form/questioncomponents/constants";
 import { TemplateStepsArray } from "./constants";
@@ -25,7 +25,7 @@ const defaultQuestionConfig = {
   questionText: "",
   options: [defaultOption],
   open: true,
-  type: MULTIPLECHOICE_TYPE,
+  type: MULTIPLE_CHOICE_TYPE,
   error: "",
   active: true,
 };
@@ -280,7 +280,7 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
       let errorOptions = item.options;
       if (
         item.options.length &&
-        (item.type === MULTIPLECHOICE_TYPE || item.type === SCALE_TYPE)
+        (item.type === MULTIPLE_CHOICE_TYPE || item.type === SCALE_TYPE)
       ) {
         errorOptions = item.options.map((option) => {
           let error = "";

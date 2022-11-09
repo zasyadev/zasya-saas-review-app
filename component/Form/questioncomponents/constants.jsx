@@ -9,7 +9,7 @@ import { StarOutlined } from "@ant-design/icons";
 
 export const INPUT_TYPE = "input";
 export const TEXTAREA_TYPE = "textarea";
-export const MULTIPLECHOICE_TYPE = "checkbox";
+export const MULTIPLE_CHOICE_TYPE = "checkbox";
 export const SCALE_TYPE = "scale";
 export const YESNO_TYPE = "yesno";
 export const RATING_TYPE = "rating";
@@ -31,7 +31,7 @@ export const QuestionTypeList = [
   {
     title: "Multiple Choice",
     Icon: () => <CheckboxIcon />,
-    type: MULTIPLECHOICE_TYPE,
+    type: MULTIPLE_CHOICE_TYPE,
   },
 
   {

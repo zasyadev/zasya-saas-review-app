@@ -6,7 +6,7 @@ import { CustomInput } from "../common/CustomFormFeilds";
 import ErrorBox from "../common/ErrorBox";
 import {
   INPUT_TYPE,
-  MULTIPLECHOICE_TYPE,
+  MULTIPLE_CHOICE_TYPE,
   QuestionTypeList,
   RATING_TYPE,
   SCALE_TYPE,
@@ -56,7 +56,7 @@ const QuestionEditViewComponent = ({
             >
               <Select.Option value={INPUT_TYPE}>Text</Select.Option>
               <Select.Option value={TEXTAREA_TYPE}>Paragraph</Select.Option>
-              <Select.Option value={MULTIPLECHOICE_TYPE}>
+              <Select.Option value={MULTIPLE_CHOICE_TYPE}>
                 Multiple Choice
               </Select.Option>
               <Select.Option value={SCALE_TYPE}>Opinion Scale</Select.Option>
@@ -85,11 +85,11 @@ const QuestionEditViewComponent = ({
           <ErrorBox error={error} />
         </div>
 
-        {[MULTIPLECHOICE_TYPE, YESNO_TYPE, RATING_TYPE, SCALE_TYPE].includes(
+        {[MULTIPLE_CHOICE_TYPE, YESNO_TYPE, RATING_TYPE, SCALE_TYPE].includes(
           type
         ) && (
           <div className="space-y-4">
-            {type === MULTIPLECHOICE_TYPE && (
+            {type === MULTIPLE_CHOICE_TYPE && (
               <MultipleChoiceType
                 idx={idx}
                 options={options}

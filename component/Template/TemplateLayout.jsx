@@ -4,17 +4,16 @@ import { openNotificationBox } from "../../component/common/notification";
 import httpService from "../../lib/httpService";
 import ToggleButton from "../common/ToggleButton";
 import NoRecordFound from "../common/NoRecordFound";
-import {
-  CreateTemplateCard,
-  SkeletonTemplateCard,
-  TemplateCard,
-} from "./TemplateCard";
+
 import {
   MY_TEMPLATE_KEY,
   TemplateToggleList,
   DefaultMotionVarient,
 } from "./constants";
 import { PrimaryButton } from "../common/CustomButton";
+import SkeletonTemplateCard from "./components/SkeletonTemplateCard";
+import CreateTemplateCard from "./components/CreateTemplateCard";
+import TemplateCard from "./TemplateCard";
 
 function TemplateLayout({ user }) {
   const [templateList, setTemplateList] = useState([]);

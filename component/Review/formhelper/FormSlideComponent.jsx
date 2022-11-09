@@ -11,7 +11,7 @@ import { PrimaryButton, SecondaryButton } from "../../common/CustomButton";
 import { openNotificationBox } from "../../common/notification";
 import {
   INPUT_TYPE,
-  MULTIPLECHOICE_TYPE,
+  MULTIPLE_CHOICE_TYPE,
   RATING_TYPE,
   SCALE_TYPE,
   TEXTAREA_TYPE,
@@ -114,7 +114,7 @@ export function FormSlideComponent({
             <p className="text-lg  lg:text-2xl font-bold text-primary">
               {questionText}
             </p>
-            {options?.length > 0 && type === MULTIPLECHOICE_TYPE && (
+            {options?.length > 0 && type === MULTIPLE_CHOICE_TYPE && (
               <Form.Item
                 name={"ques" + id}
                 rules={[

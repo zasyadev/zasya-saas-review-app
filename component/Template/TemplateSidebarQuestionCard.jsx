@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import { DeleteOutlined, HolderOutlined } from "@ant-design/icons";
 import {
-  MULTIPLECHOICE_TYPE,
+  MULTIPLE_CHOICE_TYPE,
   SCALE_TYPE,
 } from "../Form/questioncomponents/constants";
 import { Tooltip } from "antd";
@@ -15,7 +15,7 @@ function TemplateSidebarQuestionCard({
 }) {
   const isValidQuestion = useMemo(() => {
     let optionErrors = [];
-    if ([MULTIPLECHOICE_TYPE, SCALE_TYPE].includes(question.type)) {
+    if ([MULTIPLE_CHOICE_TYPE, SCALE_TYPE].includes(question.type)) {
       optionErrors = question.options.filter((item) => item.error);
     }
     return question.error ? question.error : optionErrors.length;

@@ -53,7 +53,7 @@ const ReviewViewComponent = ({
               )}
             </div>
 
-            {options?.length > 0 && type === MULTIPLECHOICE_TYPE && (
+            {options?.length > 0 && type === MULTIPLE_CHOICE_TYPE && (
               <div className="ml-2 my-2">
                 <Radio.Group
                   name="checkbox_option"
