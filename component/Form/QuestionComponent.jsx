@@ -42,7 +42,7 @@ const QuestionEditViewComponent = ({
 }) => {
   return (
     <div className="divide-y">
-      <div className="p-2 md:py-3 md:px-5 xl:py-4 flex flex-wrap items-center justify-between space-x-4">
+      <div className="p-4 md:px-5 flex flex-wrap items-center justify-between space-x-4">
         <h2 className="font-semibold text-base xl:text-lg">
           Question {idx + 1}
         </h2>
@@ -69,7 +69,7 @@ const QuestionEditViewComponent = ({
         </div>
       </div>
 
-      <div className="p-2 md:py-3 md:px-5 xl:py-4  mb-1 xl:mb-3 space-y-4">
+      <div className="p-4 md:px-5  mb-1 xl:mb-3 space-y-4">
         <div className="space-y-3">
           <p className="font-medium text-base mb-0">
             What would you like to ask?
@@ -115,7 +115,7 @@ const QuestionEditViewComponent = ({
         )}
       </div>
       <div
-        className={`p-2 md:py-3 md:px-5 flex justify-${
+        className={`p-4 md:px-5 flex justify-${
           totalQuestionCount > 1 ? "between" : "end"
         } items-center space-x-3`}
       >
@@ -166,7 +166,7 @@ const QuestionComponent = ({
 }) => {
   return selectTypeFeild ? (
     <>
-      <div className="p-2 md:py-3 md:px-5 xl:py-4  border-b border-gray-200">
+      <div className="p-4 md:px-5  border-b border-gray-200">
         <p className="text-base 2xl:text-lg font-semibold">
           Choose Question Type
         </p>

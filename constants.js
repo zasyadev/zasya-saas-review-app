@@ -76,3 +76,8 @@ export const ApplaudCategoryList = [
     ],
   },
 ];
+
+export const INITIAL_CRON_TYPES = {
+  APPLAUD: "APPLAUD",
+  REVIEW: "REVIEW",
+};

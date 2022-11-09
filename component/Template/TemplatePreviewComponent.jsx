@@ -58,7 +58,7 @@ export function TemplatePreviewComponent({
 }) {
   return (
     <div className="answer-preview space-y-4">
-      <div className="bg-white p-2 md:px-5 md:py-5 shadow-md md:w-10/12 2xl:w-8/12 mx-auto rounded-md flex items-start justify-between gap-3">
+      <div className="bg-white p-4 md:p-5 shadow-md md:w-10/12 2xl:w-8/12 mx-auto rounded-md flex items-start justify-between gap-3">
         <div className="flex-1   space-y-3">
           <p className="text-lg font-bold text-primary mb-1">{formTitle}</p>
           <p className="mb-1 font-medium">{length} Questions</p>
@@ -72,7 +72,7 @@ export function TemplatePreviewComponent({
         )}
       </div>
 
-      <div className=" bg-white rounded-md p-2 md:px-5 md:py-5 shadow-md  md:w-10/12 2xl:w-8/12  mx-auto space-y-5">
+      <div className=" bg-white rounded-md p-4 md:p-5 shadow-md  md:w-10/12 2xl:w-8/12  mx-auto space-y-5">
         {questions.length &&
           questions.map((ques, idx) => {
             return <TypeComponent key={idx + "ques"} {...ques} />;

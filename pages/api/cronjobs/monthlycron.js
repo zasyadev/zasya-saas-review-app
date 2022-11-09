@@ -77,7 +77,7 @@ async function handle(req, res) {
         });
         SlackPostMessage({
           channel: item.UserDetails.slack_id,
-          text: `Need to Add New Applaud`,
+          text: `Monthly Report`,
           blocks: customText,
         });
       }

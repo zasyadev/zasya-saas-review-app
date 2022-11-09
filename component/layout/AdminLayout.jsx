@@ -89,7 +89,7 @@ function AdminLayout({ user, title, isBack = false, children }) {
               collapsed={collapsed}
               lg={lg}
             />
-            <div className="p-3 md:p-6">{children}</div>
+            <div className="p-4 md:p-6">{children}</div>
           </Content>
           <Footer className="text-center bg-white p-3 font-medium text-primary">
             Review App © 2022 Created By Zasya Solution

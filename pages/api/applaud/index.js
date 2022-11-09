@@ -116,7 +116,6 @@ async function handle(req, res, prisma) {
           created_by: reqBody.created_by,
         },
       });
-      prisma.$disconnect();
       if (data) {
         return res.status(201).json({
           message: "Saved  Successfully",
@@ -137,7 +136,6 @@ async function handle(req, res, prisma) {
         where: { id: reqBody.id },
       });
 
-      prisma.$disconnect();
       if (deletaData) {
         return res.status(200).json({
           status: 200,
@@ -149,10 +147,6 @@ async function handle(req, res, prisma) {
         message: "Failed To Delete Record.",
       });
     }
-  } else {
-    return res.status(405).json({
-      message: "Method Not allowed",
-    });
   }
 }
 const functionHandle = (req, res) =>

@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import { AddIcon, DeleteTemplateIcon } from "../../assets/icons";
+import { ButtonGray, SecondaryButton } from "../common/CustomButton";
 
 const motionVariants = {
   hidden: { y: 20, opacity: 0 },
@@ -11,7 +12,7 @@ const motionVariants = {
 };
 export const CreateTemplateCard = () => (
   <Link href="/template/add" passHref>
-    <div className="template  template-list flex bg-white items-center justify-center flex-col  w-full rounded-md overflow-hdden shadow-md p-5  cursor-pointer  h-56 sm:h-full add-template-card">
+    <div className="hidden template  template-list md:flex bg-white items-center justify-center flex-col  w-full rounded-md overflow-hdden shadow-md p-5  cursor-pointer  h-56 sm:h-full add-template-card">
       <div className="cursor-pointer">
         <AddIcon className="text-center " />
       </div>
@@ -26,7 +27,6 @@ export const TemplateCard = ({
   id,
   title,
   deleteTemplate,
-  linkHref,
   isDelete = false,
   description = "",
   questionLength = 0,
@@ -35,21 +35,25 @@ export const TemplateCard = ({
     <motion.div
       key={id}
       variants={motionVariants}
-      className="template-list rounded-md shadow-md bg-white flex flex-col"
+      className="template-list rounded-md shadow-md bg-white flex flex-col relative group overflow-hidden
+      "
     >
-      <Link href={linkHref} passHref>
-        <div className="relative w-full h-40 cursor-pointer ">
+      <Link href={`/template/${isDelete ? "edit" : "preview"}/${id}`} passHref>
+        <div className="relative w-full h-40 cursor-pointer  ">
           <Image
             src={"/media/images/template_dummy.png"}
             layout="fill"
-            // objectFit="cover"
             alt="template"
+            objectFit="cover"
           />
         </div>
       </Link>
 
-      <div className=" border-gray-200  p-3 space-y-2 flex flex-1 flex-col">
-        <Link href={linkHref} passHref>
+      <div className=" border-gray-200  p-3 space-y-2 flex flex-1 flex-col ">
+        <Link
+          href={`/template/${isDelete ? "edit" : "preview"}/${id}`}
+          passHref
+        >
           <div className=" space-y-2 cursor-pointer flex-1">
             <p className="text-base xl:text-lg text-primary font-semibold mb-0 flex-1">
               {title}
@@ -85,6 +89,24 @@ export const TemplateCard = ({
           )}
         </div>
       </div>
+      {!isDelete && (
+        <div className="hidden opacity-0 absolute inset-0 px-4 group-hover:opacity-100 md:grid place-content-center bg-black bg-opacity-50 rounded-md transition-all duration-300 ease-in-out">
+          <div className="space-y-4 ">
+            <ButtonGray
+              withLink={true}
+              linkHref={`/template/preview/${id}`}
+              className="w-full "
+              title="Preview Template"
+            />
+            <ButtonGray
+              withLink={true}
+              linkHref={`/review/edit/${id}`}
+              className="w-full"
+              title="Use Template"
+            />
+          </div>
+        </div>
+      )}
     </motion.div>
   );
 };
