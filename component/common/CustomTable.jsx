@@ -3,7 +3,7 @@ import React from "react";
 
 const CustomTable = ({ className = "", rowKeyLabel = "id", ...props }) => {
   return (
-    <div className="overflow-auto">
+    <div className="overflow-auto rounded-md">
       <Table
         bordered={false}
         className={`rounded-md bg-white custom-table ${className}`}

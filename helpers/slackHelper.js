@@ -20,7 +20,6 @@ export async function SlackUserList() {
 }
 
 export async function SlackPostMessage({ channel, text, blocks }) {
-  console.log(channel, "channel");
   const resData = await httpService.post(
     "https://slack.com/api/chat.postMessage",
     {

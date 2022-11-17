@@ -27,7 +27,6 @@ export default function WelcomeModal({
     if (userId) welcomeModalDataRequest();
   }, []);
 
-  console.log({ userDetails });
   return (
     <>
       <CustomModal
