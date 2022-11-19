@@ -112,7 +112,7 @@ export function OpinionScaleType({
   return (
     <>
       <p className="font-medium text-base mb-2">Opinion Scale</p>
-      <div className="flex items-center space-x-4 md:space-x-8">
+      <div className="flex flex-col gap-4 items-start lg:flex-row lg:gap-8 lg:items-center ">
         <div className="space-y-3">
           <div className="flex items-center">
             <Select
