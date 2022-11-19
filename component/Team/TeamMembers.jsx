@@ -123,22 +123,23 @@ function TeamMembers({ user }) {
       </div>
 
       <div className="w-full bg-white rounded-md overflow-hdden shadow-md">
-        <div className="px-4 ">
-          {loading ? (
+        {loading ? (
+          <div className="p-4 ">
             <Skeleton title={false} active={true} className="my-4" />
-          ) : (
-            <CustomTable
-              dataSource={membersList}
-              columns={columns}
-              className="custom-table"
-              pagination={{
-                defaultPageSize: 10,
-                showSizeChanger: true,
-                pageSizeOptions: ["10", "20", "50", "100"],
-              }}
-            />
-          )}
-        </div>
+          </div>
+        ) : (
+          <CustomTable
+            dataSource={membersList}
+            columns={columns}
+            className="custom-table"
+            pagination={{
+              defaultPageSize: 10,
+              showSizeChanger: true,
+              pageSizeOptions: ["10", "50", "100", "200", "500"],
+              className: "px-2 sm:px-4",
+            }}
+          />
+        )}
       </div>
     </div>
   );

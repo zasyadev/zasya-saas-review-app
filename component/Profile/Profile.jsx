@@ -155,7 +155,7 @@ source=LinkedIn`);
     </div>
   ) : (
     <>
-      <Row gutter={[32, 32]}>
+      <Row gutter={[24, 24]}>
         <Col md={24} xs={24}>
           <div className="bg-white relative rounded-md overflow-hidden transition-all duration-300 ease-in-out shadow-md">
             <div className="relative h-28 lg:h-48">
@@ -199,167 +199,169 @@ source=LinkedIn`);
           </div>
         </Col>
         <Col md={10} xs={24}>
-          <div className="bg-white rounded-md transition-all duration-300 ease-in-out shadow-md p-5 xl:py-5  xl:px-8 space-y-4">
-            <div className="flex justify-between items-center gap-4 flex-wrap">
-              <p className="mb-0 text-lg md:text-xl text-primary font-semibold">
-                General Information
-              </p>
-              <Link href="/profile/edit " passHref>
-                <div className="hover:bg-gray-100 border border-gray-300  py-1 px-2 rounded-full cursor-pointer transition-all  duration-300 ease-in-out">
-                  <EditOutlined className="text-base text-primary" />
-                </div>
-              </Link>
-            </div>
-
-            <div>
-              <p className="text-sm 2xl:text-base text-primary font-semibold mb-1">
-                Address
-              </p>
-              <p className="text-base font-medium text-gray-600 mb-1">
-                {userDetails?.address1} {userDetails?.address2}
-              </p>
-            </div>
-            <div>
-              <p className="text-sm 2xl:text-base text-primary font-semibold mb-1">
-                Phone No.
-              </p>
-              <p className="text-text-sm 2xl:text-base font-medium text-gray-600 mb-1">
-                {userDetails?.mobile}
-              </p>
-            </div>
-
-            <div>
-              <p className="text-sm 2xl:text-base text-primary font-semibold mb-1">
-                About
-              </p>
-              <p className="text-sm 2xl:text-base font-medium text-gray-600 mb-1">
-                {userDetails?.about}
-              </p>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-md transition-all duration-300 ease-in-out shadow-md p-5 py-4 xl:py-5  xl:px-8 space-y-4 mt-8">
-            <div className="flex justify-between items-center gap-4 flex-wrap">
-              <p className="mb-0 text-lg md:text-xl text-primary font-semibold">
-                Slack Information
-              </p>
-
-              <div
-                className="hover:bg-gray-100 border border-gray-300  py-1 px-2 rounded-full cursor-pointer transition-all  duration-300 ease-in-out"
-                onClick={() => handleEditSlack()}
-              >
-                <EditOutlined className="text-base text-primary" />
-              </div>
-            </div>
-
-            <div>
-              <p className="text-sm 2xl:text-base text-primary font-semibold mb-1">
-                Slack Email
-              </p>
-              <p className="text-base font-medium text-gray-600 mb-1">
-                {userDetails?.slack_email}
-              </p>
-            </div>
-          </div>
-
-          {user.role_id === 2 && user.organization_id && (
-            <div className="bg-white rounded-md transition-all duration-300 ease-in-out shadow-md p-5 py-4 xl:py-5  xl:px-8 space-y-4 mt-8">
+          <div className="space-y-6">
+            <div className="bg-white rounded-md transition-all duration-300 ease-in-out shadow-md p-5 xl:py-5  xl:px-6 space-y-4">
               <div className="flex justify-between items-center gap-4 flex-wrap">
                 <p className="mb-0 text-lg md:text-xl text-primary font-semibold">
-                  Applaud Information
+                  General Information
+                </p>
+                <Link href="/profile/edit " passHref>
+                  <div className="hover:bg-gray-100 border border-gray-300  py-1 px-2 rounded-full cursor-pointer transition-all  duration-300 ease-in-out">
+                    <EditOutlined className="text-base text-primary" />
+                  </div>
+                </Link>
+              </div>
+
+              <div>
+                <p className="text-sm 2xl:text-base text-primary font-semibold mb-1">
+                  Address
+                </p>
+                <p className="text-base font-medium text-gray-600 mb-1">
+                  {userDetails?.address1} {userDetails?.address2}
+                </p>
+              </div>
+              <div>
+                <p className="text-sm 2xl:text-base text-primary font-semibold mb-1">
+                  Phone No.
+                </p>
+                <p className="text-text-sm 2xl:text-base font-medium text-gray-600 mb-1">
+                  {userDetails?.mobile}
+                </p>
+              </div>
+
+              <div>
+                <p className="text-sm 2xl:text-base text-primary font-semibold mb-1">
+                  About
+                </p>
+                <p className="text-sm 2xl:text-base font-medium text-gray-600 mb-1">
+                  {userDetails?.about}
+                </p>
+              </div>
+            </div>
+            <div className="bg-white rounded-md transition-all duration-300 ease-in-out shadow-md p-5 py-4 xl:py-5  xl:px-6 space-y-4">
+              <div className="flex justify-between items-center gap-4 flex-wrap">
+                <p className="mb-0 text-lg md:text-xl text-primary font-semibold">
+                  Slack Information
                 </p>
 
                 <div
                   className="hover:bg-gray-100 border border-gray-300  py-1 px-2 rounded-full cursor-pointer transition-all  duration-300 ease-in-out"
-                  onClick={() => handleEditApplaudLimit(applaudLimit)}
+                  onClick={() => handleEditSlack()}
                 >
                   <EditOutlined className="text-base text-primary" />
                 </div>
               </div>
-              <div>
-                <p className="text-sm 2xl:text-base text-primary font-semibold mb-1 flex items-center">
-                  Applaud Limit
-                  <span className="leading-[0] ml-2">
-                    {CustomPopover(
-                      "Count of Applauds that can be given by members in a month."
-                    )}
-                  </span>
-                </p>
 
+              <div>
+                <p className="text-sm 2xl:text-base text-primary font-semibold mb-1">
+                  Slack Email
+                </p>
                 <p className="text-base font-medium text-gray-600 mb-1">
-                  {applaudLimit}
+                  {userDetails?.slack_email}
                 </p>
               </div>
             </div>
-          )}
+            {user.role_id === 2 && user.organization_id && (
+              <div className="bg-white rounded-md transition-all duration-300 ease-in-out shadow-md p-5 py-4 xl:py-5  xl:px-6 space-y-4">
+                <div className="flex justify-between items-center gap-4 flex-wrap">
+                  <p className="mb-0 text-lg md:text-xl text-primary font-semibold">
+                    Applaud Information
+                  </p>
+
+                  <div
+                    className="hover:bg-gray-100 border border-gray-300  py-1 px-2 rounded-full cursor-pointer transition-all  duration-300 ease-in-out"
+                    onClick={() => handleEditApplaudLimit(applaudLimit)}
+                  >
+                    <EditOutlined className="text-base text-primary" />
+                  </div>
+                </div>
+                <div>
+                  <p className="text-sm 2xl:text-base text-primary font-semibold mb-1 flex items-center">
+                    Applaud Limit
+                    <span className="leading-[0] ml-2">
+                      {CustomPopover(
+                        "Count of Applauds that can be given by members in a month."
+                      )}
+                    </span>
+                  </p>
+
+                  <p className="text-base font-medium text-gray-600 mb-1">
+                    {applaudLimit}
+                  </p>
+                </div>
+              </div>
+            )}
+          </div>
         </Col>
 
         <Col md={14} xs={24}>
-          <div className=" profile-applaud-card no-scrollbar">
-            <div className="bg-white rounded-md transition-all duration-300 ease-in-out shadow-md mb-4  p-5  xl:py-5  xl:px-8 space-y-4 md:space-y-6">
-              <p className=" text-lg md:text-xl text-primary font-semibold mb-0">
+          <div className=" profile-applaud-card no-scrollbar rounded-md">
+            <div className="bg-white rounded-md transition-all duration-300 ease-in-out shadow-md mb-4  relative">
+              <p className=" text-lg md:text-xl text-primary font-semibold mb-0 sticky top-0 bg-white  p-5  xl:py-5  xl:px-6 z-20 rounded-md overflow-hidden">
                 Applaud Recieved
               </p>
-              {receivedApplaudList.length > 0 ? (
-                receivedApplaudList.map((item, idx) => {
-                  return (
-                    <div key={idx + "applaud"}>
-                      <div className="flex justify-between items-start">
-                        <div className="flex items-center gap-4">
-                          <DefaultImages
-                            imageSrc={item?.created?.UserDetails?.image}
-                            width={40}
-                            height={40}
-                          />
+              <div className="p-5  xl:py-5  xl:px-6 space-y-4  md:space-y-6">
+                {receivedApplaudList.length > 0 ? (
+                  receivedApplaudList.map((item, idx) => {
+                    return (
+                      <div key={idx + "applaud"}>
+                        <div className="flex justify-between items-start">
+                          <div className="flex items-center gap-4">
+                            <DefaultImages
+                              imageSrc={item?.created?.UserDetails?.image}
+                              width={40}
+                              height={40}
+                            />
 
-                          <div>
-                            <p className="text-base font-semibold mb-0">
-                              {item.created.first_name}
-                            </p>
-                            <p className="font-medium text-xs mb-0">
-                              {moment(item.created_date).format(
-                                MONTH_DATE_FORMAT
-                              )}
-                            </p>
+                            <div>
+                              <p className="text-base font-semibold mb-0">
+                                {item.created.first_name}
+                              </p>
+                              <p className="font-medium text-xs mb-0">
+                                {moment(item.created_date).format(
+                                  MONTH_DATE_FORMAT
+                                )}
+                              </p>
+                            </div>
+                          </div>
+
+                          <div
+                            className="flex justify-end cursor-pointer"
+                            onClick={() => shareLinkedinUrl(item)}
+                          >
+                            <div className="hover:bg-gray-100 border border-gray-300  py-1 px-2 rounded-full cursor-pointer transition-all  duration-300 ease-in-out">
+                              <ShareAltOutlined className="text-base text-primary" />
+                            </div>
                           </div>
                         </div>
 
-                        <div
-                          className="flex justify-end cursor-pointer"
-                          onClick={() => shareLinkedinUrl(item)}
-                        >
-                          <div className="hover:bg-gray-100 border border-gray-300  py-1 px-2 rounded-full cursor-pointer transition-all  duration-300 ease-in-out">
-                            <ShareAltOutlined className="text-base text-primary" />
-                          </div>
+                        <div className="mt-3">
+                          <p className="text-base font-normal mb-2">
+                            {item?.comment}
+                          </p>
+                          <p className="mb-0 flex flex-wrap gap-2">
+                            {item?.category?.length > 0 &&
+                              item?.category.map((category, idx) => {
+                                return (
+                                  <span
+                                    key={idx + "cat"}
+                                    className=" px-2 py-1 rounded-full bg-gray-100 text-xs "
+                                  >
+                                    {getApplaudCategoryName(category)}
+                                  </span>
+                                );
+                              })}
+                          </p>
                         </div>
                       </div>
-
-                      <div className="mt-3">
-                        <p className="text-base font-normal mb-2">
-                          {item?.comment}
-                        </p>
-                        <p className="mb-0 flex flex-wrap gap-2">
-                          {item?.category?.length > 0 &&
-                            item?.category.map((category, idx) => {
-                              return (
-                                <span
-                                  key={idx + "cat"}
-                                  className=" px-2 py-1 rounded-full bg-gray-100 text-xs "
-                                >
-                                  {getApplaudCategoryName(category)}
-                                </span>
-                              );
-                            })}
-                        </p>
-                      </div>
-                    </div>
-                  );
-                })
-              ) : (
-                <p className="text-base font-normal mb-2">
-                  No Applauds Recieved Yet
-                </p>
-              )}
+                    );
+                  })
+                ) : (
+                  <p className="text-base font-normal mb-2">
+                    No Applauds Recieved Yet
+                  </p>
+                )}
+              </div>
             </div>
           </div>
         </Col>

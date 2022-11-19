@@ -1,7 +1,7 @@
 import { Skeleton } from "antd";
 import React, { useEffect, useState } from "react";
 import httpService from "../../lib/httpService";
-import { PreviewAnswer } from "./formhelper/PreviewAnswer";
+import PreviewAnswer from "./formhelper/PreviewAnswer";
 
 const defaultLoading = { questionLoading: false, answerLoading: false };
 function PreviewComponent({ user, reviewId }) {

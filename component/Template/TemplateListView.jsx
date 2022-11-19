@@ -3,12 +3,14 @@ import React, { useEffect, useState } from "react";
 import httpService from "../../lib/httpService";
 import ToggleButton from "../common/ToggleButton";
 import NoRecordFound from "../common/NoRecordFound";
-import { SkeletonTemplateCard, TemplateCard } from "./TemplateCard";
+
 import {
   MY_TEMPLATE_KEY,
   TemplateToggleList,
   DefaultMotionVarient,
 } from "./constants";
+import SkeletonTemplateCard from "./components/SkeletonTemplateCard";
+import TemplateCard from "./TemplateCard";
 
 function TemplateListView({ user }) {
   const [userTemplateList, setUserTemplateList] = useState([]);

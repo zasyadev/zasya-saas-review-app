@@ -112,13 +112,22 @@ function FormView({ user }) {
           />
         </div>
         <div className="w-full bg-white rounded-md overflow-hdden shadow-md">
-          <div className="px-4 ">
-            {loading ? (
-              <Skeleton title={false} active={true} className="my-4" />
-            ) : (
-              <CustomTable dataSource={formAssignList} columns={columns} />
-            )}
-          </div>
+          {loading ? (
+            <div className="p-4">
+              <Skeleton title={false} active={true} />
+            </div>
+          ) : (
+            <CustomTable
+              dataSource={formAssignList}
+              columns={columns}
+              pagination={{
+                defaultPageSize: 10,
+                showSizeChanger: true,
+                pageSizeOptions: ["10", "50", "100", "200", "500"],
+                className: "px-2 sm:px-4",
+              }}
+            />
+          )}
         </div>
       </div>
       <TempateSelectWrapper
