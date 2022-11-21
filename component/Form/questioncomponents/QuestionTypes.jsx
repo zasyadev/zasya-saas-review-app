@@ -82,10 +82,10 @@ export function YesNoType() {
       </p>
       <div className="flex items-center justify-center mt-3">
         <div className="p-5 md:p-8  border mx-2 rounded-sm">
-          <LikeOutlined style={{ fontSize: "64px" }} />
+          <LikeOutlined className="text-4xl sm:text-6xl" />
         </div>
         <div className="p-5 md:p-8 border mx-2 rounded-sm">
-          <DislikeOutlined style={{ fontSize: "64px" }} />
+          <DislikeOutlined className="text-4xl sm:text-6xl" />
         </div>
       </div>
     </>
@@ -191,17 +191,17 @@ export function QuestionTypeCard({
 }) {
   return (
     <div
-      className="flex items-center border border-gray-200 bg-white hover:bg-gray-100  rounded-md cursor-pointer space-x-3 shadow-sm"
+      className="flex items-center border gap-2 md:gap-4 border-gray-200 bg-white hover:bg-gray-100  rounded-md cursor-pointer shadow-sm overflow-hidden"
       onClick={(e) => {
         defineType(type, idx);
         setSelectTypeFeild(false);
       }}
     >
-      <div className="px-4 lg:px-5 py-4 bg-gray-50 w-14 2xl:w-16">
+      <div className="grid place-content-center overflow-hidden border-r border-gray-200 bg-gray-50 w-14 h-14 2xl:w-16 2xl:h-16">
         <Icon />
       </div>
 
-      <div className="px-4 lg:px-5 py-4 ">
+      <div className="flex-1">
         <p className="mb-0 text-sm 2xl:text-base font-semibold text-primary">
           {title}
         </p>

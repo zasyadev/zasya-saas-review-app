@@ -69,13 +69,12 @@ export default function ReviewPopUpModal({ userId }) {
           <h3 className="text-lg md:text-xl text-center font-bold -tracking-wider">
             Did you tried to get a feedback from your peers
           </h3>
-          <p className="text-base text-center font-medium -tracking-wider">
-            It will help you to enhance your performance.
+          <p className="text-base text-center font-medium -tracking-wider mb-0">
+            It will help you to enhance your performance. Let's get some
+            feedback.
           </p>
-          <p className="text-base text-center font-medium -tracking-wider">
-            Let's get some feedback.
-          </p>
-          <div className="mt-2 text-center">
+
+          <div className="mt-4 text-center">
             <PrimaryButton
               withLink={true}
               linkHref="/review?create=true"

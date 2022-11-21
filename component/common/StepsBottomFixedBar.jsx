@@ -15,7 +15,7 @@ const StepsBottomFixedBar = ({
 }) => {
   return (
     <div className="fixed bottom-0 left-0 right-0">
-      <div className=" bg-white p-3 md:p-5 rounded-md w-full">
+      <div className=" border-t border-gray-200 bg-white p-3 md:p-5  w-full">
         <div className="flex justify-between  items-center">
           <div className="w-full md:w-4/5 2xl:w-3/5 mx-auto hidden md:block">
             <CustomSteps

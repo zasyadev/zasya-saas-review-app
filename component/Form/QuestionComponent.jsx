@@ -42,17 +42,21 @@ const QuestionEditViewComponent = ({
 }) => {
   return (
     <div className="divide-y">
-      <div className="p-4 md:px-5 flex flex-wrap items-center justify-between space-x-4">
+      <div className="p-4 md:px-5 flex flex-wrap items-center justify-between gap-2">
         <h2 className="font-semibold text-base xl:text-lg">
           Question {idx + 1}
         </h2>
         <div>
-          <Tooltip placement="leftTop" title="Change Question Type">
+          <Tooltip
+            placement="topRight"
+            trigger={"hover"}
+            title="Change Question Type"
+          >
             <Select
               value={type}
-              size="large"
+              size="default"
               onChange={(e) => defineType(e, idx)}
-              className="question-select-box w-44"
+              className="question-select-box w-32 sm:w-40 md:w-44"
             >
               <Select.Option value={INPUT_TYPE}>Text</Select.Option>
               <Select.Option value={TEXTAREA_TYPE}>Paragraph</Select.Option>
@@ -171,12 +175,17 @@ const QuestionComponent = ({
           Choose Question Type
         </p>
       </div>
-      <div className="my-4 mx-6 xl:py-4">
-        <Row gutter={[16, 16]}>
+      <div className="p-4 md:px-5">
+        <Row
+          gutter={[
+            { xs: 8, sm: 8, md: 8, xl: 16 },
+            { xs: 8, sm: 8, md: 8, xl: 16 },
+          ]}
+        >
           {QuestionTypeList.filter((queType) =>
             ratingState ? (queType.type === "rating" ? false : true) : queType
           ).map((quesType) => (
-            <Col md={8} xs={12} key={quesType.title}>
+            <Col xs={24} sm={12} md={8} key={quesType.title}>
               <QuestionTypeCard
                 idx={idx}
                 key={idx + "quesType"}

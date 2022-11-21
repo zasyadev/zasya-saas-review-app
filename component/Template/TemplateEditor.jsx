@@ -27,9 +27,9 @@ function TemplateEditor({
   ratingState = false,
 }) {
   return (
-    <Row gutter={16}>
+    <Row gutter={{ xs: 0, sm: 0, md: 16 }}>
       <Col xs={24} md={8}>
-        <div className="w-full pb-4 lg:pb-2">
+        <div className="w-full p-4 md:p-0 lg:pb-2">
           <div className="w-full bg-white rounded-md shadow-md   sider-question-wrapper overflow-y-auto flex flex-col-reverse">
             <div className="question-section-container">
               <div className="question-section-contents">
@@ -71,13 +71,13 @@ function TemplateEditor({
           <div className="mt-4 flex flex-wrap justify-between space-x-3">
             <PrimaryButton
               onClick={() => addMoreQuestionField()}
-              title="Add New Question"
+              title="Add Question"
             />
           </div>
         </div>
       </Col>
       <Col xs={24} md={16}>
-        <div className="w-full bg-white rounded-md shadow-md  add-template-wrapper">
+        <div className="w-full border-t border-gray-200 bg-white md:rounded-md md:shadow-md  add-template-wrapper">
           <div className="rounded-md overflow-hidden  ">
             {questions?.length > 0 &&
               questions

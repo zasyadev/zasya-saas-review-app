@@ -11,7 +11,7 @@ const TemplatePreviewQuestionCardType = ({ type, questionText, options }) => {
   return (
     <div className="space-y-3">
       <div>
-        <p className="text-primary font-medium text-sm">
+        <p className="text-primary font-semibold text-sm">
           {QuestiontypeText(type)}
         </p>
       </div>

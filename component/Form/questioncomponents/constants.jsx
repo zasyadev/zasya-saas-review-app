@@ -42,7 +42,7 @@ export const QuestionTypeList = [
   {
     title: "Yes or No",
     Icon: () => (
-      <div className=" mr-3">
+      <div className="">
         <p className="mb-0">
           <LikeIcon />
         </p>
