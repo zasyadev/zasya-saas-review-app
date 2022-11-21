@@ -70,10 +70,11 @@ export default function ReviewPopUpModal({ userId }) {
             Did you tried to get a feedback from your peers
           </h3>
           <p className="text-base text-center font-medium -tracking-wider mb-0">
-            It will help you to enhance your performance. Let's get some
-            feedback.
+            It will help you to enhance your performance.
           </p>
-
+          <p className="text-base text-center font-medium -tracking-wider mb-0">
+            {`Let's`} get some feedback.
+          </p>
           <div className="mt-4 text-center">
             <PrimaryButton
               withLink={true}
