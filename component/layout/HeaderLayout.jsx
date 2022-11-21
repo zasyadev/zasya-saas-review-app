@@ -102,7 +102,7 @@ function HeaderLayout({ isBack, title, user, collapsed, setCollapsed, lg }) {
           </p>
         </div>
 
-        <div className="flex items-center justify-end">
+        <div className="flex flex-shrink-0 items-center justify-end">
           <Dropdown
             trigger={"click"}
             overlay={
@@ -120,7 +120,7 @@ function HeaderLayout({ isBack, title, user, collapsed, setCollapsed, lg }) {
               <BellOutlined className="text-xl text-gray-600 hover:text-primary " />
             </Badge>
           </Dropdown>
-          <div className="flex-1 bg-white   cursor-pointer   transition-all  duration-300 hover:bg-gray-100 rounded-full">
+          <div className="flex-1 flex-shrink-0 bg-white   cursor-pointer   transition-all  duration-300 hover:bg-gray-100 rounded-full">
             <Dropdown
               trigger={"click"}
               overlay={
