@@ -1,6 +1,6 @@
 import React from "react";
 
-const PreviewAnswerQuestionCard = () => {
+const PreviewAnswerQuestionCard = ({ questionText, index, option }) => {
   return (
     <div className="space-y-2 ">
       <p className="text-primary font-medium text-base">

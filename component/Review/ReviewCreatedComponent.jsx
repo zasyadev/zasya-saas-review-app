@@ -15,6 +15,7 @@ import httpService from "../../lib/httpService";
 import CustomTable from "../common/CustomTable";
 import { ResizableTitle } from "./ResizableTitle";
 import { MONTH_DATE_FORMAT, YEAR_DATE_FORMAT } from "../../helpers/dateHelper";
+import CustomPopover from "../common/CustomPopover";
 
 const { useBreakpoint } = Grid;
 
@@ -76,13 +77,13 @@ function ReviewCreatedComponent({
     render: (_, record) => (
       <div>
         <p className="mb-0">{record.name}</p>
-        <p className="mb-0 text-gray-400 text-sm ">
-          <Tooltip title="Reactive Time" placement={"bottom"}>
-            {calculateDuration({
-              from: reviewData.created_date,
-              to: record.answer_date,
-            })}
-          </Tooltip>
+        <p className="mb-0 flex items-center gap-2 text-gray-400 text-sm ">
+          {calculateDuration({
+            from: reviewData.created_date,
+            to: record.answer_date,
+          })}
+
+          {CustomPopover("Reactive Time")}
         </p>
       </div>
     ),
