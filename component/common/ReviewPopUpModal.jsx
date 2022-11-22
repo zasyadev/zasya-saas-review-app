@@ -26,7 +26,7 @@ export default function ReviewPopUpModal({ userId }) {
     if (userId) {
       const reviewPopupTime = getReviewPopupTime();
       const todayDate = moment();
-      if (reviewPopupTime && todayDate.diff(reviewPopupTime, "days") < 7)
+      if (reviewPopupTime && todayDate.diff(reviewPopupTime, "days") < 3)
         return;
 
       getUserWeeklyReviews(userId);

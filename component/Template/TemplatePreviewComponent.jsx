@@ -27,8 +27,13 @@ export function TemplatePreviewComponent({
 
       <div className=" bg-white md:rounded-md p-4 md:p-5 md:shadow-md  md:w-10/12 2xl:w-8/12  mx-auto space-y-5">
         {questions.length &&
-          questions.map((ques, idx) => (
-            <TemplatePreviewQuestionCardType key={idx + "ques"} {...ques} />
+          questions.map((question, idx) => (
+            <TemplatePreviewQuestionCardType
+              key={idx + "ques"}
+              type={question?.type}
+              questionText={question?.questionText}
+              options={question?.options}
+            />
           ))}
       </div>
     </div>

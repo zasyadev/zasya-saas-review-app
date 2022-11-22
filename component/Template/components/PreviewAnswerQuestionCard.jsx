@@ -1,10 +1,14 @@
 import React from "react";
 
-const PreviewAnswerQuestionCard = ({ questionText, index, option }) => {
+const PreviewAnswerQuestionCard = ({
+  questionText,
+  questionNumber,
+  option,
+}) => {
   return (
     <div className="space-y-2 ">
       <p className="text-primary font-medium text-base">
-        <span className="mr-2">{index + 1 + "."}</span>
+        <span className="mr-2">{questionNumber + 1 + "."}</span>
         {questionText}
       </p>
 

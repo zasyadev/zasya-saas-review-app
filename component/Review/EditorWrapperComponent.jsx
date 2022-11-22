@@ -70,18 +70,6 @@ function EditorWrapperComponent({
     );
   }
 
-  function showAsQuestion(index) {
-    setQuestionList((prev) =>
-      prev.map((item, i) => (i === index ? { ...item, open: false } : item))
-    );
-  }
-
-  function handleExpand(idx) {
-    setQuestionList((prev) =>
-      prev.map((item, i) => (i === idx ? { ...item, open: true } : item))
-    );
-  }
-
   function addOption(idx) {
     setQuestionList((prev) =>
       prev.map((item, i) =>
@@ -156,7 +144,6 @@ function EditorWrapperComponent({
 
   return (
     <TemplateEditor
-      editMode={true}
       formTitle={formTitle}
       setFormTitle={setFormTitle}
       questions={questions}
@@ -166,8 +153,6 @@ function EditorWrapperComponent({
       addMoreQuestionField={addMoreQuestionField}
       activeQuestionIndex={activeQuestionIndex}
       defineType={defineType}
-      showAsQuestion={showAsQuestion}
-      handleExpand={handleExpand}
       addOption={addOption}
       handleQuestionValue={handleQuestionValue}
       handleOptionValue={handleOptionValue}

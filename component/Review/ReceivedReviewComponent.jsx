@@ -124,16 +124,17 @@ function ReceivedReviewComponent({ user, reviewId }) {
                 ?.filter((_, index) => index === nextSlide)
                 ?.map((question, idx) => (
                   <FormSlideComponent
-                    {...question}
-                    idx={idx}
                     key={idx + "quesSlid"}
-                    open={false}
+                    type={question?.type}
+                    id={question?.id}
+                    questionText={question?.questionText}
+                    options={question?.options}
+                    error={question?.error}
                     nextSlide={nextSlide}
-                    handleAnswerChange={handleAnswerChange}
                     setNextSlide={setNextSlide}
-                    length={questions.length}
+                    totalQuestions={questions.length}
                     handleSubmit={handleSubmit}
-                    loadingSpin={loadingSpin}
+                    handleAnswerChange={handleAnswerChange}
                   />
                 ))
             ) : (

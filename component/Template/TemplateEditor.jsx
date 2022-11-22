@@ -12,10 +12,7 @@ function TemplateEditor({
   removeElement,
   addMoreQuestionField,
   activeQuestionIndex,
-  editMode,
   defineType,
-  showAsQuestion,
-  handleExpand,
   addOption,
   handleQuestionValue,
   handleOptionValue,
@@ -85,13 +82,13 @@ function TemplateEditor({
                 ?.map((question) => (
                   <QuestionComponent
                     key={activeQuestionIndex + "QuestionComponent"}
-                    {...question}
-                    editMode={editMode}
+                    type={question?.type}
+                    questionText={question?.questionText}
+                    options={question?.options}
+                    error={question?.error}
                     idx={activeQuestionIndex}
                     removeElement={removeElement}
                     defineType={defineType}
-                    showAsQuestion={showAsQuestion}
-                    handleExpand={handleExpand}
                     addOption={addOption}
                     handleQuestionValue={handleQuestionValue}
                     handleOptionValue={handleOptionValue}

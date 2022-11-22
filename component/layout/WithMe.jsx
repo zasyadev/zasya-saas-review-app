@@ -27,9 +27,19 @@ const WithMe = (props) => {
   ) : (
     <div>
       {props.children(session)}
-      {session && session?.user?.id && (
-        <ReviewPopUpModal userId={session.user.id} />
-      )}
+      {session &&
+        session?.user?.id &&
+        [
+          "/dashboard",
+          "/review/received",
+          "/review",
+          "/applaud",
+          "/template",
+          "/profile",
+          "/applaud/allapplaud",
+        ].includes(router?.pathname) && (
+          <ReviewPopUpModal userId={session.user.id} />
+        )}
     </div>
   );
 };

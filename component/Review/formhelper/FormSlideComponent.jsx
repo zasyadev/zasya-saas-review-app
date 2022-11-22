@@ -23,12 +23,12 @@ export function FormSlideComponent({
   id,
   questionText,
   options,
-  handleAnswerChange,
   error = "",
   nextSlide,
   setNextSlide,
-  length,
+  totalQuestions,
   handleSubmit,
+  handleAnswerChange,
 }) {
   const router = useRouter();
   const [sliderInputValue, setSliderInputValue] = useState({
@@ -75,7 +75,8 @@ export function FormSlideComponent({
       openNotificationBox(
         "error",
         "You can't write more than 180 character",
-        3
+        3,
+        "input-form-error"
       );
     }
   };
@@ -91,7 +92,7 @@ export function FormSlideComponent({
       >
         <div className=" text-center bg-white rounded-md shadow-md md:w-10/12 2xl:w-8/12 mx-auto px-4 lg:px-6">
           <p className="relative text-lg font-bold text-gray-400 py-4 lg:py-6 ">
-            {`Question ${nextSlide + 1}/${length}`}
+            {`Question ${nextSlide + 1}/${totalQuestions}`}
             <Popconfirm
               title={
                 <p className="font-medium mb-0">
@@ -311,7 +312,7 @@ export function FormSlideComponent({
                 />
               )}
 
-              {length - 1 === nextSlide ? (
+              {totalQuestions - 1 === nextSlide ? (
                 <Popconfirm
                   title={
                     <p className="font-medium mb-0">

@@ -104,18 +104,6 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
     );
   }
 
-  function showAsQuestion(index) {
-    setQuestions((prev) =>
-      prev.map((item, i) => (i === index ? { ...item, open: false } : item))
-    );
-  }
-
-  function handleExpand(idx) {
-    setQuestions((prev) =>
-      prev.map((item, i) => (i === idx ? { ...item, open: true } : item))
-    );
-  }
-
   function addOption(idx) {
     setQuestions((prev) =>
       prev.map((item, i) =>
@@ -408,10 +396,7 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
           removeElement={removeElement}
           addMoreQuestionField={addMoreQuestionField}
           activeQuestionIndex={activeQuestionIndex}
-          editMode={editMode}
           defineType={defineType}
-          showAsQuestion={showAsQuestion}
-          handleExpand={handleExpand}
           addOption={addOption}
           handleQuestionValue={handleQuestionValue}
           handleOptionValue={handleOptionValue}

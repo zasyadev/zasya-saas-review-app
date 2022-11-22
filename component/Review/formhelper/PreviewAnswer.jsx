@@ -11,15 +11,14 @@ function PreviewAnswer({ length, formTitle, questions }) {
 
       <div className=" bg-white rounded-md p-3 md:p-5 shadow-md md:w-10/12 2xl:w-8/12 mx-auto space-y-5">
         {questions.length &&
-          questions.map((ques, idx) => {
-            return (
-              <PreviewAnswerQuestionCard
-                key={idx + "ques"}
-                {...ques}
-                index={idx}
-              />
-            );
-          })}
+          questions.map((question, idx) => (
+            <PreviewAnswerQuestionCard
+              key={idx + "ques"}
+              questionText={question?.questionText}
+              option={question?.option}
+              questionNumber={idx}
+            />
+          ))}
       </div>
     </div>
   );
