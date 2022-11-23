@@ -148,7 +148,7 @@ function ReviewManagement({ user }) {
           0
         ) : (
           <div className="flex items-center gap-2">
-            <p className="flex ">
+            <p className="flex mb-0">
               {answerAssignee(record.ReviewAssignee)}/
               {record.ReviewAssignee.length}
             </p>

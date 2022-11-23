@@ -73,7 +73,7 @@ const GetAssigneesList = ({ type, reviewAssignee }) => {
       : reviewAssignee.filter((assignee) => assignee.status === type);
 
   return (
-    <div className="divide-y space-y-1">
+    <div className="divide-y space-y-1 max-h-96 overflow-y-auto custom-scrollbar">
       {filteredAssigneeList.length > 0 ? (
         filteredAssigneeList.map((assignee) => (
           <div className="flex items-center gap-4 p-2" key={assignee.id}>
