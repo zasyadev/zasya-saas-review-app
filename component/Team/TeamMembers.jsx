@@ -87,6 +87,18 @@ function TeamMembers({ user }) {
       ),
     },
     {
+      title: "Status",
+      render: (_, record) => (
+        <span
+          className={`text-sm text-center ${
+            record?.user?.status === 0 ? "text-red-700" : "text-green-700"
+          } rounded font-semibold text-center`}
+        >
+          {record?.user?.status === 0 ? "Inactive" : "Active"}
+        </span>
+      ),
+    },
+    {
       title: "Action",
       key: "action",
       render: (_, record) =>

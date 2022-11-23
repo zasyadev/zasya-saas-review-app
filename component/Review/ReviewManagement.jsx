@@ -1,15 +1,28 @@
-import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import { Popconfirm, Skeleton } from "antd";
+import {
+  DeleteOutlined,
+  EditOutlined,
+  InfoCircleOutlined,
+} from "@ant-design/icons";
+import { Popconfirm, Skeleton, Tabs } from "antd";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import { ButtonGray, PrimaryButton } from "../../component/common/CustomButton";
+import { PrimaryButton } from "../../component/common/CustomButton";
 import CustomTable from "../../component/common/CustomTable";
 import { openNotificationBox } from "../../component/common/notification";
 import httpService from "../../lib/httpService";
+import CustomModal from "../common/CustomModal";
+import DefaultImages from "../common/DefaultImages";
 import ToggleButton from "../common/ToggleButton";
 import { ReviewToggleList, REVIEW_CREATED_KEY } from "./constants";
+import ReviewAssignessModal from "./ReviewAssignessModal";
 import { TempateSelectWrapper } from "./TempateSelectWrapper";
+
+const initialReviewCountModalData = {
+  review_name: "",
+  ReviewAssignee: [],
+  isVisible: false,
+};
 
 function ReviewManagement({ user }) {
   const router = useRouter();
@@ -18,6 +31,9 @@ function ReviewManagement({ user }) {
   const [loading, setLoading] = useState(false);
   const [createReviewModal, setCreateReviewModal] = useState(false);
   const [reviewAssignList, setReviewAssignList] = useState([]);
+  const [reviewCountModalData, setReviewCountModalData] = useState(
+    initialReviewCountModalData
+  );
 
   async function fetchReviewAssignList() {
     setLoading(true);
@@ -74,11 +90,20 @@ function ReviewManagement({ user }) {
 
   const answerAssignee = (data) => {
     if (data.length > 0) {
-      let length = 0;
-      let a = data.filter((item) => item.status);
-      if (a.length) return a.length;
-      else return length;
+      return data.filter((item) => item.status == "answered")?.length ?? 0;
     }
+  };
+
+  const ShowReviewCountModal = ({ review_name, ReviewAssignee }) => {
+    setReviewCountModalData({
+      review_name,
+      ReviewAssignee,
+      isVisible: true,
+    });
+  };
+
+  const hideReviewCountModal = () => {
+    setReviewCountModalData(initialReviewCountModalData);
   };
 
   const columns = [
@@ -115,20 +140,6 @@ function ReviewManagement({ user }) {
       render: (review_type) => <p className={`capitalize `}>{review_type}</p>,
     },
     {
-      title: "Status",
-      key: "is_published ",
-      dataIndex: "is_published",
-      render: (is_published) => (
-        <p
-          className={`capitalize ${
-            is_published != "published" ? "text-red-400" : "text-green-400"
-          }`}
-        >
-          {is_published}
-        </p>
-      ),
-    },
-    {
       title: "Count",
       key: "count ",
 
@@ -136,12 +147,38 @@ function ReviewManagement({ user }) {
         record.is_published != "published" ? (
           0
         ) : (
-          <p>
-            {answerAssignee(record.ReviewAssignee)}/
-            {record.ReviewAssignee.length}
-          </p>
+          <div className="flex items-center gap-2">
+            <p className="flex ">
+              {answerAssignee(record.ReviewAssignee)}/
+              {record.ReviewAssignee.length}
+            </p>
+            <InfoCircleOutlined
+              className="text-gray-600 cursor-pointer select-none"
+              onClick={() =>
+                ShowReviewCountModal({
+                  review_name: record.review_name,
+                  ReviewAssignee: record.ReviewAssignee,
+                })
+              }
+            />
+          </div>
         ),
     },
+    {
+      title: "Status",
+      key: "is_published ",
+      dataIndex: "is_published",
+      render: (is_published) => (
+        <p
+          className={`capitalize ${
+            is_published != "published" ? "text-red-600" : "text-green-600"
+          }`}
+        >
+          {is_published}
+        </p>
+      ),
+    },
+
     {
       title: "Action",
       key: "action",
@@ -219,6 +256,11 @@ function ReviewManagement({ user }) {
       <TempateSelectWrapper
         createReviewModal={createReviewModal}
         setCreateReviewModal={setCreateReviewModal}
+      />
+
+      <ReviewAssignessModal
+        reviewCountModalData={reviewCountModalData}
+        hideReviewCountModal={hideReviewCountModal}
       />
     </div>
   );
