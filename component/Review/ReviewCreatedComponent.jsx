@@ -2,6 +2,7 @@ import {
   CalendarOutlined,
   FileTextOutlined,
   HistoryOutlined,
+  InfoCircleOutlined,
   StarOutlined,
   StopOutlined,
   UserOutlined,
@@ -16,8 +17,15 @@ import CustomTable from "../common/CustomTable";
 import { ResizableTitle } from "./ResizableTitle";
 import { MONTH_DATE_FORMAT, YEAR_DATE_FORMAT } from "../../helpers/dateHelper";
 import CustomPopover from "../common/CustomPopover";
+import ReviewAssignessModal from "./ReviewAssignessModal";
 
 const { useBreakpoint } = Grid;
+
+const initialReviewCountModalData = {
+  review_name: "",
+  ReviewAssignee: [],
+  isVisible: false,
+};
 
 function InfoCard({ count, title, Icon, className = "", ActionButton }) {
   return (
@@ -54,6 +62,9 @@ function ReviewCreatedComponent({
   const [dataSource, setDataSource] = useState({});
   const [totalRating, setTotalRating] = useState(0);
   const [columns, setColumns] = useState([]);
+  const [reviewCountModalData, setReviewCountModalData] = useState(
+    initialReviewCountModalData
+  );
 
   const applyFilters = (object) => {
     if (object.length > 0) {
@@ -205,6 +216,18 @@ function ReviewCreatedComponent({
     }),
   }));
 
+  const ShowReviewCountModal = ({ review_name, ReviewAssignee }) => {
+    setReviewCountModalData({
+      review_name,
+      ReviewAssignee,
+      isVisible: true,
+    });
+  };
+
+  const hideReviewCountModal = () => {
+    setReviewCountModalData(initialReviewCountModalData);
+  };
+
   return (
     <div className="container mx-auto max-w-full">
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 2xl:gap-6">
@@ -253,6 +276,17 @@ function ReviewCreatedComponent({
           title={"Assign Count"}
           count={reviewData?.ReviewAssignee?.length}
           Icon={() => <UserOutlined className="text-xl leading-0" />}
+          ActionButton={() => (
+            <InfoCircleOutlined
+              className="text-gray-600 cursor-pointer select-none"
+              onClick={() =>
+                ShowReviewCountModal({
+                  review_name: reviewData?.review_name,
+                  ReviewAssignee: reviewData?.ReviewAssignee,
+                })
+              }
+            />
+          )}
         />
       </div>
 
@@ -266,47 +300,40 @@ function ReviewCreatedComponent({
             className="review-collapse"
             expandIconPosition="end"
           >
-            {Object.entries(dataSource).map(([key, value], idx) => {
-              return (
-                <>
-                  <Panel
-                    header={
-                      <div className="flex items-center">
-                        <CalendarOutlined />
-                        <p className="ml-3 my-auto">
-                          {moment(key, YEAR_DATE_FORMAT).format(
-                            MONTH_DATE_FORMAT
-                          )}
-                        </p>
-                      </div>
-                    }
-                    key={1 + idx}
-                  >
-                    <CustomTable
-                      // className="review-question-table"
-                      components={{
-                        header: {
-                          cell: ResizableTitle,
-                        },
-                      }}
-                      columns={mergeColumns}
-                      dataSource={value}
-                      scroll={{
-                        x: 1500,
-                        y: 500,
-                      }}
-                      bordered={true}
-                      pagination={{
-                        defaultPageSize: 10,
-                        showSizeChanger: true,
-                        pageSizeOptions: ["10", "50", "100", "200", "500"],
-                        className: "px-2 sm:px-4",
-                      }}
-                    />
-                  </Panel>
-                </>
-              );
-            })}
+            {Object.entries(dataSource).map(([key, value], idx) => (
+              <Panel
+                header={
+                  <div className="flex items-center">
+                    <CalendarOutlined />
+                    <p className="ml-3 my-auto">
+                      {moment(key, YEAR_DATE_FORMAT).format(MONTH_DATE_FORMAT)}
+                    </p>
+                  </div>
+                }
+                key={1 + idx}
+              >
+                <CustomTable
+                  components={{
+                    header: {
+                      cell: ResizableTitle,
+                    },
+                  }}
+                  columns={mergeColumns}
+                  dataSource={value}
+                  scroll={{
+                    x: 1500,
+                    y: 500,
+                  }}
+                  bordered={true}
+                  pagination={{
+                    defaultPageSize: 10,
+                    showSizeChanger: true,
+                    pageSizeOptions: ["10", "50", "100", "200", "500"],
+                    className: "px-2 sm:px-4",
+                  }}
+                />
+              </Panel>
+            ))}
           </Collapse>
         ) : (
           <div className="bg-white p-5 rounded-md text-base font-medium">
@@ -314,6 +341,10 @@ function ReviewCreatedComponent({
           </div>
         )}
       </div>
+      <ReviewAssignessModal
+        reviewCountModalData={reviewCountModalData}
+        hideReviewCountModal={hideReviewCountModal}
+      />
     </div>
   );
 }

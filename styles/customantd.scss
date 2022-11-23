@@ -954,9 +954,14 @@ $primary: #0f123f;
   }
 }
 
+.ant-tabs-ink-bar {
+  background-color: $primary !important;
+}
+
 .ant-tabs-tab:hover {
   color: $primary !important;
 }
+
 .ant-tabs-tab-active {
   color: $primary !important;
   .ant-tabs-tab-btn {
