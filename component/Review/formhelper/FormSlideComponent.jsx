@@ -23,16 +23,19 @@ export function FormSlideComponent({
   id,
   questionText,
   options,
+  defaultQuestionAnswer,
   error = "",
+  updateAnswerApiLoading,
   nextSlide,
   setNextSlide,
   totalQuestions,
   handleSubmit,
   handleAnswerChange,
+  handleUpdateAnswer,
 }) {
   const router = useRouter();
   const [sliderInputValue, setSliderInputValue] = useState({
-    [id]: 0,
+    [id]: defaultQuestionAnswer?.answer ? defaultQuestionAnswer?.answer : 0,
   });
   const [rateInputValue, setRateInputValue] = useState({
     [id]: 0,
@@ -41,14 +44,17 @@ export function FormSlideComponent({
     [id]: 180,
   });
   const [disable, setDisable] = useState({
-    [id]: false,
+    [id]:
+      defaultQuestionAnswer?.answer && defaultQuestionAnswer?.answer?.trim()
+        ? false
+        : true,
   });
 
   const answerHandle = (queId, value) => {
     if (value && value.trim()) {
-      setDisable((prev) => ({ ...prev, [`${queId}`]: true }));
-    } else {
       setDisable((prev) => ({ ...prev, [`${queId}`]: false }));
+    } else {
+      setDisable((prev) => ({ ...prev, [`${queId}`]: true }));
     }
   };
   const handleSliderInput = (queId, value) => {
@@ -131,7 +137,9 @@ export function FormSlideComponent({
                     handleAnswerChange(id, e.target.value, "input_box");
                     answerHandle(id, e.target.value);
                   }}
+                  de
                   className="w-full h-full "
+                  defaultValue={defaultQuestionAnswer?.answer}
                   required={true}
                   size="large"
                 >
@@ -158,6 +166,7 @@ export function FormSlideComponent({
                     {inputLimit[id] ?? 180}
                   </span>
                 </div>
+
                 <Form.Item name={"ques" + id}>
                   <Input.TextArea
                     size="large"
@@ -168,6 +177,7 @@ export function FormSlideComponent({
                       handleAnswerChange(id, e.target.value);
                       handleInputLimit(id, e.target.value);
                     }}
+                    defaultValue={defaultQuestionAnswer?.answer}
                     className="rounded-md"
                     maxLength={180}
                   />
@@ -196,6 +206,7 @@ export function FormSlideComponent({
                     handleAnswerChange(id, e.target.value);
                     answerHandle(id, e.target.value);
                   }}
+                  defaultValue={defaultQuestionAnswer?.answer}
                 />
               </Form.Item>
             )}
@@ -212,6 +223,7 @@ export function FormSlideComponent({
               >
                 <div className="question-view-rating lg:max-w-2xl mx-auto">
                   <Rate
+                    defaultValue={defaultQuestionAnswer?.answer}
                     onChange={(e) => {
                       handleAnswerChange(id, e.toString());
                       answerHandle(id, e.toString());
@@ -238,6 +250,7 @@ export function FormSlideComponent({
                       ]}
                     >
                       <Slider
+                        defaultValue={defaultQuestionAnswer?.answer}
                         className="rating-slider"
                         min={Number(options[0]?.lowerLabel)}
                         max={Number(options[0]?.higherLabel)}
@@ -273,6 +286,7 @@ export function FormSlideComponent({
                 className="w-full lg:max-w-2xl mx-auto"
               >
                 <Radio.Group
+                  defaultValue={defaultQuestionAnswer?.answer}
                   onChange={(e) => {
                     handleAnswerChange(id, e.target.value);
                     answerHandle(id, e.target.value);
@@ -321,7 +335,7 @@ export function FormSlideComponent({
                   }
                   okText="Yes"
                   cancelText="No"
-                  onConfirm={() => handleSubmit()}
+                  onConfirm={() => handleSubmit(id)}
                   placement="topRight"
                   overlayClassName="max-w-sm"
                 >
@@ -330,9 +344,10 @@ export function FormSlideComponent({
               ) : (
                 <PrimaryButton
                   title={"Next"}
-                  disabled={!disable[id]}
+                  disabled={disable[id] || updateAnswerApiLoading}
+                  loading={updateAnswerApiLoading}
                   onClick={() => {
-                    setNextSlide(nextSlide + 1);
+                    handleUpdateAnswer(id);
                   }}
                 />
               )}

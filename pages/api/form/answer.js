@@ -7,12 +7,10 @@ async function handle(req, res, prisma) {
       const resData = req.body;
 
       const transactionData = await prisma.$transaction(async (transaction) => {
-        const answerData = resData.answers.map((item) => {
-          return {
-            question: { connect: { id: item.questionId } },
-            option: item.answer,
-          };
-        });
+        const answerData = {
+          question: { connect: { id: resData.questionId } },
+          option: resData.answer,
+        };
 
         const userTableData = await transaction.user.findUnique({
           where: { id: resData.user_id },
@@ -62,7 +60,7 @@ async function handle(req, res, prisma) {
           id: resData.review_assignee_id,
         },
       });
-      const UpdateAssignee = await prisma.reviewAssignee.update({
+      await prisma.reviewAssignee.update({
         where: {
           id: assigneeData.id,
         },

@@ -30,6 +30,11 @@ async function handle(req, res, prisma) {
           },
         },
       },
+      ReviewAssigneeAnswers: {
+        include: {
+          ReviewAssigneeAnswerOption: true,
+        },
+      },
     },
   });
 
