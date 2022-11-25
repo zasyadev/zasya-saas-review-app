@@ -10,7 +10,9 @@ const InputForm = ({
   handleAnswerChange,
   handleBtnDisable,
 }) => {
-  const [maxTextLength, setMaxTextLength] = useState(180);
+  const [maxTextLength, setMaxTextLength] = useState(
+    defaultValue ? 180 - defaultValue.length : 180
+  );
 
   const handleInputLimit = (value) => {
     if (value) {

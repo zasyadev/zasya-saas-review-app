@@ -108,16 +108,8 @@ function ReviewCreatedComponent({
 
   useEffect(() => {
     let headersData = [];
-    if (reviewData?.form?.form_data.length) {
-      headersData = reviewData?.form?.form_data.map((item, i) => {
-        return {
-          title: item.questionText,
-          dataIndex: "option" + i,
-          width: getWidthLength(item),
-          sorter: (a, b) => a[`option${i}`]?.localeCompare(b[`option${i}`]),
-        };
-      });
-    } else {
+
+    if (Number(reviewData?.form?.form_data?.questions?.length) > 0) {
       headersData = reviewData?.form?.form_data.questions.map((item, i) => {
         return {
           title: item.questionText,
@@ -126,6 +118,27 @@ function ReviewCreatedComponent({
           sorter: (a, b) => a[`option${i}`]?.localeCompare(b[`option${i}`]),
         };
       });
+    } else {
+      if (Number(answerData.length) > 0) {
+        headersData = answerData[0].ReviewAssigneeAnswerOption.map(
+          (item, i) => {
+            return {
+              title: item.question.questionText,
+              dataIndex: "option" + i,
+              width: getWidthLength(item.question),
+              sorter: (a, b) => a[`option${i}`]?.localeCompare(b[`option${i}`]),
+            };
+          }
+        ).reverse();
+      }
+      // headersData = reviewData?.form?.form_data.map((item, i) => {
+      //   return {
+      //     title: item.questionText,
+      //     dataIndex: "option" + i,
+      //     width: getWidthLength(item),
+      //     sorter: (a, b) => a[`option${i}`]?.localeCompare(b[`option${i}`]),
+      //   };
+      // });
     }
     if (headersData?.length) headersData.unshift(nameTitle);
 
