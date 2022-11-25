@@ -23,7 +23,7 @@ function DragableComponent({ stateData, handleChange, children }) {
           src="https://bernardo-castilho.github.io/DragDropTouch/DragDropTouch.js"
         ></script>
       </Head>
-      <ReactDragListView {...dragProps}>{children}</ReactDragListView>{" "}
+      <ReactDragListView {...dragProps}>{children}</ReactDragListView>
     </>
   );
 }

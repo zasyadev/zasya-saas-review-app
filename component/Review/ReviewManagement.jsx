@@ -1,17 +1,39 @@
-import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import { Popconfirm, Skeleton } from "antd";
+import {
+  DeleteOutlined,
+  EditOutlined,
+  InfoCircleOutlined,
+} from "@ant-design/icons";
+import { Popconfirm, Skeleton, Tabs } from "antd";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import { ButtonGray, PrimaryButton } from "../../component/common/CustomButton";
+import { PrimaryButton } from "../../component/common/CustomButton";
 import CustomTable from "../../component/common/CustomTable";
 import { openNotificationBox } from "../../component/common/notification";
 import httpService from "../../lib/httpService";
+import CustomModal from "../common/CustomModal";
+import DefaultImages from "../common/DefaultImages";
+import ToggleButton from "../common/ToggleButton";
+import { ReviewToggleList, REVIEW_CREATED_KEY } from "./constants";
+import ReviewAssignessModal from "./ReviewAssignessModal";
 import { TempateSelectWrapper } from "./TempateSelectWrapper";
 
+const initialReviewCountModalData = {
+  review_name: "",
+  ReviewAssignee: [],
+  isVisible: false,
+};
+
 function ReviewManagement({ user }) {
+  const router = useRouter();
+
+  const { create: showCreateModal } = router.query;
   const [loading, setLoading] = useState(false);
   const [createReviewModal, setCreateReviewModal] = useState(false);
   const [reviewAssignList, setReviewAssignList] = useState([]);
+  const [reviewCountModalData, setReviewCountModalData] = useState(
+    initialReviewCountModalData
+  );
 
   async function fetchReviewAssignList() {
     setLoading(true);
@@ -54,20 +76,41 @@ function ReviewManagement({ user }) {
   useEffect(() => {
     fetchReviewAssignList();
   }, []);
+  useEffect(() => {
+    let timeOutId = null;
+    if (showCreateModal) {
+      timeOutId = setTimeout(() => {
+        setCreateReviewModal(true);
+      }, 500);
+      return () => {
+        if (timeOutId) clearTimeout(timeOutId);
+      };
+    }
+  }, [showCreateModal]);
 
   const answerAssignee = (data) => {
     if (data.length > 0) {
-      let length = 0;
-      let a = data.filter((item) => item.status);
-      if (a.length) return a.length;
-      else return length;
+      return data.filter((item) => item.status == "answered")?.length ?? 0;
     }
+  };
+
+  const ShowReviewCountModal = ({ review_name, ReviewAssignee }) => {
+    setReviewCountModalData({
+      review_name,
+      ReviewAssignee,
+      isVisible: true,
+    });
+  };
+
+  const hideReviewCountModal = () => {
+    setReviewCountModalData(initialReviewCountModalData);
   };
 
   const columns = [
     {
       title: "Review Name",
       key: "review_name",
+      width: 250,
       render: (_, record) => (
         <div className="flex">
           {record.is_published != "published" ? (
@@ -97,20 +140,6 @@ function ReviewManagement({ user }) {
       render: (review_type) => <p className={`capitalize `}>{review_type}</p>,
     },
     {
-      title: "Status",
-      key: "is_published ",
-      dataIndex: "is_published",
-      render: (is_published) => (
-        <p
-          className={`capitalize ${
-            is_published != "published" ? "text-red-400" : "text-green-400"
-          }`}
-        >
-          {is_published}
-        </p>
-      ),
-    },
-    {
       title: "Count",
       key: "count ",
 
@@ -118,12 +147,38 @@ function ReviewManagement({ user }) {
         record.is_published != "published" ? (
           0
         ) : (
-          <p>
-            {answerAssignee(record.ReviewAssignee)}/
-            {record.ReviewAssignee.length}
-          </p>
+          <div className="flex items-center gap-2">
+            <p className="flex mb-0">
+              {answerAssignee(record.ReviewAssignee)}/
+              {record.ReviewAssignee.length}
+            </p>
+            <InfoCircleOutlined
+              className="text-gray-600 cursor-pointer select-none"
+              onClick={() =>
+                ShowReviewCountModal({
+                  review_name: record.review_name,
+                  ReviewAssignee: record.ReviewAssignee,
+                })
+              }
+            />
+          </div>
         ),
     },
+    {
+      title: "Status",
+      key: "is_published ",
+      dataIndex: "is_published",
+      render: (is_published) => (
+        <p
+          className={`capitalize ${
+            is_published != "published" ? "text-red-600" : "text-green-600"
+          }`}
+        >
+          {is_published}
+        </p>
+      ),
+    },
+
     {
       title: "Action",
       key: "action",
@@ -161,55 +216,51 @@ function ReviewManagement({ user }) {
   return (
     <div className="container mx-auto max-w-full">
       <div className="grid grid-cols-1">
-        <div className="flex flex-col-reverse md:flex-row md:items-center md:justify-between  mb-4 md:mb-6">
-          <div className="flex w-auto">
-            <ButtonGray
-              withLink={true}
-              className="rounded-r-none rounded-l-md  w-1/2 md:w-fit "
-              linkHref="/review/received"
-              title={"Received"}
-            />
-            <PrimaryButton
-              withLink={false}
-              className="rounded-l-none rounded-r-md w-1/2 md:w-fit "
-              title={"Created"}
-            />
-          </div>
-          <div className="mb-4 md:mb-0 text-right">
-            <PrimaryButton
-              withLink={false}
-              className="rounded-md"
-              // linkHref="/review/add"
-              onClick={() => setCreateReviewModal(true)}
-              title={"Create"}
-            />
-          </div>
+        <div className="flex flex-row items-center justify-between flex-wrap gap-4  mb-4 md:mb-6 ">
+          <ToggleButton
+            arrayList={ReviewToggleList}
+            handleToggle={(activeKey) => {
+              if (activeKey !== REVIEW_CREATED_KEY)
+                router.push("/review/received");
+            }}
+            activeKey={REVIEW_CREATED_KEY}
+          />
+
+          <PrimaryButton
+            withLink={false}
+            onClick={() => setCreateReviewModal(true)}
+            title={"Create"}
+          />
         </div>
 
         <div className="w-full bg-white rounded-md overflow-hdden shadow-md">
-          <div className="px-4">
-            {loading ? (
-              <Skeleton
-                title={false}
-                active={true}
-                width={[200]}
-                className="mt-4"
-                rows={3}
-              />
-            ) : (
-              <CustomTable
-                dataSource={reviewAssignList}
-                columns={columns}
-                pagination={true}
-                rowKey="review_id"
-              />
-            )}
-          </div>
+          {loading ? (
+            <div className="px-4">
+              <Skeleton title={false} active={true} className="my-4" />{" "}
+            </div>
+          ) : (
+            <CustomTable
+              dataSource={reviewAssignList}
+              columns={columns}
+              pagination={{
+                defaultPageSize: 10,
+                showSizeChanger: true,
+                pageSizeOptions: ["10", "50", "100", "200", "500"],
+                className: "px-2 sm:px-4",
+              }}
+              rowKey="review_id"
+            />
+          )}
         </div>
       </div>
       <TempateSelectWrapper
         createReviewModal={createReviewModal}
         setCreateReviewModal={setCreateReviewModal}
+      />
+
+      <ReviewAssignessModal
+        reviewCountModalData={reviewCountModalData}
+        hideReviewCountModal={hideReviewCountModal}
       />
     </div>
   );

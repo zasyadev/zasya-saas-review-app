@@ -2,6 +2,9 @@ import { RequestHandler } from "../../../lib/RequestHandler";
 
 async function handle(req, res, prisma) {
   const { user_id } = req.query;
+  if (!user_id) {
+    return res.status(401).json({ status: 401, message: "No User found" });
+  }
   const data = await prisma.user.findUnique({
     where: { id: user_id },
     include: {
@@ -33,5 +36,6 @@ async function handle(req, res, prisma) {
     message: "All Data Retrieved",
   });
 }
+const functionHandle = (req, res) => RequestHandler(req, res, handle, ["GET"]);
 
-export default (req, res) => RequestHandler(req, res, handle, ["GET"]);
+export default functionHandle;

@@ -1,12 +1,15 @@
 import { Skeleton } from "antd";
-import Link from "next/link";
+import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { ButtonGray, PrimaryButton } from "../../component/common/CustomButton";
 import CustomTable from "../../component/common/CustomTable";
 import httpService from "../../lib/httpService";
+import ToggleButton from "../common/ToggleButton";
+import { ReviewToggleList, REVIEW_RECEIVED_KEY } from "../Review/constants";
 import { TempateSelectWrapper } from "../Review/TempateSelectWrapper";
 
 function FormView({ user }) {
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [createReviewModal, setCreateReviewModal] = useState(false);
   const [formAssignList, setFormAssignList] = useState([]);
@@ -34,18 +37,18 @@ function FormView({ user }) {
 
   const columns = [
     {
+      title: "Review Name",
+      dataIndex: "review",
+      key: "review",
+      // width: 250,
+      render: (review) => review.review_name,
+    },
+    {
       title: "Assign By",
       dataIndex: "review",
       key: "Assign_By",
       render: (review) =>
         review.created.first_name + " " + review.created.last_name,
-    },
-
-    {
-      title: "Review Name",
-      dataIndex: "review",
-      key: "review",
-      render: (review) => review.review_name,
     },
     {
       title: "Frequency",
@@ -59,9 +62,9 @@ function FormView({ user }) {
       dataIndex: "status",
       render: (status) =>
         status ? (
-          <p className="text-green-400">Answered</p>
+          <p className="text-green-400 mb-0">Answered</p>
         ) : (
-          <p className="text-red-400">Pending</p>
+          <p className="text-red-400 mb-0">Pending</p>
         ),
     },
 
@@ -71,22 +74,19 @@ function FormView({ user }) {
       render: (_, record) => (
         <>
           {!record.status ? (
-            <Link href={`/review/id/${record.id}`} passHref>
-              <span
-                className="text-primary text-lg  cursor-pointer"
-                title="Attempt"
-              >
-                Attempt
-              </span>
-            </Link>
+            <PrimaryButton
+              withLink={true}
+              className=" text-sm"
+              linkHref={`/review/id/${record.id}`}
+              title={"Attempt"}
+            />
           ) : (
-            <div>
-              <Link href={`/review/preview/${record.id}`} passHref>
-                <button className="primary-bg-btn text-white px-2 py-1 rounded-md mx-2">
-                  View
-                </button>
-              </Link>
-            </div>
+            <ButtonGray
+              withLink={true}
+              className=" text-sm"
+              linkHref={`/review/preview/${record.id}`}
+              title={"View"}
+            />
           )}
         </>
       ),
@@ -96,47 +96,38 @@ function FormView({ user }) {
   return (
     <div className="container mx-auto max-w-full">
       <div className="grid grid-cols-1 mb-16">
-        <div className="md:flex items-center justify-between mb-4 md:mb-6">
-          <div className="flex w-auto">
-            <PrimaryButton
-              withLink={false}
-              className="rounded-r-none rounded-l-md rounded-md w-1/2 md:w-fit "
-              title={"Received"}
-            />
-            <ButtonGray
-              withLink={true}
-              className="rounded-r-md rounded-l-none w-1/2 md:w-fit "
-              linkHref="/review"
-              title={"Created"}
-            />
-          </div>
-          <div className="mb-4 md:mb-0 text-right">
-            <PrimaryButton
-              withLink={false}
-              className="rounded-md"
-              onClick={() => setCreateReviewModal(true)}
-              title={"Create"}
-            />
-          </div>
+        <div className="flex flex-row items-center justify-between flex-wrap gap-4  mb-4 md:mb-6 ">
+          <ToggleButton
+            arrayList={ReviewToggleList}
+            handleToggle={(activeKey) => {
+              if (activeKey !== REVIEW_RECEIVED_KEY) router.push("/review");
+            }}
+            activeKey={REVIEW_RECEIVED_KEY}
+          />
+
+          <PrimaryButton
+            withLink={false}
+            onClick={() => setCreateReviewModal(true)}
+            title={"Create"}
+          />
         </div>
         <div className="w-full bg-white rounded-md overflow-hdden shadow-md">
-          <div className="px-4 ">
-            {loading ? (
-              <Skeleton
-                title={false}
-                active={true}
-                width={[200]}
-                className="mt-4"
-                rows={3}
-              />
-            ) : (
-              <CustomTable
-                dataSource={formAssignList}
-                columns={columns}
-                rowKey="form_view"
-              />
-            )}
-          </div>
+          {loading ? (
+            <div className="p-4">
+              <Skeleton title={false} active={true} />
+            </div>
+          ) : (
+            <CustomTable
+              dataSource={formAssignList}
+              columns={columns}
+              pagination={{
+                defaultPageSize: 10,
+                showSizeChanger: true,
+                pageSizeOptions: ["10", "50", "100", "200", "500"],
+                className: "px-2 sm:px-4",
+              }}
+            />
+          )}
         </div>
       </div>
       <TempateSelectWrapper

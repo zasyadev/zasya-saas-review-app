@@ -1,4 +1,3 @@
-import { LoadingOutlined } from "@ant-design/icons";
 import { Form, Input } from "antd";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -37,15 +36,7 @@ function ForgotPassword() {
         });
     }
   }
-  const antIcon = (
-    <LoadingOutlined
-      style={{
-        fontSize: 24,
-        color: "white",
-      }}
-      spin
-    />
-  );
+
   const ForgotPasswordComponent = () => {
     return (
       <Form
@@ -67,7 +58,7 @@ function ForgotPassword() {
         >
           <Input
             type="text"
-            className="form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white  focus:outline-none"
+            className="form-control block w-full px-4 py-2 text-base xxl:text-lg font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white  focus:outline-none"
             placeholder="Email address"
           />
         </Form.Item>

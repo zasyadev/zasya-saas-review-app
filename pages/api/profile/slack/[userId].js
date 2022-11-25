@@ -5,6 +5,19 @@ async function handle(req, res, prisma) {
   const { userId } = req.query;
   const reqBody = req.body;
 
+  const userDetails = await prisma.userDetails.findUnique({
+    where: {
+      user_id: userId,
+    },
+  });
+
+  if (userDetails?.slack_email === reqBody.slack_email) {
+    return res.status(402).json({
+      message: "The new email you have entered is same as your old email.",
+      status: 402,
+    });
+  }
+
   let slackUserList = await SlackUserList();
 
   let valid_slack_email = "";
@@ -27,7 +40,7 @@ async function handle(req, res, prisma) {
       });
       if (userDetailData) {
         return res.status(200).json({
-          message: "Succesfully changed email address",
+          message: "Slack Email Updated Succesfully.",
           status: 200,
         });
       } else {
@@ -45,4 +58,6 @@ async function handle(req, res, prisma) {
   }
 }
 
-export default (req, res) => RequestHandler(req, res, handle, ["POST"]);
+const functionHandle = (req, res) => RequestHandler(req, res, handle, ["POST"]);
+
+export default functionHandle;

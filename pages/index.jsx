@@ -1,21 +1,17 @@
 import { useEffect } from "react";
-// import { getSession } from "next-auth/client";
 import Router from "next/router";
-import { useSession } from "next-auth/client";
-// import LandingPage from "../component/layout/LandingPage";
-
-// export default function homePage() {
-//   return <LandingPage />;
-// }
+import { useSession } from "next-auth/react";
 
 export default function Home() {
-  const [session, loading] = useSession();
+  const { data: session, status } = useSession();
+
   useEffect(() => {
-    if (!loading) {
-      if (session) Router.push("/dashboard");
-      else {
+    if (status !== "loading") {
+      if (status === "authenticated" && session) {
+        Router.push("/dashboard");
+      } else {
         Router.push("/auth/login");
       }
     }
-  }, [session, loading]);
+  }, [session, status]);
 }

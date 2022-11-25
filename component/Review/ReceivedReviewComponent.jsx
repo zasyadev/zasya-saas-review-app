@@ -1,10 +1,11 @@
+import { CloseOutlined } from "@ant-design/icons";
 import { Form, Skeleton } from "antd";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { openNotificationBox } from "../../component/common/notification";
 import httpService from "../../lib/httpService";
-import { FormSlideComponent } from "./formhelper/FormComponent";
+import { FormSlideComponent } from "./formhelper/FormSlideComponent";
 import { motion, AnimatePresence } from "framer-motion";
 
 function ReceivedReviewComponent({ user, reviewId }) {
@@ -91,106 +92,77 @@ function ReceivedReviewComponent({ user, reviewId }) {
       })
       .catch((err) => {
         openNotificationBox("error", err.response.data?.message);
-        console.log(err.response.data?.message);
       });
   };
 
   useEffect(() => {
     if (reviewId) fetchReviewData(user, reviewId);
-    // else return;
   }, []);
 
   return (
-    <div className="answer-bg p-4">
+    <div className="answer-bg px-2 py-4 md:p-4 flex items-center justify-center">
       {loading ? (
-        <>
-          <div className="text-right mt-4 mr-4">
-            <Link href="/review/received" passHref>
-              <button className="primary-bg-btn text-white py-2 px-4 rounded-md">
-                Back
-              </button>
-            </Link>
-          </div>
-          <div className="answer-preview">
-            <div className=" text-center bg-white rounded-md p-10 shadow-md md:w-7/12 mx-auto">
-              <Skeleton
-                title={false}
-                active={true}
-                width={[200]}
-                className="mt-4"
-                rows={3}
-              />
-            </div>
-          </div>
-        </>
+        <div className=" text-center bg-white rounded-md p-10 shadow-md md:w-10/12 2xl:w-8/12 mx-auto">
+          <Skeleton title={false} active={true} className="mt-4" />
+        </div>
       ) : reviewData?.status ? (
-        <>
-          <div className="text-right mt-4 mr-4">
-            <Link href="/review/received" passHref>
-              <button className="primary-bg-btn text-white py-2 px-4 rounded-md">
-                Back
-              </button>
-            </Link>
-          </div>
-          <div className="answer-preview">
-            <div className=" text-center bg-white rounded-md py-10 shadow-md md:w-7/12 mx-auto">
-              <p className="text-lg font-bold text-red-400 mt-5">
-                Already Submitted This Review
-              </p>
-            </div>
-          </div>
-        </>
+        <div className="relative  text-center bg-white rounded-md py-10 shadow-md md:w-10/12 2xl:w-8/12 mx-auto">
+          <Link href="/review/received" passHref>
+            <span className="absolute top-2 right-2 p-3 leading-0 cursor-pointer rounded-full hover:bg-gray-100">
+              <CloseOutlined />
+            </span>
+          </Link>
+          <p className="text-lg font-bold text-red-400 mt-5">
+            Already Submitted This Review
+          </p>
+        </div>
       ) : (
-        <>
-          <div className="text-right mt-4 mr-4">
-            <Link href="/review/received" passHref>
-              <button className="primary-bg-btn text-white py-2 px-4 rounded-md">
-                Back
-              </button>
-            </Link>
-          </div>
-          <Form layout="vertical" className="py-4" form={answerForm}>
-            <AnimatePresence>
-              {questions ? (
-                questions.length > 0 &&
-                questions
-                  ?.filter((_, index) => index === nextSlide)
-                  ?.map((question, idx) => (
-                    <FormSlideComponent
-                      {...question}
-                      idx={idx}
-                      key={idx + "quesSlid"}
-                      open={false}
-                      nextSlide={nextSlide}
-                      handleAnswerChange={handleAnswerChange}
-                      setNextSlide={setNextSlide}
-                      length={questions.length}
-                      handleSubmit={handleSubmit}
-                      loadingSpin={loadingSpin}
-                    />
-                  ))
-              ) : (
-                <>
-                  <div className="answer-preview">
-                    <motion.div
-                      key={"loaderquesSlid"}
-                      initial={{ y: 20, opacity: 0 }}
-                      animate={{ y: 0, opacity: 1 }}
-                      exit={{ y: -10, opacity: 0 }}
-                      transition={{ duration: 0.8 }}
-                    >
-                      <div className=" text-center bg-white rounded-md py-10 shadow-md md:w-7/12 mx-auto">
-                        <p className="text-lg font-bold text-red-400 mt-5">
-                          Review Not Found
-                        </p>
-                      </div>
-                    </motion.div>
-                  </div>
-                </>
-              )}
-            </AnimatePresence>
-          </Form>
-        </>
+        <Form layout="vertical" className="py-4 w-11/12" form={answerForm}>
+          <AnimatePresence>
+            {Number(questions?.length) > 0 ? (
+              questions
+                ?.filter((_, index) => index === nextSlide)
+                ?.map((question, idx) => (
+                  <FormSlideComponent
+                    key={idx + "quesSlid"}
+                    type={question?.type}
+                    id={question?.id}
+                    questionText={question?.questionText}
+                    options={question?.options}
+                    error={question?.error}
+                    nextSlide={nextSlide}
+                    setNextSlide={setNextSlide}
+                    totalQuestions={questions.length}
+                    handleSubmit={handleSubmit}
+                    handleAnswerChange={handleAnswerChange}
+                  />
+                ))
+            ) : (
+              <>
+                <div className="answer-preview">
+                  <motion.div
+                    key={"loaderquesSlid"}
+                    initial={{ y: 20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    exit={{ y: -10, opacity: 0 }}
+                    transition={{ duration: 0.8 }}
+                  >
+                    <div className="relative text-center bg-white rounded-md py-10 shadow-md md:w-10/12 2xl:w-8/12 mx-auto">
+                      <Link href="/review/received" passHref>
+                        <span className="absolute top-2 right-2 p-3 leading-0 cursor-pointer rounded-full hover:bg-gray-100">
+                          <CloseOutlined />
+                        </span>
+                      </Link>
+                      <p className="text-lg font-bold text-red-400 mt-5">
+                        Review Not Found
+                      </p>
+                    </div>
+                  </motion.div>
+                </div>
+              </>
+            )}
+          </AnimatePresence>
+        </Form>
       )}
     </div>
   );

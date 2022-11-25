@@ -25,7 +25,7 @@ const CustomModal = ({
         ) : null
       }
       className={`${className}`}
-      visible={visible}
+      open={visible}
       onCancel={() => onCancel()}
       footer={
         customFooter

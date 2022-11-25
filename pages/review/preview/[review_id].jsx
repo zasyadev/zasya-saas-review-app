@@ -5,7 +5,7 @@ import PreviewComponent from "../../../component/Review/PreviewComponent";
 import AdminLayout from "../../../component/layout/AdminLayout";
 import WithMe from "../../../component/layout/WithMe";
 
-function ReceivedPage({ user }) {
+function PreviewPage() {
   const router = useRouter();
   const { review_id } = router.query;
   return (
@@ -13,7 +13,7 @@ function ReceivedPage({ user }) {
       {({ user }) => (
         <>
           <HeadersComponent />
-          <AdminLayout user={user} title="Preview Answer">
+          <AdminLayout user={user} title="Preview Answer" isBack>
             <PreviewComponent user={user} reviewId={review_id} />
           </AdminLayout>
         </>
@@ -22,4 +22,4 @@ function ReceivedPage({ user }) {
   );
 }
 
-export default ReceivedPage;
+export default PreviewPage;

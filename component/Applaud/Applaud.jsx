@@ -5,72 +5,69 @@ import React, { useEffect, useState } from "react";
 import {
   PrimaryButton,
   SecondaryButton,
-  ToggleButton,
 } from "../../component/common/CustomButton";
+import ToggleButton from "../../component/common/ToggleButton";
+import {
+  disableDates,
+  MONTH_DATE_FORMAT,
+  MONTH_FORMAT,
+} from "../../helpers/dateHelper";
 import getApplaudCategoryName from "../../helpers/getApplaudCategoryName";
 import httpService from "../../lib/httpService";
 import { openNotificationBox } from "../common/notification";
+import { DefaultMotionVarient } from "../Template/constants";
 
-const container = {
-  enter: {
-    transition: {
-      when: "beforeChildren",
-      staggerChildren: 0.3,
-    },
-  },
-};
-const varientItem = {
-  initial: {
-    y: 20,
-    opacity: 0,
-  },
-  enter: {
-    y: 0,
-    opacity: 1,
-  },
+const APPLAUD_RECEIVED_KEY = "Received";
+const APPLAUD_SENT_KEY = "Sent";
+const applaudCardVarient = {
+  hidden: { y: 20, opacity: 0 },
+  show: { y: 0, opacity: 1 },
 };
 
 const ApplaudCard = ({ applaud, type }) => {
   return (
-    <div className="flex flex-col template-list h-full w-full rounded-md shadow-md bg-white space-y-4 p-4">
-      <div className="relative h-auto p-4 bg-teal-100 space-y-4 rounded-md flex flex-col flex-1">
-        <p className="mb-0 font-medium flex-1">{applaud.comment}</p>
-        {applaud?.category?.length > 0 && (
-          <p className="mb-0 flex flex-wrap gap-2">
-            {applaud?.category.map((item, idx) => (
-              <span
-                key={idx + "cat"}
-                className=" px-3 py-1 rounded-full bg-teal-200 text-xs "
-              >
-                {getApplaudCategoryName(item)}
-              </span>
-            ))}
+    <motion.div key={applaud.id} variants={applaudCardVarient}>
+      <div className="flex flex-col template-list h-full w-full rounded-md shadow-md bg-white space-y-4 p-5">
+        <div className="relative h-auto p-4 bg-teal-100 space-y-4 rounded-md flex flex-col flex-1">
+          <p className="mb-0 font-medium flex-1">{applaud.comment}</p>
+          {applaud?.category?.length > 0 && (
+            <p className="mb-0 flex flex-wrap gap-2">
+              {applaud?.category.map((item, idx) => (
+                <span
+                  key={idx + "cat"}
+                  className=" px-3 py-1 rounded-full bg-teal-200 text-xs "
+                >
+                  {getApplaudCategoryName(item)}
+                </span>
+              ))}
+            </p>
+          )}
+        </div>
+
+        <div className=" border-gray-200  px-2 ">
+          <p className="text-base text-primary mb-0 ">
+            {type === "received" ? "From " : "Sent To "}
+
+            <span className="font-semibold">
+              {type === "received"
+                ? applaud.created.first_name
+                : applaud.user.first_name}
+            </span>
           </p>
-        )}
+          <p className="text-sm  text-gray-500 font-medium mb-0 ">
+            {moment(applaud.created_date).format(MONTH_DATE_FORMAT)}
+          </p>
+        </div>
       </div>
-
-      <div className=" border-gray-200  px-2 ">
-        <p className="text-base text-primary mb-0 ">
-          {type === "received" ? "From " : "Sent To "}
-
-          <span className="font-semibold">
-            {type === "received"
-              ? applaud.created.first_name
-              : applaud.user.first_name}{" "}
-          </span>
-        </p>
-        <p className="text-sm  text-gray-500 font-medium mb-0 ">
-          {moment(applaud.created_date).format("MMMM DD, YYYY")}
-        </p>
-      </div>
-    </div>
+    </motion.div>
   );
 };
 
 function Applaud({ user }) {
   const [applaudList, setApplaudList] = useState([]);
   const [receivedApplaudList, setReceivedApplaudList] = useState([]);
-  const [changeReceivedView, setChangeReceivedView] = useState(true);
+  const [changeReceivedView, setChangeReceivedView] =
+    useState(APPLAUD_RECEIVED_KEY);
 
   const [loading, setLoading] = useState(true);
   const [currentMonth, setCurrentMonth] = useState({
@@ -110,51 +107,41 @@ function Applaud({ user }) {
 
   return (
     <div className="container mx-auto max-w-full">
-      <div className="flex flex-col-reverse md:flex-row md:items-center md:justify-between  mb-4 md:mb-6 gap-3">
-        <div className="flex w-auto">
+      <div className="flex flex-col-reverse md:flex-row flex-wrap items-center justify-between  mb-4 md:mb-6 gap-3">
+        <div className="w-full justify-between md:justify-start md:w-auto flex items-center gap-4">
           <ToggleButton
-            className={`rounded-r-none rounded-l-md w-1/2  md:w-fit ${
-              changeReceivedView
-                ? "bg-primary text-white"
-                : " bg-gray-50 hover:bg-gray-100 border-gray-300 text-gray-600"
-            }`}
-            onClick={() => setChangeReceivedView(true)}
-            title={"Received"}
+            arrayList={[
+              { label: APPLAUD_RECEIVED_KEY },
+              { label: APPLAUD_SENT_KEY },
+            ]}
+            handleToggle={(activeKey) => setChangeReceivedView(activeKey)}
+            activeKey={changeReceivedView}
           />
-          <ToggleButton
-            className={`rounded-l-none rounded-r-md w-1/2  md:w-fit ${
-              changeReceivedView
-                ? "bg-gray-50 hover:bg-gray-100 border-gray-300 text-gray-600 "
-                : "bg-primary text-white"
-            } `}
-            onClick={() => setChangeReceivedView(false)}
-            title={"Sent"}
-          />
+
+          <div className="bg-white rounded-md shrink-0 py-1 px-2">
+            <DatePicker
+              onChange={onDateChange}
+              picker="month"
+              bordered={false}
+              allowClear={false}
+              format={MONTH_FORMAT}
+              defaultValue={moment()}
+              className="font-semibold w-full md:w-auto"
+              disabledDate={disableDates}
+            />
+          </div>
         </div>
 
-        <div className="bg-white rounded-md overflow-hidden shadow-md  py-1 px-2">
-          <DatePicker
-            onChange={onDateChange}
-            picker="month"
-            bordered={false}
-            allowClear={false}
-            format="MMMM"
-            defaultValue={moment()}
-            className="font-semibold w-full md:w-auto"
-          />
-        </div>
-
-        <div className="mx-auto md:mx-0">
+        <div className="w-full md:w-auto flex items-center justify-end flex-shrink-0">
           <SecondaryButton
             withLink={true}
-            className="rounded-md mr-3"
+            className="mr-3"
             linkHref="/applaud/allapplaud"
             title={"View All"}
           />
 
           <PrimaryButton
             withLink={true}
-            className="rounded-md "
             linkHref="/applaud/add"
             title={"Create"}
           />
@@ -163,17 +150,7 @@ function Applaud({ user }) {
       <div className="container mx-auto max-w-full">
         <motion.div
           className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-8 2xl:gap-12 "
-          variants={{
-            hidden: { opacity: 0 },
-            show: {
-              opacity: 1,
-              transition: {
-                duration: 0.3,
-                staggerChildren: 0.5,
-                delayChildren: 0.5,
-              },
-            },
-          }}
+          variants={DefaultMotionVarient}
           initial="hidden"
           animate="show"
         >
@@ -181,34 +158,22 @@ function Applaud({ user }) {
             [2, 3, 4].map((loop) => (
               <motion.div
                 key={"loaderquesSlid" + loop}
-                variants={{
-                  hidden: { y: 20, opacity: 0 },
-                  show: { y: 0, opacity: 1 },
-                }}
+                variants={applaudCardVarient}
               >
-                <div className="template-list h-full w-full rounded-md shadow-md bg-white space-y-2 p-4">
+                <div className="template-list h-full w-full rounded-md shadow-md bg-white space-y-2 p-5">
                   <Skeleton
                     title={false}
                     active={true}
-                    width={[200]}
                     className="my-4"
                     key={loop}
                   />
                 </div>
               </motion.div>
             ))
-          ) : changeReceivedView ? (
+          ) : changeReceivedView === APPLAUD_RECEIVED_KEY ? (
             receivedApplaudList.length > 0 ? (
-              receivedApplaudList.map((item, idx) => (
-                <motion.div
-                  key={idx + "received"}
-                  variants={{
-                    hidden: { y: 20, opacity: 0 },
-                    show: { y: 0, opacity: 1 },
-                  }}
-                >
-                  <ApplaudCard applaud={item} type={"received"} />
-                </motion.div>
+              receivedApplaudList.map((item) => (
+                <ApplaudCard applaud={item} type={"received"} key={item.id} />
               ))
             ) : (
               <div className="template-list h-full w-full rounded-md shadow-md bg-white space-y-2">
@@ -216,16 +181,8 @@ function Applaud({ user }) {
               </div>
             )
           ) : applaudList.length > 0 ? (
-            applaudList.map((item, idx) => (
-              <motion.div
-                key={idx + "sent"}
-                variants={{
-                  hidden: { y: 20, opacity: 0 },
-                  show: { y: 0, opacity: 1 },
-                }}
-              >
-                <ApplaudCard applaud={item} type={"sent"} />
-              </motion.div>
+            applaudList.map((item) => (
+              <ApplaudCard applaud={item} type={"sent"} key={item.id} />
             ))
           ) : (
             <div className="template-list h-full w-full rounded-md shadow-md bg-white space-y-2">

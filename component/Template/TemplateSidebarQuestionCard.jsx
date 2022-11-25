@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import { DeleteOutlined, HolderOutlined } from "@ant-design/icons";
 import {
-  MULTIPLECHOICE_TYPE,
+  MULTIPLE_CHOICE_TYPE,
   SCALE_TYPE,
 } from "../Form/questioncomponents/constants";
 import { Tooltip } from "antd";
@@ -12,11 +12,10 @@ function TemplateSidebarQuestionCard({
   handleSelect,
   handleRemove,
   question,
-  myRefs,
 }) {
   const isValidQuestion = useMemo(() => {
     let optionErrors = [];
-    if ([MULTIPLECHOICE_TYPE, SCALE_TYPE].includes(question.type)) {
+    if ([MULTIPLE_CHOICE_TYPE, SCALE_TYPE].includes(question.type)) {
       optionErrors = question.options.filter((item) => item.error);
     }
     return question.error ? question.error : optionErrors.length;
@@ -24,12 +23,10 @@ function TemplateSidebarQuestionCard({
 
   return (
     <div
-      className={`dragable-div question-section-wrapper cursor-pointer    ${
+      className={`dragable-div question-section-wrapper cursor-pointer ${
         isActive ? "border-l-primary border-l-2" : ""
       }
-${isValidQuestion ? "border-x border-x-red-500 bg-red-50" : ""}
-
-
+      ${isValidQuestion ? "border-x border-x-red-500 bg-red-50" : ""}
     `}
     >
       <div className="flex items-center">

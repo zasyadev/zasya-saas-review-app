@@ -10,6 +10,11 @@ async function handle(req, res, prisma) {
       email_id: reqBody.email,
     },
   });
+  let userData = await prisma.user.findUnique({
+    where: {
+      email: reqBody.email,
+    },
+  });
   if (alreadyData) {
     return res.status(402).json({
       error: "FAILED",
@@ -31,9 +36,12 @@ async function handle(req, res, prisma) {
       from: process.env.SMTP_USER,
       to: reqBody.email,
       subject: `Review App Forgot Password`,
-      html: mailTemplate(`
-          You have been send Link to Reset Your  Review app Password . Please <a href= ${process.env.NEXT_APP_URL}/resetpassword?passtoken=${generatedToken}&email=${reqBody.email}>click here</a> to collaborate with them now .
-          `),
+      html: mailTemplate({
+        body: `We recevied a request that you want to reset your password. To reset your password, click the button below.`,
+        name: userData?.first_name ?? reqBody.email,
+        btnLink: `${process.env.NEXT_APP_URL}/resetpassword?passtoken=${generatedToken}&email=${reqBody.email}`,
+        btnText: "Reset Link",
+      }),
     };
 
     let mailResponse = await new Promise((resolve, reject) => {
@@ -65,5 +73,6 @@ async function handle(req, res, prisma) {
     return res.status(400).json({ status: 400, message: "Wrong Token " });
   }
 }
+const functionHandle = (req, res) => RequestHandler(req, res, handle, ["POST"]);
 
-export default (req, res) => RequestHandler(req, res, handle, ["POST"]);
+export default functionHandle;

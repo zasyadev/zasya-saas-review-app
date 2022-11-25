@@ -1,4 +1,4 @@
-import { Col, Row, Skeleton } from "antd";
+import { Col, Row } from "antd";
 import moment from "moment";
 import dynamic from "next/dynamic";
 import Image from "next/image";
@@ -30,26 +30,22 @@ function CountCard({
   return (
     <Link href={href} passHref>
       <div
-        className={`bg-white rounded-md shadow-md transition-all duration-300 ease-in hover:bg-gradient-to-r hover:from-peach hover:to-peach-light ${className}`}
+        className={`bg-white p-5 rounded-md shadow-md transition-all duration-300 ease-in hover:bg-gradient-to-r hover:from-peach hover:to-peach-light ${className}`}
       >
-        <div className="px-4 py-5">
-          <div className="flex flex-wrap items-start space-x-3">
-            <div className="bg-gradient-to-r from-peach to-peach-light text-white grid items-center w-10 h-10 py-1 px-1 justify-center shadow-lg-pink rounded-full">
-              <Icon />
+        <div className="flex flex-wrap items-stretch h-full gap-3">
+          <div className="bg-gradient-to-r from-peach to-peach-light text-white grid items-center w-10 h-10 py-1 px-1 justify-center shadow-lg-pink rounded-full">
+            <Icon />
+          </div>
+          <div className="flex-1">
+            <div className="text-primary flex items-start justify-between font-semibold tracking-wide text-sm gap-2 mb-2">
+              <span className="flex-1">{title}</span>
+              {tooltipText && (
+                <span className="leading-4">{CustomPopover(tooltipText)}</span>
+              )}
             </div>
-            <div className="flex-1">
-              <div className="text-primary font-semibold tracking-wide text-sm  mb-1 flex items-center">
-                {title}
-                {tooltipText && (
-                  <span className="leading-[0] ml-2">
-                    {CustomPopover(tooltipText)}
-                  </span>
-                )}
-              </div>
-              <span className="text-2xl text-primary font-semibold ">
-                {count}
-              </span>
-            </div>
+            <span className="text-lg xl:text-xl 2xl:text-2xl text-primary font-semibold leading-6">
+              {count}
+            </span>
           </div>
         </div>
       </div>
@@ -66,10 +62,16 @@ function DashBoard({ user }) {
     reviewRating: [],
     averageAnswerTime: 0,
   };
+  const defaultMonthlyLeaderboardData = {
+    applaudData: [],
+    reviewRating: [],
+  };
 
   const [dashBoardData, setDashboardData] = useState(defaultDashboardData);
+  const [monthlyLeaderBoardData, setMonthlyLeaderBoardData] = useState(
+    defaultMonthlyLeaderboardData
+  );
 
-  const [loading, setLoading] = useState(false);
   const [feedbackList, setFeedbackList] = useState([]);
   const [allApplaud, setAllApplaud] = useState([]);
   const currentMonth = {
@@ -91,6 +93,21 @@ function DashBoard({ user }) {
       .catch((err) => {
         console.error(err.response.data?.message);
         setDashboardData(defaultDashboardData);
+      });
+  }
+  async function fetchMonthlyLeaderBoardData() {
+    await httpService
+      .post(`/api/dashboard/monthly_leaderboard`, {
+        date: currentMonth,
+        userId: user.id,
+      })
+      .then(({ data: response }) => {
+        if (response.status === 200) {
+          setMonthlyLeaderBoardData(response.data);
+        }
+      })
+      .catch((err) => {
+        console.error(err.response.data?.message);
       });
   }
 
@@ -137,6 +154,7 @@ function DashBoard({ user }) {
     fetchDashboardData();
     fetchFeedbackData();
     fetchApplaudData();
+    fetchMonthlyLeaderBoardData();
   }, []);
 
   return (
@@ -183,25 +201,22 @@ function DashBoard({ user }) {
               tooltipText="Count of Members in your organization."
             />
           </div>
+          <div className="md:hidden">
+            <SiderRight
+              dashBoardData={dashBoardData}
+              monthlyLeaderBoardData={monthlyLeaderBoardData}
+            />
+          </div>
 
-          <div className="w-full bg-white rounded-md overflow-hidden shadow-md p-4">
-            {loading ? (
-              <Skeleton
-                title={false}
-                active={true}
-                width={[200]}
-                className="mt-4"
-              />
-            ) : (
-              <BarChart user={user} />
-            )}
+          <div className="w-full bg-white rounded-md overflow-hidden shadow-md p-5 ">
+            <BarChart user={user} />
           </div>
           <Row gutter={[24, 24]}>
             <Col xs={24} md={12} lg={12}>
-              <div className="w-full bg-white rounded-md overflow-hidden shadow-md p-4 h-full flex flex-col">
-                <h2 className="text-xl mt-1 font-semibold text-primary mb-2 flex items-center">
-                  Applauds Leaderboard
-                  <span className="leading-[0] ml-2">
+              <div className="w-full bg-white rounded-md overflow-hidden shadow-md p-5 h-full flex flex-col">
+                <h2 className="text-xl font-semibold text-primary mb-2 flex items-center justify-between gap-3">
+                  <span className="flex-1"> Applauds Leaderboard</span>
+                  <span className="leading-4 text-base  text-gray-900">
                     {CustomPopover("Applauds count received by that member.")}
                   </span>
                 </h2>
@@ -210,40 +225,27 @@ function DashBoard({ user }) {
                     {allApplaud.length > 0 ? (
                       allApplaud.map((item, idx) => {
                         if (idx <= 3) {
-                          return (
-                            <>
-                              {Object.entries(item).map(([key, value]) => {
-                                return (
-                                  <Col
-                                    xs={24}
-                                    sm={12}
-                                    md={12}
-                                    key={"applaud" + idx}
-                                  >
-                                    <div className="flex items-center space-x-4 ">
-                                      <div className="shrink-0">
-                                        <DefaultImages
-                                          imageSrc={value?.image}
-                                        />
-                                      </div>
+                          return Object.entries(item).map(([key, value]) => (
+                            <Col xs={24} sm={12} md={12} key={"applaud" + idx}>
+                              <div className="flex items-center space-x-4 ">
+                                <div className="shrink-0">
+                                  <DefaultImages imageSrc={value?.image} />
+                                </div>
 
-                                      <div className="flex-1">
-                                        <p className="mb-2 text-primary font-medium text-sm">
-                                          {key}
-                                        </p>
-                                        <p className="flex">
-                                          <ApplaudIconSmall />
-                                          <span className="pl-2 text-sm font-medium text-gray-500">
-                                            {value?.taken?.length}
-                                          </span>
-                                        </p>
-                                      </div>
-                                    </div>
-                                  </Col>
-                                );
-                              })}
-                            </>
-                          );
+                                <div className="flex-1">
+                                  <p className="mb-2 text-primary font-medium text-sm">
+                                    {key}
+                                  </p>
+                                  <p className="flex">
+                                    <ApplaudIconSmall />
+                                    <span className="pl-2 text-sm font-medium text-gray-500">
+                                      {value?.taken?.length}
+                                    </span>
+                                  </p>
+                                </div>
+                              </div>
+                            </Col>
+                          ));
                         }
                       })
                     ) : (
@@ -268,10 +270,10 @@ function DashBoard({ user }) {
               </div>
             </Col>
             <Col md={12} lg={12} xs={24}>
-              <div className="w-full bg-white rounded-md overflow-hidden shadow-md p-4 h-full">
-                <h2 className="text-xl mt-1 text-primary  font-semibold mb-2 flex items-center">
-                  Feedback Leaderboard
-                  <span className="leading-[0] ml-2">
+              <div className="w-full bg-white rounded-md overflow-hidden shadow-md p-5 h-full">
+                <h2 className="text-xl text-primary  font-semibold mb-2 flex items-center gap-3 justify-between">
+                  <span className="flex-1"> Feedback Leaderboard</span>
+                  <span className="leading-4 text-base  text-gray-900">
                     {CustomPopover(
                       "Feedback received and given count by your team members"
                     )}
@@ -281,51 +283,42 @@ function DashBoard({ user }) {
                   <Col xs={24} md={24}>
                     {feedbackList.length > 0 ? (
                       feedbackList.map((feedback, idx) => {
-                        return (
-                          <>
-                            {Object.entries(feedback).map(([key, value]) => {
-                              return (
-                                <Row className="my-3" key={idx + "feedback"}>
-                                  <Col xs={6} md={5}>
-                                    <DefaultImages
-                                      imageSrc={value?.image}
-                                      width={70}
-                                      height={70}
-                                    />
-                                  </Col>
+                        return Object.entries(feedback).map(([key, value]) => (
+                          <Row className="my-3" key={idx + key + "feedback"}>
+                            <Col xs={6} md={5}>
+                              <DefaultImages
+                                imageSrc={value?.image}
+                                width={70}
+                                height={70}
+                              />
+                            </Col>
 
-                                  <Col xs={18} md={19}>
-                                    <div className="px-4">
-                                      <p className="mb-2 text-primary font-medium text-sm">
-                                        {key}
-                                      </p>
-                                      <p className="flex justify-between mr-0 md:mr-3">
-                                        <span
-                                          className="flex"
-                                          title="Feedback given"
-                                        >
-                                          <FileRightIcon />
-                                          <span className="pl-2 text-sm font-medium text-gray-500">
-                                            {value.feedbackGiven ?? 0}
-                                          </span>
-                                        </span>
-                                        <span
-                                          className="flex"
-                                          title="Feedback received"
-                                        >
-                                          <FileLeftIcon />
-                                          <span className="pl-2 text-sm font-medium text-gray-500">
-                                            {value.feedbackTaken ?? 0}
-                                          </span>
-                                        </span>
-                                      </p>
-                                    </div>
-                                  </Col>
-                                </Row>
-                              );
-                            })}
-                          </>
-                        );
+                            <Col xs={18} md={19}>
+                              <div className="px-4">
+                                <p className="mb-2 text-primary font-medium text-sm">
+                                  {key}
+                                </p>
+                                <p className="flex justify-between mr-0 md:mr-3">
+                                  <span className="flex" title="Feedback given">
+                                    <FileRightIcon />
+                                    <span className="pl-2 text-sm font-medium text-gray-500">
+                                      {value.feedbackGiven ?? 0}
+                                    </span>
+                                  </span>
+                                  <span
+                                    className="flex"
+                                    title="Feedback received"
+                                  >
+                                    <FileLeftIcon />
+                                    <span className="pl-2 text-sm font-medium text-gray-500">
+                                      {value.feedbackTaken ?? 0}
+                                    </span>
+                                  </span>
+                                </p>
+                              </div>
+                            </Col>
+                          </Row>
+                        ));
                       })
                     ) : (
                       <div className="flex justify-center items-center h-48 ">
@@ -339,8 +332,11 @@ function DashBoard({ user }) {
           </Row>
         </div>
       </Col>
-      <Col xs={24} sm={24} md={24} lg={8} xxl={6} className="h-full">
-        <SiderRight dashBoardData={dashBoardData} />
+      <Col xs={24} md={24} lg={8} xxl={6} className="h-full hidden md:block">
+        <SiderRight
+          dashBoardData={dashBoardData}
+          monthlyLeaderBoardData={monthlyLeaderBoardData}
+        />
       </Col>
     </Row>
   );

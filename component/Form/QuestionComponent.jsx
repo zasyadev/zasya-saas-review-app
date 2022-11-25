@@ -6,7 +6,7 @@ import { CustomInput } from "../common/CustomFormFeilds";
 import ErrorBox from "../common/ErrorBox";
 import {
   INPUT_TYPE,
-  MULTIPLECHOICE_TYPE,
+  MULTIPLE_CHOICE_TYPE,
   QuestionTypeList,
   RATING_TYPE,
   SCALE_TYPE,
@@ -42,21 +42,25 @@ const QuestionEditViewComponent = ({
 }) => {
   return (
     <div className="divide-y">
-      <div className="p-2 md:py-3 md:px-5 xl:py-4 flex flex-wrap items-center justify-between space-x-4">
+      <div className="p-4 md:px-5 flex flex-wrap items-center justify-between gap-2">
         <h2 className="font-semibold text-base xl:text-lg">
           Question {idx + 1}
         </h2>
         <div>
-          <Tooltip placement="leftTop" title="Change Question Type">
+          <Tooltip
+            placement="topRight"
+            trigger={"hover"}
+            title="Change Question Type"
+          >
             <Select
               value={type}
-              size="large"
+              size="default"
               onChange={(e) => defineType(e, idx)}
-              className="question-select-box w-44"
+              className="question-select-box w-32 sm:w-40 md:w-44"
             >
               <Select.Option value={INPUT_TYPE}>Text</Select.Option>
               <Select.Option value={TEXTAREA_TYPE}>Paragraph</Select.Option>
-              <Select.Option value={MULTIPLECHOICE_TYPE}>
+              <Select.Option value={MULTIPLE_CHOICE_TYPE}>
                 Multiple Choice
               </Select.Option>
               <Select.Option value={SCALE_TYPE}>Opinion Scale</Select.Option>
@@ -69,7 +73,7 @@ const QuestionEditViewComponent = ({
         </div>
       </div>
 
-      <div className="p-2 md:py-3 md:px-5 xl:py-4  mb-1 xl:mb-3 space-y-4">
+      <div className="p-4 md:px-5  mb-1 xl:mb-3 space-y-4">
         <div className="space-y-3">
           <p className="font-medium text-base mb-0">
             What would you like to ask?
@@ -85,11 +89,11 @@ const QuestionEditViewComponent = ({
           <ErrorBox error={error} />
         </div>
 
-        {[MULTIPLECHOICE_TYPE, YESNO_TYPE, RATING_TYPE, SCALE_TYPE].includes(
+        {[MULTIPLE_CHOICE_TYPE, YESNO_TYPE, RATING_TYPE, SCALE_TYPE].includes(
           type
         ) && (
           <div className="space-y-4">
-            {type === MULTIPLECHOICE_TYPE && (
+            {type === MULTIPLE_CHOICE_TYPE && (
               <MultipleChoiceType
                 idx={idx}
                 options={options}
@@ -115,7 +119,7 @@ const QuestionEditViewComponent = ({
         )}
       </div>
       <div
-        className={`p-2 md:py-3 md:px-5 flex justify-${
+        className={`p-4 md:px-5 flex justify-${
           totalQuestionCount > 1 ? "between" : "end"
         } items-center space-x-3`}
       >
@@ -166,17 +170,22 @@ const QuestionComponent = ({
 }) => {
   return selectTypeFeild ? (
     <>
-      <div className="p-2 md:py-3 md:px-5 xl:py-4  border-b border-gray-200">
+      <div className="p-4 md:px-5  border-b border-gray-200">
         <p className="text-base 2xl:text-lg font-semibold">
           Choose Question Type
         </p>
       </div>
-      <div className="my-4 mx-6 xl:py-4">
-        <Row gutter={[16, 16]}>
+      <div className="p-4 md:px-5">
+        <Row
+          gutter={[
+            { xs: 8, sm: 8, md: 8, xl: 16 },
+            { xs: 8, sm: 8, md: 8, xl: 16 },
+          ]}
+        >
           {QuestionTypeList.filter((queType) =>
             ratingState ? (queType.type === "rating" ? false : true) : queType
           ).map((quesType) => (
-            <Col md={8} xs={12} key={quesType.title}>
+            <Col xs={24} sm={12} md={8} key={quesType.title}>
               <QuestionTypeCard
                 idx={idx}
                 key={idx + "quesType"}

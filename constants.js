@@ -65,4 +65,19 @@ export const ApplaudCategoryList = [
       },
     ],
   },
+  {
+    name: "Others",
+    data: [
+      {
+        name: "Other",
+        value: "other",
+        about: "Anything else than above",
+      },
+    ],
+  },
 ];
+
+export const INITIAL_CRON_TYPES = {
+  APPLAUD: "APPLAUD",
+  REVIEW: "REVIEW",
+};

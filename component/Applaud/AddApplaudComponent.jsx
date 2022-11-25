@@ -1,5 +1,4 @@
-import { Col, Form, Row, Select, Spin } from "antd";
-import TextArea from "antd/lib/input/TextArea";
+import { Col, Form, Row, Select } from "antd";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import {
@@ -9,6 +8,7 @@ import {
 import { openNotificationBox } from "../../component/common/notification";
 import { ApplaudCategoryList } from "../../constants";
 import httpService from "../../lib/httpService";
+import { CustomTextArea } from "../common/CustomFormFeilds";
 import CustomPopover from "../common/CustomPopover";
 
 function AddApplaud({ user }) {
@@ -32,7 +32,6 @@ function AddApplaud({ user }) {
         }
       })
       .catch((err) => {
-        console.log(err.response.data?.message);
         openNotificationBox("error", err.response.data?.message);
         setMembersList([]);
       });
@@ -49,7 +48,6 @@ function AddApplaud({ user }) {
         }
       })
       .catch((err) => {
-        console.log(err.response.data?.message);
         openNotificationBox("error", err.response.data?.message);
         setApplaudLimit(0);
       });
@@ -94,8 +92,8 @@ function AddApplaud({ user }) {
 
   return (
     <div className="w-full  md:w-3/6 mx-auto">
-      <div className="w-full bg-white rounded-md shadow-md p-4 mt-4 add-template-wrapper">
-        <div className="  rounded-t-md  mt-1">
+      <div className="w-full bg-white rounded-md shadow-md p-5 mt-4 add-template-wrapper">
+        <div className=" rounded-t-md  mt-1">
           <Form
             layout="vertical"
             form={applaudform}
@@ -137,7 +135,7 @@ function AddApplaud({ user }) {
                   name="category"
                   label={
                     <p className="flex items-center">
-                      Category{" "}
+                      Category
                       <span className="leading-[0] ml-2">
                         {CustomPopover(
                           "Category that can  define your applaud. Hover over them to see details"
@@ -195,12 +193,12 @@ function AddApplaud({ user }) {
                     },
                   ]}
                 >
-                  <TextArea />
+                  <CustomTextArea rows={2} customclassname="shadow-none" />
                 </Form.Item>
               </Col>
 
               <Col md={24} xs={24}>
-                <div className="flex justify-end  ">
+                <div className="flex justify-end shad  ">
                   <SecondaryButton
                     withLink={true}
                     linkHref="/applaud"

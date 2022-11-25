@@ -102,9 +102,8 @@ function AddTeamComponent({ user, editMode, memberData }) {
 
   return (
     <div className="w-full  md:w-3/6 mx-auto">
-      <div className="w-full bg-white rounded-md shadow-md p-4 mt-4 add-template-wrapper">
+      <div className="w-full bg-white rounded-md shadow-md p-5 mt-4 add-template-wrapper">
         <div className="rounded-t-md  mt-1">
-          {" "}
           <Form
             layout="vertical"
             form={form}
@@ -211,12 +210,12 @@ function AddTeamComponent({ user, editMode, memberData }) {
                   <SecondaryButton
                     withLink={true}
                     linkHref="/team/members"
-                    className="mx-4 rounded my-1"
+                    className="mx-4 my-1"
                     title="Cancel"
                   />
                   <PrimaryButton
                     type="submit"
-                    className=" my-1 rounded "
+                    className=" my-1 "
                     title={editMode ? "Update" : "Create"}
                   />
                 </div>

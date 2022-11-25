@@ -40,9 +40,6 @@ async function handle(req, res, prisma) {
           // password: await hashedPassword(password),
           first_name: resData.first_name,
           last_name: resData.last_name ?? "",
-          address: "",
-          pin_code: "",
-          mobile: "",
           status: resData.status,
           role: { connect: { id: resData.role } },
           organization: { connect: { id: createdUserData.organization_id } },
@@ -70,15 +67,19 @@ async function handle(req, res, prisma) {
           let mailData = {
             from: process.env.SMTP_USER,
             to: userData.email,
-            subject: `Successfully Registered on Zasya Review App`,
-            html: mailTemplate(
-              `You have successfull registered on Review App . Please <a href= ${process.env.NEXT_APP_URL}/auth/login>Login</a> in to continue with your Profile.`
-            ),
+            subject: `Successfully Registered on Review App`,
+
+            html: mailTemplate({
+              body: `You have successfully registered on Review App. Please login to get started.`,
+              name: userData.first_name,
+              btnLink: `${process.env.NEXT_APP_URL}/auth/login`,
+              btnText: "Get Started",
+            }),
           };
 
           await mailService.sendMail(mailData, function (err, info) {
-            if (err) console.log("failed");
-            else console.log("successfull");
+            // if (err) console.log("failed");
+            // else console.log("successfull");
           });
         } else {
           userData = await transaction.user.create({
@@ -114,14 +115,18 @@ async function handle(req, res, prisma) {
             from: process.env.SMTP_USER,
             to: userData.email,
             subject: `Invitation to collaborate on Review App`,
-            html: mailTemplate(`
-            You have been invited to collaborate on Review app . Please <a href= ${process.env.NEXT_APP_URL}/resetpassword?passtoken=${passwordResetData.token}&email=${userData.email}>click here</a> to collaborate with them now .
-            `),
+
+            html: mailTemplate({
+              body: `You have been invited to collaborate on the Review app.`,
+              name: userData.first_name,
+              btnLink: `${process.env.NEXT_APP_URL}/resetpassword?passtoken=${passwordResetData.token}&email=${userData.email}`,
+              btnText: "Get Started",
+            }),
           };
 
           await mailService.sendMail(mailData, function (err, info) {
-            if (err) console.log("failed");
-            else console.log("successfull");
+            // if (err) console.log("failed");
+            // else console.log("successfull");
           });
         }
         let newTags = [];
@@ -316,6 +321,7 @@ async function handle(req, res, prisma) {
     }
   }
 }
-
-export default (req, res) =>
+const functionHandle = (req, res) =>
   RequestHandler(req, res, handle, ["POST", "GET", "PUT", "DELETE"]);
+
+export default functionHandle;

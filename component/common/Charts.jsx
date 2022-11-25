@@ -36,12 +36,6 @@ const defaultOptions = {
             columnWidth: "90%",
           },
         },
-        // title: {
-        //   text: "Comapny Rating ",
-        //   style: {
-        //     fontSize: "14px",
-        //   },
-        // },
       },
     },
   ],
@@ -79,15 +73,6 @@ const defaultOptions = {
       show: false,
     },
   },
-  // title: {
-  //   text: "Feedback  ",
-  //   style: {
-  //     fontSize: "20",
-  //     fontWeight: "600",
-  //     fontFamily: "Montserrat",
-  //     color: "#0f123f",
-  //   },
-  // },
 
   colors: ["#0F123F"],
   grid: {
@@ -113,7 +98,7 @@ const BarChart = ({ user }) => {
 
   async function fetchChartData() {
     setLoading(true);
-    setChartData([]);
+    setChartData(defaultChartSeries);
 
     await httpService
       .post(`/api/dashboard/chart`, {
@@ -126,6 +111,7 @@ const BarChart = ({ user }) => {
         }
       })
       .catch((err) => {
+        setLoading(false);
         setChartData(defaultChartSeries);
         console.error(err.response.data?.message);
       });
@@ -137,9 +123,9 @@ const BarChart = ({ user }) => {
 
   return (
     <div>
-      <p className="chart-title text-primary flex items-center">
-        Feedback{" "}
-        <span className="leading-[0] ml-2">
+      <p className="chart-title text-primary flex items-center justify-between">
+        Feedback
+        <span className="leading-0 text-base text-gray-900 ml-2">
           {CustomPopover(
             "Count of Feedback given by the organization monthly."
           )}
@@ -147,8 +133,7 @@ const BarChart = ({ user }) => {
       </p>
       {loading ? (
         <>
-          {" "}
-          <Skeleton active className="mb-2" />
+          <Skeleton active className="mt-4 mb-2" />
           <Skeleton active />
         </>
       ) : (
@@ -160,7 +145,6 @@ const BarChart = ({ user }) => {
           className="chart-data "
         />
       )}
-      {/* <div className="bar-chart-text">No Data Found</div> */}
     </div>
   );
 };

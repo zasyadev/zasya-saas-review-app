@@ -1,7 +1,13 @@
-import { Col, Row } from "antd";
+import { Col, Radio, Row } from "antd";
 import moment from "moment";
-import React from "react";
-import { ApplaudIcon, ClockIcon, StarIcon } from "../../assets/icons";
+import React, { useState } from "react";
+import {
+  ApplaudIcon,
+  ApplaudIconSmall,
+  ClockIcon,
+  StarIcon,
+} from "../../assets/icons";
+import DefaultImages from "../common/DefaultImages";
 
 const ratingHandler = (data) => {
   if (data.length === 0) {
@@ -44,40 +50,46 @@ const ratingHandler = (data) => {
   return Number(avgRating).toFixed(2);
 };
 
-function SiderRight({ dashBoardData }) {
+function SiderRight({ dashBoardData, monthlyLeaderBoardData }) {
   const { reviewRating, averageAnswerTime, applaudCount } = dashBoardData;
   const tempTime = moment.duration(averageAnswerTime);
+  const [activeMonthlyIndex, setActiveMonthlyIndex] = useState(0);
+
+  const onChangeRadioHandler = (e) => {
+    setActiveMonthlyIndex(e.target.value);
+  };
+
   return (
-    <div className="bg-white rounded-md shadow-md py-5 px-4">
-      <Row justify="space-around">
-        <Col xs={12} md={12} className="border-r border-slate-200">
-          <div className=" flex flex-col items-center justify-center">
-            <ApplaudIcon />
+    <>
+      <div className="bg-white rounded-md shadow-md p-5">
+        <Row justify="space-around">
+          <Col xs={12} md={12} className="border-r border-slate-200">
+            <div className=" flex flex-col items-center justify-center">
+              <ApplaudIcon />
 
-            <div>
-              <p className="text-primary text-xl font-extrabold my-2">
-                {applaudCount}
-              </p>
+              <div>
+                <p className="text-primary text-xl font-extrabold my-2">
+                  {applaudCount}
+                </p>
+              </div>
             </div>
-          </div>
-        </Col>
-        <Col xs={12} md={12}>
-          <div className=" flex flex-col items-center justify-center">
-            <StarIcon />
+          </Col>
+          <Col xs={12} md={12}>
+            <div className=" flex flex-col items-center justify-center">
+              <StarIcon />
 
-            <div>
-              <p className="text-primary text-xl font-extrabold my-2">
-                {ratingHandler(reviewRating)}
-              </p>
+              <div>
+                <p className="text-primary text-xl font-extrabold my-2">
+                  {ratingHandler(reviewRating)}
+                </p>
+              </div>
             </div>
-          </div>
-        </Col>
-        <Col xs={24} md={24}>
-          <hr className="my-3" />
-        </Col>
+          </Col>
+          <Col xs={24} md={24}>
+            <hr className="my-3" />
+          </Col>
 
-        <Col xs={24} md={24}>
-          <div className="py-2 px-3">
+          <Col xs={24} md={24}>
             <div className="flex flex-wrap items-center justify-between">
               <div className="flex-shrink-0 grid place-content-center">
                 <ClockIcon />
@@ -110,10 +122,69 @@ function SiderRight({ dashBoardData }) {
                 </div>
               </div>
             </div>
-          </div>
-        </Col>
-      </Row>
-    </div>
+          </Col>
+        </Row>
+      </div>
+      {monthlyLeaderBoardData.applaudData.length > 0 && (
+        <div className="relative bg-white rounded-md shadow-md p-5  mt-6 ">
+          <p className="mb-4 text-primary text-xl font-semibold pr-10 md:pr-14">
+            Monthly Leaderboard
+          </p>
+
+          {monthlyLeaderBoardData.applaudData.map((item, idx) => {
+            if (idx === activeMonthlyIndex) {
+              return Object.entries(item).map(([key, value]) => (
+                <div key={idx + "monthlyapplaud"}>
+                  <img
+                    src={`/media/images/${
+                      activeMonthlyIndex === 0
+                        ? "badge_gold.png"
+                        : "badge_silver.png"
+                    }`}
+                    className="absolute top-0 right-4 w-10 md:w-14 "
+                    alt="badge"
+                  />
+                  <div className="space-y-4">
+                    <p className="mb-3 text-primary font-semibold  text-base  pr-10 md:pr-14">
+                      Congratulations 🎉 {key} !
+                    </p>
+                    <div className="flex items-center space-x-4 ">
+                      <div className="shrink-0">
+                        <DefaultImages
+                          imageSrc={value?.image}
+                          width={80}
+                          height={80}
+                        />
+                      </div>
+
+                      <div className="flex-1">
+                        <p className="flex mb-2 text-primary font-medium text-sm">
+                          <ApplaudIconSmall />
+                          <span className="pl-2 text-sm font-medium ">
+                            {value?.count} Applaud(s)
+                          </span>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  {monthlyLeaderBoardData.applaudData.length > 1 && (
+                    <div className="text-center slider-radio">
+                      <Radio.Group
+                        onChange={onChangeRadioHandler}
+                        value={activeMonthlyIndex}
+                      >
+                        <Radio value={0} />
+                        <Radio value={1} />
+                      </Radio.Group>
+                    </div>
+                  )}
+                </div>
+              ));
+            }
+          })}
+        </div>
+      )}
+    </>
   );
 }
 

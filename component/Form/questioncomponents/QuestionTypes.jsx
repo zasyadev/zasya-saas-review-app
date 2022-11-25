@@ -16,38 +16,42 @@ export function MultipleChoiceType({
   return (
     <>
       <p className="font-medium text-base">Multiple choice</p>
-      {options.map((op, j) => (
-        <div key={"Multiple choice" + j}>
-          <div className="flex flex-row  items-center">
-            <CustomInput
-              placeholder={`E.g. Option ${j + 1}`}
-              customclassname="w-60 xl:w-64"
-              onChange={(e) => {
-                handleOptionValue(e.target.value, idx, j);
-              }}
-              value={op.optionText}
-              maxLength={180}
-            />
-            {j !== 0 && (
-              <button
-                onClick={() => {
-                  removeOption(idx, j);
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        {options.map((op, j) => (
+          <div key={"Multiple choice" + j}>
+            <div className="flex flex-row  items-center">
+              <CustomInput
+                placeholder={`E.g. Option ${j + 1}`}
+                customclassname="w-60 xl:w-64 flex-1"
+                onChange={(e) => {
+                  handleOptionValue(e.target.value, idx, j);
                 }}
-                className="p-2 bg-gray-100 ml-4 rounded-full leading-0"
-              >
-                <Image
-                  src={"/media/svg/close-line.svg"}
-                  alt="Close "
-                  width={20}
-                  height={20}
-                />
-              </button>
-            )}
-          </div>
+                value={op.optionText}
+                maxLength={180}
+              />
+              {j !== 0 ? (
+                <button
+                  onClick={() => {
+                    removeOption(idx, j);
+                  }}
+                  className="p-2 bg-gray-100 ml-4 rounded-full leading-0"
+                >
+                  <Image
+                    src={"/media/svg/close-line.svg"}
+                    alt="Close "
+                    width={20}
+                    height={20}
+                  />
+                </button>
+              ) : (
+                <div className="opacity-0 w-8 h-8 ml-4"></div>
+              )}
+            </div>
 
-          <ErrorBox error={op?.error} />
-        </div>
-      ))}
+            <ErrorBox error={op?.error} />
+          </div>
+        ))}
+      </div>
       {options.length < 5 && (
         <ButtonGray
           onClick={() => {
@@ -78,10 +82,10 @@ export function YesNoType() {
       </p>
       <div className="flex items-center justify-center mt-3">
         <div className="p-5 md:p-8  border mx-2 rounded-sm">
-          <LikeOutlined style={{ fontSize: "64px" }} />
+          <LikeOutlined className="text-4xl sm:text-6xl" />
         </div>
         <div className="p-5 md:p-8 border mx-2 rounded-sm">
-          <DislikeOutlined style={{ fontSize: "64px" }} />
+          <DislikeOutlined className="text-4xl sm:text-6xl" />
         </div>
       </div>
     </>
@@ -108,7 +112,7 @@ export function OpinionScaleType({
   return (
     <>
       <p className="font-medium text-base mb-2">Opinion Scale</p>
-      <div className="flex items-center space-x-4 md:space-x-8">
+      <div className="flex flex-col gap-4 items-start lg:flex-row lg:gap-8 lg:items-center ">
         <div className="space-y-3">
           <div className="flex items-center">
             <Select
@@ -120,7 +124,7 @@ export function OpinionScaleType({
             >
               <Select.Option value={0}>0</Select.Option>
               <Select.Option value={1}>1</Select.Option>
-            </Select>{" "}
+            </Select>
             <p className="ml-4 font-medium mb-0">label </p>
           </div>
           {options.length > 1 && (
@@ -187,18 +191,17 @@ export function QuestionTypeCard({
 }) {
   return (
     <div
-      className="flex items-center border border-gray-200 bg-white hover:bg-gray-100  rounded-md cursor-pointer space-x-3 shadow-sm"
+      className="flex items-center border gap-2 md:gap-4 border-gray-200 bg-white hover:bg-gray-100  rounded-md cursor-pointer shadow-sm overflow-hidden"
       onClick={(e) => {
         defineType(type, idx);
         setSelectTypeFeild(false);
       }}
     >
-      <div className="px-4 lg:px-5 py-4 bg-gray-50 w-14 2xl:w-16">
+      <div className="grid place-content-center overflow-hidden border-r border-gray-200 bg-gray-50 w-14 h-14 2xl:w-16 2xl:h-16">
         <Icon />
       </div>
 
-      <div className="px-4 lg:px-5 py-4 ">
-        {" "}
+      <div className="flex-1">
         <p className="mb-0 text-sm 2xl:text-base font-semibold text-primary">
           {title}
         </p>

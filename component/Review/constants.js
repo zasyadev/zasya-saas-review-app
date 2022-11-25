@@ -20,3 +20,15 @@ export const ReviewStepsArray = [
     title: "Preview Your Review",
   },
 ];
+
+export const REVIEW_RECEIVED_KEY = "Received";
+export const REVIEW_CREATED_KEY = "Created";
+
+export const ReviewToggleList = [
+  {
+    label: REVIEW_RECEIVED_KEY,
+  },
+  {
+    label: REVIEW_CREATED_KEY,
+  },
+];

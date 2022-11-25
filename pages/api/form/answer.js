@@ -47,9 +47,13 @@ async function handle(req, res, prisma) {
         from: process.env.SMTP_USER,
         to: assignedByUser.email,
         subject: ` ${assignedUser.first_name} has filled your review`,
-        html: mailTemplate(
-          ` ${assignedUser.first_name} has just filled your review , click here to see their response now .`
-        ),
+
+        html: mailTemplate({
+          body: `<b>${assignedUser.first_name}</b> has filled your review.`,
+          name: assignedByUser.first_name,
+          btnLink: `${process.env.NEXT_APP_URL}review`,
+          btnText: "See Response",
+        }),
       };
       const assigneeData = await prisma.reviewAssignee.findFirst({
         where: {
@@ -68,8 +72,8 @@ async function handle(req, res, prisma) {
       });
 
       await mailService.sendMail(mailData, function (err, info) {
-        if (err) console.log("failed");
-        else console.log("successfull");
+        // if (err) console.log("failed");
+        // else console.log("successfull");
       });
 
       if (!transactionData.formdata || !transactionData) {
@@ -159,5 +163,6 @@ async function handle(req, res, prisma) {
     });
   }
 }
-export default (req, res) =>
+const functionHandle = (req, res) =>
   RequestHandler(req, res, handle, ["POST", "GET", "PUT", "DELETE"]);
+export default functionHandle;

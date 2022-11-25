@@ -21,7 +21,6 @@ async function handle(req, res, prisma) {
     } else {
       return res.status(400).json({
         status: 400,
-
         message: "Internal Server Error",
       });
     }
@@ -60,4 +59,7 @@ async function handle(req, res, prisma) {
   }
 }
 
-export default (req, res) => RequestHandler(req, res, handle, ["POST", "PUT"]);
+const functionHandle = (req, res) =>
+  RequestHandler(req, res, handle, ["POST", "PUT"]);
+
+export default functionHandle;

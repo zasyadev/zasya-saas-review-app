@@ -72,21 +72,30 @@ function TeamMembers({ user }) {
     },
     {
       title: "Tags",
-
       render: (_, record) => (
-        <div className="grid grid-cols-1  md:grid-cols-3 gap-2">
-          {" "}
-          {record?.tags?.length > 0
-            ? record?.tags.map((item, index) => (
-                <span
-                  className="text-sm text-center bg-sky-300  text-white rounded px-2 py-1"
-                  key={index + "tags"}
-                >
-                  {item}
-                </span>
-              ))
-            : null}
+        <div className="grid grid-cols-1  lg:grid-cols-3 gap-2 w-40 lg:w-full">
+          {record?.tags?.length > 0 &&
+            record?.tags.map((item, index) => (
+              <span
+                className="text-sm text-center bg-sky-300  text-white rounded px-2 py-1"
+                key={index + "tags"}
+              >
+                {item}
+              </span>
+            ))}
         </div>
+      ),
+    },
+    {
+      title: "Status",
+      render: (_, record) => (
+        <span
+          className={`text-sm text-center ${
+            record?.user?.status === 0 ? "text-red-700" : "text-green-700"
+          } rounded font-semibold text-center`}
+        >
+          {record?.user?.status === 0 ? "Inactive" : "Active"}
+        </span>
       ),
     },
     {
@@ -96,10 +105,7 @@ function TeamMembers({ user }) {
         record.role_id === 2 ? null : (
           <p>
             <Link href={`/team/edit/${record.user_id}`} passHref>
-              <EditOutlined
-                className="primary-color-blue text-xl mx-1  md:mx-2 cursor-pointer"
-                // onClick={() => onUpdate(record)}
-              />
+              <EditOutlined className="primary-color-blue text-xl mx-1  md:mx-2 cursor-pointer" />
             </Link>
 
             <Popconfirm
@@ -122,35 +128,30 @@ function TeamMembers({ user }) {
       <div className="mb-4 md:mb-6 flex justify-end">
         <PrimaryButton
           withLink={true}
-          className="rounded-md  px-2 md:px-4 "
+          className="px-2 md:px-4 "
           linkHref="/team/add"
           title={"Create"}
         />
       </div>
 
       <div className="w-full bg-white rounded-md overflow-hdden shadow-md">
-        <div className="px-4 ">
-          {loading ? (
-            <Skeleton
-              title={false}
-              active={true}
-              width={[200]}
-              className="mt-4"
-              rows={3}
-            />
-          ) : (
-            <CustomTable
-              dataSource={membersList}
-              columns={columns}
-              className="custom-table"
-              pagination={{
-                defaultPageSize: 10,
-                showSizeChanger: true,
-                pageSizeOptions: ["10", "20", "50", "100"],
-              }}
-            />
-          )}
-        </div>
+        {loading ? (
+          <div className="p-4 ">
+            <Skeleton title={false} active={true} className="my-4" />
+          </div>
+        ) : (
+          <CustomTable
+            dataSource={membersList}
+            columns={columns}
+            className="custom-table"
+            pagination={{
+              defaultPageSize: 10,
+              showSizeChanger: true,
+              pageSizeOptions: ["10", "50", "100", "200", "500"],
+              className: "px-2 sm:px-4",
+            }}
+          />
+        )}
       </div>
     </div>
   );

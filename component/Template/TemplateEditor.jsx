@@ -12,10 +12,7 @@ function TemplateEditor({
   removeElement,
   addMoreQuestionField,
   activeQuestionIndex,
-  editMode,
   defineType,
-  showAsQuestion,
-  handleExpand,
   addOption,
   handleQuestionValue,
   handleOptionValue,
@@ -25,12 +22,11 @@ function TemplateEditor({
   selectTypeFeild,
   setQuestions,
   ratingState = false,
-  myRefs = [],
 }) {
   return (
-    <Row gutter={16}>
+    <Row gutter={{ xs: 0, sm: 0, md: 16 }}>
       <Col xs={24} md={8}>
-        <div className="w-full pb-2">
+        <div className="w-full p-4 md:p-0 lg:pb-2">
           <div className="w-full bg-white rounded-md shadow-md   sider-question-wrapper overflow-y-auto flex flex-col-reverse">
             <div className="question-section-container">
               <div className="question-section-contents">
@@ -60,7 +56,6 @@ function TemplateEditor({
                               removeElement(idx, question.type);
                             }}
                             question={question}
-                            myRefs={myRefs}
                           />
                         ))}
                       </div>
@@ -70,16 +65,16 @@ function TemplateEditor({
               </div>
             </div>
           </div>
-          <div className="mt-3 flex flex-wrap justify-between space-x-3">
+          <div className="mt-4 flex flex-wrap justify-between space-x-3">
             <PrimaryButton
               onClick={() => addMoreQuestionField()}
-              title="Add New Question"
+              title="Add Question"
             />
           </div>
         </div>
       </Col>
       <Col xs={24} md={16}>
-        <div className="w-full bg-white rounded-md shadow-md  add-template-wrapper">
+        <div className="w-full border-t border-gray-200 bg-white md:rounded-md md:shadow-md  add-template-wrapper">
           <div className="rounded-md overflow-hidden  ">
             {questions?.length > 0 &&
               questions
@@ -87,13 +82,13 @@ function TemplateEditor({
                 ?.map((question) => (
                   <QuestionComponent
                     key={activeQuestionIndex + "QuestionComponent"}
-                    {...question}
-                    editMode={editMode}
+                    type={question?.type}
+                    questionText={question?.questionText}
+                    options={question?.options}
+                    error={question?.error}
                     idx={activeQuestionIndex}
                     removeElement={removeElement}
                     defineType={defineType}
-                    showAsQuestion={showAsQuestion}
-                    handleExpand={handleExpand}
                     addOption={addOption}
                     handleQuestionValue={handleQuestionValue}
                     handleOptionValue={handleOptionValue}

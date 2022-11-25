@@ -135,20 +135,61 @@ export function CustomizeMonthlyCronSlackMessage({
       type: "header",
       text: {
         type: "plain_text",
-        text: ":calendar: | Your Monthly Activities | :calendar:  ",
+        text: "Your Monthly Activities | :calendar:  ",
         emoji: true,
       },
     },
     {
-      type: "context",
-      elements: [
+      type: "divider",
+    },
+    {
+      type: "section",
+      fields: [
         {
           type: "mrkdwn",
-          text: "Applaud Given",
+          text: `*Applaud Given* \n *${applaudCount}*`,
+        },
+      ],
+    },
+
+    {
+      type: "section",
+      fields: [
+        {
+          type: "mrkdwn",
+          text: `*Review Assigned* \n *${reviewCreatedCount}*`,
         },
         {
           type: "mrkdwn",
-          text: `*${applaudCount}*`,
+          text: `*Review Answered* \n *${reviewAnsweredCount}*`,
+        },
+      ],
+    },
+  ];
+  return customText;
+}
+
+export function WeeklyCustomizeReviewMessage({
+  header,
+  link,
+  text = "",
+  btnText = "Create",
+  subText = "",
+}) {
+  let customText = [
+    {
+      type: "header",
+      text: {
+        type: "plain_text",
+        text: header,
+      },
+    },
+    {
+      type: "section",
+      elements: [
+        {
+          type: "mrkdwn",
+          text: `*${subText}*`,
         },
       ],
     },
@@ -157,24 +198,24 @@ export function CustomizeMonthlyCronSlackMessage({
       elements: [
         {
           type: "mrkdwn",
-          text: "Review Assigned",
-        },
-        {
-          type: "mrkdwn",
-          text: `*${reviewCreatedCount}*`,
+          text: text,
         },
       ],
     },
     {
-      type: "context",
+      type: "actions",
       elements: [
         {
-          type: "mrkdwn",
-          text: "Review Answered",
-        },
-        {
-          type: "mrkdwn",
-          text: `*${reviewAnsweredCount}*`,
+          type: "button",
+          text: {
+            type: "plain_text",
+            text: btnText,
+            emoji: true,
+          },
+          value: "details",
+          url: link,
+          action_id: "button-action",
+          style: "primary",
         },
       ],
     },

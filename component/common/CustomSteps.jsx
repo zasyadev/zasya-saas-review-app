@@ -21,7 +21,7 @@ function CustomSteps({
       <Steps
         type={"navigation"}
         current={activeStepState}
-        size={lg ? "large" : "small"}
+        size={lg ? "default" : "small"}
         className="pt-0 font-semibold custom-steps-wrapper"
         {...restProps}
       >

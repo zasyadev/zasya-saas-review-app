@@ -2,6 +2,7 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 const moment = require("moment");
 
+import { DATE_FORMAT } from "../../../helpers/dateHelper";
 import { RequestHandler } from "../../../lib/RequestHandler";
 
 async function handle(req, res) {
@@ -30,8 +31,8 @@ async function handle(req, res) {
   });
 
   reviewData.map(async (item) => {
-    let createdDate = moment(item.created_date).format("DD");
-    let todayDate = moment().format("DD");
+    let createdDate = moment(item.created_date).format(DATE_FORMAT);
+    let todayDate = moment().format(DATE_FORMAT);
 
     if (!item.frequency_status && createdDate != todayDate) {
       let assigneeData = await prisma.reviewAssignee.findMany({
@@ -58,5 +59,6 @@ async function handle(req, res) {
     status: 200,
   });
 }
+const functionHandle = (req, res) => RequestHandler(req, res, handle, ["POST"]);
 
-export default (req, res) => RequestHandler(req, res, handle, ["POST"]);
+export default functionHandle;

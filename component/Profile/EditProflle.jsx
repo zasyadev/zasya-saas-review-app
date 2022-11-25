@@ -11,7 +11,7 @@ import {
 } from "antd";
 import ImgCrop from "antd-img-crop";
 import { useS3Upload } from "next-s3-upload";
-import { useRouter } from "next/router";
+
 import React, { useEffect, useState } from "react";
 import {
   PrimaryButton,
@@ -48,7 +48,6 @@ const ImageUpload = ({
   formName,
   limit = true,
   limitSize = 1,
-  // handleFileChange
 }) => {
   const [isUploading, setIsUploading] = useState(false);
 
@@ -123,7 +122,6 @@ const ImageUpload = ({
             onChange={handleChange}
             onPreview={onPreview}
             data={{ category: category }}
-            // onRemove={(val) => deleteBanner(val.uid)}
             beforeUpload={beforeUpload}
           >
             {limit
@@ -138,10 +136,8 @@ const ImageUpload = ({
   );
 };
 function EditProfile({ user }) {
-  const router = useRouter();
   const { uploadToS3 } = useS3Upload();
   const [passwordForm] = Form.useForm();
-  const [slackForm] = Form.useForm();
   const [apiLoading, setApiLoading] = useState(false);
   const [userDetails, setUserDetails] = useState({
     first_name: "",
@@ -154,7 +150,6 @@ function EditProfile({ user }) {
     slack_email: "",
   });
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [showSlackEditModal, setShowSlackEditModal] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const [image, setImage] = useState([]);
@@ -193,8 +188,7 @@ function EditProfile({ user }) {
       .then(({ data: response }) => {
         if (response.status === 200) {
           openNotificationBox("success", response.message, 3);
-          router.push("/profile");
-          return;
+          window.location.href = process.env.NEXT_PUBLIC_APP_URL + "/profile";
         }
       })
       .catch((err) => setApiLoading(false));
@@ -277,34 +271,10 @@ function EditProfile({ user }) {
     setImage([]);
   };
 
-  const onChangeSlack = async (values) => {
-    await httpService
-      .post(`/api/profile/slack/${user.id}`, values)
-      .then(({ data: response }) => {
-        if (response.status === 200) {
-          slackForm.resetFields();
-          setShowSlackEditModal(false);
-          openNotificationBox("success", response.message, 3);
-          getProfileData();
-        }
-      })
-      .catch((err) => {
-        console.log(err.response.data?.message);
-        openNotificationBox("error", err.response.data?.message, 3);
-      });
-  };
-
-  function handleEditSlack() {
-    slackForm.setFieldsValue({
-      slack_email: userDetails.slack_email,
-    });
-    setShowSlackEditModal(true);
-  }
-
   return loading ? (
     <div className="grid grid-cols-1 xl:grid-cols-6 mt-1">
       <div className="xl:col-start-1 xl:col-end-7 px-4 ">
-        <div className="w-full bg-white rounded-md  shadow-md p-4 mt-2">
+        <div className="w-full bg-white rounded-md  shadow-md p-5 mt-2">
           <Row gutter={16}>
             <Col lg={24} xs={24} className="mt-4 items-center">
               <Skeleton active />
@@ -319,25 +289,16 @@ function EditProfile({ user }) {
         <div className="xl:col-start-1 xl:col-end-7 px-4 ">
           <div className="rounded-md text-white grid items-center w-full shadow-lg-purple mb-4 md:mb-6">
             <div className="w-full flex item-center justify-end">
-              <div className="flex justify-end ">
-                <div className="mr-4">
-                  <SecondaryButton
-                    onClick={() => handleEditSlack()}
-                    className="rounded h-full md:w-full w-32 mr-2"
-                    title="Change Slack Email"
-                  />
-                </div>
-                <div>
-                  <PrimaryButton
-                    onClick={() => showPasswordEditModal()}
-                    className="md:px-4 px-2 rounded-md md:w-full w-24"
-                    title="Change Password"
-                  />
-                </div>
+              <div className=" w-fit">
+                <PrimaryButton
+                  onClick={() => showPasswordEditModal()}
+                  className="md:px-4 px-2 w-full"
+                  title="Change Password"
+                />
               </div>
             </div>
           </div>
-          <div className="w-full bg-white rounded-md  shadow-md px-2 py-3 md:px-4 md:py-6">
+          <div className="w-full bg-white rounded-md  shadow-md p-4 md:py-6">
             <Row gutter={16}>
               <Col lg={24} xs={24} className=" items-center">
                 <Form
@@ -461,14 +422,14 @@ function EditProfile({ user }) {
                   <div className="text-center space-x-4">
                     <SecondaryButton
                       withLink={true}
-                      className="rounded h-full w-32"
+                      className=" h-full w-32"
                       linkHref={"/profile"}
                       title="Cancel"
                     />
                     <PrimaryButton
                       type="submit"
                       disabled={apiLoading}
-                      className=" h-full w-32 rounded "
+                      className=" h-full w-32  "
                       title="Submit"
                     />
                   </div>
@@ -488,12 +449,12 @@ function EditProfile({ user }) {
           <>
             <SecondaryButton
               onClick={() => setIsModalVisible(false)}
-              className="rounded h-full mr-2"
+              className=" h-full mr-2"
               title="Cancel"
             />
             <PrimaryButton
               onClick={() => passwordForm.submit()}
-              className=" h-full rounded "
+              className=" h-full  "
               title="Change Password"
             />
           </>,
@@ -577,54 +538,6 @@ function EditProfile({ user }) {
             </div>
           </Form>
         </div>
-      </CustomModal>
-
-      <CustomModal
-        title="Change Slack Email"
-        visible={showSlackEditModal}
-        onCancel={() => setShowSlackEditModal(false)}
-        customFooter
-        footer={[
-          <>
-            <SecondaryButton
-              onClick={() => setShowSlackEditModal(false)}
-              className="rounded h-full mr-2"
-              title="Cancel"
-            />
-            <PrimaryButton
-              onClick={() => slackForm.submit()}
-              className=" h-full rounded "
-              title="Change Email"
-            />
-          </>,
-        ]}
-        modalProps={{ wrapClassName: "view_form_modal" }}
-      >
-        <Form
-          form={slackForm}
-          layout="vertical"
-          autoComplete="off"
-          initialValues={{
-            slack_email: userDetails?.slack_email,
-          }}
-          onFinish={onChangeSlack}
-        >
-          <Form.Item
-            label="Slack Email Address "
-            name="slack_email"
-            rules={[
-              {
-                required: true,
-                message: "Required",
-              },
-            ]}
-          >
-            <Input
-              placeholder="Slack Email Address"
-              className="form-control block w-full px-4 py-2 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-green-500 focus:outline-none"
-            />
-          </Form.Item>
-        </Form>
       </CustomModal>
     </>
   );

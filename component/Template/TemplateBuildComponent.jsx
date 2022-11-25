@@ -12,8 +12,7 @@ import ErrorBox from "../common/ErrorBox";
 import StepFixedHeader from "../common/StepFixedHeader";
 import StepsBottomFixedBar from "../common/StepsBottomFixedBar";
 import {
-  MULTIPLECHOICE_TYPE,
-  RATING_TYPE,
+  MULTIPLE_CHOICE_TYPE,
   SCALE_TYPE,
 } from "../Form/questioncomponents/constants";
 import { TemplateStepsArray } from "./constants";
@@ -26,7 +25,7 @@ const defaultQuestionConfig = {
   questionText: "",
   options: [defaultOption],
   open: true,
-  type: MULTIPLECHOICE_TYPE,
+  type: MULTIPLE_CHOICE_TYPE,
   error: "",
   active: true,
 };
@@ -56,10 +55,6 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
   const [templateSaveLoading, setTemplateSaveLoading] = useState(false);
 
   function removeElement(idx, type) {
-    // if (type === RATING_TYPE) {
-    //   setRatingState(false);
-    // }
-
     setQuestions((prev) => prev.filter((_, i) => i != idx));
 
     if (idx > 0) setActiveQuestionIndex(idx - 1);
@@ -91,10 +86,6 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
   }
 
   function defineType(type, index) {
-    // if (type === RATING_TYPE) {
-    //   setRatingState(true);
-    // }
-
     setQuestions((prev) =>
       prev.map((item, i) =>
         i === index
@@ -110,18 +101,6 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
               }
           : item
       )
-    );
-  }
-
-  function showAsQuestion(index) {
-    setQuestions((prev) =>
-      prev.map((item, i) => (i === index ? { ...item, open: false } : item))
-    );
-  }
-
-  function handleExpand(idx) {
-    setQuestions((prev) =>
-      prev.map((item, i) => (i === idx ? { ...item, open: true } : item))
     );
   }
 
@@ -265,7 +244,6 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
       setFormTitle({ value: editFormData?.form_data?.title, error: "" });
       setFormDes(editFormData?.form_data?.description);
       setSelectTypeFeild(false);
-      // setModalTitleOpen(false);
     }
   }, []);
 
@@ -290,7 +268,7 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
       let errorOptions = item.options;
       if (
         item.options.length &&
-        (item.type === MULTIPLECHOICE_TYPE || item.type === SCALE_TYPE)
+        (item.type === MULTIPLE_CHOICE_TYPE || item.type === SCALE_TYPE)
       ) {
         errorOptions = item.options.map((option) => {
           let error = "";
@@ -358,17 +336,17 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
   };
 
   return (
-    <div className="px-4 md:px-6 pb-28 pt-20 md:pt-20 md:pb-24  bg-gray-100 min-h-screen">
+    <div className=" md:px-6 pb-16 pt-14 md:pt-20 md:pb-24 bg-white  md:bg-gray-100 min-h-screen">
       <StepFixedHeader
         title={`${editMode ? "Edit" : "Create"} Template`}
         backUrl={"/template"}
       />
       {activeStepState === 0 && (
-        <div className="w-full md:w-1/2 bg-white p-2 md:px-5 md:pt-5 md:pb-6 xl:p-8 xl:pt-6 rounded-md mx-auto space-y-6">
-          <div className="text-primary text-base md:text-lg xl:text-xl font-bold border-b border-gray-200 pb-2">
+        <div className="w-full md:w-1/2 bg-white pb-2  md:px-5 md:pt-5 md:pb-6 xl:p-8 xl:pt-6 md:rounded-md mx-auto space-y-2 md:space-y-6">
+          <div className="text-primary text-base md:text-lg xl:text-xl font-bold md:border-b border-gray-200 px-4 py-3">
             Create a Custom Template
           </div>
-          <div className="space-y-2">
+          <div className="px-4 md:p-0 space-y-2">
             <div className="text-primary text-base font-semibold">Title</div>
 
             <CustomInput
@@ -382,19 +360,22 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
             />
             <ErrorBox error={formTitle?.error} />
           </div>
-          <div className="text-primary text-base font-semibold">
-            Description
+          <div className="px-4 md:p-0">
+            <div className="text-primary text-base font-semibold mb-2">
+              Description
+            </div>
+
+            <CustomTextArea
+              placeholder="E.g. Template Description"
+              customclassname="w-full"
+              rows={5}
+              onChange={(e) => {
+                setFormDes(e.target.value);
+              }}
+              value={formDes}
+            />
           </div>
 
-          <CustomTextArea
-            placeholder="E.g. Template Description"
-            customclassname="w-full"
-            rows={5}
-            onChange={(e) => {
-              setFormDes(e.target.value);
-            }}
-            value={formDes}
-          />
           {user?.role_id === 1 && (
             <CustomCheckbox
               title="Check if you want to make this a Default Template"
@@ -415,10 +396,7 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
           removeElement={removeElement}
           addMoreQuestionField={addMoreQuestionField}
           activeQuestionIndex={activeQuestionIndex}
-          editMode={editMode}
           defineType={defineType}
-          showAsQuestion={showAsQuestion}
-          handleExpand={handleExpand}
           addOption={addOption}
           handleQuestionValue={handleQuestionValue}
           handleOptionValue={handleOptionValue}
@@ -446,7 +424,6 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
         lastStep={2}
         previewStep={1}
         submitLoading={templateSaveLoading}
-        // submitHandle={saveFormField}
         nextStepHandller={nextStepHandller}
       />
     </div>

@@ -1,13 +1,22 @@
+import { motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
 import httpService from "../../lib/httpService";
-import { ToggleButton } from "../common/CustomButton";
-import { SkeletonTemplateCard, TemplateCard } from "./TemplateCard";
+import ToggleButton from "../common/ToggleButton";
+import NoRecordFound from "../common/NoRecordFound";
+
+import {
+  MY_TEMPLATE_KEY,
+  TemplateToggleList,
+  DefaultMotionVarient,
+} from "./constants";
+import SkeletonTemplateCard from "./components/SkeletonTemplateCard";
+import TemplateCard from "./TemplateCard";
 
 function TemplateListView({ user }) {
   const [userTemplateList, setUserTemplateList] = useState([]);
   const [defaultTemplateList, setDefaultTemplateList] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [changeTemaplateView, setChangeTemaplateView] = useState(true);
+  const [changeTemplateView, setChangeTemplateView] = useState(MY_TEMPLATE_KEY);
 
   async function fetchUserTemplateList() {
     setLoading(true);
@@ -50,67 +59,64 @@ function TemplateListView({ user }) {
 
   return (
     <div className="container mx-auto max-w-full">
-      <div className="w-full  p-4 lg:p-6">
-        <div className="flex w-auto">
-          <ToggleButton
-            className={`rounded-r-none rounded-l-md w-1/2  md:w-fit ${
-              changeTemaplateView
-                ? "bg-primary text-white"
-                : " bg-gray-50 hover:bg-gray-100 border-gray-300 text-gray-600"
-            }`}
-            onClick={() => setChangeTemaplateView(true)}
-            title={"My Templates"}
-          />
-          <ToggleButton
-            className={`rounded-l-none rounded-r-md w-1/2  md:w-fit ${
-              changeTemaplateView
-                ? "bg-gray-50 hover:bg-gray-100 border-gray-300 text-gray-600 "
-                : "bg-primary text-white"
-            } `}
-            onClick={() => setChangeTemaplateView(false)}
-            title={"Default Templates"}
-          />
-        </div>
+      <div className="  mb-4 md:mb-6">
+        <ToggleButton
+          arrayList={TemplateToggleList}
+          handleToggle={(activeKey) => setChangeTemplateView(activeKey)}
+          activeKey={changeTemplateView}
+        />
+      </div>
 
-        <div className="container mx-auto max-w-full mt-3">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-5 gap-8 2xl:gap-12 ">
-            {changeTemaplateView ? (
-              <>
-                {loading
-                  ? [...Array(3)].map((_, idx) => (
-                      <SkeletonTemplateCard key={idx + "temp"} />
-                    ))
-                  : userTemplateList.length > 0 &&
-                    userTemplateList.map((form) => (
-                      <TemplateCard
-                        key={form.id}
-                        id={form.id}
-                        title={form?.form_data?.title}
-                        description={form?.form_data?.description}
-                        questionLength={form?.form_data?.questions?.length}
-                        isDelete={false}
-                        linkHref={`/review/edit/${form.id}`}
-                        // deleteTemplate={deleteTemplate}
-                      />
-                    ))}
-              </>
-            ) : (
-              defaultTemplateList.length > 0 &&
-              defaultTemplateList.map((form) => (
-                <TemplateCard
-                  key={form.id}
-                  id={form.id}
-                  title={form?.form_data?.title}
-                  description={form?.form_data?.description}
-                  questionLength={form?.form_data?.questions?.length}
-                  isDelete={false}
-                  linkHref={`/review/edit/${form.id}`}
-                  // deleteTemplate={deleteTemplate}
-                />
-              ))
-            )}
-          </div>
-        </div>
+      <div className="container mx-auto max-w-full ">
+        <motion.div
+          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-5 gap-8 2xl:gap-12 "
+          variants={DefaultMotionVarient}
+          initial="hidden"
+          animate="show"
+        >
+          {changeTemplateView === MY_TEMPLATE_KEY ? (
+            <>
+              {loading ? (
+                [...Array(3)].map((_, idx) => (
+                  <SkeletonTemplateCard
+                    key={idx + "temp"}
+                    index={idx + "temp"}
+                  />
+                ))
+              ) : userTemplateList.length > 0 ? (
+                userTemplateList.map((form) => (
+                  <TemplateCard
+                    key={form.id}
+                    id={form.id}
+                    title={form?.form_data?.title}
+                    description={form?.form_data?.description}
+                    questionLength={form?.form_data?.questions?.length}
+                    isDelete={false}
+                    linkHref={`/template/preview/${form.id}`}
+                    // linkHref={`/review/edit/${form.id}`}
+                  />
+                ))
+              ) : (
+                <NoRecordFound title="No Templates Found" />
+              )}
+            </>
+          ) : defaultTemplateList.length > 0 ? (
+            defaultTemplateList.map((form) => (
+              <TemplateCard
+                key={form.id}
+                id={form.id}
+                title={form?.form_data?.title}
+                description={form?.form_data?.description}
+                questionLength={form?.form_data?.questions?.length}
+                isDelete={false}
+                // linkHref={`/review/edit/${form.id}`}
+                linkHref={`/template/preview/${form.id}`}
+              />
+            ))
+          ) : (
+            <NoRecordFound title="No Templates Found" />
+          )}
+        </motion.div>
       </div>
     </div>
   );

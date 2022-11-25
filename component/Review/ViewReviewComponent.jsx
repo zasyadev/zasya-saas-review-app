@@ -1,3 +1,4 @@
+import { Skeleton } from "antd";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import httpService from "../../lib/httpService";
@@ -36,26 +37,16 @@ function ViewReviewComponent({ user }) {
   useEffect(() => {
     if (review_id) fetchReviewData(review_id);
   }, [review_id]);
-  return (
-    <AdminLayout user={user} title={reviewData?.review_name}>
-      {loading ? (
-        <div className="container mx-auto max-w-full">
-          <div className="border shadow bg-white rounded-md p-2 mt-4 w-full mx-auto">
-            <div className="w-full  rounded-md  p-2 mt-2 template-wrapper">
-              <div className="animate-pulse flex space-x-4">
-                <div className="flex-1 space-y-6 py-1">
-                  <div className="h-4 bg-slate-200 rounded"></div>
-                  <div className="h-4 bg-slate-200 rounded"></div>
 
-                  <div className="space-y-5">
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="h-4 bg-slate-200 rounded"></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+  return (
+    <AdminLayout
+      user={user}
+      isBack
+      title={reviewData?.questionData?.review_name}
+    >
+      {loading ? (
+        <div className="container bg-white rounded-md p-5 mx-auto max-w-full">
+          <Skeleton active />
         </div>
       ) : reviewData &&
         reviewData?.questionData &&

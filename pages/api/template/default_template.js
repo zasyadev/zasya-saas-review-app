@@ -17,5 +17,5 @@ async function handle(req, res, prisma) {
 
   return res.status(404).json({ status: 404, message: "No Record Found" });
 }
-
-export default (req, res) => RequestHandler(req, res, handle, ["GET"]);
+const functionHandle = (req, res) => RequestHandler(req, res, handle, ["GET"]);
+export default functionHandle;

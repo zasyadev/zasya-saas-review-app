@@ -3,7 +3,7 @@ import DashBoard from "../../component/DashBoard/DashBoard";
 import AdminLayout from "../../component/layout/AdminLayout";
 import WithMe from "../../component/layout/WithMe";
 
-function dashboard() {
+function DashboardPage() {
   return (
     <WithMe>
       {({ user }) => (
@@ -15,4 +15,4 @@ function dashboard() {
   );
 }
 
-export default dashboard;
+export default DashboardPage;

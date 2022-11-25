@@ -1,24 +1,28 @@
+import dynamic from "next/dynamic";
 import React from "react";
 import { HeadersComponent } from "../../component/common/HeadersComponent";
-
-// import AdminLayout from "../../component/layout/AdminLayout";
+import SuspenceWrapper from "../../component/common/SuspenceWrapper";
 import WithMe from "../../component/layout/WithMe";
 
-import TemplateBuildComponent from "../../component/Template/TemplateBuildComponent";
+const TemplateBuildComponent = dynamic(
+  () => import("../../component/Template/TemplateBuildComponent"),
+  {
+    suspense: true,
+  }
+);
 
-function AddTemplate({ user }) {
+function AddTemplate() {
   return (
-    <WithMe>
-      {({ user }) => (
-        // <AdminLayout user={user} title="Template">
-        <>
-          <HeadersComponent />
-          <TemplateBuildComponent user={user} />
-        </>
-
-        // </AdminLayout>
-      )}
-    </WithMe>
+    <SuspenceWrapper>
+      <WithMe>
+        {({ user }) => (
+          <>
+            <HeadersComponent />
+            <TemplateBuildComponent user={user} />
+          </>
+        )}
+      </WithMe>
+    </SuspenceWrapper>
   );
 }
 

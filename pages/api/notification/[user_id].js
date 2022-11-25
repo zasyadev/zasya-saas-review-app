@@ -8,11 +8,10 @@ async function handle(req, res, prisma) {
   });
 
   const notificationData = await prisma.userNotification.findMany({
-    orderBy: [
-      {
-        id: "desc",
-      },
-    ],
+    orderBy: {
+      id: "desc",
+    },
+
     where: {
       AND: [
         { user_id: user_id },
@@ -29,5 +28,5 @@ async function handle(req, res, prisma) {
     message: "All Data Retrieved",
   });
 }
-
-export default (req, res) => RequestHandler(req, res, handle, ["GET"]);
+const functionHandle = (req, res) => RequestHandler(req, res, handle, ["GET"]);
+export default functionHandle;

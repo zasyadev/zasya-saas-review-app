@@ -41,7 +41,7 @@ const ReviewViewComponent = ({
                   {`(${idx + 1})`} {questionText}
                 </p>
               )}
-              {editableFeedback ? (
+              {editableFeedback && (
                 <p
                   className="ml-3 text-primary  text-sm cursor-pointer"
                   onClick={() => {
@@ -50,10 +50,10 @@ const ReviewViewComponent = ({
                 >
                   <EditOutlined />
                 </p>
-              ) : null}
+              )}
             </div>
 
-            {options?.length > 0 && type === MULTIPLECHOICE_TYPE && (
+            {options?.length > 0 && type === MULTIPLE_CHOICE_TYPE && (
               <div className="ml-2 my-2">
                 <Radio.Group
                   name="checkbox_option"
@@ -76,7 +76,7 @@ const ReviewViewComponent = ({
                 </Radio.Group>
               </div>
             )}
-            {checkInputOrTextarea(type) ? (
+            {checkInputOrTextarea(type) && (
               <div className="review-view-input-wrraper">
                 <Input
                   fullWidth={true}
@@ -85,7 +85,7 @@ const ReviewViewComponent = ({
                   disabled
                 />
               </div>
-            ) : null}
+            )}
             {type == RATING_TYPE && (
               <div className="mt-2 review-question-rating">
                 <div className="text-white text-2xl ">
@@ -93,7 +93,7 @@ const ReviewViewComponent = ({
                 </div>
               </div>
             )}
-            {type == YESNO_TYPE ? (
+            {type == YESNO_TYPE && (
               <div className="mt-2">
                 <div className="flex items-center justify-center">
                   <div className="p-4  border mx-2 rounded-sm">
@@ -108,7 +108,7 @@ const ReviewViewComponent = ({
                   </div>
                 </div>
               </div>
-            ) : null}
+            )}
 
             {type === SCALE_TYPE && options?.length > 1 && (
               <div className="flex w-full justify-center items-center">

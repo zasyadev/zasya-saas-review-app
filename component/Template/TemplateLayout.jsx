@@ -1,18 +1,25 @@
+import { motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
 import { openNotificationBox } from "../../component/common/notification";
 import httpService from "../../lib/httpService";
-import { ToggleButton } from "../common/CustomButton";
+import ToggleButton from "../common/ToggleButton";
+import NoRecordFound from "../common/NoRecordFound";
+
 import {
-  CreateTemplateCard,
-  SkeletonTemplateCard,
-  TemplateCard,
-} from "./TemplateCard";
+  MY_TEMPLATE_KEY,
+  TemplateToggleList,
+  DefaultMotionVarient,
+} from "./constants";
+import { PrimaryButton } from "../common/CustomButton";
+import SkeletonTemplateCard from "./components/SkeletonTemplateCard";
+import CreateTemplateCard from "./components/CreateTemplateCard";
+import TemplateCard from "./TemplateCard";
 
 function TemplateLayout({ user }) {
   const [templateList, setTemplateList] = useState([]);
   const [defaultTemplateList, setDefaultTemplateList] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [changeTemaplateView, setChangeTemaplateView] = useState(true);
+  const [changeTemplateView, setChangeTemplateView] = useState(MY_TEMPLATE_KEY);
 
   async function fetchUserTemplateList() {
     setLoading(true);
@@ -76,35 +83,38 @@ function TemplateLayout({ user }) {
 
   return (
     <div className="container mx-auto max-w-full">
-      <div className="flex w-auto">
+      <div className="flex flex-row items-center justify-between flex-wrap gap-4 mb-4 md:mb-6">
         <ToggleButton
-          className={`rounded-r-none rounded-l-md w-1/2  md:w-fit ${
-            changeTemaplateView
-              ? "bg-primary text-white"
-              : " bg-gray-50 hover:bg-gray-100 border-gray-300 text-gray-600"
-          }`}
-          onClick={() => setChangeTemaplateView(true)}
-          title={"My Templates"}
+          arrayList={TemplateToggleList}
+          handleToggle={(activeKey) => setChangeTemplateView(activeKey)}
+          activeKey={changeTemplateView}
         />
-        <ToggleButton
-          className={`rounded-l-none rounded-r-md w-1/2  md:w-fit ${
-            changeTemaplateView
-              ? "bg-gray-50 hover:bg-gray-100 border-gray-300 text-gray-600 "
-              : "bg-primary text-white"
-          } `}
-          onClick={() => setChangeTemaplateView(false)}
-          title={"Default Templates"}
-        />
+        {changeTemplateView === MY_TEMPLATE_KEY && (
+          <PrimaryButton
+            withLink={true}
+            className="md:hidden"
+            linkHref="/template/add"
+            title={"Create"}
+          />
+        )}
       </div>
 
-      <div className="container mx-auto max-w-full mt-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-5 gap-8 2xl:gap-12 ">
-          {changeTemaplateView ? (
+      <div className="container mx-auto max-w-full">
+        <motion.div
+          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 xl:gap:6 2xl:gap-8 "
+          variants={DefaultMotionVarient}
+          initial="hidden"
+          animate="show"
+        >
+          {changeTemplateView === MY_TEMPLATE_KEY ? (
             <>
               <CreateTemplateCard />
               {loading
                 ? [...Array(3)].map((_, idx) => (
-                    <SkeletonTemplateCard key={idx + "temp"} />
+                    <SkeletonTemplateCard
+                      key={idx + "temp"}
+                      index={idx + "temp"}
+                    />
                   ))
                 : templateList.length > 0 &&
                   templateList.map((template) => (
@@ -122,7 +132,7 @@ function TemplateLayout({ user }) {
             </>
           ) : (
             <>
-              {defaultTemplateList.length > 0 &&
+              {defaultTemplateList.length > 0 ? (
                 defaultTemplateList.map((template) => (
                   <TemplateCard
                     key={template.id + "default"}
@@ -134,10 +144,13 @@ function TemplateLayout({ user }) {
                     linkHref={`/template/preview/${template.id}`}
                     isDelete={false}
                   />
-                ))}
+                ))
+              ) : (
+                <NoRecordFound title="No Templates Found" />
+              )}
             </>
           )}
-        </div>
+        </motion.div>
       </div>
     </div>
   );

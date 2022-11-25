@@ -1,27 +1,46 @@
-import { useSession } from "next-auth/client";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
-import { LoadingSpinner } from "../Loader/LoadingSpinner";
+import ReviewPopUpModal from "../common/ReviewPopUpModal";
+import LoadingSpinner from "../Loader/LoadingSpinner";
+
 const WithMe = (props) => {
   const router = useRouter();
-  const [session, loading] = useSession();
+  const { data: session, status } = useSession();
 
   useEffect(() => {
-    if (!loading && !session) {
-      let back_url = "";
-      if (router.asPath) {
-        back_url = `?back_url=${router.asPath}`;
+    if (status !== "loading") {
+      if (status === "unauthenticated" && !session) {
+        let back_url = "";
+        if (router.asPath) {
+          back_url = `?back_url=${router.asPath}`;
+        }
+        router.push(`/auth/login${back_url}`);
       }
-      router.push(`/auth/login${back_url}`);
     }
-  }, [loading, session]);
+  }, [status, session]);
 
-  return loading ? (
+  return status === "loading" ? (
     <LoadingSpinner />
   ) : !session ? (
     <LoadingSpinner />
   ) : (
-    <div>{props.children(session)}</div>
+    <div>
+      {props.children(session)}
+      {session &&
+        session?.user?.id &&
+        [
+          "/dashboard",
+          "/review/received",
+          "/review",
+          "/applaud",
+          "/template",
+          "/profile",
+          "/applaud/allapplaud",
+        ].includes(router?.pathname) && (
+          <ReviewPopUpModal userId={session.user.id} />
+        )}
+    </div>
   );
 };
 

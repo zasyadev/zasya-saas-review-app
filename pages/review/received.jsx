@@ -8,7 +8,7 @@ function ReviewReceivedPage() {
   return (
     <WithMe>
       {({ user }) => (
-        <AdminLayout user={user} title={"Reviews Received"}>
+        <AdminLayout user={user} title={"Reviews"}>
           <FormView user={user} />
         </AdminLayout>
       )}

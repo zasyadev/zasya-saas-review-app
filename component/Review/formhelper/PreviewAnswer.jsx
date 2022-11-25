@@ -1,50 +1,27 @@
-import { Col, Row } from "antd";
 import React from "react";
-import { PrimaryButton, SecondaryButton } from "../../common/CustomButton";
+import PreviewAnswerQuestionCard from "../../Template/components/PreviewAnswerQuestionCard";
 
-export function PreviewAnswer({ item, nextSlide, setNextSlide, length }) {
+function PreviewAnswer({ length, formTitle, questions }) {
   return (
-    <div className="my-auto answer-bg  ">
-      <Row justify="center">
-        <Col xs={20} md={18}>
-          <div className=" bg-white rounded-md shadow-md px-2 py-2 mt-8 sm:mt-15 md:my-10">
-            <div className="text-xl font-bold text-red-400 mt-5 px-2 text-center">
-              {item.questionText}
-            </div>
-            <div className="text-lg text-primary mt-5 text-center px-2">
-              {item.option}
-            </div>
-            <div className="flex items-center justify-center px-3 my-6 space-x-3">
-              {nextSlide === 0 ? (
-                ""
-              ) : (
-                <SecondaryButton
-                  onClick={() => setNextSlide(nextSlide - 1)}
-                  className="bg-gray-400"
-                  title="Previous"
-                />
-              )}
+    <div className="answer-preview space-y-4">
+      <div className=" bg-white rounded-md p-3 md:p-5 shadow-md md:w-10/12 2xl:w-8/12 mx-auto space-y-3">
+        <p className="text-lg font-bold text-primary mb-1">{formTitle}</p>
+        <p className="mb-1 font-medium">{length} Questions</p>
+      </div>
 
-              {length - 1 === nextSlide ? (
-                <PrimaryButton
-                  withLink={true}
-                  className=""
-                  linkHref={"/review/received"}
-                  title="Back"
-                />
-              ) : (
-                <PrimaryButton
-                  className=""
-                  title="Next"
-                  onClick={() => {
-                    setNextSlide(nextSlide + 1);
-                  }}
-                />
-              )}
-            </div>
-          </div>
-        </Col>
-      </Row>
+      <div className=" bg-white rounded-md p-3 md:p-5 shadow-md md:w-10/12 2xl:w-8/12 mx-auto space-y-5">
+        {questions.length &&
+          questions.map((question, idx) => (
+            <PreviewAnswerQuestionCard
+              key={idx + "ques"}
+              questionText={question?.questionText}
+              option={question?.option}
+              questionNumber={idx}
+            />
+          ))}
+      </div>
     </div>
   );
 }
+
+export default PreviewAnswer;

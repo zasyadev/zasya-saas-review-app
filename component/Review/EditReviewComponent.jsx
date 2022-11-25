@@ -1,6 +1,5 @@
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-// import AdminLayout from "../../component/layout/AdminLayout";
 import AddEditReviewComponent from "../../component/Review/AddEditReviewComponent";
 import httpService from "../../lib/httpService";
 import { HeadersComponent } from "../common/HeadersComponent";

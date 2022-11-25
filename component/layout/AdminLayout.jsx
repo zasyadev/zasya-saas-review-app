@@ -24,14 +24,14 @@ function getItem(label, key, icon, children, type) {
   };
 }
 
-function AdminLayout({ user, title, children }) {
-  const { md } = useBreakpoint();
+function AdminLayout({ user, title, isBack = false, children }) {
+  const { md, lg } = useBreakpoint();
   const [collapsed, setCollapsed] = useState(false);
 
   useEffect(() => {
-    if (md) setCollapsed(false);
+    if (lg) setCollapsed(false);
     else setCollapsed(true);
-  }, [md]);
+  }, [lg]);
 
   const allMenus = [
     getItem(
@@ -77,18 +77,19 @@ function AdminLayout({ user, title, children }) {
           collapsed={collapsed}
           setCollapsed={setCollapsed}
           items={filteredMenus}
-          md={md}
+          lg={lg}
         />
-        <Layout>
+        <Layout className="min-h-screen">
           <Content className="bg-primary-gray ">
             <HeaderLayout
+              isBack={isBack}
               title={title}
               user={user}
               setCollapsed={setCollapsed}
               collapsed={collapsed}
-              md={md}
+              lg={lg}
             />
-            <div className="p-3 md:p-6">{children}</div>
+            <div className="p-4 md:p-6">{children}</div>
           </Content>
           <Footer className="text-center bg-white p-3 font-medium text-primary">
             Review App © 2022 Created By Zasya Solution
