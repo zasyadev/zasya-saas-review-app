@@ -87,14 +87,14 @@ export function ButtonGray({
   withLink,
   className = "",
   linkHref,
-
+  rounded = "rounded-md",
   disabled = false,
   loading = false,
   ...restProp
 }) {
   const isDisabled = disabled || loading;
 
-  const btnClassName = `rounded-md text-center px-4 py-2 border border-gray-300 font-medium text-gray-600 ${
+  const btnClassName = `${rounded} text-center px-4 py-2 border border-gray-300 font-medium text-gray-600 ${
     isDisabled ? "bg-gray-200" : "bg-gray-50 hover:bg-gray-100"
   }  ${className}`;
   return withLink ? (
