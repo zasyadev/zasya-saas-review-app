@@ -122,36 +122,12 @@ async function handle(req, res, prisma) {
               },
             });
 
-            if (
-              user?.UserDetails &&
-              user?.UserDetails?.notification &&
-              user?.UserDetails?.notification?.length &&
-              user?.UserDetails?.notification.includes("mail")
-            ) {
-              const mailData = {
-                from: process.env.SMTP_USER,
-                to: user.email,
-                subject: `New review assigned by ${assignedFromData.first_name}`,
-                html: mailTemplate({
-                  body: `Will you take a moment to complete this review assigned by <b>${assignedFromData.first_name}</b>.`,
-                  name: user.first_name,
-                  btnLink: `${process.env.NEXT_APP_URL}review/id/${assigneeData.id}`,
-                  btnText: "Get Started",
-                }),
-              };
-
-              await mailService.sendMail(mailData, function (err, info) {
-                // if (err) console.log("failed");
-                // else console.log("successfull");
-              });
-            }
-
             let notificationMessage = {
               message: `${assignedFromData.first_name} has assigned you New Review.`,
               link: `${process.env.NEXT_APP_URL}review/id/${assigneeData.id}`,
             };
 
-            let notificationData = await prisma.userNotification.create({
+            await prisma.userNotification.create({
               data: {
                 user: { connect: { id: user.id } },
                 data: notificationMessage,
@@ -161,24 +137,40 @@ async function handle(req, res, prisma) {
                 },
               },
             });
-            if (
-              user?.UserDetails &&
-              user?.UserDetails?.notification &&
-              user?.UserDetails?.notification?.length &&
-              user?.UserDetails?.notification.includes("slack")
-            ) {
-              if (user.UserDetails.slack_id) {
-                let customText = CustomizeSlackMessage({
-                  header: "New Review Recieved",
-                  user: assignedFromData.first_name ?? "",
-                  link: `${process.env.NEXT_APP_URL}review/id/${assigneeData.id}`,
-                  by: "Review Assigned By",
+
+            if (Number(user?.UserDetails?.notification?.length) > 0) {
+              if (user?.UserDetails?.notification.includes("mail")) {
+                const mailData = {
+                  from: process.env.SMTP_USER,
+                  to: user.email,
+                  subject: `New review assigned by ${assignedFromData.first_name}`,
+                  html: mailTemplate({
+                    body: `Will you take a moment to complete this review assigned by <b>${assignedFromData.first_name}</b>.`,
+                    name: user.first_name,
+                    btnLink: `${process.env.NEXT_APP_URL}review/id/${assigneeData.id}`,
+                    btnText: "Get Started",
+                  }),
+                };
+
+                await mailService.sendMail(mailData, function (err, info) {
+                  // if (err) console.log("failed");
+                  // else console.log("successfull");
                 });
-                SlackPostMessage({
-                  channel: user.UserDetails.slack_id,
-                  text: `${assignedFromData.first_name} has assigned you New Review.`,
-                  blocks: customText,
-                });
+              }
+              if (user?.UserDetails?.notification.includes("slack")) {
+                if (user.UserDetails.slack_id) {
+                  let customText = CustomizeSlackMessage({
+                    header: "New Review Recieved",
+                    user: assignedFromData.first_name ?? "",
+                    link: `${process.env.NEXT_APP_URL}review/id/${assigneeData.id}`,
+                    by: "Review Assigned By",
+                  });
+                  SlackPostMessage({
+                    channel: user.UserDetails.slack_id,
+                    text: `${assignedFromData.first_name} has assigned you New Review.`,
+                    blocks: customText,
+                  });
+                }
               }
             }
           });

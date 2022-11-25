@@ -3,11 +3,12 @@ import { Button, Dropdown, Menu, Popconfirm, Select, Skeleton } from "antd";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import { PrimaryButton } from "../../component/common/CustomButton";
+import { ButtonGray, PrimaryButton } from "../../component/common/CustomButton";
 import CustomTable from "../../component/common/CustomTable";
 import { openNotificationBox } from "../../component/common/notification";
 import httpService from "../../lib/httpService";
 import ToggleButton from "../common/ToggleButton";
+import AddMembersModal from "./AddMembersModal";
 import { ReviewToggleList, REVIEW_CREATED_KEY } from "./constants";
 import ReviewAssignessModal from "./ReviewAssignessModal";
 import { TempateSelectWrapper } from "./TempateSelectWrapper";
@@ -18,13 +19,23 @@ const initialReviewCountModalData = {
   isVisible: false,
 };
 
+const initialAddMembersReviewModal = {
+  review_id: "",
+  review_name: "",
+  reviewAssignee: [],
+  isVisible: false,
+};
+
 function ReviewManagement({ user }) {
   const router = useRouter();
 
   const { create: showCreateModal } = router.query;
   const [loading, setLoading] = useState(false);
   const [createReviewModal, setCreateReviewModal] = useState(false);
-  const [addMembersReviewModal, setAddMembersReviewModal] = useState(false);
+  const [addMembersReviewModal, setAddMembersReviewModal] = useState(
+    initialAddMembersReviewModal
+  );
+  const [userList, setUserList] = useState([]);
   const [reviewAssignList, setReviewAssignList] = useState([]);
   const [reviewCountModalData, setReviewCountModalData] = useState(
     initialReviewCountModalData
@@ -46,6 +57,22 @@ function ReviewManagement({ user }) {
       });
   }
 
+  async function fetchAllMembers() {
+    setUserList([]);
+    await httpService
+      .get(`/api/user/organizationId/${user.id}`)
+      .then(({ data: response }) => {
+        if (response.status === 200) {
+          let filterData = response.data.filter(
+            (item) => item.user.status && item.user_id != user.id
+          );
+          setUserList(filterData);
+        }
+      })
+      .catch((err) => {
+        setUserList([]);
+      });
+  }
   async function onDelete(id) {
     if (id) {
       let obj = {
@@ -69,6 +96,7 @@ function ReviewManagement({ user }) {
 
   useEffect(() => {
     fetchReviewAssignList();
+    fetchAllMembers();
   }, []);
   useEffect(() => {
     let timeOutId = null;
@@ -95,12 +123,22 @@ function ReviewManagement({ user }) {
       isVisible: true,
     });
   };
-  const handleAddMembers = ({ review_name, ReviewAssignee }) => {
-    setReviewCountModalData({});
-  };
 
   const hideReviewCountModal = () => {
     setReviewCountModalData(initialReviewCountModalData);
+  };
+
+  const ShowReviewAddModal = ({ review_id, review_name, ReviewAssignee }) => {
+    setAddMembersReviewModal({
+      review_id,
+      review_name,
+      reviewAssignee: ReviewAssignee,
+      isVisible: true,
+    });
+  };
+
+  const hideReviewAddMemberModal = () => {
+    setAddMembersReviewModal(initialReviewCountModalData);
   };
 
   const columns = [
@@ -184,33 +222,33 @@ function ReviewManagement({ user }) {
           <Dropdown
             trigger={"click"}
             overlay={
-              <Menu className="divide-y-2">
-                <Menu.Item key={"call-add-member"}>
-                  {record.is_published === "published" && (
-                    <span
-                      title="Assign"
+              <Menu className="divide-y">
+                {record.is_published === "published" &&
+                  record?.ReviewAssignee?.length < userList?.length && (
+                    <Menu.Item
+                      className="font-semibold"
+                      key={"call-add-member"}
                       onClick={() => {
-                        handleAddMembers({
+                        ShowReviewAddModal({
+                          review_id: record.id,
                           review_name: record.review_name,
                           ReviewAssignee: record.ReviewAssignee,
                         });
                       }}
                     >
                       Add Members
-                    </span>
+                    </Menu.Item>
                   )}
-                </Menu.Item>
-
-                <Menu.Item className=" font-medium" key={"call-preview"}>
+                <Menu.Item className="font-semibold" key={"call-preview"}>
                   <Link href={`/review/question/preview/${record.id}`}>
                     Preview
                   </Link>
                 </Menu.Item>
-                <Menu.Item
-                  className="text-red-500 font-medium"
-                  key={"call-delete"}
-                >
-                  {record.created_by === user.id && (
+                {record.created_by === user.id && (
+                  <Menu.Item
+                    className="text-red-600 font-semibold"
+                    key={"call-delete"}
+                  >
                     <>
                       <Popconfirm
                         title={`Are you sure to delete ${record.review_name} ？`}
@@ -222,15 +260,19 @@ function ReviewManagement({ user }) {
                         Delete
                       </Popconfirm>
                     </>
-                  )}
-                </Menu.Item>
+                  </Menu.Item>
+                )}
               </Menu>
             }
             placement="bottomRight"
           >
-            <Button shape="circle" type="secondary">
-              <EllipsisOutlined rotate={90} className="text-lg" />
-            </Button>
+            <ButtonGray
+              className="grid place-content-center w-8 h-8"
+              rounded="rounded-full"
+              title={
+                <EllipsisOutlined rotate={90} className="text-lg leading-0" />
+              }
+            />
           </Dropdown>
         </>
       ),
@@ -282,10 +324,24 @@ function ReviewManagement({ user }) {
         setCreateReviewModal={setCreateReviewModal}
       />
 
-      <ReviewAssignessModal
-        reviewCountModalData={reviewCountModalData}
-        hideReviewCountModal={hideReviewCountModal}
-      />
+      {reviewCountModalData?.isVisible && (
+        <ReviewAssignessModal
+          reviewCountModalData={reviewCountModalData}
+          hideReviewCountModal={hideReviewCountModal}
+        />
+      )}
+      {addMembersReviewModal?.isVisible && (
+        <AddMembersModal
+          allTeamMembers={userList}
+          review_name="asdasd"
+          isVisible={addMembersReviewModal?.isVisible}
+          review_id={addMembersReviewModal?.review_id}
+          reviewAssignee={addMembersReviewModal?.reviewAssignee}
+          hideReviewAddMemberModal={hideReviewAddMemberModal}
+          fetchReviewAssignList={fetchReviewAssignList}
+          userId={user.id}
+        />
+      )}
     </div>
   );
 }
