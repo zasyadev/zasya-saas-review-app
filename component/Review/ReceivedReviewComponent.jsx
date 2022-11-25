@@ -13,7 +13,7 @@ function ReceivedReviewComponent({ user, reviewId }) {
   const [answerForm] = Form.useForm();
   const [reviewData, setReviewData] = useState({});
   const [loading, setLoading] = useState(false);
-  const [loadingSpin, setLoadingSpin] = useState(false);
+
   const [updateAnswerApiLoading, setUpdateAnswerApiLoading] = useState(false);
   const [formValues, setFormValues] = useState([]);
   const [questions, setQuestions] = useState([]);
@@ -39,7 +39,6 @@ function ReceivedReviewComponent({ user, reviewId }) {
   };
 
   const handleSubmit = async (questionId) => {
-    setLoadingSpin(true);
     if (formValues.length <= 0) {
       openNotificationBox("error", "You have to answer all question", 3);
       return;
@@ -52,7 +51,12 @@ function ReceivedReviewComponent({ user, reviewId }) {
     if (user.id && reviewData.id) {
       let formValue = formValues.find((data) => data.questionId === questionId);
 
-      if (!formValue) return;
+      if (!formValue) {
+        openNotificationBox("error", "You have to answer this question", 3);
+        return;
+      }
+
+      setUpdateAnswerApiLoading(true);
 
       let obj = {
         user_id: user.id,
@@ -68,25 +72,27 @@ function ReceivedReviewComponent({ user, reviewId }) {
         .then(({ data: response }) => {
           if (response.status === 200) {
             openNotificationBox("success", response.message, 3);
+            setUpdateAnswerApiLoading(false);
             router.replace("/review/received");
           }
-          // setLoadingSpin(false);
         })
         .catch((err) => {
           openNotificationBox("error", err.response.data?.message, 3);
-          console.error(err.response.data?.message);
-          setLoadingSpin(false);
+          setUpdateAnswerApiLoading(false);
         });
     }
   };
 
   const handleUpdateAnswer = async (questionId) => {
-    setUpdateAnswerApiLoading(true);
-
     if (user.id && reviewData.id) {
       let formValue = formValues.find((data) => data.questionId === questionId);
 
-      if (!formValue) return;
+      if (!formValue) {
+        openNotificationBox("error", "You have to answer this question", 3);
+        return;
+      }
+
+      setUpdateAnswerApiLoading(true);
 
       let obj = {
         user_id: user.id,
@@ -146,8 +152,6 @@ function ReceivedReviewComponent({ user, reviewId }) {
               });
             }
 
-            console.log({ answersList });
-
             if (answersList.length > 0) {
               setFormValues(answersList);
             }
@@ -198,7 +202,6 @@ function ReceivedReviewComponent({ user, reviewId }) {
                     defaultQuestionAnswer={formValues?.find(
                       (values) => values.questionId === question?.id
                     )}
-                    error={question?.error}
                     updateAnswerApiLoading={updateAnswerApiLoading}
                     nextSlide={nextSlide}
                     setNextSlide={setNextSlide}
