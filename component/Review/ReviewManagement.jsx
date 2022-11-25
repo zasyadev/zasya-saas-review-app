@@ -1,9 +1,5 @@
-import {
-  DeleteOutlined,
-  EditOutlined,
-  InfoCircleOutlined,
-} from "@ant-design/icons";
-import { Popconfirm, Skeleton, Tabs } from "antd";
+import { EllipsisOutlined, InfoCircleOutlined } from "@ant-design/icons";
+import { Button, Dropdown, Menu, Popconfirm, Select, Skeleton } from "antd";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
@@ -11,8 +7,6 @@ import { PrimaryButton } from "../../component/common/CustomButton";
 import CustomTable from "../../component/common/CustomTable";
 import { openNotificationBox } from "../../component/common/notification";
 import httpService from "../../lib/httpService";
-import CustomModal from "../common/CustomModal";
-import DefaultImages from "../common/DefaultImages";
 import ToggleButton from "../common/ToggleButton";
 import { ReviewToggleList, REVIEW_CREATED_KEY } from "./constants";
 import ReviewAssignessModal from "./ReviewAssignessModal";
@@ -30,6 +24,7 @@ function ReviewManagement({ user }) {
   const { create: showCreateModal } = router.query;
   const [loading, setLoading] = useState(false);
   const [createReviewModal, setCreateReviewModal] = useState(false);
+  const [addMembersReviewModal, setAddMembersReviewModal] = useState(false);
   const [reviewAssignList, setReviewAssignList] = useState([]);
   const [reviewCountModalData, setReviewCountModalData] = useState(
     initialReviewCountModalData
@@ -68,7 +63,6 @@ function ReviewManagement({ user }) {
         })
         .catch((err) => {
           fetchReviewAssignList([]);
-          console.error(err.response.data?.message);
         });
     }
   }
@@ -100,6 +94,9 @@ function ReviewManagement({ user }) {
       ReviewAssignee,
       isVisible: true,
     });
+  };
+  const handleAddMembers = ({ review_name, ReviewAssignee }) => {
+    setReviewCountModalData({});
   };
 
   const hideReviewCountModal = () => {
@@ -183,32 +180,59 @@ function ReviewManagement({ user }) {
       title: "Action",
       key: "action",
       render: (_, record) => (
-        <p>
-          {record.is_published != "published" && (
-            <Link href={`/review/edit/${record.id}`} passHref>
-              <span
-                className="text-primary text-xl mr-4 cursor-pointer"
-                title="Assign"
-              >
-                <EditOutlined />
-              </span>
-            </Link>
-          )}
+        <>
+          <Dropdown
+            trigger={"click"}
+            overlay={
+              <Menu className="divide-y-2">
+                <Menu.Item key={"call-add-member"}>
+                  {record.is_published === "published" && (
+                    <span
+                      title="Assign"
+                      onClick={() => {
+                        handleAddMembers({
+                          review_name: record.review_name,
+                          ReviewAssignee: record.ReviewAssignee,
+                        });
+                      }}
+                    >
+                      Add Members
+                    </span>
+                  )}
+                </Menu.Item>
 
-          {record.created_by === user.id && (
-            <>
-              <Popconfirm
-                title={`Are you sure to delete ${record.review_name} ？`}
-                okText="Yes"
-                cancelText="No"
-                onConfirm={() => onDelete(record.id)}
-                icon={false}
-              >
-                <DeleteOutlined className="text-red-500 text-xl" />
-              </Popconfirm>
-            </>
-          )}
-        </p>
+                <Menu.Item className=" font-medium" key={"call-preview"}>
+                  <Link href={`/review/question/preview/${record.id}`}>
+                    Preview
+                  </Link>
+                </Menu.Item>
+                <Menu.Item
+                  className="text-red-500 font-medium"
+                  key={"call-delete"}
+                >
+                  {record.created_by === user.id && (
+                    <>
+                      <Popconfirm
+                        title={`Are you sure to delete ${record.review_name} ？`}
+                        okText="Yes"
+                        cancelText="No"
+                        onConfirm={() => onDelete(record.id)}
+                        icon={false}
+                      >
+                        Delete
+                      </Popconfirm>
+                    </>
+                  )}
+                </Menu.Item>
+              </Menu>
+            }
+            placement="bottomRight"
+          >
+            <Button shape="circle" type="secondary">
+              <EllipsisOutlined rotate={90} className="text-lg" />
+            </Button>
+          </Dropdown>
+        </>
       ),
     },
   ];

@@ -1,38 +1,32 @@
 import React, { useEffect, useState } from "react";
 import NoRecordFound from "../common/NoRecordFound";
-import { TemplatePreviewComponent } from "./TemplatePreviewComponent";
-import { useRouter } from "next/router";
 import httpService from "../../lib/httpService";
+import { TemplatePreviewComponent } from "../Template/TemplatePreviewComponent";
 
-function TemplatePreviewWrapperComponent() {
-  const router = useRouter();
-  const { template_id } = router.query;
-  const [templateData, setTemplateData] = useState({});
+function ReviewQuestionPreviewWrapper({ user, reviewId }) {
+  const [question, setQuestions] = useState({});
+  const [reviewTitle, setReviewTitle] = useState("");
   const [loading, setLoading] = useState(false);
 
-  async function fetchTemplateData() {
+  const fetchReviewData = async () => {
     setLoading(true);
-    setTemplateData({});
-
     await httpService
-      .post(`/api/template/edit`, {
-        template_id: template_id,
-      })
+      .get(`/api/review/received/${reviewId}`)
       .then(({ data: response }) => {
         if (response.status === 200) {
-          setTemplateData(response.data);
+          setQuestions(response.data?.form?.questions);
+          setReviewTitle(response.data?.form?.form_title);
         }
         setLoading(false);
       })
       .catch((err) => {
-        setTemplateData({});
         setLoading(false);
       });
-  }
+  };
 
   useEffect(() => {
-    fetchTemplateData();
-  }, [template_id]);
+    fetchReviewData();
+  }, [reviewId]);
 
   return loading ? (
     <div className="border shadow bg-white rounded-md p-2 mt-4 w-full  md:w-4/6 mx-auto">
@@ -58,17 +52,14 @@ function TemplatePreviewWrapperComponent() {
         </div>
       </div>
     </div>
-  ) : templateData?.form_data?.questions?.length ? (
-    <TemplatePreviewComponent
-      length={templateData.form_data.questions.length}
-      formTitle={templateData.form_data.title}
-      questions={templateData.form_data.questions}
-      isQuestionPreviewMode={true}
-      templateId={template_id}
-    />
   ) : (
-    <NoRecordFound />
+    <TemplatePreviewComponent
+      length={question.length}
+      formTitle={reviewTitle}
+      questions={question}
+      isQuestionPreviewMode={true}
+    />
   );
 }
 
-export default TemplatePreviewWrapperComponent;
+export default ReviewQuestionPreviewWrapper;

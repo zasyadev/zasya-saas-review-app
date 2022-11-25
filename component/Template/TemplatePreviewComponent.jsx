@@ -6,7 +6,7 @@ export function TemplatePreviewComponent({
   length,
   formTitle,
   questions,
-  previewMode = false,
+  isQuestionPreviewMode = false,
   templateId = "",
 }) {
   return (
@@ -16,7 +16,7 @@ export function TemplatePreviewComponent({
           <p className="text-lg font-bold text-primary mb-1">{formTitle}</p>
           <p className="mb-1 font-medium">{length} Questions</p>
         </div>
-        {previewMode && (
+        {isQuestionPreviewMode && templateId && (
           <PrimaryButton
             withLink={true}
             linkHref={`/review/edit/${templateId}`}

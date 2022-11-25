@@ -9,7 +9,10 @@ const ReviewAssignessModal = ({
 }) => {
   const tabItems = [
     {
-      label: "All Assignees",
+      label: `All Assignees (${
+        getFilteredAssigneeList("ALL", reviewCountModalData?.ReviewAssignee)
+          .length
+      })`,
       key: "All",
       children: (
         <GetAssigneesList
@@ -19,7 +22,12 @@ const ReviewAssignessModal = ({
       ),
     },
     {
-      label: "Submitted",
+      label: `Submitted (${
+        getFilteredAssigneeList(
+          "answered",
+          reviewCountModalData?.ReviewAssignee
+        ).length
+      })`,
       key: "Submitted",
       children: (
         <GetAssigneesList
@@ -29,7 +37,10 @@ const ReviewAssignessModal = ({
       ),
     },
     {
-      label: "Pending",
+      label: `Pending (${
+        getFilteredAssigneeList(null, reviewCountModalData?.ReviewAssignee)
+          .length
+      })`,
       key: "Pending",
       children: (
         <GetAssigneesList
@@ -64,13 +75,17 @@ const ReviewAssignessModal = ({
   );
 };
 
+const getFilteredAssigneeList = (type, reviewAssignee) => {
+  if (!Number(reviewAssignee.length) > 0) return [];
+  return type === "ALL"
+    ? reviewAssignee
+    : reviewAssignee.filter((assignee) => assignee.status === type);
+};
+
 const GetAssigneesList = ({ type, reviewAssignee }) => {
   if (Number(reviewAssignee?.length) === 0) return null;
 
-  const filteredAssigneeList =
-    type === "ALL"
-      ? reviewAssignee
-      : reviewAssignee.filter((assignee) => assignee.status === type);
+  const filteredAssigneeList = getFilteredAssigneeList(type, reviewAssignee);
 
   return (
     <div className="divide-y space-y-1 max-h-96 overflow-y-auto custom-scrollbar">
