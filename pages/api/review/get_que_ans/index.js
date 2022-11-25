@@ -1,14 +1,14 @@
 import { RequestHandler } from "../../../../lib/RequestHandler";
 
 async function handle(req, res, prisma) {
-  const { review_id } = req.body;
+  const { review_id, user_id } = req.body;
 
-  if (!review_id) {
+  if (!review_id && !user_id) {
     return res.status(401).json({ status: 401, message: "No Review found" });
   }
 
-  const questionData = await prisma.review.findUnique({
-    where: { id: review_id },
+  const questionData = await prisma.review.findFirst({
+    where: { AND: [{ id: review_id }, { created_by: user_id }] },
     include: {
       created: true,
       form: true,
@@ -30,6 +30,12 @@ async function handle(req, res, prisma) {
       },
     },
   });
+  if (!questionData) {
+    res.status(400).json({
+      status: 400,
+      message: "No Data Found",
+    });
+  }
   const answerData = await prisma.reviewAssigneeAnswers.findMany({
     where: {
       review_id: review_id,
@@ -37,7 +43,6 @@ async function handle(req, res, prisma) {
     orderBy: { id: "desc" },
     include: {
       ReviewAssigneeAnswerOption: {
-        orderBy: { id: "desc" },
         include: { question: true },
       },
       user: {
