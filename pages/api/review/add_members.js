@@ -2,7 +2,7 @@ import {
   CustomizeSlackMessage,
   SlackPostMessage,
 } from "../../../helpers/slackHelper";
-import { mailTemplate } from "../../../lib/emailservice";
+import { mailTemplate, mailService } from "../../../lib/emailservice";
 import { RequestHandler } from "../../../lib/RequestHandler";
 
 async function handle(req, res, prisma) {
