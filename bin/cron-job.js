@@ -1,7 +1,6 @@
 const axios = require("axios").default;
 require("dotenv").config();
 const schedule = require("node-schedule");
-const { INITIAL_CRON_TYPES } = require("../constants");
 
 async function cronJobStart() {
   try {
@@ -19,7 +18,7 @@ async function cronJobStart() {
     schedule.scheduleJob("weekly_schedule", "30 4 * * 1", async function () {
       await axios.post(`${process.env.NEXT_APP_URL}api/cronjobs/weeklycron`, {
         password: process.env.NEXT_APP_CRON_PASSWORD,
-        type: INITIAL_CRON_TYPES.APPLAUD,
+        type: "APPLAUD",
       });
       await axios.post(
         `${process.env.NEXT_APP_URL}api/cronjobs/weeklyfrequencycron`,
@@ -31,7 +30,7 @@ async function cronJobStart() {
     schedule.scheduleJob("weekly_schedule", "30 4 * * 3", async function () {
       await axios.post(`${process.env.NEXT_APP_URL}api/cronjobs/weeklycron`, {
         password: process.env.NEXT_APP_CRON_PASSWORD,
-        type: INITIAL_CRON_TYPES.REVIEW,
+        type: "REVIEW",
       });
     });
     schedule.scheduleJob("monthly_schedule", "30 4 1 * *", async function () {
