@@ -21,6 +21,7 @@
     "apexcharts": "^3.35.5",
     "axios": "^1.1.2",
     "bcrypt": "^5.1.0",
+    "dotenv": "^16.0.3",
     "framer-motion": "^7.5.3",
     "moment": "^2.29.4",
     "next": "^12.3.1",

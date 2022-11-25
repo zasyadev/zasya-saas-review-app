@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import NoRecordFound from "../common/NoRecordFound";
 import httpService from "../../lib/httpService";
 import { TemplatePreviewComponent } from "../Template/TemplatePreviewComponent";
 
