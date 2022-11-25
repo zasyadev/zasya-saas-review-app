@@ -109,36 +109,37 @@ function ReviewCreatedComponent({
   useEffect(() => {
     let headersData = [];
 
-    if (Number(reviewData?.form?.form_data?.questions?.length) > 0) {
-      headersData = reviewData?.form?.form_data.questions.map((item, i) => {
+    //This is for old review that we are geting from the reiew table
+    // if (Number(reviewData?.form?.form_data?.questions?.length) > 0) {
+    //   reviewData?.form?.form_data.questions.forEach((item, i) => {
+    //     headersData.push( {
+    //       title: item.questionText,
+    //       dataIndex: "option" + i,
+    //       questionId: item.question_id,
+    //       width: getWidthLength(item),
+    //       sorter: (a, b) => a[`option${i}`]?.localeCompare(b[`option${i}`]),
+    //     });
+    //   });
+    // } else {
+    // headersData = reviewData?.form?.form_data.map((item, i) => {
+    //   return {
+    //     title: item.questionText,
+    //     dataIndex: "option" + i,
+    //     width: getWidthLength(item),
+    //     sorter: (a, b) => a[`option${i}`]?.localeCompare(b[`option${i}`]),
+    //   };
+    // });
+    // }
+
+    if (Number(answerData.length) > 0) {
+      headersData = answerData[0].ReviewAssigneeAnswerOption.map((item, i) => {
         return {
-          title: item.questionText,
-          dataIndex: "option" + i,
-          width: getWidthLength(item),
+          title: item.question.questionText,
+          dataIndex: `question_${item.question_id}`,
+          width: getWidthLength(item.question),
           sorter: (a, b) => a[`option${i}`]?.localeCompare(b[`option${i}`]),
         };
       });
-    } else {
-      if (Number(answerData.length) > 0) {
-        headersData = answerData[0].ReviewAssigneeAnswerOption.map(
-          (item, i) => {
-            return {
-              title: item.question.questionText,
-              dataIndex: "option" + i,
-              width: getWidthLength(item.question),
-              sorter: (a, b) => a[`option${i}`]?.localeCompare(b[`option${i}`]),
-            };
-          }
-        ).reverse();
-      }
-      // headersData = reviewData?.form?.form_data.map((item, i) => {
-      //   return {
-      //     title: item.questionText,
-      //     dataIndex: "option" + i,
-      //     width: getWidthLength(item),
-      //     sorter: (a, b) => a[`option${i}`]?.localeCompare(b[`option${i}`]),
-      //   };
-      // });
     }
     if (headersData?.length) headersData.unshift(nameTitle);
 
@@ -158,7 +159,7 @@ function ReviewCreatedComponent({
       let optionObj = {};
 
       item.answers.forEach((data, i) => {
-        optionObj[`option${i}`] = data.option;
+        optionObj[`question_${data.question_id}`] = data.option;
       });
 
       return {
