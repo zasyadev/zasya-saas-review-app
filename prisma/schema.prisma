@@ -39,6 +39,7 @@ model User {
   UserOraganizationTags UserOraganizationTags[]
   UserDetails           UserDetails?
   UserNotification      UserNotification[]
+
   @@map("users")
 }
 
@@ -157,6 +158,8 @@ model ReviewAssigneeAnswers {
 
   ReviewAssignTemplate   ReviewAssignTemplate? @relation(fields: [reviewAssignTemplateId], references: [id])
   reviewAssignTemplateId String?
+
+  @@unique([user_id, review_id, review_assignee_id], name: "user_id_review_id_review_assignee_id_unique_constraint")
   @@map("review_assignee_answers")
 }
 
@@ -206,9 +209,9 @@ model UserOrganization {
   UserOraganizationTags UserOraganizationTags[]
   ReviewAssigneeAnswers ReviewAssigneeAnswers[]
   UserNotification      UserNotification[]
+
   @@map("user_organization")
 }
-
 
 model PasswordReset {
   id            Int      @id @default(autoincrement())
@@ -292,7 +295,6 @@ model UserNotification {
   read_at         DateTime?
   organization    UserOrganization @relation(fields: [organization_id], references: [id], onDelete: Cascade)
   organization_id Int
-
 
   @@map("user_notification")
 }

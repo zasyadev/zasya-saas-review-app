@@ -13,7 +13,8 @@ function ReceivedReviewComponent({ user, reviewId }) {
   const [answerForm] = Form.useForm();
   const [reviewData, setReviewData] = useState({});
   const [loading, setLoading] = useState(false);
-  const [loadingSpin, setLoadingSpin] = useState(false);
+
+  const [updateAnswerApiLoading, setUpdateAnswerApiLoading] = useState(false);
   const [formValues, setFormValues] = useState([]);
   const [questions, setQuestions] = useState([]);
   const [nextSlide, setNextSlide] = useState(0);
@@ -37,8 +38,7 @@ function ReceivedReviewComponent({ user, reviewId }) {
     }
   };
 
-  const handleSubmit = async () => {
-    setLoadingSpin(true);
+  const handleSubmit = async (questionId) => {
     if (formValues.length <= 0) {
       openNotificationBox("error", "You have to answer all question", 3);
       return;
@@ -49,11 +49,20 @@ function ReceivedReviewComponent({ user, reviewId }) {
     }
 
     if (user.id && reviewData.id) {
-      let ansValues = formValues.sort((a, b) => a.questionId - b.questionId);
+      let formValue = formValues.find((data) => data.questionId === questionId);
+
+      if (!formValue) {
+        openNotificationBox("error", "You have to answer this question", 3);
+        return;
+      }
+
+      setUpdateAnswerApiLoading(true);
+
       let obj = {
         user_id: user.id,
         review_assignee_id: reviewData.id,
-        answers: ansValues,
+        answer: formValue.answer,
+        questionId: formValue.questionId,
         review_id: reviewData.review.id,
         created_assignee_date: reviewData.created_date,
       };
@@ -63,14 +72,48 @@ function ReceivedReviewComponent({ user, reviewId }) {
         .then(({ data: response }) => {
           if (response.status === 200) {
             openNotificationBox("success", response.message, 3);
+            setUpdateAnswerApiLoading(false);
             router.replace("/review/received");
           }
-          // setLoadingSpin(false);
         })
         .catch((err) => {
           openNotificationBox("error", err.response.data?.message, 3);
-          console.error(err.response.data?.message);
-          setLoadingSpin(false);
+          setUpdateAnswerApiLoading(false);
+        });
+    }
+  };
+
+  const handleUpdateAnswer = async (questionId) => {
+    if (user.id && reviewData.id) {
+      let formValue = formValues.find((data) => data.questionId === questionId);
+
+      if (!formValue) {
+        openNotificationBox("error", "You have to answer this question", 3);
+        return;
+      }
+
+      setUpdateAnswerApiLoading(true);
+
+      let obj = {
+        user_id: user.id,
+        review_assignee_id: reviewData.id,
+        answer: formValue.answer,
+        questionId: formValue.questionId,
+        review_id: reviewData.review.id,
+        created_assignee_date: reviewData.created_date,
+      };
+
+      await httpService
+        .post(`/api/form/update_answer`, obj)
+        .then(({ data: response }) => {
+          if (response.status === 200) {
+            setUpdateAnswerApiLoading(false);
+            setNextSlide(nextSlide + 1);
+          }
+        })
+        .catch((err) => {
+          openNotificationBox("error", err.response.data?.message, 3);
+          setUpdateAnswerApiLoading(false);
         });
     }
   };
@@ -86,6 +129,33 @@ function ReceivedReviewComponent({ user, reviewId }) {
         if (response.status === 200) {
           setReviewData(response.data);
           setQuestions(response.data?.review?.form?.questions);
+          if (Number(response?.data?.ReviewAssigneeAnswers?.length) > 0) {
+            let answersList = [];
+
+            if (Number(response.data?.review?.form?.questions?.length) > 0) {
+              response.data?.review?.form?.questions.forEach((question) => {
+                response?.data?.ReviewAssigneeAnswers.forEach(
+                  (ReviewAssigneeAnswer) => {
+                    let findAnswer =
+                      ReviewAssigneeAnswer.ReviewAssigneeAnswerOption.find(
+                        (answer) => answer.question_id === question.id
+                      );
+
+                    if (findAnswer) {
+                      answersList.push({
+                        questionId: question.id,
+                        answer: findAnswer.option,
+                      });
+                    }
+                  }
+                );
+              });
+            }
+
+            if (answersList.length > 0) {
+              setFormValues(answersList);
+            }
+          }
         }
 
         setLoading(false);
@@ -129,12 +199,16 @@ function ReceivedReviewComponent({ user, reviewId }) {
                     id={question?.id}
                     questionText={question?.questionText}
                     options={question?.options}
-                    error={question?.error}
+                    defaultQuestionAnswer={formValues?.find(
+                      (values) => values.questionId === question?.id
+                    )}
+                    updateAnswerApiLoading={updateAnswerApiLoading}
                     nextSlide={nextSlide}
                     setNextSlide={setNextSlide}
                     totalQuestions={questions.length}
                     handleSubmit={handleSubmit}
                     handleAnswerChange={handleAnswerChange}
+                    handleUpdateAnswer={handleUpdateAnswer}
                   />
                 ))
             ) : (

@@ -14,7 +14,18 @@ async function handle(req, res, prisma) {
       form: true,
       ReviewAssignee: {
         include: {
-          assigned_to: true,
+          assigned_to: {
+            select: {
+              email: true,
+              first_name: true,
+              id: true,
+              UserDetails: {
+                select: {
+                  image: true,
+                },
+              },
+            },
+          },
         },
       },
     },

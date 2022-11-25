@@ -1,10 +1,9 @@
-import { mailService, mailTemplate } from "../../../lib/emailservice";
 import { RequestHandler } from "../../../lib/RequestHandler";
 
 async function handle(req, res, prisma) {
   try {
     const resData = req.body;
-
+    let isUpdateRecord = false;
     const transactionData = await prisma.$transaction(async (transaction) => {
       const answerData = {
         question: { connect: { id: resData.questionId } },
@@ -48,10 +47,8 @@ async function handle(req, res, prisma) {
               },
             });
 
-          return {
-            formdata: updatedRecord,
-            review_id: findReviewAlreadyAnswered.review_id,
-          };
+          isUpdateRecord = true;
+          return { formdata: updatedRecord };
         } else {
           const createdAnswerRecord =
             await transaction.ReviewAssigneeAnswerOption.create({
@@ -62,10 +59,7 @@ async function handle(req, res, prisma) {
               },
             });
 
-          return {
-            formdata: createdAnswerRecord,
-            review_id: findReviewAlreadyAnswered.review_id,
-          };
+          return { formdata: createdAnswerRecord };
         }
       } else {
         const formdata = await transaction.reviewAssigneeAnswers.create({
@@ -84,54 +78,11 @@ async function handle(req, res, prisma) {
             },
           },
         });
-        return { formdata, review_id: formdata.review_id };
+        return { formdata };
       }
     });
 
-    const assignedByFromData = await prisma.review.findFirst({
-      where: { id: transactionData.review_id },
-    });
-    const assignedByUser = await prisma.user.findFirst({
-      where: { id: assignedByFromData.created_by },
-    });
-    const assignedUser = await prisma.user.findFirst({
-      where: { id: resData.user_id },
-    });
-
-    const mailData = {
-      from: process.env.SMTP_USER,
-      to: assignedByUser.email,
-      subject: ` ${assignedUser.first_name} has filled your review`,
-
-      html: mailTemplate({
-        body: `<b>${assignedUser.first_name}</b> has filled your review.`,
-        name: assignedByUser.first_name,
-        btnLink: `${process.env.NEXT_APP_URL}review`,
-        btnText: "See Response",
-      }),
-    };
-    const assigneeData = await prisma.reviewAssignee.findFirst({
-      where: {
-        review_id: resData.review_id,
-        assigned_to_id: resData.user_id,
-        id: resData.review_assignee_id,
-      },
-    });
-    await prisma.reviewAssignee.update({
-      where: {
-        id: assigneeData.id,
-      },
-      data: {
-        status: "answered",
-      },
-    });
-
-    await mailService.sendMail(mailData, function (err, info) {
-      // if (err) console.log("failed");
-      // else console.log("successfull");
-    });
-
-    if (!transactionData.formdata || !transactionData) {
+    if (!transactionData.formdata) {
       return res.status(500).json({
         status: 500,
         message: "Internal Server Error!",
@@ -140,7 +91,7 @@ async function handle(req, res, prisma) {
     }
 
     return res.status(201).json({
-      message: "Review Saved Sucessfully.",
+      message: `Review ${isUpdateRecord ? "Updated" : "Saved"} Sucessfully.`,
       data: transactionData.formdata,
       status: 200,
     });
