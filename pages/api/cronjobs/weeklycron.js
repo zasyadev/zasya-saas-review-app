@@ -66,7 +66,7 @@ async function handle(req, res) {
   let filteredReviewData = [];
 
   if (type === INITIAL_CRON_TYPES.APPLAUD) {
-    if (userData.length && applaudData.length) {
+    if (userData.length) {
       filteredApplaudData = userData.map((userItem) => {
         let applaudBy = applaudData.filter(
           (applaudItem) => userItem.id === applaudItem.created_by

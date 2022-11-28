@@ -20,20 +20,27 @@ export async function SlackUserList() {
 }
 
 export async function SlackPostMessage({ channel, text, blocks }) {
-  const resData = await httpService.post(
-    "https://slack.com/api/chat.postMessage",
-    {
-      channel: channel,
+  const resData = await httpService
+    .post(
+      "https://slack.com/api/chat.postMessage",
+      {
+        channel: channel,
 
-      blocks: blocks,
-      text: text,
-    },
-    {
-      headers: {
-        Authorization: "Bearer " + SLACK_BOT_TOKEN,
+        blocks: blocks,
+        text: text,
       },
-    }
-  );
+      {
+        headers: {
+          Authorization: "Bearer " + SLACK_BOT_TOKEN,
+        },
+      }
+    )
+    .then(({ data: response }) => {
+      console.log(response);
+    })
+    .catch((err) => {
+      console.log(response);
+    });
   return;
 }
 
@@ -186,12 +193,10 @@ export function WeeklyCustomizeReviewMessage({
     },
     {
       type: "section",
-      elements: [
-        {
-          type: "mrkdwn",
-          text: `*${subText}*`,
-        },
-      ],
+      text: {
+        type: "mrkdwn",
+        text: `*${subText}*`,
+      },
     },
     {
       type: "context",
