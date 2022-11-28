@@ -7,16 +7,19 @@ import {
   StopOutlined,
   UserOutlined,
 } from "@ant-design/icons";
+import xlsx from "json-as-xlsx";
 import { Collapse, Grid, Popconfirm, Tooltip } from "antd";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { openNotificationBox } from "../../component/common/notification";
+import { MONTH_DATE_FORMAT, YEAR_DATE_FORMAT } from "../../helpers/dateHelper";
 import { calculateDuration } from "../../helpers/momentHelper";
 import httpService from "../../lib/httpService";
-import CustomTable from "../common/CustomTable";
-import { ResizableTitle } from "./ResizableTitle";
-import { MONTH_DATE_FORMAT, YEAR_DATE_FORMAT } from "../../helpers/dateHelper";
+import { ButtonGray } from "../common/CustomButton";
 import CustomPopover from "../common/CustomPopover";
+import CustomTable from "../common/CustomTable";
+import ExportToExcel from "../common/exportToExcel";
+import { ResizableTitle } from "./ResizableTitle";
 import ReviewAssignessModal from "./ReviewAssignessModal";
 
 const { useBreakpoint } = Grid;
@@ -58,7 +61,7 @@ function ReviewCreatedComponent({
 }) {
   const { xs } = useBreakpoint();
   const { Panel } = Collapse;
-
+  const [isExporting, setIsExporting] = useState(false);
   const [dataSource, setDataSource] = useState({});
   const [totalRating, setTotalRating] = useState(0);
   const [columns, setColumns] = useState([]);
@@ -242,6 +245,70 @@ function ReviewCreatedComponent({
     setReviewCountModalData(initialReviewCountModalData);
   };
 
+  const handleExport = async (data) => {
+    let excelData = [];
+    setIsExporting(true);
+
+    Object.entries(data).forEach(([key, values]) => {
+      if (Number(values?.length) > 0) {
+        let sheetObj = {};
+
+        sheetObj["sheet"] = key;
+
+        sheetObj["columns"] = columns.map((col) => {
+          return { label: col.title, value: col.dataIndex };
+        });
+        let duplicateCount = 0;
+        sheetObj["columns"] = sheetObj["columns"].map((col, idx) => {
+          const findSameLabelKey = sheetObj["columns"].find(
+            (data, index) => data.label === col.label && index != idx
+          );
+
+          if (findSameLabelKey) {
+            const underScoresString = new Array(duplicateCount)
+              .fill("_")
+              .toString();
+            duplicateCount++;
+            return {
+              label: `${col.label}${
+                underScoresString ? underScoresString : ""
+              }`,
+              value: col.value,
+            };
+          } else {
+            return col;
+          }
+        });
+
+        sheetObj["content"] = [];
+
+        values.forEach((answerData) => {
+          let obj = {};
+          columns.forEach((col, index) => {
+            obj[col.dataIndex] = answerData[col.dataIndex];
+          });
+
+          sheetObj["content"].push(obj);
+        });
+
+        excelData.push(sheetObj);
+      }
+    });
+
+    let settings = {
+      fileName: reviewData?.review_name ?? "Review",
+      extraLength: 3,
+      writeMode: "writeFile",
+      writeOptions: {},
+      RTL: false,
+    };
+    await xlsx(excelData, settings, function () {
+      openNotificationBox("success", "Exported Successfully", 3, "data-export");
+    });
+
+    setIsExporting(false);
+  };
+
   return (
     <div className="container mx-auto max-w-full">
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 2xl:gap-6">
@@ -308,47 +375,59 @@ function ReviewCreatedComponent({
         {dataSource &&
         typeof dataSource === "object" &&
         Object.keys(dataSource).length ? (
-          <Collapse
-            accordion
-            defaultActiveKey={["1"]}
-            className="review-collapse"
-            expandIconPosition="end"
-          >
-            {Object.entries(dataSource).map(([key, value], idx) => (
-              <Panel
-                header={
-                  <div className="flex items-center">
-                    <CalendarOutlined />
-                    <p className="ml-3 my-auto">
-                      {moment(key, YEAR_DATE_FORMAT).format(MONTH_DATE_FORMAT)}
-                    </p>
-                  </div>
-                }
-                key={1 + idx}
-              >
-                <CustomTable
-                  components={{
-                    header: {
-                      cell: ResizableTitle,
-                    },
-                  }}
-                  columns={mergeColumns}
-                  dataSource={value}
-                  scroll={{
-                    x: 1500,
-                    y: 500,
-                  }}
-                  bordered={true}
-                  pagination={{
-                    defaultPageSize: 10,
-                    showSizeChanger: true,
-                    pageSizeOptions: ["10", "50", "100", "200", "500"],
-                    className: "px-2 sm:px-4",
-                  }}
-                />
-              </Panel>
-            ))}
-          </Collapse>
+          <>
+            <div className="text-right mb-4">
+              <ButtonGray
+                loading={isExporting}
+                disabled={isExporting}
+                title="Export"
+                onClick={() => handleExport(dataSource)}
+              />
+            </div>
+            <Collapse
+              accordion
+              defaultActiveKey={["1"]}
+              className="review-collapse"
+              expandIconPosition="end"
+            >
+              {Object.entries(dataSource).map(([key, value], idx) => (
+                <Panel
+                  header={
+                    <div className="flex items-center">
+                      <CalendarOutlined />
+                      <p className="ml-3 my-auto">
+                        {moment(key, YEAR_DATE_FORMAT).format(
+                          MONTH_DATE_FORMAT
+                        )}
+                      </p>
+                    </div>
+                  }
+                  key={1 + idx}
+                >
+                  <CustomTable
+                    components={{
+                      header: {
+                        cell: ResizableTitle,
+                      },
+                    }}
+                    columns={mergeColumns}
+                    dataSource={value}
+                    scroll={{
+                      x: 1500,
+                      y: 500,
+                    }}
+                    bordered={true}
+                    pagination={{
+                      defaultPageSize: 10,
+                      showSizeChanger: true,
+                      pageSizeOptions: ["10", "50", "100", "200", "500"],
+                      className: "px-2 sm:px-4",
+                    }}
+                  />
+                </Panel>
+              ))}
+            </Collapse>
+          </>
         ) : (
           <div className="bg-white p-5 rounded-md text-base font-medium">
             <p>No answers yet</p>
