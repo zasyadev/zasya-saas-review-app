@@ -80,7 +80,7 @@ async function handle(req, res) {
       if (
         item.UserDetails &&
         item.UserDetails.slack_id &&
-        item.applaudBy.length < 4
+        item.applaudBy.length < 3
       ) {
         let customText = WeeklyCustomizeReviewMessage(
           ApplaudSlackMessage(item.first_name)
@@ -92,7 +92,7 @@ async function handle(req, res) {
       }
     });
   } else {
-    if (userData.length && reviewData.length) {
+    if (userData.length) {
       filteredReviewData = userData.map((userItem) => {
         let reviewBy = reviewData.filter(
           (reviewItem) => userItem.id === reviewItem.created_by
@@ -105,7 +105,7 @@ async function handle(req, res) {
       if (
         item.UserDetails &&
         item.UserDetails.slack_id &&
-        item.reviewBy.length < 3
+        item.reviewBy.length < 2
       ) {
         let customText = WeeklyCustomizeReviewMessage(
           ReviewSlackMessage(item.first_name)
