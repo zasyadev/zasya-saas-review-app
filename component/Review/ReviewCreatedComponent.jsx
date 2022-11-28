@@ -7,8 +7,8 @@ import {
   StopOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import xlsx from "json-as-xlsx";
 import { Collapse, Grid, Popconfirm, Tooltip } from "antd";
+import xlsx from "json-as-xlsx";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { openNotificationBox } from "../../component/common/notification";
@@ -18,7 +18,6 @@ import httpService from "../../lib/httpService";
 import { ButtonGray } from "../common/CustomButton";
 import CustomPopover from "../common/CustomPopover";
 import CustomTable from "../common/CustomTable";
-import ExportToExcel from "../common/exportToExcel";
 import { ResizableTitle } from "./ResizableTitle";
 import ReviewAssignessModal from "./ReviewAssignessModal";
 

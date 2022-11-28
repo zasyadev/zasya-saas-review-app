@@ -22,7 +22,6 @@
     "axios": "^1.1.2",
     "bcrypt": "^5.1.0",
     "dotenv": "^16.0.3",
-    "file-saver": "^2.0.5",
     "framer-motion": "^7.5.3",
     "json-as-xlsx": "^2.4.6",
     "moment": "^2.29.4",
