@@ -3,10 +3,11 @@ import NoRecordFound from "../common/NoRecordFound";
 import { TemplatePreviewComponent } from "./TemplatePreviewComponent";
 import { useRouter } from "next/router";
 import httpService from "../../lib/httpService";
+import { REVIEW_TYPE } from "./constants";
 
 function TemplatePreviewWrapperComponent() {
   const router = useRouter();
-  const { template_id } = router.query;
+  const { template_id, type } = router.query;
   const [templateData, setTemplateData] = useState({});
   const [loading, setLoading] = useState(false);
 
@@ -65,6 +66,9 @@ function TemplatePreviewWrapperComponent() {
       questions={templateData.form_data.questions}
       isQuestionPreviewMode={true}
       templateId={template_id}
+      linkHref={`/${
+        type === REVIEW_TYPE ? "review" : "survey"
+      }/edit/${template_id}`}
     />
   ) : (
     <NoRecordFound />

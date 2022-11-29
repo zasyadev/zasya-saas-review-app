@@ -1,9 +1,11 @@
 import { PrimaryButton } from "../common/CustomButton";
 import CustomModal from "../common/CustomModal";
+import { REVIEW_TYPE, SURVEY_TYPE } from "../Template/constants";
 
 export function TempateSelectWrapper({
   setCreateReviewModal,
   createReviewModal,
+  type = REVIEW_TYPE,
 }) {
   return (
     <CustomModal
@@ -21,7 +23,7 @@ export function TempateSelectWrapper({
           </p>
           <PrimaryButton
             withLink={true}
-            linkHref="/review/add"
+            linkHref={`/${type === SURVEY_TYPE ? "survey" : "review"}/add`}
             title={"From Scratch"}
           />
         </div>
@@ -34,7 +36,9 @@ export function TempateSelectWrapper({
           </p>
           <PrimaryButton
             withLink={true}
-            linkHref="/template/select"
+            linkHref={`/template/select/${
+              type === SURVEY_TYPE ? "survey" : "review"
+            }`}
             title={"From Template"}
           />
         </div>

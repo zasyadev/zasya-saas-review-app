@@ -39,3 +39,6 @@ export const DefaultMotionVarient = {
     },
   },
 };
+
+export const REVIEW_TYPE = "review";
+export const SURVEY_TYPE = "survey";

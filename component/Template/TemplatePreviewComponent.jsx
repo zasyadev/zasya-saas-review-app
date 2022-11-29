@@ -8,6 +8,7 @@ export function TemplatePreviewComponent({
   questions,
   isQuestionPreviewMode = false,
   templateId = "",
+  linkHref,
 }) {
   return (
     <div className="answer-preview space-y-2 md:space-y-4">
@@ -19,7 +20,7 @@ export function TemplatePreviewComponent({
         {isQuestionPreviewMode && templateId && (
           <PrimaryButton
             withLink={true}
-            linkHref={`/review/edit/${templateId}`}
+            linkHref={linkHref}
             title={"Use template"}
           />
         )}

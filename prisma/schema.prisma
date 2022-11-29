@@ -39,6 +39,7 @@ model User {
   UserOraganizationTags UserOraganizationTags[]
   UserDetails           UserDetails?
   UserNotification      UserNotification[]
+  Survey                Survey[]
 
   @@map("users")
 }
@@ -51,6 +52,7 @@ model Role {
   User                    User[]
   Review                  Review[]
   UserOraganizationGroups UserOraganizationGroups[]
+  Survey                  Survey[]
 
   @@map("users_role")
 }
@@ -209,6 +211,7 @@ model UserOrganization {
   UserOraganizationTags UserOraganizationTags[]
   ReviewAssigneeAnswers ReviewAssigneeAnswers[]
   UserNotification      UserNotification[]
+  Survey                Survey[]
 
   @@map("user_organization")
 }
@@ -316,4 +319,50 @@ enum Frequency {
 enum ReviewType {
   feedback
   other
+}
+
+model Survey {
+  id              String            @id @default(uuid())
+  created         User              @relation(fields: [created_by], references: [id])
+  created_by      String
+  survey_name     String?
+  status          String?
+  organization    UserOrganization? @relation(fields: [organization_id], references: [id])
+  organization_id Int?
+  role            Role?             @relation(fields: [role_id], references: [id])
+  role_id         Int?
+  is_published    String?
+  url_id          String            @default(uuid())
+  created_date    DateTime          @default(now())
+  modified_date   DateTime          @default(now())
+  SurveyQuestions SurveyQuestions[]
+
+  @@map("survey")
+}
+
+model SurveyQuestions {
+  id                   Int                    @id @default(autoincrement())
+  survey               Survey                 @relation(fields: [survey_id], references: [id], onDelete: Cascade)
+  survey_id            String
+  questionText         String
+  type                 String
+  open                 Boolean
+  created_date         DateTime               @default(now())
+  modified_date        DateTime               @default(now())
+  SurveyQuestionOption SurveyQuestionOption[]
+
+  @@map("survey_questions")
+}
+
+model SurveyQuestionOption {
+  id            Int             @id @default(autoincrement())
+  question      SurveyQuestions @relation(fields: [question_id], references: [id], onDelete: Cascade)
+  question_id   Int
+  optionText    String?
+  lowerLabel    String?
+  higherLabel   String?
+  created_date  DateTime        @default(now())
+  modified_date DateTime        @default(now())
+
+  @@map("survey_question_option")
 }
