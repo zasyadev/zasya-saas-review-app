@@ -14,9 +14,4 @@ export const SurveyStepsArray = [
     key: "preview_review",
     title: "Preview Your Survey",
   },
-  {
-    id: 2,
-    key: "share",
-    title: "Share ",
-  },
 ];
