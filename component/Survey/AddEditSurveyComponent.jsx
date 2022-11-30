@@ -1,4 +1,5 @@
 import { Col, Form, Row } from "antd";
+import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import httpService from "../../lib/httpService";
 import GetSurveySteps from "../common/GetSurveySteps";
@@ -25,10 +26,10 @@ function AddEditSurveyComponent({
   pageTitle,
 }) {
   const [form] = Form.useForm();
+  const router = useRouter();
   const [questionList, setQuestionList] = useState([defaultQuestionConfig]);
   const [activeSurveyStep, setActiveSurveyStep] = useState(0);
   const [loadingSubmitSpin, setLoadingSubmitSpin] = useState(false);
-  const [urlId, setUrlId] = useState("");
 
   function onPreviewSubmit(type) {
     let values = form.getFieldsValue(true);
@@ -50,16 +51,12 @@ function AddEditSurveyComponent({
       .post(`/api/survey/add`, obj)
       .then(({ data: response }) => {
         if (response.status === 200) {
-          // router.push("/survey");
           openNotificationBox("success", response.message, 3);
-          if (response.data.url_id) {
-            setUrlId(response.data.url_id);
-            setActiveSurveyStep(obj.activeType + 1);
-          }
+          router.push(`/survey/share/${response.data.id}`);
         }
       })
       .catch((err) => {
-        openNotificationBox("error", err.response.data?.message, 3);
+        openNotificationBox("error", err?.message ?? "Failed", 3);
         setLoadingSubmitSpin(false);
       });
   }
@@ -148,8 +145,6 @@ function AddEditSurveyComponent({
       case 1:
         return nextQuestionListStep(key);
       case 2:
-        return onPreviewSubmit(key);
-      case 3:
         return onPreviewSubmit();
 
       default:
@@ -170,9 +165,7 @@ function AddEditSurveyComponent({
                   type: activeSurveyStep,
                   questionList,
                   setQuestionList,
-
                   formTitle: form.getFieldsValue(true)?.survey_name,
-                  urlId,
                 })}
               </div>
             </Col>

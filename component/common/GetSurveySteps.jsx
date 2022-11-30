@@ -50,23 +50,10 @@ const SurveyTitleStep = () => {
   );
 };
 
-const FeedbackMemberStep = ({ urlId }) => {
-  return (
-    <div className="w-full md:w-1/2 bg-white p-4 md:py-5 md:px-6 mx-auto rounded-md space-y-5">
-      <p className="text-base font-bold  text-primary">This is your URL</p>
-
-      <p className="text-base font-bold  text-primary">
-        {`${process.env.NEXT_PUBLIC_APP_URL}survey/${urlId}`}
-      </p>
-    </div>
-  );
-};
-
 export default function GetSurveySteps({
   type,
   questionList,
   setQuestionList,
-
   formTitle,
   urlId,
 }) {
@@ -89,8 +76,6 @@ export default function GetSurveySteps({
           questions={questionList}
         />
       );
-    case 3:
-      return <FeedbackMemberStep urlId={urlId} />;
 
     default:
       return null;

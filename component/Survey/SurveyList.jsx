@@ -89,6 +89,9 @@ function SurveyList({ user }) {
             overlay={
               <Menu className="divide-y">
                 <Menu.Item className="font-semibold" key={"call-preview"}>
+                  <Link href={`/survey/share/${survey.id}`}>Share</Link>
+                </Menu.Item>
+                <Menu.Item className="font-semibold" key={"call-preview"}>
                   {/* <Link href={`/review/question/preview/${survey.id}`}> */}
                   Preview
                   {/* </Link> */}

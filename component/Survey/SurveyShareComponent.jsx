@@ -9,6 +9,8 @@ import NoRecordFound from "../common/NoRecordFound";
 import { openNotificationBox } from "../common/notification";
 import AdminLayout from "../layout/AdminLayout";
 
+const SURVEY_BASE_URL = process.env.NEXT_PUBLIC_APP_URL + "survey/";
+
 function SurveyResponsePage({ user }) {
   const router = useRouter();
   const { surveyId } = router.query;
@@ -21,7 +23,7 @@ function SurveyResponsePage({ user }) {
     setSurveyData({});
 
     await httpService
-      .post(`/api/survey/get_que_ans`, {
+      .post(`/api/survey/getByChannel`, {
         surveyId: surveyId,
         user_id: user.id,
       })
@@ -51,33 +53,6 @@ function SurveyResponsePage({ user }) {
     console.log({ id, status });
   };
 
-  const allShare = [
-    {
-      name: "asasd",
-      create_at: new Date(),
-      isDefault: false,
-      type: "Email",
-      status: true,
-      url: "https://github.com/",
-    },
-    {
-      name: "asasd",
-      create_at: new Date(),
-      type: "Link",
-      isDefault: true,
-      status: true,
-      url: "https://github.com/1",
-    },
-    {
-      name: "asasd",
-      type: "Link",
-      create_at: new Date(),
-      isDefault: true,
-      status: false,
-      url: "https://github.com/2",
-    },
-  ];
-
   const allSharesColumn = [
     {
       title: "Name",
@@ -86,8 +61,8 @@ function SurveyResponsePage({ user }) {
     },
     {
       title: "Created At",
-      dataIndex: "create_at",
-      key: "create_at",
+      dataIndex: "created_date",
+      key: "created_date",
       render: (date) => (date ? moment(date).format(DATE_FORMAT_FULL) : null),
     },
     {
@@ -114,16 +89,17 @@ function SurveyResponsePage({ user }) {
   ];
 
   const defaultUrl = useMemo(() => {
-    if (Number(allShare?.length) > 0) {
-      const findDefaultUrlObj = allShare.find(
+    if (Number(surveyData?.SurveyChannels?.length) > 0) {
+      const findDefaultUrlObj = surveyData?.SurveyChannels.find(
         (share) => share.isDefault === true
       );
 
-      if (findDefaultUrlObj) return findDefaultUrlObj.url;
+      if (findDefaultUrlObj)
+        return `${SURVEY_BASE_URL}${findDefaultUrlObj.url}`;
     }
 
     return null;
-  }, [allShare]);
+  }, [surveyData]);
 
   return (
     <AdminLayout user={user} isBack title={surveyData?.survey_name}>
@@ -131,7 +107,7 @@ function SurveyResponsePage({ user }) {
         <div className="container bg-white rounded-md p-5 mx-auto max-w-full">
           <Skeleton active />
         </div>
-      ) : Number(surveyData?.SurveyQuestions?.length) > 0 ? (
+      ) : surveyData ? (
         <>
           <div className="container mx-auto rounded-md bg-white max-w-full">
             <div className="p-4 md:p-6 ">
@@ -159,7 +135,11 @@ function SurveyResponsePage({ user }) {
             All Shares
           </h3>
           <CustomTable
-            dataSource={allShare}
+            dataSource={
+              Number(surveyData?.SurveyChannels?.length) > 0
+                ? surveyData?.SurveyChannels
+                : []
+            }
             columns={allSharesColumn}
             pagination={{
               defaultPageSize: 10,
