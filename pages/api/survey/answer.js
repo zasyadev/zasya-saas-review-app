@@ -11,7 +11,6 @@ async function handle(req, res, prisma) {
           option: value.answer,
         };
       });
-      console.log(answerData);
       const formdata = await transaction.surveyAnswers.create({
         data: {
           survey: { connect: { id: reqBody.survey_id } },

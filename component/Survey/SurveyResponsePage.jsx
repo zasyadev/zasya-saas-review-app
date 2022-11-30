@@ -5,12 +5,10 @@ import httpService from "../../lib/httpService";
 import NoRecordFound from "../common/NoRecordFound";
 import AdminLayout from "../layout/AdminLayout";
 import SurveyResponseComponent from "./SurveyResponseComponent";
-import { SURVEY_TYPE } from "../Template/constants";
 
 function SurveyResponsePage({ user }) {
   const router = useRouter();
   const { surveyId } = router.query;
-
   const [surveyData, setSurveyData] = useState({});
   const [loading, setLoading] = useState(true);
 
@@ -37,8 +35,6 @@ function SurveyResponsePage({ user }) {
   useEffect(() => {
     if (surveyId) fetchSurveyData(surveyId);
   }, [surveyId]);
-
-  console.log(surveyData?.SurveyQuestions?.length);
 
   return (
     <AdminLayout user={user} isBack title={surveyData?.survey_name}>

@@ -10,7 +10,6 @@ async function handle(req, res, prisma) {
   const surveyData = await prisma.survey.findFirst({
     where: { AND: [{ id: surveyId }, { created_by: user_id }] },
     include: {
-      created: true,
       SurveyChannels: true,
     },
   });

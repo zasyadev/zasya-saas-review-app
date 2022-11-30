@@ -39,8 +39,6 @@ function SurveyReplyComponent({ surveyId }) {
   };
 
   const handleSubmit = async () => {
-    console.log(formValues, "formValues");
-
     if (formValues.length <= 0) {
       openNotificationBox("error", "You have to answer all question", 3);
       return;
