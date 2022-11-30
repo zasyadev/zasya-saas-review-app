@@ -3,19 +3,19 @@ import React from "react";
 import SuspenceWrapper from "../../../component/common/SuspenceWrapper";
 import WithMe from "../../../component/layout/WithMe";
 
-const ViewSurveyDetailComponent = dynamic(
-  () => import("../../../component/Survey/ViewSurveyDetailComponent"),
+const SurveyResponsePage = dynamic(
+  () => import("../../../component/Survey/SurveyResponsePage"),
   {
     suspense: true,
   }
 );
 
-function SingleSurveyPage() {
+function SurveyResponse() {
   return (
     <SuspenceWrapper>
-      <WithMe>{({ user }) => <ViewSurveyDetailComponent user={user} />}</WithMe>
+      <WithMe>{({ user }) => <SurveyResponsePage user={user} />}</WithMe>
     </SuspenceWrapper>
   );
 }
 
-export default SingleSurveyPage;
+export default SurveyResponse;

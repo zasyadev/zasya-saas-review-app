@@ -4,15 +4,15 @@ import React, { useEffect, useState } from "react";
 import httpService from "../../lib/httpService";
 import NoRecordFound from "../common/NoRecordFound";
 import AdminLayout from "../layout/AdminLayout";
-import SurveyCreatedComponent from "./SurveyCreatedComponent";
+import SurveyResponseComponent from "./SurveyResponseComponent";
 import { SURVEY_TYPE } from "../Template/constants";
 
-function ViewSurveyDetailComponent({ user }) {
+function SurveyResponsePage({ user }) {
   const router = useRouter();
   const { surveyId } = router.query;
 
   const [surveyData, setSurveyData] = useState({});
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const fetchSurveyData = async (surveyId) => {
     setLoading(true);
@@ -38,24 +38,23 @@ function ViewSurveyDetailComponent({ user }) {
     if (surveyId) fetchSurveyData(surveyId);
   }, [surveyId]);
 
+  console.log(surveyData?.SurveyQuestions?.length);
+
   return (
     <AdminLayout user={user} isBack title={surveyData?.survey_name}>
       {loading ? (
         <div className="container bg-white rounded-md p-5 mx-auto max-w-full">
           <Skeleton active />
         </div>
-      ) : surveyData &&
-        surveyData?.questionData &&
-        typeof surveyData.questionData === "object" ? (
-        Object.keys(surveyData.questionData).length ? (
-          <SurveyCreatedComponent
-            user={user}
-            surveyData={surveyData}
-            surveyId={surveyId}
-            fetchSurveyData={fetchSurveyData}
-            fromType={SURVEY_TYPE}
-          />
-        ) : null
+      ) : Number(surveyData?.SurveyQuestions?.length) > 0 ? (
+        <SurveyResponseComponent
+          user={user}
+          surveyName={surveyData.survey_name}
+          surveyId={surveyData.surveyId}
+          surveyQuestions={surveyData.SurveyQuestions}
+          surveyAnswers={surveyData.SurveyAnswers}
+          fetchSurveyData={fetchSurveyData}
+        />
       ) : (
         <NoRecordFound />
       )}
@@ -63,4 +62,4 @@ function ViewSurveyDetailComponent({ user }) {
   );
 }
 
-export default ViewSurveyDetailComponent;
+export default SurveyResponsePage;

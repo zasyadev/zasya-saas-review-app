@@ -38,7 +38,7 @@ function SurveyList({ user }) {
       title: "Survey Name",
       key: "survey_name",
       render: (_, survey) => (
-        <Link href={`/survey/detail/${survey.id}`} passHref>
+        <Link href={`/survey/response/${survey.id}`} passHref>
           <p className="cursor-pointer underline text-gray-500">
             {survey.survey_name}
           </p>
