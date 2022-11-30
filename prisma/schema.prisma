@@ -302,25 +302,6 @@ model UserNotification {
   @@map("user_notification")
 }
 
-enum RoleEnum {
-  SuperAdmin
-  Admin
-  Manager
-  Member
-}
-
-enum Frequency {
-  once
-  daily
-  weekly
-  monthly
-}
-
-enum ReviewType {
-  feedback
-  other
-}
-
 model Survey {
   id              String            @id @default(uuid())
   created         User              @relation(fields: [created_by], references: [id])
@@ -332,11 +313,11 @@ model Survey {
   role            Role?             @relation(fields: [role_id], references: [id])
   role_id         Int?
   is_published    String?
-  url_id          String            @default(uuid())
   created_date    DateTime          @default(now())
   modified_date   DateTime          @default(now())
   SurveyQuestions SurveyQuestions[]
   SurveyAnswers   SurveyAnswers[]
+  SurveyChannels  SurveyChannels[]
 
   @@map("survey")
 }
@@ -397,4 +378,58 @@ model SurveyAnswerOption {
   delete_date   DateTime?
 
   @@map("survey_answer_option")
+}
+
+model SurveyChannels {
+  id                Int                   @id @default(autoincrement())
+  survey            Survey                @relation(fields: [survey_id], references: [id], onDelete: Cascade)
+  survey_id         String
+  type              SurveyChannelTypeEnum
+  url               String?               @default(uuid())
+  isDefault         Boolean               @default(false)
+  name              String?
+  submission_count  Int
+  status            Boolean
+  created_date      DateTime              @default(now())
+  modified_date     DateTime              @default(now())
+  SurveyChannelUser SurveyChannelUser[]
+
+  @@map("survey_channels")
+}
+
+model SurveyChannelUser {
+  id            Int            @id @default(autoincrement())
+  channel       SurveyChannels @relation(fields: [channel_id], references: [id], onDelete: Cascade)
+  channel_id    Int
+  name          String?
+  status        Boolean
+  customer_url  String?        @default(uuid())
+  created_date  DateTime       @default(now())
+  modified_date DateTime       @default(now())
+
+  @@map("survey_channels_user")
+}
+
+enum RoleEnum {
+  SuperAdmin
+  Admin
+  Manager
+  Member
+}
+
+enum Frequency {
+  once
+  daily
+  weekly
+  monthly
+}
+
+enum ReviewType {
+  feedback
+  other
+}
+
+enum SurveyChannelTypeEnum {
+  Email
+  Link
 }

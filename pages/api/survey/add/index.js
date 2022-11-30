@@ -34,6 +34,14 @@ async function handle(req, res, prisma) {
         };
       });
 
+      const channelData = {
+        type: reqBody.channelType,
+        isDefault: true,
+        name: reqBody.survey_name,
+        submission_count: 1,
+        status: true,
+      };
+
       const formdata = await transaction.survey.create({
         data: {
           created: { connect: { id: reqBody.created_by } },
@@ -43,6 +51,9 @@ async function handle(req, res, prisma) {
           status: reqBody.status,
           SurveyQuestions: {
             create: questionData,
+          },
+          SurveyChannels: {
+            create: channelData,
           },
         },
       });
@@ -64,6 +75,7 @@ async function handle(req, res, prisma) {
       });
     }
   } catch (error) {
+    console.log(error);
     return res.status(500).json({
       error: error,
       message: "Internal Server Error",
