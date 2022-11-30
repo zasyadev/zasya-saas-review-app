@@ -336,6 +336,7 @@ model Survey {
   created_date    DateTime          @default(now())
   modified_date   DateTime          @default(now())
   SurveyQuestions SurveyQuestions[]
+  SurveyAnswers   SurveyAnswers[]
 
   @@map("survey")
 }
@@ -350,6 +351,7 @@ model SurveyQuestions {
   created_date         DateTime               @default(now())
   modified_date        DateTime               @default(now())
   SurveyQuestionOption SurveyQuestionOption[]
+  SurveyAnswerOption   SurveyAnswerOption[]
 
   @@map("survey_questions")
 }
@@ -365,4 +367,34 @@ model SurveyQuestionOption {
   modified_date DateTime        @default(now())
 
   @@map("survey_question_option")
+}
+
+model SurveyAnswers {
+  id                  Int                  @id @default(autoincrement())
+  user_id             String               @default(uuid())
+  survey              Survey               @relation(fields: [survey_id], references: [id], onDelete: Cascade)
+  survey_id           String
+  created_date        DateTime             @default(now())
+  modified_date       DateTime             @default(now())
+  created_survey_date DateTime?
+  delete_date         DateTime?
+  SurveyAnswerOption  SurveyAnswerOption[]
+
+  @@map("survey_answers")
+}
+
+model SurveyAnswerOption {
+  id            Int             @id @default(autoincrement())
+  survey        SurveyAnswers   @relation(fields: [survey_id], references: [id], onDelete: Cascade)
+  survey_id     Int
+  question      SurveyQuestions @relation(fields: [question_id], references: [id], onDelete: Cascade)
+  question_id   Int
+  option        String?         @db.Text
+  lowerLabel    String?
+  higherLabel   String?
+  created_date  DateTime        @default(now())
+  modified_date DateTime        @default(now())
+  delete_date   DateTime?
+
+  @@map("survey_answer_option")
 }

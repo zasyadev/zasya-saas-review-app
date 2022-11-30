@@ -3,7 +3,6 @@ import { useRouter } from "next/router";
 import React from "react";
 import { HeadersComponent } from "../../component/common/HeadersComponent";
 import SuspenceWrapper from "../../component/common/SuspenceWrapper";
-import WithMe from "../../component/layout/WithMe";
 
 const SurveyReplyComponent = dynamic(
   () => import("../../component/Survey/SurveyReplyComponent"),
@@ -11,20 +10,13 @@ const SurveyReplyComponent = dynamic(
     suspense: true,
   }
 );
-
 function SurveyReplyPage() {
   const router = useRouter();
   const { url_id } = router.query;
   return (
     <SuspenceWrapper>
-      <WithMe>
-        {({ user }) => (
-          <>
-            <HeadersComponent />
-            <SurveyReplyComponent user={user} surveyId={url_id} />
-          </>
-        )}
-      </WithMe>
+      <HeadersComponent />
+      <SurveyReplyComponent surveyId={url_id} />
     </SuspenceWrapper>
   );
 }

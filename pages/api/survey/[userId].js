@@ -41,10 +41,12 @@ async function handle(req, res, prisma) {
   }
 
   if (req.method === "POST") {
-    const { urlID } = req.body;
+    const { urlId } = req.body;
+
+    console.log(urlId, "urlID");
     const data = await prisma.survey.findFirst({
       where: {
-        url_id: urlID,
+        url_id: urlId,
       },
 
       include: {

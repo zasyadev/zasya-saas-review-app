@@ -64,7 +64,9 @@ export function FormSlideComponent({
             <Popconfirm
               title={
                 <p className="font-medium mb-0">
-                  Are you sure you want to close review?
+                  {`Are you sure you want to close ${
+                    fromType === REVIEW_TYPE ? "review" : "survey"
+                  }?`}
                 </p>
               }
               okText="Yes"

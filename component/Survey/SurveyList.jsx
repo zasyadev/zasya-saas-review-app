@@ -1,4 +1,5 @@
 import { Skeleton } from "antd";
+import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import httpService from "../../lib/httpService";
 import { PrimaryButton } from "../common/CustomButton";
@@ -35,8 +36,14 @@ function SurveyList({ user }) {
   const columns = [
     {
       title: "Survey Name",
-      dataIndex: "survey_name",
       key: "survey_name",
+      render: (_, survey) => (
+        <Link href={`/survey/detail/${survey.id}`} passHref>
+          <p className="cursor-pointer underline text-gray-500">
+            {survey.survey_name}
+          </p>
+        </Link>
+      ),
     },
     {
       title: "Questions",
