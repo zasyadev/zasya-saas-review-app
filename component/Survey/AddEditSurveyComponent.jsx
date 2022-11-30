@@ -52,7 +52,7 @@ function AddEditSurveyComponent({
       .then(({ data: response }) => {
         if (response.status === 200) {
           openNotificationBox("success", response.message, 3);
-          router.push(`/survey/share/${response.data.id}`);
+          router.replace(`/survey/share/${response.data.id}`);
         }
       })
       .catch((err) => {

@@ -3,7 +3,7 @@ import { RequestHandler } from "../../../../lib/RequestHandler";
 async function handle(req, res, prisma) {
   if (req.method === "POST") {
     const { urlId } = req.body;
-    const data = await prisma.surveyChannel.findFirst({
+    const data = await prisma.surveyChannels.findFirst({
       where: { url: urlId },
     });
 
@@ -26,13 +26,12 @@ async function handle(req, res, prisma) {
       if (surveyData && surveyData.status) {
         return res.status(200).json({
           status: 200,
-          data: data,
+          data: surveyData,
           message: "Survey Details Retrieved",
         });
       } else {
         return res.status(401).json({
           status: 401,
-          data: data,
           message: "Survey is Inactive",
         });
       }
