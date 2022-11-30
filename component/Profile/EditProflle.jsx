@@ -146,7 +146,7 @@ function EditProfile({ user }) {
     address2: "",
     mobile: "",
     pin_code: "",
-    notification: [],
+    notification: ["mail"],
     slack_email: "",
   });
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -211,7 +211,7 @@ function EditProfile({ user }) {
             address2: response.data.address2 ?? "",
             mobile: response.data.mobile ?? "",
             pin_code: response.data.pin_code ?? "",
-            notification: response.data.notification ?? [],
+            notification: response.data.notification ?? ["mail"],
             slack_email: response.data.slack_email ?? "",
           });
           setImageHandler(response.data.image);

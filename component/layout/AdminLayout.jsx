@@ -52,6 +52,7 @@ function AdminLayout({ user, title, isBack = false, children }) {
       <AppstoreOutlined className="sidebar-icon " />
     ),
     getItem("Applaud", "/applaud", <LikeOutlined className="sidebar-icon " />),
+    getItem("Surveys", "/survey", <FormOutlined className="sidebar-icon " />),
 
     getItem(
       "Settings",
