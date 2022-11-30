@@ -1,4 +1,4 @@
-import { RequestHandler } from "../../../lib/RequestHandler";
+import { RequestHandler } from "../../../../lib/RequestHandler";
 
 async function handle(req, res, prisma) {
   const { surveyId, user_id } = req.body;
@@ -11,10 +11,7 @@ async function handle(req, res, prisma) {
     where: { AND: [{ id: surveyId }, { created_by: user_id }] },
     include: {
       created: true,
-      SurveyQuestions: true,
-      SurveyAnswers: {
-        include: { SurveyAnswerOption: true },
-      },
+      SurveyChannels: true,
     },
   });
 

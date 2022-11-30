@@ -40,6 +40,7 @@ function AddEditSurveyComponent({
       role_id: user.role_id,
       templateData: questionList,
       activeType: type,
+      channelType: "Link",
     });
   }
 

@@ -1,11 +1,12 @@
-import { Skeleton } from "antd";
+import { Dropdown, Menu, Popconfirm, Skeleton } from "antd";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import httpService from "../../lib/httpService";
-import { PrimaryButton } from "../common/CustomButton";
+import { ButtonGray, PrimaryButton } from "../common/CustomButton";
 import CustomTable from "../common/CustomTable";
 import { TempateSelectWrapper } from "../Review/TempateSelectWrapper";
 import { SURVEY_TYPE } from "../Template/constants";
+import { EllipsisOutlined } from "@ant-design/icons";
 
 function SurveyList({ user }) {
   const [loading, setLoading] = useState(false);
@@ -33,6 +34,28 @@ function SurveyList({ user }) {
     fetchSurveyList();
   }, []);
 
+  async function onDelete(id) {
+    if (id) {
+      let obj = {
+        id: id,
+        userId: user.id,
+      };
+      await httpService
+        .delete(`/api/survey/getSurveyByUrl`, { data: obj })
+        .then(({ data: response }) => {
+          if (response.status === 200) {
+            fetchSurveyList();
+            openNotificationBox("success", response.message, 3);
+          } else {
+            openNotificationBox("error", response.message, 3);
+          }
+        })
+        .catch((err) => {
+          fetchReviewAssignList([]);
+        });
+    }
+  }
+
   const columns = [
     {
       title: "Survey Name",
@@ -50,23 +73,58 @@ function SurveyList({ user }) {
       key: "Questions",
       render: (_, survey) => survey.SurveyQuestions.length,
     },
-
     {
-      title: "Status",
-      key: "status",
-      dataIndex: "status",
-      render: (status) =>
-        status ? (
-          <p className="text-green-400 mb-0">Active</p>
-        ) : (
-          <p className="text-red-400 mb-0">Pending</p>
-        ),
+      title: "Responses",
+      key: "responses",
+      render: (_, survey) => survey._count.SurveyAnswers,
     },
 
     {
       title: "Action",
       key: "action",
-      render: (_, survey) => <p></p>,
+      render: (_, survey) => (
+        <>
+          <Dropdown
+            trigger={"click"}
+            overlay={
+              <Menu className="divide-y">
+                <Menu.Item className="font-semibold" key={"call-preview"}>
+                  {/* <Link href={`/review/question/preview/${survey.id}`}> */}
+                  Preview
+                  {/* </Link> */}
+                </Menu.Item>
+                {survey.created_by === user.id && (
+                  <Menu.Item
+                    className="text-red-600 font-semibold"
+                    key={"call-delete"}
+                  >
+                    <>
+                      <Popconfirm
+                        title={`Are you sure to delete ${survey.survey_name} ？`}
+                        okText="Yes"
+                        cancelText="No"
+                        onConfirm={() => onDelete(survey.id)}
+                        icon={false}
+                      >
+                        Delete
+                      </Popconfirm>
+                    </>
+                  </Menu.Item>
+                )}
+              </Menu>
+            }
+            placement="bottomRight"
+          >
+            <ButtonGray
+              className="grid place-content-center w-8 h-8"
+              rounded="rounded-full"
+              title={
+                <EllipsisOutlined rotate={90} className="text-lg leading-0" />
+              }
+            />
+          </Dropdown>
+        </>
+      ),
     },
   ];
 
