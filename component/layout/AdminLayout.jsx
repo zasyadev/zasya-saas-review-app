@@ -4,6 +4,7 @@ import {
   FormOutlined,
   LikeOutlined,
   SettingOutlined,
+  FileTextOutlined,
 } from "@ant-design/icons";
 import { Grid, Layout } from "antd";
 import React, { useEffect, useMemo, useState } from "react";
@@ -25,7 +26,7 @@ function getItem(label, key, icon, children, type) {
 }
 
 function AdminLayout({ user, title, isBack = false, children }) {
-  const { md, lg } = useBreakpoint();
+  const { lg } = useBreakpoint();
   const [collapsed, setCollapsed] = useState(false);
 
   useEffect(() => {
@@ -52,7 +53,11 @@ function AdminLayout({ user, title, isBack = false, children }) {
       <AppstoreOutlined className="sidebar-icon " />
     ),
     getItem("Applaud", "/applaud", <LikeOutlined className="sidebar-icon " />),
-    getItem("Surveys", "/survey", <FormOutlined className="sidebar-icon " />),
+    getItem(
+      "Surveys",
+      "/survey",
+      <FileTextOutlined className="sidebar-icon " />
+    ),
 
     getItem(
       "Settings",
@@ -63,7 +68,7 @@ function AdminLayout({ user, title, isBack = false, children }) {
   ];
 
   const filteredMenus = useMemo(() => {
-    if (user.role_id !== 4) {
+    if (user?.role_id !== 4) {
       return allMenus;
     } else {
       return allMenus.filter((item) => item.label !== "Team");

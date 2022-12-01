@@ -1,3 +1,4 @@
+import { EllipsisOutlined } from "@ant-design/icons";
 import { Dropdown, Menu, Popconfirm, Skeleton } from "antd";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
@@ -6,7 +7,6 @@ import { ButtonGray, PrimaryButton } from "../common/CustomButton";
 import CustomTable from "../common/CustomTable";
 import { TempateSelectWrapper } from "../Review/TempateSelectWrapper";
 import { SURVEY_TYPE } from "../Template/constants";
-import { EllipsisOutlined } from "@ant-design/icons";
 
 function SurveyList({ user }) {
   const [loading, setLoading] = useState(false);
@@ -88,13 +88,11 @@ function SurveyList({ user }) {
             trigger={"click"}
             overlay={
               <Menu className="divide-y">
-                <Menu.Item className="font-semibold" key={"call-preview"}>
+                <Menu.Item className="font-semibold" key={"call-share"}>
                   <Link href={`/survey/share/${survey.id}`}>Share</Link>
                 </Menu.Item>
                 <Menu.Item className="font-semibold" key={"call-preview"}>
-                  {/* <Link href={`/review/question/preview/${survey.id}`}> */}
-                  Preview
-                  {/* </Link> */}
+                  <Link href={`/survey/preview/${survey.id}`}>Preview</Link>
                 </Menu.Item>
                 {survey.created_by === user.id && (
                   <Menu.Item
@@ -147,16 +145,7 @@ function SurveyList({ user }) {
               <Skeleton title={false} active={true} />
             </div>
           ) : (
-            <CustomTable
-              dataSource={surveyList}
-              columns={columns}
-              pagination={{
-                defaultPageSize: 10,
-                showSizeChanger: true,
-                pageSizeOptions: ["10", "50", "100", "200", "500"],
-                className: "px-2 sm:px-4",
-              }}
-            />
+            <CustomTable dataSource={surveyList} columns={columns} />
           )}
         </div>
       </div>

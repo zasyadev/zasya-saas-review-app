@@ -1,7 +1,12 @@
 import { Table } from "antd";
 import React from "react";
 
-const CustomTable = ({ className = "", rowKeyLabel = "id", ...props }) => {
+const CustomTable = ({
+  className = "",
+  rowKeyLabel = "id",
+  isPagination = true,
+  ...props
+}) => {
   return (
     <div className="overflow-auto rounded-md">
       <Table
@@ -12,6 +17,16 @@ const CustomTable = ({ className = "", rowKeyLabel = "id", ...props }) => {
           index % 2 === 0 ? "" : "background-color-voilet"
         }
         rowKey={(record) => record[rowKeyLabel]}
+        pagination={
+          isPagination
+            ? {
+                defaultPageSize: 10,
+                showSizeChanger: true,
+                pageSizeOptions: ["10", "50", "100", "200", "500"],
+                className: "px-2 sm:px-4",
+              }
+            : false
+        }
       />
     </div>
   );

@@ -16,7 +16,7 @@ function SurveyReplyPage() {
   return (
     <SuspenceWrapper>
       <HeadersComponent />
-      <SurveyReplyComponent surveyId={url_id} />
+      <SurveyReplyComponent urlId={url_id} />
     </SuspenceWrapper>
   );
 }

@@ -1,14 +1,14 @@
 import { RequestHandler } from "../../../lib/RequestHandler";
 
 async function handle(req, res, prisma) {
-  const { surveyId, user_id } = req.body;
+  const { surveyId, userId } = req.body;
 
-  if (!surveyId && !user_id) {
+  if (!surveyId && !userId) {
     return res.status(401).json({ status: 401, message: "No Survey found" });
   }
 
   const surveyData = await prisma.survey.findFirst({
-    where: { AND: [{ id: surveyId }, { created_by: user_id }] },
+    where: { AND: [{ id: surveyId }, { created_by: userId }] },
     include: {
       SurveyQuestions: true,
       SurveyAnswers: {

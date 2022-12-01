@@ -19,7 +19,7 @@ function SurveyResponsePage({ user }) {
     await httpService
       .post(`/api/survey/get_que_ans`, {
         surveyId: surveyId,
-        user_id: user.id,
+        userId: user.id,
       })
       .then(({ data: response }) => {
         if (response.status === 200) {

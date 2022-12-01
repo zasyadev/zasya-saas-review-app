@@ -15,6 +15,7 @@ async function handle(req, res, prisma) {
         data: {
           survey: { connect: { id: reqBody.survey_id } },
           created_survey_date: reqBody.created_survey_date,
+          url_id: reqBody.urlId,
           SurveyAnswerOption: {
             create: answerData,
           },

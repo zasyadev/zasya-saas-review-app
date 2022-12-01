@@ -1,19 +1,22 @@
 import { CloseOutlined } from "@ant-design/icons";
 import { Form, Skeleton } from "antd";
+import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { openNotificationBox } from "../../component/common/notification";
 import httpService from "../../lib/httpService";
-import { AnimatePresence, motion } from "framer-motion";
 import { FormSlideComponent } from "../Review/formhelper/FormSlideComponent";
 import { SURVEY_TYPE } from "../Template/constants";
 
-function SurveyReplyComponent({ surveyId }) {
+function SurveyReplyComponent({ urlId }) {
   const [answerForm] = Form.useForm();
   const [surveyData, setSurveyData] = useState({});
   const [loading, setLoading] = useState(false);
   const [thankyouResponse, setThankyouResponse] = useState(false);
-
+  const [inactiveResponse, setInactiveResponse] = useState({
+    status: false,
+    message: "Survey is not active",
+  });
   const [updateAnswerApiLoading, setUpdateAnswerApiLoading] = useState(false);
   const [formValues, setFormValues] = useState([]);
   const [questions, setQuestions] = useState([]);
@@ -55,6 +58,7 @@ function SurveyReplyComponent({ surveyId }) {
         survey_id: surveyData.id,
         answerValue: formValues,
         created_survey_date: surveyData.created_date,
+        urlId: urlId,
       };
 
       await httpService
@@ -63,8 +67,6 @@ function SurveyReplyComponent({ surveyId }) {
           if (response.status === 200) {
             openNotificationBox("success", response.message, 3);
             setUpdateAnswerApiLoading(false);
-            // router.replace("/survey");
-            console.log(response);
             setThankyouResponse(true);
           }
         })
@@ -75,16 +77,21 @@ function SurveyReplyComponent({ surveyId }) {
     }
   };
 
-  const fetchSurveyData = async (surveyId) => {
+  const fetchSurveyData = async (urlId) => {
     setLoading(true);
     await httpService
       .post(`/api/survey/getSurveyByUrl`, {
-        urlId: surveyId,
+        urlId: urlId,
       })
       .then(({ data: response }) => {
         if (response.status === 200) {
           setSurveyData(response.data);
           setQuestions(response.data?.SurveyQuestions);
+        } else if (response.status === 403) {
+          setInactiveResponse({
+            status: true,
+            message: response?.message,
+          });
         }
 
         setLoading(false);
@@ -95,8 +102,8 @@ function SurveyReplyComponent({ surveyId }) {
   };
 
   useEffect(() => {
-    if (surveyId) fetchSurveyData(surveyId);
-  }, [surveyId]);
+    if (urlId) fetchSurveyData(urlId);
+  }, [urlId]);
 
   return (
     <div className="answer-bg px-2 py-4 md:p-4 flex items-center justify-center">
@@ -107,29 +114,48 @@ function SurveyReplyComponent({ surveyId }) {
       ) : (
         <Form layout="vertical" className="py-4 w-11/12" form={answerForm}>
           <AnimatePresence>
-            {thankyouResponse ? (
-              <>
-                <div className="answer-preview">
-                  <motion.div
-                    key={"loaderquesSlid"}
-                    initial={{ y: 20, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    exit={{ y: -10, opacity: 0 }}
-                    transition={{ duration: 0.8 }}
-                  >
-                    <div className="relative text-center bg-white rounded-md py-10 shadow-md md:w-10/12 2xl:w-8/12 mx-auto">
-                      <Link href="/" passHref>
-                        <span className="absolute top-2 right-2 p-3 leading-0 cursor-pointer rounded-full hover:bg-gray-100">
-                          <CloseOutlined />
-                        </span>
-                      </Link>
-                      <p className="text-lg font-bold text-red-400 mt-5">
-                        ThankYou for your response! Have a nice day!
-                      </p>
-                    </div>
-                  </motion.div>
-                </div>
-              </>
+            {inactiveResponse.status ? (
+              <div className="answer-preview">
+                <motion.div
+                  key={"inactivequesSlid"}
+                  initial={{ y: 20, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  exit={{ y: -10, opacity: 0 }}
+                  transition={{ duration: 0.8 }}
+                >
+                  <div className="relative text-center bg-white rounded-md py-10 shadow-md md:w-10/12 2xl:w-8/12 mx-auto">
+                    <Link href="/" passHref>
+                      <span className="absolute top-2 right-2 p-3 leading-0 cursor-pointer rounded-full hover:bg-gray-100">
+                        <CloseOutlined />
+                      </span>
+                    </Link>
+                    <p className="text-lg font-bold text-red-400 my-2">
+                      Sorry! the survey has been closed.
+                    </p>
+                  </div>
+                </motion.div>
+              </div>
+            ) : thankyouResponse ? (
+              <div className="answer-preview">
+                <motion.div
+                  key={"thankyouquesSlid"}
+                  initial={{ y: 20, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  exit={{ y: -10, opacity: 0 }}
+                  transition={{ duration: 0.8 }}
+                >
+                  <div className="relative text-center bg-white rounded-md py-10 shadow-md md:w-10/12 2xl:w-8/12 mx-auto">
+                    <Link href="/" passHref>
+                      <span className="absolute top-2 right-2 p-3 leading-0 cursor-pointer rounded-full hover:bg-gray-100">
+                        <CloseOutlined />
+                      </span>
+                    </Link>
+                    <p className="text-lg font-bold text-red-400 my-2">
+                      ThankYou for your response! Have a nice day!
+                    </p>
+                  </div>
+                </motion.div>
+              </div>
             ) : (
               Number(questions?.length) > 0 &&
               questions

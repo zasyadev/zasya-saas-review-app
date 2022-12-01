@@ -308,12 +308,6 @@ function ReviewManagement({ user }) {
             <CustomTable
               dataSource={reviewAssignList}
               columns={columns}
-              pagination={{
-                defaultPageSize: 10,
-                showSizeChanger: true,
-                pageSizeOptions: ["10", "50", "100", "200", "500"],
-                className: "px-2 sm:px-4",
-              }}
               rowKey="review_id"
             />
           )}

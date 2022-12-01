@@ -8,6 +8,13 @@ async function handle(req, res, prisma) {
     });
 
     if (data) {
+      if (!data.status) {
+        return res.status(200).json({
+          status: 403,
+          message: "Survey is Inactive",
+        });
+      }
+
       const surveyData = await prisma.survey.findFirst({
         where: { id: data.survey_id },
         include: {
@@ -23,18 +30,12 @@ async function handle(req, res, prisma) {
           .status(404)
           .json({ status: 404, message: "No Record Found" });
       }
-      if (surveyData && surveyData.status) {
-        return res.status(200).json({
-          status: 200,
-          data: surveyData,
-          message: "Survey Details Retrieved",
-        });
-      } else {
-        return res.status(401).json({
-          status: 401,
-          message: "Survey is Inactive",
-        });
-      }
+
+      return res.status(200).json({
+        status: 200,
+        data: surveyData,
+        message: "Survey Details Retrieved",
+      });
     }
 
     return res.status(404).json({ status: 404, message: "No Record Found" });

@@ -9,18 +9,13 @@ import { ResizableTitle } from "../Review/ResizableTitle";
 const { useBreakpoint } = Grid;
 
 function SurveyResponseComponent({
-  user,
-  surveyId,
   surveyName,
   surveyQuestions,
   surveyAnswers,
-  fetchSurveyData,
 }) {
   const { xs } = useBreakpoint();
-
   const [isExporting, setIsExporting] = useState(false);
   const [dataSource, setDataSource] = useState([]);
-
   const [columns, setColumns] = useState([]);
 
   let nameTitle = {
@@ -32,14 +27,6 @@ function SurveyResponseComponent({
     render: (_, record) => (
       <div>
         <p className="mb-0">{record.name}</p>
-        {/* <p className="mb-0 flex items-center gap-2 text-gray-400 text-sm ">
-          {calculateDuration({
-            from: reviewData.created_date,
-            to: record.answer_date,
-          })}
-
-          {CustomPopover("Reactive Time")}
-        </p> */}
       </div>
     ),
   };
@@ -66,7 +53,7 @@ function SurveyResponseComponent({
         });
 
         return {
-          name: "unknown",
+          name: "Anonymous",
           created_date: item.created_date,
           answer_date: item.answer_date,
           ...optionObj,
@@ -115,54 +102,44 @@ function SurveyResponseComponent({
   }));
 
   const handleExport = async (data) => {
-    console.log({ data });
     if (Number(data?.length) > 0) {
       let excelData = [];
       setIsExporting(true);
-
-      data.forEach((values) => {
-        let sheetObj = {};
-
-        sheetObj["sheet"] = surveyName;
-
-        sheetObj["columns"] = columns.map((col) => {
-          return { label: col.title, value: col.dataIndex };
-        });
-        let duplicateCount = 0;
-        sheetObj["columns"] = sheetObj["columns"].map((col, idx) => {
-          const findSameLabelKey = sheetObj["columns"].find(
-            (data, index) => data.label === col.label && index != idx
-          );
-
-          if (findSameLabelKey) {
-            const underScoresString = new Array(duplicateCount)
-              .fill("_")
-              .toString();
-            duplicateCount++;
-            return {
-              label: `${col.label}${
-                underScoresString ? underScoresString : ""
-              }`,
-              value: col.value,
-            };
-          } else {
-            return col;
-          }
-        });
-
-        sheetObj["content"] = [];
-
-        data.forEach((surveyAnswers) => {
-          let obj = {};
-          columns.forEach((col, index) => {
-            obj[col.dataIndex] = surveyAnswers[col.dataIndex];
-          });
-
-          sheetObj["content"].push(obj);
-        });
-
-        excelData.push(sheetObj);
+      let sheetObj = {};
+      sheetObj["sheet"] = surveyName;
+      sheetObj["columns"] = columns.map((col) => {
+        return { label: col.title, value: col.dataIndex };
       });
+      let duplicateCount = 0;
+      sheetObj["columns"] = sheetObj["columns"].map((col, idx) => {
+        const findSameLabelKey = sheetObj["columns"].find(
+          (data, index) => data.label === col.label && index != idx
+        );
+
+        if (findSameLabelKey) {
+          const underScoresString = new Array(duplicateCount)
+            .fill("_")
+            .toString();
+          duplicateCount++;
+          return {
+            label: `${col.label}${underScoresString ? underScoresString : ""}`,
+            value: col.value,
+          };
+        } else {
+          return col;
+        }
+      });
+
+      sheetObj["content"] = [];
+      data.forEach((surveyAnswers) => {
+        let obj = {};
+        columns.forEach((col) => {
+          obj[col.dataIndex] = surveyAnswers[col.dataIndex];
+        });
+        sheetObj["content"].push(obj);
+      });
+
+      excelData.push(sheetObj);
 
       let settings = {
         fileName: surveyName ?? "Survey",
@@ -180,7 +157,6 @@ function SurveyResponseComponent({
           "data-export"
         );
       });
-
       setIsExporting(false);
     }
   };
@@ -212,12 +188,6 @@ function SurveyResponseComponent({
                 y: 500,
               }}
               bordered={true}
-              pagination={{
-                defaultPageSize: 10,
-                showSizeChanger: true,
-                pageSizeOptions: ["10", "50", "100", "200", "500"],
-                className: "px-2 sm:px-4",
-              }}
             />
           </>
         ) : (

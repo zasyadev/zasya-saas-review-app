@@ -1,4 +1,5 @@
-import { Input, Skeleton, Switch } from "antd";
+import { CopyOutlined, DeleteOutlined } from "@ant-design/icons";
+import { Input, Popconfirm, Popover, Skeleton, Switch } from "antd";
 import moment from "moment";
 import { useRouter } from "next/router";
 import React, { useEffect, useMemo, useState } from "react";
@@ -14,18 +15,19 @@ const SURVEY_BASE_URL = process.env.NEXT_PUBLIC_APP_URL + "survey/";
 function SurveyResponsePage({ user }) {
   const router = useRouter();
   const { surveyId } = router.query;
-
   const [surveyData, setSurveyData] = useState({});
   const [loading, setLoading] = useState(true);
 
-  const fetchSurveyData = async (surveyId) => {
-    setLoading(true);
-    setSurveyData({});
+  const fetchSurveyData = async (isLoadingRequired = true) => {
+    if (isLoadingRequired) {
+      setLoading(true);
+      setSurveyData({});
+    }
 
     await httpService
-      .post(`/api/survey/getByChannel`, {
+      .post(`/api/survey/channels`, {
         surveyId: surveyId,
-        user_id: user.id,
+        userId: user.id,
       })
       .then(({ data: response }) => {
         if (response.status === 200) {
@@ -39,7 +41,7 @@ function SurveyResponsePage({ user }) {
   };
 
   useEffect(() => {
-    if (surveyId) fetchSurveyData(surveyId);
+    if (surveyId) fetchSurveyData();
   }, [surveyId]);
 
   const handleCopyUrl = (url) => {
@@ -49,9 +51,53 @@ function SurveyResponsePage({ user }) {
     }
   };
 
-  const handleUpdateSurveyChannelStatus = (id, status) => {
-    console.log({ id, status });
+  const handleUpdateSurveyChannelStatus = async (id, status) => {
+    const oldSurveyData = surveyData;
+    setSurveyData((prev) => ({
+      ...prev,
+      SurveyChannels: prev.SurveyChannels.map((channel) =>
+        channel.id === id ? { ...channel, status: status } : channel
+      ),
+    }));
+    await httpService
+      .put(`/api/survey/channels`, {
+        channelId: id,
+        userId: user.id,
+        status: status,
+      })
+      .then(({ data: response }) => {
+        if (response.status === 200) {
+          fetchSurveyData(false);
+          openNotificationBox("success", response.message, 3, "updateKey");
+        }
+      })
+      .catch((err) => {
+        setSurveyData(oldSurveyData);
+        setLoading(false);
+      });
   };
+
+  async function onDelete(id) {
+    if (id) {
+      let obj = {
+        id: id,
+        userId: user.id,
+      };
+      await httpService
+        .delete(`/api/survey/channels`, { data: obj })
+        .then(({ data: response }) => {
+          if (response.status === 200) {
+            fetchSurveyData(false);
+            openNotificationBox("success", response.message, 3);
+          } else {
+            openNotificationBox("error", response.message, 3);
+          }
+        })
+        .catch((err) => {
+          fetchReviewAssignList([]);
+        });
+    }
+  }
 
   const allSharesColumn = [
     {
@@ -76,7 +122,7 @@ function SurveyResponsePage({ user }) {
           unCheckedChildren="Inactive"
           checked={record.status}
           onChange={() =>
-            handleUpdateSurveyChannelStatus(record, !record.status)
+            handleUpdateSurveyChannelStatus(record.id, !record.status)
           }
         />
       ),
@@ -85,6 +131,33 @@ function SurveyResponsePage({ user }) {
     {
       title: "Action",
       key: "action",
+      render: (_, record) => (
+        <p>
+          {record.type === "Link" && (
+            <Popover
+              content={<p className="font-medium mb-0">Copy Url</p>}
+              trigger={["click", "hover"]}
+              placement="top"
+              overlayClassName="max-w-sm"
+            >
+              <CopyOutlined
+                className="primary-color-blue text-xl mx-1  md:mx-2 cursor-pointer"
+                onClick={() => handleCopyUrl(SURVEY_BASE_URL + record.url)}
+              />
+            </Popover>
+          )}
+
+          <Popconfirm
+            title={`Are you sure to delete this channel？`}
+            okText="Yes"
+            cancelText="No"
+            onConfirm={() => onDelete(record.user.email)}
+            icon={false}
+          >
+            <DeleteOutlined className="text-red-500 text-xl mx-1 md:mx-2 cursor-pointer" />
+          </Popconfirm>
+        </p>
+      ),
     },
   ];
 
@@ -111,7 +184,7 @@ function SurveyResponsePage({ user }) {
         <>
           <div className="container mx-auto rounded-md bg-white max-w-full">
             <div className="p-4 md:p-6 ">
-              <h3 className="text-center text-lg lg:text-xl font-bold leading-6 -tracking-wider">
+              <h3 className="text-center text-lg lg:text-xl font-bold leading-6 text-primary -tracking-wider">
                 Link To Share
               </h3>
               <div className="flex items-center max-w-xl mx-auto my-4">
@@ -131,23 +204,19 @@ function SurveyResponsePage({ user }) {
               </div>
             </div>
           </div>
-          <h3 className="px-4 text-lg lg:text-xl font-bold leading-6 -tracking-wider my-4">
+          <h3 className="px-1 text-lg lg:text-xl font-bold leading-6 -tracking-wider my-4 text-primary">
             All Shares
           </h3>
-          <CustomTable
-            dataSource={
-              Number(surveyData?.SurveyChannels?.length) > 0
-                ? surveyData?.SurveyChannels
-                : []
-            }
-            columns={allSharesColumn}
-            pagination={{
-              defaultPageSize: 10,
-              showSizeChanger: true,
-              pageSizeOptions: ["10", "50", "100", "200", "500"],
-              className: "px-2 sm:px-4",
-            }}
-          />
+          <div className="w-full bg-white rounded-md overflow-hdden ">
+            <CustomTable
+              dataSource={
+                Number(surveyData?.SurveyChannels?.length) > 0
+                  ? surveyData?.SurveyChannels
+                  : []
+              }
+              columns={allSharesColumn}
+            />
+          </div>
         </>
       ) : (
         <NoRecordFound />

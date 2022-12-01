@@ -307,7 +307,6 @@ model Survey {
   created         User              @relation(fields: [created_by], references: [id])
   created_by      String
   survey_name     String?
-  status          String?
   organization    UserOrganization? @relation(fields: [organization_id], references: [id])
   organization_id Int?
   role            Role?             @relation(fields: [role_id], references: [id])
@@ -355,6 +354,7 @@ model SurveyAnswers {
   user_id             String               @default(uuid())
   survey              Survey               @relation(fields: [survey_id], references: [id], onDelete: Cascade)
   survey_id           String
+  url_id              String
   created_date        DateTime             @default(now())
   modified_date       DateTime             @default(now())
   created_survey_date DateTime?

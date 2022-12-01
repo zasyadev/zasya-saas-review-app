@@ -1,5 +1,5 @@
 import { Form, Select } from "antd";
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
 import httpService from "../../lib/httpService";
 import { PrimaryButton, SecondaryButton } from "../common/CustomButton";
 import CustomModal from "../common/CustomModal";

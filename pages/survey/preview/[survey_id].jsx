@@ -12,7 +12,7 @@ function PreviewQuestionPage() {
       {({ user }) => (
         <>
           <AdminLayout user={user} title="Preview questions" isBack>
-            <SurveyQuestionPreviewWrapper surveyId={survey_id} />
+            <SurveyQuestionPreviewWrapper surveyId={survey_id} user={user} />
           </AdminLayout>
         </>
       )}

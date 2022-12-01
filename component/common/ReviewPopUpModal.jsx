@@ -73,7 +73,7 @@ export default function ReviewPopUpModal({ userId }) {
             It will help you to enhance your performance.
           </p>
           <p className="text-base text-center font-medium -tracking-wider mb-0">
-            {`Let's`} get some feedback.
+            Let's get some feedback.
           </p>
           <div className="mt-4 text-center">
             <PrimaryButton
