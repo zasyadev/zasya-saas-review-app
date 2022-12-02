@@ -92,8 +92,9 @@ function SurveyReplyComponent({ urlId }) {
             status: true,
             message: response?.message,
           });
+        } else if (response.status === 402) {
+          setThankyouResponse(true);
         }
-
         setLoading(false);
       })
       .catch((err) => {

@@ -1,10 +1,26 @@
-import { CopyOutlined, DeleteOutlined } from "@ant-design/icons";
-import { Input, Popconfirm, Popover, Skeleton, Switch } from "antd";
+import {
+  CopyOutlined,
+  DeleteOutlined,
+  MailOutlined,
+  LinkOutlined,
+} from "@ant-design/icons";
+import {
+  Form,
+  Input,
+  Popconfirm,
+  Popover,
+  Select,
+  Skeleton,
+  Switch,
+} from "antd";
 import moment from "moment";
 import { useRouter } from "next/router";
 import React, { useEffect, useMemo, useState } from "react";
 import { DATE_FORMAT_FULL } from "../../helpers/dateHelper";
+import { validateEmail } from "../../helpers/validateEmail";
 import httpService from "../../lib/httpService";
+import { PrimaryButton, SecondaryButton } from "../common/CustomButton";
+import CustomModal from "../common/CustomModal";
 import CustomTable from "../common/CustomTable";
 import NoRecordFound from "../common/NoRecordFound";
 import { openNotificationBox } from "../common/notification";
@@ -14,9 +30,11 @@ const SURVEY_BASE_URL = process.env.NEXT_PUBLIC_APP_URL + "survey/";
 
 function SurveyResponsePage({ user }) {
   const router = useRouter();
+  const [emailForm] = Form.useForm();
   const { surveyId } = router.query;
   const [surveyData, setSurveyData] = useState({});
   const [loading, setLoading] = useState(true);
+  const [emailModalVisible, setEmailModalVisible] = useState(false);
 
   const fetchSurveyData = async (isLoadingRequired = true) => {
     if (isLoadingRequired) {
@@ -77,14 +95,15 @@ function SurveyResponsePage({ user }) {
       });
   };
 
-  async function onDelete(id) {
-    if (id) {
-      let obj = {
-        id: id,
-        userId: user.id,
-      };
+  async function onDelete(channelId) {
+    if (channelId) {
       await httpService
-        .delete(`/api/survey/channels`, { data: obj })
+        .delete(`/api/survey/channels`, {
+          data: {
+            channelId: channelId,
+            userId: user.id,
+          },
+        })
         .then(({ data: response }) => {
           if (response.status === 200) {
             fetchSurveyData(false);
@@ -104,6 +123,11 @@ function SurveyResponsePage({ user }) {
       title: "Name",
       dataIndex: "name",
       key: "name",
+    },
+    {
+      title: "Type",
+      dataIndex: "type",
+      key: "type",
     },
     {
       title: "Created At",
@@ -151,7 +175,7 @@ function SurveyResponsePage({ user }) {
             title={`Are you sure to delete this channel？`}
             okText="Yes"
             cancelText="No"
-            onConfirm={() => onDelete(record.user.email)}
+            onConfirm={() => onDelete(record.id)}
             icon={false}
           >
             <DeleteOutlined className="text-red-500 text-xl mx-1 md:mx-2 cursor-pointer" />
@@ -173,6 +197,75 @@ function SurveyResponsePage({ user }) {
 
     return null;
   }, [surveyData]);
+
+  const onFinishEmailHandler = async (values) => {
+    const oldSurveyData = surveyData;
+    let notValidEmail = values.email.filter((item) => {
+      return !validateEmail(item);
+    });
+    let errorStr = "";
+    if (Number(notValidEmail.length) > 0) {
+      notValidEmail.forEach((item, idx) => {
+        errorStr = `${errorStr}  ${item} ${
+          notValidEmail.length === 1
+            ? ""
+            : notValidEmail.length === idx + 1
+            ? ""
+            : ","
+        }`;
+      });
+      errorStr = `${errorStr} is not valid email`;
+    }
+    if (errorStr) {
+      openNotificationBox(
+        "error",
+        "Email Not Valid",
+        3,
+        "errorEmailKey",
+        errorStr
+      );
+      return;
+    }
+
+    await httpService
+      .put(`/api/survey/add`, {
+        surveyId: surveyId,
+        userId: user.id,
+        email: values.email,
+        channelType: "Email",
+        status: "Pending",
+      })
+      .then(({ data: response }) => {
+        if (response.status === 200) {
+          fetchSurveyData();
+          openNotificationBox("success", response.message, 3, "newChannelKey");
+          setEmailModalVisible(false);
+          emailForm.resetFields();
+        }
+      })
+      .catch((err) => {
+        setSurveyData(oldSurveyData);
+        setLoading(false);
+      });
+  };
+
+  const onNewUrlHandler = async () => {
+    await httpService
+      .put(`/api/survey/add`, {
+        surveyId: surveyId,
+        userId: user.id,
+        channelType: "Link",
+      })
+      .then(({ data: response }) => {
+        if (response.status === 200) {
+          fetchSurveyData();
+          openNotificationBox("success", response.message, 3, "newChannelKey");
+        }
+      })
+      .catch((err) => {
+        setLoading(false);
+      });
+  };
 
   return (
     <AdminLayout user={user} isBack title={surveyData?.survey_name}>
@@ -203,7 +296,38 @@ function SurveyResponsePage({ user }) {
                 </button>
               </div>
             </div>
+            <h3 className="px-1 text-lg lg:text-xl font-bold leading-6 -tracking-wider my-4 text-primary text-center">
+              Create New Shares
+            </h3>
+            <div className="flex justify-center items-center space-x-4 pb-4">
+              <div
+                className="w-36 h-28 cursor-pointer border border-black flex flex-col justify-center items-center rounded-md"
+                onClick={() => {
+                  setEmailModalVisible(true);
+                }}
+              >
+                <div>
+                  <MailOutlined className="text-prmary text-2xl" />
+                </div>
+                <p className="mb-0 text-lg">Send Email</p>
+              </div>
+              <Popconfirm
+                title={`Are you sure you want to Create new Link`}
+                okText="Yes"
+                cancelText="No"
+                onConfirm={() => onNewUrlHandler()}
+                icon={false}
+              >
+                <div className="w-36 h-28 cursor-pointer border border-black flex flex-col justify-center items-center rounded-md">
+                  <div>
+                    <LinkOutlined className="text-prmary text-2xl" />
+                  </div>
+                  <p className="mb-0 text-lg">Create Url</p>
+                </div>
+              </Popconfirm>
+            </div>
           </div>
+
           <h3 className="px-1 text-lg lg:text-xl font-bold leading-6 -tracking-wider my-4 text-primary">
             All Shares
           </h3>
@@ -221,6 +345,57 @@ function SurveyResponsePage({ user }) {
       ) : (
         <NoRecordFound />
       )}
+      <CustomModal
+        title="Email Share"
+        visible={emailModalVisible}
+        onCancel={() => setEmailModalVisible(false)}
+        customFooter
+        footer={[
+          <>
+            <SecondaryButton
+              onClick={() => setEmailModalVisible(false)}
+              className=" h-full mr-2"
+              title="Cancel"
+            />
+            <PrimaryButton
+              onClick={() => emailForm.submit()}
+              className=" h-full  "
+              title="Submit"
+            />
+          </>,
+        ]}
+        modalProps={{ wrapClassName: "view_form_modal" }}
+      >
+        <div>
+          <Form
+            form={emailForm}
+            layout="vertical"
+            autoComplete="off"
+            onFinish={onFinishEmailHandler}
+          >
+            <div className=" mx-2">
+              <Form.Item
+                label="Send to"
+                name="email"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please enter a Email!",
+                  },
+                ]}
+              >
+                <Select
+                  size="large"
+                  mode="tags"
+                  placeholder="Emails"
+                  className="select-tag tag-select-box"
+                  maxTagCount="responsive"
+                ></Select>
+              </Form.Item>
+            </div>
+          </Form>
+        </div>
+      </CustomModal>
     </AdminLayout>
   );
 }

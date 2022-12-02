@@ -72,7 +72,7 @@ async function handle(req, res, prisma) {
         message: "Channel is default.",
       });
     } else {
-      const deleteChannel = await prisma.surveyChannels.findUnique({
+      const deleteChannel = await prisma.surveyChannels.delete({
         where: { id: surveyChannelData.id },
       });
       if (!deleteChannel) {
@@ -83,7 +83,7 @@ async function handle(req, res, prisma) {
       } else {
         return res.status(200).json({
           status: 200,
-          message: "Status deleted successfully  ",
+          message: "Channel deleted successfully  ",
         });
       }
     }

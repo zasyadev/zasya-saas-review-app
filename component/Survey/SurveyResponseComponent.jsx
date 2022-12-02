@@ -43,6 +43,7 @@ function SurveyResponseComponent({
         answers: item.SurveyAnswerOption,
         created_date: item.created_survey_date ?? item.created_date,
         answer_date: item.created_date,
+        name: item?.name,
       }));
 
       let dataobj = data.map((item) => {
@@ -53,7 +54,7 @@ function SurveyResponseComponent({
         });
 
         return {
-          name: "Anonymous",
+          name: item.name ?? "Anonymous",
           created_date: item.created_date,
           answer_date: item.answer_date,
           ...optionObj,

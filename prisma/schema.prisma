@@ -354,7 +354,7 @@ model SurveyAnswers {
   user_id             String               @default(uuid())
   survey              Survey               @relation(fields: [survey_id], references: [id], onDelete: Cascade)
   survey_id           String
-  url_id              String
+  name                String?
   created_date        DateTime             @default(now())
   modified_date       DateTime             @default(now())
   created_survey_date DateTime?
@@ -398,14 +398,14 @@ model SurveyChannels {
 }
 
 model SurveyChannelUser {
-  id            Int            @id @default(autoincrement())
-  channel       SurveyChannels @relation(fields: [channel_id], references: [id], onDelete: Cascade)
+  id            Int                         @id @default(autoincrement())
+  channel       SurveyChannels              @relation(fields: [channel_id], references: [id], onDelete: Cascade)
   channel_id    Int
-  name          String?
-  status        Boolean
-  customer_url  String?        @default(uuid())
-  created_date  DateTime       @default(now())
-  modified_date DateTime       @default(now())
+  name          String
+  status        SurveyChannelUserStatusEnum
+  customer_url  String                      @unique @default(uuid())
+  created_date  DateTime                    @default(now())
+  modified_date DateTime                    @default(now())
 
   @@map("survey_channels_user")
 }
@@ -432,4 +432,10 @@ enum ReviewType {
 enum SurveyChannelTypeEnum {
   Email
   Link
+}
+
+enum SurveyChannelUserStatusEnum {
+  Pending
+  Opened
+  Answered
 }

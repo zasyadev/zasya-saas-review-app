@@ -14,6 +14,9 @@ async function handle(req, res, prisma) {
       SurveyAnswers: {
         include: { SurveyAnswerOption: true },
       },
+      SurveyChannels: {
+        include: { SurveyChannelUser: true },
+      },
     },
   });
 

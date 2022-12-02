@@ -1,3 +1,5 @@
+import { validateEmail } from "../../../../helpers/validateEmail";
+import { mailService, mailTemplate } from "../../../../lib/emailservice";
 import { RequestHandler } from "../../../../lib/RequestHandler";
 
 async function handle(req, res, prisma) {
@@ -90,9 +92,63 @@ async function handle(req, res, prisma) {
         });
 
         if (reqBody.channelType === "Email") {
+          let channelUserData = [];
+          if (Number(reqBody.email.length) > 0) {
+            channelUserData = reqBody.email.map((item) => {
+              return { name: item, status: reqBody.status };
+            });
+          }
+          const channeldata = await transaction.surveyChannels.create({
+            data: {
+              survey: { connect: { id: reqBody.surveyId } },
+              type: reqBody.channelType,
+              isDefault: false,
+              name: surveyData.survey_name,
+              submission_count: 1,
+              url: "",
+              status: true,
+              SurveyChannelUser: {
+                create: channelUserData,
+              },
+            },
+          });
+
+          const channelUsers = await transaction.surveyChannelUser.findMany({
+            where: { channel_id: channeldata.id },
+          });
+
+          channelUsers.forEach(async (item) => {
+            if (validateEmail(item.name)) {
+              let userName =
+                Number(item?.name.split("@").length) > 0
+                  ? item?.name.split("@")[0]
+                  : "";
+
+              const mailData = {
+                from: process.env.SMTP_USER,
+                to: item.name,
+                subject: `Could you spare some time for my survey?`,
+
+                html: mailTemplate({
+                  body: ` Will you take a moment to complete this survey that I have shared to you. It won't take long.`,
+                  name: userName ?? "",
+                  btnLink: `${process.env.NEXT_APP_URL}survey/rvc-${item.customer_url}`,
+                  btnText: "Get Started",
+                }),
+              };
+
+              await mailService.sendMail(mailData, function (err, info) {
+                if (err) console.log("failed");
+                else console.log("successfull");
+              });
+            }
+          });
+
+          return { channeldata };
         } else {
           const channeldata = await transaction.surveyChannels.create({
             data: {
+              survey: { connect: { id: reqBody.surveyId } },
               type: reqBody.channelType,
               isDefault: false,
               name: surveyData.survey_name,
@@ -117,6 +173,7 @@ async function handle(req, res, prisma) {
         });
       }
     } catch (error) {
+      console.log(error);
       return res.status(500).json({
         error: error,
         message: "Internal Server Error",
