@@ -17,9 +17,10 @@ function RegisterPage() {
 
   async function handleSubmit(values) {
     setLoading(true);
-    values["role"] = 2;
-    values["status"] = 1;
 
+    if (values?.confirm_password) {
+      delete values?.confirm_password;
+    }
     await httpService
       .post(`/api/user`, values)
       .then(({ data: response }) => {
@@ -32,6 +33,7 @@ function RegisterPage() {
       })
       .catch((err) => {
         openNotificationBox("error", err.response.data?.message);
+        setLoading(false);
       });
   }
 
