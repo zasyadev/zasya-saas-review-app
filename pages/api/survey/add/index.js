@@ -138,8 +138,8 @@ async function handle(req, res, prisma) {
               };
 
               await mailService.sendMail(mailData, function (err, info) {
-                if (err) console.log("failed");
-                else console.log("successfull");
+                // if (err) console.log("failed");
+                // else console.log("successfull");
               });
             }
           });
@@ -173,7 +173,6 @@ async function handle(req, res, prisma) {
         });
       }
     } catch (error) {
-      console.log(error);
       return res.status(500).json({
         error: error,
         message: "Internal Server Error",
@@ -182,5 +181,12 @@ async function handle(req, res, prisma) {
   }
 }
 const functionHandle = (req, res) =>
-  RequestHandler(req, res, handle, ["POST", "PUT"]);
+  RequestHandler({
+    req,
+    res,
+    callback: handle,
+    allowedMethods: ["POST", "PUT"],
+    protectedRoute: false,
+  });
+
 export default functionHandle;

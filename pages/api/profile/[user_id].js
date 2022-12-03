@@ -109,6 +109,13 @@ async function handle(req, res, prisma) {
   }
 }
 const functionHandle = (req, res) =>
-  RequestHandler(req, res, handle, ["GET", "POST"], UPDATE_PROFILE_SCHEMA);
+  RequestHandler({
+    req,
+    res,
+    callback: handle,
+    allowedMethods: ["GET", "POST"],
+    protectedRoute: true,
+    schemaObj: UPDATE_PROFILE_SCHEMA,
+  });
 
 export default functionHandle;

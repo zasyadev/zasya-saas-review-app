@@ -33,5 +33,13 @@ async function handle(req, res, prisma) {
     message: "Survey Details Retrieved",
   });
 }
-const functionHandle = (req, res) => RequestHandler(req, res, handle, ["POST"]);
+const functionHandle = (req, res) =>
+  RequestHandler({
+    req,
+    res,
+    callback: handle,
+    allowedMethods: ["POST"],
+    protectedRoute: false,
+  });
+
 export default functionHandle;

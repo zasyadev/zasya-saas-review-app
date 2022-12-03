@@ -114,6 +114,13 @@ async function handle(req, res, prisma) {
     message: "Monthly Leaderboard Data Received",
   });
 }
-const functionHandle = (req, res) => RequestHandler(req, res, handle, ["POST"]);
+const functionHandle = (req, res) =>
+  RequestHandler({
+    req,
+    res,
+    callback: handle,
+    allowedMethods: ["POST"],
+    protectedRoute: true,
+  });
 
 export default functionHandle;

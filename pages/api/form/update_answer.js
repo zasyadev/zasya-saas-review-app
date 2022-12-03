@@ -101,5 +101,12 @@ async function handle(req, res, prisma) {
       .json({ error: error, message: "Internal Server Error" });
   }
 }
-const functionHandle = (req, res) => RequestHandler(req, res, handle, ["POST"]);
+const functionHandle = (req, res) =>
+  RequestHandler({
+    req,
+    res,
+    callback: handle,
+    allowedMethods: ["POST"],
+    protectedRoute: true,
+  });
 export default functionHandle;
