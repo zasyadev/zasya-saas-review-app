@@ -3,10 +3,12 @@ import NoRecordFound from "../common/NoRecordFound";
 import { TemplatePreviewComponent } from "./TemplatePreviewComponent";
 import { useRouter } from "next/router";
 import httpService from "../../lib/httpService";
+import { REVIEW_TYPE } from "./constants";
+import { PulseLoader } from "../Loader/LoadingSpinner";
 
 function TemplatePreviewWrapperComponent() {
   const router = useRouter();
-  const { template_id } = router.query;
+  const { template_id, type } = router.query;
   const [templateData, setTemplateData] = useState({});
   const [loading, setLoading] = useState(false);
 
@@ -35,29 +37,7 @@ function TemplatePreviewWrapperComponent() {
   }, [template_id]);
 
   return loading ? (
-    <div className="border shadow bg-white rounded-md p-2 mt-4 w-full  md:w-4/6 mx-auto">
-      <div className="w-full  rounded-md  p-2 mt-2 template-wrapper">
-        <div className="animate-pulse flex space-x-4">
-          <div className="flex-1 space-y-6 py-1">
-            <div className="h-4 bg-slate-200 rounded"></div>
-            <div className="h-4 bg-slate-200 rounded"></div>
-
-            <div className="space-y-5">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="h-4 bg-slate-200 rounded"></div>
-              </div>
-              <div className="h-4 bg-slate-200 rounded"></div>
-            </div>
-            <div className="space-y-5">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="h-4 bg-slate-200 rounded"></div>
-              </div>
-              <div className="h-4 bg-slate-200 rounded"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <PulseLoader isDouble />
   ) : templateData?.form_data?.questions?.length ? (
     <TemplatePreviewComponent
       length={templateData.form_data.questions.length}
@@ -65,6 +45,9 @@ function TemplatePreviewWrapperComponent() {
       questions={templateData.form_data.questions}
       isQuestionPreviewMode={true}
       templateId={template_id}
+      linkHref={`/${
+        type === REVIEW_TYPE ? "review" : "survey"
+      }/edit/${template_id}`}
     />
   ) : (
     <NoRecordFound />

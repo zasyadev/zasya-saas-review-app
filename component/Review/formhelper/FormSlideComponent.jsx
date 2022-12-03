@@ -12,6 +12,7 @@ import {
   TEXTAREA_TYPE,
   YESNO_TYPE,
 } from "../../Form/questioncomponents/constants";
+import { REVIEW_TYPE } from "../../Template/constants";
 import InputForm from "./InputForm";
 import MutipleChoiceForm from "./MutipleChoiceForm";
 import RateForm from "./RateForm";
@@ -31,6 +32,7 @@ export function FormSlideComponent({
   handleSubmit,
   handleAnswerChange,
   handleUpdateAnswer,
+  fromType = REVIEW_TYPE,
 }) {
   const router = useRouter();
 
@@ -62,12 +64,18 @@ export function FormSlideComponent({
             <Popconfirm
               title={
                 <p className="font-medium mb-0">
-                  Are you sure you want to close review?
+                  {`Are you sure you want to close ${
+                    fromType === REVIEW_TYPE ? "review" : "survey"
+                  }?`}
                 </p>
               }
               okText="Yes"
               cancelText="No"
-              onConfirm={() => router.back()}
+              onConfirm={() =>
+                router.replace(
+                  fromType === REVIEW_TYPE ? "/review/received" : "/"
+                )
+              }
               placement="right"
               overlayClassName="max-w-sm"
             >
@@ -139,7 +147,9 @@ export function FormSlideComponent({
                 <Popconfirm
                   title={
                     <p className="font-medium mb-0">
-                      Are you sure you want to submit your review?
+                      {`Are you sure you want to submit your ${
+                        fromType === REVIEW_TYPE ? "review" : "survey"
+                      } ?`}
                     </p>
                   }
                   okText="Yes"
@@ -166,7 +176,11 @@ export function FormSlideComponent({
                   }
                   loading={updateAnswerApiLoading}
                   onClick={() => {
-                    handleUpdateAnswer(id);
+                    if (fromType === REVIEW_TYPE) {
+                      handleUpdateAnswer(id);
+                    } else {
+                      setNextSlide(nextSlide + 1);
+                    }
                   }}
                 />
               )}

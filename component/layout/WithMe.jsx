@@ -15,7 +15,7 @@ const WithMe = (props) => {
         if (router.asPath) {
           back_url = `?back_url=${router.asPath}`;
         }
-        router.push(`/auth/login${back_url}`);
+        router.replace(`/auth/login${back_url}`);
       }
     }
   }, [status, session]);

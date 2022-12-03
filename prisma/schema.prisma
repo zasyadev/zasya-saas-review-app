@@ -39,6 +39,7 @@ model User {
   UserOraganizationTags UserOraganizationTags[]
   UserDetails           UserDetails?
   UserNotification      UserNotification[]
+  Survey                Survey[]
 
   @@map("users")
 }
@@ -51,6 +52,7 @@ model Role {
   User                    User[]
   Review                  Review[]
   UserOraganizationGroups UserOraganizationGroups[]
+  Survey                  Survey[]
 
   @@map("users_role")
 }
@@ -159,7 +161,6 @@ model ReviewAssigneeAnswers {
   ReviewAssignTemplate   ReviewAssignTemplate? @relation(fields: [reviewAssignTemplateId], references: [id])
   reviewAssignTemplateId String?
 
-  @@unique([user_id, review_id, review_assignee_id], name: "user_id_review_id_review_assignee_id_unique_constraint")
   @@map("review_assignee_answers")
 }
 
@@ -209,6 +210,7 @@ model UserOrganization {
   UserOraganizationTags UserOraganizationTags[]
   ReviewAssigneeAnswers ReviewAssigneeAnswers[]
   UserNotification      UserNotification[]
+  Survey                Survey[]
 
   @@map("user_organization")
 }
@@ -299,6 +301,114 @@ model UserNotification {
   @@map("user_notification")
 }
 
+model Survey {
+  id              String            @id @default(uuid())
+  created         User              @relation(fields: [created_by], references: [id])
+  created_by      String
+  survey_name     String?
+  organization    UserOrganization? @relation(fields: [organization_id], references: [id])
+  organization_id Int?
+  role            Role?             @relation(fields: [role_id], references: [id])
+  role_id         Int?
+  is_published    String?
+  created_date    DateTime          @default(now())
+  modified_date   DateTime          @default(now())
+  SurveyQuestions SurveyQuestions[]
+  SurveyAnswers   SurveyAnswers[]
+  SurveyChannels  SurveyChannels[]
+
+  @@map("survey")
+}
+
+model SurveyQuestions {
+  id                   Int                    @id @default(autoincrement())
+  survey               Survey                 @relation(fields: [survey_id], references: [id], onDelete: Cascade)
+  survey_id            String
+  questionText         String
+  type                 String
+  open                 Boolean
+  created_date         DateTime               @default(now())
+  modified_date        DateTime               @default(now())
+  SurveyQuestionOption SurveyQuestionOption[]
+  SurveyAnswerOption   SurveyAnswerOption[]
+
+  @@map("survey_questions")
+}
+
+model SurveyQuestionOption {
+  id            Int             @id @default(autoincrement())
+  question      SurveyQuestions @relation(fields: [question_id], references: [id], onDelete: Cascade)
+  question_id   Int
+  optionText    String?
+  lowerLabel    String?
+  higherLabel   String?
+  created_date  DateTime        @default(now())
+  modified_date DateTime        @default(now())
+
+  @@map("survey_question_option")
+}
+
+model SurveyAnswers {
+  id                  Int                  @id @default(autoincrement())
+  user_id             String               @default(uuid())
+  survey              Survey               @relation(fields: [survey_id], references: [id], onDelete: Cascade)
+  survey_id           String
+  name                String?
+  created_date        DateTime             @default(now())
+  modified_date       DateTime             @default(now())
+  created_survey_date DateTime?
+  delete_date         DateTime?
+  SurveyAnswerOption  SurveyAnswerOption[]
+
+  @@map("survey_answers")
+}
+
+model SurveyAnswerOption {
+  id            Int             @id @default(autoincrement())
+  survey        SurveyAnswers   @relation(fields: [survey_id], references: [id], onDelete: Cascade)
+  survey_id     Int
+  question      SurveyQuestions @relation(fields: [question_id], references: [id], onDelete: Cascade)
+  question_id   Int
+  option        String?         @db.Text
+  lowerLabel    String?
+  higherLabel   String?
+  created_date  DateTime        @default(now())
+  modified_date DateTime        @default(now())
+  delete_date   DateTime?
+
+  @@map("survey_answer_option")
+}
+
+model SurveyChannels {
+  id                Int                   @id @default(autoincrement())
+  survey            Survey                @relation(fields: [survey_id], references: [id], onDelete: Cascade)
+  survey_id         String
+  type              SurveyChannelTypeEnum
+  url               String?               @default(uuid())
+  isDefault         Boolean               @default(false)
+  name              String?
+  submission_count  Int
+  status            Boolean
+  created_date      DateTime              @default(now())
+  modified_date     DateTime              @default(now())
+  SurveyChannelUser SurveyChannelUser[]
+
+  @@map("survey_channels")
+}
+
+model SurveyChannelUser {
+  id            Int                         @id @default(autoincrement())
+  channel       SurveyChannels              @relation(fields: [channel_id], references: [id], onDelete: Cascade)
+  channel_id    Int
+  name          String
+  status        SurveyChannelUserStatusEnum
+  customer_url  String                      @unique @default(uuid())
+  created_date  DateTime                    @default(now())
+  modified_date DateTime                    @default(now())
+
+  @@map("survey_channels_user")
+}
+
 enum RoleEnum {
   SuperAdmin
   Admin
@@ -316,4 +426,15 @@ enum Frequency {
 enum ReviewType {
   feedback
   other
+}
+
+enum SurveyChannelTypeEnum {
+  Email
+  Link
+}
+
+enum SurveyChannelUserStatusEnum {
+  Pending
+  Opened
+  Answered
 }

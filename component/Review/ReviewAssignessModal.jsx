@@ -54,9 +54,9 @@ const ReviewAssignessModal = ({
   return (
     <CustomModal
       title={
-        <div className="single-line-clamp mb-0 pr-6">
+        <p className="single-line-clamp mb-0 pr-6">
           {reviewCountModalData?.review_name}
-        </div>
+        </p>
       }
       visible={reviewCountModalData?.isVisible}
       onCancel={() => hideReviewCountModal()}
@@ -69,7 +69,7 @@ const ReviewAssignessModal = ({
           defaultActiveKey="All"
           className="font-semibold"
           items={tabItems}
-        />{" "}
+        />
       </div>
     </CustomModal>
   );

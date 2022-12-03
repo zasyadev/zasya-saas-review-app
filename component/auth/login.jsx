@@ -29,9 +29,9 @@ function LoginPage() {
         return;
       }
       if (router.query && router.query.back_url) {
-        router.push(router.query.back_url);
+        router.replace(router.query.back_url);
       } else {
-        router.push("/dashboard");
+        router.replace("/dashboard");
       }
     } catch (error) {
       setLoading(false);

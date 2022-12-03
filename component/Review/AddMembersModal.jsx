@@ -1,5 +1,5 @@
 import { Form, Select } from "antd";
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
 import httpService from "../../lib/httpService";
 import { PrimaryButton, SecondaryButton } from "../common/CustomButton";
 import CustomModal from "../common/CustomModal";
@@ -55,7 +55,7 @@ const AddMembersModal = ({
 
   return (
     <CustomModal
-      title={<div className="single-line-clamp mb-0 pr-6">{review_name}</div>}
+      title={<p className="single-line-clamp mb-0 pr-6">{review_name}</p>}
       visible={isVisible}
       onCancel={() => hideReviewAddMemberModal()}
       customFooter
