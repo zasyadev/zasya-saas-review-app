@@ -23,7 +23,7 @@ const UPDATE_USER_SCHEMA = yup.object().shape({
 
 const UPDATE_USER_PASSWORD_SCHEMA = yup.object().shape({
   old_password: yup.string().required().label("Old Password"),
-  new_password: yup.string().required().label("New Password"),
+  new_password: yup.string().min(6).required().label("New Password"),
 });
 
 export const USER_SCHEMA = {

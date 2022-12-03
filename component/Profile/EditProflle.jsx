@@ -521,6 +521,7 @@ function EditProfile({ user }) {
                     required: true,
                     message: "Please enter your New password!",
                   },
+                  { min: 6, message: "Password must be minimum 6 characters." },
                 ]}
               >
                 <Input
