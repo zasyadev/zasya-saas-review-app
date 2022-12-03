@@ -161,7 +161,6 @@ model ReviewAssigneeAnswers {
   ReviewAssignTemplate   ReviewAssignTemplate? @relation(fields: [reviewAssignTemplateId], references: [id])
   reviewAssignTemplateId String?
 
-  @@unique([user_id, review_id, review_assignee_id], name: "user_id_review_id_review_assignee_id_unique_constraint")
   @@map("review_assignee_answers")
 }
 
