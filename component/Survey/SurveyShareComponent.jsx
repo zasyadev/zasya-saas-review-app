@@ -317,7 +317,7 @@ function SurveyResponsePage({ user }) {
               <h3 className="text-center text-lg lg:text-xl font-bold leading-6 text-primary -tracking-wider">
                 Link To Share
               </h3>
-              <div className="flex items-center max-w-xl mx-auto my-4">
+              <div className="flex items-center max-w-3xl mx-auto my-4">
                 <Input
                   size="large"
                   className="rounded-l-md font-semibold text-primary leading-6"
