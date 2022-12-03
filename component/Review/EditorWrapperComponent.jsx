@@ -1,25 +1,9 @@
 import React, { useState } from "react";
+import {
+  defaultQuestionConfig,
+  defaultScaleQuestion,
+} from "../Form/questioncomponents/constants";
 import TemplateEditor from "../Template/TemplateEditor";
-
-const defaultOption = { optionText: "", error: "" };
-
-const defaultQuestionConfig = {
-  questionText: "",
-  options: [defaultOption],
-  open: true,
-  type: "checkbox",
-  error: "",
-  active: true,
-};
-const defaultScaleQuestion = {
-  questionText: "",
-  options: [defaultOption, defaultOption],
-  lowerLabel: 0,
-  higherLabel: 5,
-  open: true,
-  type: "scale",
-  error: "",
-};
 
 function EditorWrapperComponent({
   questions,

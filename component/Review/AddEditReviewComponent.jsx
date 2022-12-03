@@ -6,28 +6,11 @@ import httpService from "../../lib/httpService";
 import GetReviewSteps from "../common/GetReviewSteps";
 import StepFixedHeader from "../common/StepFixedHeader";
 import StepsBottomFixedBar from "../common/StepsBottomFixedBar";
+import {
+  defaultQuestionConfig,
+  defaultRatingQuestion,
+} from "../Form/questioncomponents/constants";
 import { ReviewStepsArray } from "./constants";
-
-const defaultOption = { optionText: "", error: "" };
-
-const defaultScaleQuestion = {
-  questionText: "Rating",
-  options: [{ optionText: "low" }, { optionText: "high" }],
-  lowerLabel: 1,
-  higherLabel: 10,
-  open: false,
-  type: "scale",
-  editableFeedback: true,
-  ratingFeedback: true,
-};
-const defaultQuestionConfig = {
-  questionText: "",
-  options: [defaultOption],
-  open: true,
-  type: "checkbox",
-  error: "",
-  active: true,
-};
 
 function AddEditReviewComponent({
   user,
@@ -56,7 +39,7 @@ function AddEditReviewComponent({
       }
       if (name == "rating") {
         if (value === "feedback") {
-          setQuestionList((prev) => [...prev, defaultScaleQuestion]);
+          setQuestionList((prev) => [...prev, defaultRatingQuestion]);
         } else {
           setQuestionList((prev) =>
             prev.filter((item) => !item.ratingFeedback)
@@ -151,7 +134,7 @@ function AddEditReviewComponent({
 
   //       if (values.review_type === "feedback") {
   //         templateData.form_data.questions.length > 0
-  //           ? templateData.form_data.questions.push(defaultScaleQuestion)
+  //           ? templateData.form_data.questions.push(defaultRatingQuestion)
   //           : null;
   //       }
 
@@ -191,11 +174,11 @@ function AddEditReviewComponent({
     let values = form.getFieldsValue(true);
 
     if (!values.frequency) {
-      openNotificationBox("error", "Need to Select Frequency", 3);
+      openNotificationBox("error", "Need to Select Feedback Frequency", 3);
       return;
     }
-    if (!values.assigned_to_id) {
-      openNotificationBox("error", "Need to Select Members", 3);
+    if (!Number(values?.assigned_to_id?.length)) {
+      openNotificationBox("error", "Need to Select Feedback Members", 3);
       return;
     }
     setActiveReviewStep(type + 1);
@@ -208,6 +191,11 @@ function AddEditReviewComponent({
         error = "Question field required!";
       }
       let errorOptions = item.options;
+      if (item.type === "checkbox") {
+        if (item.options.length < 2) {
+          error = "Minimum 2 options  required!";
+        }
+      }
       if (
         item.options.length &&
         (item.type === "checkbox" || item.type === "scale")

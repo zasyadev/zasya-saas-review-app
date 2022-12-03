@@ -32,13 +32,15 @@ async function handle(req, res, prisma) {
           message: "Survey is already Answered",
         });
       }
-      if (!data.status === "Opened")
+
+      if (data.status !== "Opened") {
         await prisma.surveyChannelUser.update({
           where: { id: data.id },
           data: {
             status: "Opened",
           },
         });
+      }
       if (data.channel && data.channel.survey_id) {
         surveyData = await prisma.survey.findFirst({
           where: { id: data.channel.survey_id },

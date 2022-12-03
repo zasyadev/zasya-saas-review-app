@@ -1,8 +1,29 @@
 import { Col, Row } from "antd";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
-import React from "react";
+import { useRouter } from "next/router";
+import React, { useEffect } from "react";
 
 function AuthWrapper({ FormComponent, heading }) {
+  const { data: session, status } = useSession();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (status !== "loading") {
+      if (status === "authenticated" && session) {
+        if (router.query && router.query.back_url) {
+          router.replace(router.query.back_url);
+        } else {
+          router.replace("/dashboard");
+        }
+      }
+    }
+  }, [status, session]);
+
+  if (status === "loading" || session) {
+    return null;
+  }
+
   return (
     <Row className="h-full" align="stretch">
       <Col xs={24} md={12} lg={12}>

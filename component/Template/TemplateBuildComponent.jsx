@@ -12,32 +12,14 @@ import ErrorBox from "../common/ErrorBox";
 import StepFixedHeader from "../common/StepFixedHeader";
 import StepsBottomFixedBar from "../common/StepsBottomFixedBar";
 import {
+  defaultQuestionConfig,
+  defaultScaleQuestion,
   MULTIPLE_CHOICE_TYPE,
   SCALE_TYPE,
 } from "../Form/questioncomponents/constants";
 import { TemplateStepsArray } from "./constants";
 import TemplateEditor from "./TemplateEditor";
 import { TemplatePreviewComponent } from "./TemplatePreviewComponent";
-
-const defaultOption = { optionText: "", error: "" };
-
-const defaultQuestionConfig = {
-  questionText: "",
-  options: [defaultOption],
-  open: true,
-  type: MULTIPLE_CHOICE_TYPE,
-  error: "",
-  active: true,
-};
-const defaultScaleQuestion = {
-  questionText: "",
-  options: [defaultOption, defaultOption],
-  lowerLabel: 0,
-  higherLabel: 5,
-  open: true,
-  type: SCALE_TYPE,
-  error: "",
-};
 
 function TemplateBuildComponent({ user, editMode, editFormData }) {
   const router = useRouter();

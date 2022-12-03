@@ -17,7 +17,14 @@ function SurveyQuestionPreviewWrapper({ surveyId, user }) {
       })
       .then(({ data: response }) => {
         if (response.status === 200) {
-          setQuestions(response.data?.SurveyQuestions);
+          let filterQuestion = response.data?.SurveyQuestions.map((item) => {
+            return {
+              ...item,
+              options: item.SurveyQuestionOption,
+            };
+          });
+
+          setQuestions(filterQuestion);
           setSurveyTitle(response.data?.survey_name);
         }
         setLoading(false);
