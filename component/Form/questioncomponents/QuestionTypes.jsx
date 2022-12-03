@@ -29,7 +29,7 @@ export function MultipleChoiceType({
                 value={op.optionText}
                 maxLength={180}
               />
-              {j !== 0 ? (
+              {j > 1 ? (
                 <button
                   onClick={() => {
                     removeOption(idx, j);
