@@ -1,19 +1,12 @@
 import { hashedPassword } from "../../../lib/auth";
 import { mailService, mailTemplate } from "../../../lib/emailservice";
 import { RequestHandler } from "../../../lib/RequestHandler";
-import { validate } from "../../../middleware/validate";
-import { CREATE_USER_SCHEMA } from "../../../yup-schema/user";
+import { USER_SCHEMA } from "../../../yup-schema/user";
 
 const DEFAULT_USER_ROLE = 2;
 const DEFAULT_USER_STATUS = 1;
 
 async function handle(req, res, prisma) {
-  try {
-    await validate(CREATE_USER_SCHEMA, req.body, res);
-  } catch (error) {
-    return res.status(400).json(error);
-  }
-
   const { first_name, company_name, email, password } = req.body;
 
   const orgData = await prisma.userOrganization.findUnique({
@@ -113,5 +106,6 @@ async function handle(req, res, prisma) {
   });
 }
 
-const functionHandle = (req, res) => RequestHandler(req, res, handle, ["POST"]);
+const functionHandle = (req, res) =>
+  RequestHandler(req, res, handle, ["POST"], USER_SCHEMA);
 export default functionHandle;

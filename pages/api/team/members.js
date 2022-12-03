@@ -1,18 +1,21 @@
 import { hashedPassword } from "../../../lib/auth";
 import { mailService, mailTemplate } from "../../../lib/emailservice";
 import { RequestHandler } from "../../../lib/RequestHandler";
+import { MEMBER_SCHEMA } from "../../../yup-schema/user";
 
 async function handle(req, res, prisma) {
   if (req.method === "POST") {
     try {
-      const resData = req.body;
+      const { first_name, email, tags, role, created_by } = req.body;
 
       let existingData = await prisma.user.findUnique({
-        where: { email: resData.email },
+        where: { email: email },
       });
+
       let createdUserData = await prisma.user.findUnique({
-        where: { id: resData.created_by },
+        where: { id: created_by },
       });
+
       let organizationTags = await prisma.userOraganizationTags.findMany({
         where: { organization_id: createdUserData.organization_id },
       });
@@ -28,25 +31,25 @@ async function handle(req, res, prisma) {
         });
 
         if (existingOrgUser.length > 0) {
-          return res
-            .status(409)
-            .json({ error: "409", message: "Duplicate Employee" });
+          return res.status(409).json({
+            error: "409",
+            message: "User with email id already exists!",
+          });
         }
       }
 
       const transactionData = await prisma.$transaction(async (transaction) => {
         let userobj = {
-          email: resData.email,
-          // password: await hashedPassword(password),
-          first_name: resData.first_name,
-          last_name: resData.last_name ?? "",
-          status: resData.status,
-          role: { connect: { id: resData.role } },
+          email: email,
+          first_name: first_name,
+          last_name: "",
+          status: 0,
+          role: { connect: { id: role } },
           organization: { connect: { id: createdUserData.organization_id } },
         };
 
         let existingUser = await transaction.user.findUnique({
-          where: { email: resData.email },
+          where: { email: email },
         });
         let userData = {};
         let passwordResetData = {};
@@ -55,12 +58,12 @@ async function handle(req, res, prisma) {
           userData = await transaction.userOraganizationGroups.create({
             data: {
               user: { connect: { id: existingUser.id } },
-              role: { connect: { id: resData.role } },
+              role: { connect: { id: role } },
               organization: {
                 connect: { id: createdUserData.organization_id },
               },
               status: true,
-              tags: resData.tags,
+              tags: tags,
             },
           });
 
@@ -86,19 +89,19 @@ async function handle(req, res, prisma) {
             data: userobj,
           });
           if (userData.id) {
-            let userOrgData = await transaction.userOraganizationGroups.create({
+            await transaction.userOraganizationGroups.create({
               data: {
                 user: { connect: { id: userData.id } },
-                role: { connect: { id: resData.role } },
+                role: { connect: { id: role } },
                 organization: {
                   connect: { id: createdUserData.organization_id },
                 },
                 status: true,
-                tags: resData.tags,
+                tags: tags,
               },
             });
 
-            let userDeatilsTable = await transaction.userDetails.create({
+            await transaction.userDetails.create({
               data: {
                 user: { connect: { id: userData.id } },
               },
@@ -107,8 +110,8 @@ async function handle(req, res, prisma) {
           passwordResetData = await transaction.passwordReset.create({
             data: {
               email: { connect: { email: userData.email } },
-              created_by: { connect: { id: resData.created_by } },
-              token: await hashedPassword(resData.email),
+              created_by: { connect: { id: created_by } },
+              token: await hashedPassword(email),
             },
           });
           let mailData = {
@@ -131,18 +134,18 @@ async function handle(req, res, prisma) {
         }
         let newTags = [];
         if (organizationTags.length > 0) {
-          newTags = resData.tags.filter((item) => {
+          newTags = tags.filter((item) => {
             return !organizationTags.find((data) => {
               return data.tag_name === item;
             });
           });
         } else {
-          newTags = resData.tags;
+          newTags = tags;
         }
         if (newTags.length > 0) {
           let tagsData = [];
 
-          let multipleTags = newTags.forEach((item) => {
+          newTags.forEach((item) => {
             tagsData.push({
               user: { connect: { id: createdUserData.id } },
               tag_name: item,
@@ -185,19 +188,17 @@ async function handle(req, res, prisma) {
           .json({ error: error, message: "Internal Server Error" });
       }
     }
-  } else if (req.method === "GET") {
-    return;
   } else if (req.method === "PUT") {
     try {
-      const resData = req.body;
+      const { id, first_name, tags, role, created_by } = req.body;
 
       let createdUserData = await prisma.user.findUnique({
-        where: { id: resData.created_by },
+        where: { id: created_by },
       });
 
       const transactionData = await prisma.$transaction(async (transaction) => {
         let existingData = await transaction.user.findUnique({
-          where: { email: resData.email },
+          where: { id: id },
         });
 
         let existingOrgUser =
@@ -214,16 +215,17 @@ async function handle(req, res, prisma) {
 
         if (existingOrgUser.length > 0) {
           userData = await transaction.user.update({
-            where: { email: resData.email },
+            where: { id: id },
             data: {
-              first_name: resData.first_name,
+              first_name: first_name,
             },
           });
-          const userOrgData = await transaction.userOraganizationGroups.update({
+
+          await transaction.userOraganizationGroups.update({
             where: { id: existingOrgUser[0].id },
             data: {
-              role_id: resData.role,
-              tags: resData.tags,
+              role_id: role,
+              tags: tags,
             },
           });
         } else {
@@ -236,18 +238,18 @@ async function handle(req, res, prisma) {
 
         let newTags = [];
         if (organizationTags.length > 0) {
-          newTags = resData.tags.filter((item) => {
+          newTags = tags.filter((item) => {
             return !organizationTags.find((data) => {
               return data.tag_name === item;
             });
           });
         } else {
-          newTags = resData.tags;
+          newTags = tags;
         }
         if (newTags.length > 0) {
           let tagsData = [];
 
-          let multipleTags = newTags.forEach((item) => {
+          newTags.forEach((item) => {
             tagsData.push({
               user: { connect: { id: createdUserData.id } },
               tag_name: item,
@@ -304,7 +306,7 @@ async function handle(req, res, prisma) {
       });
 
       if (existingOrgUser) {
-        const deleteData = await prisma.userOraganizationGroups.delete({
+        await prisma.userOraganizationGroups.delete({
           where: { id: existingOrgUser.id },
         });
 
@@ -322,6 +324,6 @@ async function handle(req, res, prisma) {
   }
 }
 const functionHandle = (req, res) =>
-  RequestHandler(req, res, handle, ["POST", "GET", "PUT", "DELETE"]);
+  RequestHandler(req, res, handle, ["POST", "PUT", "DELETE"], MEMBER_SCHEMA);
 
 export default functionHandle;

@@ -7,8 +7,8 @@ import WithMe from "../../../component/layout/WithMe";
 
 import httpService from "../../../lib/httpService";
 
-const AddTeamComponent = dynamic(
-  () => import("../../../component/Team/AddTeamComponent"),
+const AddUpdateTeamMember = dynamic(
+  () => import("../../../component/Team/AddUpdateTeamMember"),
   {
     suspense: true,
   }
@@ -47,7 +47,7 @@ function EditTeam() {
         {({ user }) => (
           <AdminLayout user={user} title="">
             {Object.keys(memberData).length > 0 && (
-              <AddTeamComponent
+              <AddUpdateTeamMember
                 user={user}
                 memberData={memberData}
                 editMode={true}

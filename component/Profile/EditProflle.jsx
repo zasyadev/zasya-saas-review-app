@@ -18,7 +18,13 @@ import {
   SecondaryButton,
 } from "../../component/common/CustomButton";
 import { openNotificationBox } from "../../component/common/notification";
+import {
+  maxLengthValidator,
+  phoneValidator,
+} from "../../helpers/formValidations";
+import getErrors from "../../helpers/getErrors";
 import httpService from "../../lib/httpService";
+import { CustomTextArea } from "../common/CustomFormFeilds";
 import CustomModal from "../common/CustomModal";
 const ActionURL = process.env.NEXT_PUBLIC_APP_URL + "api/profile/noop";
 
@@ -107,7 +113,7 @@ const ImageUpload = ({
 
   return (
     <>
-      <Form.Item name={formName} label="Profile Image">
+      <Form.Item className="text-center" name={formName} label="Profile Image">
         <ImgCrop
           zoom
           rotate={false}
@@ -191,7 +197,18 @@ function EditProfile({ user }) {
           window.location.href = process.env.NEXT_PUBLIC_APP_URL + "/profile";
         }
       })
-      .catch((err) => setApiLoading(false));
+      .catch((err) => {
+        setApiLoading(false);
+
+        if (
+          err?.response?.status === 400 &&
+          Number(err?.response?.data?.inner?.length) > 0
+        ) {
+          const errorNode = getErrors(err?.response?.data?.inner);
+
+          openNotificationBox("error", "Errors", 5, "error-reg", errorNode);
+        } else openNotificationBox("error", err.response.data?.message);
+      });
   };
 
   const validateMessages = {
@@ -206,6 +223,7 @@ function EditProfile({ user }) {
         if (response.status === 200) {
           setUserDetails({
             first_name: response.data.user.first_name,
+            email: response.data.user.email,
             address1: response.data.address1 ?? "",
             about: response.data.about ?? "",
             address2: response.data.address2 ?? "",
@@ -218,7 +236,10 @@ function EditProfile({ user }) {
         }
         setLoading(false);
       })
-      .catch((err) => console.error(err?.response?.data?.message));
+      .catch((err) => {
+        setLoading(false);
+        openNotificationBox("error", err.response.data?.message);
+      });
   };
 
   const setImageHandler = (img) => {
@@ -236,7 +257,6 @@ function EditProfile({ user }) {
             filepaths: [img],
           },
         },
-        // originFileObj: img,
       });
 
       setImage(array);
@@ -299,143 +319,148 @@ function EditProfile({ user }) {
             </div>
           </div>
           <div className="w-full bg-white rounded-md  shadow-md p-4 md:py-6">
-            <Row gutter={16}>
-              <Col lg={24} xs={24} className=" items-center">
-                <Form
-                  layout="vertical"
-                  onFinish={onFinish}
-                  validateMessages={validateMessages}
-                  initialValues={{
-                    first_name: userDetails?.first_name,
-                    address1: userDetails?.address1,
-                    about: userDetails?.about,
-                    address2: userDetails?.address2,
-                    mobile: userDetails?.mobile,
-                    pin_code: userDetails?.pin_code,
-                    notification: userDetails?.notification,
-                  }}
+            <div className="md:w-3/6 mx-auto">
+              <Form
+                layout="vertical"
+                onFinish={onFinish}
+                validateMessages={validateMessages}
+                initialValues={{
+                  first_name: userDetails?.first_name,
+                  address1: userDetails?.address1,
+                  about: userDetails?.about,
+                  address2: userDetails?.address2,
+                  mobile: userDetails?.mobile,
+                  pin_code: userDetails?.pin_code,
+                  notification: userDetails?.notification,
+                }}
+              >
+                <ImageUpload
+                  category="profile"
+                  fileList={image}
+                  setFileList={setImage}
+                  formName="profileImage"
+                  onDelete={onDeleteImage}
+                />
+                <Form.Item
+                  label="Name"
+                  name="first_name"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Required!",
+                    },
+                    {
+                      validator: (_, value) => maxLengthValidator(value, 50),
+                    },
+                  ]}
                 >
-                  <Row gutter={16} justify="center">
-                    <Col md={4} xs={24}>
-                      <Row justify="center">
-                        <Col md={24} xs={24}>
-                          <ImageUpload
-                            category="profile"
-                            fileList={image}
-                            setFileList={setImage}
-                            formName="profileImage"
-                            onDelete={onDeleteImage}
-                          />
-                        </Col>
-                      </Row>
-                    </Col>
-                    <Col md={12} xs={24}>
-                      <Row>
-                        <Col md={24} xs={24}>
-                          <Form.Item
-                            label="Name"
-                            name="first_name"
-                            rules={[
-                              {
-                                required: true,
-                              },
-                            ]}
-                          >
-                            <Input
-                              placeholder="Name"
-                              className="bg-gray-100 h-12 rounded-md"
-                            />
-                          </Form.Item>
-                        </Col>
-                        <Col md={24} sm={24} xs={24}>
-                          <Form.Item
-                            label="Address Line 1"
-                            name="address1"
-                            rules={[
-                              {
-                                required: true,
-                              },
-                            ]}
-                          >
-                            <Input
-                              placeholder="Address Line 1"
-                              className="bg-gray-100 h-12 rounded-md"
-                            />
-                          </Form.Item>
-                        </Col>
-                        <Col md={24} sm={24} xs={24}>
-                          <Form.Item label="Address Line 2" name="address2">
-                            <Input
-                              placeholder="Address Line 2"
-                              className="bg-gray-100 h-12 rounded-md"
-                            />
-                          </Form.Item>
-                        </Col>
-                        <Col md={24} sm={24} xs={24}>
-                          <Form.Item
-                            label="Phone Number"
-                            name="mobile"
-                            rules={[
-                              {
-                                required: true,
-                              },
-                            ]}
-                          >
-                            <Input
-                              placeholder="Mobile"
-                              className="bg-gray-100 h-12 rounded-md"
-                            />
-                          </Form.Item>
-                        </Col>
-                        <Col md={24} sm={24} xs={24}>
-                          <Form.Item
-                            label="About "
-                            name="about"
-                            rules={[
-                              {
-                                required: true,
-                              },
-                            ]}
-                          >
-                            <Input
-                              placeholder="About You"
-                              className="bg-gray-100 h-12 rounded-md"
-                            />
-                          </Form.Item>
-                        </Col>
-                        <Col md={24} sm={24} xs={24}>
-                          <Form.Item
-                            label="Notification Method "
-                            name="notification"
-                            rules={[
-                              {
-                                required: true,
-                              },
-                            ]}
-                          >
-                            <Checkbox.Group options={notificationOptions} />
-                          </Form.Item>
-                        </Col>
-                      </Row>
-                    </Col>
-                  </Row>
-                  <div className="text-center space-x-4">
-                    <SecondaryButton
-                      withLink={true}
-                      className=" h-full w-32"
-                      linkHref={"/profile"}
-                      title="Cancel"
+                  <Input placeholder="Name" className=" h-12 rounded-md" />
+                </Form.Item>{" "}
+                {userDetails?.email && (
+                  <Form.Item label="Email">
+                    <Input
+                      disabled={true}
+                      value={userDetails?.email}
+                      className="form-control block w-full px-4 py-2 text-base font-normal text-gray-700 disabled:opacity-60 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0  focus:outline-none"
                     />
-                    <PrimaryButton
-                      type="submit"
-                      disabled={apiLoading}
-                      className=" h-full w-32  "
-                      title="Submit"
-                    />
-                  </div>
-                </Form>
-              </Col>
-            </Row>
+                  </Form.Item>
+                )}
+                <Form.Item
+                  label="Address 1"
+                  name="address1"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Required!",
+                    },
+                    {
+                      validator: (_, value) => maxLengthValidator(value, 200),
+                    },
+                  ]}
+                >
+                  <CustomTextArea
+                    placeholder="Address 1"
+                    className=" h-12 rounded-md"
+                  />
+                </Form.Item>
+                <Form.Item
+                  label="Address 2"
+                  name="address2"
+                  rules={[
+                    {
+                      validator: (_, value) => maxLengthValidator(value, 200),
+                    },
+                  ]}
+                >
+                  <CustomTextArea
+                    placeholder="Address 2"
+                    className=" h-12 rounded-md"
+                  />
+                </Form.Item>
+                <Form.Item
+                  label="Phone Number"
+                  name="mobile"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please Enter your Phone Number!",
+                    },
+                    {
+                      validator: (_, value) => maxLengthValidator(value, 20),
+                    },
+                    {
+                      validator: (_, value) => phoneValidator(value),
+                    },
+                  ]}
+                >
+                  <Input placeholder="Mobile" className=" h-12 rounded-md" />
+                </Form.Item>
+                <Form.Item
+                  label="About "
+                  name="about"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Required!",
+                    },
+                    {
+                      validator: (_, value) => maxLengthValidator(value, 400),
+                    },
+                  ]}
+                >
+                  <CustomTextArea
+                    placeholder="About You"
+                    className=" h-12 rounded-md"
+                  />
+                </Form.Item>
+                <Form.Item
+                  label="Notification Method "
+                  name="notification"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Required!",
+                    },
+                  ]}
+                >
+                  <Checkbox.Group options={notificationOptions} />
+                </Form.Item>
+                <div className="flex items-center justify-center gap-4">
+                  <SecondaryButton
+                    withLink={true}
+                    className=" h-full w-32"
+                    linkHref={"/profile"}
+                    title="Cancel"
+                  />
+                  <PrimaryButton
+                    type="submit"
+                    disabled={apiLoading}
+                    className=" h-full w-32  "
+                    title="Submit"
+                  />
+                </div>
+              </Form>
+            </div>
           </div>
         </div>
       </div>

@@ -4,7 +4,6 @@ export function openNotificationBox(
   type,
   message,
   duration,
-
   key = "error",
   description = null
 ) {

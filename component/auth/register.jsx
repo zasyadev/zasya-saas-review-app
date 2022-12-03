@@ -5,6 +5,8 @@ import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { HeadersComponent } from "../../component/common/HeadersComponent";
 import { openNotificationBox } from "../../component/common/notification";
+import { maxLengthValidator } from "../../helpers/formValidations";
+import getErrors from "../../helpers/getErrors";
 import httpService from "../../lib/httpService";
 import { PrimaryButton } from "../common/CustomButton";
 import AuthWrapper from "./AuthWrapper";
@@ -32,14 +34,22 @@ function RegisterPage() {
         setLoading(false);
       })
       .catch((err) => {
-        openNotificationBox("error", err.response.data?.message);
         setLoading(false);
+        if (
+          err?.response?.status === 400 &&
+          Number(err?.response?.data?.inner?.length) > 0
+        ) {
+          const errorNode = getErrors(err?.response?.data?.inner);
+
+          openNotificationBox("error", "Errors", 5, "error-reg", errorNode);
+        } else openNotificationBox("error", err.response.data?.message);
       });
   }
 
   const FormComponent = () => {
     return (
       <Form
+        name="register-form"
         form={registerForm}
         layout="vertical"
         autoComplete="off"
@@ -53,8 +63,9 @@ function RegisterPage() {
           rules={[
             {
               required: true,
-              message: "Please enter your full name!",
+              message: "Please enter your name!",
             },
+            { validator: (_, value) => maxLengthValidator(value, 50) },
           ]}
         >
           <Input
@@ -73,6 +84,7 @@ function RegisterPage() {
               required: true,
               message: "Please enter your company name!",
             },
+            { validator: (_, value) => maxLengthValidator(value, 100) },
           ]}
         >
           <Input
@@ -90,6 +102,10 @@ function RegisterPage() {
             {
               required: true,
               message: "Please enter your email!",
+            },
+            {
+              type: "email",
+              message: "Please enter valid email!",
             },
           ]}
         >
@@ -109,6 +125,7 @@ function RegisterPage() {
               required: true,
               message: "Please enter your password!",
             },
+            { min: 6, message: "Password must be minimum 6 characters." },
           ]}
         >
           <Input
@@ -122,6 +139,7 @@ function RegisterPage() {
           className="mb-3 lg:mb-5"
           name="confirm_password"
           label="Confirm Password"
+          dependencies={["password"]}
           rules={[
             {
               required: true,
