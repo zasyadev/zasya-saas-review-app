@@ -6,18 +6,8 @@ import GetSurveySteps from "../common/GetSurveySteps";
 import { openNotificationBox } from "../common/notification";
 import StepFixedHeader from "../common/StepFixedHeader";
 import StepsBottomFixedBar from "../common/StepsBottomFixedBar";
+import { defaultQuestionConfig } from "../Form/questioncomponents/constants";
 import { SurveyStepsArray } from "./constants";
-
-const defaultOption = { optionText: "", error: "" };
-
-const defaultQuestionConfig = {
-  questionText: "",
-  options: [defaultOption],
-  open: true,
-  type: "checkbox",
-  error: "",
-  active: true,
-};
 
 function AddEditSurveyComponent({
   user,

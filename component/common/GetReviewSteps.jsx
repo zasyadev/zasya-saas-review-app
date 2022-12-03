@@ -57,7 +57,16 @@ const FeedbackMemberStep = ({ onInputChange, userList }) => {
         Please enter your feedback frequency
       </p>
 
-      <Form.Item name="frequency" className="mb-0 margin-b-0">
+      <Form.Item
+        name="frequency"
+        className="mb-0 margin-b-0"
+        rules={[
+          {
+            required: true,
+            message: "Please select your frequency",
+          },
+        ]}
+      >
         <Select
           placeholder="Select Frequency"
           showSearch
@@ -78,7 +87,16 @@ const FeedbackMemberStep = ({ onInputChange, userList }) => {
         Please select your feedback members
       </p>
 
-      <Form.Item name="assigned_to_id" className="mb-0 margin-b-0">
+      <Form.Item
+        name="assigned_to_id"
+        className="mb-0 margin-b-0"
+        rules={[
+          {
+            required: true,
+            message: "Please select your Members",
+          },
+        ]}
+      >
         <Select
           mode="multiple"
           placeholder="Select Member"
