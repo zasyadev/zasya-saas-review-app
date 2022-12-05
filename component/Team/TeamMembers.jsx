@@ -17,7 +17,6 @@ function TeamMembers({ user }) {
         .delete(`/api/team/members`, {
           data: {
             email: email,
-            created_by: user.id,
           },
         })
         .then(({ data: response }) => {

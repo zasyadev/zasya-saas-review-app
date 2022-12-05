@@ -1,12 +1,12 @@
 import { RequestHandler } from "../../../../lib/RequestHandler";
 
-async function handle(req, res, prisma) {
-  const { user_id } = req.query;
+async function handle(req, res, prisma, user) {
+  const { id: userId } = user;
   const reqBody = req.body;
 
-  if (user_id && reqBody.org_id && reqBody.roleId) {
+  if (userId && reqBody.org_id && reqBody.roleId) {
     let userData = await prisma.user.update({
-      where: { id: user_id },
+      where: { id: userId },
       data: {
         organization_id: reqBody.org_id,
         role_id: reqBody.roleId,

@@ -1,10 +1,10 @@
 import { RequestHandler } from "../../../../lib/RequestHandler";
 
-async function handle(req, res, prisma) {
+async function handle(req, res, prisma, user) {
   const { review_id } = req.query;
 
   if (req.method === "POST") {
-    const { userId } = req.body;
+    const { id: userId } = user;
     if (!userId && !review_id) {
       return res.status(401).json({ status: 401, message: "No Record found" });
     }

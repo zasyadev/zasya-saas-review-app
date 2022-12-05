@@ -274,7 +274,7 @@ function EditProfile({ user }) {
     };
 
     await httpService
-      .post(`/api/user/password/${user.id}`, obj)
+      .post(`/api/user/password`, obj)
       .then(({ data: response }) => {
         if (response.status === 200) {
           passwordForm.resetFields();

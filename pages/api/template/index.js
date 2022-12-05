@@ -1,21 +1,19 @@
 import { RequestHandler } from "../../../lib/RequestHandler";
+import { TEMPLATE_SCHEMA } from "../../../yup-schema/template";
 
-async function handle(req, res, prisma) {
+async function handle(req, res, prisma, user) {
   if (req.method === "POST") {
     const resData = req.body;
+    const { id: userId } = user;
 
     const templateData = await prisma.reviewTemplate.create({
       data: {
-        user: { connect: { id: resData.user_id } },
-
+        user: { connect: { id: userId } },
         form_title: resData.form_title,
         form_description: resData.form_description,
         form_data: resData.form_data,
         status: resData.status,
         default_template: resData.default_template,
-        // questions: {
-        //   create: questionData,
-        // },
       },
     });
 
@@ -38,19 +36,16 @@ async function handle(req, res, prisma) {
     return res.status(404).json({ status: 404, message: "No Record Found" });
   } else if (req.method === "PUT") {
     const resData = req.body;
-
+    const { id: userId } = user;
     const templateData = await prisma.reviewTemplate.update({
       where: { id: resData.id },
       data: {
-        user: { connect: { id: resData.user_id } },
-
+        user: { connect: { id: userId } },
         form_title: resData.form_title,
         form_description: resData.form_description,
         form_data: resData.form_data,
         status: resData.status,
-        // questions: {
-        //   create: questionData,
-        // },
+        default_template: resData.default_template,
       },
     });
 
@@ -91,6 +86,7 @@ const functionHandle = (req, res) =>
     callback: handle,
     allowedMethods: ["POST", "GET", "PUT", "DELETE"],
     protectedRoute: true,
+    schemaObj: TEMPLATE_SCHEMA,
   });
 
 export default functionHandle;

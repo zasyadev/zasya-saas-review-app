@@ -112,7 +112,7 @@ const functionHandle = (req, res) =>
     res,
     callback: handle,
     allowedMethods: ["POST"],
-    protectedRoute: true,
+    protectedRoute: false,
     schemaObj: USER_SCHEMA,
   });
 

@@ -3,29 +3,26 @@ import { mailService, mailTemplate } from "../../../lib/emailservice";
 import { RequestHandler } from "../../../lib/RequestHandler";
 import { MEMBER_SCHEMA } from "../../../yup-schema/user";
 
-async function handle(req, res, prisma) {
+async function handle(req, res, prisma, user) {
   if (req.method === "POST") {
+    const { id: created_by, organization_id } = user;
     try {
-      const { first_name, email, tags, role, created_by } = req.body;
+      const { first_name, email, tags, role } = req.body;
 
       let existingData = await prisma.user.findUnique({
         where: { email: email },
       });
 
-      let createdUserData = await prisma.user.findUnique({
-        where: { id: created_by },
-      });
-
       let organizationTags = await prisma.userOraganizationTags.findMany({
-        where: { organization_id: createdUserData.organization_id },
+        where: { organization_id: organization_id },
       });
 
-      if (existingData && createdUserData) {
+      if (existingData && organization_id) {
         let existingOrgUser = await prisma.userOraganizationGroups.findMany({
           where: {
             AND: [
               { user_id: existingData.id },
-              { organization_id: createdUserData.organization_id },
+              { organization_id: organization_id },
             ],
           },
         });
@@ -45,7 +42,7 @@ async function handle(req, res, prisma) {
           last_name: "",
           status: 0,
           role: { connect: { id: role } },
-          organization: { connect: { id: createdUserData.organization_id } },
+          organization: { connect: { id: organization_id } },
         };
 
         let existingUser = await transaction.user.findUnique({
@@ -60,7 +57,7 @@ async function handle(req, res, prisma) {
               user: { connect: { id: existingUser.id } },
               role: { connect: { id: role } },
               organization: {
-                connect: { id: createdUserData.organization_id },
+                connect: { id: organization_id },
               },
               status: true,
               tags: tags,
@@ -94,7 +91,7 @@ async function handle(req, res, prisma) {
                 user: { connect: { id: userData.id } },
                 role: { connect: { id: role } },
                 organization: {
-                  connect: { id: createdUserData.organization_id },
+                  connect: { id: organization_id },
                 },
                 status: true,
                 tags: tags,
@@ -147,10 +144,10 @@ async function handle(req, res, prisma) {
 
           newTags.forEach((item) => {
             tagsData.push({
-              user: { connect: { id: createdUserData.id } },
+              user: { connect: { id: created_by } },
               tag_name: item,
               organization: {
-                connect: { id: createdUserData.organization_id },
+                connect: { id: organization_id },
               },
             });
           });
@@ -190,11 +187,8 @@ async function handle(req, res, prisma) {
     }
   } else if (req.method === "PUT") {
     try {
-      const { id, first_name, tags, role, created_by } = req.body;
-
-      let createdUserData = await prisma.user.findUnique({
-        where: { id: created_by },
-      });
+      const { id: created_by, organization_id } = user;
+      const { id, first_name, tags, role } = req.body;
 
       const transactionData = await prisma.$transaction(async (transaction) => {
         let existingData = await transaction.user.findUnique({
@@ -206,7 +200,7 @@ async function handle(req, res, prisma) {
             where: {
               AND: [
                 { user_id: existingData.id },
-                { organization_id: createdUserData.organization_id },
+                { organization_id: organization_id },
               ],
             },
           });
@@ -233,7 +227,7 @@ async function handle(req, res, prisma) {
         }
 
         let organizationTags = await prisma.userOraganizationTags.findMany({
-          where: { organization_id: createdUserData.organization_id },
+          where: { organization_id: organization_id },
         });
 
         let newTags = [];
@@ -251,10 +245,10 @@ async function handle(req, res, prisma) {
 
           newTags.forEach((item) => {
             tagsData.push({
-              user: { connect: { id: createdUserData.id } },
+              user: { connect: { id: created_by } },
               tag_name: item,
               organization: {
-                connect: { id: createdUserData.organization_id },
+                connect: { id: organization_id },
               },
             });
           });
@@ -287,20 +281,18 @@ async function handle(req, res, prisma) {
     }
   } else if (req.method === "DELETE") {
     const reqBody = req.body;
+    const { organization_id } = user;
 
     if (reqBody.email) {
       let existingData = await prisma.user.findUnique({
         where: { email: reqBody.email },
-      });
-      let createdUserData = await prisma.user.findUnique({
-        where: { id: reqBody.created_by },
       });
 
       let existingOrgUser = await prisma.userOraganizationGroups.findFirst({
         where: {
           AND: [
             { user_id: existingData.id },
-            { organization_id: createdUserData.organization_id },
+            { organization_id: organization_id },
           ],
         },
       });

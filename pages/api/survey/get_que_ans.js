@@ -1,7 +1,8 @@
 import { RequestHandler } from "../../../lib/RequestHandler";
 
-async function handle(req, res, prisma) {
-  const { surveyId, userId } = req.body;
+async function handle(req, res, prisma, user) {
+  const { surveyId } = req.body;
+  const { id: userId } = user;
 
   if (!surveyId && !userId) {
     return res.status(401).json({ status: 401, message: "No Survey found" });
@@ -41,7 +42,7 @@ const functionHandle = (req, res) =>
     res,
     callback: handle,
     allowedMethods: ["POST"],
-    protectedRoute: false,
+    protectedRoute: true,
   });
 
 export default functionHandle;

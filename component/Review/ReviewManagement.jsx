@@ -60,7 +60,7 @@ function ReviewManagement({ user }) {
   async function fetchAllMembers() {
     setUserList([]);
     await httpService
-      .get(`/api/user/organizationId/${user.id}`)
+      .get(`/api/user/organizationId`)
       .then(({ data: response }) => {
         if (response.status === 200) {
           let filterData = response.data.filter(
@@ -333,7 +333,6 @@ function ReviewManagement({ user }) {
           reviewAssignee={addMembersReviewModal?.reviewAssignee}
           hideReviewAddMemberModal={hideReviewAddMemberModal}
           fetchReviewAssignList={fetchReviewAssignList}
-          userId={user.id}
         />
       )}
     </div>

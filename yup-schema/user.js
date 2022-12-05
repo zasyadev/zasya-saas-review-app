@@ -40,7 +40,6 @@ export const USER_PASSWORD_SCHEMA = {
 
 const CREATE_MEMBER_SCHEMA = yup.object().shape({
   first_name: yup.string().max(50).required().label("Name"),
-  created_by: yup.string().required().label("Created By"),
   email: yup.string().max(62).email().required().label("Email"),
   tags: yup.array().of(yup.string()).required().label("Tags"),
   role: yup.number().required().label("Role"),
@@ -49,7 +48,6 @@ const CREATE_MEMBER_SCHEMA = yup.object().shape({
 const UPDATE_MEMBER_SCHEMA = yup.object().shape({
   id: yup.string().required().label("Member Id"),
   first_name: yup.string().max(50).required().label("Name"),
-  created_by: yup.string().required().label("Created By"),
   tags: yup.array().of(yup.string()).required().label("Tags"),
   role: yup.number().required().label("Role"),
 });

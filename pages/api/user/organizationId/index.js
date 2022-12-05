@@ -1,14 +1,14 @@
 import { RequestHandler } from "../../../../lib/RequestHandler";
 
-async function handle(req, res, prisma) {
-  const { user_id } = req.query;
+async function handle(req, res, prisma, user) {
+  const { id: userId } = user;
 
-  if (!user_id) {
+  if (!userId) {
     return res.status(401).json({ status: 401, message: "No User found" });
   }
 
   const userOrgData = await prisma.user.findUnique({
-    where: { id: user_id },
+    where: { id: userId },
   });
 
   const data = await prisma.userOraganizationGroups.findMany({

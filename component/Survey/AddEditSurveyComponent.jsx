@@ -25,7 +25,6 @@ function AddEditSurveyComponent({
     let values = form.getFieldsValue(true);
 
     addSurvey({
-      created_by: user.id,
       survey_name: values.survey_name,
       status: values.status ?? "active",
       role_id: user.role_id,

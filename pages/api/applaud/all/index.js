@@ -1,7 +1,9 @@
 import { RequestHandler } from "../../../../lib/RequestHandler";
 
-async function handle(req, res, prisma) {
-  const { date, userId } = req.body;
+async function handle(req, res, prisma, user) {
+  const { date } = req.body;
+  const { id: userId } = user;
+
   if (!userId) {
     return res.status(401).json({ status: 401, message: "No User found" });
   }

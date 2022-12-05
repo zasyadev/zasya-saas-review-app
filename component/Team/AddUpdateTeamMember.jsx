@@ -13,12 +13,7 @@ function AddUpdateTeamMember({ user, editMode, memberData }) {
   const [tagsList, setTagsList] = useState([]);
 
   async function onFinish(values) {
-    let obj = {
-      ...values,
-      created_by: user.id,
-    };
-
-    editMode ? updatingMember(obj) : addingMember(obj);
+    editMode ? updatingMember(values) : addingMember(values);
   }
   async function addingMember(obj) {
     await httpService

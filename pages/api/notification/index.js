@@ -1,14 +1,15 @@
 import { RequestHandler } from "../../../lib/RequestHandler";
 
-async function handle(req, res, prisma) {
+async function handle(req, res, prisma, user) {
   const reqBody = req.body;
+  const { id: userId } = user;
   if (reqBody.id) {
     let data = [];
     if (reqBody.id === "ALL") {
       data = await prisma.userNotification.updateMany({
         where: {
           AND: [
-            { user_id: reqBody.user_id },
+            { user_id: userId },
             {
               read_at: null,
             },

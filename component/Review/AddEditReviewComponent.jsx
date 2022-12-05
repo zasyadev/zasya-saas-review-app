@@ -85,7 +85,7 @@ function AddEditReviewComponent({
   async function fetchUserData() {
     setUserList([]);
     await httpService
-      .get(`/api/user/organizationId/${user.id}`)
+      .get(`/api/user/organizationId`)
       .then(({ data: response }) => {
         if (response.status === 200) {
           let filterData = response.data.filter(

@@ -1,10 +1,14 @@
 import { RequestHandler } from "../../../../lib/RequestHandler";
 
-async function handle(req, res, prisma) {
+async function handle(req, res, prisma, user) {
+  const { id: userId } = user;
+  if (!userId) {
+    return res.status(401).json({ status: 401, message: "No User found" });
+  }
   if (req.method === "POST") {
-    const { surveyId, userId } = req.body;
+    const { surveyId } = req.body;
 
-    if (!surveyId && !userId) {
+    if (!surveyId) {
       return res.status(401).json({ status: 401, message: "No Survey found" });
     }
     const surveyData = await prisma.survey.findFirst({
@@ -31,9 +35,9 @@ async function handle(req, res, prisma) {
       message: "Survey Details Retrieved",
     });
   } else if (req.method === "PUT") {
-    const { channelId, userId, status } = req.body;
+    const { channelId, status } = req.body;
 
-    if (!channelId && !userId) {
+    if (!channelId) {
       return res.status(401).json({ status: 401, message: "No Survey found" });
     }
     const surveyChannelData = await prisma.surveyChannels.update({
@@ -56,9 +60,9 @@ async function handle(req, res, prisma) {
       message: "Status changed successfully  ",
     });
   } else if (req.method === "DELETE") {
-    const { channelId, userId } = req.body;
+    const { channelId } = req.body;
 
-    if (!channelId && !userId) {
+    if (!channelId) {
       return res.status(401).json({ status: 401, message: "No Survey found" });
     }
     const surveyChannelData = await prisma.surveyChannels.findUnique({
@@ -100,7 +104,7 @@ const functionHandle = (req, res) =>
     res,
     callback: handle,
     allowedMethods: ["POST", "PUT", "DELETE"],
-    protectedRoute: false,
+    protectedRoute: true,
   });
 
 export default functionHandle;

@@ -1,8 +1,8 @@
 import { RequestHandler } from "../../../lib/RequestHandler";
 
-async function handle(req, res, prisma) {
-  if (req.method === "POST") {
-    const { userId } = req.body;
+async function handle(req, res, prisma, user) {
+  if (req.method === "GET") {
+    const { id: userId } = user;
     const userData = await prisma.user.findUnique({
       where: {
         id: userId,
@@ -26,20 +26,15 @@ async function handle(req, res, prisma) {
     }
   }
   if (req.method === "PUT") {
-    const resBody = req.body;
-
-    const userData = await prisma.user.findUnique({
-      where: {
-        id: resBody.userId,
-      },
-    });
+    const { applaud_count } = req.body;
+    const { organization_id } = user;
 
     const data = await prisma.userOrganization.update({
       where: {
-        id: userData.organization_id,
+        id: organization_id,
       },
       data: {
-        applaud_count: resBody.applaud_count,
+        applaud_count: applaud_count,
       },
     });
 
@@ -52,7 +47,6 @@ async function handle(req, res, prisma) {
     } else {
       return res.status(400).json({
         status: 400,
-
         message: "Internal Server Error",
       });
     }
@@ -64,7 +58,7 @@ const functionHandle = (req, res) =>
     req,
     res,
     callback: handle,
-    allowedMethods: ["POST", "PUT"],
+    allowedMethods: ["GET", "PUT"],
     protectedRoute: true,
   });
 

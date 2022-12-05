@@ -6,21 +6,16 @@ const currentMonth = {
   gte: moment().startOf("month").format(),
 };
 
-async function handle(req, res, prisma) {
-  const { userId } = req.body;
+async function handle(req, res, prisma, user) {
+  const { id: userId, organization_id } = user;
 
   if (!userId) {
     return res.status(401).json({ status: 401, message: "No User found" });
   }
 
-  const userData = await prisma.user.findUnique({
-    where: {
-      id: userId,
-    },
-  });
   const userOrgData = await prisma.userOrganization.findUnique({
     where: {
-      id: userData.organization_id,
+      id: organization_id,
     },
   });
   const data = await prisma.userApplaud.findMany({
@@ -28,7 +23,7 @@ async function handle(req, res, prisma) {
       AND: [
         { created_by: userId },
         { created_date: currentMonth },
-        { organization_id: userData.organization_id },
+        { organization_id: organization_id },
       ],
     },
   });
@@ -60,7 +55,7 @@ const functionHandle = (req, res) =>
     req,
     res,
     callback: handle,
-    allowedMethods: ["POST"],
+    allowedMethods: ["GET"],
     protectedRoute: true,
   });
 

@@ -37,11 +37,9 @@ function AddApplaud({ user }) {
       });
   }
 
-  async function fetchApplaudLimit(user) {
+  async function fetchApplaudLimit() {
     await httpService
-      .post(`/api/applaud/applaudlimit`, {
-        userId: user.id,
-      })
+      .get(`/api/applaud/applaudlimit`)
       .then(({ data }) => {
         if (data.status === 200) {
           setApplaudLimit(data);
@@ -60,7 +58,6 @@ function AddApplaud({ user }) {
       let obj = {
         user_id: values.user_id,
         comment: values.comment,
-        created_by: user.id,
         category: values.category,
       };
       addApplaud(obj);

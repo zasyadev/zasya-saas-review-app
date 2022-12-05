@@ -2,25 +2,25 @@ import { RequestHandler } from "../../../lib/RequestHandler";
 
 async function handle(req, res, prisma) {
   try {
-    const resData = req.body;
+    const reqBody = req.body;
     let isUpdateRecord = false;
     const transactionData = await prisma.$transaction(async (transaction) => {
       const answerData = {
-        question: { connect: { id: resData.questionId } },
-        option: resData.answer,
+        question: { connect: { id: reqBody.questionId } },
+        option: reqBody.answer,
       };
 
       const userTableData = await transaction.user.findUnique({
-        where: { id: resData.user_id },
+        where: { id: reqBody.user_id },
       });
 
       const findReviewAlreadyAnswered =
         await transaction.reviewAssigneeAnswers.findFirst({
           where: {
             AND: [
-              { user_id: resData.user_id },
-              { review_id: resData.review_id },
-              { review_assignee_id: resData.review_assignee_id },
+              { user_id: reqBody.user_id },
+              { review_id: reqBody.review_id },
+              { review_assignee_id: reqBody.review_assignee_id },
             ],
           },
         });
@@ -30,7 +30,7 @@ async function handle(req, res, prisma) {
           await transaction.ReviewAssigneeAnswerOption.findFirst({
             where: {
               AND: [
-                { question_id: resData.questionId },
+                { question_id: reqBody.questionId },
                 { review_id: findReviewAlreadyAnswered.id },
               ],
             },
@@ -43,7 +43,7 @@ async function handle(req, res, prisma) {
                 id: findAnswerRecord.id,
               },
               data: {
-                option: resData.answer,
+                option: reqBody.answer,
               },
             });
 
@@ -53,8 +53,8 @@ async function handle(req, res, prisma) {
           const createdAnswerRecord =
             await transaction.ReviewAssigneeAnswerOption.create({
               data: {
-                question_id: resData.questionId,
-                option: resData.answer,
+                question_id: reqBody.questionId,
+                option: reqBody.answer,
                 review_id: findReviewAlreadyAnswered.id,
               },
             });
@@ -64,12 +64,12 @@ async function handle(req, res, prisma) {
       } else {
         const formdata = await transaction.reviewAssigneeAnswers.create({
           data: {
-            user: { connect: { id: resData.user_id } },
-            review: { connect: { id: resData.review_id } },
+            user: { connect: { id: reqBody.user_id } },
+            review: { connect: { id: reqBody.review_id } },
             review_assignee: {
-              connect: { id: resData.review_assignee_id },
+              connect: { id: reqBody.review_assignee_id },
             },
-            created_assignee_date: resData.created_assignee_date,
+            created_assignee_date: reqBody.created_assignee_date,
             organization: {
               connect: { id: userTableData.organization_id },
             },

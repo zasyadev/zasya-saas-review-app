@@ -81,10 +81,7 @@ function DashBoard({ user }) {
 
   async function fetchDashboardData() {
     await httpService
-      .post(`/api/dashboard`, {
-        userId: user.id,
-        role: user.role_id,
-      })
+      .get(`/api/dashboard`)
       .then(({ data: response }) => {
         if (response.status === 200) {
           setDashboardData(response.data);
@@ -132,7 +129,6 @@ function DashBoard({ user }) {
     await httpService
       .post(`/api/applaud/all`, {
         date: currentMonth,
-        userId: user.id,
       })
       .then(({ data: response }) => {
         if (response.status === 200) {

@@ -22,7 +22,6 @@ function ViewReviewComponent({ user }) {
     await httpService
       .post(`/api/review/get_que_ans`, {
         review_id: reviewId,
-        user_id: user.id,
       })
       .then(({ data: response }) => {
         if (response.status === 200) {

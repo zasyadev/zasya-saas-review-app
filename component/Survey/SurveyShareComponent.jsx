@@ -67,7 +67,6 @@ function SurveyResponsePage({ user }) {
     await httpService
       .post(`/api/survey/channels`, {
         surveyId: surveyId,
-        userId: user.id,
       })
       .then(({ data: response }) => {
         if (response.status === 200) {
@@ -102,7 +101,6 @@ function SurveyResponsePage({ user }) {
     await httpService
       .put(`/api/survey/channels`, {
         channelId: id,
-        userId: user.id,
         status: status,
       })
       .then(({ data: response }) => {
@@ -123,7 +121,6 @@ function SurveyResponsePage({ user }) {
         .delete(`/api/survey/channels`, {
           data: {
             channelId: channelId,
-            userId: user.id,
           },
         })
         .then(({ data: response }) => {
@@ -267,7 +264,6 @@ function SurveyResponsePage({ user }) {
     await httpService
       .put(`/api/survey/add`, {
         surveyId: surveyId,
-        userId: user.id,
         email: values.email,
         channelType: "Email",
         status: "Pending",
@@ -290,7 +286,7 @@ function SurveyResponsePage({ user }) {
     await httpService
       .put(`/api/survey/add`, {
         surveyId: surveyId,
-        userId: user.id,
+
         channelType: "Link",
       })
       .then(({ data: response }) => {

@@ -118,13 +118,11 @@ function ReceivedReviewComponent({ user, reviewId }) {
     }
   };
 
-  const fetchReviewData = async (user, reviewId) => {
+  const fetchReviewData = async (reviewId) => {
     setLoading(true);
 
     await httpService
-      .post(`/api/review/received/${reviewId}`, {
-        userId: user.id,
-      })
+      .post(`/api/review/received/${reviewId}`, {})
       .then(({ data: response }) => {
         if (response.status === 200) {
           setReviewData(response.data);
@@ -166,7 +164,7 @@ function ReceivedReviewComponent({ user, reviewId }) {
   };
 
   useEffect(() => {
-    if (reviewId) fetchReviewData(user, reviewId);
+    if (reviewId) fetchReviewData(reviewId);
   }, []);
 
   return (

@@ -2,14 +2,15 @@ import { validateEmail } from "../../../../helpers/validateEmail";
 import { mailService, mailTemplate } from "../../../../lib/emailservice";
 import { RequestHandler } from "../../../../lib/RequestHandler";
 
-async function handle(req, res, prisma) {
+async function handle(req, res, prisma, user) {
   const reqBody = req.body;
+  const { id: createdBy } = user;
   if (req.method === "POST") {
     try {
       let transactionData = {};
       transactionData = await prisma.$transaction(async (transaction) => {
         let userOrgData = await transaction.user.findUnique({
-          where: { id: reqBody.created_by },
+          where: { id: createdBy },
         });
 
         const questionData = reqBody.templateData.map((item) => {
@@ -47,7 +48,7 @@ async function handle(req, res, prisma) {
 
         const formdata = await transaction.survey.create({
           data: {
-            created: { connect: { id: reqBody.created_by } },
+            created: { connect: { id: createdBy } },
             survey_name: reqBody.survey_name,
             organization: { connect: { id: userOrgData.organization_id } },
             role: { connect: { id: reqBody.role_id } },
@@ -186,7 +187,7 @@ const functionHandle = (req, res) =>
     res,
     callback: handle,
     allowedMethods: ["POST", "PUT"],
-    protectedRoute: false,
+    protectedRoute: true,
   });
 
 export default functionHandle;

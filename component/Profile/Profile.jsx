@@ -82,7 +82,6 @@ source=LinkedIn`);
     await httpService
       .put(`/api/profile/organization`, {
         applaud_count: Number(values.applaud_count),
-        userId: user.id,
         orgId: user.organization_id,
       })
       .then(({ data: response }) => {
@@ -98,9 +97,7 @@ source=LinkedIn`);
   };
   const fetchOrgData = async () => {
     await httpService
-      .post(`/api/profile/organization`, {
-        userId: user.id,
-      })
+      .get(`/api/profile/organization`)
       .then(({ data: response }) => {
         if (response.status === 200) {
           setApplaudLimit(response.data.organization.applaud_count);

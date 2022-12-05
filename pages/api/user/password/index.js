@@ -2,9 +2,8 @@ import { hashedPassword, compareHashedPassword } from "../../../../lib/auth";
 import { RequestHandler } from "../../../../lib/RequestHandler";
 import { USER_PASSWORD_SCHEMA } from "../../../../yup-schema/user";
 
-async function handle(req, res, prisma) {
-  const { userId } = req.query;
-
+async function handle(req, res, prisma, user) {
+  const { id: userId } = user;
   const { old_password, new_password } = req.body;
 
   if (userId) {

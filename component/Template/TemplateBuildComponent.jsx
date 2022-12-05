@@ -167,7 +167,6 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
     let quesArray = questions.map((item) => ({ ...item, open: false }));
 
     let obj = {
-      user_id: user.id,
       form_data: {
         title: formTitle.value ?? "",
         description: formDes ?? "",
@@ -176,7 +175,6 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
       form_title: formTitle.value ?? "",
       form_description: formDes ?? "",
       status: true,
-      questions: quesArray,
       default_template: defaultTemplate,
     };
     setTemplateSaveLoading(true);

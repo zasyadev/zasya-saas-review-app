@@ -79,7 +79,7 @@ const functionHandle = (req, res) =>
     res,
     callback: handle,
     allowedMethods: ["POST"],
-    protectedRoute: true,
+    protectedRoute: false,
   });
 
 export default functionHandle;
