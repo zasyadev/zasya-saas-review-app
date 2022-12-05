@@ -101,7 +101,7 @@ const BarChart = ({ user }) => {
     setChartData(defaultChartSeries);
 
     await httpService
-      .post(`/api/dashboard/chart`, {
+      .get(`/api/dashboard/chart`, {
         userId: user.id,
       })
       .then(({ data: response }) => {

@@ -12,7 +12,6 @@ const AddMembersModal = ({
   reviewAssignee,
   hideReviewAddMemberModal,
   fetchReviewAssignList,
-  userId,
 }) => {
   const [addMembersForm] = Form.useForm();
   const [loading, setLoading] = useState(false);
@@ -37,7 +36,6 @@ const AddMembersModal = ({
         .post(`/api/review/add_members`, {
           reviewId: review_id,
           assignedIds: values?.assignedIds,
-          userId: userId,
         })
         .then(({ data: response }) => {
           if (response.status === 200) {

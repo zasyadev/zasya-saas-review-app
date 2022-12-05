@@ -1,17 +1,14 @@
 import { RequestHandler } from "../../../../lib/RequestHandler";
 
-async function handle(req, res, prisma) {
-  const { userId, currentMonth } = req.body;
+async function handle(req, res, prisma, user) {
+  const { currentMonth } = req.body;
+  const { id: userId, organization_id } = user;
   if (!userId) {
     return res.status(401).json({ status: 401, message: "No User found" });
   }
 
-  const userTableData = await prisma.user.findUnique({
-    where: { id: userId },
-  });
-
   const orgData = await prisma.userOraganizationGroups.findMany({
-    where: { organization_id: userTableData.organization_id },
+    where: { organization_id: organization_id },
 
     include: {
       user: {
@@ -30,7 +27,7 @@ async function handle(req, res, prisma) {
   const reviewAssignedData = await prisma.review.findMany({
     where: {
       AND: [
-        { organization_id: userTableData.organization_id },
+        { organization_id: organization_id },
         { created_date: currentMonth },
       ],
     },
@@ -52,7 +49,7 @@ async function handle(req, res, prisma) {
   const reviewAnsweredData = await prisma.reviewAssigneeAnswers.findMany({
     where: {
       AND: [
-        { organization_id: userTableData.organization_id },
+        { organization_id: organization_id },
         { created_date: currentMonth },
       ],
     },
@@ -177,6 +174,13 @@ async function handle(req, res, prisma) {
 
   return res.status(404).json({ status: 404, message: "No Record Found" });
 }
-const functionHandle = (req, res) => RequestHandler(req, res, handle, ["POST"]);
+const functionHandle = (req, res) =>
+  RequestHandler({
+    req,
+    res,
+    callback: handle,
+    allowedMethods: ["POST"],
+    protectedRoute: true,
+  });
 
 export default functionHandle;

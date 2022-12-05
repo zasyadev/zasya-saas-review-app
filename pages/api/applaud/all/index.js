@@ -1,7 +1,9 @@
 import { RequestHandler } from "../../../../lib/RequestHandler";
 
-async function handle(req, res, prisma) {
-  const { date, userId } = req.body;
+async function handle(req, res, prisma, user) {
+  const { date } = req.body;
+  const { id: userId } = user;
+
   if (!userId) {
     return res.status(401).json({ status: 401, message: "No User found" });
   }
@@ -170,5 +172,13 @@ async function handle(req, res, prisma) {
   });
 }
 
-const functionHandle = (req, res) => RequestHandler(req, res, handle, ["POST"]);
+const functionHandle = (req, res) =>
+  RequestHandler({
+    req,
+    res,
+    callback: handle,
+    allowedMethods: ["POST"],
+    protectedRoute: true,
+  });
+
 export default functionHandle;

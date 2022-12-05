@@ -67,7 +67,6 @@ function SurveyResponsePage({ user }) {
     await httpService
       .post(`/api/survey/channels`, {
         surveyId: surveyId,
-        userId: user.id,
       })
       .then(({ data: response }) => {
         if (response.status === 200) {
@@ -102,7 +101,6 @@ function SurveyResponsePage({ user }) {
     await httpService
       .put(`/api/survey/channels`, {
         channelId: id,
-        userId: user.id,
         status: status,
       })
       .then(({ data: response }) => {
@@ -123,7 +121,6 @@ function SurveyResponsePage({ user }) {
         .delete(`/api/survey/channels`, {
           data: {
             channelId: channelId,
-            userId: user.id,
           },
         })
         .then(({ data: response }) => {
@@ -267,7 +264,6 @@ function SurveyResponsePage({ user }) {
     await httpService
       .put(`/api/survey/add`, {
         surveyId: surveyId,
-        userId: user.id,
         email: values.email,
         channelType: "Email",
         status: "Pending",
@@ -290,7 +286,7 @@ function SurveyResponsePage({ user }) {
     await httpService
       .put(`/api/survey/add`, {
         surveyId: surveyId,
-        userId: user.id,
+
         channelType: "Link",
       })
       .then(({ data: response }) => {
@@ -317,7 +313,7 @@ function SurveyResponsePage({ user }) {
               <h3 className="text-center text-lg lg:text-xl font-bold leading-6 text-primary -tracking-wider">
                 Link To Share
               </h3>
-              <div className="flex items-center max-w-xl mx-auto my-4">
+              <div className="flex items-center max-w-3xl mx-auto my-4">
                 <Input
                   size="large"
                   className="rounded-l-md font-semibold text-primary leading-6"

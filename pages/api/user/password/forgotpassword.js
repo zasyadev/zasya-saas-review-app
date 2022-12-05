@@ -73,6 +73,13 @@ async function handle(req, res, prisma) {
     return res.status(400).json({ status: 400, message: "Wrong Token " });
   }
 }
-const functionHandle = (req, res) => RequestHandler(req, res, handle, ["POST"]);
+const functionHandle = (req, res) =>
+  RequestHandler({
+    req,
+    res,
+    callback: handle,
+    allowedMethods: ["POST"],
+    protectedRoute: false,
+  });
 
 export default functionHandle;

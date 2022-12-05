@@ -3,11 +3,13 @@ import {
   SlackPostMessage,
 } from "../../../helpers/slackHelper";
 import { RequestHandler } from "../../../lib/RequestHandler";
+import { APPLAUD_SCHEMA } from "../../../yup-schema/applaud";
 
-async function handle(req, res, prisma) {
+async function handle(req, res, prisma, user) {
   if (req.method === "POST") {
     try {
       const reqBody = req.body;
+      const { id: userId } = user;
 
       let userData = await prisma.user.findUnique({
         where: { id: reqBody.user_id },
@@ -16,7 +18,7 @@ async function handle(req, res, prisma) {
         },
       });
       let createdData = await prisma.user.findUnique({
-        where: { id: reqBody.created_by },
+        where: { id: userId },
       });
 
       if (userData && createdData) {
@@ -25,7 +27,7 @@ async function handle(req, res, prisma) {
             user: { connect: { id: reqBody.user_id } },
             comment: reqBody.comment,
             category: reqBody.category,
-            created: { connect: { id: reqBody.created_by } },
+            created: { connect: { id: userId } },
             organization: { connect: { id: userData.organization_id } },
           },
         });
@@ -36,7 +38,7 @@ async function handle(req, res, prisma) {
             link: `${process.env.NEXT_APP_URL}applaud`,
           };
 
-          let notificationData = await prisma.userNotification.create({
+          await prisma.userNotification.create({
             data: {
               user: { connect: { id: reqBody.user_id } },
               data: notificationMessage,
@@ -84,72 +86,16 @@ async function handle(req, res, prisma) {
         .status(500)
         .json({ error: error, message: "Internal Server Error" });
     }
-  } else if (req.method === "GET") {
-    try {
-      const data = await prisma.userApplaud.findMany({
-        include: { user: true, created: true },
-      });
-
-      if (data) {
-        return res.status(200).json({
-          status: 200,
-          data: data,
-          message: "All Applaud Retrieved",
-        });
-      }
-
-      return res.status(404).json({ status: 404, message: "No Record Found" });
-    } catch (error) {
-      return res
-        .status(500)
-        .json({ error: error, message: "Internal Server Error" });
-    }
-  } else if (req.method === "PUT") {
-    try {
-      const reqBody = JSON.parse(req.body);
-
-      const data = await prisma.userApplaud.update({
-        where: { id: reqBody.id },
-        data: {
-          user_id: reqBody.user_id,
-          comment: reqBody.comment,
-          created_by: reqBody.created_by,
-        },
-      });
-      if (data) {
-        return res.status(201).json({
-          message: "Saved  Successfully",
-          data: data,
-          status: 200,
-        });
-      }
-    } catch (error) {
-      return res
-        .status(500)
-        .json({ error: error, message: "Internal Server Error" });
-    }
-  } else if (req.method === "DELETE") {
-    const reqBody = JSON.parse(req.body);
-
-    if (reqBody.id) {
-      const deletaData = await prisma.userApplaud.delete({
-        where: { id: reqBody.id },
-      });
-
-      if (deletaData) {
-        return res.status(200).json({
-          status: 200,
-          message: "Form Deleted Successfully.",
-        });
-      }
-      return res.status(400).json({
-        status: 400,
-        message: "Failed To Delete Record.",
-      });
-    }
   }
 }
 const functionHandle = (req, res) =>
-  RequestHandler(req, res, handle, ["POST", "GET", "PUT", "DELETE"]);
+  RequestHandler({
+    req,
+    res,
+    callback: handle,
+    allowedMethods: ["POST"],
+    protectedRoute: true,
+    schemaObj: APPLAUD_SCHEMA,
+  });
 
 export default functionHandle;

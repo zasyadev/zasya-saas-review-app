@@ -2,14 +2,15 @@ import { validateEmail } from "../../../../helpers/validateEmail";
 import { mailService, mailTemplate } from "../../../../lib/emailservice";
 import { RequestHandler } from "../../../../lib/RequestHandler";
 
-async function handle(req, res, prisma) {
+async function handle(req, res, prisma, user) {
   const reqBody = req.body;
+  const { id: createdBy } = user;
   if (req.method === "POST") {
     try {
       let transactionData = {};
       transactionData = await prisma.$transaction(async (transaction) => {
         let userOrgData = await transaction.user.findUnique({
-          where: { id: reqBody.created_by },
+          where: { id: createdBy },
         });
 
         const questionData = reqBody.templateData.map((item) => {
@@ -47,7 +48,7 @@ async function handle(req, res, prisma) {
 
         const formdata = await transaction.survey.create({
           data: {
-            created: { connect: { id: reqBody.created_by } },
+            created: { connect: { id: createdBy } },
             survey_name: reqBody.survey_name,
             organization: { connect: { id: userOrgData.organization_id } },
             role: { connect: { id: reqBody.role_id } },
@@ -138,8 +139,8 @@ async function handle(req, res, prisma) {
               };
 
               await mailService.sendMail(mailData, function (err, info) {
-                if (err) console.log("failed");
-                else console.log("successfull");
+                // if (err) console.log("failed");
+                // else console.log("successfull");
               });
             }
           });
@@ -173,7 +174,6 @@ async function handle(req, res, prisma) {
         });
       }
     } catch (error) {
-      console.log(error);
       return res.status(500).json({
         error: error,
         message: "Internal Server Error",
@@ -182,5 +182,12 @@ async function handle(req, res, prisma) {
   }
 }
 const functionHandle = (req, res) =>
-  RequestHandler(req, res, handle, ["POST", "PUT"]);
+  RequestHandler({
+    req,
+    res,
+    callback: handle,
+    allowedMethods: ["POST", "PUT"],
+    protectedRoute: true,
+  });
+
 export default functionHandle;

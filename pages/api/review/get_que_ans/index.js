@@ -1,14 +1,15 @@
 import { RequestHandler } from "../../../../lib/RequestHandler";
 
-async function handle(req, res, prisma) {
-  const { review_id, user_id } = req.body;
+async function handle(req, res, prisma, user) {
+  const { review_id } = req.body;
+  const { id: userId } = user;
 
-  if (!review_id && !user_id) {
+  if (!review_id && !userId) {
     return res.status(401).json({ status: 401, message: "No Review found" });
   }
 
   const questionData = await prisma.review.findFirst({
-    where: { AND: [{ id: review_id }, { created_by: user_id }] },
+    where: { AND: [{ id: review_id }, { created_by: userId }] },
     include: {
       created: true,
       form: true,
@@ -60,5 +61,12 @@ async function handle(req, res, prisma) {
     message: "Review Details Retrieved",
   });
 }
-const functionHandle = (req, res) => RequestHandler(req, res, handle, ["POST"]);
+const functionHandle = (req, res) =>
+  RequestHandler({
+    req,
+    res,
+    callback: handle,
+    allowedMethods: ["POST"],
+    protectedRoute: true,
+  });
 export default functionHandle;

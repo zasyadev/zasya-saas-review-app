@@ -10,6 +10,7 @@ import {
   DefaultMotionVarient,
   REVIEW_TYPE,
   SURVEY_TYPE,
+  DEFAULT_TEMPLATE_KEY,
 } from "./constants";
 import SkeletonTemplateCard from "./components/SkeletonTemplateCard";
 import TemplateCard from "./TemplateCard";
@@ -60,6 +61,10 @@ function TemplateListView({ user }) {
   useEffect(() => {
     fetchUserTemplateList();
     fetchDefaultTemplateList();
+  }, []);
+  useEffect(() => {
+    if (userTemplateList && Number(userTemplateList.length) === 0)
+      setChangeTemplateView(DEFAULT_TEMPLATE_KEY);
   }, []);
 
   const getTypeCard = (type, template) => {

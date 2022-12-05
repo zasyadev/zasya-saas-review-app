@@ -1,24 +1,21 @@
 import { hashedPassword, compareHashedPassword } from "../../../../lib/auth";
 import { RequestHandler } from "../../../../lib/RequestHandler";
+import { USER_PASSWORD_SCHEMA } from "../../../../yup-schema/user";
 
-async function handle(req, res, prisma) {
-  const { userId } = req.query;
-
-  const reqData = req.body;
+async function handle(req, res, prisma, user) {
+  const { id: userId } = user;
+  const { old_password, new_password } = req.body;
 
   if (userId) {
     const data = await prisma.user.findUnique({
       where: { id: userId },
     });
-    const compare = await compareHashedPassword(
-      reqData.old_password,
-      data.password
-    );
+    const compare = await compareHashedPassword(old_password, data.password);
     if (compare) {
       const updateData = await prisma.user.update({
         where: { email: data.email },
         data: {
-          password: await hashedPassword(reqData.new_password),
+          password: await hashedPassword(new_password),
         },
       });
 
@@ -31,14 +28,22 @@ async function handle(req, res, prisma) {
       } else {
         return res
           .status(404)
-          .json({ status: 404, message: "No Record Found" });
+          .json({ status: 404, message: "No Record Found!" });
       }
     } else {
       return res
         .status(400)
-        .json({ status: 400, message: "Wrong Old Password" });
+        .json({ status: 400, message: "Old Password incorrect!" });
     }
   }
 }
-const functionHandle = (req, res) => RequestHandler(req, res, handle, ["POST"]);
+const functionHandle = (req, res) =>
+  RequestHandler({
+    req,
+    res,
+    callback: handle,
+    allowedMethods: ["POST"],
+    protectedRoute: true,
+    schemaObj: USER_PASSWORD_SCHEMA,
+  });
 export default functionHandle;

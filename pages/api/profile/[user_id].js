@@ -1,4 +1,5 @@
 import { RequestHandler } from "../../../lib/RequestHandler";
+import { UPDATE_PROFILE_SCHEMA } from "../../../yup-schema/user";
 
 async function handle(req, res, prisma) {
   const { user_id } = req.query;
@@ -16,6 +17,7 @@ async function handle(req, res, prisma) {
             first_name: true,
             organization: true,
             role: true,
+            email: true,
           },
         },
       },
@@ -33,14 +35,22 @@ async function handle(req, res, prisma) {
       .status(404)
       .json({ status: 404, message: "No User Details Found" });
   } else if (req.method === "POST") {
-    const reqBody = req.body;
+    const {
+      first_name,
+      address1,
+      address2,
+      about,
+      mobile,
+      imageName,
+      notification,
+    } = req.body;
 
-    if (reqBody.first_name) {
+    if (first_name) {
       const transactionData = await prisma.$transaction(async (transaction) => {
         await transaction.user.update({
           where: { id: user_id },
           data: {
-            first_name: reqBody.first_name,
+            first_name: first_name,
           },
         });
 
@@ -51,13 +61,13 @@ async function handle(req, res, prisma) {
         let userDeatilsTable = {};
         if (userDetailData) {
           let dataObj = {
-            address1: reqBody.address1 ?? "",
-            address2: reqBody.address2 ?? "",
-            about: reqBody.about ?? "",
-            pin_code: reqBody.pin_code ?? "",
-            mobile: reqBody.mobile ?? "",
-            image: reqBody.imageName ?? "",
-            notification: reqBody.notification ?? [],
+            address1: address1 ?? "",
+            address2: address2 ?? "",
+            about: about ?? "",
+            pin_code: "",
+            mobile: mobile ?? "",
+            image: imageName ?? "",
+            notification: notification ?? [],
           };
 
           userDeatilsTable = await transaction.userDetails.update({
@@ -68,13 +78,13 @@ async function handle(req, res, prisma) {
           userDeatilsTable = await transaction.userDetails.create({
             data: {
               user: { connect: { id: user_id } },
-              image: reqBody.imageName ?? "",
-              address1: reqBody.address1 ?? "",
-              address2: reqBody.address2 ?? "",
-              about: reqBody.about ?? "",
-              pin_code: reqBody.pin_code ?? "",
-              mobile: reqBody.mobile ?? "",
-              notification: reqBody.notification ?? [],
+              image: imageName ?? "",
+              address1: address1 ?? "",
+              address2: address2 ?? "",
+              about: about ?? "",
+              pin_code: pin_code ?? "",
+              mobile: mobile ?? "",
+              notification: notification ?? [],
             },
           });
         }
@@ -99,6 +109,13 @@ async function handle(req, res, prisma) {
   }
 }
 const functionHandle = (req, res) =>
-  RequestHandler(req, res, handle, ["GET", "POST"]);
+  RequestHandler({
+    req,
+    res,
+    callback: handle,
+    allowedMethods: ["GET", "POST"],
+    protectedRoute: true,
+    schemaObj: UPDATE_PROFILE_SCHEMA,
+  });
 
 export default functionHandle;

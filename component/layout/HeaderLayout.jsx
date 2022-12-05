@@ -25,7 +25,7 @@ function HeaderLayout({ isBack, title, user, collapsed, setCollapsed, lg }) {
 
   const changeOragnizationHandle = async ({ orgId, roleId }) => {
     await httpService
-      .post(`/api/user/changeOrgId/${user.id}`, {
+      .post(`/api/user/changeOrgId`, {
         org_id: orgId,
         roleId: roleId,
       })
@@ -58,7 +58,6 @@ function HeaderLayout({ isBack, title, user, collapsed, setCollapsed, lg }) {
     await httpService
       .post(`/api/notification`, {
         id: data,
-        user_id: user.id,
       })
       .then(({ data: response }) => {
         if (response.status === 200) {

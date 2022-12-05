@@ -39,7 +39,7 @@ function AllAplaud({ user }) {
   }
   async function fetchAllOrgData() {
     await httpService
-      .post("/api/applaud/timeline", { date: currentMonth, userId: user.id })
+      .post("/api/applaud/timeline", { date: currentMonth })
       .then(({ data: response }) => {
         if (response.status === 200) {
           setAllOrgApplaud(response.data);

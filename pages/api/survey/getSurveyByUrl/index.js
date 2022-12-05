@@ -114,6 +114,12 @@ async function handle(req, res, prisma) {
 }
 
 const functionHandle = (req, res) =>
-  RequestHandler(req, res, handle, ["POST", "DELETE"]);
+  RequestHandler({
+    req,
+    res,
+    callback: handle,
+    allowedMethods: ["POST", "DELETE"],
+    protectedRoute: false,
+  });
 
 export default functionHandle;

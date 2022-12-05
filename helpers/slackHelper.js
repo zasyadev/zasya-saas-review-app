@@ -36,10 +36,10 @@ export async function SlackPostMessage({ channel, text, blocks }) {
       }
     )
     .then(({ data: response }) => {
-      console.log(response);
+      // console.log(response);
     })
     .catch((err) => {
-      console.log(response);
+      // console.log(response);
     });
   return;
 }

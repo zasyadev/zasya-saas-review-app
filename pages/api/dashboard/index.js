@@ -1,15 +1,13 @@
 import { calculateMiliDuration } from "../../../helpers/momentHelper";
 import { RequestHandler } from "../../../lib/RequestHandler";
 
-async function handle(req, res, prisma) {
-  const { userId } = req.body;
+async function handle(req, res, prisma, user) {
+  const { id: userId, organization_id } = user;
 
   if (!userId) {
     return res.status(401).json({ status: 401, message: "No User found" });
   }
-  const userTableData = await prisma.user.findUnique({
-    where: { id: userId },
-  });
+
   const reviewCreated = await prisma.review.findMany({
     where: {
       AND: [
@@ -17,7 +15,7 @@ async function handle(req, res, prisma) {
           created_by: userId,
         },
         {
-          organization_id: userTableData.organization_id,
+          organization_id: organization_id,
         },
       ],
     },
@@ -40,7 +38,7 @@ async function handle(req, res, prisma) {
           created_by: userId,
         },
         {
-          organization_id: userTableData.organization_id,
+          organization_id: organization_id,
         },
         {
           review_type: "feedback",
@@ -62,7 +60,7 @@ async function handle(req, res, prisma) {
         },
         {
           review: {
-            is: { organization_id: userTableData.organization_id },
+            is: { organization_id: organization_id },
           },
         },
       ],
@@ -74,19 +72,13 @@ async function handle(req, res, prisma) {
 
   const userData = await prisma.userOraganizationGroups.findMany({
     where: {
-      AND: [
-        { organization_id: userTableData.organization_id },
-        { status: true },
-      ],
+      AND: [{ organization_id: organization_id }, { status: true }],
     },
   });
 
   const applaudData = await prisma.userApplaud.findMany({
     where: {
-      AND: [
-        { user_id: userId },
-        { organization_id: userTableData.organization_id },
-      ],
+      AND: [{ user_id: userId }, { organization_id: organization_id }],
     },
     include: {
       user: true,
@@ -135,6 +127,13 @@ async function handle(req, res, prisma) {
 
   return res.status(404).json({ status: 404, message: "No Record Found" });
 }
-const functionHandle = (req, res) => RequestHandler(req, res, handle, ["POST"]);
+const functionHandle = (req, res) =>
+  RequestHandler({
+    req,
+    res,
+    callback: handle,
+    allowedMethods: ["GET"],
+    protectedRoute: true,
+  });
 
 export default functionHandle;

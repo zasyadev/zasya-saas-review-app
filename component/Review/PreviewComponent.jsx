@@ -15,9 +15,7 @@ function PreviewComponent({ user, reviewId }) {
     setLoading((prev) => ({ ...prev, answerLoading: true }));
     if (reviewId) {
       await httpService
-        .post(`/api/review/answer/id/${reviewId}`, {
-          userId: user.id,
-        })
+        .get(`/api/review/answer/id/${reviewId}`)
         .then(({ data: response }) => {
           if (response.status === 200 && response.data) {
             setAnswers(response.data.ReviewAssigneeAnswerOption);
@@ -55,12 +53,10 @@ function PreviewComponent({ user, reviewId }) {
       }
     }
   };
-  const fetchReviewData = async (user, reviewId) => {
+  const fetchReviewData = async (reviewId) => {
     setLoading((prev) => ({ ...prev, questionLoading: true }));
     await httpService
-      .post(`/api/review/received/${reviewId}`, {
-        userId: user.id,
-      })
+      .post(`/api/review/received/${reviewId}`, {})
       .then(({ data: response }) => {
         if (response.status === 200) {
           setQuestions(response.data?.review?.form?.questions);
@@ -76,7 +72,7 @@ function PreviewComponent({ user, reviewId }) {
 
   useEffect(() => {
     if (reviewId) {
-      fetchReviewData(user, reviewId);
+      fetchReviewData(reviewId);
       fetchAnswer();
     }
   }, []);

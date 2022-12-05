@@ -4,8 +4,8 @@ import SuspenceWrapper from "../../component/common/SuspenceWrapper";
 import AdminLayout from "../../component/layout/AdminLayout";
 import WithMe from "../../component/layout/WithMe";
 
-const AddTeamComponent = dynamic(
-  () => import("../../component/Team/AddTeamComponent"),
+const AddUpdateTeamMember = dynamic(
+  () => import("../../component/Team/AddUpdateTeamMember"),
   {
     suspense: true,
   }
@@ -17,7 +17,7 @@ function AddTeam() {
       <WithMe>
         {({ user }) => (
           <AdminLayout user={user} title="Create Team">
-            <AddTeamComponent user={user} />
+            <AddUpdateTeamMember user={user} />
           </AdminLayout>
         )}
       </WithMe>

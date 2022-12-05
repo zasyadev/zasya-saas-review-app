@@ -1,14 +1,11 @@
 import { RequestHandler } from "../../../lib/RequestHandler";
 
-async function handle(req, res, prisma) {
-  const { date, userId } = req.body;
+async function handle(req, res, prisma, user) {
+  const { date } = req.body;
+  const { id: userId, organization_id } = user;
   if (!userId) {
     return res.status(401).json({ status: 401, message: "No User found" });
   }
-
-  const userTableData = await prisma.user.findUnique({
-    where: { id: userId },
-  });
 
   const allApplaudData = await prisma.userApplaud.findMany({
     orderBy: {
@@ -17,7 +14,7 @@ async function handle(req, res, prisma) {
 
     where: {
       AND: [
-        { organization_id: userTableData.organization_id },
+        { organization_id: organization_id },
         {
           created_date: date,
         },
@@ -48,6 +45,13 @@ async function handle(req, res, prisma) {
     message: "Applaud Data Received",
   });
 }
-const functionHandle = (req, res) => RequestHandler(req, res, handle, ["POST"]);
+const functionHandle = (req, res) =>
+  RequestHandler({
+    req,
+    res,
+    callback: handle,
+    allowedMethods: ["POST"],
+    protectedRoute: true,
+  });
 
 export default functionHandle;

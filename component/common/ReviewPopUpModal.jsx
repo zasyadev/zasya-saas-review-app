@@ -12,7 +12,7 @@ export default function ReviewPopUpModal({ userId }) {
 
   const getUserWeeklyReviews = async (userId) => {
     await httpService
-      .post("/api/user/getweeklyreivewscount", { userId })
+      .get("/api/user/getweeklyreivewscount")
       .then(({ data: response }) => {
         if (response.status === 200 && response?.count === 0) {
           setNotificationModal(true);

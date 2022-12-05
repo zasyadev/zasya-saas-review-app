@@ -5,13 +5,14 @@ import {
 import { mailTemplate, mailService } from "../../../lib/emailservice";
 import { RequestHandler } from "../../../lib/RequestHandler";
 
-async function handle(req, res, prisma) {
+async function handle(req, res, prisma, user) {
   try {
-    const { reviewId, assignedIds, userId } = req.body;
+    const { reviewId, assignedIds } = req.body;
+    const { id: userId } = user;
 
     if (Number(assignedIds?.length) > 0) {
       assignedIds.forEach(async (item) => {
-        let newData = await prisma.reviewAssignee.create({
+        await prisma.reviewAssignee.create({
           data: {
             review: { connect: { id: reviewId } },
             assigned_to: { connect: { id: item } },
@@ -107,5 +108,12 @@ async function handle(req, res, prisma) {
     });
   }
 }
-const functionHandle = (req, res) => RequestHandler(req, res, handle, ["POST"]);
+const functionHandle = (req, res) =>
+  RequestHandler({
+    req,
+    res,
+    callback: handle,
+    allowedMethods: ["POST"],
+    protectedRoute: true,
+  });
 export default functionHandle;

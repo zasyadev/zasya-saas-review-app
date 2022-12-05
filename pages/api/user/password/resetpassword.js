@@ -62,6 +62,13 @@ async function handle(req, res, prisma) {
     return res.status(404).json({ status: 404, message: "No record found" });
   }
 }
-const functionHandle = (req, res) => RequestHandler(req, res, handle, ["POST"]);
+const functionHandle = (req, res) =>
+  RequestHandler({
+    req,
+    res,
+    callback: handle,
+    allowedMethods: ["POST"],
+    protectedRoute: false,
+  });
 
 export default functionHandle;
