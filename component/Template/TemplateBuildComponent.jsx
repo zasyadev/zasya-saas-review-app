@@ -12,6 +12,7 @@ import ErrorBox from "../common/ErrorBox";
 import StepFixedHeader from "../common/StepFixedHeader";
 import StepsBottomFixedBar from "../common/StepsBottomFixedBar";
 import {
+  defaultOption,
   defaultQuestionConfig,
   defaultScaleQuestion,
   MULTIPLE_CHOICE_TYPE,

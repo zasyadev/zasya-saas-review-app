@@ -328,36 +328,36 @@ function SurveyResponsePage({ user }) {
                   Copy Url
                 </button>
               </div>
-            </div>
-            <h3 className="px-1 text-lg lg:text-xl font-bold leading-6 -tracking-wider my-4 text-primary text-center">
-              Create New Shares
-            </h3>
-            <div className="md:flex justify-center items-center md:space-x-4 pb-4 space-y-3 md:space-y-0  mx-4 md:mx-0">
-              <div
-                className="w-full md:w-36 h-20 md:h-28 cursor-pointer border border-black flex flex-col justify-center items-center rounded-md"
-                onClick={() => {
-                  setEmailModalVisible(true);
-                }}
-              >
-                <div>
-                  <MailOutlined className="text-prmary text-xl md:text-2xl" />
-                </div>
-                <p className="mb-0 text-base md:text-lg">Send Email</p>
-              </div>
-              <Popconfirm
-                title={`Are you sure you want to Create new Link`}
-                okText="Yes"
-                cancelText="No"
-                onConfirm={() => onNewUrlHandler()}
-                icon={false}
-              >
-                <div className="w-full md:w-36 h-20 md:h-28 cursor-pointer border border-black flex flex-col justify-center items-center rounded-md">
+              <h3 className="px-1 text-lg lg:text-xl font-bold leading-6 -tracking-wider my-4 mt-6  text-primary text-center">
+                Create New Shares
+              </h3>
+              <div className="md:flex justify-center items-center md:space-x-4  space-y-3 md:space-y-0  mx-4 md:mx-0">
+                <div
+                  className="w-full md:w-36 h-20 md:h-28 cursor-pointer border border-black flex flex-col justify-center items-center rounded-md"
+                  onClick={() => {
+                    setEmailModalVisible(true);
+                  }}
+                >
                   <div>
-                    <LinkOutlined className="text-prmary text-xl md:text-2xl" />
+                    <MailOutlined className="text-prmary text-xl md:text-2xl" />
                   </div>
-                  <p className="mb-0 text-base md:text-lg">Create Url</p>
+                  <p className="mb-0 text-base md:text-lg">Send Email</p>
                 </div>
-              </Popconfirm>
+                <Popconfirm
+                  title={`Are you sure you want to Create new Link`}
+                  okText="Yes"
+                  cancelText="No"
+                  onConfirm={() => onNewUrlHandler()}
+                  icon={false}
+                >
+                  <div className="w-full md:w-36 h-20 md:h-28 cursor-pointer border border-black flex flex-col justify-center items-center rounded-md">
+                    <div>
+                      <LinkOutlined className="text-prmary text-xl md:text-2xl" />
+                    </div>
+                    <p className="mb-0 text-base md:text-lg">Create Url</p>
+                  </div>
+                </Popconfirm>
+              </div>
             </div>
           </div>
 
