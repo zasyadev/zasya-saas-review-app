@@ -81,7 +81,7 @@ export const QuestiontypeText = (key) => {
   }
 };
 
-const defaultOption = { optionText: "", error: "" };
+export const defaultOption = { optionText: "", error: "" };
 
 export const defaultScaleQuestion = {
   questionText: "",

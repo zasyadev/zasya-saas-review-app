@@ -1,4 +1,4 @@
-import { EllipsisOutlined } from "@ant-design/icons";
+import { EllipsisOutlined, ShareAltOutlined } from "@ant-design/icons";
 import { Dropdown, Menu, Popconfirm, Skeleton } from "antd";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
@@ -83,14 +83,21 @@ function SurveyList({ user }) {
       title: "Action",
       key: "action",
       render: (_, survey) => (
-        <>
+        <div className="flex items-center space-x-4">
+          <ButtonGray
+            className="grid place-content-center w-8 h-8"
+            rounded="rounded-full"
+            title={
+              <ShareAltOutlined className="text-lg leading-0" title="Share" />
+            }
+            withLink={true}
+            linkHref={`/survey/share/${survey.id}`}
+          />
+
           <Dropdown
             trigger={"click"}
             overlay={
               <Menu className="divide-y">
-                <Menu.Item className="font-semibold" key={"call-share"}>
-                  <Link href={`/survey/share/${survey.id}`}>Share</Link>
-                </Menu.Item>
                 <Menu.Item className="font-semibold" key={"call-preview"}>
                   <Link href={`/survey/preview/${survey.id}`}>Preview</Link>
                 </Menu.Item>
@@ -124,7 +131,7 @@ function SurveyList({ user }) {
               }
             />
           </Dropdown>
-        </>
+        </div>
       ),
     },
   ];

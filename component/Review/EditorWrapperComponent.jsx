@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import {
+  defaultOption,
   defaultQuestionConfig,
   defaultScaleQuestion,
 } from "../Form/questioncomponents/constants";
