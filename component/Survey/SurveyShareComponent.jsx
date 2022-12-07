@@ -140,11 +140,12 @@ function SurveyResponsePage({ user }) {
   const allSharesColumn = [
     {
       title: "Name",
-
       key: "name",
       render: (_, record) => (
         <p
-          className={record.type === "Email" ? "underline cursor-pointer" : ""}
+          className={
+            record.type === "Email" ? "underline cursor-pointer mb-0" : ""
+          }
           onClick={() => {
             if (record.type === "Email") {
               ShowReviewCountModal({
@@ -175,7 +176,7 @@ function SurveyResponsePage({ user }) {
       key: "status",
       render: (_, record) => (
         <Switch
-          className={`${record.status ? "bg-green-700" : "bg-red-700"}`}
+          className={`${record.status ? "bg-green-600" : "bg-red-600"}`}
           checkedChildren="Active"
           unCheckedChildren="Inactive"
           checked={record.status}

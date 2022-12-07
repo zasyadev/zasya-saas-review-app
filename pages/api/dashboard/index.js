@@ -1,3 +1,4 @@
+import { USER_SELECT_FEILDS } from "../../../constants";
 import { calculateMiliDuration } from "../../../helpers/momentHelper";
 import { RequestHandler } from "../../../lib/RequestHandler";
 
@@ -20,7 +21,7 @@ async function handle(req, res, prisma, user) {
       ],
     },
     include: {
-      created: true,
+      created: USER_SELECT_FEILDS,
 
       form: {
         include: {
@@ -52,7 +53,7 @@ async function handle(req, res, prisma, user) {
     },
   });
 
-  let reviewAnswered = await prisma.reviewAssigneeAnswers.findMany({
+  const reviewAnswered = await prisma.reviewAssigneeAnswers.findMany({
     where: {
       AND: [
         {
@@ -64,9 +65,6 @@ async function handle(req, res, prisma, user) {
           },
         },
       ],
-    },
-    include: {
-      review_assignee: true,
     },
   });
 
@@ -81,17 +79,9 @@ async function handle(req, res, prisma, user) {
       AND: [{ user_id: userId }, { organization_id: organization_id }],
     },
     include: {
-      user: true,
+      user: USER_SELECT_FEILDS,
     },
   });
-
-  let filterApplaudData = [];
-  if (applaudData.length > 0) {
-    filterApplaudData = applaudData.filter((item) => {
-      delete item?.user?.password;
-      return true;
-    });
-  }
 
   let averageAnswerTime = 0;
   if (reviewAnswered.length > 0) {
@@ -112,7 +102,7 @@ async function handle(req, res, prisma, user) {
     reviewCreatedCount: reviewCreated.length,
     reviewAnsweredCount: reviewAnswered.length,
     userCount: userData.length,
-    applaudCount: filterApplaudData.length,
+    applaudCount: applaudData.length,
     reviewRating: reviewRating,
     averageAnswerTime: averageAnswerTime,
   };

@@ -1,3 +1,4 @@
+import { USER_SELECT_FEILDS } from "../../../constants";
 import { RequestHandler } from "../../../lib/RequestHandler";
 
 async function handle(req, res, prisma) {
@@ -8,23 +9,18 @@ async function handle(req, res, prisma) {
       where: { id: user_id },
     });
     const data = await prisma.userOraganizationGroups.findMany({
-      where: { organization_id: userData.organization_id },
+      where: {
+        AND: [{ organization_id: userData.organization_id }, { status: true }],
+      },
 
       include: {
-        user: true,
+        user: USER_SELECT_FEILDS,
       },
     });
 
-    const filterdata = data
-      .filter((item) => item.status === true)
-      .map((item) => {
-        delete item?.user?.password;
-        return item;
-      });
-
     return res.status(200).json({
       status: 200,
-      data: filterdata,
+      data: data,
       message: "All Data Retrieved",
     });
   }

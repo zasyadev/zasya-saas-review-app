@@ -1,3 +1,4 @@
+import { USER_SELECT_FEILDS } from "../../../../constants";
 import { RequestHandler } from "../../../../lib/RequestHandler";
 
 async function handle(req, res, prisma, user) {
@@ -21,7 +22,7 @@ async function handle(req, res, prisma, user) {
       include: {
         review: {
           include: {
-            created: true,
+            created: USER_SELECT_FEILDS,
             form: {
               include: {
                 questions: {
@@ -52,7 +53,7 @@ async function handle(req, res, prisma, user) {
         id: review_id,
       },
       include: {
-        created: true,
+        created: USER_SELECT_FEILDS,
         form: {
           include: {
             questions: {
