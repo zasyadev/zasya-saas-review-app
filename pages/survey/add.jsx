@@ -11,7 +11,7 @@ const AddEditSurveyComponent = dynamic(
   }
 );
 
-function ReviewAdd() {
+function SurveyAdd() {
   return (
     <SuspenceWrapper>
       <WithMe>
@@ -26,4 +26,4 @@ function ReviewAdd() {
   );
 }
 
-export default ReviewAdd;
+export default SurveyAdd;

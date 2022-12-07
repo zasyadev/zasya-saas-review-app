@@ -40,6 +40,7 @@ model User {
   UserDetails           UserDetails?
   UserNotification      UserNotification[]
   Survey                Survey[]
+  Goals                 Goals[]
 
   @@map("users")
 }
@@ -211,6 +212,7 @@ model UserOrganization {
   ReviewAssigneeAnswers ReviewAssigneeAnswers[]
   UserNotification      UserNotification[]
   Survey                Survey[]
+  Goals                 Goals[]
 
   @@map("user_organization")
 }
@@ -409,6 +411,25 @@ model SurveyChannelUser {
   @@map("survey_channels_user")
 }
 
+model Goals {
+  id               String            @id @default(uuid())
+  created          User              @relation(fields: [created_by], references: [id])
+  created_by       String
+  goal_title       String
+  goal_description String
+  goal_type        GoalTypeEnum
+  status           GoalStatusEnum
+  progress         Int?
+  start_date       DateTime?
+  end_date         DateTime?
+  organization     UserOrganization? @relation(fields: [organization_id], references: [id])
+  organization_id  Int
+  created_date     DateTime          @default(now())
+  modified_date    DateTime          @default(now())
+
+  @@map("goals")
+}
+
 enum RoleEnum {
   SuperAdmin
   Admin
@@ -437,4 +458,18 @@ enum SurveyChannelUserStatusEnum {
   Pending
   Opened
   Answered
+}
+
+enum GoalTypeEnum {
+  Organization
+  Individual
+  Team
+}
+
+enum GoalStatusEnum {
+  OnTrack
+  Completed
+  Delayed
+  AtRisk
+  Abandoned
 }
