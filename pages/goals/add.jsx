@@ -11,7 +11,7 @@ const AddEditGoalComponent = dynamic(
   }
 );
 
-function GoalAdd() {
+function GoalAddPage() {
   return (
     <SuspenceWrapper>
       <WithMe>
@@ -25,4 +25,4 @@ function GoalAdd() {
   );
 }
 
-export default GoalAdd;
+export default GoalAddPage;
