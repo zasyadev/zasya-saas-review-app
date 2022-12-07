@@ -1,3 +1,4 @@
+import { USER_SELECT_FEILDS } from "../../../../constants";
 import { RequestHandler } from "../../../../lib/RequestHandler";
 
 async function handle(req, res, prisma, user) {
@@ -11,7 +12,7 @@ async function handle(req, res, prisma, user) {
   const questionData = await prisma.review.findFirst({
     where: { AND: [{ id: review_id }, { created_by: userId }] },
     include: {
-      created: true,
+      created: USER_SELECT_FEILDS,
       form: true,
       ReviewAssignee: {
         include: {

@@ -62,7 +62,7 @@ function SurveyList({ user }) {
       key: "survey_name",
       render: (_, survey) => (
         <Link href={`/survey/response/${survey.id}`} passHref>
-          <p className="cursor-pointer underline text-gray-500">
+          <p className="cursor-pointer underline text-gray-500 mb-0">
             {survey.survey_name}
           </p>
         </Link>
@@ -85,11 +85,9 @@ function SurveyList({ user }) {
       render: (_, survey) => (
         <div className="flex items-center space-x-4">
           <ButtonGray
-            className="grid place-content-center w-8 h-8"
+            className="grid place-content-center w-9 h-9"
             rounded="rounded-full"
-            title={
-              <ShareAltOutlined className="text-lg leading-0" title="Share" />
-            }
+            title={<ShareAltOutlined className=" leading-0" title="Share" />}
             withLink={true}
             linkHref={`/survey/share/${survey.id}`}
           />
@@ -106,17 +104,15 @@ function SurveyList({ user }) {
                     className="text-red-600 font-semibold"
                     key={"call-delete"}
                   >
-                    <>
-                      <Popconfirm
-                        title={`Are you sure to delete ${survey.survey_name} ？`}
-                        okText="Yes"
-                        cancelText="No"
-                        onConfirm={() => onDelete(survey.id)}
-                        icon={false}
-                      >
-                        Delete
-                      </Popconfirm>
-                    </>
+                    <Popconfirm
+                      title={`Are you sure to delete ${survey.survey_name} ？`}
+                      okText="Yes"
+                      cancelText="No"
+                      onConfirm={() => onDelete(survey.id)}
+                      icon={false}
+                    >
+                      Delete
+                    </Popconfirm>
                   </Menu.Item>
                 )}
               </Menu>
@@ -124,7 +120,7 @@ function SurveyList({ user }) {
             placement="bottomRight"
           >
             <ButtonGray
-              className="grid place-content-center w-8 h-8"
+              className="grid place-content-center w-9 h-9"
               rounded="rounded-full"
               title={
                 <EllipsisOutlined rotate={90} className="text-lg leading-0" />

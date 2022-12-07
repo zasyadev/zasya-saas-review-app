@@ -1,3 +1,4 @@
+import { USER_SELECT_FEILDS } from "../../../constants";
 import { RequestHandler } from "../../../lib/RequestHandler";
 
 async function handle(req, res, prisma) {
@@ -27,7 +28,7 @@ async function handle(req, res, prisma) {
       ],
     },
     include: {
-      created: true,
+      created: USER_SELECT_FEILDS,
       form: true,
       ReviewAssignee: {
         include: {

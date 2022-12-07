@@ -4,6 +4,7 @@ import {
   SlackPostMessage,
 } from "../../../helpers/slackHelper";
 import { RequestHandler } from "../../../lib/RequestHandler";
+import { USER_SELECT_FEILDS } from "../../../constants";
 
 async function handle(req, res, prisma) {
   if (req.method === "POST") {
@@ -222,7 +223,11 @@ async function handle(req, res, prisma) {
   } else if (req.method === "GET") {
     try {
       const data = await prisma.review.findMany({
-        include: { created: true, form: true, ReviewAssignee: true },
+        include: {
+          created: USER_SELECT_FEILDS,
+          form: true,
+          ReviewAssignee: USER_SELECT_FEILDS,
+        },
       });
 
       if (data) {

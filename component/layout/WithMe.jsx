@@ -25,7 +25,7 @@ const WithMe = (props) => {
   ) : !session ? (
     <LoadingSpinner />
   ) : (
-    <div>
+    <>
       {props.children(session)}
       {session &&
         session?.user?.id &&
@@ -41,7 +41,7 @@ const WithMe = (props) => {
         ].includes(router?.pathname) && (
           <ReviewPopUpModal userId={session.user.id} />
         )}
-    </div>
+    </>
   );
 };
 
