@@ -13,7 +13,17 @@ async function handle(req, res, prisma, user) {
         modified_date: "desc",
       },
       where: {
-        AND: [{ created_by: userId }, { organization_id: organization_id }],
+        OR: [
+          {
+            AND: [{ created_by: userId }, { organization_id: organization_id }],
+          },
+          {
+            AND: [
+              { goal_type: "Organization" },
+              { organization_id: organization_id },
+            ],
+          },
+        ],
       },
     });
 
@@ -55,6 +65,44 @@ async function handle(req, res, prisma, user) {
       });
     }
     return res.status(404).json({ status: 404, message: "No Record Found" });
+  } else if (req.method === "PUT") {
+    const reqBody = req.body;
+
+    let transactionData = {};
+    transactionData = await prisma.$transaction(async (transaction) => {
+      await transaction.goalsTimeline.create({
+        data: {
+          user: { connect: { id: userId } },
+          goals: { connect: { id: reqBody.id } },
+          status: reqBody.status,
+          comment: reqBody?.comment ?? "",
+        },
+      });
+
+      const formdata = await transaction.goals.update({
+        where: {
+          id: reqBody.id,
+        },
+        data: {
+          goal_title: reqBody.goal_title,
+          goal_description: reqBody.goal_description,
+          goal_type: reqBody.goal_type,
+
+          end_date: reqBody.end_date,
+        },
+      });
+
+      return { formdata };
+    });
+
+    if (transactionData && transactionData.formdata) {
+      return res.status(200).json({
+        status: 200,
+        data: transactionData.formdata,
+        message: "Goals Details Updated",
+      });
+    }
+    return res.status(404).json({ status: 404, message: "No Record Found" });
   }
 }
 const functionHandle = (req, res) =>
@@ -62,7 +110,7 @@ const functionHandle = (req, res) =>
     req,
     res,
     callback: handle,
-    allowedMethods: ["GET", "POST"],
+    allowedMethods: ["GET", "POST", "PUT"],
     protectedRoute: true,
     schemaObj: GOALS_SCHEMA,
   });
