@@ -14,7 +14,15 @@ async function handle(req, res, prisma, user) {
     const data = await prisma.goals.findUnique({
       where: { id: goal_id },
       include: {
-        GoalsTimeline: true,
+        GoalsTimeline: {
+          include: {
+            user: {
+              select: {
+                first_name: true,
+              },
+            },
+          },
+        },
       },
     });
 
