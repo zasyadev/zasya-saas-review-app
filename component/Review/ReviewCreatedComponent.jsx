@@ -58,7 +58,7 @@ function ReviewCreatedComponent({
   fetchReviewData,
   answerData,
 }) {
-  const { xs } = useBreakpoint();
+  const { lg } = useBreakpoint();
   const { Panel } = Collapse;
   const [isExporting, setIsExporting] = useState(false);
   const [dataSource, setDataSource] = useState({});
@@ -85,7 +85,7 @@ function ReviewCreatedComponent({
     title: "Name",
     dataIndex: "name",
     width: 180,
-    fixed: xs ? false : true,
+    fixed: lg,
     sorter: (a, b) => a.name?.localeCompare(b.name),
     render: (_, record) => (
       <div>
@@ -147,7 +147,7 @@ function ReviewCreatedComponent({
 
     handleAnswerChange(answerData);
     setColumns([...headersData]);
-  }, []);
+  }, [lg]);
 
   const handleAnswerChange = (answerData) => {
     let data = answerData.map((item) => ({

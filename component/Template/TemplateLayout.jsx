@@ -141,7 +141,6 @@ function TemplateLayout({ user }) {
                     description={template?.form_data?.description}
                     questionLength={template?.form_data?.questions?.length}
                     deleteTemplate={deleteTemplate}
-                    linkHref={`/template/preview/${template.id}`}
                     isDelete={false}
                   />
                 ))
