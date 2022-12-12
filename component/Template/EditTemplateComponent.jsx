@@ -22,7 +22,7 @@ function EditTemplateComponent({ user }) {
         if (response.status === 200) {
           setFormData(response.data);
           if (response.data.default_template) {
-            router.push(`/template/preview/${response.data.id}`);
+            router.push(`/template/preview/${response.data.id}/review`);
           } else {
             setLoading(false);
           }

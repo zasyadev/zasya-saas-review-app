@@ -82,7 +82,7 @@ const TemplateCard = ({
           <div className="space-y-4 ">
             <ButtonGray
               withLink={true}
-              linkHref={`/template/preview/${id}`}
+              linkHref={`/template/preview/${id}/review`}
               className="w-full "
               title="Preview Template"
             />
