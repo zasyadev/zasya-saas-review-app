@@ -1,3 +1,4 @@
+import { getGoalEndDays } from "../../../helpers/momentHelper";
 import { RequestHandler } from "../../../lib/RequestHandler";
 import { GOALS_SCHEMA } from "../../../yup-schema/goals";
 
@@ -8,22 +9,65 @@ async function handle(req, res, prisma, user) {
   }
 
   if (req.method === "GET") {
-    const data = await prisma.goals.findMany({
+    const data = await prisma.goalAssignee.findMany({
       orderBy: {
         modified_date: "desc",
       },
       where: {
         OR: [
           {
-            AND: [{ created_by: userId }, { organization_id: organization_id }],
+            AND: [
+              {
+                assignee_id: userId,
+              },
+              {
+                goal: {
+                  organization_id: organization_id,
+                },
+              },
+            ],
           },
           {
             AND: [
-              { goal_type: "Organization" },
-              { organization_id: organization_id },
+              {
+                goal: {
+                  goal_type: "Organization",
+                },
+              },
+              {
+                goal: {
+                  organization_id: organization_id,
+                },
+              },
             ],
           },
         ],
+      },
+      include: {
+        goal: {
+          include: {
+            GoalAssignee: {
+              include: {
+                assignee: {
+                  select: {
+                    first_name: true,
+                    UserDetails: {
+                      select: { image: true },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        assignee: {
+          select: {
+            first_name: true,
+            UserDetails: {
+              select: { image: true },
+            },
+          },
+        },
       },
     });
 
@@ -36,35 +80,66 @@ async function handle(req, res, prisma, user) {
     }
     return res.status(404).json({ status: 404, message: "No Record Found" });
   } else if (req.method === "POST") {
-    const reqBody = req.body;
+    try {
+      const reqBody = req.body;
+      if (reqBody.goals_headers.length > 0) {
+        const reqData = reqBody.goals_headers.map(async (header) => {
+          let data = {
+            created: { connect: { id: userId } },
+            goal_title: header.goal_title,
+            goal_description: header.goal_description,
+            goal_type: reqBody.goal_type,
+            status: reqBody.status,
+            progress: reqBody.progress ?? 0,
+            frequency: reqBody.frequency ?? "daily",
+            end_date: getGoalEndDays(reqBody.end_date),
+            organization: { connect: { id: organization_id } },
+          };
 
-    let transactionData = {};
-    transactionData = await prisma.$transaction(async (transaction) => {
-      const formdata = await transaction.goals.create({
-        data: {
-          created: { connect: { id: userId } },
-          goal_title: reqBody.goal_title,
-          goal_description: reqBody.goal_description,
-          goal_type: reqBody.goal_type,
-          status: reqBody.status,
-          progress: reqBody.progress ?? 0,
-          start_date: reqBody.start_date ?? new Date(),
-          end_date: reqBody.end_date,
-          organization: { connect: { id: organization_id } },
-        },
-      });
+          if (reqBody.goal_type === "Individual") {
+            let assigneeData = reqBody.goal_assignee.map((assignee) => {
+              return {
+                assignee: { connect: { id: assignee } },
+                status: "OnTrack",
+              };
+            });
+            let createdBy = {
+              assignee: { connect: { id: userId } },
+              status: "OnTrack",
+            };
+            assigneeData.push(createdBy);
 
-      return { formdata };
-    });
+            data.GoalAssignee = { create: assigneeData };
+          } else {
+            let assigneeData = {
+              assignee: { connect: { id: userId } },
+              status: "OnTrack",
+            };
 
-    if (transactionData && transactionData.formdata) {
-      return res.status(200).json({
-        status: 200,
-        data: transactionData.formdata,
-        message: "Goals Details Saved Successfully ",
-      });
+            data.GoalAssignee = { create: assigneeData };
+          }
+          await prisma.goals.create({
+            data: data,
+          });
+        });
+
+        if (reqData && reqData.length > 0) {
+          return res.status(200).json({
+            status: 200,
+            data: reqData,
+            message: "Goals Details Saved Successfully ",
+          });
+        }
+      } else {
+        return res
+          .status(404)
+          .json({ status: 404, message: "No Record Found" });
+      }
+    } catch (error) {
+      return res
+        .status(404)
+        .json({ status: 404, message: "Internal server error" });
     }
-    return res.status(404).json({ status: 404, message: "No Record Found" });
   } else if (req.method === "PUT") {
     const reqBody = req.body;
 

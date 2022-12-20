@@ -15,10 +15,30 @@ async function handle(req, res, prisma, user) {
       where: { id: goal_id },
       include: {
         GoalsTimeline: {
+          orderBy: {
+            modified_date: "desc",
+          },
           include: {
             user: {
               select: {
                 first_name: true,
+              },
+            },
+          },
+        },
+        GoalAssignee: {
+          where: {
+            NOT: {
+              assignee_id: userId,
+            },
+          },
+          include: {
+            assignee: {
+              select: {
+                first_name: true,
+                UserDetails: {
+                  select: { image: true },
+                },
               },
             },
           },
@@ -73,8 +93,9 @@ async function handle(req, res, prisma, user) {
         is_archived: reqBody.value,
       };
     }
-    const data = await prisma.goals.update({
-      where: { id: goal_id },
+
+    const data = await prisma.goalAssignee.update({
+      where: { id: reqBody.id },
       data: objData,
     });
 

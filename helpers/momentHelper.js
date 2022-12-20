@@ -35,3 +35,19 @@ export const customTimeString = ({ days, hours, minutes }) => {
   difference += minutes ? `${days || hours ? ", " : ""} ${minutes} min` : "";
   return difference;
 };
+
+export const getGoalEndDays = (number) => {
+  switch (number) {
+    case 0:
+      return moment(moment()).add(1, "days").format();
+    case 1:
+      return moment(moment()).add(7, "days").format();
+    case 2:
+      return moment(moment()).add(1, "months").format();
+    case 3:
+      return moment(moment()).add(6, "months").format();
+
+    default:
+      return 0;
+  }
+};

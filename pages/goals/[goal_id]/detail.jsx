@@ -11,7 +11,7 @@ function GoalsDetailPage() {
     <SuspenceWrapper>
       <WithMe>
         {({ user }) => (
-          <AdminLayout user={user} title={`${title} Timeline`}>
+          <AdminLayout user={user} title={``}>
             <GoalsDetailComponent setTitle={setTitle} />
           </AdminLayout>
         )}

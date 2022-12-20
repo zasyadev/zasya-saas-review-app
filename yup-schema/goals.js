@@ -1,8 +1,7 @@
 import * as yup from "yup";
 
 const CREATE_GOALS_SCHEMA = yup.object().shape({
-  goal_title: yup.string().required().label("Goal Title"),
-  goal_description: yup.string().required().label("Goal Description"),
+  goals_headers: yup.array().required().label("Goal Headers"),
   goal_type: yup.string().label("Goal Type"),
   status: yup.string().required().label("Goal Status"),
   end_date: yup.date().required().label("End Date"),
@@ -10,8 +9,7 @@ const CREATE_GOALS_SCHEMA = yup.object().shape({
 
 const UPDATE_GOALS_SCHEMA = yup.object().shape({
   id: yup.string().required().label("Goal Id"),
-  goal_title: yup.string().required().label("Goal Title"),
-  goal_description: yup.string().required().label("Goal Description"),
+  goals_headers: yup.array().required().label("Goal Headers"),
   goal_type: yup.string().label("Goal Type"),
   status: yup.string().required().label("Goal Status"),
   end_date: yup.date().required().label("End Date"),
