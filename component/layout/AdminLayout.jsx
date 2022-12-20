@@ -5,6 +5,7 @@ import {
   LikeOutlined,
   SettingOutlined,
   FileTextOutlined,
+  CrownOutlined,
 } from "@ant-design/icons";
 import { Grid, Layout } from "antd";
 import React, { useEffect, useMemo, useState } from "react";
@@ -58,6 +59,7 @@ function AdminLayout({ user, title, isBack = false, children }) {
       "/survey",
       <FileTextOutlined className="sidebar-icon " />
     ),
+    getItem("Goals", "/goals", <CrownOutlined className="sidebar-icon " />),
 
     getItem(
       "Settings",

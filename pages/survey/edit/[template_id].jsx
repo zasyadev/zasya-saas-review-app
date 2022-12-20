@@ -10,7 +10,7 @@ const EditSurveyComponent = dynamic(
   }
 );
 
-function ReviewEdit() {
+function SurveyEdit() {
   return (
     <SuspenceWrapper>
       <WithMe>{({ user }) => <EditSurveyComponent user={user} />}</WithMe>
@@ -18,4 +18,4 @@ function ReviewEdit() {
   );
 }
 
-export default ReviewEdit;
+export default SurveyEdit;

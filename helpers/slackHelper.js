@@ -227,3 +227,46 @@ export function WeeklyCustomizeReviewMessage({
   ];
   return customText;
 }
+
+export function GoalCustomizeMessage({
+  header,
+  link,
+  btnText = "Goals",
+  subText = "",
+}) {
+  let customText = [
+    {
+      type: "header",
+      text: {
+        type: "plain_text",
+        text: header,
+      },
+    },
+    {
+      type: "section",
+      text: {
+        type: "mrkdwn",
+        text: `*${subText}*`,
+      },
+    },
+
+    {
+      type: "actions",
+      elements: [
+        {
+          type: "button",
+          text: {
+            type: "plain_text",
+            text: btnText,
+            emoji: true,
+          },
+          value: "details",
+          url: link,
+          action_id: "button-action",
+          style: "primary",
+        },
+      ],
+    },
+  ];
+  return customText;
+}

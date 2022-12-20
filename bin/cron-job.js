@@ -17,6 +17,12 @@ async function cronJobStart() {
           password: process.env.NEXT_APP_CRON_PASSWORD,
         }
       );
+      await axios.post(
+        `${process.env.NEXT_APP_URL}api/cronjobs/goalsnotifications`,
+        {
+          password: process.env.NEXT_APP_CRON_PASSWORD,
+        }
+      );
     });
     schedule.scheduleJob("weekly_schedule", "30 4 * * 1", async function () {
       await axios.post(`${process.env.NEXT_APP_URL}api/cronjobs/weeklycron`, {

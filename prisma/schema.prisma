@@ -40,6 +40,10 @@ model User {
   UserDetails           UserDetails?
   UserNotification      UserNotification[]
   Survey                Survey[]
+  Goals                 Goals[]
+  GoalsTimeline         GoalsTimeline[]
+  UserTeams             UserTeams[]
+  GoalAssignee          GoalAssignee[]
 
   @@map("users")
 }
@@ -211,6 +215,8 @@ model UserOrganization {
   ReviewAssigneeAnswers ReviewAssigneeAnswers[]
   UserNotification      UserNotification[]
   Survey                Survey[]
+  Goals                 Goals[]
+  UserTeams             UserTeams[]
 
   @@map("user_organization")
 }
@@ -409,6 +415,69 @@ model SurveyChannelUser {
   @@map("survey_channels_user")
 }
 
+model Goals {
+  id               String            @id @default(uuid())
+  created          User              @relation(fields: [created_by], references: [id])
+  created_by       String
+  goal_title       String            @db.VarChar(120)
+  goal_description String            @db.LongText
+  goal_type        GoalTypeEnum
+  status           GoalStatusEnum
+  progress         Int?
+  frequency        GoalFrequencyEnum
+  start_date       DateTime?         @default(now())
+  end_date         DateTime?
+  is_archived      Boolean           @default(false)
+  organization     UserOrganization? @relation(fields: [organization_id], references: [id])
+  organization_id  Int
+  created_date     DateTime          @default(now())
+  modified_date    DateTime          @default(now())
+  GoalsTimeline    GoalsTimeline[]
+  GoalAssignee     GoalAssignee[]
+
+  @@map("goals")
+}
+
+model GoalsTimeline {
+  id            String         @id @default(uuid())
+  user          User           @relation(fields: [user_id], references: [id])
+  user_id       String
+  goals         Goals          @relation(fields: [goals_id], references: [id], onDelete: Cascade)
+  goals_id      String
+  status        GoalStatusEnum
+  comment       String?
+  created_date  DateTime       @default(now())
+  modified_date DateTime       @default(now())
+
+  @@map("goals_timeline")
+}
+
+model UserTeams {
+  id              Int               @id @default(autoincrement())
+  user            User              @relation(fields: [user_id], references: [id])
+  user_id         String
+  team_name       String            @db.VarChar(100)
+  organization    UserOrganization? @relation(fields: [organization_id], references: [id])
+  organization_id Int
+  created_date    DateTime          @default(now())
+  modified_date   DateTime          @default(now())
+
+  @@map("user_teams")
+}
+
+model GoalAssignee {
+  id            Int            @id @default(autoincrement())
+  assignee      User           @relation(fields: [assignee_id], references: [id])
+  assignee_id   String
+  status        GoalStatusEnum
+  goal          Goals          @relation(fields: [goal_id], references: [id], onDelete: Cascade)
+  goal_id       String
+  created_date  DateTime       @default(now())
+  modified_date DateTime       @default(now())
+
+  @@map("goal_assignee")
+}
+
 enum RoleEnum {
   SuperAdmin
   Admin
@@ -437,4 +506,26 @@ enum SurveyChannelUserStatusEnum {
   Pending
   Opened
   Answered
+}
+
+enum GoalTypeEnum {
+  Organization
+  Individual
+  Team
+  Self
+}
+
+enum GoalStatusEnum {
+  OnTrack
+  Completed
+  Delayed
+  AtRisk
+  Abandoned
+}
+
+enum GoalFrequencyEnum {
+  daily
+  monthly
+  weekly
+  halfyearly
 }

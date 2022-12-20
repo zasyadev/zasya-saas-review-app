@@ -12,6 +12,7 @@
     "lint": "next lint",
     "migrate": "prisma migrate dev",
     "seed": "prisma db seed",
+    "push": "npx prisma db push",
     "cronjob": "node bin/cron-job.js"
   },
   "dependencies": {

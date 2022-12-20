@@ -1,5 +1,5 @@
 import { ClockCircleOutlined } from "@ant-design/icons";
-import { Col, DatePicker, Row, Timeline } from "antd";
+import { DatePicker, Timeline } from "antd";
 import moment from "moment";
 import React, { useEffect, useMemo, useState } from "react";
 import { ApplaudGiven, ApplaudIconSmall } from "../../assets/icons";

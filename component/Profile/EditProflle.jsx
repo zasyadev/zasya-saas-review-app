@@ -293,7 +293,7 @@ function EditProfile({ user }) {
 
   return loading ? (
     <div className="grid grid-cols-1 xl:grid-cols-6 mt-1">
-      <div className="xl:col-start-1 xl:col-end-7 px-4 ">
+      <div className="xl:col-start-1 xl:col-end-7">
         <div className="w-full bg-white rounded-md  shadow-md p-5 mt-2">
           <Row gutter={16}>
             <Col lg={24} xs={24} className="mt-4 items-center">
@@ -305,162 +305,160 @@ function EditProfile({ user }) {
     </div>
   ) : (
     <>
-      <div className="grid grid-cols-1 xl:grid-cols-6">
-        <div className="xl:col-start-1 xl:col-end-7 px-4 ">
-          <div className="rounded-md text-white grid items-center w-full shadow-lg-purple mb-4 md:mb-6">
-            <div className="w-full flex item-center justify-end">
-              <div className=" w-fit">
-                <PrimaryButton
-                  onClick={() => showPasswordEditModal()}
-                  className="md:px-4 px-2 w-full"
-                  title="Change Password"
-                />
-              </div>
+      <div className="xl:col-start-1 xl:col-end-7">
+        <div className="rounded-md text-white grid items-center w-full shadow-lg-purple mb-4 md:mb-6">
+          <div className="w-full flex item-center justify-end">
+            <div className=" w-fit">
+              <PrimaryButton
+                onClick={() => showPasswordEditModal()}
+                className="md:px-4 px-2 w-full"
+                title="Change Password"
+              />
             </div>
           </div>
-          <div className="w-full bg-white rounded-md  shadow-md p-4 md:py-6">
-            <div className="md:w-3/6 mx-auto">
-              <Form
-                layout="vertical"
-                onFinish={onFinish}
-                validateMessages={validateMessages}
-                initialValues={{
-                  first_name: userDetails?.first_name,
-                  address1: userDetails?.address1,
-                  about: userDetails?.about,
-                  address2: userDetails?.address2,
-                  mobile: userDetails?.mobile,
-                  pin_code: userDetails?.pin_code,
-                  notification: userDetails?.notification,
-                }}
+        </div>
+        <div className="w-full bg-white rounded-md  shadow-md p-4 md:py-6">
+          <div className="md:w-3/6 mx-auto">
+            <Form
+              layout="vertical"
+              onFinish={onFinish}
+              validateMessages={validateMessages}
+              initialValues={{
+                first_name: userDetails?.first_name,
+                address1: userDetails?.address1,
+                about: userDetails?.about,
+                address2: userDetails?.address2,
+                mobile: userDetails?.mobile,
+                pin_code: userDetails?.pin_code,
+                notification: userDetails?.notification,
+              }}
+            >
+              <ImageUpload
+                category="profile"
+                fileList={image}
+                setFileList={setImage}
+                formName="profileImage"
+                onDelete={onDeleteImage}
+              />
+              <Form.Item
+                label="Name"
+                name="first_name"
+                rules={[
+                  {
+                    required: true,
+                    message: "Required!",
+                  },
+                  {
+                    validator: (_, value) => maxLengthValidator(value, 50),
+                  },
+                ]}
               >
-                <ImageUpload
-                  category="profile"
-                  fileList={image}
-                  setFileList={setImage}
-                  formName="profileImage"
-                  onDelete={onDeleteImage}
+                <Input placeholder="Name" className=" h-12 rounded-md" />
+              </Form.Item>{" "}
+              {userDetails?.email && (
+                <Form.Item label="Email">
+                  <Input
+                    disabled={true}
+                    value={userDetails?.email}
+                    className="form-control block w-full px-4 py-2 text-base font-normal text-gray-700 disabled:opacity-60 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0  focus:outline-none"
+                  />
+                </Form.Item>
+              )}
+              <Form.Item
+                label="Address 1"
+                name="address1"
+                rules={[
+                  {
+                    required: true,
+                    message: "Required!",
+                  },
+                  {
+                    validator: (_, value) => maxLengthValidator(value, 200),
+                  },
+                ]}
+              >
+                <CustomTextArea
+                  placeholder="Address 1"
+                  className=" h-12 rounded-md"
                 />
-                <Form.Item
-                  label="Name"
-                  name="first_name"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Required!",
-                    },
-                    {
-                      validator: (_, value) => maxLengthValidator(value, 50),
-                    },
-                  ]}
-                >
-                  <Input placeholder="Name" className=" h-12 rounded-md" />
-                </Form.Item>{" "}
-                {userDetails?.email && (
-                  <Form.Item label="Email">
-                    <Input
-                      disabled={true}
-                      value={userDetails?.email}
-                      className="form-control block w-full px-4 py-2 text-base font-normal text-gray-700 disabled:opacity-60 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0  focus:outline-none"
-                    />
-                  </Form.Item>
-                )}
-                <Form.Item
-                  label="Address 1"
-                  name="address1"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Required!",
-                    },
-                    {
-                      validator: (_, value) => maxLengthValidator(value, 200),
-                    },
-                  ]}
-                >
-                  <CustomTextArea
-                    placeholder="Address 1"
-                    className=" h-12 rounded-md"
-                  />
-                </Form.Item>
-                <Form.Item
-                  label="Address 2"
-                  name="address2"
-                  rules={[
-                    {
-                      validator: (_, value) => maxLengthValidator(value, 200),
-                    },
-                  ]}
-                >
-                  <CustomTextArea
-                    placeholder="Address 2"
-                    className=" h-12 rounded-md"
-                  />
-                </Form.Item>
-                <Form.Item
-                  label="Phone Number"
-                  name="mobile"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Please Enter your Phone Number!",
-                    },
-                    {
-                      validator: (_, value) => maxLengthValidator(value, 20),
-                    },
-                    {
-                      validator: (_, value) => phoneValidator(value),
-                    },
-                  ]}
-                >
-                  <Input placeholder="Mobile" className=" h-12 rounded-md" />
-                </Form.Item>
-                <Form.Item
-                  label="About "
-                  name="about"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Required!",
-                    },
-                    {
-                      validator: (_, value) => maxLengthValidator(value, 400),
-                    },
-                  ]}
-                >
-                  <CustomTextArea
-                    placeholder="About You"
-                    className=" h-12 rounded-md"
-                  />
-                </Form.Item>
-                <Form.Item
-                  label="Notification Method "
-                  name="notification"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Required!",
-                    },
-                  ]}
-                >
-                  <Checkbox.Group options={notificationOptions} />
-                </Form.Item>
-                <div className="flex items-center justify-center gap-4">
-                  <SecondaryButton
-                    withLink={true}
-                    className=" h-full w-32"
-                    linkHref={"/profile"}
-                    title="Cancel"
-                  />
-                  <PrimaryButton
-                    type="submit"
-                    disabled={apiLoading}
-                    className=" h-full w-32  "
-                    title="Submit"
-                  />
-                </div>
-              </Form>
-            </div>
+              </Form.Item>
+              <Form.Item
+                label="Address 2"
+                name="address2"
+                rules={[
+                  {
+                    validator: (_, value) => maxLengthValidator(value, 200),
+                  },
+                ]}
+              >
+                <CustomTextArea
+                  placeholder="Address 2"
+                  className=" h-12 rounded-md"
+                />
+              </Form.Item>
+              <Form.Item
+                label="Phone Number"
+                name="mobile"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please Enter your Phone Number!",
+                  },
+                  {
+                    validator: (_, value) => maxLengthValidator(value, 20),
+                  },
+                  {
+                    validator: (_, value) => phoneValidator(value),
+                  },
+                ]}
+              >
+                <Input placeholder="Mobile" className=" h-12 rounded-md" />
+              </Form.Item>
+              <Form.Item
+                label="About "
+                name="about"
+                rules={[
+                  {
+                    required: true,
+                    message: "Required!",
+                  },
+                  {
+                    validator: (_, value) => maxLengthValidator(value, 400),
+                  },
+                ]}
+              >
+                <CustomTextArea
+                  placeholder="About You"
+                  className=" h-12 rounded-md"
+                />
+              </Form.Item>
+              <Form.Item
+                label="Notification Method "
+                name="notification"
+                rules={[
+                  {
+                    required: true,
+                    message: "Required!",
+                  },
+                ]}
+              >
+                <Checkbox.Group options={notificationOptions} />
+              </Form.Item>
+              <div className="flex items-center justify-center gap-4">
+                <SecondaryButton
+                  withLink={true}
+                  className=" h-full w-32"
+                  linkHref={"/profile"}
+                  title="Cancel"
+                />
+                <PrimaryButton
+                  type="submit"
+                  disabled={apiLoading}
+                  className=" h-full w-32  "
+                  title="Submit"
+                />
+              </div>
+            </Form>
           </div>
         </div>
       </div>
