@@ -186,7 +186,7 @@ function AddEditGoalComponent({ user, editMode = false }) {
           {(fields, { add, remove }) => (
             <>
               {fields.map(({ key, name, ...restField }, index) => (
-                <>
+                <div key={index + "form"}>
                   <Form.Item
                     label={`Title ${fields.length > 1 ? index + 1 : ""}`}
                     {...restField}
@@ -232,7 +232,7 @@ function AddEditGoalComponent({ user, editMode = false }) {
                       </span>
                     </div>
                   )}
-                </>
+                </div>
               ))}
               {fields.length < 5 && (
                 <div className="text-right">

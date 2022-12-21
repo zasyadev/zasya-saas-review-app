@@ -1,4 +1,8 @@
 import { getGoalEndDays } from "../../../helpers/momentHelper";
+import {
+  CustomizeSlackMessage,
+  SlackPostMessage,
+} from "../../../helpers/slackHelper";
 import { RequestHandler } from "../../../lib/RequestHandler";
 import { GOALS_SCHEMA } from "../../../yup-schema/goals";
 
@@ -121,6 +125,38 @@ async function handle(req, res, prisma, user) {
           await prisma.goals.create({
             data: data,
           });
+          if (reqBody.goal_type === "Individual") {
+            reqBody.goal_assignee.forEach(async (assignee) => {
+              const { first_name: createdBy } = user;
+              let assignedUser = await prisma.user.findUnique({
+                where: { id: assignee },
+                include: {
+                  UserDetails: true,
+                },
+              });
+
+              if (
+                assignedUser?.UserDetails &&
+                assignedUser?.UserDetails?.notification &&
+                assignedUser?.UserDetails?.notification?.length &&
+                assignedUser?.UserDetails?.notification.includes("slack") &&
+                assignedUser.UserDetails.slack_id
+              ) {
+                let customText = CustomizeSlackMessage({
+                  header: "New Goal Recieved",
+                  user: createdBy ?? "",
+                  link: `${process.env.NEXT_APP_URL}goals`,
+                  by: "Assigneed By",
+                  text: header.goal_title,
+                });
+                SlackPostMessage({
+                  channel: assignedUser.UserDetails.slack_id,
+                  text: `${createdBy ?? ""} has assigneed you a goal`,
+                  blocks: customText,
+                });
+              }
+            });
+          }
         });
 
         if (reqData && reqData.length > 0) {

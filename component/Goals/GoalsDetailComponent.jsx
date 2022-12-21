@@ -10,7 +10,6 @@ import DefaultImages from "../common/DefaultImages";
 function GoalsDetailComponent({ setTitle }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [timeLineData, setTimeLineData] = useState([]);
   const [goalData, setGoalData] = useState({});
 
   const fetchGoalData = async () => {
@@ -19,12 +18,12 @@ function GoalsDetailComponent({ setTitle }) {
       .get(`/api/goals/${router.query.goal_id}`)
       .then(({ data: response }) => {
         if (response.status === 200) {
-          if (response.data.GoalsTimeline) {
+          if (response.data) {
             setGoalData(response.data);
-            setTimeLineData(response.data.GoalsTimeline);
+            setTitle(response.data.goal_title ?? "");
           }
-          setTitle(response.data.goal_title ?? "");
         }
+
         setLoading(false);
       })
       .catch((err) => {
@@ -61,9 +60,9 @@ function GoalsDetailComponent({ setTitle }) {
             Assignees
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-white rounded-md  shadow-md ">
-            {goalData?.GoalAssignee?.map((item, idx) => (
+            {goalData?.GoalAssignee?.map((item) => (
               <div
-                key={item.id + idx}
+                key={item.id}
                 className="overflow-hidden p-4 flex gap-4 shrink-0 items-center"
               >
                 <div className="shrink-0  lg:hidden">
@@ -104,8 +103,8 @@ function GoalsDetailComponent({ setTitle }) {
         TimeLine
       </p>
       <Timeline className="p-4 py-6 bg-white rounded-md  shadow-md ">
-        {timeLineData?.length ? (
-          timeLineData.map((item) => (
+        {goalData?.GoalsTimeline?.length > 0 ? (
+          goalData?.GoalsTimeline.map((item) => (
             <Timeline.Item
               dot={
                 <ClockCircleOutlined
@@ -115,6 +114,7 @@ function GoalsDetailComponent({ setTitle }) {
                   }}
                 />
               }
+              key={item.id}
             >
               <div className="flex items-start gap-2 ">
                 <p className="flex-1 font-semibold mb-1 text-sm md:text-base">
