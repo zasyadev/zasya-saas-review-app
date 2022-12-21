@@ -24,7 +24,24 @@ const initialGoalCountModalData = {
   isVisible: false,
 };
 
-const GroupListBox = ({ goalsList, type, title, userId, fetchGoalList }) => {
+const statusPill = (key) => {
+  switch (key) {
+    case "Completed":
+      return "text-green-600 bg-green-200";
+    case "OnTrack":
+      return "text-blue-600 bg-blue-200";
+    case "Delayed":
+      return "text-orange-600 bg-orange-200";
+    case "AtRisk":
+      return "text-red-600 bg-red-200";
+    case "Abandoned":
+      return "text-gray-500 bg-gray-100";
+    default:
+      return "";
+  }
+};
+
+const GoalsGroupList = ({ goalsList, type, title, userId, fetchGoalList }) => {
   const [updateGoalForm] = Form.useForm();
   const [editGoalModalVisible, setEditGoalModalVisible] =
     useState(initialModalVisible);
@@ -55,44 +72,6 @@ const GroupListBox = ({ goalsList, type, title, userId, fetchGoalList }) => {
     setGoalAssigneeModalData(initialGoalCountModalData);
   };
 
-  const statusPill = (key) => {
-    switch (key) {
-      case "Completed":
-        return (
-          <span className="text-xs font-semibold px-2 py-1 uppercase rounded-md text-green-600 bg-green-200">
-            Completed
-          </span>
-        );
-      case "OnTrack":
-        return (
-          <span className="text-xs font-semibold px-2 py-1  uppercase rounded-md text-blue-600 bg-blue-200">
-            OnTrack
-          </span>
-        );
-      case "Delayed":
-        return (
-          <span className="text-xs font-semibold px-2 py-1  uppercase rounded-md text-orange-600 bg-orange-200">
-            Delayed
-          </span>
-        );
-      case "AtRisk":
-        return (
-          <span className="text-xs font-semibold px-2 py-1  uppercase rounded-md text-red-600 bg-red-200">
-            AtRisk
-          </span>
-        );
-      case "Abandoned":
-        return (
-          <span className="text-xs font-semibold px-2 py-1  uppercase rounded-md text-gray-500 bg-gray-100">
-            Abandoned
-          </span>
-        );
-
-      default:
-        break;
-    }
-  };
-
   const goalEditHandle = async ({ goal_id, id, value, type }) => {
     setLoading(true);
     await httpService
@@ -120,7 +99,10 @@ const GroupListBox = ({ goalsList, type, title, userId, fetchGoalList }) => {
       <div className="divide-y space-y-3 max-h-screen overflow-y-auto custom-scrollbar px-2">
         {Number(filteredGoalList.length > 0) ? (
           filteredGoalList.map((item) => (
-            <div className="py-4 bg-gray-50 border border-gray-100 shadow-sm rounded-md ">
+            <div
+              className="py-4 bg-gray-50 border border-gray-100 shadow-sm rounded-md "
+              key={item.id}
+            >
               <div className=" px-4 space-y-3">
                 {item.goal.created_by === userId ? (
                   <Link href={`/goals/${item.goal.id}/detail`} passHref>
@@ -170,7 +152,13 @@ const GroupListBox = ({ goalsList, type, title, userId, fetchGoalList }) => {
                       }
                     }}
                   >
-                    {statusPill(item.status)}
+                    <span
+                      className={`text-xs font-semibold px-2 py-1 uppercase rounded-md ${statusPill(
+                        item.status
+                      )}`}
+                    >
+                      {item.status}
+                    </span>
                   </p>
                 </div>
                 <p className="text-right text-xs font-medium">
@@ -252,52 +240,4 @@ const GroupListBox = ({ goalsList, type, title, userId, fetchGoalList }) => {
   );
 };
 
-function GoalGroupComponent({ goalsList, userId, fetchGoalList }) {
-  const defaultProps = {
-    goalsList: goalsList,
-    userId: userId,
-    fetchGoalList: fetchGoalList,
-  };
-  const groupItems = [
-    {
-      label: "Day",
-      key: "day",
-      children: <GroupListBox type={"daily"} title={"Day"} {...defaultProps} />,
-    },
-    {
-      label: "Week",
-      key: "week",
-      children: (
-        <GroupListBox type={"weekly"} title={"Week"} {...defaultProps} />
-      ),
-    },
-    {
-      label: "Month",
-      key: "month",
-      children: (
-        <GroupListBox type={"monthly"} title={"Month"} {...defaultProps} />
-      ),
-    },
-    {
-      label: "Half Year",
-      key: "halfyear",
-      children: (
-        <GroupListBox
-          type={"halfyearly"}
-          title={"Half Year"}
-          {...defaultProps}
-        />
-      ),
-    },
-  ];
-
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-      {groupItems.map((groupItems) => {
-        return <>{groupItems.children}</>;
-      })}
-    </div>
-  );
-}
-
-export default GoalGroupComponent;
+export default GoalsGroupList;
