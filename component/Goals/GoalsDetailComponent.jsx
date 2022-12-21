@@ -64,7 +64,7 @@ function GoalsDetailComponent({ setTitle }) {
             {goalData?.GoalAssignee?.map((item, idx) => (
               <div
                 key={item.id + idx}
-                className="overflow-hidden p-4  cursor-pointer flex gap-4 shrink-0 items-center"
+                className="overflow-hidden p-4 flex gap-4 shrink-0 items-center"
               >
                 <div className="shrink-0  lg:hidden">
                   <DefaultImages
