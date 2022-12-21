@@ -1,5 +1,5 @@
 import { InfoCircleOutlined } from "@ant-design/icons";
-import { Form, Input, Select, Tag } from "antd";
+import { Form, Input, Select } from "antd";
 import moment from "moment";
 import Link from "next/link";
 import React, { useMemo, useState } from "react";
@@ -58,15 +58,35 @@ const GroupListBox = ({ goalsList, type, title, userId, fetchGoalList }) => {
   const statusPill = (key) => {
     switch (key) {
       case "Completed":
-        return <Tag color="success">Completed</Tag>;
+        return (
+          <span className="text-xs font-semibold px-2 py-1 uppercase rounded-md text-green-600 bg-green-200">
+            Completed
+          </span>
+        );
       case "OnTrack":
-        return <Tag color="processing">OnTrack</Tag>;
+        return (
+          <span className="text-xs font-semibold px-2 py-1  uppercase rounded-md text-blue-600 bg-blue-200">
+            OnTrack
+          </span>
+        );
       case "Delayed":
-        return <Tag color="warning">Delayed</Tag>;
+        return (
+          <span className="text-xs font-semibold px-2 py-1  uppercase rounded-md text-orange-600 bg-orange-200">
+            Delayed
+          </span>
+        );
       case "AtRisk":
-        return <Tag color="error">AtRisk</Tag>;
+        return (
+          <span className="text-xs font-semibold px-2 py-1  uppercase rounded-md text-red-600 bg-red-200">
+            AtRisk
+          </span>
+        );
       case "Abandoned":
-        return <Tag color="default">Abandoned</Tag>;
+        return (
+          <span className="text-xs font-semibold px-2 py-1  uppercase rounded-md text-gray-500 bg-gray-100">
+            Abandoned
+          </span>
+        );
 
       default:
         break;
@@ -101,7 +121,7 @@ const GroupListBox = ({ goalsList, type, title, userId, fetchGoalList }) => {
         {Number(filteredGoalList.length > 0) ? (
           filteredGoalList.map((item) => (
             <div className="py-4 bg-gray-50 border border-gray-100 shadow-sm rounded-md ">
-              <div className=" px-4 space-y-2">
+              <div className=" px-4 space-y-3">
                 {item.goal.created_by === userId ? (
                   <Link href={`/goals/${item.goal.id}/detail`} passHref>
                     <p className="cursor-pointer text-gray-500 mb-0 text-base font-medium two-line-clamp">
