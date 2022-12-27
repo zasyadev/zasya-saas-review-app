@@ -1,10 +1,20 @@
-import { InfoCircleOutlined, EllipsisOutlined } from "@ant-design/icons";
-import { Dropdown, Form, Input, Menu, Popconfirm, Select } from "antd";
+import {
+  BankOutlined,
+  InfoCircleOutlined,
+  EllipsisOutlined,
+  UserOutlined,
+  TeamOutlined,
+} from "@ant-design/icons";
+import { Dropdown, Form, Input, Menu, Popconfirm, Popover, Select } from "antd";
 import Link from "next/link";
 import React, { useMemo, useState } from "react";
 
 import httpService from "../../../../lib/httpService";
-import { PrimaryButton, SecondaryButton } from "../../../common/CustomButton";
+import {
+  ButtonGray,
+  PrimaryButton,
+  SecondaryButton,
+} from "../../../common/CustomButton";
 import CustomModal from "../../../common/CustomModal";
 import NoRecordFound from "../../../common/NoRecordFound";
 import { statusPill } from "../../constants";
@@ -124,7 +134,7 @@ const GoalsGroupList = ({
                     }`}
                     passHref
                   >
-                    <p className="cursor-pointer text-gray-500 mb-0 text-base font-medium two-line-clamp">
+                    <p className="cursor-pointer text-gray-800 mb-0 text-base font-medium two-line-clamp">
                       {item.goal.goal_title}
                     </p>
                   </Link>
@@ -186,18 +196,47 @@ const GoalsGroupList = ({
                       }
                       placement="bottomRight"
                     >
-                      <EllipsisOutlined
-                        rotate={90}
-                        className="text-lg leading-0 "
+                      <ButtonGray
+                        className="grid place-content-center w-6 h-6 p-0"
+                        rounded="rounded-full"
+                        title={
+                          <EllipsisOutlined
+                            rotate={90}
+                            className="text-base leading-0"
+                          />
+                        }
                       />
                     </Dropdown>
                   )}
                 </div>
 
                 <div className="flex justify-between ">
-                  <div className="flex items-center gap-2 font-medium">
-                    <p className="flex mb-0">{item.goal.goal_type}</p>
-                    {item.goal.goal_type === "Individual" &&
+                  <div className="flex items-center gap-2 flex-wrap font-medium">
+                    <Popover
+                      placement="topLeft"
+                      title={"Created by"}
+                      content={
+                        <>
+                          <span className="font-medium">
+                            {item?.goal?.created.first_name} (
+                            {item.goal.goal_type})
+                          </span>
+                        </>
+                      }
+                      trigger={["click", "hover"]}
+                    >
+                      {item.goal.goal_type === "Individual" && (
+                        <TeamOutlined className="text-base leading-0" />
+                      )}
+                      {item.goal.goal_type === "Self" && (
+                        <UserOutlined className="text-base leading-0" />
+                      )}
+
+                      {item.goal.goal_type === "Organization" && (
+                        <BankOutlined className="text-base leading-0" />
+                      )}
+                    </Popover>
+                    {/* {item.goal.goal_type === "Individual" &&
                       item.goal.created_by === userId && (
                         <InfoCircleOutlined
                           className="text-gray-600 cursor-pointer select-none"
@@ -208,7 +247,7 @@ const GoalsGroupList = ({
                             })
                           }
                         />
-                      )}
+                      )} */}
                   </div>
 
                   <p
@@ -240,6 +279,7 @@ const GoalsGroupList = ({
                     </span>
                   </p>
                 </div>
+
                 <DateInfoCard endDate={item?.goal.end_date} />
               </div>
             </div>
