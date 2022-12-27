@@ -1,29 +1,16 @@
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { Form, Select } from "antd";
+import moment from "moment";
 import { useRouter } from "next/router";
 import React, { useState, useEffect } from "react";
+import { DEFAULT_DATE_FORMAT } from "../../helpers/dateHelper";
 import { maxLengthValidator } from "../../helpers/formValidations";
 import httpService from "../../lib/httpService";
 import { PrimaryButton } from "../common/CustomButton";
 import { CustomInput, CustomTextArea } from "../common/CustomFormFeilds";
 import { openNotificationBox } from "../common/notification";
 import { PulseLoader } from "../Loader/LoadingSpinner";
-
-const getFrequency = (number) => {
-  switch (number) {
-    case 0:
-      return "daily";
-    case 1:
-      return "weekly";
-    case 2:
-      return "monthly";
-    case 3:
-      return "halfyearly";
-
-    default:
-      return 0;
-  }
-};
+import { getGoalFrequency } from "./constants";
 
 function AddEditGoalComponent({ user, editMode = false }) {
   const router = useRouter();
@@ -40,7 +27,7 @@ function AddEditGoalComponent({ user, editMode = false }) {
       goal_type: values.goal_type,
       status: "OnTrack",
       progress: 0,
-      frequency: getFrequency(values.end_date),
+      frequency: getGoalFrequency(values.end_date),
       end_date: values.end_date,
       goal_assignee:
         values?.goal_assignee && Number(values?.goal_assignee?.length) > 0
@@ -99,10 +86,16 @@ function AddEditGoalComponent({ user, editMode = false }) {
         .then(({ data: response }) => {
           if (response.status === 200) {
             form.setFieldsValue({
-              goal_title: response.data.goal_title,
-              goal_description: response.data.goal_description,
+              goals_headers: [
+                {
+                  goal_title: response.data.goal_title,
+                  goal_description: response.data.goal_description,
+                },
+              ],
               goal_type: response.data.goal_type,
-              end_date: response.data.end_date,
+              end_date: moment(response.data.end_date).format(
+                DEFAULT_DATE_FORMAT
+              ),
             });
           }
           setLoading(false);
@@ -234,7 +227,7 @@ function AddEditGoalComponent({ user, editMode = false }) {
                   )}
                 </div>
               ))}
-              {fields.length < 5 && (
+              {fields.length < 5 && !editMode && (
                 <div className="text-right">
                   <PrimaryButton
                     onClick={() => add()}
@@ -272,6 +265,7 @@ function AddEditGoalComponent({ user, editMode = false }) {
               placeholder="Select Goal Type"
               size="large"
               onSelect={(val) => handleGoalType(val)}
+              disabled={editMode}
             >
               {user.role_id === 2 && (
                 <Select.Option value="Organization">Organization</Select.Option>
@@ -307,6 +301,7 @@ function AddEditGoalComponent({ user, editMode = false }) {
                 size="large"
                 className="w-full"
                 maxTagCount="responsive"
+                disabled={editMode}
               >
                 {userList.length > 0 && (
                   <>
@@ -337,7 +332,11 @@ function AddEditGoalComponent({ user, editMode = false }) {
               },
             ]}
           >
-            <Select placeholder="Select Goal Scope" size="large">
+            <Select
+              placeholder="Select Goal Scope"
+              size="large"
+              disabled={editMode}
+            >
               <Select.Option value={0}>Day</Select.Option>
               <Select.Option value={1}>Week</Select.Option>
               <Select.Option value={2}> Month</Select.Option>

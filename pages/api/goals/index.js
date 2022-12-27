@@ -13,6 +13,56 @@ async function handle(req, res, prisma, user) {
   }
 
   if (req.method === "GET") {
+    let filteredStatement1 = [
+      {
+        assignee_id: userId,
+      },
+      {
+        goal: {
+          organization_id: organization_id,
+        },
+      },
+    ];
+    let filteredStatement2 = [
+      {
+        goal: {
+          goal_type: "Organization",
+        },
+      },
+      {
+        goal: {
+          organization_id: organization_id,
+        },
+      },
+    ];
+
+    if (req?.query?.status !== "All") {
+      filteredStatement1.push({
+        status: req.query.status,
+      });
+      filteredStatement2.push({
+        status: req.query.status,
+      });
+    }
+
+    if (req?.query?.isArchived) {
+      let filter = {
+        goal: {
+          is_archived: true,
+        },
+      };
+      filteredStatement1.push(filter);
+      filteredStatement2.push(filter);
+    } else {
+      let filter = {
+        goal: {
+          is_archived: false,
+        },
+      };
+      filteredStatement1.push(filter);
+      filteredStatement2.push(filter);
+    }
+
     const data = await prisma.goalAssignee.findMany({
       orderBy: {
         modified_date: "desc",
@@ -20,36 +70,22 @@ async function handle(req, res, prisma, user) {
       where: {
         OR: [
           {
-            AND: [
-              {
-                assignee_id: userId,
-              },
-              {
-                goal: {
-                  organization_id: organization_id,
-                },
-              },
-            ],
+            AND: filteredStatement1,
           },
           {
-            AND: [
-              {
-                goal: {
-                  goal_type: "Organization",
-                },
-              },
-              {
-                goal: {
-                  organization_id: organization_id,
-                },
-              },
-            ],
+            AND: filteredStatement2,
           },
         ],
       },
       include: {
         goal: {
           include: {
+            created: {
+              select: {
+                first_name: true,
+                id: true,
+              },
+            },
             GoalAssignee: {
               include: {
                 assignee: {
@@ -181,25 +217,13 @@ async function handle(req, res, prisma, user) {
 
     let transactionData = {};
     transactionData = await prisma.$transaction(async (transaction) => {
-      await transaction.goalsTimeline.create({
-        data: {
-          user: { connect: { id: userId } },
-          goals: { connect: { id: reqBody.id } },
-          status: reqBody.status,
-          comment: reqBody?.comment ?? "",
-        },
-      });
-
       const formdata = await transaction.goals.update({
         where: {
           id: reqBody.id,
         },
         data: {
-          goal_title: reqBody.goal_title,
-          goal_description: reqBody.goal_description,
-          goal_type: reqBody.goal_type,
-
-          end_date: reqBody.end_date,
+          goal_title: reqBody.goals_headers[0].goal_title,
+          goal_description: reqBody.goals_headers[0].goal_description,
         },
       });
 

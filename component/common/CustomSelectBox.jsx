@@ -14,13 +14,13 @@ export default function CustomSelectBox({
       value={value}
       size="large"
       onChange={(value) => handleOnChange(value)}
-      className={`question-select-box ${className}`}
+      className={` ${className}`}
       {...rest}
     >
       {arrayList.map((item, idx) => (
         <Select.Option
           value={valueInLabel ? item.label : item.value}
-          key={value + idx}
+          key={valueInLabel ? item.label : item.value + idx}
         >
           {item.label}
         </Select.Option>

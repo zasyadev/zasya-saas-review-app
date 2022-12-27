@@ -27,7 +27,7 @@ export default function ToggleButton({ arrayList, activeKey, handleToggle }) {
       </div>
 
       <CustomSelectBox
-        className={"block md:hidden w-36 text-sm"}
+        className={"block md:hidden w-36 text-sm question-select-box"}
         arrayList={arrayList}
         valueInLabel
         value={activeKey}
