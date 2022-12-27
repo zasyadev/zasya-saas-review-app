@@ -12,7 +12,6 @@ const UPDATE_GOALS_SCHEMA = yup.object().shape({
   goals_headers: yup.array().required().label("Goal Headers"),
   goal_type: yup.string().label("Goal Type"),
   status: yup.string().required().label("Goal Status"),
-  end_date: yup.date().required().label("End Date"),
 });
 
 export const GOALS_SCHEMA = {

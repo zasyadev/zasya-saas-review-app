@@ -7,7 +7,7 @@ import NoRecordFound from "../common/NoRecordFound";
 import moment from "moment";
 import DefaultImages from "../common/DefaultImages";
 
-function GoalsDetailComponent({ setTitle }) {
+function GoalsDetailComponent({ setTitle, isArchived = false }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [goalData, setGoalData] = useState({});
@@ -41,7 +41,7 @@ function GoalsDetailComponent({ setTitle }) {
     </div>
   ) : (
     <div className=" flex-1 p-4  lg:p-5  space-y-4 ">
-      <div className="p-4 bg-white rounded-md  shadow-md ">
+      <div className="p-4 bg-white rounded-md  shadow-md relative">
         <div className="flex-1 space-y-2 ">
           <p className=" text-primary font-bold text-base md:text-lg text-center">
             {goalData?.goal_title}
@@ -53,6 +53,11 @@ function GoalsDetailComponent({ setTitle }) {
             Goal Scope : {goalData?.frequency}
           </p>
         </div>
+        {isArchived && (
+          <div className="border border-gray-200 bg-gray-100 absolute top-0 left-4 px-3 py-1 border-t-0 rounded-b-md">
+            Archived
+          </div>
+        )}
       </div>
       {goalData && goalData?.GoalAssignee?.length > 0 && (
         <>

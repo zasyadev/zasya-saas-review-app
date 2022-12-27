@@ -75,6 +75,8 @@ async function handle(req, res, prisma, user) {
 
     let objData = {};
 
+    let data = {};
+
     if (reqBody.type === "forStatus") {
       objData = {
         status: reqBody.value.status,
@@ -88,16 +90,25 @@ async function handle(req, res, prisma, user) {
           goals: { connect: { id: goal_id } },
         },
       });
-    } else {
+
+      data = await prisma.goalAssignee.update({
+        where: { id: reqBody.id },
+        data: objData,
+      });
+    } else if (reqBody.type === "forArchived") {
       objData = {
         is_archived: reqBody.value,
       };
-    }
 
-    const data = await prisma.goalAssignee.update({
-      where: { id: reqBody.id },
-      data: objData,
-    });
+      data = await prisma.goals.update({
+        where: { id: goal_id },
+        data: objData,
+      });
+    } else if (reqBody.type === "forDelete") {
+      data = await prisma.goals.delete({
+        where: { id: goal_id },
+      });
+    }
 
     if (data) {
       return res.status(200).json({

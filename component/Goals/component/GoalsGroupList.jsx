@@ -1,5 +1,5 @@
-import { InfoCircleOutlined } from "@ant-design/icons";
-import { Form, Input, Select } from "antd";
+import { InfoCircleOutlined, EllipsisOutlined } from "@ant-design/icons";
+import { Dropdown, Form, Input, Menu, Popconfirm, Select } from "antd";
 import moment from "moment";
 import Link from "next/link";
 import React, { useMemo, useState } from "react";
@@ -8,6 +8,7 @@ import httpService from "../../../lib/httpService";
 import { PrimaryButton, SecondaryButton } from "../../common/CustomButton";
 import CustomModal from "../../common/CustomModal";
 import NoRecordFound from "../../common/NoRecordFound";
+import { statusPill } from "../constants";
 import GoalAssignessModal from "../GoalAssignessModal";
 
 const initialModalVisible = {
@@ -24,24 +25,14 @@ const initialGoalCountModalData = {
   isVisible: false,
 };
 
-const statusPill = (key) => {
-  switch (key) {
-    case "Completed":
-      return "text-green-600 bg-green-200";
-    case "OnTrack":
-      return "text-blue-600 bg-blue-200";
-    case "Delayed":
-      return "text-orange-600 bg-orange-200";
-    case "AtRisk":
-      return "text-red-600 bg-red-200";
-    case "Abandoned":
-      return "text-gray-500 bg-gray-100";
-    default:
-      return "";
-  }
-};
-
-const GoalsGroupList = ({ goalsList, type, title, userId, fetchGoalList }) => {
+const GoalsGroupList = ({
+  goalsList,
+  type,
+  title,
+  userId,
+  fetchGoalList,
+  isArchived,
+}) => {
   const [updateGoalForm] = Form.useForm();
   const [editGoalModalVisible, setEditGoalModalVisible] =
     useState(initialModalVisible);
@@ -59,6 +50,17 @@ const GoalsGroupList = ({ goalsList, type, title, userId, fetchGoalList }) => {
 
     [goalsList?.length]
   );
+
+  const goalsProgressPercent = useMemo(() => {
+    if (filteredGoalList.length === 0) return 0;
+    const pendingGoals = filteredGoalList.filter(
+      (item) => item?.status === "Completed"
+    );
+    const percent = Math.abs(
+      Number(pendingGoals?.length / filteredGoalList?.length) * 100
+    );
+    return percent;
+  }, [goalsList?.length]);
 
   const ShowAssigneeModal = ({ goal_title, GoalAssignee }) => {
     setGoalAssigneeModalData({
@@ -82,7 +84,7 @@ const GoalsGroupList = ({ goalsList, type, title, userId, fetchGoalList }) => {
       })
       .then(({ data: response }) => {
         if (response.status === 200) {
-          fetchGoalList();
+          fetchGoalList("All");
           setEditGoalModalVisible(initialModalVisible);
         }
         setLoading(false);
@@ -95,7 +97,18 @@ const GoalsGroupList = ({ goalsList, type, title, userId, fetchGoalList }) => {
 
   return (
     <div className=" bg-white rounded-md pb-3">
-      <div className="p-4 font-bold text-lg capitalize ">{title}</div>
+      <div className=" items-center p-4 font-bold text-lg capitalize">
+        <p className="mb-2">{title}</p>
+        {!isArchived && (
+          <div className=" flex-1 w-full bg-gray-200 rounded-full h-1.5">
+            <div
+              className="bg-green-600 h-1.5 rounded-full"
+              style={{ width: `${goalsProgressPercent}%` }}
+              title={Number(goalsProgressPercent).toFixed(2) + "%"}
+            ></div>
+          </div>
+        )}
+      </div>
       <div className="divide-y space-y-3 max-h-screen overflow-y-auto custom-scrollbar px-2">
         {Number(filteredGoalList.length > 0) ? (
           filteredGoalList.map((item) => (
@@ -104,17 +117,82 @@ const GoalsGroupList = ({ goalsList, type, title, userId, fetchGoalList }) => {
               key={item.id}
             >
               <div className=" px-4 space-y-3">
-                {item.goal.created_by === userId ? (
-                  <Link href={`/goals/${item.goal.id}/detail`} passHref>
+                <div className="flex items-center justify-between">
+                  <Link
+                    href={`/goals/${item.goal.id}/${
+                      isArchived ? "archived" : "detail"
+                    }`}
+                    passHref
+                  >
                     <p className="cursor-pointer text-gray-500 mb-0 text-base font-medium two-line-clamp">
                       {item.goal.goal_title}
                     </p>
                   </Link>
-                ) : (
-                  <p className="text-base font-medium two-line-clamp">
-                    {item.goal.goal_title}
-                  </p>
-                )}
+
+                  {item.goal.created_by === userId && (
+                    <Dropdown
+                      trigger={"click"}
+                      overlay={
+                        <Menu className="divide-y">
+                          {!isArchived && (
+                            <Menu.Item
+                              className="font-semibold"
+                              key={"call-preview"}
+                            >
+                              <Link href={`/goals/${item.goal.id}/edit`}>
+                                Edit
+                              </Link>
+                            </Menu.Item>
+                          )}
+
+                          <Menu.Item
+                            className="text-gray-400 font-semibold"
+                            key={"call-Archived"}
+                            onClick={() =>
+                              goalEditHandle({
+                                goal_id: item.goal.id,
+                                id: item.id,
+                                value: item.goal.is_archived ? false : true,
+                                type: "forArchived",
+                              })
+                            }
+                          >
+                            {item.goal.is_archived ? "UnArchived" : "Archived"}
+                          </Menu.Item>
+                          {isArchived && (
+                            <Menu.Item
+                              className="text-red-600 font-semibold"
+                              key={"call-delete"}
+                            >
+                              <Popconfirm
+                                title={`Are you sure to delete ${item.goal.goal_title} ？`}
+                                okText="Yes"
+                                cancelText="No"
+                                onConfirm={() =>
+                                  goalEditHandle({
+                                    goal_id: item.goal.id,
+                                    id: item.id,
+                                    value: item.goal.is_archived ? false : true,
+                                    type: "forDelete",
+                                  })
+                                }
+                                icon={false}
+                              >
+                                Delete
+                              </Popconfirm>
+                            </Menu.Item>
+                          )}
+                        </Menu>
+                      }
+                      placement="bottomRight"
+                    >
+                      <EllipsisOutlined
+                        rotate={90}
+                        className="text-lg leading-0 "
+                      />
+                    </Dropdown>
+                  )}
+                </div>
 
                 <div className="flex justify-between ">
                   <div className="flex items-center gap-2 font-medium">
@@ -137,9 +215,10 @@ const GoalsGroupList = ({ goalsList, type, title, userId, fetchGoalList }) => {
                     className="text-sm cursor-pointer"
                     onClick={() => {
                       if (
-                        (!item.goal.is_archived &&
+                        ((!item.goal.is_archived &&
                           item.goal.created_by === userId) ||
-                        item.assignee_id === userId
+                          item.assignee_id === userId) &&
+                        !isArchived
                       ) {
                         setEditGoalModalVisible({
                           visible: true,
