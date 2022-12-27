@@ -1,15 +1,15 @@
 import { InfoCircleOutlined, EllipsisOutlined } from "@ant-design/icons";
 import { Dropdown, Form, Input, Menu, Popconfirm, Select } from "antd";
-import moment from "moment";
 import Link from "next/link";
 import React, { useMemo, useState } from "react";
-import { DEFAULT_DATE_FORMAT } from "../../../helpers/dateHelper";
-import httpService from "../../../lib/httpService";
-import { PrimaryButton, SecondaryButton } from "../../common/CustomButton";
-import CustomModal from "../../common/CustomModal";
-import NoRecordFound from "../../common/NoRecordFound";
-import { statusPill } from "../constants";
-import GoalAssignessModal from "../GoalAssignessModal";
+
+import httpService from "../../../../lib/httpService";
+import { PrimaryButton, SecondaryButton } from "../../../common/CustomButton";
+import CustomModal from "../../../common/CustomModal";
+import NoRecordFound from "../../../common/NoRecordFound";
+import { statusPill } from "../../constants";
+import GoalAssignessModal from "../../GoalAssignessModal";
+import DateInfoCard from "./components/DateInfoCard";
 
 const initialModalVisible = {
   visible: false,
@@ -240,10 +240,7 @@ const GoalsGroupList = ({
                     </span>
                   </p>
                 </div>
-                <p className="text-right text-xs font-medium">
-                  Ends On:{" "}
-                  {moment(item?.goal.end_date).format(DEFAULT_DATE_FORMAT)}
-                </p>
+                <DateInfoCard endDate={item?.goal.end_date} />
               </div>
             </div>
           ))
