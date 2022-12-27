@@ -46,27 +46,21 @@ async function handle(req, res, prisma, user) {
     }
 
     if (req?.query?.isArchived) {
-      filteredStatement1.push({
+      let filter = {
         goal: {
           is_archived: true,
         },
-      });
-      filteredStatement2.push({
-        goal: {
-          is_archived: true,
-        },
-      });
+      };
+      filteredStatement1.push(filter);
+      filteredStatement2.push(filter);
     } else {
-      filteredStatement1.push({
+      let filter = {
         goal: {
           is_archived: false,
         },
-      });
-      filteredStatement2.push({
-        goal: {
-          is_archived: false,
-        },
-      });
+      };
+      filteredStatement1.push(filter);
+      filteredStatement2.push(filter);
     }
 
     const data = await prisma.goalAssignee.findMany({
@@ -86,6 +80,12 @@ async function handle(req, res, prisma, user) {
       include: {
         goal: {
           include: {
+            created: {
+              select: {
+                first_name: true,
+                id: true,
+              },
+            },
             GoalAssignee: {
               include: {
                 assignee: {
