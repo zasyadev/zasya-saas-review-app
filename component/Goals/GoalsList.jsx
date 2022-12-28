@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { useRouter } from "next/router";
 import httpService from "../../lib/httpService";
 import { PrimaryButton } from "../common/CustomButton";
 import CustomSelectBox from "../common/CustomSelectBox";
 import GoalsGroupList from "./component/GoalsGroupList";
 import GoalsGroupListSkeleton from "./component/GoalsGroupListSkeleton";
+import GoalInfoCard from "./component/GoalsGroupList/components/GoalInfoCard";
 import { goalsFilterList, groupItems } from "./constants";
+import moment from "moment";
 
 function GoalsList({ user, isArchived = false }) {
   const router = useRouter();
@@ -61,6 +63,22 @@ function GoalsList({ user, isArchived = false }) {
     }
   };
 
+  const sortListByEndDate = useMemo(() => {
+    if (Number(goalsList?.length) > 0) {
+      const latestUpcomingGoalsList = goalsList
+        .filter(
+          (item) => moment(item?.goal?.end_date).diff(moment(), "days") >= 0
+        )
+        .sort((a, b) =>
+          moment(a?.goal?.end_date).diff(moment(b?.goal?.end_date))
+        );
+
+      if (latestUpcomingGoalsList.length < 4) return latestUpcomingGoalsList;
+
+      return latestUpcomingGoalsList.slice(0, 4);
+    } else return [];
+  }, [goalsList]);
+
   return (
     <div className="container mx-auto max-w-full">
       {!isArchived && (
@@ -77,6 +95,19 @@ function GoalsList({ user, isArchived = false }) {
             linkHref={`/goals/add`}
             title={"Create"}
           />
+        </div>
+      )}
+      {!isArchived && Number(sortListByEndDate?.length) > 0 && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 2xl:grid-cols-4 gap-4 mb-4">
+          {sortListByEndDate.map((item, idx) => (
+            <GoalInfoCard
+              item={item}
+              key={"goal" + item.id + idx}
+              isArchived={isArchived}
+              userId={user.id}
+              fetchGoalList={fetchGoalList}
+            />
+          ))}
         </div>
       )}
 
