@@ -1,18 +1,31 @@
-import React, { useEffect, useState, useMemo } from "react";
+import { Form, Input, Select } from "antd";
+import moment from "moment";
 import { useRouter } from "next/router";
+import React, { useEffect, useMemo, useState } from "react";
 import httpService from "../../lib/httpService";
-import { PrimaryButton } from "../common/CustomButton";
+import { PrimaryButton, SecondaryButton } from "../common/CustomButton";
+import CustomModal from "../common/CustomModal";
 import CustomSelectBox from "../common/CustomSelectBox";
+import GoalsCustomTable from "./component/GoalsCustomTable";
 import GoalsGroupList from "./component/GoalsGroupList";
 import GoalsGroupListSkeleton from "./component/GoalsGroupListSkeleton";
-import GoalInfoCard from "./component/GoalsGroupList/components/GoalInfoCard";
 import { goalsFilterList, groupItems } from "./constants";
-import moment from "moment";
+
+const initialModalVisible = {
+  visible: false,
+  id: "",
+  goal_title: "",
+  defaultValue: "",
+  goal_id: "",
+};
 
 function GoalsList({ user, isArchived = false }) {
   const router = useRouter();
+  const [updateGoalForm] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [goalsList, setGoalsList] = useState([]);
+  const [editGoalModalVisible, setEditGoalModalVisible] =
+    useState(initialModalVisible);
 
   async function fetchGoalList(status) {
     setLoading(true);
@@ -73,11 +86,32 @@ function GoalsList({ user, isArchived = false }) {
           moment(a?.goal?.end_date).diff(moment(b?.goal?.end_date))
         );
 
-      if (latestUpcomingGoalsList.length < 4) return latestUpcomingGoalsList;
+      if (latestUpcomingGoalsList.length < 3) return latestUpcomingGoalsList;
 
-      return latestUpcomingGoalsList.slice(0, 4);
+      return latestUpcomingGoalsList.slice(0, 3);
     } else return [];
   }, [goalsList]);
+
+  const goalEditHandle = async ({ goal_id, id, value, type }) => {
+    setLoading(true);
+    await httpService
+      .put(`/api/goals/${goal_id}`, {
+        value,
+        type,
+        id,
+      })
+      .then(({ data: response }) => {
+        if (response.status === 200) {
+          fetchGoalList("All");
+          setEditGoalModalVisible(initialModalVisible);
+        }
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error(err);
+        setLoading(false);
+      });
+  };
 
   return (
     <div className="container mx-auto max-w-full">
@@ -98,16 +132,15 @@ function GoalsList({ user, isArchived = false }) {
         </div>
       )}
       {!loading && !isArchived && Number(sortListByEndDate?.length) > 0 && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-4">
-          {sortListByEndDate.map((item, idx) => (
-            <GoalInfoCard
-              item={item}
-              key={"goal" + item.id + idx}
-              isArchived={isArchived}
-              userId={user.id}
-              fetchGoalList={fetchGoalList}
-            />
-          ))}
+        <div className="gap-4 mb-4">
+          <GoalsCustomTable
+            sortListByEndDate={sortListByEndDate}
+            setEditGoalModalVisible={setEditGoalModalVisible}
+            updateGoalForm={updateGoalForm}
+            goalEditHandle={goalEditHandle}
+            userId={user.id}
+            isArchived={isArchived}
+          />
         </div>
       )}
 
@@ -130,9 +163,68 @@ function GoalsList({ user, isArchived = false }) {
                 key={groupItem.type}
                 type={groupItem.type}
                 isArchived={isArchived}
+                goalEditHandle={goalEditHandle}
+                updateGoalForm={updateGoalForm}
+                setEditGoalModalVisible={setEditGoalModalVisible}
               />
             ))}
       </div>
+      <CustomModal
+        title={
+          <p className="single-line-clamp mb-0 pr-6">
+            {editGoalModalVisible.goal_title}
+          </p>
+        }
+        visible={editGoalModalVisible.visible}
+        onCancel={() => setEditGoalModalVisible(initialModalVisible)}
+        customFooter
+        footer={[
+          <>
+            <SecondaryButton
+              onClick={() => setEditGoalModalVisible(initialModalVisible)}
+              className=" h-full mr-2"
+              title="Cancel"
+            />
+            <PrimaryButton
+              onClick={() => updateGoalForm.submit()}
+              className=" h-full  "
+              title="Update"
+              disabled={loading}
+              loading={loading}
+            />
+          </>,
+        ]}
+      >
+        <div>
+          <Form
+            layout="vertical"
+            form={updateGoalForm}
+            onFinish={(value) =>
+              goalEditHandle({
+                goal_id: editGoalModalVisible.goal_id,
+                id: editGoalModalVisible.id,
+                value: value,
+                type: "forStatus",
+              })
+            }
+            initialValues={{
+              status: editGoalModalVisible.defaultValue,
+            }}
+          >
+            <Form.Item name="status" label="Status">
+              <Select value={editGoalModalVisible.defaultValue}>
+                <Select.Option value="OnTrack">On Track</Select.Option>
+                <Select.Option value="Completed">Completed</Select.Option>
+                <Select.Option value="Delayed">Delayed</Select.Option>
+                <Select.Option value="Abandoned">Abandoned</Select.Option>
+              </Select>
+            </Form.Item>
+            <Form.Item name="comment" label="Comment">
+              <Input />
+            </Form.Item>
+          </Form>
+        </div>
+      </CustomModal>
     </div>
   );
 }

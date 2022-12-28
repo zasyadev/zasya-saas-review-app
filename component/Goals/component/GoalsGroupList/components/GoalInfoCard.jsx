@@ -1,66 +1,24 @@
 import {
   BankOutlined,
   EllipsisOutlined,
-  UserOutlined,
   TeamOutlined,
+  UserOutlined,
 } from "@ant-design/icons";
-import {
-  Dropdown,
-  Form,
-  Input,
-  Menu,
-  Popconfirm,
-  Popover,
-  Select,
-  Tooltip,
-} from "antd";
+import { Dropdown, Menu, Popconfirm, Tooltip } from "antd";
 import Link from "next/link";
-import React, { useState } from "react";
-import httpService from "../../../../../lib/httpService";
-import {
-  ButtonGray,
-  PrimaryButton,
-  SecondaryButton,
-} from "../../../../common/CustomButton";
-import CustomModal from "../../../../common/CustomModal";
+import React from "react";
+import { ButtonGray } from "../../../../common/CustomButton";
 import { statusPill } from "../../../constants";
 import DateInfoCard from "./DateInfoCard";
 
-const initialModalVisible = {
-  visible: false,
-  id: "",
-  goal_title: "",
-  defaultValue: "",
-  goal_id: "",
-};
-
-function GoalInfoCard({ item, isArchived, fetchGoalList, userId }) {
-  const [updateGoalForm] = Form.useForm();
-  const [loading, setLoading] = useState(false);
-  const [editGoalModalVisible, setEditGoalModalVisible] =
-    useState(initialModalVisible);
-
-  const goalEditHandle = async ({ goal_id, id, value, type }) => {
-    setLoading(true);
-    await httpService
-      .put(`/api/goals/${goal_id}`, {
-        value,
-        type,
-        id,
-      })
-      .then(({ data: response }) => {
-        if (response.status === 200) {
-          fetchGoalList("All");
-          setEditGoalModalVisible(initialModalVisible);
-        }
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error(err);
-        setLoading(false);
-      });
-  };
-
+function GoalInfoCard({
+  item,
+  isArchived,
+  userId,
+  updateGoalForm,
+  goalEditHandle,
+  setEditGoalModalVisible,
+}) {
   return (
     <div className="py-4 bg-gray-50 border border-gray-100 shadow-sm rounded-md ">
       <div className="px-4 space-y-4">
@@ -162,7 +120,9 @@ function GoalInfoCard({ item, isArchived, fetchGoalList, userId }) {
               )}
             </Tooltip>
             <span className="font-medium">
-              {item?.goal?.created.first_name}
+              {item?.goal?.created_by === userId
+                ? "You"
+                : item?.goal?.created.first_name}
             </span>
 
             {/* {item.goal.goal_type === "Individual" &&
@@ -210,62 +170,6 @@ function GoalInfoCard({ item, isArchived, fetchGoalList, userId }) {
 
         <DateInfoCard endDate={item?.goal.end_date} />
       </div>
-      <CustomModal
-        title={
-          <p className="single-line-clamp mb-0 pr-6">
-            {editGoalModalVisible.goal_title}
-          </p>
-        }
-        visible={editGoalModalVisible.visible}
-        onCancel={() => setEditGoalModalVisible(initialModalVisible)}
-        customFooter
-        footer={[
-          <>
-            <SecondaryButton
-              onClick={() => setEditGoalModalVisible(initialModalVisible)}
-              className=" h-full mr-2"
-              title="Cancel"
-            />
-            <PrimaryButton
-              onClick={() => updateGoalForm.submit()}
-              className=" h-full  "
-              title="Update"
-              disabled={loading}
-              loading={loading}
-            />
-          </>,
-        ]}
-      >
-        <div>
-          <Form
-            layout="vertical"
-            form={updateGoalForm}
-            onFinish={(value) =>
-              goalEditHandle({
-                goal_id: editGoalModalVisible.goal_id,
-                id: editGoalModalVisible.id,
-                value: value,
-                type: "forStatus",
-              })
-            }
-            initialValues={{
-              status: editGoalModalVisible.defaultValue,
-            }}
-          >
-            <Form.Item name="status" label="Status">
-              <Select value={editGoalModalVisible.defaultValue}>
-                <Select.Option value="OnTrack">On Track</Select.Option>
-                <Select.Option value="Completed">Completed</Select.Option>
-                <Select.Option value="Delayed">Delayed</Select.Option>
-                <Select.Option value="Abandoned">Abandoned</Select.Option>
-              </Select>
-            </Form.Item>
-            <Form.Item name="comment" label="Comment">
-              <Input />
-            </Form.Item>
-          </Form>
-        </div>
-      </CustomModal>
     </div>
   );
 }

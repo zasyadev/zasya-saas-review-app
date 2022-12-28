@@ -16,6 +16,9 @@ const GoalsGroupList = ({
   userId,
   fetchGoalList,
   isArchived,
+  goalEditHandle,
+  updateGoalForm,
+  setEditGoalModalVisible,
 }) => {
   const [goalAssigneeModalData, setGoalAssigneeModalData] = useState(
     initialGoalCountModalData
@@ -76,6 +79,9 @@ const GoalsGroupList = ({
               isArchived={isArchived}
               userId={userId}
               fetchGoalList={fetchGoalList}
+              goalEditHandle={goalEditHandle}
+              updateGoalForm={updateGoalForm}
+              setEditGoalModalVisible={setEditGoalModalVisible}
             />
           ))
         ) : (
