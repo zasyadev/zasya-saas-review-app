@@ -98,7 +98,7 @@ function GoalsList({ user, isArchived = false }) {
         </div>
       )}
       {!loading && !isArchived && Number(sortListByEndDate?.length) > 0 && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 2xl:grid-cols-4 gap-4 mb-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-4">
           {sortListByEndDate.map((item, idx) => (
             <GoalInfoCard
               item={item}
@@ -111,7 +111,7 @@ function GoalsList({ user, isArchived = false }) {
         </div>
       )}
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 2xl:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
         {loading
           ? groupItems.map((groupItem) => (
               <GoalsGroupListSkeleton

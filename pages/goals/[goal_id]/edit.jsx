@@ -16,7 +16,7 @@ function GoalEditPage() {
     <SuspenceWrapper>
       <WithMe>
         {({ user }) => (
-          <AdminLayout user={user} title={"Edit Goals"}>
+          <AdminLayout user={user} title={"Edit Goals"} isBack>
             <AddEditGoalComponent user={user} editMode />
           </AdminLayout>
         )}

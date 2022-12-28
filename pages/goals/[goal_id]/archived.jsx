@@ -9,7 +9,7 @@ function GoalsArchivedPage() {
     <SuspenceWrapper>
       <WithMe>
         {({ user }) => (
-          <AdminLayout user={user} title={``}>
+          <AdminLayout user={user} isBack>
             <GoalsDetailComponent isArchived />
           </AdminLayout>
         )}

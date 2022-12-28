@@ -9,7 +9,7 @@ function GoalsDetailPage() {
     <SuspenceWrapper>
       <WithMe>
         {({ user }) => (
-          <AdminLayout user={user}>
+          <AdminLayout user={user} isBack>
             <GoalsDetailComponent />
           </AdminLayout>
         )}
