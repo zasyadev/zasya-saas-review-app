@@ -97,7 +97,7 @@ function GoalsList({ user, isArchived = false }) {
           />
         </div>
       )}
-      {!isArchived && Number(sortListByEndDate?.length) > 0 && (
+      {!loading && !isArchived && Number(sortListByEndDate?.length) > 0 && (
         <div className="grid grid-cols-1 sm:grid-cols-2 2xl:grid-cols-4 gap-4 mb-4">
           {sortListByEndDate.map((item, idx) => (
             <GoalInfoCard
