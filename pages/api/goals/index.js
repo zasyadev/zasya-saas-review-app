@@ -14,9 +14,7 @@ async function handle(req, res, prisma, user) {
 
   if (req.method === "GET") {
     let filteredStatement1 = [
-      {
-        assignee_id: userId,
-      },
+      { assignee_id: userId },
       {
         goal: {
           organization_id: organization_id,
@@ -27,10 +25,6 @@ async function handle(req, res, prisma, user) {
       {
         goal: {
           goal_type: "Organization",
-        },
-      },
-      {
-        goal: {
           organization_id: organization_id,
         },
       },
@@ -68,14 +62,7 @@ async function handle(req, res, prisma, user) {
         modified_date: "desc",
       },
       where: {
-        OR: [
-          {
-            AND: filteredStatement1,
-          },
-          {
-            AND: filteredStatement2,
-          },
-        ],
+        OR: [{ AND: filteredStatement1 }, { AND: filteredStatement2 }],
       },
       include: {
         goal: {

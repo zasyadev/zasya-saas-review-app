@@ -59,7 +59,7 @@ async function handle(req, res) {
               header: `Hey ${user.assignee?.first_name ?? "mate"}`,
               subText: "Your Goal DeadLine is Coming.",
               link: `${process.env.NEXT_APP_URL}goals`,
-              btnText: "Goals ",
+              btnText: "Goals",
             });
 
             SlackPostMessage({

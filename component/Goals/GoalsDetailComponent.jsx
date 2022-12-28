@@ -7,7 +7,7 @@ import NoRecordFound from "../common/NoRecordFound";
 import moment from "moment";
 import DefaultImages from "../common/DefaultImages";
 
-function GoalsDetailComponent({ setTitle, isArchived = false }) {
+function GoalsDetailComponent({ isArchived = false }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [goalData, setGoalData] = useState({});
@@ -20,7 +20,6 @@ function GoalsDetailComponent({ setTitle, isArchived = false }) {
         if (response.status === 200) {
           if (response.data) {
             setGoalData(response.data);
-            setTitle(response.data.goal_title ?? "");
           }
         }
 

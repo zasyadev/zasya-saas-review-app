@@ -5,6 +5,7 @@ import httpService from "../../lib/httpService";
 import { PrimaryButton } from "../common/CustomButton";
 import CustomSelectBox from "../common/CustomSelectBox";
 import GoalsGroupList from "./component/GoalsGroupList";
+import GoalInfoCard from "./component/GoalsGroupList/components/GoalInfoCard";
 import { goalsFilterList, groupItems } from "./constants";
 
 function GoalsList({ user, isArchived = false }) {
@@ -80,24 +81,46 @@ function GoalsList({ user, isArchived = false }) {
           />
         </div>
       )}
+
       {loading ? (
         <div className="p-4">
           <Skeleton title={false} active={true} />
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          {groupItems.map((groupItem) => (
-            <GoalsGroupList
-              goalsList={goalsList}
-              userId={user.id}
-              fetchGoalList={isArchived ? fetchArchivedGoalList : fetchGoalList}
-              title={groupItem.title}
-              key={groupItem.type}
-              type={groupItem.type}
-              isArchived={isArchived}
-            />
-          ))}
-        </div>
+        <>
+          {!isArchived && (
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+              {goalsList.map((item, idx) => {
+                if (idx < 4) {
+                  return (
+                    <GoalInfoCard
+                      item={item}
+                      key={"goal" + item.id}
+                      isArchived={isArchived}
+                      userId={user.id}
+                      fetchGoalList={fetchGoalList}
+                    />
+                  );
+                }
+              })}
+            </div>
+          )}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            {groupItems.map((groupItem) => (
+              <GoalsGroupList
+                goalsList={goalsList}
+                userId={user.id}
+                fetchGoalList={
+                  isArchived ? fetchArchivedGoalList : fetchGoalList
+                }
+                title={groupItem.title}
+                key={groupItem.type}
+                type={groupItem.type}
+                isArchived={isArchived}
+              />
+            ))}
+          </div>
+        </>
       )}
     </div>
   );
