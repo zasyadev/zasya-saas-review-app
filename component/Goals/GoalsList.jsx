@@ -1,6 +1,5 @@
-import { Skeleton } from "antd";
-import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import httpService from "../../lib/httpService";
 import { PrimaryButton } from "../common/CustomButton";
 import CustomSelectBox from "../common/CustomSelectBox";
@@ -69,7 +68,6 @@ function GoalsList({ user, isArchived = false }) {
           <CustomSelectBox
             className={" w-36 text-sm"}
             arrayList={goalsFilterList}
-            valueInLabel
             handleOnChange={(selectedKey) => handleToggle(selectedKey)}
             defaultValue={"All"}
           />

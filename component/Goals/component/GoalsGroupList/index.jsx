@@ -156,7 +156,7 @@ const GoalsGroupList = ({
                           )}
 
                           <Menu.Item
-                            className="text-gray-400 font-semibold"
+                            className="text-gray-600 font-semibold"
                             key={"call-Archived"}
                             onClick={() =>
                               goalEditHandle({

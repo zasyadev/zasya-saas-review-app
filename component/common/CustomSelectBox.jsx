@@ -21,6 +21,7 @@ export default function CustomSelectBox({
         <Select.Option
           value={valueInLabel ? item.label : item.value}
           key={valueInLabel ? item.label : item.value + idx}
+          className="font-medium"
         >
           {item.label}
         </Select.Option>
