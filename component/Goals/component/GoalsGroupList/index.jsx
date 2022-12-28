@@ -58,7 +58,7 @@ const GoalsGroupList = ({
         ? goalsList.filter((item) => item?.goal?.frequency === type)
         : [],
 
-    [goalsList?.length]
+    [goalsList, type]
   );
 
   const goalsProgressPercent = useMemo(() => {
@@ -70,7 +70,7 @@ const GoalsGroupList = ({
       Number(pendingGoals?.length / filteredGoalList?.length) * 100
     );
     return percent;
-  }, [goalsList?.length]);
+  }, [filteredGoalList]);
 
   const ShowAssigneeModal = ({ goal_title, GoalAssignee }) => {
     setGoalAssigneeModalData({

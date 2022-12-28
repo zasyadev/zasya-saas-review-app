@@ -37,6 +37,7 @@
     "react-drag-listview": "^0.2.1",
     "react-resizable": "^3.0.4",
     "sass": "^1.55.0",
+    "tailwind-merge": "^1.8.1",
     "xlsx": "^0.18.5",
     "yup": "^0.32.11"
   },

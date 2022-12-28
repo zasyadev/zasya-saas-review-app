@@ -5,6 +5,7 @@ import httpService from "../../lib/httpService";
 import { PrimaryButton } from "../common/CustomButton";
 import CustomSelectBox from "../common/CustomSelectBox";
 import GoalsGroupList from "./component/GoalsGroupList";
+import GoalsGroupListSkeleton from "./component/GoalsGroupListSkeleton";
 import { goalsFilterList, groupItems } from "./constants";
 
 function GoalsList({ user, isArchived = false }) {
@@ -51,7 +52,7 @@ function GoalsList({ user, isArchived = false }) {
     } else {
       fetchGoalList("All");
     }
-  }, []);
+  }, [isArchived]);
 
   const handleToggle = (value) => {
     if (value === "Archived") {
@@ -80,25 +81,29 @@ function GoalsList({ user, isArchived = false }) {
           />
         </div>
       )}
-      {loading ? (
-        <div className="p-4">
-          <Skeleton title={false} active={true} />
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          {groupItems.map((groupItem) => (
-            <GoalsGroupList
-              goalsList={goalsList}
-              userId={user.id}
-              fetchGoalList={isArchived ? fetchArchivedGoalList : fetchGoalList}
-              title={groupItem.title}
-              key={groupItem.type}
-              type={groupItem.type}
-              isArchived={isArchived}
-            />
-          ))}
-        </div>
-      )}
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 2xl:grid-cols-4 gap-4">
+        {loading
+          ? groupItems.map((groupItem) => (
+              <GoalsGroupListSkeleton
+                title={groupItem.title}
+                key={groupItem.type + "skeleton"}
+              />
+            ))
+          : groupItems.map((groupItem) => (
+              <GoalsGroupList
+                goalsList={goalsList}
+                userId={user.id}
+                fetchGoalList={
+                  isArchived ? fetchArchivedGoalList : fetchGoalList
+                }
+                title={groupItem.title}
+                key={groupItem.type}
+                type={groupItem.type}
+                isArchived={isArchived}
+              />
+            ))}
+      </div>
     </div>
   );
 }
