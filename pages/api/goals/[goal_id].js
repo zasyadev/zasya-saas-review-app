@@ -27,11 +27,6 @@ async function handle(req, res, prisma, user) {
           },
         },
         GoalAssignee: {
-          where: {
-            NOT: {
-              assignee_id: userId,
-            },
-          },
           include: {
             assignee: {
               select: {
@@ -41,6 +36,11 @@ async function handle(req, res, prisma, user) {
                 },
               },
             },
+          },
+        },
+        created: {
+          select: {
+            first_name: true,
           },
         },
       },

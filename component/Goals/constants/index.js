@@ -17,13 +17,13 @@ export const groupItems = [
   },
 ];
 export const goalsFilterList = [
-  { label: "All" },
-  { label: "OnTrack" },
-  { label: "Completed" },
-  { label: "Delayed" },
-  { label: "AtRisk" },
-  { label: "Abandoned" },
-  { label: "Archived" },
+  { value: "All", label: "All" },
+  { value: "OnTrack", label: "On Track" },
+  { value: "Completed", label: "Completed" },
+  { value: "Delayed", label: "Delayed" },
+  { value: "AtRisk", label: "At Risk" },
+  { value: "Abandoned", label: "Abandoned" },
+  { value: "Archived", label: "Archived" },
 ];
 
 export const statusPill = (key) => {

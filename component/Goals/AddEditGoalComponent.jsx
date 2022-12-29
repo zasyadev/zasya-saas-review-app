@@ -2,11 +2,11 @@ import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { Form, Select } from "antd";
 import moment from "moment";
 import { useRouter } from "next/router";
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { DEFAULT_DATE_FORMAT } from "../../helpers/dateHelper";
 import { maxLengthValidator } from "../../helpers/formValidations";
 import httpService from "../../lib/httpService";
-import { PrimaryButton } from "../common/CustomButton";
+import { ButtonGray, PrimaryButton } from "../common/CustomButton";
 import { CustomInput, CustomTextArea } from "../common/CustomFormFeilds";
 import { openNotificationBox } from "../common/notification";
 import { PulseLoader } from "../Loader/LoadingSpinner";
@@ -229,11 +229,11 @@ function AddEditGoalComponent({ user, editMode = false }) {
               ))}
               {fields.length < 5 && !editMode && (
                 <div className="text-right">
-                  <PrimaryButton
+                  <ButtonGray
                     onClick={() => add()}
-                    className="mr-2 lg:mx-4 my-1"
+                    className="text-xs"
                     title={
-                      <p className="mb-0 flex items-center gap-2">
+                      <p className="mb-0 flex items-center gap-2 font-semibold">
                         <PlusOutlined /> Add More
                       </p>
                     }

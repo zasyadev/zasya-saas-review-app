@@ -5,13 +5,12 @@ import AdminLayout from "../../../component/layout/AdminLayout";
 import WithMe from "../../../component/layout/WithMe";
 
 function GoalsArchivedPage() {
-  const [title, setTitle] = useState("");
   return (
     <SuspenceWrapper>
       <WithMe>
         {({ user }) => (
-          <AdminLayout user={user} title={``}>
-            <GoalsDetailComponent setTitle={setTitle} isArchived />
+          <AdminLayout user={user} isBack>
+            <GoalsDetailComponent isArchived />
           </AdminLayout>
         )}
       </WithMe>

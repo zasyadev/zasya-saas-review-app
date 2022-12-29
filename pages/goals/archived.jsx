@@ -7,7 +7,7 @@ function GoalsArchivedListPage() {
   return (
     <WithMe>
       {({ user }) => (
-        <AdminLayout user={user} title={"Goals"}>
+        <AdminLayout user={user} title={"Goals"} isBack>
           <GoalsList user={user} isArchived />
         </AdminLayout>
       )}

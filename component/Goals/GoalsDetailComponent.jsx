@@ -7,7 +7,7 @@ import NoRecordFound from "../common/NoRecordFound";
 import moment from "moment";
 import DefaultImages from "../common/DefaultImages";
 
-function GoalsDetailComponent({ setTitle, isArchived = false }) {
+function GoalsDetailComponent({ isArchived = false }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [goalData, setGoalData] = useState({});
@@ -20,7 +20,6 @@ function GoalsDetailComponent({ setTitle, isArchived = false }) {
         if (response.status === 200) {
           if (response.data) {
             setGoalData(response.data);
-            setTitle(response.data.goal_title ?? "");
           }
         }
 
@@ -49,9 +48,14 @@ function GoalsDetailComponent({ setTitle, isArchived = false }) {
           <p className=" text-primary font-medium text-sm md:text-base ">
             {goalData?.goal_description}
           </p>
-          <p className=" text-primary font-semibold text-sm md:text-base capitalize">
-            Goal Scope : {goalData?.frequency}
-          </p>
+          <div className="flex justify-between">
+            <p className=" text-primary font-semibold text-sm md:text-base capitalize">
+              Goal Scope : {goalData?.frequency}
+            </p>
+            <p className=" text-primary font-semibold text-sm md:text-base capitalize">
+              Goal Owner : {goalData?.created?.first_name}
+            </p>
+          </div>
         </div>
         {isArchived && (
           <div className="border border-gray-200 bg-gray-100 absolute top-0 left-4 px-3 py-1 border-t-0 rounded-b-md">
@@ -59,13 +63,15 @@ function GoalsDetailComponent({ setTitle, isArchived = false }) {
           </div>
         )}
       </div>
-      {goalData && goalData?.GoalAssignee?.length > 0 && (
+      {goalData && goalData?.GoalAssignee?.length > 1 && (
         <>
           <p className=" text-primary font-bold text-lg md:text-xl mb-0">
             Assignees
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-white rounded-md  shadow-md ">
-            {goalData?.GoalAssignee?.map((item) => (
+            {goalData?.GoalAssignee?.filter(
+              (item) => item.assignee_id !== goalData?.created_by
+            )?.map((item) => (
               <div
                 key={item.id}
                 className="overflow-hidden p-4 flex gap-4 shrink-0 items-center"
