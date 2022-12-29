@@ -8,10 +8,10 @@ const GoalsGroupListSkeleton = ({ title }) => {
         <p className="mb-2">{title}</p>
       </div>
       <div className="divide-y space-y-3 max-h-screen overflow-y-auto custom-scrollbar px-2">
-        {[...Array(3)].map((item, index) => (
+        {[...Array(3)].map((_, index) => (
           <div
             className="py-4 bg-gray-50 border border-gray-100 shadow-sm rounded-md "
-            key={item + index}
+            key={index + "skkey"}
           >
             <div className=" px-4 space-y-3">
               <div className="flex items-center justify-between">

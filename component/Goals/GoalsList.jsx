@@ -123,7 +123,6 @@ function GoalsList({ user, isArchived = false }) {
             handleOnChange={(selectedKey) => handleToggle(selectedKey)}
             defaultValue={"All"}
           />
-
           <PrimaryButton
             withLink={true}
             linkHref={`/goals/add`}
@@ -132,7 +131,7 @@ function GoalsList({ user, isArchived = false }) {
         </div>
       )}
       {!loading && !isArchived && Number(sortListByEndDate?.length) > 0 && (
-        <div className="gap-4 mb-4">
+        <div className="gap-4 mb-4 bg-white">
           <GoalsCustomTable
             sortListByEndDate={sortListByEndDate}
             setEditGoalModalVisible={setEditGoalModalVisible}
