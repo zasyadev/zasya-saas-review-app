@@ -158,12 +158,28 @@ async function handle(req, res, prisma, user) {
                 },
               });
 
+              let notificationMessage = {
+                message: `${createdBy} has assigned you a Goal.`,
+                link: `${process.env.NEXT_APP_URL}goals`,
+              };
+
+              await prisma.userNotification.create({
+                data: {
+                  user: { connect: { id: assignee } },
+                  data: notificationMessage,
+                  read_at: null,
+                  organization: {
+                    connect: { id: organization_id },
+                  },
+                },
+              });
+
               if (
                 assignedUser?.UserDetails &&
                 assignedUser?.UserDetails?.notification &&
                 assignedUser?.UserDetails?.notification?.length &&
                 assignedUser?.UserDetails?.notification.includes("slack") &&
-                assignedUser.UserDetails.slack_id
+                assignedUser?.UserDetails?.slack_id
               ) {
                 let customText = CustomizeSlackMessage({
                   header: "New Goal Recieved",
