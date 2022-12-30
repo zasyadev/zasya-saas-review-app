@@ -44,6 +44,7 @@ model User {
   GoalsTimeline         GoalsTimeline[]
   UserTeams             UserTeams[]
   GoalAssignee          GoalAssignee[]
+  UserTeamsGroups       UserTeamsGroups[]
 
   @@map("users")
 }
@@ -57,6 +58,7 @@ model Role {
   Review                  Review[]
   UserOraganizationGroups UserOraganizationGroups[]
   Survey                  Survey[]
+  UserTeamsGroups         UserTeamsGroups[]
 
   @@map("users_role")
 }
@@ -461,6 +463,7 @@ model UserTeams {
   organization_id Int
   created_date    DateTime          @default(now())
   modified_date   DateTime          @default(now())
+  UserTeamsGroups UserTeamsGroups[]
 
   @@map("user_teams")
 }
@@ -476,6 +479,19 @@ model GoalAssignee {
   modified_date DateTime       @default(now())
 
   @@map("goal_assignee")
+}
+
+model UserTeamsGroups {
+  id        Int       @id @default(autoincrement())
+  member    User      @relation(fields: [member_id], references: [id])
+  member_id String
+  team      UserTeams @relation(fields: [team_id], references: [id], onDelete: Cascade)
+  team_id   Int
+  role      Role      @relation(fields: [role_id], references: [id])
+  role_id   Int
+  isManager Boolean   @default(false)
+
+  @@map("user_teams_groups")
 }
 
 enum RoleEnum {

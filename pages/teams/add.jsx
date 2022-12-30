@@ -5,7 +5,7 @@ import AdminLayout from "../../component/layout/AdminLayout";
 import WithMe from "../../component/layout/WithMe";
 
 const AddUpdateTeamMember = dynamic(
-  () => import("../../component/Team/AddUpdateTeamMember"),
+  () => import("../../component/Teams/AddUpdateTeamMember"),
   {
     suspense: true,
   }
@@ -17,7 +17,7 @@ function AddTeam() {
       <WithMe>
         {({ user }) => (
           <AdminLayout user={user} title="Create Team">
-            <AddUpdateTeamMember user={user} />
+            <AddUpdateTeamMember />
           </AdminLayout>
         )}
       </WithMe>

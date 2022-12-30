@@ -1,3 +1,4 @@
+import { USER_SELECT_FEILDS } from "../../../constants";
 import { RequestHandler } from "../../../lib/RequestHandler";
 
 async function handle(req, res, prisma, user) {
@@ -14,6 +15,13 @@ async function handle(req, res, prisma, user) {
       where: {
         AND: [{ user_id: userId }, { organization_id: organization_id }],
       },
+      include: {
+        UserTeamsGroups: {
+          include: {
+            member: USER_SELECT_FEILDS,
+          },
+        },
+      },
     });
 
     if (data) {
@@ -29,17 +37,39 @@ async function handle(req, res, prisma, user) {
 
     let transactionData = {};
     transactionData = await prisma.$transaction(async (transaction) => {
+      let teamGroups = [];
+
+      teamGroups = reqBody.members.map((member) => {
+        return {
+          member: { connect: { id: member } },
+          role: { connect: { id: 4 } },
+          isManager: false,
+        };
+      });
+
+      let managerData = {
+        member: { connect: { id: reqBody.manager } },
+        role: { connect: { id: 3 } },
+        isManager: true,
+      };
+      teamGroups.push(managerData);
+
       const formdata = await transaction.userTeams.create({
         data: {
-          created: { connect: { id: userId } },
-          goal_title: reqBody.goal_title,
-          goal_description: reqBody.goal_description,
-          goal_type: reqBody.goal_type,
-          status: reqBody.status,
-          progress: reqBody.progress ?? 0,
-          start_date: reqBody.start_date ?? new Date(),
-          end_date: reqBody.end_date,
-          organization: { connect: { id: organization_id } },
+          user: {
+            connect: {
+              id: userId,
+            },
+          },
+          organization: {
+            connect: {
+              id: organization_id,
+            },
+          },
+          team_name: reqBody.name,
+          UserTeamsGroups: {
+            create: teamGroups,
+          },
         },
       });
 
@@ -50,7 +80,7 @@ async function handle(req, res, prisma, user) {
       return res.status(200).json({
         status: 200,
         data: transactionData.formdata,
-        message: "Teams Details Saved Successfully ",
+        message: "Team Created  Successfully ",
       });
     }
     return res.status(404).json({ status: 404, message: "No Record Found" });
@@ -58,31 +88,54 @@ async function handle(req, res, prisma, user) {
     const reqBody = req.body;
 
     let transactionData = {};
-    transactionData = await prisma.$transaction(async (transaction) => {
-      await transaction.goalsTimeline.create({
-        data: {
-          user: { connect: { id: userId } },
-          userTeams: { connect: { id: reqBody.id } },
-          status: reqBody.status,
-          comment: reqBody?.comment ?? "",
-        },
+    if (reqBody.id) {
+      transactionData = await prisma.$transaction(async (transaction) => {
+        await transaction.userTeams.delete({
+          where: {
+            id: reqBody.id,
+          },
+        });
+
+        let teamGroups = [];
+        teamGroups = reqBody.members.map((member) => {
+          return {
+            member: { connect: { id: member } },
+            role: { connect: { id: 4 } },
+            isManager: false,
+          };
+        });
+
+        let managerData = {
+          member: { connect: { id: reqBody.manager } },
+          role: { connect: { id: 3 } },
+          isManager: true,
+        };
+        teamGroups.push(managerData);
+
+        const formdata = await transaction.userTeams.create({
+          data: {
+            user: {
+              connect: {
+                id: userId,
+              },
+            },
+            organization: {
+              connect: {
+                id: organization_id,
+              },
+            },
+            team_name: reqBody.name,
+            UserTeamsGroups: {
+              create: teamGroups,
+            },
+          },
+        });
+
+        return { formdata };
       });
-
-      const formdata = await transaction.userTeams.update({
-        where: {
-          id: reqBody.id,
-        },
-        data: {
-          goal_title: reqBody.goal_title,
-          goal_description: reqBody.goal_description,
-          goal_type: reqBody.goal_type,
-
-          end_date: reqBody.end_date,
-        },
-      });
-
-      return { formdata };
-    });
+    } else {
+      return res.status(404).json({ status: 404, message: "No Record Found" });
+    }
 
     if (transactionData && transactionData.formdata) {
       return res.status(200).json({
@@ -91,7 +144,6 @@ async function handle(req, res, prisma, user) {
         message: "Teams Details Updated",
       });
     }
-    return res.status(404).json({ status: 404, message: "No Record Found" });
   }
 }
 const functionHandle = (req, res) =>
