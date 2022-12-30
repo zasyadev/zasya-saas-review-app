@@ -9,7 +9,12 @@ import Link from "next/link";
 import React from "react";
 import { ButtonGray } from "../../common/CustomButton";
 import CustomTable from "../../common/CustomTable";
-import { statusPill } from "../constants";
+import {
+  INDIVIDUAL_TYPE,
+  ORGANIZATION_TYPE,
+  SELF_TYPE,
+  statusPill,
+} from "../constants";
 import DateInfoCard from "./GoalsGroupList/components/DateInfoCard";
 
 function GoalsCustomTable({
@@ -43,14 +48,14 @@ function GoalsCustomTable({
             overlayClassName="text-xs"
             title={record.goal.goal_type}
           >
-            {record.goal.goal_type === "Individual" && (
+            {record.goal.goal_type === INDIVIDUAL_TYPE && (
               <TeamOutlined className="text-base leading-0" />
             )}
-            {record.goal.goal_type === "Self" && (
+            {record.goal.goal_type === SELF_TYPE && (
               <UserOutlined className="text-base leading-0" />
             )}
 
-            {record.goal.goal_type === "Organization" && (
+            {record.goal.goal_type === ORGANIZATION_TYPE && (
               <BankOutlined className="text-base leading-0" />
             )}
           </Tooltip>

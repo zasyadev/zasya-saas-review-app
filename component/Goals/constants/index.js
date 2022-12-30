@@ -1,3 +1,13 @@
+export const ORGANIZATION_TYPE = "Organization";
+export const SELF_TYPE = "Self";
+export const INDIVIDUAL_TYPE = "Individual";
+
+export const ONTRACK_STATUS = "OnTrack";
+export const COMPLETED_STATUS = "Completed";
+export const DELAYED_STATUS = "Delayed";
+export const ABANDONED_STATUS = "Abandoned";
+export const ATRISK_STATUS = "AtRisk";
+
 export const groupItems = [
   {
     title: "Daily",

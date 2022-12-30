@@ -70,7 +70,7 @@ function GoalsDetailComponent({ isArchived = false }) {
           </div>
           <div className="space-y-1">
             <p className=" text-primary font-semibold text-base md:text-lg mb-0 mt-6">
-              TimeLine
+              Timeline
             </p>
             <Timeline className="p-4 py-6 lg:w-11/12">
               {goalData?.GoalsTimeline?.length > 0 ? (
@@ -94,11 +94,14 @@ function GoalsDetailComponent({ isArchived = false }) {
                         updated the goal status to {item.status}.
                       </p>
                     </div>
-                    <div className="border border-gray-300 rounded-md px-4 py-3 mt-2">
-                      <p className=" mb-0 text-sm md:text-base">
-                        {item.comment}
-                      </p>
-                    </div>
+                    {item?.comment && (
+                      <div className="border border-gray-300 rounded-md px-4 py-3 mt-2">
+                        <p className=" mb-0 text-sm md:text-base">
+                          {item.comment}
+                        </p>
+                      </div>
+                    )}
+
                     {item.created_date && (
                       <p className="mt-2 mb-0  text-gray-400  text-xs leading-6 ">
                         {moment(item.created_date).fromNow()}
