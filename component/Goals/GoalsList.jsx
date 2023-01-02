@@ -117,7 +117,6 @@ function GoalsList({ user, isArchived = false }) {
       const searchTextFilteredRes = goalsList.filter((item) =>
         item.goal.goal_title.toLowerCase().includes(searchText)
       );
-      console.log({ filterByMembersId });
       if (filterByMembersId.length > 0) {
         return searchTextFilteredRes.filter((item) =>
           Boolean(

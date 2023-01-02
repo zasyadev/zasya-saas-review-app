@@ -146,10 +146,13 @@ function AddEditGoalComponent({ user, editMode = false }) {
   const handleGoalType = (val) => {
     if (val === "Individual") {
       setMemberList(true);
+      setTeamListBox(false);
     } else if (val === "Team") {
       setTeamListBox(true);
+      setMemberList(false);
     } else {
       setMemberList(false);
+      setTeamListBox(false);
       form.setFieldsValue({
         goal_assignee: [],
       });
@@ -319,11 +322,14 @@ function AddEditGoalComponent({ user, editMode = false }) {
                   Organization
                 </Select.Option>
               )}
-              <Select.Option value={TEAM_TYPE}>Team</Select.Option>
+
               {(user.role_id === 2 || user.role_id === 3) && (
-                <Select.Option value={INDIVIDUAL_TYPE}>
-                  Individual
-                </Select.Option>
+                <>
+                  <Select.Option value={INDIVIDUAL_TYPE}>
+                    Individual
+                  </Select.Option>
+                  <Select.Option value={TEAM_TYPE}>Team</Select.Option>
+                </>
               )}
               <Select.Option value={SELF_TYPE}>Self</Select.Option>
             </Select>

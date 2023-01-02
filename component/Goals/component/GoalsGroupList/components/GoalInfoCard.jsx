@@ -14,6 +14,7 @@ import {
   ORGANIZATION_TYPE,
   SELF_TYPE,
   statusPill,
+  TEAM_TYPE,
 } from "../../../constants";
 import { getAssigneeName } from "../../../helper";
 import DateInfoCard from "./DateInfoCard";
@@ -117,6 +118,9 @@ function GoalInfoCard({
               title={item.goal.goal_type}
             >
               {item.goal.goal_type === INDIVIDUAL_TYPE && (
+                <TeamOutlined className="text-base leading-0" />
+              )}
+              {item.goal.goal_type === TEAM_TYPE && (
                 <TeamOutlined className="text-base leading-0" />
               )}
               {item.goal.goal_type === SELF_TYPE && (

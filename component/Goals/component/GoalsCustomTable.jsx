@@ -59,7 +59,7 @@ function GoalsCustomTable({
               <UserOutlined className="text-base leading-0" />
             )}
             {record.goal.goal_type === TEAM_TYPE && (
-              <UserOutlined className="text-base leading-0" />
+              <TeamOutlined className="text-base leading-0" />
             )}
 
             {record.goal.goal_type === ORGANIZATION_TYPE && (
