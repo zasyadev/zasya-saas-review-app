@@ -157,7 +157,7 @@ function GoalsDetailComponent({ isArchived = false }) {
               </p>
             </div>
 
-            {goalData && Number(goalData?.GoalAssignee?.length) > 0 && (
+            {goalData && Number(goalData?.GoalAssignee?.length) > 1 && (
               <div className="space-y-1">
                 <p className=" text-primary font-semibold text-base mb-0">
                   Assignees

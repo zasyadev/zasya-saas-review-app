@@ -123,7 +123,10 @@ async function handle(req, res, prisma, user) {
             organization: { connect: { id: organization_id } },
           };
 
-          if (reqBody.goal_type === "Individual") {
+          if (
+            reqBody.goal_type === "Individual" ||
+            reqBody.goal_type === "Team"
+          ) {
             let assigneeData = reqBody.goal_assignee.map((assignee) => {
               return {
                 assignee: { connect: { id: assignee } },
@@ -201,7 +204,6 @@ async function handle(req, res, prisma, user) {
         if (reqData && reqData.length > 0) {
           return res.status(200).json({
             status: 200,
-            data: reqData,
             message: "Goals Details Saved Successfully ",
           });
         }

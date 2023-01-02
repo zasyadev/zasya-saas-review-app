@@ -16,6 +16,7 @@ import {
   ONTRACK_STATUS,
   ORGANIZATION_TYPE,
   SELF_TYPE,
+  TEAM_TYPE,
 } from "./constants";
 
 function AddEditGoalComponent({ user, editMode = false }) {
@@ -24,10 +25,27 @@ function AddEditGoalComponent({ user, editMode = false }) {
   const [loading, setLoading] = useState(false);
   const [memberList, setMemberList] = useState(false);
   const [userList, setUserList] = useState([]);
-
+  const [teamListBox, setTeamListBox] = useState(false);
+  const [teamList, setTeamList] = useState([]);
+  const [assigneeList, setAssigneeList] = useState([]);
   const [form] = Form.useForm();
 
   const onFinish = (values) => {
+    if (values.goal_type === TEAM_TYPE && teamList.length > 0) {
+      let teamMembers = [];
+      if (editMode && assigneeList.length > 0) {
+        teamMembers = assigneeList.map((member) => {
+          return member.assignee_id;
+        });
+      } else {
+        teamMembers = teamList
+          .find((item) => item.id === values.goal_assignee)
+          .UserTeamsGroups.map((member) => {
+            return member.member_id;
+          });
+      }
+      values.goal_assignee = teamMembers;
+    }
     let data = {
       goals_headers: values.goals_headers,
       goal_type: values.goal_type,
@@ -103,6 +121,11 @@ function AddEditGoalComponent({ user, editMode = false }) {
                 DEFAULT_DATE_FORMAT
               ),
             });
+            setAssigneeList(
+              response.data?.GoalAssignee?.length > 0
+                ? response.data.GoalAssignee
+                : []
+            );
           }
           setLoading(false);
         })
@@ -117,11 +140,14 @@ function AddEditGoalComponent({ user, editMode = false }) {
       fetchGoalData();
     }
     fetchUserData();
+    fetchTeamData();
   }, [editMode]);
 
   const handleGoalType = (val) => {
     if (val === "Individual") {
       setMemberList(true);
+    } else if (val === "Team") {
+      setTeamListBox(true);
     } else {
       setMemberList(false);
       form.setFieldsValue({
@@ -144,6 +170,21 @@ function AddEditGoalComponent({ user, editMode = false }) {
       })
       .catch((err) => {
         setUserList([]);
+        console.error(err.response.data?.message);
+      });
+  }
+
+  async function fetchTeamData() {
+    setTeamList([]);
+    await httpService
+      .get(`/api/teams`)
+      .then(({ data: response }) => {
+        if (response.status === 200) {
+          setTeamList(response.data);
+        }
+      })
+      .catch((err) => {
+        setTeamList([]);
         console.error(err.response.data?.message);
       });
   }
@@ -254,7 +295,7 @@ function AddEditGoalComponent({ user, editMode = false }) {
       <div className="w-full bg-white rounded-md  shadow-md p-5 mt-2 md:px-8">
         <div
           className={`grid grid-cols-1 md:grid-cols-${
-            memberList ? "3" : "2"
+            memberList || teamListBox ? "3" : "2"
           } gap-4`}
         >
           <Form.Item
@@ -278,7 +319,7 @@ function AddEditGoalComponent({ user, editMode = false }) {
                   Organization
                 </Select.Option>
               )}
-              {/* <Select.Option value="Team">Team</Select.Option> */}
+              <Select.Option value={TEAM_TYPE}>Team</Select.Option>
               {(user.role_id === 2 || user.role_id === 3) && (
                 <Select.Option value={INDIVIDUAL_TYPE}>
                   Individual
@@ -328,6 +369,39 @@ function AddEditGoalComponent({ user, editMode = false }) {
                     ))}
                   </>
                 )}
+              </Select>
+            </Form.Item>
+          )}
+
+          {teamListBox && (
+            <Form.Item
+              name="goal_assignee"
+              label="Team"
+              rules={[
+                {
+                  required: true,
+                  message: "Please select your Team",
+                },
+              ]}
+            >
+              <Select
+                placeholder="Select Team"
+                showSearch
+                filterOption={(input, option) =>
+                  option.children.toLowerCase().indexOf(input.toLowerCase()) >=
+                  0
+                }
+                size="large"
+                className="w-full"
+                maxTagCount="responsive"
+                disabled={editMode}
+              >
+                {teamList.length > 0 &&
+                  teamList.map((data, index) => (
+                    <Select.Option key={index + "teams"} value={data?.id}>
+                      {data?.team_name}
+                    </Select.Option>
+                  ))}
               </Select>
             </Form.Item>
           )}

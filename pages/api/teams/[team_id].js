@@ -4,12 +4,18 @@ import { RequestHandler } from "../../../lib/RequestHandler";
 async function handle(req, res, prisma, user) {
   const { id: userId } = user;
   const { team_id } = req.query;
+  const teamId = Number(team_id);
   if (!userId) {
     return res.status(401).json({ status: 401, message: "No User found" });
   }
+
+  if (!teamId) {
+    return res.status(401).json({ status: 401, message: "No Team found" });
+  }
+
   if (req.method === "GET") {
     const data = await prisma.userTeams.findUnique({
-      where: { id: Number(team_id) },
+      where: { id: teamId },
       include: {
         UserTeamsGroups: {
           include: {
@@ -30,7 +36,7 @@ async function handle(req, res, prisma, user) {
   } else if (req.method === "DELETE") {
     const data = await prisma.userTeams.delete({
       where: {
-        id: Number(team_id),
+        id: teamId,
       },
     });
 

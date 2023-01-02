@@ -17,6 +17,7 @@ import {
   groupItems,
   ONTRACK_STATUS,
 } from "./constants";
+import GoalAssignessModal from "./GoalAssignessModal";
 
 const initialModalVisible = {
   visible: false,
@@ -26,6 +27,12 @@ const initialModalVisible = {
   goal_id: "",
 };
 
+const initialGoalCountModalData = {
+  goal_title: "",
+  GoalAssignee: [],
+  isVisible: false,
+};
+
 function GoalsList({ user, isArchived = false }) {
   const router = useRouter();
   const [updateGoalForm] = Form.useForm();
@@ -33,6 +40,10 @@ function GoalsList({ user, isArchived = false }) {
   const [goalsList, setGoalsList] = useState([]);
   const [editGoalModalVisible, setEditGoalModalVisible] =
     useState(initialModalVisible);
+
+  const [goalAssigneeModalData, setGoalAssigneeModalData] = useState(
+    initialGoalCountModalData
+  );
 
   async function fetchGoalList(status) {
     setLoading(true);
@@ -120,6 +131,18 @@ function GoalsList({ user, isArchived = false }) {
       });
   };
 
+  const ShowAssigneeModal = ({ goal_title, GoalAssignee }) => {
+    setGoalAssigneeModalData({
+      goal_title,
+      GoalAssignee,
+      isVisible: true,
+    });
+  };
+
+  const hideAssigneeModal = () => {
+    setGoalAssigneeModalData(initialGoalCountModalData);
+  };
+
   return (
     <div className="container mx-auto max-w-full">
       {!isArchived && (
@@ -146,6 +169,7 @@ function GoalsList({ user, isArchived = false }) {
             goalEditHandle={goalEditHandle}
             userId={user.id}
             isArchived={isArchived}
+            ShowAssigneeModal={ShowAssigneeModal}
           />
         </div>
       )}
@@ -172,6 +196,7 @@ function GoalsList({ user, isArchived = false }) {
                 goalEditHandle={goalEditHandle}
                 updateGoalForm={updateGoalForm}
                 setEditGoalModalVisible={setEditGoalModalVisible}
+                ShowAssigneeModal={ShowAssigneeModal}
               />
             ))}
       </div>
@@ -235,6 +260,14 @@ function GoalsList({ user, isArchived = false }) {
           </Form>
         </div>
       </CustomModal>
+
+      {goalAssigneeModalData?.isVisible && (
+        <GoalAssignessModal
+          goalAssigneeModalData={goalAssigneeModalData}
+          hideAssigneeModal={hideAssigneeModal}
+          userId={user.id}
+        />
+      )}
     </div>
   );
 }

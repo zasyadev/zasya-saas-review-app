@@ -6,6 +6,7 @@ import httpService from "../../lib/httpService";
 import { PrimaryButton, SecondaryButton } from "../common/CustomButton";
 import { openNotificationBox } from "../common/notification";
 import { PulseLoader } from "../Loader/LoadingSpinner";
+import NoRecordFound from "../common/NoRecordFound";
 
 function AddUpdateTeamMember({ editMode = false, team_id }) {
   const router = useRouter();
@@ -79,6 +80,7 @@ function AddUpdateTeamMember({ editMode = false, team_id }) {
         setLoading(false);
       })
       .catch((err) => {
+        setLoading(false);
         openNotificationBox(
           "error",
           err.response.data?.message || "Failed ! Please try again"
@@ -120,6 +122,8 @@ function AddUpdateTeamMember({ editMode = false, team_id }) {
 
   return loading ? (
     <PulseLoader />
+  ) : !selectedManagerId && editMode ? (
+    <NoRecordFound title={"No Team Found"} />
   ) : (
     <div className="w-full  md:w-3/6 mx-auto">
       <div className="w-full bg-white rounded-md shadow-md p-5 mt-4 add-template-wrapper">

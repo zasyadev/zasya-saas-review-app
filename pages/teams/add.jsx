@@ -16,7 +16,7 @@ function AddTeam() {
     <SuspenceWrapper>
       <WithMe>
         {({ user }) => (
-          <AdminLayout user={user} title="Create Team">
+          <AdminLayout user={user} title="Create Team" isBack>
             <AddUpdateTeamMember />
           </AdminLayout>
         )}

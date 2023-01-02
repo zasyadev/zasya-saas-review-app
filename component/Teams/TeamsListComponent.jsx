@@ -76,7 +76,7 @@ function TeamsListComponent({ user }) {
       render: (_, record) =>
         user.role_id === 2 && (
           <p>
-            <Link href={`/teams/edit/${record.id}`} passHref>
+            <Link href={`/teams/${record.id}/edit`} passHref>
               <EditOutlined className="primary-color-blue text-xl mx-1  md:mx-2 cursor-pointer" />
             </Link>
 

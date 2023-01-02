@@ -20,9 +20,9 @@ function EditTeam() {
     <SuspenceWrapper>
       <WithMe>
         {({ user }) => (
-          <AdminLayout user={user} title="">
+          <AdminLayout user={user} isBack>
             {team_id && (
-              <AddUpdateTeamMember team_id={team_id} editMode={true} />
+              <AddUpdateTeamMember team_id={Number(team_id)} editMode={true} />
             )}
           </AdminLayout>
         )}
