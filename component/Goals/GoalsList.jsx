@@ -1,7 +1,7 @@
-import { Form, Input, Select } from "antd";
-import moment from "moment";
-import { useRouter } from "next/router";
 import React, { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/router";
+import moment from "moment";
+import { Form, Input, Select } from "antd";
 import httpService from "../../lib/httpService";
 import { PrimaryButton, SecondaryButton } from "../common/CustomButton";
 import CustomModal from "../common/CustomModal";
@@ -35,6 +35,8 @@ const initialGoalCountModalData = {
 
 function GoalsList({ user, isArchived = false }) {
   const router = useRouter();
+  const [searchText, setSearchText] = useState("");
+  const [filterByMembersId, setFilterByMembersId] = useState([]);
   const [updateGoalForm] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [goalsList, setGoalsList] = useState([]);
@@ -44,6 +46,7 @@ function GoalsList({ user, isArchived = false }) {
   const [goalAssigneeModalData, setGoalAssigneeModalData] = useState(
     initialGoalCountModalData
   );
+  const [userList, setUserList] = useState([]);
 
   async function fetchGoalList(status) {
     setLoading(true);
@@ -78,7 +81,22 @@ function GoalsList({ user, isArchived = false }) {
       });
   }
 
+  async function fetchUserData() {
+    setUserList([]);
+    await httpService
+      .get(`/api/user/organizationId`)
+      .then(({ data: response }) => {
+        if (response.status === 200) {
+          setUserList(response.data);
+        }
+      })
+      .catch(() => {
+        setUserList([]);
+      });
+  }
+
   useEffect(() => {
+    fetchUserData();
     if (isArchived) {
       fetchArchivedGoalList();
     } else {
@@ -94,9 +112,31 @@ function GoalsList({ user, isArchived = false }) {
     }
   };
 
-  const sortListByEndDate = useMemo(() => {
+  const filteredGoalList = useMemo(() => {
     if (Number(goalsList?.length) > 0) {
-      const latestUpcomingGoalsList = goalsList
+      const searchTextFilteredRes = goalsList.filter((item) =>
+        item.goal.goal_title.toLowerCase().includes(searchText)
+      );
+      console.log({ filterByMembersId });
+      if (filterByMembersId.length > 0) {
+        return searchTextFilteredRes.filter((item) =>
+          Boolean(
+            item.goal.GoalAssignee.find((assignee) =>
+              filterByMembersId.includes(assignee.assignee_id)
+            )
+          )
+        );
+      }
+
+      return searchTextFilteredRes;
+    }
+
+    return [];
+  }, [goalsList, searchText, filterByMembersId]);
+
+  const sortListByEndDate = useMemo(() => {
+    if (Number(filteredGoalList?.length) > 0) {
+      const latestUpcomingGoalsList = filteredGoalList
         .filter(
           (item) => moment(item?.goal?.end_date).diff(moment(), "days") >= 0
         )
@@ -108,7 +148,7 @@ function GoalsList({ user, isArchived = false }) {
 
       return latestUpcomingGoalsList.slice(0, 3);
     } else return [];
-  }, [goalsList]);
+  }, [filteredGoalList]);
 
   const goalEditHandle = async ({ goal_id, id, value, type }) => {
     setLoading(true);
@@ -147,12 +187,48 @@ function GoalsList({ user, isArchived = false }) {
     <div className="container mx-auto max-w-full">
       {!isArchived && (
         <div className="flex justify-between items-center  flex-wrap gap-4  mb-4 md:mb-6 ">
-          <CustomSelectBox
-            className={" w-36 text-sm"}
-            arrayList={goalsFilterList}
-            handleOnChange={(selectedKey) => handleToggle(selectedKey)}
-            defaultValue={"All"}
-          />
+          <div className="flex items-center  flex-wrap gap-4 flex-1">
+            <Input
+              size="large"
+              className="rounded-md"
+              placeholder="Search"
+              style={{ maxWidth: 200 }}
+              onChange={(event) => {
+                let value = event.target.value;
+                value = value?.trim() || "";
+                setSearchText(value.toLowerCase());
+              }}
+            />
+            <Select
+              mode="multiple"
+              placeholder="Filter By Members"
+              showSearch
+              filterOption={(input, option) =>
+                option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+              }
+              onChange={(values) => {
+                setFilterByMembersId(values);
+              }}
+              size="large"
+              className="w-full"
+              maxTagCount="responsive"
+              style={{ maxWidth: 250, width: "100%" }}
+            >
+              {userList.length > 0 &&
+                userList.map((data, index) => (
+                  <Select.Option key={index + "users"} value={data?.user?.id}>
+                    {data?.user?.first_name}
+                  </Select.Option>
+                ))}
+            </Select>
+
+            <CustomSelectBox
+              className={" w-36 text-sm"}
+              arrayList={goalsFilterList}
+              handleOnChange={(selectedKey) => handleToggle(selectedKey)}
+              defaultValue={"All"}
+            />
+          </div>
           <PrimaryButton
             withLink={true}
             linkHref={`/goals/add`}
@@ -184,7 +260,7 @@ function GoalsList({ user, isArchived = false }) {
             ))
           : groupItems.map((groupItem) => (
               <GoalsGroupList
-                goalsList={goalsList}
+                goalsList={filteredGoalList}
                 userId={user.id}
                 fetchGoalList={
                   isArchived ? fetchArchivedGoalList : fetchGoalList
