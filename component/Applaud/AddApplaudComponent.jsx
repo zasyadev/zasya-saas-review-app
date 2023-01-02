@@ -24,7 +24,7 @@ function AddApplaud({ user }) {
 
   async function fetchMember(user) {
     await httpService
-      .get(`/api/team/${user.id}`)
+      .get(`/api/members/${user.id}`)
       .then(({ data }) => {
         if (data.status === 200) {
           let filterData = data.data.filter((item) => item.user_id != user.id);

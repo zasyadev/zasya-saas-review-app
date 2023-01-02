@@ -105,8 +105,8 @@ function TeamsListComponent({ user }) {
         <PrimaryButton
           withLink={true}
           className="px-2 md:px-4 "
-          linkHref="/team"
-          title={"Team"}
+          linkHref="/users"
+          title={"Users"}
         />
       </div>
 

@@ -7,7 +7,7 @@ import { maxLengthValidator } from "../../helpers/formValidations";
 import getErrors from "../../helpers/getErrors";
 import httpService from "../../lib/httpService";
 
-function AddUpdateTeamMember({ user, editMode, memberData }) {
+function AddUpdateUsers({ user, editMode, memberData }) {
   const router = useRouter();
   const [form] = Form.useForm();
   const [tagsList, setTagsList] = useState([]);
@@ -17,12 +17,12 @@ function AddUpdateTeamMember({ user, editMode, memberData }) {
   }
   async function addingMember(obj) {
     await httpService
-      .post(`/api/team/members`, obj)
+      .post(`/api/member`, obj)
       .then(({ data: response }) => {
         if (response.status === 200) {
           form.resetFields();
           openNotificationBox("success", response.message, 3);
-          router.push("/team/members");
+          router.push("/users");
         }
       })
       .catch((err) => {
@@ -39,13 +39,13 @@ function AddUpdateTeamMember({ user, editMode, memberData }) {
   async function updatingMember(obj) {
     if (memberData.id) {
       await httpService
-        .put(`/api/team/members`, { id: memberData.id, ...obj })
+        .put(`/api/member`, { id: memberData.id, ...obj })
         .then(({ data: response }) => {
           if (response.status === 200) {
             form.resetFields();
 
             openNotificationBox("success", response.message, 3);
-            router.push("/team/members");
+            router.push("/users");
           } else {
             openNotificationBox("error", response.message, 3);
           }
@@ -59,7 +59,7 @@ function AddUpdateTeamMember({ user, editMode, memberData }) {
   async function fetchTagsData() {
     if (user.id) {
       await httpService
-        .get(`/api/team/tags/${user.id}`)
+        .get(`/api/member/tags/${user.id}`)
         .then(({ data: response }) => {
           if (response.status === 200) {
             setTagsList(response.data);
@@ -202,7 +202,7 @@ function AddUpdateTeamMember({ user, editMode, memberData }) {
             <div className="flex justify-end">
               <SecondaryButton
                 withLink={true}
-                linkHref="/team/members"
+                linkHref="/users"
                 className="mx-4 my-1"
                 title="Cancel"
               />
@@ -219,4 +219,4 @@ function AddUpdateTeamMember({ user, editMode, memberData }) {
   );
 }
 
-export default AddUpdateTeamMember;
+export default AddUpdateUsers;

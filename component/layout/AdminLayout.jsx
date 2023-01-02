@@ -1,11 +1,12 @@
 import {
-  AppstoreOutlined,
+  UserOutlined,
   DashboardOutlined,
   FormOutlined,
   LikeOutlined,
   SettingOutlined,
   FileTextOutlined,
   CrownOutlined,
+  TeamOutlined,
 } from "@ant-design/icons";
 import { Grid, Layout } from "antd";
 import React, { useEffect, useMemo, useState } from "react";
@@ -47,12 +48,9 @@ function AdminLayout({ user, title, isBack = false, children }) {
       "/review/received",
       <FormOutlined className="sidebar-icon " />
     ),
+    getItem("Users", "/users", <UserOutlined className="sidebar-icon " />),
+    getItem("Teams", "/teams", <TeamOutlined className="sidebar-icon " />),
 
-    getItem(
-      "Team",
-      "/team/members",
-      <AppstoreOutlined className="sidebar-icon " />
-    ),
     getItem("Applaud", "/applaud", <LikeOutlined className="sidebar-icon " />),
     getItem(
       "Surveys",
@@ -73,7 +71,9 @@ function AdminLayout({ user, title, isBack = false, children }) {
     if (user?.role_id !== 4) {
       return allMenus;
     } else {
-      return allMenus.filter((item) => item.label !== "Team");
+      return allMenus.filter(
+        (item) => item.label !== "Teams" && item.label !== "Users"
+      );
     }
   }, [user]);
 
