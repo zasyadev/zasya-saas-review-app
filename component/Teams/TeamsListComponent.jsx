@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import CustomTable from "../common/CustomTable";
 import { openNotificationBox } from "../common/notification";
 import httpService from "../../lib/httpService";
-import { PrimaryButton } from "../common/CustomButton";
+import { PrimaryButton, ButtonGray } from "../common/CustomButton";
 
 function TeamsListComponent({ user }) {
   const [loading, setLoading] = useState(false);
@@ -96,17 +96,17 @@ function TeamsListComponent({ user }) {
   return (
     <div className="container mx-auto max-w-full">
       <div className="mb-4 md:mb-6 flex justify-end space-x-3">
+        <ButtonGray
+          withLink={true}
+          className="px-2 md:px-4 "
+          linkHref="/users"
+          title={"All Users"}
+        />
         <PrimaryButton
           withLink={true}
           className="px-2 md:px-4 "
           linkHref="/teams/add"
           title={"Create"}
-        />
-        <PrimaryButton
-          withLink={true}
-          className="px-2 md:px-4 "
-          linkHref="/users"
-          title={"Users"}
         />
       </div>
 

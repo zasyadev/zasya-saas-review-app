@@ -1,6 +1,6 @@
+import React, { useEffect, useMemo, useState, useCallback } from "react";
 import { Form, Input, Select } from "antd";
 import { useRouter } from "next/router";
-import React, { useEffect, useMemo, useState } from "react";
 import { maxLengthValidator } from "../../helpers/formValidations";
 import httpService from "../../lib/httpService";
 import { PrimaryButton, SecondaryButton } from "../common/CustomButton";
@@ -11,9 +11,8 @@ function AddUpdateTeamMember({ editMode = false, team_id }) {
   const router = useRouter();
   const [form] = Form.useForm();
   const [userList, setUserList] = useState([]);
-  const [isManagerSelected, setIsManagerSelected] = useState(false);
+  const [selectedManagerId, setSelectedManagerId] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [isManagerStateChange, setIsManagerStateChange] = useState(false);
 
   async function onFinish(values) {
     editMode ? updatingMember(values) : addingMember(values);
@@ -29,24 +28,28 @@ function AddUpdateTeamMember({ editMode = false, team_id }) {
         }
       })
       .catch((err) => {
-        openNotificationBox("error", err.response.data?.message);
+        openNotificationBox(
+          "error",
+          err.response.data?.message || "Failed ! Please try again"
+        );
       });
   }
   async function updatingMember(obj) {
-    if (team_id) {
-      await httpService
-        .put(`/api/teams`, { id: team_id, ...obj })
-        .then(({ data: response }) => {
-          if (response.status === 200) {
-            form.resetFields();
-            openNotificationBox("success", response.message, 3);
-            router.push("/teams");
-          }
-        })
-        .catch((err) => {
-          openNotificationBox("error", err.response.data?.message);
-        });
-    }
+    await httpService
+      .put(`/api/teams`, { id: team_id, ...obj })
+      .then(({ data: response }) => {
+        if (response.status === 200) {
+          form.resetFields();
+          openNotificationBox("success", response.message, 3);
+          router.push("/teams");
+        }
+      })
+      .catch((err) => {
+        openNotificationBox(
+          "error",
+          err.response.data?.message || "Failed ! Please try again"
+        );
+      });
   }
 
   async function fetchTeamData(id) {
@@ -54,35 +57,36 @@ function AddUpdateTeamMember({ editMode = false, team_id }) {
       .get(`/api/teams/${id}`)
       .then(({ data: response }) => {
         if (response.status === 200) {
-          setIsManagerSelected(true);
-          const memberList =
-            response.data?.UserTeamsGroups?.length > 0
-              ? response.data?.UserTeamsGroups.filter(
-                  (group) => !group.isManager
-                ).map((group) => group.member_id)
-              : [];
-          const manager =
-            response.data?.UserTeamsGroups?.length > 0
-              ? response.data?.UserTeamsGroups.find((group) => group.isManager)
-                  .member_id
-              : "";
-          if (memberList && manager) {
-            form.setFieldsValue({
-              name: response.data?.team_name,
-              manager: manager,
-              members: memberList,
-            });
+          if (Number(response.data?.UserTeamsGroups?.length) > 0) {
+            const memberList = response.data?.UserTeamsGroups.filter(
+              (group) => !group.isManager
+            ).map((group) => group.member_id);
+
+            const managerId = response.data?.UserTeamsGroups.find(
+              (group) => group.isManager
+            )?.member_id;
+
+            if (memberList && managerId) {
+              setSelectedManagerId(managerId);
+              form.setFieldsValue({
+                name: response.data?.team_name,
+                manager: managerId,
+                members: memberList,
+              });
+            }
           }
         }
         setLoading(false);
       })
       .catch((err) => {
-        console.error(err?.response?.data?.message);
+        openNotificationBox(
+          "error",
+          err.response.data?.message || "Failed ! Please try again"
+        );
       });
   }
 
-  async function fetchUserData() {
-    setUserList([]);
+  const fetchUserData = useCallback(async () => {
     await httpService
       .get(`/api/user/organizationId`)
       .then(({ data: response }) => {
@@ -95,28 +99,24 @@ function AddUpdateTeamMember({ editMode = false, team_id }) {
       })
       .catch((err) => {
         setUserList([]);
+        openNotificationBox(
+          "error",
+          err.response.data?.message || "Failed ! Please try again"
+        );
       });
-  }
+  }, []);
 
   useEffect(() => {
+    fetchUserData();
     if (editMode && team_id) {
       setLoading(true);
       fetchTeamData(team_id);
     }
-    fetchUserData();
   }, []);
 
-  const managerUser = useMemo(
-    () => form.getFieldValue("manager"),
-    [isManagerStateChange]
-  );
-
   const filteredUserList = useMemo(() => {
-    form.setFieldValue("members", []);
-    {
-      return userList.filter((item) => item.user_id !== managerUser);
-    }
-  }, [isManagerStateChange]);
+    return userList.filter((item) => item.user_id !== selectedManagerId);
+  }, [selectedManagerId, userList]);
 
   return loading ? (
     <PulseLoader />
@@ -156,9 +156,8 @@ function AddUpdateTeamMember({ editMode = false, team_id }) {
                   option.children.toLowerCase().indexOf(input.toLowerCase()) >=
                   0
                 }
-                onChange={(e) => {
-                  setIsManagerSelected(true);
-                  setIsManagerStateChange((prev) => !prev);
+                onSelect={(value) => {
+                  setSelectedManagerId(value);
                 }}
                 size="large"
                 className="w-full"
@@ -172,7 +171,7 @@ function AddUpdateTeamMember({ editMode = false, team_id }) {
                   ))}
               </Select>
             </Form.Item>
-            {isManagerSelected && (
+            {selectedManagerId && (
               <Form.Item
                 name="members"
                 label="Members "

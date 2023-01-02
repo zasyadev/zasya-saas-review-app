@@ -7,7 +7,7 @@ function MembersPage() {
   return (
     <WithMe>
       {({ user }) => (
-        <AdminLayout user={user} title={"Team"}>
+        <AdminLayout user={user} title={"Teams"}>
           <TeamsListComponent user={user} />
         </AdminLayout>
       )}
