@@ -9,7 +9,14 @@ import CustomSelectBox from "../common/CustomSelectBox";
 import GoalsCustomTable from "./component/GoalsCustomTable";
 import GoalsGroupList from "./component/GoalsGroupList";
 import GoalsGroupListSkeleton from "./component/GoalsGroupListSkeleton";
-import { goalsFilterList, groupItems } from "./constants";
+import {
+  ABANDONED_STATUS,
+  COMPLETED_STATUS,
+  DELAYED_STATUS,
+  goalsFilterList,
+  groupItems,
+  ONTRACK_STATUS,
+} from "./constants";
 
 const initialModalVisible = {
   visible: false,
@@ -212,10 +219,14 @@ function GoalsList({ user, isArchived = false }) {
           >
             <Form.Item name="status" label="Status">
               <Select value={editGoalModalVisible.defaultValue}>
-                <Select.Option value="OnTrack">On Track</Select.Option>
-                <Select.Option value="Completed">Completed</Select.Option>
-                <Select.Option value="Delayed">Delayed</Select.Option>
-                <Select.Option value="Abandoned">Abandoned</Select.Option>
+                <Select.Option value={ONTRACK_STATUS}>On Track</Select.Option>
+                <Select.Option value={COMPLETED_STATUS}>
+                  Completed
+                </Select.Option>
+                <Select.Option value={DELAYED_STATUS}>Delayed</Select.Option>
+                <Select.Option value={ABANDONED_STATUS}>
+                  Abandoned
+                </Select.Option>
               </Select>
             </Form.Item>
             <Form.Item name="comment" label="Comment">

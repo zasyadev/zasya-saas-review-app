@@ -10,7 +10,13 @@ import { ButtonGray, PrimaryButton } from "../common/CustomButton";
 import { CustomInput, CustomTextArea } from "../common/CustomFormFeilds";
 import { openNotificationBox } from "../common/notification";
 import { PulseLoader } from "../Loader/LoadingSpinner";
-import { getGoalFrequency } from "./constants";
+import {
+  getGoalFrequency,
+  INDIVIDUAL_TYPE,
+  ONTRACK_STATUS,
+  ORGANIZATION_TYPE,
+  SELF_TYPE,
+} from "./constants";
 
 function AddEditGoalComponent({ user, editMode = false }) {
   const router = useRouter();
@@ -25,7 +31,7 @@ function AddEditGoalComponent({ user, editMode = false }) {
     let data = {
       goals_headers: values.goals_headers,
       goal_type: values.goal_type,
-      status: "OnTrack",
+      status: ONTRACK_STATUS,
       progress: 0,
       frequency: getGoalFrequency(values.end_date),
       end_date: values.end_date,
@@ -268,13 +274,17 @@ function AddEditGoalComponent({ user, editMode = false }) {
               disabled={editMode}
             >
               {user.role_id === 2 && (
-                <Select.Option value="Organization">Organization</Select.Option>
+                <Select.Option value={ORGANIZATION_TYPE}>
+                  Organization
+                </Select.Option>
               )}
               {/* <Select.Option value="Team">Team</Select.Option> */}
               {(user.role_id === 2 || user.role_id === 3) && (
-                <Select.Option value="Individual">Individual</Select.Option>
+                <Select.Option value={INDIVIDUAL_TYPE}>
+                  Individual
+                </Select.Option>
               )}
-              <Select.Option value="Self">Self</Select.Option>
+              <Select.Option value={SELF_TYPE}>Self</Select.Option>
             </Select>
           </Form.Item>
 

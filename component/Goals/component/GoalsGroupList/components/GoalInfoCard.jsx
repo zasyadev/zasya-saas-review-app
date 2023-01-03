@@ -8,7 +8,12 @@ import { Dropdown, Menu, Popconfirm, Tooltip } from "antd";
 import Link from "next/link";
 import React from "react";
 import { ButtonGray } from "../../../../common/CustomButton";
-import { statusPill } from "../../../constants";
+import {
+  INDIVIDUAL_TYPE,
+  ORGANIZATION_TYPE,
+  SELF_TYPE,
+  statusPill,
+} from "../../../constants";
 import DateInfoCard from "./DateInfoCard";
 
 function GoalInfoCard({
@@ -108,14 +113,14 @@ function GoalInfoCard({
               overlayClassName="text-xs"
               title={item.goal.goal_type}
             >
-              {item.goal.goal_type === "Individual" && (
+              {item.goal.goal_type === INDIVIDUAL_TYPE && (
                 <TeamOutlined className="text-base leading-0" />
               )}
-              {item.goal.goal_type === "Self" && (
+              {item.goal.goal_type === SELF_TYPE && (
                 <UserOutlined className="text-base leading-0" />
               )}
 
-              {item.goal.goal_type === "Organization" && (
+              {item.goal.goal_type === ORGANIZATION_TYPE && (
                 <BankOutlined className="text-base leading-0" />
               )}
             </Tooltip>
