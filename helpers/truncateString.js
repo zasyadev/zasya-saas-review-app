@@ -5,3 +5,7 @@ export function truncateString(str, num) {
   }
   return str.slice(0, num) + "...";
 }
+
+export const getFirstTwoLetter = (text) => {
+  return text.substring(2, 0);
+};

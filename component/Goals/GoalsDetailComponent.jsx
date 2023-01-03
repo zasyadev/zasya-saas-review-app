@@ -167,13 +167,17 @@ function GoalsDetailComponent({ isArchived = false }) {
                     (item) => item.assignee_id !== goalData?.created_by
                   )?.map((item) => (
                     <>
-                      <p className=" text-gray-700 font-medium text-xs md:text-sm mb-0">
+                      <p
+                        className=" text-gray-700 font-medium text-xs md:text-sm mb-0"
+                        key={item.id + "name"}
+                      >
                         {item?.assignee?.first_name}
                       </p>
                       <span
                         className={`w-28 px-2 py-1  font-medium text-xs md:text-sm mb-0 text-center uppercase rounded-md ${statusPill(
                           item?.status
                         )}`}
+                        key={item.id + "status"}
                       >
                         {item?.status}
                       </span>
