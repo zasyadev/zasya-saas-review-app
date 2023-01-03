@@ -1,22 +1,10 @@
-import {
-  BankOutlined,
-  EllipsisOutlined,
-  TeamOutlined,
-  UserOutlined,
-  InfoCircleOutlined,
-} from "@ant-design/icons";
-import { Dropdown, Menu, Popconfirm, Tooltip } from "antd";
+import { EllipsisOutlined } from "@ant-design/icons";
+import { Dropdown, Menu, Popconfirm } from "antd";
 import Link from "next/link";
 import React from "react";
 import { ButtonGray } from "../../../../common/CustomButton";
-import {
-  INDIVIDUAL_TYPE,
-  ORGANIZATION_TYPE,
-  SELF_TYPE,
-  statusPill,
-  TEAM_TYPE,
-} from "../../../constants";
-import { getAssigneeName } from "../../../helper";
+import { statusPill } from "../../../constants";
+import { GoalAssigneeName } from "../../GoalAssigneeName";
 import DateInfoCard from "./DateInfoCard";
 
 function GoalInfoCard({
@@ -110,55 +98,11 @@ function GoalInfoCard({
         </div>
 
         <div className="flex justify-between ">
-          <div className="flex items-center gap-2 flex-wrap font-medium">
-            <Tooltip
-              placement="topLeft"
-              className="text-xs"
-              overlayClassName="text-xs"
-              title={item.goal.goal_type}
-            >
-              {item.goal.goal_type === INDIVIDUAL_TYPE && (
-                <TeamOutlined className="text-base leading-0" />
-              )}
-              {item.goal.goal_type === TEAM_TYPE && (
-                <TeamOutlined className="text-base leading-0" />
-              )}
-              {item.goal.goal_type === SELF_TYPE && (
-                <UserOutlined className="text-base leading-0" />
-              )}
-
-              {item.goal.goal_type === ORGANIZATION_TYPE && (
-                <BankOutlined className="text-base leading-0" />
-              )}
-            </Tooltip>
-
-            <span className="font-medium">
-              {item?.goal?.created_by === userId ? (
-                item?.goal?.goal_type === INDIVIDUAL_TYPE ? (
-                  Number(item.goal?.GoalAssignee?.length === 2) ? (
-                    getAssigneeName(item.goal)
-                  ) : (
-                    <>
-                      You{" "}
-                      <InfoCircleOutlined
-                        className="text-gray-600 cursor-pointer select-none"
-                        onClick={() =>
-                          ShowAssigneeModal({
-                            goal_title: item.goal.goal_title,
-                            GoalAssignee: item.goal.GoalAssignee,
-                          })
-                        }
-                      />
-                    </>
-                  )
-                ) : (
-                  "You"
-                )
-              ) : (
-                item?.goal?.created.first_name
-              )}
-            </span>
-          </div>
+          <GoalAssigneeName
+            record={item}
+            userId={userId}
+            ShowAssigneeModal={ShowAssigneeModal}
+          />
 
           <p
             className="text-sm cursor-pointer"
