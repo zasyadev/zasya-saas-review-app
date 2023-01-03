@@ -4,17 +4,16 @@ import React, { useEffect, useState } from "react";
 import SuspenceWrapper from "../../../component/common/SuspenceWrapper";
 import AdminLayout from "../../../component/layout/AdminLayout";
 import WithMe from "../../../component/layout/WithMe";
-
 import httpService from "../../../lib/httpService";
 
-const AddUpdateTeamMember = dynamic(
-  () => import("../../../component/Team/AddUpdateTeamMember"),
+const AddUpdateUsers = dynamic(
+  () => import("../../../component/Users/AddUpdateUsers"),
   {
     suspense: true,
   }
 );
 
-function EditTeam() {
+function EditUsers() {
   const router = useRouter();
   const { user_id } = router.query;
   const [memberData, setMemberData] = useState({});
@@ -23,7 +22,7 @@ function EditTeam() {
     setMemberData([]);
 
     await httpService
-      .post(`/api/team/edit/${id}`, {
+      .post(`/api/member/edit/${id}`, {
         org_user: id,
       })
       .then(({ data: response }) => {
@@ -47,7 +46,7 @@ function EditTeam() {
         {({ user }) => (
           <AdminLayout user={user} title="">
             {Object.keys(memberData).length > 0 && (
-              <AddUpdateTeamMember
+              <AddUpdateUsers
                 user={user}
                 memberData={memberData}
                 editMode={true}
@@ -60,4 +59,4 @@ function EditTeam() {
   );
 }
 
-export default EditTeam;
+export default EditUsers;

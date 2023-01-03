@@ -157,7 +157,7 @@ function GoalsDetailComponent({ isArchived = false }) {
               </p>
             </div>
 
-            {goalData && Number(goalData?.GoalAssignee?.length) > 0 && (
+            {goalData && Number(goalData?.GoalAssignee?.length) > 1 && (
               <div className="space-y-1">
                 <p className=" text-primary font-semibold text-base mb-0">
                   Assignees
@@ -167,13 +167,17 @@ function GoalsDetailComponent({ isArchived = false }) {
                     (item) => item.assignee_id !== goalData?.created_by
                   )?.map((item) => (
                     <>
-                      <p className=" text-gray-700 font-medium text-xs md:text-sm mb-0">
+                      <p
+                        className=" text-gray-700 font-medium text-xs md:text-sm mb-0"
+                        key={item.id + "name"}
+                      >
                         {item?.assignee?.first_name}
                       </p>
                       <span
                         className={`w-28 px-2 py-1  font-medium text-xs md:text-sm mb-0 text-center uppercase rounded-md ${statusPill(
                           item?.status
                         )}`}
+                        key={item.id + "status"}
                       >
                         {item?.status}
                       </span>

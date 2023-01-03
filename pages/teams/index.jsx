@@ -1,14 +1,14 @@
 import React from "react";
 import AdminLayout from "../../component/layout/AdminLayout";
 import WithMe from "../../component/layout/WithMe";
-import TeamListComponent from "../../component/Team/TeamListComponent";
+import TeamsListComponent from "../../component/Teams/TeamsListComponent";
 
 function MembersPage() {
   return (
     <WithMe>
       {({ user }) => (
-        <AdminLayout user={user} title={"Team"}>
-          <TeamListComponent user={user} />
+        <AdminLayout user={user} title={"Teams"}>
+          <TeamsListComponent user={user} />
         </AdminLayout>
       )}
     </WithMe>

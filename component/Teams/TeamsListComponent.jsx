@@ -2,23 +2,19 @@ import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { Popconfirm, Skeleton } from "antd";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-import { PrimaryButton } from "../../component/common/CustomButton";
-import CustomTable from "../../component/common/CustomTable";
-import { openNotificationBox } from "../../component/common/notification";
+import CustomTable from "../common/CustomTable";
+import { openNotificationBox } from "../common/notification";
 import httpService from "../../lib/httpService";
+import { PrimaryButton, ButtonGray } from "../common/CustomButton";
 
-function TeamListComponent({ user }) {
+function TeamsListComponent({ user }) {
   const [loading, setLoading] = useState(false);
   const [teamsList, setTeamsList] = useState([]);
 
   async function onDelete(id) {
     if (id) {
       await httpService
-        .delete(`/api/teams`, {
-          data: {
-            id: id,
-          },
-        })
+        .delete(`/api/teams/${id}`, {})
         .then(({ data: response }) => {
           if (response.status === 200) {
             fetchTeamsData();
@@ -39,7 +35,7 @@ function TeamListComponent({ user }) {
       .get(`/api/teams`)
       .then(({ data: response }) => {
         if (response.status === 200) {
-          setTeamsList(data);
+          setTeamsList(response.data);
         }
         setLoading(false);
       })
@@ -56,61 +52,39 @@ function TeamListComponent({ user }) {
   const columns = [
     {
       title: "Name",
-      key: "id",
+      key: "team_name",
+      dataIndex: "team_name",
+
+      sorter: (a, b) => a.team_name?.localeCompare(b.team_name),
+    },
+    {
+      title: "Manager Name",
+      key: "manager_name",
       render: (_, record) =>
-        record?.user.first_name + " " + record?.user?.last_name,
-      sorter: (a, b) => a.user.first_name?.localeCompare(b.user.first_name),
+        record?.UserTeamsGroups.find((item) => item.isManager)?.member
+          ?.first_name,
     },
     {
-      title: "Email",
-      render: (_, record) => record?.user.email,
-      sorter: (a, b) => a.user.email?.localeCompare(b.user.email),
+      title: "Member Count ",
+      key: "member_count",
+      render: (_, record) => record?.UserTeamsGroups?.length,
     },
-    {
-      title: "Tags",
-      render: (_, record) => (
-        <div className="grid grid-cols-1  lg:grid-cols-3 gap-2 w-40 lg:w-full">
-          {record?.tags?.length > 0 &&
-            record?.tags.map((item, index) => (
-              <span
-                className="text-sm text-center bg-sky-300  text-white rounded px-2 py-1"
-                key={index + "tags"}
-              >
-                {item}
-              </span>
-            ))}
-        </div>
-      ),
-    },
-    {
-      title: "Status",
-      render: (_, record) => (
-        <span
-          className={`text-sm text-center ${
-            record?.user?.status === 0 ? "text-red-700" : "text-green-700"
-          } rounded font-semibold text-center`}
-        >
-          {record?.user?.status === 0 ? "Inactive" : "Active"}
-        </span>
-      ),
-    },
+
     {
       title: "Action",
       key: "action",
       render: (_, record) =>
-        record.role_id === 2 ? null : (
+        user.role_id === 2 && (
           <p>
-            <Link href={`/team/edit/${record.user_id}`} passHref>
+            <Link href={`/teams/${record.id}/edit`} passHref>
               <EditOutlined className="primary-color-blue text-xl mx-1  md:mx-2 cursor-pointer" />
             </Link>
 
             <Popconfirm
-              title={`Are you sure to delete ${
-                record?.user?.first_name + " " + record?.user?.last_name
-              }？`}
+              title={`Are you sure to delete ${record?.team_name}？`}
               okText="Yes"
               cancelText="No"
-              onConfirm={() => onDelete(record.user.email)}
+              onConfirm={() => onDelete(record.id)}
               icon={false}
             >
               <DeleteOutlined className="text-red-500 text-xl mx-1 md:mx-2 cursor-pointer" />
@@ -121,20 +95,20 @@ function TeamListComponent({ user }) {
   ];
   return (
     <div className="container mx-auto max-w-full">
-      {/* <div className="mb-4 md:mb-6 flex justify-end">
+      <div className="mb-4 md:mb-6 flex justify-end space-x-3">
+        <ButtonGray
+          withLink={true}
+          className="px-2 md:px-4 "
+          linkHref="/users"
+          title={"All Users"}
+        />
         <PrimaryButton
           withLink={true}
           className="px-2 md:px-4 "
           linkHref="/teams/add"
           title={"Create"}
         />
-        <PrimaryButton
-          withLink={true}
-          className="px-2 md:px-4 "
-          linkHref="/team/add"
-          title={"Team"}
-        />
-      </div> */}
+      </div>
 
       <div className="w-full bg-white rounded-md overflow-hdden shadow-md">
         {loading ? (
@@ -153,4 +127,4 @@ function TeamListComponent({ user }) {
   );
 }
 
-export default TeamListComponent;
+export default TeamsListComponent;

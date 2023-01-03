@@ -1,13 +1,6 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import NoRecordFound from "../../../common/NoRecordFound";
-import GoalAssignessModal from "../../GoalAssignessModal";
 import GoalInfoCard from "./components/GoalInfoCard";
-
-const initialGoalCountModalData = {
-  goal_title: "",
-  GoalAssignee: [],
-  isVisible: false,
-};
 
 const GoalsGroupList = ({
   goalsList,
@@ -19,11 +12,8 @@ const GoalsGroupList = ({
   goalEditHandle,
   updateGoalForm,
   setEditGoalModalVisible,
+  ShowAssigneeModal,
 }) => {
-  const [goalAssigneeModalData, setGoalAssigneeModalData] = useState(
-    initialGoalCountModalData
-  );
-
   const filteredGoalList = useMemo(
     () =>
       goalsList?.length
@@ -43,18 +33,6 @@ const GoalsGroupList = ({
     );
     return percent;
   }, [filteredGoalList]);
-
-  // const ShowAssigneeModal = ({ goal_title, GoalAssignee }) => {
-  //   setGoalAssigneeModalData({
-  //     goal_title,
-  //     GoalAssignee,
-  //     isVisible: true,
-  //   });
-  // };
-
-  const hideAssigneeModal = () => {
-    setGoalAssigneeModalData(initialGoalCountModalData);
-  };
 
   return (
     <div className=" bg-white rounded-md pb-3">
@@ -82,20 +60,13 @@ const GoalsGroupList = ({
               goalEditHandle={goalEditHandle}
               updateGoalForm={updateGoalForm}
               setEditGoalModalVisible={setEditGoalModalVisible}
+              ShowAssigneeModal={ShowAssigneeModal}
             />
           ))
         ) : (
           <NoRecordFound title={"No Goals Found"} />
         )}
       </div>
-
-      {goalAssigneeModalData?.isVisible && (
-        <GoalAssignessModal
-          goalAssigneeModalData={goalAssigneeModalData}
-          hideAssigneeModal={hideAssigneeModal}
-          userId={userId}
-        />
-      )}
     </div>
   );
 };

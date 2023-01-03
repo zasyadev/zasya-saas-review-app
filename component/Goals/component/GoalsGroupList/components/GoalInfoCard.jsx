@@ -3,6 +3,7 @@ import {
   EllipsisOutlined,
   TeamOutlined,
   UserOutlined,
+  InfoCircleOutlined,
 } from "@ant-design/icons";
 import { Dropdown, Menu, Popconfirm, Tooltip } from "antd";
 import Link from "next/link";
@@ -13,7 +14,9 @@ import {
   ORGANIZATION_TYPE,
   SELF_TYPE,
   statusPill,
+  TEAM_TYPE,
 } from "../../../constants";
+import { getAssigneeName } from "../../../helper";
 import DateInfoCard from "./DateInfoCard";
 
 function GoalInfoCard({
@@ -23,6 +26,7 @@ function GoalInfoCard({
   updateGoalForm,
   goalEditHandle,
   setEditGoalModalVisible,
+  ShowAssigneeModal,
 }) {
   return (
     <div className="py-4 bg-gray-50 border border-gray-100 shadow-sm rounded-md ">
@@ -116,6 +120,9 @@ function GoalInfoCard({
               {item.goal.goal_type === INDIVIDUAL_TYPE && (
                 <TeamOutlined className="text-base leading-0" />
               )}
+              {item.goal.goal_type === TEAM_TYPE && (
+                <TeamOutlined className="text-base leading-0" />
+              )}
               {item.goal.goal_type === SELF_TYPE && (
                 <UserOutlined className="text-base leading-0" />
               )}
@@ -124,24 +131,33 @@ function GoalInfoCard({
                 <BankOutlined className="text-base leading-0" />
               )}
             </Tooltip>
-            <span className="font-medium">
-              {item?.goal?.created_by === userId
-                ? "You"
-                : item?.goal?.created.first_name}
-            </span>
 
-            {/* {item.goal.goal_type === "Individual" &&
-            item.goal.created_by === userId && (
-              <InfoCircleOutlined
-                className="text-gray-600 cursor-pointer select-none"
-                onClick={() =>
-                  ShowAssigneeModal({
-                    goal_title: item.goal.goal_title,
-                    GoalAssignee: item.goal.GoalAssignee,
-                  })
-                }
-              />
-            )} */}
+            <span className="font-medium">
+              {item?.goal?.created_by === userId ? (
+                item?.goal?.goal_type === INDIVIDUAL_TYPE ? (
+                  Number(item.goal?.GoalAssignee?.length === 2) ? (
+                    getAssigneeName(item.goal)
+                  ) : (
+                    <>
+                      You{" "}
+                      <InfoCircleOutlined
+                        className="text-gray-600 cursor-pointer select-none"
+                        onClick={() =>
+                          ShowAssigneeModal({
+                            goal_title: item.goal.goal_title,
+                            GoalAssignee: item.goal.GoalAssignee,
+                          })
+                        }
+                      />
+                    </>
+                  )
+                ) : (
+                  "You"
+                )
+              ) : (
+                item?.goal?.created.first_name
+              )}
+            </span>
           </div>
 
           <p

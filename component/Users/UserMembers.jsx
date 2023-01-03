@@ -2,19 +2,19 @@ import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { Popconfirm, Skeleton } from "antd";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-import { PrimaryButton } from "../../component/common/CustomButton";
-import CustomTable from "../../component/common/CustomTable";
-import { openNotificationBox } from "../../component/common/notification";
 import httpService from "../../lib/httpService";
+import { PrimaryButton } from "../common/CustomButton";
+import CustomTable from "../common/CustomTable";
+import { openNotificationBox } from "../common/notification";
 
-function TeamMembers({ user }) {
+function UserMembers({ user }) {
   const [loading, setLoading] = useState(false);
   const [membersList, setMembersList] = useState([]);
 
   async function onDelete(email) {
     if (email) {
       await httpService
-        .delete(`/api/team/members`, {
+        .delete(`/api/member`, {
           data: {
             email: email,
           },
@@ -36,7 +36,7 @@ function TeamMembers({ user }) {
     setLoading(true);
     setMembersList([]);
     await httpService
-      .get(`/api/team/${user.id}`)
+      .get(`/api/member/${user.id}`)
       .then(({ data: response }) => {
         if (response.status === 200) {
           let data = response.data.filter((item) => item.user_id != user.id);
@@ -103,7 +103,7 @@ function TeamMembers({ user }) {
       render: (_, record) =>
         record.role_id === 2 ? null : (
           <p>
-            <Link href={`/team/edit/${record.user_id}`} passHref>
+            <Link href={`/users/edit/${record.user_id}`} passHref>
               <EditOutlined className="primary-color-blue text-xl mx-1  md:mx-2 cursor-pointer" />
             </Link>
 
@@ -128,7 +128,7 @@ function TeamMembers({ user }) {
         <PrimaryButton
           withLink={true}
           className="px-2 md:px-4 "
-          linkHref="/team/add"
+          linkHref="/users/add"
           title={"Create"}
         />
       </div>
@@ -150,4 +150,4 @@ function TeamMembers({ user }) {
   );
 }
 
-export default TeamMembers;
+export default UserMembers;

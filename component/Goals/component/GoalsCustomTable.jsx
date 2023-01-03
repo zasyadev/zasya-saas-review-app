@@ -3,6 +3,7 @@ import {
   EllipsisOutlined,
   TeamOutlined,
   UserOutlined,
+  InfoCircleOutlined,
 } from "@ant-design/icons";
 import { Dropdown, Menu, Tooltip } from "antd";
 import Link from "next/link";
@@ -14,7 +15,9 @@ import {
   ORGANIZATION_TYPE,
   SELF_TYPE,
   statusPill,
+  TEAM_TYPE,
 } from "../constants";
+import { getAssigneeName } from "../helper";
 import DateInfoCard from "./GoalsGroupList/components/DateInfoCard";
 
 function GoalsCustomTable({
@@ -24,6 +27,7 @@ function GoalsCustomTable({
   goalEditHandle,
   userId,
   isArchived,
+  ShowAssigneeModal,
 }) {
   const columns = [
     {
@@ -54,29 +58,40 @@ function GoalsCustomTable({
             {record.goal.goal_type === SELF_TYPE && (
               <UserOutlined className="text-base leading-0" />
             )}
+            {record.goal.goal_type === TEAM_TYPE && (
+              <TeamOutlined className="text-base leading-0" />
+            )}
 
             {record.goal.goal_type === ORGANIZATION_TYPE && (
               <BankOutlined className="text-base leading-0" />
             )}
           </Tooltip>
           <span className="font-medium">
-            {record?.goal?.created_by === userId
-              ? "You"
-              : record?.goal?.created.first_name}
+            {record?.goal?.created_by === userId ? (
+              record?.goal?.goal_type === INDIVIDUAL_TYPE ? (
+                Number(record?.goal?.GoalAssignee?.length) === 2 ? (
+                  getAssigneeName(record.goal)
+                ) : (
+                  <>
+                    You{" "}
+                    <InfoCircleOutlined
+                      className="text-gray-600 cursor-pointer select-none"
+                      onClick={() =>
+                        ShowAssigneeModal({
+                          goal_title: record.goal.goal_title,
+                          GoalAssignee: record.goal.GoalAssignee,
+                        })
+                      }
+                    />
+                  </>
+                )
+              ) : (
+                "You"
+              )
+            ) : (
+              record?.goal?.created.first_name
+            )}
           </span>
-
-          {/* {item.goal.goal_type === "Individual" &&
-                item.goal.created_by === userId && (
-                  <InfoCircleOutlined
-                    className="text-gray-600 cursor-pointer select-none"
-                    onClick={() =>
-                      ShowAssigneeModal({
-                        goal_title: item.goal.goal_title,
-                        GoalAssignee: item.goal.GoalAssignee,
-                      })
-                    }
-                  />
-                )} */}
         </div>
       ),
     },

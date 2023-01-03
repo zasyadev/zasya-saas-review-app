@@ -1,6 +1,7 @@
 export const ORGANIZATION_TYPE = "Organization";
 export const SELF_TYPE = "Self";
 export const INDIVIDUAL_TYPE = "Individual";
+export const TEAM_TYPE = "Team";
 
 export const ONTRACK_STATUS = "OnTrack";
 export const COMPLETED_STATUS = "Completed";
