@@ -237,9 +237,28 @@ function GoalsList({ user, isArchived = false }) {
                     key={index + "users"}
                   >
                     <Avatar
-                      className="bg-primary capitalize hover:cursor-pointer "
+                      className={`${
+                        index === 0
+                          ? "bg-cyan-500"
+                          : index === 1
+                          ? "bg-orange-600"
+                          : "bg-green-600"
+                      } ${
+                        filterByMembersId.includes(data?.user?.id)
+                          ? "border-primary"
+                          : "border-white"
+                      } border-2 capitalize hover:cursor-pointer hover:z-10 transition-all duration-200 ease-in-out`}
                       onClick={() => {
-                        setFilterByMembersId(data?.user?.id);
+                        if (filterByMembersId.includes(data?.user?.id)) {
+                          setFilterByMembersId((prev) =>
+                            prev.filter((item) => item !== data?.user?.id)
+                          );
+                        } else {
+                          setFilterByMembersId((prev) => [
+                            ...prev,
+                            data?.user?.id,
+                          ]);
+                        }
                       }}
                     >
                       {getFirstTwoLetter(data?.user?.first_name)}
