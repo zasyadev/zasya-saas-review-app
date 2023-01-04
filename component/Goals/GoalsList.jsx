@@ -1,8 +1,9 @@
-import { UnorderedListOutlined, ApartmentOutlined } from "@ant-design/icons";
-import React, { useEffect, useMemo, useState } from "react";
-import { useRouter } from "next/router";
-import moment from "moment";
+import { ApartmentOutlined, UnorderedListOutlined } from "@ant-design/icons";
 import { Avatar, Form, Input, Select, Tooltip } from "antd";
+import moment from "moment";
+import { useRouter } from "next/router";
+import React, { useEffect, useMemo, useState } from "react";
+import { getFirstTwoLetter } from "../../helpers/truncateString";
 import httpService from "../../lib/httpService";
 import {
   ButtonGray,
@@ -23,7 +24,6 @@ import {
   ONTRACK_STATUS,
 } from "./constants";
 import GoalAssignessModal from "./GoalAssignessModal";
-import { getFirstTwoLetter } from "../../helpers/truncateString";
 
 const initialModalVisible = {
   visible: false,
@@ -48,12 +48,10 @@ function GoalsList({ user, isArchived = false }) {
   const [goalsList, setGoalsList] = useState([]);
   const [editGoalModalVisible, setEditGoalModalVisible] =
     useState(initialModalVisible);
-
   const [goalAssigneeModalData, setGoalAssigneeModalData] = useState(
     initialGoalCountModalData
   );
   const [userList, setUserList] = useState([]);
-
   const [displayMode, setDisplayMode] = useState("grid");
 
   async function fetchGoalList(status) {
@@ -95,7 +93,8 @@ function GoalsList({ user, isArchived = false }) {
       .get(`/api/user/organizationId`)
       .then(({ data: response }) => {
         if (response.status === 200) {
-          setUserList(response.data);
+          let filterData = response.data.filter((item) => item.user.status);
+          setUserList(filterData);
         }
       })
       .catch(() => {
@@ -238,9 +237,28 @@ function GoalsList({ user, isArchived = false }) {
                     key={index + "users"}
                   >
                     <Avatar
-                      className="bg-primary capitalize hover:cursor-pointer"
+                      className={`${
+                        index === 0
+                          ? "bg-cyan-500"
+                          : index === 1
+                          ? "bg-orange-600"
+                          : "bg-green-600"
+                      } ${
+                        filterByMembersId.includes(data?.user?.id)
+                          ? "border-primary"
+                          : "border-white"
+                      } border-2 capitalize hover:cursor-pointer hover:z-10 transition-all duration-200 ease-in-out`}
                       onClick={() => {
-                        setFilterByMembersId(data?.user?.id);
+                        if (filterByMembersId.includes(data?.user?.id)) {
+                          setFilterByMembersId((prev) =>
+                            prev.filter((item) => item !== data?.user?.id)
+                          );
+                        } else {
+                          setFilterByMembersId((prev) => [
+                            ...prev,
+                            data?.user?.id,
+                          ]);
+                        }
                       }}
                     >
                       {getFirstTwoLetter(data?.user?.first_name)}
@@ -258,18 +276,22 @@ function GoalsList({ user, isArchived = false }) {
           </div>
           <div className="space-x-3 flex items-center ">
             <div className="space-x-2">
-              <ButtonGray
-                withLink={false}
-                onClick={() => setDisplayMode("grid")}
-                title={<ApartmentOutlined />}
-                className="leading-0"
-              />
-              <ButtonGray
-                withLink={false}
-                onClick={() => setDisplayMode("list")}
-                title={<UnorderedListOutlined />}
-                className="leading-0"
-              />
+              <Tooltip title="Grid View">
+                <ButtonGray
+                  withLink={false}
+                  onClick={() => setDisplayMode("grid")}
+                  title={<ApartmentOutlined />}
+                  className="leading-0"
+                />
+              </Tooltip>
+              <Tooltip title="List View">
+                <ButtonGray
+                  withLink={false}
+                  onClick={() => setDisplayMode("list")}
+                  title={<UnorderedListOutlined />}
+                  className="leading-0"
+                />
+              </Tooltip>
             </div>
             <PrimaryButton
               withLink={true}
@@ -318,6 +340,7 @@ function GoalsList({ user, isArchived = false }) {
               userId={user.id}
               isArchived={isArchived}
               ShowAssigneeModal={ShowAssigneeModal}
+              showHeader={true}
             />
           </div>
         )}
@@ -337,7 +360,6 @@ function GoalsList({ user, isArchived = false }) {
               onClick={() => setEditGoalModalVisible(initialModalVisible)}
               className=" h-full mr-2"
               title="Cancel"
-              key="cancel_btn"
             />
             <PrimaryButton
               onClick={() => updateGoalForm.submit()}
@@ -345,7 +367,6 @@ function GoalsList({ user, isArchived = false }) {
               title="Update"
               disabled={loading}
               loading={loading}
-              key="update_btn"
             />
           </>,
         ]}

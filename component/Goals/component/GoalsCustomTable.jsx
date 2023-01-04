@@ -1,23 +1,11 @@
-import {
-  BankOutlined,
-  EllipsisOutlined,
-  TeamOutlined,
-  UserOutlined,
-  InfoCircleOutlined,
-} from "@ant-design/icons";
-import { Dropdown, Menu, Tooltip } from "antd";
+import { EllipsisOutlined } from "@ant-design/icons";
+import { Dropdown, Menu } from "antd";
 import Link from "next/link";
 import React from "react";
 import { ButtonGray } from "../../common/CustomButton";
 import CustomTable from "../../common/CustomTable";
-import {
-  INDIVIDUAL_TYPE,
-  ORGANIZATION_TYPE,
-  SELF_TYPE,
-  statusPill,
-  TEAM_TYPE,
-} from "../constants";
-import { getAssigneeName } from "../helper";
+import { statusPill } from "../constants";
+import { GoalAssigneeName } from "./GoalAssigneeName";
 import DateInfoCard from "./GoalsGroupList/components/DateInfoCard";
 
 function GoalsCustomTable({
@@ -28,6 +16,7 @@ function GoalsCustomTable({
   userId,
   isArchived,
   ShowAssigneeModal,
+  showHeader = false,
 }) {
   const columns = [
     {
@@ -42,57 +31,14 @@ function GoalsCustomTable({
       ),
     },
     {
-      title: "Type",
-      key: "goal_type",
+      title: "Assignee",
+      key: "goal_assignee",
       render: (_, record) => (
-        <div className="flex items-center gap-2 flex-wrap font-medium">
-          <Tooltip
-            placement="topLeft"
-            className="text-xs"
-            overlayClassName="text-xs"
-            title={record.goal.goal_type}
-          >
-            {record.goal.goal_type === INDIVIDUAL_TYPE && (
-              <TeamOutlined className="text-base leading-0" />
-            )}
-            {record.goal.goal_type === SELF_TYPE && (
-              <UserOutlined className="text-base leading-0" />
-            )}
-            {record.goal.goal_type === TEAM_TYPE && (
-              <TeamOutlined className="text-base leading-0" />
-            )}
-
-            {record.goal.goal_type === ORGANIZATION_TYPE && (
-              <BankOutlined className="text-base leading-0" />
-            )}
-          </Tooltip>
-          <span className="font-medium">
-            {record?.goal?.created_by === userId ? (
-              record?.goal?.goal_type === INDIVIDUAL_TYPE ? (
-                Number(record?.goal?.GoalAssignee?.length) === 2 ? (
-                  getAssigneeName(record.goal)
-                ) : (
-                  <>
-                    You{" "}
-                    <InfoCircleOutlined
-                      className="text-gray-600 cursor-pointer select-none"
-                      onClick={() =>
-                        ShowAssigneeModal({
-                          goal_title: record.goal.goal_title,
-                          GoalAssignee: record.goal.GoalAssignee,
-                        })
-                      }
-                    />
-                  </>
-                )
-              ) : (
-                "You"
-              )
-            ) : (
-              record?.goal?.created.first_name
-            )}
-          </span>
-        </div>
+        <GoalAssigneeName
+          record={record}
+          userId={userId}
+          ShowAssigneeModal={ShowAssigneeModal}
+        />
       ),
     },
     {
@@ -131,7 +77,7 @@ function GoalsCustomTable({
       ),
     },
     {
-      title: "End Date",
+      title: <p className="mb-0 text-center">End Date</p>,
       key: "end_date",
       render: (_, record) => <DateInfoCard endDate={record?.goal.end_date} />,
     },
@@ -182,7 +128,7 @@ function GoalsCustomTable({
       dataSource={sortListByEndDate}
       columns={columns}
       className="custom-table"
-      showHeader={false}
+      showHeader={showHeader}
       isPagination={false}
     />
   );
