@@ -1,5 +1,4 @@
 import { Tooltip } from "antd";
-
 import {
   BankOutlined,
   InfoCircleOutlined,
@@ -13,9 +12,17 @@ import {
   TEAM_TYPE,
 } from "../constants";
 
-import { getAssigneeName } from "../helper";
-
 export const GoalAssigneeName = ({ record, userId, ShowAssigneeModal }) => {
+  const getAssigneeName = (record) => {
+    let assigneeName = "";
+
+    assigneeName = record.GoalAssignee.find(
+      (assignee) => assignee?.assignee_id !== record?.created_by
+    )?.assignee?.first_name;
+
+    return assigneeName;
+  };
+
   return (
     <div className="flex items-center gap-2 flex-wrap font-medium">
       <Tooltip
@@ -33,7 +40,6 @@ export const GoalAssigneeName = ({ record, userId, ShowAssigneeModal }) => {
         {record.goal.goal_type === TEAM_TYPE && (
           <TeamOutlined className="text-base leading-0" />
         )}
-
         {record.goal.goal_type === ORGANIZATION_TYPE && (
           <BankOutlined className="text-base leading-0" />
         )}

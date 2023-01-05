@@ -9,7 +9,7 @@ import { GoalAssigneeName } from "./GoalAssigneeName";
 import DateInfoCard from "./GoalsGroupList/components/DateInfoCard";
 
 function GoalsCustomTable({
-  sortListByEndDate,
+  goalList,
   setEditGoalModalVisible,
   updateGoalForm,
   goalEditHandle,
@@ -17,6 +17,7 @@ function GoalsCustomTable({
   isArchived,
   ShowAssigneeModal,
   showHeader = false,
+  isPagination = false,
 }) {
   const columns = [
     {
@@ -125,11 +126,11 @@ function GoalsCustomTable({
   ];
   return (
     <CustomTable
-      dataSource={sortListByEndDate}
+      dataSource={goalList}
       columns={columns}
       className="custom-table"
       showHeader={showHeader}
-      isPagination={false}
+      isPagination={isPagination}
     />
   );
 }

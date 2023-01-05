@@ -93,8 +93,7 @@ function GoalsList({ user, isArchived = false }) {
       .get(`/api/user/organizationId`)
       .then(({ data: response }) => {
         if (response.status === 200) {
-          let filterData = response.data.filter((item) => item.user.status);
-          setUserList(filterData);
+          setUserList(response.data);
         }
       })
       .catch(() => {
@@ -102,16 +101,31 @@ function GoalsList({ user, isArchived = false }) {
       });
   }
 
+  const activeGoalUsers = useMemo(() => {
+    let goalUsers = [];
+    goalsList.forEach((item) => {
+      item?.goal?.GoalAssignee.forEach((assignee) => {
+        if (goalUsers.indexOf(assignee?.assignee_id) === -1)
+          goalUsers.push(assignee?.assignee_id);
+      });
+    });
+    if (Number(goalUsers.length) > 0) {
+      return userList.filter((user) =>
+        goalUsers.find((item) => item === user?.user_id)
+      );
+    } else return [];
+  }, [goalsList, userList]);
+
   useEffect(() => {
-    fetchUserData();
     if (isArchived) {
       fetchArchivedGoalList();
     } else {
+      fetchUserData();
       fetchGoalList("All");
     }
   }, [isArchived]);
 
-  const handleToggle = (value) => {
+  const handleFilterChange = (value) => {
     if (value === "Archived") {
       router.push("/goals/archived");
     } else {
@@ -133,10 +147,8 @@ function GoalsList({ user, isArchived = false }) {
           )
         );
       }
-
       return searchTextFilteredRes;
     }
-
     return [];
   }, [goalsList, searchText, filterByMembersId]);
 
@@ -194,7 +206,7 @@ function GoalsList({ user, isArchived = false }) {
       {!loading && !isArchived && Number(sortListByEndDate?.length) > 0 && (
         <div className="gap-4 mb-4 bg-white">
           <GoalsCustomTable
-            sortListByEndDate={sortListByEndDate}
+            goalList={sortListByEndDate}
             setEditGoalModalVisible={setEditGoalModalVisible}
             updateGoalForm={updateGoalForm}
             goalEditHandle={goalEditHandle}
@@ -229,8 +241,8 @@ function GoalsList({ user, isArchived = false }) {
                 cursor: "pointer",
               }}
             >
-              {userList.length > 0 &&
-                userList.map((data, index) => (
+              {Number(activeGoalUsers.length) > 0 &&
+                activeGoalUsers.map((data, index) => (
                   <Tooltip
                     title={data?.user?.first_name}
                     placement="top"
@@ -270,7 +282,7 @@ function GoalsList({ user, isArchived = false }) {
             <CustomSelectBox
               className={" w-36 text-sm"}
               arrayList={goalsFilterList}
-              handleOnChange={(selectedKey) => handleToggle(selectedKey)}
+              handleOnChange={(selectedKey) => handleFilterChange(selectedKey)}
               defaultValue={"All"}
             />
           </div>
@@ -333,14 +345,15 @@ function GoalsList({ user, isArchived = false }) {
         ) : (
           <div className="gap-4 mb-4 bg-white">
             <GoalsCustomTable
-              sortListByEndDate={filteredGoalList}
+              goalList={filteredGoalList}
               setEditGoalModalVisible={setEditGoalModalVisible}
               updateGoalForm={updateGoalForm}
               goalEditHandle={goalEditHandle}
               userId={user.id}
               isArchived={isArchived}
               ShowAssigneeModal={ShowAssigneeModal}
-              showHeader={true}
+              showHeader
+              isPagination
             />
           </div>
         )}
