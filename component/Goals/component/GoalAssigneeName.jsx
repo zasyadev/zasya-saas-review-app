@@ -15,11 +15,11 @@ import {
 export const GoalAssigneeName = ({ record, userId, ShowAssigneeModal }) => {
   const getAssigneeName = (record) => {
     let assigneeName = "";
-
-    assigneeName = record.GoalAssignee.find(
-      (assignee) => assignee?.assignee_id !== record?.created_by
-    )?.assignee?.first_name;
-
+    if (Number(record?.GoalAssignee?.length) > 0) {
+      assigneeName = record?.GoalAssignee.find(
+        (assignee) => assignee?.assignee_id !== record?.created_by
+      )?.assignee?.first_name;
+    }
     return assigneeName;
   };
 
