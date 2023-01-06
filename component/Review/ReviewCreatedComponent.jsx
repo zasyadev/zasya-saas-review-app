@@ -207,16 +207,25 @@ function ReviewCreatedComponent({
   };
 
   const jobChangeHandler = async (obj) => {
+    setUpdateFreqApiLoading(true);
     await httpService
       .put(`/api/review/manage`, obj)
       .then(({ data: response }) => {
         if (response.status === 200) {
           openNotificationBox("success", response.message, 3);
           fetchReviewData(reviewId);
+          setUpdateFreqApiLoading(false);
+          if (editFreqModalVisible) {
+            setEditFreqModalVisible(false);
+          }
         }
       })
       .catch((err) => {
-        console.error(err.response.data?.message);
+        openNotificationBox(
+          "error",
+          err?.response?.data?.message || "Unable to update! Please try again"
+        );
+        setUpdateFreqApiLoading(false);
       });
   };
 
@@ -316,7 +325,6 @@ function ReviewCreatedComponent({
   };
 
   const handleUpdateFrequency = (values) => {
-    console.log({ values });
     jobChangeHandler({ id: reviewId, ...values });
   };
 
