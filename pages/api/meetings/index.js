@@ -15,12 +15,52 @@ async function handle(req, res, prisma, user) {
         created_by: userId,
         organization_id: organization_id,
       },
+      include: {
+        review: {
+          select: {
+            ReviewAssignee: true,
+            created_by: true,
+            review_name: true,
+            created_date: true,
+          },
+        },
+        goal: {
+          select: {
+            GoalAssignee: true,
+            goal_title: true,
+            end_date: true,
+          },
+        },
+      },
     });
+    let filterData = [];
+    let filterList = [];
+    if (Number(data?.length) > 0)
+      filterList = data.map((item) => {
+        if (item?.meeting_type === "Goal") {
+          filterData = item?.goal?.GoalAssignee.map((i) => {
+            return i.assignee_id;
+          });
+        }
+        if (item?.meeting_type === "Review") {
+          let list = [];
+          list = item?.review?.ReviewAssignee.map((i) => {
+            return i.assigned_to_id;
+          });
+          list.push(item?.review?.created_by);
+          filterData = list;
+        }
 
-    if (data) {
+        return {
+          ...item,
+          assigneeList: filterData,
+        };
+      });
+
+    if (filterList) {
       return res.status(200).json({
         status: 200,
-        data: data,
+        data: filterList,
         message: "Meetings Details Retrieved",
       });
     }
@@ -38,14 +78,20 @@ async function handle(req, res, prisma, user) {
         organization: { connect: { id: organization_id } },
       };
 
-      const create = await prisma.meetings.create({
+      if (reqBody.meeting_type === "Goal") {
+        data.goal = { connect: { id: reqBody?.type_id } };
+      } else if (reqBody.meeting_type === "Review") {
+        data.review = { connect: { id: reqBody?.type_id } };
+      }
+
+      const createData = await prisma.meetings.create({
         data: data,
       });
 
-      if (create) {
+      if (createData) {
         return res.status(200).json({
           status: 200,
-          message: "Meeting Details Saved Successfully ",
+          message: "Meeting Details Saved Successfully",
         });
       }
     } catch (error) {

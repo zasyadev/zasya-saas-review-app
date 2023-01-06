@@ -505,13 +505,13 @@ model Meetings {
   meeting_title       String               @db.VarChar(120)
   meeting_description String?              @db.LongText
   meeting_type        MeetingTypeEnum
-  frequency           MeetingFrequencyEnum
+  frequency           MeetingFrequencyEnum?
   meeting_at          DateTime
   organization        UserOrganization?    @relation(fields: [organization_id], references: [id])
   organization_id     Int
-  goal                Goals?               @relation(fields: [goal_id], references: [id])
+  goal                Goals?               @relation(fields: [goal_id], references: [id],onDelete: Cascade)
   goal_id             String?
-  review              Review?              @relation(fields: [review_id], references: [id])
+  review              Review?              @relation(fields: [review_id], references: [id],onDelete: Cascade)
   review_id           String?
   created_date        DateTime             @default(now())
   modified_date       DateTime             @default(now())
