@@ -246,12 +246,12 @@ async function handle(req, res, prisma) {
     }
   } else if (req.method === "PUT") {
     try {
-      const resData = req.body;
+      const reqBody = req.body;
 
       const updateReview = await prisma.review.update({
-        where: { id: resData.id },
+        where: { id: reqBody.id },
         data: {
-          frequency_status: true,
+          frequency: reqBody.frequency,
         },
       });
 
