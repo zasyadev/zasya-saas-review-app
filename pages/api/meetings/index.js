@@ -1,10 +1,4 @@
-import { getGoalEndDays } from "../../../helpers/momentHelper";
-import {
-  CustomizeSlackMessage,
-  SlackPostMessage,
-} from "../../../helpers/slackHelper";
 import { RequestHandler } from "../../../lib/RequestHandler";
-import { GOALS_SCHEMA } from "../../../yup-schema/goals";
 
 async function handle(req, res, prisma, user) {
   const { id: userId, organization_id } = user;
@@ -16,6 +10,10 @@ async function handle(req, res, prisma, user) {
     const data = await prisma.meetings.findMany({
       orderBy: {
         modified_date: "desc",
+      },
+      where: {
+        created_by: userId,
+        organization_id: organization_id,
       },
     });
 
@@ -35,7 +33,7 @@ async function handle(req, res, prisma, user) {
         meeting_title: reqBody.meeting_title,
         meeting_description: reqBody?.meeting_description ?? "",
         meeting_type: reqBody.meeting_type,
-        frequency: reqBody.frequency ?? "Once",
+        frequency: reqBody?.frequency ?? "Once",
         meeting_at: reqBody.meeting_at,
         organization: { connect: { id: organization_id } },
       };
@@ -51,7 +49,6 @@ async function handle(req, res, prisma, user) {
         });
       }
     } catch (error) {
-      console.log(error);
       return res
         .status(404)
         .json({ status: 404, message: "Internal server error" });
@@ -60,25 +57,12 @@ async function handle(req, res, prisma, user) {
     const reqBody = req.body;
 
     let transactionData = {};
-    transactionData = await prisma.$transaction(async (transaction) => {
-      const formdata = await transaction.goals.update({
-        where: {
-          id: reqBody.id,
-        },
-        data: {
-          goal_title: reqBody.goals_headers[0].goal_title,
-          goal_description: reqBody.goals_headers[0].goal_description,
-        },
-      });
 
-      return { formdata };
-    });
-
-    if (transactionData && transactionData.formdata) {
+    if (transactionData) {
       return res.status(200).json({
         status: 200,
         data: transactionData.formdata,
-        message: "Goals Details Updated",
+        message: "Meeting Details Updated",
       });
     }
     return res.status(404).json({ status: 404, message: "No Record Found" });

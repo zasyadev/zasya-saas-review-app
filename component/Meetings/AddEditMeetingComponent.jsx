@@ -165,7 +165,7 @@ function AddEditGoalComponent({ user, editMode = false }) {
             <DatePicker />
           </Form.Item>
 
-          <Form.Item
+          {/* <Form.Item
             label="Frequency"
             name="frequency"
             rules={[
@@ -184,7 +184,7 @@ function AddEditGoalComponent({ user, editMode = false }) {
               <Select.Option value={WEEKLY_FREQUENCY}>Weekly</Select.Option>
               <Select.Option value={MONTHLY_FREQUENCY}>Monthly</Select.Option>
             </Select>
-          </Form.Item>
+          </Form.Item> */}
         </div>
 
         <div className="flex justify-end">
