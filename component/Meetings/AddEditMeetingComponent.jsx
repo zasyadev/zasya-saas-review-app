@@ -17,7 +17,9 @@ function AddEditGoalComponent({ user, editMode = false }) {
   const [loadingSubmitSpin, setLoadingSubmitSpin] = useState(false);
   const [loading, setLoading] = useState(false);
   const [meetingData, setMeetingData] = useState(null);
-
+  const [meetingType, setMeetingType] = useState(null);
+  const [reviewsList, setReviewsList] = useState([]);
+  const [goalsList, setGoalsList] = useState([]);
   const [form] = Form.useForm();
 
   const { meeting_id } = router.query;
@@ -86,6 +88,38 @@ function AddEditGoalComponent({ user, editMode = false }) {
       });
   }
 
+  async function fetchReviewsList() {
+    await httpService
+      .get(`/api/review/${user.id}`)
+      .then(({ data: response }) => {
+        if (response.status === 200) {
+          setReviewsList(response.data);
+        }
+      })
+      .catch((err) => {
+        openNotificationBox(
+          "error",
+          err?.response?.data?.message || "Failed! Please try again"
+        );
+      });
+  }
+
+  async function fetchGoalList() {
+    await httpService
+      .get(`/api/goals?status=All`)
+      .then(({ data: response }) => {
+        if (response.status === 200) {
+          setGoalsList(response.data);
+        }
+      })
+      .catch((err) => {
+        openNotificationBox(
+          "error",
+          err?.response?.data?.message || "Failed! Please try again"
+        );
+      });
+  }
+
   const fillFormWithData = () => {
     form.setFieldsValue({
       meeting_at: moment(meetingData.meetingData),
@@ -99,6 +133,8 @@ function AddEditGoalComponent({ user, editMode = false }) {
     if (editMode && meeting_id) {
       fetchMeetingData();
     }
+    fetchReviewsList();
+    fetchGoalList();
   }, [editMode, meeting_id]);
 
   useEffect(() => {
@@ -173,11 +209,49 @@ function AddEditGoalComponent({ user, editMode = false }) {
               placeholder="Select Meeting Type"
               size="large"
               className="font-medium"
+              onSelect={(value) => {
+                setMeetingType(value);
+                form.setFieldsValue({ type_id: null });
+              }}
             >
               <Select.Option value={GOAL_TYPE}>Goal</Select.Option>
               <Select.Option value={REVIEW_TYPE}>Review</Select.Option>
             </Select>
           </Form.Item>
+          {[GOAL_TYPE, REVIEW_TYPE].includes(meetingType) && (
+            <Form.Item
+              name="type_id"
+              label={`Select ${meetingType}`}
+              rules={[
+                {
+                  required: true,
+                  message: "required",
+                },
+              ]}
+            >
+              <Select
+                size="large"
+                placeholder={`Select ${meetingType}`}
+                showSearch
+                filterOption={(input, option) =>
+                  option.children.toLowerCase().indexOf(input.toLowerCase()) >=
+                  0
+                }
+              >
+                {meetingType === REVIEW_TYPE
+                  ? reviewsList.map((data, index) => (
+                      <Select.Option key={index} value={data.id}>
+                        {data?.review_name}
+                      </Select.Option>
+                    ))
+                  : goalsList.map((data, index) => (
+                      <Select.Option key={index} value={data.goal_id}>
+                        {data?.goal?.goal_title}
+                      </Select.Option>
+                    ))}
+              </Select>
+            </Form.Item>
+          )}
 
           <Form.Item
             label="Meeting Date"
