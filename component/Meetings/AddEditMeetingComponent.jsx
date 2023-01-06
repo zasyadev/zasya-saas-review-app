@@ -107,11 +107,17 @@ function AddEditGoalComponent({ user, editMode = false }) {
     }
   }, [meetingData]);
 
-  return loading ? (
-    <div className="container mx-auto max-w-full">
-      <PulseLoader />
-    </div>
-  ) : meetingData ? (
+  if (loading)
+    return (
+      <div className="container mx-auto max-w-full">
+        <PulseLoader />
+      </div>
+    );
+
+  if (editMode && !meetingData)
+    return <NoRecordFound title={"No Meeting Found"} />;
+
+  return (
     <Form form={form} name="goals" layout="vertical" onFinish={onFinish}>
       <div className="w-full bg-white rounded-md  shadow-md p-5 mt-2 md:px-8">
         <Form.Item
@@ -201,8 +207,6 @@ function AddEditGoalComponent({ user, editMode = false }) {
         </div>
       </div>
     </Form>
-  ) : (
-    <NoRecordFound title={"No Meeting Found"} />
   );
 }
 
