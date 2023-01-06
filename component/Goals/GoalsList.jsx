@@ -217,7 +217,7 @@ function GoalsList({ user, isArchived = false }) {
         </div>
       )}
       {!isArchived && (
-        <div className="flex justify-between items-center  flex-wrap gap-4  mb-4 md:mb-6 ">
+        <div className="flex flex-col md:flex-row justify-between items-center  flex-wrap gap-4  mb-4 md:mb-6 ">
           <div className="flex justify-center md:justify-start items-center  flex-wrap gap-4 flex-1">
             <Input
               size="large"
@@ -286,14 +286,16 @@ function GoalsList({ user, isArchived = false }) {
               defaultValue={"All"}
             />
           </div>
-          <div className="space-x-3 flex items-center ">
+          <div className=" flex items-center justify-center md:justify-end flex-wrap gap-4 flex-1">
             <div className="space-x-2">
               <Tooltip title="Grid View">
                 <ButtonGray
                   withLink={false}
                   onClick={() => setDisplayMode("grid")}
                   title={<ApartmentOutlined />}
-                  className="leading-0"
+                  className={`leading-0 ${
+                    displayMode === "grid" ? "border-2 border-primary" : ""
+                  }`}
                 />
               </Tooltip>
               <Tooltip title="List View">
@@ -301,7 +303,9 @@ function GoalsList({ user, isArchived = false }) {
                   withLink={false}
                   onClick={() => setDisplayMode("list")}
                   title={<UnorderedListOutlined />}
-                  className="leading-0"
+                  className={`leading-0 ${
+                    displayMode === "list" ? "border-2 border-primary" : ""
+                  }`}
                 />
               </Tooltip>
             </div>
