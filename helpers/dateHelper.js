@@ -9,3 +9,7 @@ export const YEAR_DATE_FORMAT = "YYYY-MM-DD";
 export function disableDates(current) {
   return current && current > moment().endOf("month");
 }
+
+export const disabledPreviousDates = (currentDate) => {
+  return currentDate < moment().startOf("day");
+};

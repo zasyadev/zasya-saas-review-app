@@ -1,32 +1,32 @@
 import { DatePicker, Form, Select } from "antd";
+import moment from "moment";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
+import { disabledPreviousDates } from "../../helpers/dateHelper";
 import { maxLengthValidator } from "../../helpers/formValidations";
 import httpService from "../../lib/httpService";
 import { PrimaryButton } from "../common/CustomButton";
 import { CustomInput, CustomTextArea } from "../common/CustomFormFeilds";
+import NoRecordFound from "../common/NoRecordFound";
 import { openNotificationBox } from "../common/notification";
 import { PulseLoader } from "../Loader/LoadingSpinner";
-import {
-  GOAL_TYPE,
-  MONTHLY_FREQUENCY,
-  ONCE_FREQUENCY,
-  REVIEW_TYPE,
-  WEEKLY_FREQUENCY,
-} from "./constants";
+import { GOAL_TYPE, REVIEW_TYPE } from "./constants";
 
 function AddEditGoalComponent({ user, editMode = false }) {
   const router = useRouter();
   const [loadingSubmitSpin, setLoadingSubmitSpin] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [teamList, setTeamList] = useState([]);
+  const [meetingData, setMeetingData] = useState(null);
+
   const [form] = Form.useForm();
+
+  const { meeting_id } = router.query;
 
   const onFinish = (values) => {
     editMode
-      ? updateGoalData({
+      ? updateMeeting({
           ...values,
-          id: router.query.goal_id,
+          id: meeting_id,
         })
       : addMeetingsData(values);
   };
@@ -47,16 +47,16 @@ function AddEditGoalComponent({ user, editMode = false }) {
         setLoadingSubmitSpin(false);
       });
   };
-  const updateGoalData = async (data) => {
+  const updateMeeting = async (data) => {
     if (data.id) {
       setLoadingSubmitSpin(true);
 
       await httpService
-        .put("/api/goals", data)
+        .put("/api/meetings", data)
         .then(({ data: response }) => {
           if (response.status === 200) {
             openNotificationBox("success", response.message, 3);
-            router.push("/goals");
+            router.push("/meetings");
           }
         })
         .catch((err) => {
@@ -66,35 +66,52 @@ function AddEditGoalComponent({ user, editMode = false }) {
     }
   };
 
-  const fetchGoalData = async () => {};
+  async function fetchMeetingData() {
+    setLoading(true);
 
-  useEffect(() => {
-    if (editMode) {
-      fetchGoalData();
-    }
-    fetchTeamData();
-  }, [editMode]);
-
-  async function fetchTeamData() {
-    setTeamList([]);
     await httpService
-      .get(`/api/teams`)
+      .get(`/api/meetings/${meeting_id}`)
       .then(({ data: response }) => {
+        setLoading(false);
         if (response.status === 200) {
-          setTeamList(response.data);
+          setMeetingData(response.data);
         }
       })
       .catch((err) => {
-        setTeamList([]);
-        console.error(err.response.data?.message);
+        openNotificationBox(
+          "error",
+          err?.response?.data?.message || "Failed! Please try again"
+        );
+        setLoading(false);
       });
   }
+
+  const fillFormWithData = () => {
+    form.setFieldsValue({
+      meeting_at: moment(meetingData.meetingData),
+      meeting_description: meetingData.meeting_description,
+      meeting_title: meetingData.meeting_title,
+      meeting_type: meetingData.meeting_type,
+    });
+  };
+
+  useEffect(() => {
+    if (editMode && meeting_id) {
+      fetchMeetingData();
+    }
+  }, [editMode, meeting_id]);
+
+  useEffect(() => {
+    if (meetingData) {
+      fillFormWithData();
+    }
+  }, [meetingData]);
 
   return loading ? (
     <div className="container mx-auto max-w-full">
       <PulseLoader />
     </div>
-  ) : (
+  ) : meetingData ? (
     <Form form={form} name="goals" layout="vertical" onFinish={onFinish}>
       <div className="w-full bg-white rounded-md  shadow-md p-5 mt-2 md:px-8">
         <Form.Item
@@ -111,7 +128,7 @@ function AddEditGoalComponent({ user, editMode = false }) {
           ]}
         >
           <CustomInput
-            placeholder="Goal Title eg:weekly targets"
+            placeholder="Meeting Title"
             className=" h-12 rounded-md"
           />
         </Form.Item>
@@ -146,7 +163,11 @@ function AddEditGoalComponent({ user, editMode = false }) {
               },
             ]}
           >
-            <Select placeholder="Select Meeting Type" size="large">
+            <Select
+              placeholder="Select Meeting Type"
+              size="large"
+              className="font-medium"
+            >
               <Select.Option value={GOAL_TYPE}>Goal</Select.Option>
               <Select.Option value={REVIEW_TYPE}>Review</Select.Option>
             </Select>
@@ -162,29 +183,12 @@ function AddEditGoalComponent({ user, editMode = false }) {
               },
             ]}
           >
-            <DatePicker />
-          </Form.Item>
-
-          {/* <Form.Item
-            label="Frequency"
-            name="frequency"
-            rules={[
-              {
-                required: true,
-                message: "Required!",
-              },
-            ]}
-          >
-            <Select
-              placeholder="Select Goal Type"
+            <DatePicker
               size="large"
-              disabled={editMode}
-            >
-              <Select.Option value={ONCE_FREQUENCY}>Once</Select.Option>
-              <Select.Option value={WEEKLY_FREQUENCY}>Weekly</Select.Option>
-              <Select.Option value={MONTHLY_FREQUENCY}>Monthly</Select.Option>
-            </Select>
-          </Form.Item> */}
+              className="rounded-md"
+              disabledDate={disabledPreviousDates}
+            />
+          </Form.Item>
         </div>
 
         <div className="flex justify-end">
@@ -197,6 +201,8 @@ function AddEditGoalComponent({ user, editMode = false }) {
         </div>
       </div>
     </Form>
+  ) : (
+    <NoRecordFound title={"No Meeting Found"} />
   );
 }
 

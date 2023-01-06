@@ -11,7 +11,7 @@ const AddEditMeetingComponent = dynamic(
   }
 );
 
-function GoalAddPage() {
+function CreateMeetingPage() {
   return (
     <SuspenceWrapper>
       <WithMe>
@@ -25,4 +25,4 @@ function GoalAddPage() {
   );
 }
 
-export default GoalAddPage;
+export default CreateMeetingPage;
