@@ -1,4 +1,5 @@
 import {
+  EditOutlined,
   CalendarOutlined,
   FileTextOutlined,
   HistoryOutlined,
@@ -7,7 +8,7 @@ import {
   StopOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { Collapse, Grid, Popconfirm, Tooltip } from "antd";
+import { Collapse, Form, Grid, Popconfirm, Select, Tooltip } from "antd";
 import xlsx from "json-as-xlsx";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
@@ -15,7 +16,12 @@ import { openNotificationBox } from "../../component/common/notification";
 import { MONTH_DATE_FORMAT, YEAR_DATE_FORMAT } from "../../helpers/dateHelper";
 import { calculateDuration } from "../../helpers/momentHelper";
 import httpService from "../../lib/httpService";
-import { ButtonGray } from "../common/CustomButton";
+import {
+  ButtonGray,
+  PrimaryButton,
+  SecondaryButton,
+} from "../common/CustomButton";
+import CustomModal from "../common/CustomModal";
 import CustomPopover from "../common/CustomPopover";
 import CustomTable from "../common/CustomTable";
 import { ResizableTitle } from "./ResizableTitle";
@@ -60,6 +66,9 @@ function ReviewCreatedComponent({
 }) {
   const { lg } = useBreakpoint();
   const { Panel } = Collapse;
+  const [FrequencyUpdateForm] = Form.useForm();
+  const [editFreqModalVisible, setEditFreqModalVisible] = useState(false);
+  const [updateFreqApiLoading, setUpdateFreqApiLoading] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
   const [dataSource, setDataSource] = useState({});
   const [totalRating, setTotalRating] = useState(0);
@@ -308,6 +317,10 @@ function ReviewCreatedComponent({
     setIsExporting(false);
   };
 
+  const handleUpdateFrequency = (values) => {
+    console.log({ values });
+  };
+
   return (
     <div className="container mx-auto max-w-full">
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 2xl:gap-6">
@@ -320,31 +333,46 @@ function ReviewCreatedComponent({
           title={`Review Frequency`}
           count={reviewData?.frequency}
           Icon={() => <HistoryOutlined className="text-xl leading-0" />}
-          ActionButton={() =>
-            reviewData.frequency != "once" &&
-            reviewId &&
-            !reviewData.frequency_status && (
-              <Popconfirm
-                title={
-                  <p className="font-medium mb-0">
-                    Are you sure you want to stop the frequency of this review?
-                  </p>
-                }
-                okText="Yes"
-                cancelText="No"
-                onConfirm={() => jobChangeHandler(reviewId)}
-                placement="topRight"
-                overlayClassName="max-w-sm"
+          ActionButton={() => (
+            <>
+              <Tooltip
+                placement="bottom"
+                trigger={"hover"}
+                title="Update Frequency"
               >
-                <Tooltip
-                  placement="bottom"
-                  title={"To stop the frequency of this review"}
+                <div
+                  className="w-8 h-8 primary-color-blue p-2 rounded-full bg-gray-100 text-base cursor-pointer grid place-content-center ml-2"
+                  onClick={() => setEditFreqModalVisible(true)}
                 >
-                  <StopOutlined className="text-base p-1 leading-0 bg-gray-100  text-center rounded-full mx-2" />
-                </Tooltip>
-              </Popconfirm>
-            )
-          }
+                  <EditOutlined className="primary-color-bluetext-base " />
+                </div>
+              </Tooltip>
+              {reviewData.frequency != "once" &&
+                reviewId &&
+                !reviewData.frequency_status && (
+                  <Popconfirm
+                    title={
+                      <p className="font-medium mb-0">
+                        Are you sure you want to stop the frequency of this
+                        review?
+                      </p>
+                    }
+                    okText="Yes"
+                    cancelText="No"
+                    onConfirm={() => jobChangeHandler(reviewId)}
+                    placement="topRight"
+                    overlayClassName="max-w-sm"
+                  >
+                    <Tooltip
+                      placement="bottom"
+                      title={"To stop the frequency of this review"}
+                    >
+                      <StopOutlined className="text-base p-2 leading-0 bg-gray-100 text-red-700  text-center rounded-full ml-2" />
+                    </Tooltip>
+                  </Popconfirm>
+                )}
+            </>
+          )}
         />
         <InfoCard
           title={"Total Rating"}
@@ -431,6 +459,66 @@ function ReviewCreatedComponent({
         reviewCountModalData={reviewCountModalData}
         hideReviewCountModal={hideReviewCountModal}
       />
+
+      <CustomModal
+        title={
+          <p className="single-line-clamp mb-0 pr-6">Update Review Frequency</p>
+        }
+        visible={editFreqModalVisible}
+        onCancel={() => setEditFreqModalVisible(false)}
+        customFooter
+        footer={[
+          <>
+            <SecondaryButton
+              onClick={() => setEditFreqModalVisible(false)}
+              className=" h-full mr-2"
+              title="Cancel"
+            />
+            <PrimaryButton
+              onClick={() => FrequencyUpdateForm.submit()}
+              className=" h-full  "
+              title="Update"
+              disabled={updateFreqApiLoading}
+              loading={updateFreqApiLoading}
+            />
+          </>,
+        ]}
+      >
+        <Form
+          layout="vertical"
+          form={FrequencyUpdateForm}
+          onFinish={(value) => handleUpdateFrequency(value)}
+          initialValues={{
+            frequency: reviewData.frequency,
+          }}
+        >
+          <Form.Item
+            name="frequency"
+            className="mb-0 margin-b-0"
+            rules={[
+              {
+                required: true,
+                message: "Please select your frequency",
+              },
+            ]}
+          >
+            <Select
+              placeholder="Select Frequency"
+              showSearch
+              filterOption={(input, option) =>
+                option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+              }
+              size="large"
+              className="w-full font-bold"
+            >
+              <Select.Option value="once">Once</Select.Option>
+              <Select.Option value="daily">Daily</Select.Option>
+              <Select.Option value="weekly">Weekly</Select.Option>
+              <Select.Option value="monthly">Monthly</Select.Option>
+            </Select>
+          </Form.Item>
+        </Form>
+      </CustomModal>
     </div>
   );
 }
