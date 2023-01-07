@@ -1,17 +1,21 @@
 import { Form } from "antd";
-import moment from "moment";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import httpService from "../../lib/httpService";
 import NoRecordFound from "../common/NoRecordFound";
 import { openNotificationBox } from "../common/notification";
 import { PulseLoader } from "../Loader/LoadingSpinner";
 import MeetingForm from "./component/MeetingForm";
-import { CASUAL_MEETINGTYPE } from "./constants";
+import {
+  GOAL_MEETINGTYPE,
+  GOAL_TYPE,
+  REVIEW_MEETINGTYPE,
+  REVIEW_TYPE,
+} from "./constants";
 
 function AddEditGoalComponent({ user, editMode = false }) {
   const router = useRouter();
-  const { meeting_id, tp: meetingEditType } = router.query;
+  const { type_id, tp: meetingEditType } = router.query;
   const [form] = Form.useForm();
   const [loadingSubmitSpin, setLoadingSubmitSpin] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -21,12 +25,11 @@ function AddEditGoalComponent({ user, editMode = false }) {
   const [goalsList, setGoalsList] = useState([]);
 
   const onFinish = (values) => {
-    editMode
-      ? updateMeeting({
-          ...values,
-          id: meeting_id,
-        })
-      : addMeetingsData(values);
+    addMeetingsData({
+      ...values,
+      type_id: type_id,
+      assigneeList: assigneeList,
+    });
   };
 
   const addMeetingsData = async (data) => {
@@ -45,44 +48,6 @@ function AddEditGoalComponent({ user, editMode = false }) {
         setLoadingSubmitSpin(false);
       });
   };
-  const updateMeeting = async (data) => {
-    if (data.id) {
-      setLoadingSubmitSpin(true);
-
-      await httpService
-        .put("/api/meetings", data)
-        .then(({ data: response }) => {
-          if (response.status === 200) {
-            openNotificationBox("success", response.message, 3);
-            router.push("/meetings");
-          }
-        })
-        .catch((err) => {
-          openNotificationBox("error", err.response.data?.message);
-          setLoadingSubmitSpin(false);
-        });
-    }
-  };
-
-  async function fetchMeetingData() {
-    setLoading(true);
-
-    await httpService
-      .get(`/api/meetings/${meeting_id}`)
-      .then(({ data: response }) => {
-        setLoading(false);
-        if (response.status === 200) {
-          setMeetingData(response.data);
-        }
-      })
-      .catch((err) => {
-        openNotificationBox(
-          "error",
-          err?.response?.data?.message || "Failed! Please try again"
-        );
-        setLoading(false);
-      });
-  }
 
   async function fetchReviewsList() {
     await httpService
@@ -116,22 +81,58 @@ function AddEditGoalComponent({ user, editMode = false }) {
       });
   }
 
+  const assigneeList = useMemo(() => {
+    if (meetingEditType === GOAL_MEETINGTYPE && Number(goalsList.length) > 0) {
+      const goalData = goalsList.find((item) => item.goal.id === type_id);
+      return goalData?.goal?.GoalAssignee.map((i) => {
+        return i.assignee_id;
+      });
+    } else if (
+      meetingEditType === REVIEW_MEETINGTYPE &&
+      Number(reviewsList.length) > 0
+    ) {
+      let list = [];
+      const reviewData = reviewsList.find((item) => item.id === type_id);
+      list = reviewData?.ReviewAssignee.map((i) => {
+        return i.assigned_to_id;
+      });
+      if (list?.length > 0) list.push(reviewData?.created_by);
+
+      return list;
+    } else return [];
+  }, [goalsList.length, reviewsList.length]);
+
   const fillFormWithData = () => {
-    form.setFieldsValue({
-      meeting_at: moment(meetingData.meetingData),
-      meeting_description: meetingData.meeting_description,
-      meeting_title: meetingData.meeting_title,
-      meeting_type: meetingData.meeting_type,
-    });
+    if (meetingEditType === GOAL_MEETINGTYPE) {
+      form.setFieldsValue({
+        meeting_title: meetingData.goal.goal_title,
+        meeting_type: GOAL_TYPE,
+      });
+    } else if (meetingEditType === REVIEW_MEETINGTYPE) {
+      form.setFieldsValue({
+        meeting_title: meetingData.review_name,
+        meeting_type: REVIEW_TYPE,
+      });
+    }
   };
 
   useEffect(() => {
-    if (editMode && meeting_id && meetingEditType === CASUAL_MEETINGTYPE) {
-      fetchMeetingData();
+    if (type_id) {
+      if (
+        meetingEditType === GOAL_MEETINGTYPE &&
+        Number(goalsList.length) > 0
+      ) {
+        setMeetingData(goalsList.find((item) => item.goal.id === type_id));
+      } else if (
+        meetingEditType === REVIEW_MEETINGTYPE &&
+        Number(reviewsList.length) > 0
+      ) {
+        setMeetingData(reviewsList.find((item) => item.id === type_id));
+      }
     }
     fetchReviewsList();
     fetchGoalList();
-  }, [editMode, meeting_id]);
+  }, [goalsList.length, reviewsList.length]);
 
   useEffect(() => {
     if (meetingData) {
@@ -146,8 +147,7 @@ function AddEditGoalComponent({ user, editMode = false }) {
       </div>
     );
 
-  if (editMode && !meetingData)
-    return <NoRecordFound title={"No Meeting Found"} />;
+  if (!meetingData) return <NoRecordFound title={"No Meeting Found"} />;
 
   return (
     <MeetingForm
@@ -157,7 +157,7 @@ function AddEditGoalComponent({ user, editMode = false }) {
       meetingType={meetingType}
       loadingSubmitSpin={loadingSubmitSpin}
       editMode={editMode}
-      disabledTypeField={editMode}
+      disabledTypeField={true}
       reviewsList={reviewsList}
       goalsList={goalsList}
     />

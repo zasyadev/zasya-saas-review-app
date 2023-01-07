@@ -1,19 +1,17 @@
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import { Popconfirm } from "antd";
 import moment from "moment";
 import Link from "next/link";
-import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import httpService from "../../lib/httpService";
-import CustomTable from "../common/CustomTable";
-import MeetingListSkeleton from "./component/MeetingListSkeleton";
 import { DEFAULT_DATE_FORMAT } from "../../helpers/dateHelper";
+import httpService from "../../lib/httpService";
 import { PrimaryButton } from "../common/CustomButton";
-import { Popconfirm } from "antd";
+import CustomTable from "../common/CustomTable";
 import { openNotificationBox } from "../common/notification";
+import MeetingListSkeleton from "./component/MeetingListSkeleton";
+import { CASUAL_MEETINGTYPE } from "./constants";
 
 function GoalsList({ user }) {
-  const router = useRouter();
-
   const [loading, setLoading] = useState(false);
   const [meetingsList, setMeetingsList] = useState([]);
 
@@ -77,9 +75,12 @@ function GoalsList({ user }) {
       title: "Action",
       key: "action",
       render: (_, record) =>
-        user.role_id === 2 && (
+        user.id === record.created_by && (
           <p>
-            <Link href={`/meetings/edit/${record.id}`} passHref>
+            <Link
+              href={`/meetings/edit/${record.id}/?tp=${CASUAL_MEETINGTYPE}`}
+              passHref
+            >
               <EditOutlined className="primary-color-blue text-xl mx-1  md:mx-2 cursor-pointer" />
             </Link>
 
@@ -118,14 +119,6 @@ function GoalsList({ user }) {
           />
         </>
       )}
-
-      {/* {goalAssigneeModalData?.isVisible && (
-        <GoalAssignessModal
-          goalAssigneeModalData={goalAssigneeModalData}
-          hideAssigneeModal={hideAssigneeModal}
-          userId={user.id}
-        />
-      )} */}
     </div>
   );
 }

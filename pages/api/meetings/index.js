@@ -1,3 +1,7 @@
+import {
+  CustomizeSlackMessage,
+  SlackPostMessage,
+} from "../../../helpers/slackHelper";
 import { RequestHandler } from "../../../lib/RequestHandler";
 
 async function handle(req, res, prisma, user) {
@@ -68,6 +72,7 @@ async function handle(req, res, prisma, user) {
   } else if (req.method === "POST") {
     try {
       const reqBody = req.body;
+
       let data = {
         created: { connect: { id: userId } },
         meeting_title: reqBody.meeting_title,
@@ -77,16 +82,88 @@ async function handle(req, res, prisma, user) {
         meeting_at: reqBody.meeting_at,
         organization: { connect: { id: organization_id } },
       };
+      if (reqBody?.type_id) {
+        if (reqBody.meeting_type === "Goal") {
+          data.goal = { connect: { id: reqBody?.type_id } };
+        } else if (reqBody.meeting_type === "Review") {
+          data.review = { connect: { id: reqBody?.type_id } };
+        }
+      }
 
-      if (reqBody.meeting_type === "Goal") {
-        data.goal = { connect: { id: reqBody?.type_id } };
-      } else if (reqBody.meeting_type === "Review") {
-        data.review = { connect: { id: reqBody?.type_id } };
+      let assigneeData = [];
+      if (Number(reqBody?.assigneeList?.length) > 0) {
+        assigneeData = reqBody?.assigneeList.map((assignee) => {
+          return { assignee: { connect: { id: assignee } }, comment: "" };
+        });
+      }
+
+      if (Number(assigneeData?.length) > 0) {
+        data.MeetingAssignee = { create: assigneeData };
       }
 
       const createData = await prisma.meetings.create({
         data: data,
       });
+      if (createData?.id) {
+        const meetingData = await prisma.meetings.findUnique({
+          where: { id: createData.id },
+          include: {
+            MeetingAssignee: true,
+          },
+        });
+
+        if (Number(meetingData?.MeetingAssignee.length) > 0) {
+          meetingData.MeetingAssignee.filter(
+            (item) => item.assignee_id !== userId
+          ).forEach(async (assignee) => {
+            const { first_name: createdBy } = user;
+
+            let assignedUser = await prisma.user.findUnique({
+              where: { id: assignee.assignee_id },
+              include: {
+                UserDetails: true,
+              },
+            });
+
+            let notificationMessage = {
+              message: `${createdBy} has scheduled a meeting with you.`,
+              link: `${process.env.NEXT_APP_URL}meetings`,
+            };
+
+            await prisma.userNotification.create({
+              data: {
+                user: { connect: { id: assignee.assignee_id } },
+                data: notificationMessage,
+                read_at: null,
+                organization: {
+                  connect: { id: organization_id },
+                },
+              },
+            });
+
+            if (
+              assignedUser?.UserDetails &&
+              assignedUser?.UserDetails?.notification &&
+              assignedUser?.UserDetails?.notification?.length &&
+              assignedUser?.UserDetails?.notification.includes("slack") &&
+              assignedUser?.UserDetails?.slack_id
+            ) {
+              let customText = CustomizeSlackMessage({
+                header: "New Meeting Scheduled",
+                user: createdBy ?? "",
+                link: `${process.env.NEXT_APP_URL}meetings`,
+                by: "Assigneed By",
+                text: reqBody.meeting_title,
+              });
+              SlackPostMessage({
+                channel: assignedUser.UserDetails.slack_id,
+                text: `${createdBy ?? ""} has assigneed you a goal`,
+                blocks: customText,
+              });
+            }
+          });
+        }
+      }
 
       if (createData) {
         return res.status(200).json({
@@ -102,12 +179,21 @@ async function handle(req, res, prisma, user) {
   } else if (req.method === "PUT") {
     const reqBody = req.body;
 
-    let transactionData = {};
+    const data = await prisma.meetings.update({
+      where: {
+        id: reqBody.id,
+      },
+      data: {
+        meeting_title: reqBody.meeting_title,
+        meeting_description: reqBody?.meeting_description ?? "",
+        meeting_at: reqBody.meeting_at,
+      },
+    });
 
-    if (transactionData) {
+    if (data) {
       return res.status(200).json({
         status: 200,
-        data: transactionData.formdata,
+        data: data,
         message: "Meeting Details Updated",
       });
     }

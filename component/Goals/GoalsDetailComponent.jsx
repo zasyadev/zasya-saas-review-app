@@ -5,7 +5,9 @@ import { useRouter } from "next/router";
 import React, { useEffect, useMemo, useState } from "react";
 import { DEFAULT_DATE_FORMAT } from "../../helpers/dateHelper";
 import httpService from "../../lib/httpService";
+import { PrimaryButton } from "../common/CustomButton";
 import NoRecordFound from "../common/NoRecordFound";
+import { GOAL_MEETINGTYPE } from "../Meetings/constants";
 import { statusPill } from "./constants";
 
 function GoalsDetailComponent({ isArchived = false }) {
@@ -188,6 +190,13 @@ function GoalsDetailComponent({ isArchived = false }) {
             )}
           </div>
         </div>
+      </div>
+      <div className="mb-2 flex justify-end">
+        <PrimaryButton
+          withLink={true}
+          linkHref={`/meetings/add/${router?.query?.goal_id}?tp=${GOAL_MEETINGTYPE}`}
+          title={"Add Meeting"}
+        />
       </div>
     </div>
   );
