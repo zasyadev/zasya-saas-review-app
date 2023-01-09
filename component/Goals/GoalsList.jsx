@@ -1,9 +1,8 @@
 import { ApartmentOutlined, UnorderedListOutlined } from "@ant-design/icons";
-import { Avatar, Form, Input, Select, Tooltip } from "antd";
+import { Form, Input, Select, Tooltip } from "antd";
 import moment from "moment";
 import { useRouter } from "next/router";
 import React, { useEffect, useMemo, useState } from "react";
-import { getFirstTwoLetter } from "../../helpers/truncateString";
 import httpService from "../../lib/httpService";
 import {
   ButtonGray,
@@ -12,9 +11,10 @@ import {
 } from "../common/CustomButton";
 import CustomModal from "../common/CustomModal";
 import CustomSelectBox from "../common/CustomSelectBox";
+import { PulseLoader } from "../Loader/LoadingSpinner";
+import GoalsAvatar from "./component/GoalsAvatar";
 import GoalsCustomTable from "./component/GoalsCustomTable";
 import GoalsGroupList from "./component/GoalsGroupList";
-import GoalsGroupListSkeleton from "./component/GoalsGroupListSkeleton";
 import {
   ABANDONED_STATUS,
   COMPLETED_STATUS,
@@ -52,7 +52,7 @@ function GoalsList({ user, isArchived = false }) {
     initialGoalCountModalData
   );
   const [userList, setUserList] = useState([]);
-  const [displayMode, setDisplayMode] = useState("grid");
+  const [displayMode, setDisplayMode] = useState("list");
 
   async function fetchGoalList(status) {
     setLoading(true);
@@ -231,53 +231,11 @@ function GoalsList({ user, isArchived = false }) {
               }}
             />
 
-            <Avatar.Group
-              maxCount={3}
-              maxPopoverTrigger="click"
-              size="large"
-              maxStyle={{
-                color: "#0f123f",
-                backgroundColor: "#fde3cf",
-                cursor: "pointer",
-              }}
-            >
-              {Number(activeGoalUsers.length) > 0 &&
-                activeGoalUsers.map((data, index) => (
-                  <Tooltip
-                    title={data?.user?.first_name}
-                    placement="top"
-                    key={index + "users"}
-                  >
-                    <Avatar
-                      className={`${
-                        index === 0
-                          ? "bg-cyan-500"
-                          : index === 1
-                          ? "bg-orange-600"
-                          : "bg-green-600"
-                      } ${
-                        filterByMembersId.includes(data?.user?.id)
-                          ? "border-primary"
-                          : "border-white"
-                      } border-2 capitalize hover:cursor-pointer hover:z-10 transition-all duration-200 ease-in-out`}
-                      onClick={() => {
-                        if (filterByMembersId.includes(data?.user?.id)) {
-                          setFilterByMembersId((prev) =>
-                            prev.filter((item) => item !== data?.user?.id)
-                          );
-                        } else {
-                          setFilterByMembersId((prev) => [
-                            ...prev,
-                            data?.user?.id,
-                          ]);
-                        }
-                      }}
-                    >
-                      {getFirstTwoLetter(data?.user?.first_name)}
-                    </Avatar>
-                  </Tooltip>
-                ))}
-            </Avatar.Group>
+            <GoalsAvatar
+              activeGoalUsers={activeGoalUsers}
+              filterByMembersId={filterByMembersId}
+              setFilterByMembersId={setFilterByMembersId}
+            />
 
             <CustomSelectBox
               className={" w-36 text-sm"}
@@ -294,7 +252,9 @@ function GoalsList({ user, isArchived = false }) {
                   onClick={() => setDisplayMode("grid")}
                   title={<ApartmentOutlined />}
                   className={`leading-0 ${
-                    displayMode === "grid" ? "border-2 border-primary" : ""
+                    displayMode === "grid"
+                      ? "border-2 border-primary bg-gray-200"
+                      : " "
                   }`}
                 />
               </Tooltip>
@@ -304,7 +264,9 @@ function GoalsList({ user, isArchived = false }) {
                   onClick={() => setDisplayMode("list")}
                   title={<UnorderedListOutlined />}
                   className={`leading-0 ${
-                    displayMode === "list" ? "border-2 border-primary" : ""
+                    displayMode === "list"
+                      ? "border-2 border-primary bg-gray-200"
+                      : " "
                   }`}
                 />
               </Tooltip>
@@ -324,12 +286,13 @@ function GoalsList({ user, isArchived = false }) {
         } gap-4`}
       >
         {loading ? (
-          groupItems.map((groupItem) => (
-            <GoalsGroupListSkeleton
-              title={groupItem.title}
-              key={groupItem.type + "skeleton"}
-            />
-          ))
+          // groupItems.map((groupItem) => (
+          // <GoalsGroupListSkeleton
+          //   title={groupItem.title}
+          //   key={groupItem.type + "skeleton"}
+          // />
+          // ))
+          <PulseLoader />
         ) : displayMode === "grid" ? (
           groupItems.map((groupItem) => (
             <GoalsGroupList
