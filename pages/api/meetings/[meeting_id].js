@@ -29,36 +29,37 @@ async function handle(req, res, prisma, user) {
             end_date: true,
           },
         },
+        MeetingAssignee: true,
       },
     });
 
-    let filterData = [];
-    let filterMeetingData = {};
+    // let filterData = [];
+    // let filterMeetingData = {};
+    // if (data) {
+    //   if (data?.meeting_type === "Goal") {
+    //     filterData = data?.goal?.GoalAssignee.map((i) => {
+    //       return i.assignee_id;
+    //     });
+    //   }
+    //   if (data?.meeting_type === "Review") {
+    //     let list = [];
+    //     list = data?.review?.ReviewAssignee.map((i) => {
+    //       return i.assigned_to_id;
+    //     });
+    //     list.push(data?.review?.created_by);
+    //     filterData = list;
+    //   }
+
+    //   filterMeetingData = {
+    //     ...data,
+    //     assigneeList: filterData,
+    //   };
+    // }
+
     if (data) {
-      if (data?.meeting_type === "Goal") {
-        filterData = data?.goal?.GoalAssignee.map((i) => {
-          return i.assignee_id;
-        });
-      }
-      if (data?.meeting_type === "Review") {
-        let list = [];
-        list = data?.review?.ReviewAssignee.map((i) => {
-          return i.assigned_to_id;
-        });
-        list.push(data?.review?.created_by);
-        filterData = list;
-      }
-
-      filterMeetingData = {
-        ...data,
-        assigneeList: filterData,
-      };
-    }
-
-    if (filterMeetingData) {
       return res.status(200).json({
         status: 200,
-        data: filterMeetingData,
+        data: data,
         message: "Meetings Details Retrieved",
       });
     }

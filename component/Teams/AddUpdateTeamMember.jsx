@@ -154,7 +154,7 @@ function AddUpdateTeamMember({ editMode = false, team_id }) {
               ]}
             >
               <Select
-                placeholder="Select Member"
+                placeholder="Select Manager"
                 showSearch
                 filterOption={(input, option) =>
                   option.children.toLowerCase().indexOf(input.toLowerCase()) >=
@@ -182,7 +182,7 @@ function AddUpdateTeamMember({ editMode = false, team_id }) {
                 rules={[
                   {
                     required: true,
-                    message: "Please select your Manager",
+                    message: "Please select your Members",
                   },
                 ]}
               >

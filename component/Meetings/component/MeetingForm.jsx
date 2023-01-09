@@ -16,6 +16,7 @@ function MeetingForm({
   reviewsList,
   goalsList,
   disabledTypeField = false,
+  userList,
 }) {
   return (
     <Form form={form} name="meeting" layout="vertical" onFinish={onFinish}>
@@ -102,6 +103,7 @@ function MeetingForm({
                   option.children.toLowerCase().indexOf(input.toLowerCase()) >=
                   0
                 }
+                disabled={disabledTypeField}
               >
                 {meetingType === REVIEW_TYPE
                   ? reviewsList.map((data, index) => (
@@ -117,6 +119,37 @@ function MeetingForm({
               </Select>
             </Form.Item>
           )}
+
+          <Form.Item
+            name="members"
+            label="Members "
+            rules={[
+              {
+                required: true,
+                message: "Please select your Members",
+              },
+            ]}
+          >
+            <Select
+              mode="multiple"
+              placeholder="Select Member"
+              showSearch
+              filterOption={(input, option) =>
+                option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+              }
+              size="large"
+              className="w-full"
+              maxTagCount="responsive"
+              disabled={disabledTypeField}
+            >
+              {userList?.length > 0 &&
+                userList?.map((data, index) => (
+                  <Select.Option key={index + "users"} value={data?.user?.id}>
+                    {data?.user?.first_name}
+                  </Select.Option>
+                ))}
+            </Select>
+          </Form.Item>
 
           <Form.Item
             label="Meeting Date"

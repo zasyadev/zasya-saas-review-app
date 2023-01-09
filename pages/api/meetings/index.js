@@ -72,7 +72,6 @@ async function handle(req, res, prisma, user) {
   } else if (req.method === "POST") {
     try {
       const reqBody = req.body;
-
       let data = {
         created: { connect: { id: userId } },
         meeting_title: reqBody.meeting_title,

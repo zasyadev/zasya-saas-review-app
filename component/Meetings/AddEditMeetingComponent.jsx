@@ -1,7 +1,7 @@
 import { Form } from "antd";
 import moment from "moment";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import httpService from "../../lib/httpService";
 import NoRecordFound from "../common/NoRecordFound";
 import { openNotificationBox } from "../common/notification";
@@ -19,6 +19,7 @@ function AddEditGoalComponent({ user, editMode = false }) {
   const [meetingType, setMeetingType] = useState(null);
   const [reviewsList, setReviewsList] = useState([]);
   const [goalsList, setGoalsList] = useState([]);
+  const [userList, setUserList] = useState([]);
 
   const onFinish = (values) => {
     editMode
@@ -30,10 +31,16 @@ function AddEditGoalComponent({ user, editMode = false }) {
   };
 
   const addMeetingsData = async (data) => {
-    setLoadingSubmitSpin(true);
+    data.members.push(user.id);
 
+    const obj = {
+      ...data,
+      assigneeList: data.members,
+    };
+
+    setLoadingSubmitSpin(true);
     await httpService
-      .post("/api/meetings", data)
+      .post("/api/meetings", obj)
       .then(({ data: response }) => {
         if (response.status === 200) {
           openNotificationBox("success", response.message, 3);
@@ -116,6 +123,26 @@ function AddEditGoalComponent({ user, editMode = false }) {
       });
   }
 
+  const fetchUserData = useCallback(async () => {
+    await httpService
+      .get(`/api/user/organizationId`)
+      .then(({ data: response }) => {
+        if (response.status === 200) {
+          let filterData = response.data.filter(
+            (item) => item.user.status && item.role_id !== 2
+          );
+          setUserList(filterData);
+        }
+      })
+      .catch((err) => {
+        setUserList([]);
+        openNotificationBox(
+          "error",
+          err.response.data?.message || "Failed ! Please try again"
+        );
+      });
+  }, []);
+
   const fillFormWithData = () => {
     form.setFieldsValue({
       meeting_at: moment(meetingData.meetingData),
@@ -125,12 +152,36 @@ function AddEditGoalComponent({ user, editMode = false }) {
     });
   };
 
+  const filterUserList = useMemo(() => {
+    if (editMode && Number(userList.length) > 0) {
+      return userList?.filter((item) => {
+        if (Number(meetingData?.MeetingAssignee?.length) > 0) {
+          return meetingData?.MeetingAssignee.find(
+            (assignee) => assignee.assignee_id === item.user_id
+          );
+        }
+        return null;
+      });
+    } else {
+      return [];
+    }
+  }, [meetingData?.MeetingAssignee?.length, userList.length, editMode]);
+
+  useEffect(() => {
+    if (editMode && Number(filterUserList.length) > 0) {
+      form.setFieldsValue({
+        members: filterUserList.map((user) => user.user_id),
+      });
+    }
+  }, [filterUserList.length, editMode]);
+
   useEffect(() => {
     if (editMode && meeting_id && meetingEditType === CASUAL_MEETINGTYPE) {
       fetchMeetingData();
     }
     fetchReviewsList();
     fetchGoalList();
+    fetchUserData();
   }, [editMode, meeting_id]);
 
   useEffect(() => {
@@ -160,6 +211,7 @@ function AddEditGoalComponent({ user, editMode = false }) {
       disabledTypeField={editMode}
       reviewsList={reviewsList}
       goalsList={goalsList}
+      userList={userList}
     />
   );
 }

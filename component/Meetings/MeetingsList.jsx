@@ -56,13 +56,7 @@ function GoalsList({ user }) {
     {
       title: "Title",
       key: "meeting_title",
-      render: (_, record) => (
-        <Link href={`/goals/${record.id}/detail`} passHref>
-          <p className="cursor-pointer text-gray-500 mb-0">
-            {record.meeting_title}
-          </p>
-        </Link>
-      ),
+      render: (_, record) => record.meeting_title,
     },
 
     {
