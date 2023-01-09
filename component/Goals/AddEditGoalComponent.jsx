@@ -2,12 +2,13 @@ import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { Form, Select } from "antd";
 import moment from "moment";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { DEFAULT_DATE_FORMAT } from "../../helpers/dateHelper";
 import { maxLengthValidator } from "../../helpers/formValidations";
 import httpService from "../../lib/httpService";
 import { ButtonGray, PrimaryButton } from "../common/CustomButton";
 import { CustomInput, CustomTextArea } from "../common/CustomFormFeilds";
+import NoRecordFound from "../common/NoRecordFound";
 import { openNotificationBox } from "../common/notification";
 import { PulseLoader } from "../Loader/LoadingSpinner";
 import {
@@ -21,14 +22,15 @@ import {
 
 function AddEditGoalComponent({ user, editMode = false }) {
   const router = useRouter();
+  const [form] = Form.useForm();
   const [loadingSubmitSpin, setLoadingSubmitSpin] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [goalData, setGoalData] = useState(false);
   const [memberList, setMemberList] = useState(false);
   const [userList, setUserList] = useState([]);
   const [teamListBox, setTeamListBox] = useState(false);
   const [teamList, setTeamList] = useState([]);
   const [assigneeList, setAssigneeList] = useState([]);
-  const [form] = Form.useForm();
 
   const onFinish = (values) => {
     if (values.goal_type === TEAM_TYPE && teamList.length > 0) {
@@ -105,43 +107,70 @@ function AddEditGoalComponent({ user, editMode = false }) {
   const fetchGoalData = async () => {
     if (router.query.goal_id) {
       setLoading(true);
+
       await httpService
         .get(`/api/goals/${router.query.goal_id}`)
         .then(({ data: response }) => {
           if (response.status === 200) {
-            form.setFieldsValue({
-              goals_headers: [
-                {
-                  goal_title: response.data.goal_title,
-                  goal_description: response.data.goal_description,
-                },
-              ],
-              goal_type: response.data.goal_type,
-              end_date: moment(response.data.end_date).format(
-                DEFAULT_DATE_FORMAT
-              ),
-            });
-            setAssigneeList(
-              response.data?.GoalAssignee?.length > 0
-                ? response.data.GoalAssignee
-                : []
-            );
+            setFormFeilds(response.data);
+            setGoalData(true);
           }
           setLoading(false);
         })
         .catch((err) => {
+          setGoalData(false);
           setLoading(false);
         });
     }
   };
 
+  const setFormFeilds = (data) => {
+    form.setFieldsValue({
+      goals_headers: [
+        {
+          goal_title: data?.goal_title,
+          goal_description: data?.goal_description,
+        },
+      ],
+      goal_type: data?.goal_type,
+      end_date: moment(data?.end_date).format(DEFAULT_DATE_FORMAT),
+    });
+    setAssigneeList(data?.GoalAssignee?.length > 0 ? data.GoalAssignee : []);
+  };
+
   useEffect(() => {
-    if (editMode) {
-      fetchGoalData();
-    }
     fetchUserData();
     fetchTeamData();
-  }, [editMode]);
+    if (editMode) {
+      fetchGoalData();
+    } else {
+      setGoalData(true);
+    }
+  }, []);
+
+  const filterUserList = useMemo(() => {
+    if (editMode && Number(assigneeList.length) > 0) {
+      return userList?.filter((item) => {
+        if (Number(assigneeList.length) > 0) {
+          return assigneeList.find(
+            (assignee) => assignee.assignee_id === item.user_id
+          );
+        }
+        return null;
+      });
+    } else {
+      return userList;
+    }
+  }, [assigneeList.length, userList.length, editMode]);
+
+  useEffect(() => {
+    if (editMode && Number(filterUserList.length) > 0) {
+      setMemberList(true);
+      form.setFieldsValue({
+        goal_assignee: filterUserList.map((user) => user.user_id),
+      });
+    }
+  }, [filterUserList.length, editMode]);
 
   const handleGoalType = (val) => {
     if (val === "Individual") {
@@ -209,6 +238,8 @@ function AddEditGoalComponent({ user, editMode = false }) {
     <div className="container mx-auto max-w-full">
       <PulseLoader />
     </div>
+  ) : !goalData ? (
+    <NoRecordFound title="No Goal Found" />
   ) : (
     <Form
       form={form}
@@ -360,12 +391,12 @@ function AddEditGoalComponent({ user, editMode = false }) {
                 maxTagCount="responsive"
                 disabled={editMode}
               >
-                {userList.length > 0 && (
+                {filterUserList.length > 0 && (
                   <>
                     <Select.Option key="all" value="all">
                       ---SELECT ALL---
                     </Select.Option>
-                    {userList.map((data, index) => (
+                    {filterUserList.map((data, index) => (
                       <Select.Option
                         key={index + "users"}
                         value={data?.user?.id}
