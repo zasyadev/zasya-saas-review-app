@@ -1,6 +1,7 @@
 import { ClockCircleOutlined } from "@ant-design/icons";
 import { Skeleton, Timeline } from "antd";
 import moment from "moment";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useMemo, useState } from "react";
 import { DEFAULT_DATE_FORMAT } from "../../helpers/dateHelper";
@@ -9,7 +10,7 @@ import { PrimaryButton } from "../common/CustomButton";
 import CustomTable from "../common/CustomTable";
 import NoRecordFound from "../common/NoRecordFound";
 import { GOAL_MEETINGTYPE } from "../Meetings/constants";
-import { statusPill } from "./constants";
+import { INDIVIDUAL_TYPE, statusPill, TEAM_TYPE } from "./constants";
 
 function GoalsDetailComponent({ isArchived = false }) {
   const router = useRouter();
@@ -35,7 +36,7 @@ function GoalsDetailComponent({ isArchived = false }) {
 
   useEffect(() => {
     if (router?.query && router?.query?.goal_id) fetchGoalData();
-  }, []);
+  }, [router?.query?.goal_id]);
 
   const goalStatus = useMemo(() => {
     if (goalData && Number(goalData?.GoalAssignee?.length) > 0) {
@@ -49,7 +50,13 @@ function GoalsDetailComponent({ isArchived = false }) {
     {
       title: "Title",
       key: "meeting_title",
-      render: (_, record) => record.meeting_title,
+      render: (_, record) => (
+        <Link href={`/meetings/${record.id}`} passHref>
+          <p className="cursor-pointer text-gray-500 mb-0">
+            {record.meeting_title}
+          </p>
+        </Link>
+      ),
     },
 
     {
@@ -59,7 +66,6 @@ function GoalsDetailComponent({ isArchived = false }) {
         moment(record.meeting_at).format(DEFAULT_DATE_FORMAT),
     },
   ];
-  console.log({ goalData });
 
   return loading ? (
     <div className=" bg-white rounded-md  shadow-md flex-1 p-4  lg:p-5">
@@ -138,7 +144,7 @@ function GoalsDetailComponent({ isArchived = false }) {
             <p className=" text-primary font-bold text-lg md:text-xl mb-2">
               Details
             </p>
-            <div className="border border-gray-100 p-4 space-y-4 rounded-md">
+            <div className="border-2 border-gray-100 p-4 space-y-4 rounded-md shadow-sm">
               <div className="space-y-1">
                 <p className=" text-primary font-semibold text-base mb-0">
                   Created By
@@ -208,24 +214,31 @@ function GoalsDetailComponent({ isArchived = false }) {
             </div>
           </div>
         </div>
-        <div className="mb-2 flex justify-end">
-          <PrimaryButton
-            withLink={true}
-            linkHref={`/meetings/add/${router?.query?.goal_id}?tp=${GOAL_MEETINGTYPE}`}
-            title={"Add Meeting"}
-          />
-        </div>
+        {(goalData?.goal_type === INDIVIDUAL_TYPE ||
+          goalData?.goal_type === TEAM_TYPE) && (
+          <div className="mb-2 flex justify-end mt-4">
+            <PrimaryButton
+              withLink={true}
+              linkHref={`/meetings/add/${router?.query?.goal_id}?tp=${GOAL_MEETINGTYPE}`}
+              title={"Add Meeting"}
+            />
+          </div>
+        )}
       </div>
-      <div className="bg-white rounded-md  shadow-md relative p-4 lg:p-6 mt-4 md:mt-6">
-        {Number(goalData?.Meetings?.length) > 0 && (
+
+      {Number(goalData?.Meetings?.length) > 0 && (
+        <div className="bg-white rounded-md  shadow-md relative p-4 lg:p-6 mt-4 md:mt-6">
+          <p className=" text-primary font-bold text-lg md:text-xl mb-2">
+            Meetings TimeLine
+          </p>
           <CustomTable
             dataSource={goalData.Meetings}
             columns={columns}
             className="custom-table"
             isPagination={goalData?.Meetings?.length > 10}
           />
-        )}
-      </div>
+        </div>
+      )}
     </>
   );
 }

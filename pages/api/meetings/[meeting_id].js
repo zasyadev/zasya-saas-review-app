@@ -1,4 +1,5 @@
 import { RequestHandler } from "../../../lib/RequestHandler";
+import { MEETING_ASSIGNEE_SCHEMA } from "../../../yup-schema/meeting";
 
 async function handle(req, res, prisma, user) {
   const { id: userId } = user;
@@ -29,32 +30,17 @@ async function handle(req, res, prisma, user) {
             end_date: true,
           },
         },
-        MeetingAssignee: true,
+        MeetingAssignee: {
+          include: {
+            assignee: {
+              select: {
+                first_name: true,
+              },
+            },
+          },
+        },
       },
     });
-
-    // let filterData = [];
-    // let filterMeetingData = {};
-    // if (data) {
-    //   if (data?.meeting_type === "Goal") {
-    //     filterData = data?.goal?.GoalAssignee.map((i) => {
-    //       return i.assignee_id;
-    //     });
-    //   }
-    //   if (data?.meeting_type === "Review") {
-    //     let list = [];
-    //     list = data?.review?.ReviewAssignee.map((i) => {
-    //       return i.assigned_to_id;
-    //     });
-    //     list.push(data?.review?.created_by);
-    //     filterData = list;
-    //   }
-
-    //   filterMeetingData = {
-    //     ...data,
-    //     assigneeList: filterData,
-    //   };
-    // }
 
     if (data) {
       return res.status(200).json({
@@ -64,6 +50,40 @@ async function handle(req, res, prisma, user) {
       });
     }
     return res.status(404).json({ status: 404, message: "No Record Found" });
+  } else if (req.method === "POST") {
+    try {
+      const { comment, assigneeId } = req.body;
+      const meetingAssigneeData = await prisma.meetingAssignee.findFirst({
+        where: {
+          AND: [{ meeting_id: meeting_id }, { assignee_id: assigneeId }],
+        },
+      });
+      if (!meetingAssigneeData.id) {
+        return res
+          .status(404)
+          .json({ status: 404, message: "No Record Found" });
+      }
+      const data = await prisma.meetingAssignee.update({
+        where: {
+          id: meetingAssigneeData.id,
+        },
+        data: {
+          comment: comment,
+        },
+      });
+      if (data) {
+        return res.status(200).json({
+          status: 200,
+          data: data,
+          message: "Meetings Comment Updated",
+        });
+      }
+      return res.status(404).json({ status: 404, message: "No Record Found" });
+    } catch (error) {
+      return res
+        .status(404)
+        .json({ status: 404, message: "Internal server error" });
+    }
   } else if (req.method === "DELETE") {
     const data = await prisma.meetings.delete({
       where: { id: meeting_id },
@@ -83,8 +103,9 @@ const functionHandle = (req, res) =>
     req,
     res,
     callback: handle,
-    allowedMethods: ["GET", "DELETE"],
+    allowedMethods: ["GET", "DELETE", "POST"],
     protectedRoute: true,
+    schemaObj: MEETING_ASSIGNEE_SCHEMA,
   });
 
 export default functionHandle;

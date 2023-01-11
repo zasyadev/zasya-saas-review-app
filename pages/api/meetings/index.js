@@ -3,6 +3,7 @@ import {
   SlackPostMessage,
 } from "../../../helpers/slackHelper";
 import { RequestHandler } from "../../../lib/RequestHandler";
+import { MEETING_SCHEMA } from "../../../yup-schema/meeting";
 
 async function handle(req, res, prisma, user) {
   const { id: userId, organization_id } = user;
@@ -206,6 +207,7 @@ const functionHandle = (req, res) =>
     callback: handle,
     allowedMethods: ["GET", "POST", "PUT"],
     protectedRoute: true,
+    schemaObj: MEETING_SCHEMA,
   });
 
 export default functionHandle;
