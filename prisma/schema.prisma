@@ -45,6 +45,8 @@ model User {
   UserTeams             UserTeams[]
   GoalAssignee          GoalAssignee[]
   UserTeamsGroups       UserTeamsGroups[]
+  Meetings              Meetings[]
+  MeetingAssignee       MeetingAssignee[]
 
   @@map("users")
 }
@@ -130,6 +132,7 @@ model Review {
   modified_date         DateTime                @default(now())
   ReviewAssigneeAnswers ReviewAssigneeAnswers[]
   ReviewAssignee        ReviewAssignee[]
+  Meetings              Meetings[]
 
   @@map("review")
 }
@@ -219,6 +222,7 @@ model UserOrganization {
   Survey                Survey[]
   Goals                 Goals[]
   UserTeams             UserTeams[]
+  Meetings              Meetings[]
 
   @@map("user_organization")
 }
@@ -436,6 +440,7 @@ model Goals {
   modified_date    DateTime          @default(now())
   GoalsTimeline    GoalsTimeline[]
   GoalAssignee     GoalAssignee[]
+  Meetings         Meetings[]
 
   @@map("goals")
 }
@@ -494,6 +499,41 @@ model UserTeamsGroups {
   @@map("user_teams_groups")
 }
 
+model Meetings {
+  id                  String                @id @default(uuid())
+  created             User                  @relation(fields: [created_by], references: [id])
+  created_by          String
+  meeting_title       String                @db.VarChar(120)
+  meeting_description String?               @db.LongText
+  meeting_type        MeetingTypeEnum
+  frequency           MeetingFrequencyEnum?
+  meeting_at          DateTime
+  organization        UserOrganization?     @relation(fields: [organization_id], references: [id])
+  organization_id     Int
+  goal                Goals?                @relation(fields: [goal_id], references: [id], onDelete: Cascade)
+  goal_id             String?
+  review              Review?               @relation(fields: [review_id], references: [id], onDelete: Cascade)
+  review_id           String?
+  created_date        DateTime              @default(now())
+  modified_date       DateTime              @default(now())
+  MeetingAssignee     MeetingAssignee[]
+
+  @@map("meetings")
+}
+
+model MeetingAssignee {
+  id            Int      @id @default(autoincrement())
+  assignee      User     @relation(fields: [assignee_id], references: [id])
+  assignee_id   String
+  comment       String?
+  meeting       Meetings @relation(fields: [meeting_id], references: [id], onDelete: Cascade)
+  meeting_id    String
+  created_date  DateTime @default(now())
+  modified_date DateTime @default(now())
+
+  @@map("meeting_assignee")
+}
+
 enum RoleEnum {
   SuperAdmin
   Admin
@@ -544,4 +584,15 @@ enum GoalFrequencyEnum {
   monthly
   weekly
   halfyearly
+}
+
+enum MeetingFrequencyEnum {
+  Once
+  Weekly
+  Monthly
+}
+
+enum MeetingTypeEnum {
+  Goal
+  Review
 }
