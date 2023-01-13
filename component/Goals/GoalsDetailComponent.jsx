@@ -229,7 +229,7 @@ function GoalsDetailComponent({ isArchived = false }) {
       {Number(goalData?.Meetings?.length) > 0 && (
         <div className="bg-white rounded-md  shadow-md relative p-4 lg:p-6 mt-4 md:mt-6">
           <p className=" text-primary font-bold text-lg md:text-xl mb-2">
-            Meetings TimeLine
+            Meetings
           </p>
           <CustomTable
             dataSource={goalData.Meetings}

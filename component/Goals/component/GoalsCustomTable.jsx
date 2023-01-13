@@ -128,7 +128,7 @@ function GoalsCustomTable({
     <CustomTable
       dataSource={goalList}
       columns={columns}
-      className="custom-table"
+      className="custom-table rounded-md"
       showHeader={showHeader}
       isPagination={isPagination}
     />

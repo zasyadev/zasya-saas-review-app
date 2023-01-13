@@ -1,6 +1,6 @@
 import { Form } from "antd";
 import { useRouter } from "next/router";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import httpService from "../../lib/httpService";
 import NoRecordFound from "../common/NoRecordFound";
 import { openNotificationBox } from "../common/notification";
@@ -26,9 +26,14 @@ function AddEditGoalComponent({ user, editMode = false }) {
   const [userList, setUserList] = useState([]);
 
   const onFinish = (values) => {
+    assigneeList.forEach((assignee) => {
+      if (values.members.indexOf(assignee) === -1)
+        values.members.push(assignee);
+    });
+
     addMeetingsData({
       ...values,
-      assigneeList: assigneeList,
+      assigneeList: values.members,
     });
   };
 
@@ -124,7 +129,7 @@ function AddEditGoalComponent({ user, editMode = false }) {
     if (meetingEditType === GOAL_MEETINGTYPE) {
       setMeetingType(GOAL_TYPE);
       form.setFieldsValue({
-        meeting_title: meetingData.goal.goal_title,
+        meeting_description: meetingData.goal.goal_title,
         meeting_type: GOAL_TYPE,
         type_id: type_id,
         members: filterUserList,
@@ -132,7 +137,7 @@ function AddEditGoalComponent({ user, editMode = false }) {
     } else if (meetingEditType === REVIEW_MEETINGTYPE) {
       setMeetingType(REVIEW_TYPE);
       form.setFieldsValue({
-        meeting_title: meetingData.review_name,
+        meeting_description: meetingData.review_name,
         meeting_type: REVIEW_TYPE,
         type_id: type_id,
       });
@@ -205,7 +210,7 @@ function AddEditGoalComponent({ user, editMode = false }) {
       disabledTypeField={true}
       reviewsList={reviewsList}
       goalsList={goalsList}
-      userList={filterUserList}
+      userList={userList}
     />
   );
 }
