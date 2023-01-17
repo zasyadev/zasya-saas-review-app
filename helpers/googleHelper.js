@@ -20,7 +20,12 @@ const GOOGLE_CALENDER_KEY = process.env.GOOGLE_CALENDER_KEY;
 
 async function loadSavedCredentialsIfExist() {
   try {
-    const content = fs.readFileSync(TOKEN_PATH, "utf8");
+    // const content = fs.readFileSync(TOKEN_PATH, "utf8");
+    const content = fs.readFile(TOKEN_PATH, function (err, data) {
+      if (err) throw err;
+      console.log(data);
+      return data;
+    });
 
     console.log({ content });
     const credentials = JSON.parse(content);
@@ -31,7 +36,12 @@ async function loadSavedCredentialsIfExist() {
 }
 
 async function saveCredentials(client) {
-  const content = fs.readFileSync(CREDENTIALS_PATH, "utf8");
+  // const content = fs.readFileSync(CREDENTIALS_PATH, "utf8");
+  const content = fs.readFile(CREDENTIALS_PATH, function (err, data) {
+    if (err) throw err;
+    console.log(data);
+    return data;
+  });
   const keys = JSON.parse(content);
   const key = keys.installed || keys.web;
   const payload = JSON.stringify({
@@ -41,7 +51,13 @@ async function saveCredentials(client) {
     refresh_token: client.credentials.refresh_token,
   });
   console.log({ content });
-  fs.writeFileSync(TOKEN_PATH, payload);
+  // fs.writeFileSync(TOKEN_PATH, payload);
+  fs.writeFile(TOKEN_PATH, payload, function (err) {
+    if (err) {
+      return console.log(err);
+    }
+    console.log("The file was saved!");
+  });
 }
 
 async function authorize() {
@@ -51,6 +67,12 @@ async function authorize() {
     return client;
   }
   console.log({ CREDENTIALS_PATH });
+  const content = fs.readFile(CREDENTIALS_PATH, function (err, data) {
+    if (err) throw err;
+    console.log(data);
+    return data;
+  });
+  console.log({ content }, "dhfvdxfhgxdf");
   client = await authenticate({
     scopes: SCOPES,
     keyfilePath: CREDENTIALS_PATH,
