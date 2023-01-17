@@ -20,7 +20,7 @@ const GOOGLE_CALENDER_KEY = process.env.GOOGLE_CALENDER_KEY;
 
 async function loadSavedCredentialsIfExist() {
   try {
-    const content = await fs.readFileSync(TOKEN_PATH, "utf8");
+    const content = fs.readFileSync(TOKEN_PATH, "utf8");
 
     console.log({ content });
     const credentials = JSON.parse(content);
@@ -31,7 +31,7 @@ async function loadSavedCredentialsIfExist() {
 }
 
 async function saveCredentials(client) {
-  const content = await fs.readFileSync(CREDENTIALS_PATH, "utf8");
+  const content = fs.readFileSync(CREDENTIALS_PATH, "utf8");
   const keys = JSON.parse(content);
   const key = keys.installed || keys.web;
   const payload = JSON.stringify({
@@ -41,7 +41,7 @@ async function saveCredentials(client) {
     refresh_token: client.credentials.refresh_token,
   });
   console.log({ content });
-  await fs.writeFileSync(TOKEN_PATH, payload);
+  fs.writeFileSync(TOKEN_PATH, payload);
 }
 
 async function authorize() {
