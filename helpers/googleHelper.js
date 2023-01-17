@@ -98,12 +98,12 @@ export async function CreateGoogleCalenderApi({
 
       function (err, event) {
         if (err) {
-          // console.log(
-          //   "There was an error contacting the Calendar service: " + err
-          // );
+          console.log(
+            "There was an error contacting the Calendar service: " + err
+          );
           return;
         }
-        // console.log("Event created: %s", event.data.htmlLink);
+        console.log("Event created: %s", event.data.htmlLink);
       }
     );
   }
