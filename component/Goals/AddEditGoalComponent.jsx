@@ -354,7 +354,7 @@ function AddEditGoalComponent({ user, editMode = false }) {
                 </Select.Option>
               )}
 
-              {(user.role_id === 2 || user.role_id === 3) && (
+              {user.role_id <= 3 && (
                 <>
                   <Select.Option value={INDIVIDUAL_TYPE}>
                     Individual

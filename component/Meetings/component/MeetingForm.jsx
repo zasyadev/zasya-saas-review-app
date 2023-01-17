@@ -167,7 +167,7 @@ function MeetingForm({
           >
             <DatePicker
               size="large"
-              className="rounded-md"
+              className="rounded-md w-full"
               disabledDate={disabledPreviousDates}
               showTime={{
                 format: "HH:mm",

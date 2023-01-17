@@ -1,4 +1,5 @@
-// import { GoogleCalenderApi } from "../../../helpers/googleHelper";
+import moment from "moment";
+import { CreateGoogleCalenderApi } from "../../../helpers/googleHelper";
 import {
   CustomizeSlackMessage,
   SlackPostMessage,
@@ -13,7 +14,6 @@ async function handle(req, res, prisma, user) {
   }
 
   if (req.method === "GET") {
-    // GoogleCalenderApi();
     const data = await prisma.meetings.findMany({
       orderBy: {
         modified_date: "desc",
@@ -118,11 +118,36 @@ async function handle(req, res, prisma, user) {
             const meetingData = await prisma.meetings.findUnique({
               where: { id: createData.id },
               include: {
-                MeetingAssignee: true,
+                MeetingAssignee: {
+                  include: {
+                    assignee: {
+                      select: {
+                        email: true,
+                      },
+                    },
+                  },
+                },
               },
             });
 
             if (Number(meetingData?.MeetingAssignee.length) > 0) {
+              const emailsList = meetingData?.MeetingAssignee.map((meeting) => {
+                return {
+                  email: meeting.assignee.email,
+                };
+              });
+              const meeetingStartTime = moment(meetingData.meeting_at).format();
+              const meeetingEndTime = moment(meeetingStartTime)
+                .add("30", "minutes")
+                .format();
+
+              CreateGoogleCalenderApi({
+                emailsList: emailsList,
+                meeetingStartTime: meeetingStartTime,
+                meetingTitle: meetingData.meeting_title,
+                meeetingEndTime: meeetingEndTime,
+              });
+
               meetingData.MeetingAssignee.filter(
                 (item) => item.assignee_id !== userId
               ).forEach(async (assignee) => {

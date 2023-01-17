@@ -18,80 +18,65 @@ const CREDENTIALS_PATH = path.join(process.cwd(), "credentials.json");
 const GOOGLE_CALENDER_ID = process.env.GOOGLE_CALENDER_ID;
 const GOOGLE_CALENDER_KEY = process.env.GOOGLE_CALENDER_KEY;
 
-export async function GoogleCalenderApi() {
-  async function loadSavedCredentialsIfExist() {
-    try {
-      const content = await fs.readFile(TOKEN_PATH);
-      const credentials = JSON.parse(content);
-      return google.auth.fromJSON(credentials);
-    } catch (err) {
-      return null;
-    }
+async function loadSavedCredentialsIfExist() {
+  try {
+    const content = await fs.readFile(TOKEN_PATH);
+    const credentials = JSON.parse(content);
+    return google.auth.fromJSON(credentials);
+  } catch (err) {
+    return null;
   }
+}
 
-  async function saveCredentials(client) {
-    const content = await fs.readFile(CREDENTIALS_PATH);
-    const keys = JSON.parse(content);
-    const key = keys.installed || keys.web;
-    const payload = JSON.stringify({
-      type: "authorized_user",
-      client_id: key.client_id,
-      client_secret: key.client_secret,
-      refresh_token: client.credentials.refresh_token,
-    });
-    await fs.writeFile(TOKEN_PATH, payload);
-  }
+async function saveCredentials(client) {
+  const content = await fs.readFile(CREDENTIALS_PATH);
+  const keys = JSON.parse(content);
+  const key = keys.installed || keys.web;
+  const payload = JSON.stringify({
+    type: "authorized_user",
+    client_id: key.client_id,
+    client_secret: key.client_secret,
+    refresh_token: client.credentials.refresh_token,
+  });
+  await fs.writeFile(TOKEN_PATH, payload);
+}
 
-  async function authorize() {
-    let client = await loadSavedCredentialsIfExist();
-    if (client) {
-      return client;
-    }
-    client = await authenticate({
-      scopes: SCOPES,
-      keyfilePath: CREDENTIALS_PATH,
-    });
-
-    if (client.credentials) {
-      await saveCredentials(client);
-    }
+async function authorize() {
+  let client = await loadSavedCredentialsIfExist();
+  if (client) {
     return client;
   }
+  client = await authenticate({
+    scopes: SCOPES,
+    keyfilePath: CREDENTIALS_PATH,
+  });
 
-  async function listEvents(auth) {
+  if (client.credentials) {
+    await saveCredentials(client);
+  }
+  return client;
+}
+
+export async function CreateGoogleCalenderApi({
+  emailsList,
+  meeetingStartTime,
+  meetingTitle,
+  meeetingEndTime,
+}) {
+  async function createEvents(auth) {
     const calendar = google.calendar({ version: "v3", auth });
-    // const res = await calendar.events.list({
-    //   calendarId:
-    //     "c_40d3200aea887ed7163bbc19761ee5066c71725a2ea47e2f6a559cf5a41f87da@group.calendar.google.com",
-    //   timeMin: new Date().toISOString(),
-    //   maxResults: 10,
-    //   singleEvents: true,
-    //   orderBy: "startTime",
-    // });
-    // const events = res.data.items;
-    // if (!events || events.length === 0) {
-    //   console.log("No upcoming events found.");
-    //   return;
-    // }
-    // console.log("Upcoming 10 events:");
-    // events.map((event, i) => {
-    //   const start = event.start.dateTime || event.start.date;
-    //   console.log(`${start} - ${event.summary}`);
-    // });
-
     const event = {
-      summary: "Default event",
-      description: "Google add event testing.",
-      attendees: [{ email: "nishant@zasyasolutions.com" }],
+      summary: meetingTitle,
+      description: "",
+      attendees: emailsList,
       start: {
-        dateTime: "2023-01-14T01:00:00-07:00",
-        timeZone: "America/Los_Angeles",
+        dateTime: meeetingStartTime,
+        timeZone: "Asia/Kolkata",
       },
       end: {
-        dateTime: "2023-01-14T02:00:00-07:00",
-        timeZone: "America/Los_Angeles",
+        dateTime: meeetingEndTime,
+        timeZone: "Asia/Kolkata",
       },
-      recurrence: ["RRULE:FREQ=DAILY;COUNT=2"],
       reminders: {
         useDefault: false,
         overrides: [
@@ -113,15 +98,15 @@ export async function GoogleCalenderApi() {
 
       function (err, event) {
         if (err) {
-          console.log(
-            "There was an error contacting the Calendar service: " + err
-          );
+          // console.log(
+          //   "There was an error contacting the Calendar service: " + err
+          // );
           return;
         }
-        console.log("Event created: %s", event.data.htmlLink);
+        // console.log("Event created: %s", event.data.htmlLink);
       }
     );
   }
 
-  authorize().then(listEvents).catch(console.error);
+  authorize().then(createEvents).catch(console.error);
 }
