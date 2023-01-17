@@ -131,7 +131,7 @@ function AddEditGoalComponent({ user, editMode = false }) {
       form.setFieldsValue({
         meeting_description: meetingData.goal.goal_title,
         meeting_type: GOAL_TYPE,
-        type_id: type_id,
+        type_id: [type_id],
         members: filterUserList,
       });
     } else if (meetingEditType === REVIEW_MEETINGTYPE) {
@@ -139,7 +139,7 @@ function AddEditGoalComponent({ user, editMode = false }) {
       form.setFieldsValue({
         meeting_description: meetingData.review_name,
         meeting_type: REVIEW_TYPE,
-        type_id: type_id,
+        type_id: [type_id],
       });
     }
   };
