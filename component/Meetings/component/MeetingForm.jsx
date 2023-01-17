@@ -1,6 +1,9 @@
 import { DatePicker, Form, Select } from "antd";
 import React from "react";
-import { disabledPreviousDates } from "../../../helpers/dateHelper";
+import {
+  DEFAULT_DATETIME_FORMAT,
+  disabledPreviousDates,
+} from "../../../helpers/dateHelper";
 import { PrimaryButton } from "../../common/CustomButton";
 import { CustomInput, CustomTextArea } from "../../common/CustomFormFeilds";
 import { GOAL_TYPE, REVIEW_TYPE } from "../constants";
@@ -76,7 +79,7 @@ function MeetingForm({
               className="font-medium"
               onSelect={(value) => {
                 setMeetingType(value);
-                form.setFieldsValue({ type_id: null });
+                form.setFieldsValue({ type_id: [] });
               }}
               disabled={disabledTypeField}
             >
@@ -96,6 +99,7 @@ function MeetingForm({
               ]}
             >
               <Select
+                mode="multiple"
                 size="large"
                 placeholder={`Select ${meetingType}`}
                 showSearch
@@ -103,7 +107,7 @@ function MeetingForm({
                   option.children.toLowerCase().indexOf(input.toLowerCase()) >=
                   0
                 }
-                disabled={disabledTypeField}
+                disabled={editMode}
               >
                 {meetingType === REVIEW_TYPE
                   ? reviewsList.map((data, index) => (
@@ -140,7 +144,7 @@ function MeetingForm({
               size="large"
               className="w-full"
               maxTagCount="responsive"
-              disabled={disabledTypeField}
+              // disabled={disabledTypeField}
             >
               {userList?.length > 0 &&
                 userList?.map((data, index) => (
@@ -163,8 +167,12 @@ function MeetingForm({
           >
             <DatePicker
               size="large"
-              className="rounded-md"
+              className="rounded-md w-full"
               disabledDate={disabledPreviousDates}
+              showTime={{
+                format: "HH:mm",
+              }}
+              format={DEFAULT_DATETIME_FORMAT}
             />
           </Form.Item>
         </div>

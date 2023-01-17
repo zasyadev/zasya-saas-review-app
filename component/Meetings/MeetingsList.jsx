@@ -3,7 +3,7 @@ import { Popconfirm } from "antd";
 import moment from "moment";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-import { DEFAULT_DATE_FORMAT } from "../../helpers/dateHelper";
+import { DEFAULT_DATETIME_FORMAT } from "../../helpers/dateHelper";
 import httpService from "../../lib/httpService";
 import { PrimaryButton } from "../common/CustomButton";
 import CustomTable from "../common/CustomTable";
@@ -56,14 +56,20 @@ function GoalsList({ user }) {
     {
       title: "Title",
       key: "meeting_title",
-      render: (_, record) => record.meeting_title,
+      render: (_, record) => (
+        <Link href={`/meetings/${record.id}`} passHref>
+          <p className="cursor-pointer text-gray-500 mb-0 underline">
+            {record.meeting_title}
+          </p>
+        </Link>
+      ),
     },
 
     {
       title: "Meeting Date",
       key: "meeting_at",
       render: (_, record) =>
-        moment(record.meeting_at).format(DEFAULT_DATE_FORMAT),
+        moment(record.meeting_at).format(DEFAULT_DATETIME_FORMAT),
     },
     {
       title: "Action",

@@ -7,7 +7,7 @@ import NoRecordFound from "../common/NoRecordFound";
 import { openNotificationBox } from "../common/notification";
 import { PulseLoader } from "../Loader/LoadingSpinner";
 import MeetingForm from "./component/MeetingForm";
-import { CASUAL_MEETINGTYPE } from "./constants";
+import { CASUAL_MEETINGTYPE, GOAL_TYPE } from "./constants";
 
 function AddEditGoalComponent({ user, editMode = false }) {
   const router = useRouter();
@@ -144,11 +144,16 @@ function AddEditGoalComponent({ user, editMode = false }) {
   }, []);
 
   const fillFormWithData = () => {
+    setMeetingType(meetingData.meeting_type);
     form.setFieldsValue({
-      meeting_at: moment(meetingData.meetingData),
+      meeting_at: moment(meetingData.meeting_at),
       meeting_description: meetingData.meeting_description,
       meeting_title: meetingData.meeting_title,
       meeting_type: meetingData.meeting_type,
+      type_id:
+        meetingData.meeting_type === GOAL_TYPE
+          ? meetingData?.goal_id
+          : meetingData?.review_id,
     });
   };
 

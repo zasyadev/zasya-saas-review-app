@@ -5,6 +5,8 @@ export const DATE_FORMAT = "DD";
 export const DEFAULT_DATE_FORMAT = "DD-MM-YYYY";
 export const DATE_FORMAT_FULL = "DD MMM YYYY";
 export const YEAR_DATE_FORMAT = "YYYY-MM-DD";
+export const DEFAULT_DATETIME_FORMAT = "DD-MM-YYYY HH:mm";
+export const DATETIME_FORMAT = "YYYY-MM-DD HH:mm";
 
 export function disableDates(current) {
   return current && current > moment().endOf("month");

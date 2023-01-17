@@ -204,7 +204,7 @@ function GoalsList({ user, isArchived = false }) {
   return (
     <div className="container mx-auto max-w-full">
       {!loading && !isArchived && Number(sortListByEndDate?.length) > 0 && (
-        <div className="gap-4 mb-4 bg-white">
+        <div className="gap-4 mb-4 bg-white rounded-md">
           <GoalsCustomTable
             goalList={sortListByEndDate}
             setEditGoalModalVisible={setEditGoalModalVisible}
@@ -310,7 +310,7 @@ function GoalsList({ user, isArchived = false }) {
             />
           ))
         ) : (
-          <div className="gap-4 mb-4 bg-white">
+          <div className="gap-4 mb-4 bg-white rounded-md">
             <GoalsCustomTable
               goalList={filteredGoalList}
               setEditGoalModalVisible={setEditGoalModalVisible}
