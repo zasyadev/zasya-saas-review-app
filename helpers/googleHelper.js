@@ -1,4 +1,4 @@
-const fs = require("fs").promises;
+const fs = require("fs");
 const path = require("path");
 const process = require("process");
 const { authenticate } = require("@google-cloud/local-auth");
@@ -20,7 +20,8 @@ const GOOGLE_CALENDER_KEY = process.env.GOOGLE_CALENDER_KEY;
 
 async function loadSavedCredentialsIfExist() {
   try {
-    const content = await fs.readFile(TOKEN_PATH);
+    const content = await fs.readFileSync(TOKEN_PATH, "utf8");
+
     console.log({ content });
     const credentials = JSON.parse(content);
     return google.auth.fromJSON(credentials);
@@ -30,7 +31,7 @@ async function loadSavedCredentialsIfExist() {
 }
 
 async function saveCredentials(client) {
-  const content = await fs.readFile(CREDENTIALS_PATH);
+  const content = await fs.readFileSync(CREDENTIALS_PATH, "utf8");
   const keys = JSON.parse(content);
   const key = keys.installed || keys.web;
   const payload = JSON.stringify({
@@ -40,7 +41,7 @@ async function saveCredentials(client) {
     refresh_token: client.credentials.refresh_token,
   });
   console.log({ content });
-  await fs.writeFile(TOKEN_PATH, payload);
+  await fs.writeFileSync(TOKEN_PATH, payload);
 }
 
 async function authorize() {
