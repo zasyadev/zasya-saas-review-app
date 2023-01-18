@@ -12,18 +12,20 @@ const SCOPES = [
 // The file token.json stores the user's access and refresh tokens, and is
 // created automatically when the authorization flow completes for the first
 // time.
-const jsonPath = process.env.NEXT_APP_URL + "json";
 
-const TOKEN_PATH = jsonPath + "/token.json";
-const CREDENTIALS_PATH = jsonPath + "/credentials.json";
+const TOKEN_PATH = path.join(process.cwd(), "json/token.json");
+const CREDENTIALS_PATH = path.join(process.cwd(), "json/credentials.json");
 
 console.log({ TOKEN_PATH, CREDENTIALS_PATH });
 
-const GOOGLE_CALENDER_ID = process.env.GOOGLE_CALENDER_ID;
-const GOOGLE_CALENDER_KEY = process.env.GOOGLE_CALENDER_KEY;
+const GOOGLE_CALENDER_ID = process.env.NEXT_APP_GOOGLE_CALENDER_ID;
+const GOOGLE_CALENDER_KEY = process.env.NEXT_APP_GOOGLE_CALENDER_KEY;
+
+console.log({ GOOGLE_CALENDER_ID, GOOGLE_CALENDER_KEY });
 
 async function loadSavedCredentialsIfExist() {
   try {
+    console.log("here");
     const content = await fs.readFile(TOKEN_PATH);
     const credentials = JSON.parse(content);
     console.log({ credentials });
