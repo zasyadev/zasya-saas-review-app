@@ -1018,6 +1018,7 @@ $primary: #0f123f;
   .ant-btn-primary {
     border-color: $primary;
     background: $primary;
+    color: #fff;
   }
 }
 .ant-picker-input > input:hover {
@@ -1025,6 +1026,9 @@ $primary: #0f123f;
   border-right-width: 1px;
 }
 .ant-picker:hover,
+.ant-picker-focused {
+  border-color: $primary;
+}
 .ant-picker-focused {
   border-color: $primary;
   box-shadow: 0 0 0 2px rgb(0, 5, 204, 0.35);

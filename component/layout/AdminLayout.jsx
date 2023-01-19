@@ -1,12 +1,11 @@
 import {
-  UserOutlined,
   DashboardOutlined,
   FormOutlined,
   LikeOutlined,
   SettingOutlined,
   FileTextOutlined,
   CrownOutlined,
-  TeamOutlined,
+  UsergroupAddOutlined,
 } from "@ant-design/icons";
 import { Grid, Layout } from "antd";
 import React, { useEffect, useMemo, useState } from "react";
@@ -48,8 +47,6 @@ function AdminLayout({ user, title, isBack = false, children }) {
       "/review/received",
       <FormOutlined className="sidebar-icon " />
     ),
-    getItem("Users", "/users", <UserOutlined className="sidebar-icon " />),
-    getItem("Teams", "/teams", <TeamOutlined className="sidebar-icon " />),
 
     getItem("Applaud", "/applaud", <LikeOutlined className="sidebar-icon " />),
     getItem(
@@ -58,12 +55,22 @@ function AdminLayout({ user, title, isBack = false, children }) {
       <FileTextOutlined className="sidebar-icon " />
     ),
     getItem("Goals", "/goals", <CrownOutlined className="sidebar-icon " />),
+    // getItem(
+    //   "Follow Ups",
+    //   "/meetings",
+    //   <UsergroupAddOutlined className="sidebar-icon " />
+    // ),
 
     getItem(
       "Settings",
       "setting",
       <SettingOutlined className="sidebar-icon " />,
-      [getItem("Templates", "/template"), getItem("Profile ", "/profile ")]
+      [
+        getItem("Templates", "/template"),
+        getItem("Profile ", "/profile "),
+        getItem("Users", "/users"),
+        getItem("Teams", "/teams"),
+      ]
     ),
   ];
 
@@ -71,8 +78,15 @@ function AdminLayout({ user, title, isBack = false, children }) {
     if (user?.role_id !== 4) {
       return allMenus;
     } else {
-      return allMenus.filter(
-        (item) => item.label !== "Teams" && item.label !== "Users"
+      return allMenus.map((item) =>
+        item?.children && item?.children?.length > 0
+          ? {
+              ...item,
+              children: item?.children.filter(
+                (child) => child.label !== "Teams" && child.label !== "Users"
+              ),
+            }
+          : item
       );
     }
   }, [user]);

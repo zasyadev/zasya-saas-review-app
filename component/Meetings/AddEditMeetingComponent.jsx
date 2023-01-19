@@ -7,7 +7,7 @@ import NoRecordFound from "../common/NoRecordFound";
 import { openNotificationBox } from "../common/notification";
 import { PulseLoader } from "../Loader/LoadingSpinner";
 import MeetingForm from "./component/MeetingForm";
-import { CASUAL_MEETINGTYPE, GOAL_TYPE } from "./constants";
+import { CASUAL_MEETINGTYPE, GOAL_TYPE, REVIEW_TYPE } from "./constants";
 
 function AddEditGoalComponent({ user, editMode = false }) {
   const router = useRouter();
@@ -153,7 +153,9 @@ function AddEditGoalComponent({ user, editMode = false }) {
       type_id:
         meetingData.meeting_type === GOAL_TYPE
           ? meetingData?.goal_id
-          : meetingData?.review_id,
+          : meetingData.meeting_type === REVIEW_TYPE
+          ? meetingData?.review_id
+          : ["casual"],
     });
   };
 

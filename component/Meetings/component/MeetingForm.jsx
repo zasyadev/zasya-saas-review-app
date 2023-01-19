@@ -6,7 +6,7 @@ import {
 } from "../../../helpers/dateHelper";
 import { PrimaryButton } from "../../common/CustomButton";
 import { CustomInput, CustomTextArea } from "../../common/CustomFormFeilds";
-import { GOAL_TYPE, REVIEW_TYPE } from "../constants";
+import { CASUAL_TYPE, GOAL_TYPE, REVIEW_TYPE } from "../constants";
 import { maxLengthValidator } from "../../../helpers/formValidations";
 
 function MeetingForm({
@@ -15,7 +15,7 @@ function MeetingForm({
   setMeetingType,
   meetingType,
   loadingSubmitSpin,
-  editMode,
+  editMode = false,
   reviewsList,
   goalsList,
   disabledTypeField = false,
@@ -85,6 +85,7 @@ function MeetingForm({
             >
               <Select.Option value={GOAL_TYPE}>Goal</Select.Option>
               <Select.Option value={REVIEW_TYPE}>Review</Select.Option>
+              <Select.Option value={CASUAL_TYPE}>Casual</Select.Option>
             </Select>
           </Form.Item>
           {[GOAL_TYPE, REVIEW_TYPE].includes(meetingType) && (

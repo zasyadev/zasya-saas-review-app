@@ -56,7 +56,7 @@ function MeetingCommentModal({
           <PrimaryButton
             onClick={() => meetingForm.submit()}
             className=" h-full  "
-            title="Update"
+            title="Submit"
             disabled={loadingSubmitSpin}
             loading={loadingSubmitSpin}
           />
