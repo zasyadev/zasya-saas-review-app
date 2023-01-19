@@ -1,72 +1,55 @@
-const fs = require("fs").promises;
-const path = require("path");
-const process = require("process");
-const { authenticate } = require("@google-cloud/local-auth");
 const { google } = require("googleapis");
 
 // If modifying these scopes, delete token.json.
-const SCOPES = [
-  "https://www.googleapis.com/auth/calendar",
-  "https://www.googleapis.com/auth/calendar.events",
-];
+// const SCOPES = [
+//   "https://www.googleapis.com/auth/calendar",
+//   "https://www.googleapis.com/auth/calendar.events",
+// ];
 // The file token.json stores the user's access and refresh tokens, and is
 // created automatically when the authorization flow completes for the first
 // time.
 
-const TOKEN_PATH = path.join(process.cwd(), "json/token.json");
-const CREDENTIALS_PATH = path.join(process.cwd(), "json/credentials.json");
-
-console.log({ TOKEN_PATH, CREDENTIALS_PATH });
-
 const GOOGLE_CALENDER_ID = process.env.NEXT_APP_GOOGLE_CALENDER_ID;
 const GOOGLE_CALENDER_KEY = process.env.NEXT_APP_GOOGLE_CALENDER_KEY;
-
-console.log({ GOOGLE_CALENDER_ID, GOOGLE_CALENDER_KEY });
+const GOOGLE_CLIENT_ID = process.env.NEXT_APP_GOOGLE_CLIENT_ID;
+const GOOGLE_CLIENT_SECRET = process.env.NEXT_APP_GOOGLE_CLIENT_SECRET;
+const GOOGLE_CLIENT_REFRESH_TOKEN =
+  process.env.NEXT_APP_GOOGLE_CLIENT_REFRESH_TOKEN;
 
 async function loadSavedCredentialsIfExist() {
   try {
-    console.log("here");
-    const content = await fs.readFile(TOKEN_PATH);
-    const credentials = JSON.parse(content);
-    console.log({ credentials });
-    return google.auth.fromJSON(credentials);
+    return google.auth.fromJSON({
+      type: "authorized_user",
+      client_id: GOOGLE_CLIENT_ID,
+      client_secret: GOOGLE_CLIENT_SECRET,
+      refresh_token: GOOGLE_CLIENT_REFRESH_TOKEN,
+    });
   } catch (err) {
     return null;
   }
 }
 
-async function saveCredentials(client) {
-  const content = await fs.readFile(CREDENTIALS_PATH);
-  const keys = JSON.parse(content);
-  console.log({ keys });
-  const key = keys.installed || keys.web;
-  const payload = JSON.stringify({
-    type: "authorized_user",
-    client_id: key.client_id,
-    client_secret: key.client_secret,
-    refresh_token: client.credentials.refresh_token,
-  });
+// async function saveCredentials(client) {
+//   const content = await fs.readFile(CREDENTIALS_PATH);
+//   const keys = JSON.parse(content);
+//   console.log({ keys });
+//   const key = keys.installed || keys.web;
+//   const payload = JSON.stringify({
+//     type: "authorized_user",
+//     client_id: key.client_id,
+//     client_secret: key.client_secret,
+//     refresh_token: client.credentials.refresh_token,
+//   });
 
-  await fs.writeFile(TOKEN_PATH, payload);
-}
+//   await fs.writeFile(TOKEN_PATH, payload);
+// }
 
 async function authorize() {
   try {
     let client = await loadSavedCredentialsIfExist();
-
     if (client) {
       return client;
     }
-
-    client = await authenticate({
-      scopes: SCOPES,
-      keyfilePath: CREDENTIALS_PATH,
-    });
-    console.log({ client });
-    if (client.credentials) {
-      await saveCredentials(client);
-    }
-    return client;
   } catch (error) {
     console.log({ error });
   }
@@ -113,12 +96,12 @@ export async function CreateGoogleCalenderApi({
 
       function (err, event) {
         if (err) {
-          console.log(
-            "There was an error contacting the Calendar service: " + err
-          );
+          // console.log(
+          //   "There was an error contacting the Calendar service: " + err
+          // );
           return;
         }
-        console.log("Event created: %s", event.data.htmlLink);
+        // console.log("Event created: %s", event.data.htmlLink);
       }
     );
   }
