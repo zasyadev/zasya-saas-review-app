@@ -37,9 +37,6 @@ function CreateEditGoalComponent({ user }) {
 
   const addMeetingsData = async (data) => {
     setLoadingSubmitSpin(true);
-
-    console.log(data);
-    return;
     await httpService
       .post("/api/meetings", data)
       .then(({ data: response }) => {
