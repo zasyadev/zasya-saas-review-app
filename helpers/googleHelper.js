@@ -1,13 +1,11 @@
+import { randomString } from "./randomString";
 const { google } = require("googleapis");
 
-// If modifying these scopes, delete token.json.
 // const SCOPES = [
 //   "https://www.googleapis.com/auth/calendar",
 //   "https://www.googleapis.com/auth/calendar.events",
+// "https://www.googleapis.com/auth/plus.login"
 // ];
-// The file token.json stores the user's access and refresh tokens, and is
-// created automatically when the authorization flow completes for the first
-// time.
 
 const GOOGLE_CALENDER_ID = process.env.NEXT_APP_GOOGLE_CALENDER_ID;
 const GOOGLE_CALENDER_KEY = process.env.NEXT_APP_GOOGLE_CALENDER_KEY;
@@ -32,7 +30,6 @@ async function loadSavedCredentialsIfExist() {
 // async function saveCredentials(client) {
 //   const content = await fs.readFile(CREDENTIALS_PATH);
 //   const keys = JSON.parse(content);
-//   console.log({ keys });
 //   const key = keys.installed || keys.web;
 //   const payload = JSON.stringify({
 //     type: "authorized_user",
@@ -50,6 +47,13 @@ async function authorize() {
     if (client) {
       return client;
     }
+    // client = await authenticate({
+    //   scopes: SCOPES,
+    //   keyfilePath: CREDENTIALS_PATH,
+    // });
+    // if (client.credentials) {
+    //   await saveCredentials(client);
+    // }
   } catch (error) {
     console.log({ error });
   }
@@ -82,6 +86,14 @@ export async function CreateGoogleCalenderApi({
           { method: "popup", minutes: 10 },
         ],
       },
+      conferenceData: {
+        createRequest: {
+          conferenceSolutionKey: {
+            type: "hangoutsMeet",
+          },
+          requestId: randomString(8),
+        },
+      },
     };
 
     // We make a request to Google Calendar API.
@@ -92,6 +104,8 @@ export async function CreateGoogleCalenderApi({
         resource: event,
         key: GOOGLE_CALENDER_KEY,
         conferenceDataVersion: 1,
+        sendUpdates: "all",
+        sendNotifications: true,
       },
 
       function (err, event) {

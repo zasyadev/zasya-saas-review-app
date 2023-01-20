@@ -7,6 +7,10 @@ import {
 import { RequestHandler } from "../../../lib/RequestHandler";
 import { MEETING_SCHEMA } from "../../../yup-schema/meeting";
 
+const GOAL_TYPE = "Goal";
+const REVIEW_TYPE = "Review";
+const CASUAL_TYPE = "Casual";
+
 async function handle(req, res, prisma, user) {
   const { id: userId, organization_id } = user;
   if (!userId) {
@@ -83,6 +87,10 @@ async function handle(req, res, prisma, user) {
     try {
       const reqBody = req.body;
 
+      if ((reqBody.meeting_type = CASUAL_TYPE)) {
+        reqBody.type_id = [CASUAL_TYPE];
+      }
+
       if (Number(reqBody?.type_id?.length > 0)) {
         const resData = reqBody.type_id.map(async (item) => {
           let data = {
@@ -94,9 +102,9 @@ async function handle(req, res, prisma, user) {
             meeting_at: reqBody.meeting_at,
             organization: { connect: { id: organization_id } },
           };
-          if (reqBody.meeting_type === "Goal") {
+          if (reqBody.meeting_type === GOAL_TYPE) {
             data.goal = { connect: { id: item } };
-          } else if (reqBody.meeting_type === "Review") {
+          } else if (reqBody.meeting_type === REVIEW_TYPE) {
             data.review = { connect: { id: item } };
           }
 
@@ -206,6 +214,10 @@ async function handle(req, res, prisma, user) {
             message: "Meeting Details Saved Successfully",
           });
         }
+      } else {
+        return res
+          .status(404)
+          .json({ status: 404, message: "No Meeting Type Found" });
       }
     } catch (error) {
       return res
