@@ -16,7 +16,6 @@
     "cronjob": "node bin/cron-job.js"
   },
   "dependencies": {
-    "@google-cloud/local-auth": "^2.1.0",
     "@prisma/client": "^4.4.0",
     "antd": "^4.23.5",
     "antd-img-crop": "^4.2.5",
@@ -25,7 +24,6 @@
     "bcrypt": "^5.1.0",
     "dotenv": "^16.0.3",
     "framer-motion": "^7.5.3",
-    "google-auth-library": "^8.7.0",
     "googleapis": "^105.0.0",
     "json-as-xlsx": "^2.4.6",
     "moment": "^2.29.4",
