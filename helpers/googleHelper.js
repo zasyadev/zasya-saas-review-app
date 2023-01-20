@@ -1,5 +1,5 @@
 import { randomString } from "./randomString";
-const { google } = require("googleapis");
+// const { google } = require("googleapis");
 
 // const SCOPES = [
 //   "https://www.googleapis.com/auth/calendar",
@@ -15,16 +15,16 @@ const GOOGLE_CLIENT_REFRESH_TOKEN =
   process.env.NEXT_APP_GOOGLE_CLIENT_REFRESH_TOKEN;
 
 async function loadSavedCredentialsIfExist() {
-  try {
-    return google.auth.fromJSON({
-      type: "authorized_user",
-      client_id: GOOGLE_CLIENT_ID,
-      client_secret: GOOGLE_CLIENT_SECRET,
-      refresh_token: GOOGLE_CLIENT_REFRESH_TOKEN,
-    });
-  } catch (err) {
-    return null;
-  }
+  // try {
+  //   return google.auth.fromJSON({
+  //     type: "authorized_user",
+  //     client_id: GOOGLE_CLIENT_ID,
+  //     client_secret: GOOGLE_CLIENT_SECRET,
+  //     refresh_token: GOOGLE_CLIENT_REFRESH_TOKEN,
+  //   });
+  // } catch (err) {
+  //   return null;
+  // }
 }
 
 // async function saveCredentials(client) {
@@ -66,58 +66,56 @@ export async function CreateGoogleCalenderApi({
   meeetingEndTime,
 }) {
   async function createEvents(auth) {
-    const calendar = google.calendar({ version: "v3", auth });
-    const event = {
-      summary: meetingTitle,
-      description: "",
-      attendees: emailsList,
-      start: {
-        dateTime: meeetingStartTime,
-        timeZone: "Asia/Kolkata",
-      },
-      end: {
-        dateTime: meeetingEndTime,
-        timeZone: "Asia/Kolkata",
-      },
-      reminders: {
-        useDefault: false,
-        overrides: [
-          { method: "email", minutes: 24 * 60 },
-          { method: "popup", minutes: 10 },
-        ],
-      },
-      conferenceData: {
-        createRequest: {
-          conferenceSolutionKey: {
-            type: "hangoutsMeet",
-          },
-          requestId: randomString(8),
-        },
-      },
-    };
-
+    // const calendar = google.calendar({ version: "v3", auth });
+    // const event = {
+    //   summary: meetingTitle,
+    //   description: "",
+    //   attendees: emailsList,
+    //   start: {
+    //     dateTime: meeetingStartTime,
+    //     timeZone: "Asia/Kolkata",
+    //   },
+    //   end: {
+    //     dateTime: meeetingEndTime,
+    //     timeZone: "Asia/Kolkata",
+    //   },
+    //   reminders: {
+    //     useDefault: false,
+    //     overrides: [
+    //       { method: "email", minutes: 24 * 60 },
+    //       { method: "popup", minutes: 10 },
+    //     ],
+    //   },
+    //   conferenceData: {
+    //     createRequest: {
+    //       conferenceSolutionKey: {
+    //         type: "hangoutsMeet",
+    //       },
+    //       requestId: randomString(8),
+    //     },
+    //   },
+    // };
     // We make a request to Google Calendar API.
-    calendar.events.insert(
-      {
-        auth: auth,
-        calendarId: GOOGLE_CALENDER_ID,
-        resource: event,
-        key: GOOGLE_CALENDER_KEY,
-        conferenceDataVersion: 1,
-        sendUpdates: "all",
-        sendNotifications: true,
-      },
-
-      function (err, event) {
-        if (err) {
-          // console.log(
-          //   "There was an error contacting the Calendar service: " + err
-          // );
-          return;
-        }
-        // console.log("Event created: %s", event.data.htmlLink);
-      }
-    );
+    // calendar.events.insert(
+    //   {
+    //     auth: auth,
+    //     calendarId: GOOGLE_CALENDER_ID,
+    //     resource: event,
+    //     key: GOOGLE_CALENDER_KEY,
+    //     conferenceDataVersion: 1,
+    //     sendUpdates: "all",
+    //     sendNotifications: true,
+    //   },
+    //   function (err, event) {
+    //     if (err) {
+    //       // console.log(
+    //       //   "There was an error contacting the Calendar service: " + err
+    //       // );
+    //       return;
+    //     }
+    //     // console.log("Event created: %s", event.data.htmlLink);
+    //   }
+    // );
   }
 
   authorize().then(createEvents).catch(console.error);
