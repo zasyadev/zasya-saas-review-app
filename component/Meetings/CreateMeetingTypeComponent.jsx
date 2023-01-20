@@ -4,7 +4,6 @@ import React, { useEffect, useMemo, useState } from "react";
 import httpService from "../../lib/httpService";
 import NoRecordFound from "../common/NoRecordFound";
 import { openNotificationBox } from "../common/notification";
-import { PulseLoader } from "../Loader/LoadingSpinner";
 import MeetingForm from "./component/MeetingForm";
 import {
   GOAL_MEETINGTYPE,
@@ -13,12 +12,11 @@ import {
   REVIEW_TYPE,
 } from "./constants";
 
-function AddEditGoalComponent({ user, editMode = false }) {
+function CreateEditGoalComponent({ user }) {
   const router = useRouter();
   const { type_id, tp: meetingEditType } = router.query;
   const [form] = Form.useForm();
   const [loadingSubmitSpin, setLoadingSubmitSpin] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [meetingData, setMeetingData] = useState(null);
   const [meetingType, setMeetingType] = useState(null);
   const [reviewsList, setReviewsList] = useState([]);
@@ -39,13 +37,12 @@ function AddEditGoalComponent({ user, editMode = false }) {
 
   const addMeetingsData = async (data) => {
     setLoadingSubmitSpin(true);
-
     await httpService
       .post("/api/meetings", data)
       .then(({ data: response }) => {
         if (response.status === 200) {
-          openNotificationBox("success", response.message, 3);
           router.push("/meetings");
+          openNotificationBox("success", response.message, 3);
         }
       })
       .catch((err) => {
@@ -163,7 +160,7 @@ function AddEditGoalComponent({ user, editMode = false }) {
         members: filterUserList.map((user) => user.user_id),
       });
     }
-  }, [filterUserList.length, editMode]);
+  }, [filterUserList.length]);
 
   useEffect(() => {
     if (type_id) {
@@ -190,13 +187,6 @@ function AddEditGoalComponent({ user, editMode = false }) {
     }
   }, [meetingData]);
 
-  if (loading)
-    return (
-      <div className="container mx-auto max-w-full">
-        <PulseLoader />
-      </div>
-    );
-
   if (!meetingData) return <NoRecordFound title={"No Meeting Found"} />;
 
   return (
@@ -206,7 +196,6 @@ function AddEditGoalComponent({ user, editMode = false }) {
       setMeetingType={setMeetingType}
       meetingType={meetingType}
       loadingSubmitSpin={loadingSubmitSpin}
-      editMode={editMode}
       disabledTypeField={true}
       reviewsList={reviewsList}
       goalsList={goalsList}
@@ -215,4 +204,4 @@ function AddEditGoalComponent({ user, editMode = false }) {
   );
 }
 
-export default AddEditGoalComponent;
+export default CreateEditGoalComponent;

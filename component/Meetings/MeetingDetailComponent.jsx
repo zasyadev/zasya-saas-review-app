@@ -1,3 +1,4 @@
+import { CommentOutlined } from "@ant-design/icons";
 import moment from "moment";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
@@ -89,32 +90,35 @@ function MeetingDetailComponent({ user }) {
           <p className=" text-primary font-bold text-lg md:text-xl mb-2">
             Meeting Members
           </p>
-          {Number(meetingData?.MeetingAssignee.length) > 0 &&
-            meetingData?.MeetingAssignee.map((item, idx) => (
-              <div className="space-y-1" key={idx + "meeting"}>
-                <p className=" text-primary font-semibold text-base mb-0 flex justify-between">
-                  {item?.assignee?.first_name}
-                  {item?.assignee_id === user.id && (
-                    <span
-                      onClick={() => {
-                        setMeetingModalData({
-                          meetingTitle: meetingData.meeting_title,
-                          meetingId: meetingData.id,
-                          isVisible: true,
-                          assigneeId: item?.assignee_id,
-                        });
-                      }}
-                      className="cursor-pointer"
-                    >
-                      Edit
-                    </span>
-                  )}
-                </p>
-                <p className=" text-gray-700 font-medium text-xs md:text-sm mb-0">
-                  {item?.comment}
-                </p>
-              </div>
-            ))}
+          <div className="space-y-2 pr-2">
+            {Number(meetingData?.MeetingAssignee.length) > 0 &&
+              meetingData?.MeetingAssignee.map((item, idx) => (
+                <div className="space-y-1" key={idx + "meeting"}>
+                  <p className=" text-primary font-semibold text-base mb-0 flex justify-between items-center">
+                    {item?.assignee?.first_name}
+                    {item?.assignee_id === user.id && !item.comment && (
+                      <span
+                        onClick={() => {
+                          setMeetingModalData({
+                            meetingTitle: meetingData.meeting_title,
+                            meetingId: meetingData.id,
+                            isVisible: true,
+                            assigneeId: item?.assignee_id,
+                          });
+                        }}
+                        className="cursor-pointer"
+                        title="Add comment"
+                      >
+                        <CommentOutlined className="text-lg" />
+                      </span>
+                    )}
+                  </p>
+                  <p className=" text-gray-700 font-medium text-xs md:text-sm mb-0">
+                    {item?.comment}
+                  </p>
+                </div>
+              ))}
+          </div>
         </div>
       </div>
 

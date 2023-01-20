@@ -595,4 +595,5 @@ enum MeetingFrequencyEnum {
 enum MeetingTypeEnum {
   Goal
   Review
+  Casual
 }
