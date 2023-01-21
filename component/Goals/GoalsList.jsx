@@ -3,6 +3,7 @@ import { Form, Input, Select, Tooltip } from "antd";
 import moment from "moment";
 import { useRouter } from "next/router";
 import React, { useEffect, useMemo, useState } from "react";
+import { useLocalStorage } from "../../helpers/useStorage";
 import httpService from "../../lib/httpService";
 import {
   ButtonGray,
@@ -52,7 +53,7 @@ function GoalsList({ user, isArchived = false }) {
     initialGoalCountModalData
   );
   const [userList, setUserList] = useState([]);
-  const [displayMode, setDisplayMode] = useState("list");
+  const [displayMode, setDisplayMode] = useLocalStorage("goalListView", "list");
 
   async function fetchGoalList(status) {
     setLoading(true);
@@ -201,18 +202,38 @@ function GoalsList({ user, isArchived = false }) {
     setGoalAssigneeModalData(initialGoalCountModalData);
   };
 
+  const ShowEditGoalModal = ({ record }) => {
+    updateGoalForm.resetFields();
+    updateGoalForm.setFieldValue({
+      status: record.status,
+    });
+    setEditGoalModalVisible({
+      visible: true,
+      id: record.id,
+      goal_title: record.goal.goal_title,
+      defaultValue: record.status,
+      goal_id: record.goal.id,
+    });
+  };
+
+  const hideEditGoalModal = () => {
+    setEditGoalModalVisible(initialModalVisible);
+    updateGoalForm.setFieldValue({
+      status: "",
+    });
+  };
+
   return (
     <div className="container mx-auto max-w-full">
       {!loading && !isArchived && Number(sortListByEndDate?.length) > 0 && (
         <div className="gap-4 mb-4 bg-white rounded-md">
           <GoalsCustomTable
             goalList={sortListByEndDate}
-            setEditGoalModalVisible={setEditGoalModalVisible}
-            updateGoalForm={updateGoalForm}
             goalEditHandle={goalEditHandle}
             userId={user.id}
             isArchived={isArchived}
             ShowAssigneeModal={ShowAssigneeModal}
+            ShowEditGoalModal={ShowEditGoalModal}
           />
         </div>
       )}
@@ -249,7 +270,7 @@ function GoalsList({ user, isArchived = false }) {
               <Tooltip title="Grid View">
                 <ButtonGray
                   withLink={false}
-                  onClick={() => setDisplayMode("grid")}
+                  onClick={() => setDisplayMode("grid", "goalListView")}
                   title={<ApartmentOutlined />}
                   className={`leading-0 ${
                     displayMode === "grid"
@@ -261,7 +282,7 @@ function GoalsList({ user, isArchived = false }) {
               <Tooltip title="List View">
                 <ButtonGray
                   withLink={false}
-                  onClick={() => setDisplayMode("list")}
+                  onClick={() => setDisplayMode("list", "goalListView")}
                   title={<UnorderedListOutlined />}
                   className={`leading-0 ${
                     displayMode === "list"
@@ -286,12 +307,6 @@ function GoalsList({ user, isArchived = false }) {
         } gap-4`}
       >
         {loading ? (
-          // groupItems.map((groupItem) => (
-          // <GoalsGroupListSkeleton
-          //   title={groupItem.title}
-          //   key={groupItem.type + "skeleton"}
-          // />
-          // ))
           <PulseLoader />
         ) : displayMode === "grid" ? (
           groupItems.map((groupItem) => (
@@ -313,14 +328,13 @@ function GoalsList({ user, isArchived = false }) {
           <div className="gap-4 mb-4 bg-white rounded-md">
             <GoalsCustomTable
               goalList={filteredGoalList}
-              setEditGoalModalVisible={setEditGoalModalVisible}
-              updateGoalForm={updateGoalForm}
               goalEditHandle={goalEditHandle}
               userId={user.id}
               isArchived={isArchived}
               ShowAssigneeModal={ShowAssigneeModal}
               showHeader
               isPagination
+              ShowEditGoalModal={ShowEditGoalModal}
             />
           </div>
         )}
@@ -332,12 +346,12 @@ function GoalsList({ user, isArchived = false }) {
           </p>
         }
         visible={editGoalModalVisible.visible}
-        onCancel={() => setEditGoalModalVisible(initialModalVisible)}
+        onCancel={() => hideEditGoalModal()}
         customFooter
         footer={[
           <>
             <SecondaryButton
-              onClick={() => setEditGoalModalVisible(initialModalVisible)}
+              onClick={() => hideEditGoalModal()}
               className=" h-full mr-2"
               title="Cancel"
             />
@@ -362,12 +376,9 @@ function GoalsList({ user, isArchived = false }) {
               type: "forStatus",
             })
           }
-          initialValues={{
-            status: editGoalModalVisible.defaultValue,
-          }}
         >
           <Form.Item name="status" label="Status">
-            <Select value={editGoalModalVisible.defaultValue}>
+            <Select defaultValue={editGoalModalVisible.defaultValue}>
               <Select.Option value={ONTRACK_STATUS}>On Track</Select.Option>
               <Select.Option value={COMPLETED_STATUS}>Completed</Select.Option>
               <Select.Option value={DELAYED_STATUS}>Delayed</Select.Option>

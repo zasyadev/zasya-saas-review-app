@@ -55,11 +55,11 @@ function AdminLayout({ user, title, isBack = false, children }) {
       <FileTextOutlined className="sidebar-icon " />
     ),
     getItem("Goals", "/goals", <CrownOutlined className="sidebar-icon " />),
-    // getItem(
-    //   "Follow Ups",
-    //   "/followups",
-    //   <UsergroupAddOutlined className="sidebar-icon " />
-    // ),
+    getItem(
+      "Follow Ups",
+      "/followups",
+      <UsergroupAddOutlined className="sidebar-icon " />
+    ),
 
     getItem(
       "Settings",

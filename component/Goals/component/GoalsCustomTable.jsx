@@ -10,8 +10,7 @@ import DateInfoCard from "./GoalsGroupList/components/DateInfoCard";
 
 function GoalsCustomTable({
   goalList,
-  setEditGoalModalVisible,
-  updateGoalForm,
+  ShowEditGoalModal,
   goalEditHandle,
   userId,
   isArchived,
@@ -56,14 +55,9 @@ function GoalsCustomTable({
                 record.assignee_id === userId) &&
               !isArchived
             ) {
-              setEditGoalModalVisible({
-                visible: true,
-                id: record.id,
-                goal_title: record.goal.goal_title,
-                defaultValue: record.status,
-                goal_id: record.goal.id,
+              ShowEditGoalModal({
+                record: record,
               });
-              updateGoalForm.resetFields();
             }
           }}
         >

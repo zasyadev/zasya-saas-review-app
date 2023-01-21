@@ -51,29 +51,6 @@ async function handle(req, res, prisma, user) {
         MeetingAssignee: true,
       },
     });
-    // let filterData = [];
-    // let filterList = [];
-    // if (Number(data?.length) > 0)
-    //   filterList = data.map((item) => {
-    //     if (item?.meeting_type === "Goal") {
-    //       filterData = item?.goal?.GoalAssignee.map((i) => {
-    //         return i.assignee_id;
-    //       });
-    //     }
-    //     if (item?.meeting_type === "Review") {
-    //       let list = [];
-    //       list = item?.review?.ReviewAssignee.map((i) => {
-    //         return i.assigned_to_id;
-    //       });
-    //       list.push(item?.review?.created_by);
-    //       filterData = list;
-    //     }
-
-    //     return {
-    //       ...item,
-    //       assigneeList: filterData,
-    //     };
-    //   });
 
     if (data) {
       return res.status(200).json({
