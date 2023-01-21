@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import SuspenceWrapper from "../../../component/common/SuspenceWrapper";
 import GoalsDetailComponent from "../../../component/Goals/GoalsDetailComponent";
 import AdminLayout from "../../../component/layout/AdminLayout";
@@ -10,7 +10,7 @@ function GoalsDetailPage() {
       <WithMe>
         {({ user }) => (
           <AdminLayout user={user} isBack>
-            <GoalsDetailComponent />
+            <GoalsDetailComponent user={user} />
           </AdminLayout>
         )}
       </WithMe>

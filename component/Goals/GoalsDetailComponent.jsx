@@ -12,7 +12,7 @@ import NoRecordFound from "../common/NoRecordFound";
 import { GOAL_MEETINGTYPE } from "../Meetings/constants";
 import { INDIVIDUAL_TYPE, statusPill, TEAM_TYPE } from "./constants";
 
-function GoalsDetailComponent({ isArchived = false }) {
+function GoalsDetailComponent({ user, isArchived = false }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [goalData, setGoalData] = useState({});
@@ -215,15 +215,16 @@ function GoalsDetailComponent({ isArchived = false }) {
           </div>
         </div>
         {(goalData?.goal_type === INDIVIDUAL_TYPE ||
-          goalData?.goal_type === TEAM_TYPE) && (
-          <div className="mb-2 flex justify-end mt-4">
-            <PrimaryButton
-              withLink={true}
-              linkHref={`/followups/add/${router?.query?.goal_id}?tp=${GOAL_MEETINGTYPE}`}
-              title={"Add Meeting"}
-            />
-          </div>
-        )}
+          goalData?.goal_type === TEAM_TYPE) &&
+          goalData?.created_by === user?.id && (
+            <div className="mb-2 flex justify-end mt-4">
+              <PrimaryButton
+                withLink={true}
+                linkHref={`/followups/add/${router?.query?.goal_id}?tp=${GOAL_MEETINGTYPE}`}
+                title={"Add Follow up"}
+              />
+            </div>
+          )}
       </div>
 
       {Number(goalData?.Meetings?.length) > 0 && (

@@ -11,7 +11,7 @@ import { openNotificationBox } from "../common/notification";
 import MeetingListSkeleton from "./component/MeetingListSkeleton";
 import { CASUAL_MEETINGTYPE } from "./constants";
 
-function GoalsList({ user }) {
+function MeetingsList({ user }) {
   const [loading, setLoading] = useState(false);
   const [meetingsList, setMeetingsList] = useState([]);
 
@@ -63,6 +63,11 @@ function GoalsList({ user }) {
           </p>
         </Link>
       ),
+    },
+    {
+      title: "Type",
+      key: "meeting_type",
+      dataIndex: "meeting_type",
     },
 
     {
@@ -123,4 +128,4 @@ function GoalsList({ user }) {
   );
 }
 
-export default GoalsList;
+export default MeetingsList;

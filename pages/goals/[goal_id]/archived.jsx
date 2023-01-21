@@ -10,7 +10,7 @@ function GoalsArchivedPage() {
       <WithMe>
         {({ user }) => (
           <AdminLayout user={user} isBack>
-            <GoalsDetailComponent isArchived />
+            <GoalsDetailComponent user={user} isArchived />
           </AdminLayout>
         )}
       </WithMe>
