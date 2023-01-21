@@ -44,7 +44,7 @@ function AddEditGoalComponent({ user, editMode = false }) {
       .then(({ data: response }) => {
         if (response.status === 200) {
           openNotificationBox("success", response.message, 3);
-          router.push("/meetings");
+          router.push("/followups");
         }
       })
       .catch((err) => {
@@ -61,7 +61,7 @@ function AddEditGoalComponent({ user, editMode = false }) {
         .then(({ data: response }) => {
           if (response.status === 200) {
             openNotificationBox("success", response.message, 3);
-            router.push("/meetings");
+            router.push("/followups");
           }
         })
         .catch((err) => {

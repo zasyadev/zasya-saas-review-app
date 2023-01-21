@@ -4,20 +4,20 @@ import SuspenceWrapper from "../../../component/common/SuspenceWrapper";
 import AdminLayout from "../../../component/layout/AdminLayout";
 import WithMe from "../../../component/layout/WithMe";
 
-const AddEditMeetingComponent = dynamic(
-  () => import("../../../component/Meetings/AddEditMeetingComponent"),
+const CreateMeetingTypeComponent = dynamic(
+  () => import("../../../component/Meetings/CreateMeetingTypeComponent"),
   {
     suspense: true,
   }
 );
 
-function EditMeetingPage() {
+function CreateMeetingTypePage() {
   return (
     <SuspenceWrapper>
       <WithMe>
         {({ user }) => (
-          <AdminLayout user={user} title={"Edit Meeting"} isBack>
-            <AddEditMeetingComponent user={user} editMode={true} />
+          <AdminLayout user={user} title={"Create Follow Up"} isBack>
+            <CreateMeetingTypeComponent user={user} />
           </AdminLayout>
         )}
       </WithMe>
@@ -25,4 +25,4 @@ function EditMeetingPage() {
   );
 }
 
-export default EditMeetingPage;
+export default CreateMeetingTypePage;

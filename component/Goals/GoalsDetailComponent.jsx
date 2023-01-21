@@ -51,7 +51,7 @@ function GoalsDetailComponent({ isArchived = false }) {
       title: "Title",
       key: "meeting_title",
       render: (_, record) => (
-        <Link href={`/meetings/${record.id}`} passHref>
+        <Link href={`/followups/${record.id}`} passHref>
           <p className="cursor-pointer text-gray-500 mb-0">
             {record.meeting_title}
           </p>
@@ -219,7 +219,7 @@ function GoalsDetailComponent({ isArchived = false }) {
           <div className="mb-2 flex justify-end mt-4">
             <PrimaryButton
               withLink={true}
-              linkHref={`/meetings/add/${router?.query?.goal_id}?tp=${GOAL_MEETINGTYPE}`}
+              linkHref={`/followups/add/${router?.query?.goal_id}?tp=${GOAL_MEETINGTYPE}`}
               title={"Add Meeting"}
             />
           </div>

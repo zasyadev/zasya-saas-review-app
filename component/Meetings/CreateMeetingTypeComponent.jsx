@@ -41,7 +41,7 @@ function CreateEditGoalComponent({ user }) {
       .post("/api/meetings", data)
       .then(({ data: response }) => {
         if (response.status === 200) {
-          router.push("/meetings");
+          router.push("/followups");
           openNotificationBox("success", response.message, 3);
         }
       })
