@@ -23,33 +23,26 @@ function CreateMeetingTypeComponent({ user }) {
   const [goalsList, setGoalsList] = useState([]);
   const [userList, setUserList] = useState([]);
 
-  const onFinish = (values) => {
-    assigneeList.forEach((assignee) => {
-      if (values.members.indexOf(assignee) === -1)
-        values.members.push(assignee);
-    });
-
-    addMeetingsData({
-      ...values,
-      assigneeList: values.members,
-    });
-  };
-
-  const addMeetingsData = async (data) => {
-    setLoadingSubmitSpin(true);
-    await httpService
-      .post("/api/meetings", data)
-      .then(({ data: response }) => {
-        if (response.status === 200) {
-          router.push("/followups");
-          openNotificationBox("success", response.message, 3);
-        }
-      })
-      .catch((err) => {
-        openNotificationBox("error", err.response.data?.message);
-        setLoadingSubmitSpin(false);
+  const assigneeList = useMemo(() => {
+    if (meetingEditType === GOAL_MEETINGTYPE && Number(goalsList.length) > 0) {
+      const goalData = goalsList.find((item) => item.goal.id === type_id);
+      return goalData?.goal?.GoalAssignee.map((i) => {
+        return i.assignee_id;
       });
-  };
+    } else if (
+      meetingEditType === REVIEW_MEETINGTYPE &&
+      Number(reviewsList.length) > 0
+    ) {
+      let list = [];
+      const reviewData = reviewsList.find((item) => item.id === type_id);
+      list = reviewData?.ReviewAssignee.map((i) => {
+        return i.assigned_to_id;
+      });
+      if (list?.length > 0) list.push(reviewData?.created_by);
+
+      return list;
+    } else return [];
+  }, [goalsList, reviewsList, type_id, meetingEditType]);
 
   async function fetchReviewsList() {
     await httpService
@@ -82,27 +75,6 @@ function CreateMeetingTypeComponent({ user }) {
         );
       });
   }
-
-  const assigneeList = useMemo(() => {
-    if (meetingEditType === GOAL_MEETINGTYPE && Number(goalsList.length) > 0) {
-      const goalData = goalsList.find((item) => item.goal.id === type_id);
-      return goalData?.goal?.GoalAssignee.map((i) => {
-        return i.assignee_id;
-      });
-    } else if (
-      meetingEditType === REVIEW_MEETINGTYPE &&
-      Number(reviewsList.length) > 0
-    ) {
-      let list = [];
-      const reviewData = reviewsList.find((item) => item.id === type_id);
-      list = reviewData?.ReviewAssignee.map((i) => {
-        return i.assigned_to_id;
-      });
-      if (list?.length > 0) list.push(reviewData?.created_by);
-
-      return list;
-    } else return [];
-  }, [goalsList.length, reviewsList.length]);
 
   async function fetchUserData() {
     setUserList([]);
@@ -186,6 +158,36 @@ function CreateMeetingTypeComponent({ user }) {
       fillFormWithData();
     }
   }, [meetingData]);
+
+  const onFinish = (values) => {
+    const reqAssigneeList = [...values.members];
+    assigneeList.forEach((assignee) => {
+      if (reqAssigneeList.indexOf(assignee) === -1)
+        reqAssigneeList.push(assignee);
+    });
+
+    addMeetingsData({
+      ...values,
+      assigneeList: reqAssigneeList,
+    });
+  };
+
+  const addMeetingsData = async (data) => {
+    setLoadingSubmitSpin(true);
+
+    await httpService
+      .post("/api/meetings", data)
+      .then(({ data: response }) => {
+        if (response.status === 200) {
+          router.push("/followups");
+          openNotificationBox("success", response.message, 3);
+        }
+      })
+      .catch((err) => {
+        openNotificationBox("error", err.response.data?.message);
+        setLoadingSubmitSpin(false);
+      });
+  };
 
   if (!meetingData) return <NoRecordFound title={"No Meeting Found"} />;
 

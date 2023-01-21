@@ -31,14 +31,15 @@ function AddEditMeetingComponent({ user, editMode = false }) {
   };
 
   const addMeetingsData = async (data) => {
-    data.members.push(user.id);
+    const assigneeList = [...data.members, user.id];
 
     const obj = {
       ...data,
-      assigneeList: data.members,
+      assigneeList,
     };
 
     setLoadingSubmitSpin(true);
+
     await httpService
       .post("/api/meetings", obj)
       .then(({ data: response }) => {
@@ -175,7 +176,7 @@ function AddEditMeetingComponent({ user, editMode = false }) {
   }, [meetingData?.MeetingAssignee?.length, userList.length, editMode]);
 
   useEffect(() => {
-    if (editMode && Number(filterUserList.length) > 0) {
+    if (editMode && Number(filterUserList?.length) > 0) {
       form.setFieldsValue({
         members: filterUserList.map((user) => user.user_id),
       });
