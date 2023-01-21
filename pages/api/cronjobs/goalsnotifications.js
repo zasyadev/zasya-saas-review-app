@@ -27,10 +27,16 @@ async function handle(req, res) {
       status: 401,
     });
   }
-
   const goalData = await prisma.goals.findMany({
     where: {
-      end_date: timeBetween,
+      AND: [
+        {
+          end_date: timeBetween,
+        },
+        {
+          is_archived: false,
+        },
+      ],
     },
     include: {
       GoalAssignee: {
