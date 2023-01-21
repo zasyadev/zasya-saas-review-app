@@ -15,11 +15,11 @@ function MeetingForm({
   setMeetingType,
   meetingType,
   loadingSubmitSpin,
-  editMode = false,
   reviewsList,
   goalsList,
-  disabledTypeField = false,
   userList,
+  disabledTypeField = false,
+  editMode = false,
 }) {
   return (
     <Form form={form} name="meeting" layout="vertical" onFinish={onFinish}>

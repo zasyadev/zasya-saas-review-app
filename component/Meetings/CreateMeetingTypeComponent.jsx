@@ -94,25 +94,6 @@ function CreateMeetingTypeComponent({ user }) {
       });
   }
 
-  const fillFormWithData = () => {
-    if (meetingEditType === GOAL_MEETINGTYPE) {
-      setMeetingType(GOAL_TYPE);
-      form.setFieldsValue({
-        meeting_description: meetingData.goal.goal_title,
-        meeting_type: GOAL_TYPE,
-        type_id: [type_id],
-        members: filterUserList,
-      });
-    } else if (meetingEditType === REVIEW_MEETINGTYPE) {
-      setMeetingType(REVIEW_TYPE);
-      form.setFieldsValue({
-        meeting_description: meetingData.review_name,
-        meeting_type: REVIEW_TYPE,
-        type_id: [type_id],
-      });
-    }
-  };
-
   const filterUserList = useMemo(() => {
     if (Number(assigneeList.length) > 0) {
       return userList?.filter((item) => {
@@ -124,7 +105,7 @@ function CreateMeetingTypeComponent({ user }) {
     } else {
       return [];
     }
-  }, [assigneeList.length, userList.length]);
+  }, [assigneeList, userList]);
 
   useEffect(() => {
     if (Number(filterUserList.length) > 0) {
@@ -134,30 +115,43 @@ function CreateMeetingTypeComponent({ user }) {
     }
   }, [filterUserList.length]);
 
-  useEffect(() => {
+  const handleMeetingData = (type_id, meetingEditType) => {
     if (type_id) {
       if (
         meetingEditType === GOAL_MEETINGTYPE &&
         Number(goalsList.length) > 0
       ) {
-        setMeetingData(goalsList.find((item) => item.goal.id === type_id));
+        const goalData = goalsList.find((item) => item.goal.id === type_id);
+
+        form.setFieldsValue({
+          meeting_description: goalData.goal.goal_title,
+          meeting_type: GOAL_TYPE,
+          type_id: [type_id],
+        });
+        setMeetingType(GOAL_TYPE);
+        setMeetingData(goalData);
       } else if (
         meetingEditType === REVIEW_MEETINGTYPE &&
         Number(reviewsList.length) > 0
       ) {
-        setMeetingData(reviewsList.find((item) => item.id === type_id));
+        const reviewData = reviewsList.find((item) => item.id === type_id);
+        form.setFieldsValue({
+          meeting_description: reviewData.review_name,
+          meeting_type: REVIEW_TYPE,
+          type_id: [type_id],
+        });
+        setMeetingType(REVIEW_TYPE);
+        setMeetingData(reviewData);
       }
     }
+  };
+
+  useEffect(() => {
     fetchReviewsList();
     fetchGoalList();
     fetchUserData();
+    handleMeetingData(type_id, meetingEditType);
   }, [goalsList.length, reviewsList.length]);
-
-  useEffect(() => {
-    if (meetingData) {
-      fillFormWithData();
-    }
-  }, [meetingData]);
 
   const onFinish = (values) => {
     const reqAssigneeList = [...values.members];
