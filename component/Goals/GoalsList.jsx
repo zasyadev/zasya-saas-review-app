@@ -59,6 +59,19 @@ function GoalsList({ user, isArchived = false }) {
     setGoalsList([]);
 
     await httpService
+      .post(`/api/cronjobs/goalsnotifications`, {
+        password: "STARTCRON",
+      })
+      .then(({ data: response }) => {
+        if (response.status === 200) {
+          console.log({ data });
+        }
+      })
+      .catch((err) => {
+        console.log({ err });
+      });
+
+    await httpService
       .get(`/api/goals?status=${status}`)
       .then(({ data: response }) => {
         if (response.status === 200) {

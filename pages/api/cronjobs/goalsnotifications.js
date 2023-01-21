@@ -27,7 +27,7 @@ async function handle(req, res) {
       status: 401,
     });
   }
-
+  console.log({ timeBetween });
   const goalData = await prisma.goals.findMany({
     where: {
       end_date: timeBetween,
@@ -49,6 +49,8 @@ async function handle(req, res) {
     },
   });
 
+  console.log({ goalData });
+
   prisma.$disconnect();
   if (goalData && goalData.length > 0) {
     goalData.forEach((item) => {
@@ -61,7 +63,7 @@ async function handle(req, res) {
               link: `${process.env.NEXT_APP_URL}goals`,
               btnText: "Goals",
             });
-
+            return;
             SlackPostMessage({
               channel: user.assignee.UserDetails.slack_id,
               text: `Goal is pending.`,
