@@ -11,7 +11,7 @@ import { openNotificationBox } from "../common/notification";
 import MeetingListSkeleton from "./component/MeetingListSkeleton";
 import { CASUAL_MEETINGTYPE } from "./constants";
 
-function GoalsList({ user }) {
+function MeetingsList({ user }) {
   const [loading, setLoading] = useState(false);
   const [meetingsList, setMeetingsList] = useState([]);
 
@@ -57,12 +57,17 @@ function GoalsList({ user }) {
       title: "Title",
       key: "meeting_title",
       render: (_, record) => (
-        <Link href={`/meetings/${record.id}`} passHref>
+        <Link href={`/followups/${record.id}`} passHref>
           <p className="cursor-pointer text-gray-500 mb-0 underline">
             {record.meeting_title}
           </p>
         </Link>
       ),
+    },
+    {
+      title: "Type",
+      key: "meeting_type",
+      dataIndex: "meeting_type",
     },
 
     {
@@ -78,7 +83,7 @@ function GoalsList({ user }) {
         user.id === record.created_by && (
           <p>
             <Link
-              href={`/meetings/edit/${record.id}/?tp=${CASUAL_MEETINGTYPE}`}
+              href={`/followups/edit/${record.id}/?tp=${CASUAL_MEETINGTYPE}`}
               passHref
             >
               <EditOutlined className="primary-color-blue text-xl mx-1  md:mx-2 cursor-pointer" />
@@ -107,7 +112,7 @@ function GoalsList({ user }) {
           <div className="flex  justify-end items-center gap-4 mb-4 md:mb-6 ">
             <PrimaryButton
               withLink={true}
-              linkHref={`/meetings/add`}
+              linkHref={`/followups/add`}
               title={"Create"}
             />
           </div>
@@ -123,4 +128,4 @@ function GoalsList({ user }) {
   );
 }
 
-export default GoalsList;
+export default MeetingsList;

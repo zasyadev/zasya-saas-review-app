@@ -87,7 +87,7 @@ async function handle(req, res, prisma, user) {
     try {
       const reqBody = req.body;
 
-      if ((reqBody.meeting_type = CASUAL_TYPE)) {
+      if (reqBody.meeting_type === CASUAL_TYPE) {
         reqBody.type_id = [CASUAL_TYPE];
       }
 

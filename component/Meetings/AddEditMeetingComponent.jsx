@@ -9,7 +9,7 @@ import { PulseLoader } from "../Loader/LoadingSpinner";
 import MeetingForm from "./component/MeetingForm";
 import { CASUAL_MEETINGTYPE, GOAL_TYPE, REVIEW_TYPE } from "./constants";
 
-function AddEditGoalComponent({ user, editMode = false }) {
+function AddEditMeetingComponent({ user, editMode = false }) {
   const router = useRouter();
   const { meeting_id, tp: meetingEditType } = router.query;
   const [form] = Form.useForm();
@@ -44,7 +44,7 @@ function AddEditGoalComponent({ user, editMode = false }) {
       .then(({ data: response }) => {
         if (response.status === 200) {
           openNotificationBox("success", response.message, 3);
-          router.push("/meetings");
+          router.push("/followups");
         }
       })
       .catch((err) => {
@@ -61,7 +61,7 @@ function AddEditGoalComponent({ user, editMode = false }) {
         .then(({ data: response }) => {
           if (response.status === 200) {
             openNotificationBox("success", response.message, 3);
-            router.push("/meetings");
+            router.push("/followups");
           }
         })
         .catch((err) => {
@@ -223,4 +223,4 @@ function AddEditGoalComponent({ user, editMode = false }) {
   );
 }
 
-export default AddEditGoalComponent;
+export default AddEditMeetingComponent;

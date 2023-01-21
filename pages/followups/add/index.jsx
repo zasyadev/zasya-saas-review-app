@@ -16,7 +16,7 @@ function AddMeetingPage() {
     <SuspenceWrapper>
       <WithMe>
         {({ user }) => (
-          <AdminLayout user={user} title={"Create Meeting"} isBack>
+          <AdminLayout user={user} title={"Create Follow Up"} isBack>
             <AddEditMeetingComponent user={user} />
           </AdminLayout>
         )}

@@ -57,7 +57,7 @@ function AdminLayout({ user, title, isBack = false, children }) {
     getItem("Goals", "/goals", <CrownOutlined className="sidebar-icon " />),
     // getItem(
     //   "Follow Ups",
-    //   "/meetings",
+    //   "/followups",
     //   <UsergroupAddOutlined className="sidebar-icon " />
     // ),
 

@@ -12,7 +12,7 @@ import {
   REVIEW_TYPE,
 } from "./constants";
 
-function CreateEditGoalComponent({ user }) {
+function CreateMeetingTypeComponent({ user }) {
   const router = useRouter();
   const { type_id, tp: meetingEditType } = router.query;
   const [form] = Form.useForm();
@@ -41,7 +41,7 @@ function CreateEditGoalComponent({ user }) {
       .post("/api/meetings", data)
       .then(({ data: response }) => {
         if (response.status === 200) {
-          router.push("/meetings");
+          router.push("/followups");
           openNotificationBox("success", response.message, 3);
         }
       })
@@ -204,4 +204,4 @@ function CreateEditGoalComponent({ user }) {
   );
 }
 
-export default CreateEditGoalComponent;
+export default CreateMeetingTypeComponent;

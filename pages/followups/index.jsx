@@ -7,7 +7,7 @@ function MeetingPage() {
   return (
     <WithMe>
       {({ user }) => (
-        <AdminLayout user={user} title={"Meetings"}>
+        <AdminLayout user={user} title={"Follow Ups"}>
           <MeetingsList user={user} />
         </AdminLayout>
       )}
