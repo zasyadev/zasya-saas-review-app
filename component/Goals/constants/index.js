@@ -8,6 +8,8 @@ export const COMPLETED_STATUS = "Completed";
 export const DELAYED_STATUS = "Delayed";
 export const ABANDONED_STATUS = "Abandoned";
 export const ATRISK_STATUS = "AtRisk";
+export const GRID_DISPLAY = "grid";
+export const LIST_DISPLAY = "list";
 
 export const groupItems = [
   {

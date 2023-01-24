@@ -1,3 +1,9 @@
+export const MY_TEMPLATE_KEY = "My Template";
+export const DEFAULT_TEMPLATE_KEY = "Default Template";
+
+export const REVIEW_TYPE = "review";
+export const SURVEY_TYPE = "survey";
+
 export const TemplateStepsArray = [
   {
     id: 0,
@@ -15,9 +21,6 @@ export const TemplateStepsArray = [
     title: "Preview And Launch",
   },
 ];
-
-export const MY_TEMPLATE_KEY = "My Template";
-export const DEFAULT_TEMPLATE_KEY = "Default Template";
 
 export const TemplateToggleList = [
   {
@@ -39,6 +42,3 @@ export const DefaultMotionVarient = {
     },
   },
 };
-
-export const REVIEW_TYPE = "review";
-export const SURVEY_TYPE = "survey";

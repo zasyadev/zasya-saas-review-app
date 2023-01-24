@@ -8,6 +8,7 @@ import CustomTable from "../../component/common/CustomTable";
 import { openNotificationBox } from "../../component/common/notification";
 import httpService from "../../lib/httpService";
 import ToggleButton from "../common/ToggleButton";
+import { REVIEW_MEETINGTYPE } from "../Meetings/constants";
 import AddMembersModal from "./AddMembersModal";
 import { ReviewToggleList, REVIEW_CREATED_KEY } from "./constants";
 import ReviewAssignessModal from "./ReviewAssignessModal";
@@ -28,7 +29,6 @@ const initialAddMembersReviewModal = {
 
 function ReviewManagement({ user }) {
   const router = useRouter();
-
   const { create: showCreateModal } = router.query;
   const [loading, setLoading] = useState(false);
   const [createReviewModal, setCreateReviewModal] = useState(false);
@@ -98,6 +98,7 @@ function ReviewManagement({ user }) {
     fetchReviewAssignList();
     fetchAllMembers();
   }, []);
+
   useEffect(() => {
     let timeOutId = null;
     if (showCreateModal) {
@@ -224,7 +225,8 @@ function ReviewManagement({ user }) {
             overlay={
               <Menu className="divide-y">
                 {record.is_published === "published" &&
-                  record?.ReviewAssignee?.length < userList?.length && (
+                  record?.ReviewAssignee?.length < userList?.length &&
+                  record.created_by === user.id && (
                     <Menu.Item
                       className="font-semibold"
                       key={"call-add-member"}
@@ -245,22 +247,30 @@ function ReviewManagement({ user }) {
                   </Link>
                 </Menu.Item>
                 {record.created_by === user.id && (
-                  <Menu.Item
-                    className="text-red-600 font-semibold"
-                    key={"call-delete"}
-                  >
-                    <>
+                  <>
+                    <Menu.Item className="font-semibold" key={"call-follow-up"}>
+                      <Link
+                        href={`/followups/add/${record.id}?tp=${REVIEW_MEETINGTYPE}`}
+                      >
+                        Add Follow up
+                      </Link>
+                    </Menu.Item>
+
+                    <Menu.Item
+                      className="text-red-600 font-semibold"
+                      key={"call-delete"}
+                    >
                       <Popconfirm
                         title={`Are you sure to delete ${record.review_name} ？`}
                         okText="Yes"
                         cancelText="No"
-                        onConfirm={() => onDelete(record.id)}
+                        onConfirm={(e) => onDelete(record.id)}
                         icon={false}
                       >
                         Delete
                       </Popconfirm>
-                    </>
-                  </Menu.Item>
+                    </Menu.Item>
+                  </>
                 )}
               </Menu>
             }
@@ -302,7 +312,7 @@ function ReviewManagement({ user }) {
         <div className="w-full bg-white rounded-md overflow-hdden shadow-md">
           {loading ? (
             <div className="px-4">
-              <Skeleton title={false} active={true} className="my-4" />{" "}
+              <Skeleton title={false} active={true} className="my-4" />
             </div>
           ) : (
             <CustomTable

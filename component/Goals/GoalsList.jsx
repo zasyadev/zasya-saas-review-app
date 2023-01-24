@@ -16,12 +16,15 @@ import { PulseLoader } from "../Loader/LoadingSpinner";
 import GoalsAvatar from "./component/GoalsAvatar";
 import GoalsCustomTable from "./component/GoalsCustomTable";
 import GoalsGroupList from "./component/GoalsGroupList";
+import GoalsGroupListSkeleton from "./component/GoalsGroupListSkeleton";
 import {
   ABANDONED_STATUS,
   COMPLETED_STATUS,
   DELAYED_STATUS,
   goalsFilterList,
+  GRID_DISPLAY,
   groupItems,
+  LIST_DISPLAY,
   ONTRACK_STATUS,
 } from "./constants";
 import GoalAssignessModal from "./GoalAssignessModal";
@@ -53,7 +56,10 @@ function GoalsList({ user, isArchived = false }) {
     initialGoalCountModalData
   );
   const [userList, setUserList] = useState([]);
-  const [displayMode, setDisplayMode] = useLocalStorage("goalListView", "list");
+  const [displayMode, setDisplayMode] = useLocalStorage(
+    "goalListView",
+    LIST_DISPLAY
+  );
 
   async function fetchGoalList(status) {
     setLoading(true);
@@ -270,10 +276,10 @@ function GoalsList({ user, isArchived = false }) {
               <Tooltip title="Grid View">
                 <ButtonGray
                   withLink={false}
-                  onClick={() => setDisplayMode("grid", "goalListView")}
+                  onClick={() => setDisplayMode(GRID_DISPLAY)}
                   title={<ApartmentOutlined />}
                   className={`leading-0 ${
-                    displayMode === "grid"
+                    displayMode === GRID_DISPLAY
                       ? "border-2 border-primary bg-gray-200"
                       : " "
                   }`}
@@ -282,10 +288,10 @@ function GoalsList({ user, isArchived = false }) {
               <Tooltip title="List View">
                 <ButtonGray
                   withLink={false}
-                  onClick={() => setDisplayMode("list", "goalListView")}
+                  onClick={() => setDisplayMode(LIST_DISPLAY)}
                   title={<UnorderedListOutlined />}
                   className={`leading-0 ${
-                    displayMode === "list"
+                    displayMode === LIST_DISPLAY
                       ? "border-2 border-primary bg-gray-200"
                       : " "
                   }`}
@@ -303,12 +309,21 @@ function GoalsList({ user, isArchived = false }) {
 
       <div
         className={`grid grid-cols-1 ${
-          displayMode === "grid" ? "sm:grid-cols-2 xl:grid-cols-4" : ""
+          displayMode === GRID_DISPLAY ? "sm:grid-cols-2 xl:grid-cols-4" : ""
         } gap-4`}
       >
         {loading ? (
-          <PulseLoader />
-        ) : displayMode === "grid" ? (
+          displayMode === GRID_DISPLAY ? (
+            groupItems.map((groupItem) => (
+              <GoalsGroupListSkeleton
+                title={groupItem.title}
+                key={groupItem.type + "skeleton"}
+              />
+            ))
+          ) : (
+            <PulseLoader />
+          )
+        ) : displayMode === GRID_DISPLAY ? (
           groupItems.map((groupItem) => (
             <GoalsGroupList
               goalsList={filteredGoalList}

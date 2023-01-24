@@ -8,11 +8,6 @@ import {
 } from "../../../helpers/slackHelper";
 import { RequestHandler } from "../../../lib/RequestHandler";
 
-const timeBetween = {
-  lte: moment().add(1, "day").format(),
-  gte: moment().format(),
-};
-
 async function handle(req, res) {
   if (req.method != "POST") {
     return res.status(401).json({
@@ -23,19 +18,16 @@ async function handle(req, res) {
   const { password } = req.body;
   if (password != process.env.NEXT_APP_CRON_PASSWORD) {
     return res.status(401).json({
-      message: " Wrong Password",
+      message: "Wrong Password",
       status: 401,
     });
   }
   const goalData = await prisma.goals.findMany({
     where: {
       AND: [
-        {
-          end_date: timeBetween,
-        },
-        {
-          is_archived: false,
-        },
+        { end_date: { gt: moment().format() } },
+        { is_archived: false },
+        { frequency: "halfyearly" },
       ],
     },
     include: {
@@ -55,15 +47,23 @@ async function handle(req, res) {
     },
   });
 
+  const goalFilterData = goalData.map((goal) => ({
+    ...goal,
+    GoalAssignee: goal.GoalAssignee.filter(
+      (assignee) => assignee.assignee_id !== goal.created_by
+    ),
+  }));
+
   prisma.$disconnect();
-  if (goalData && goalData.length > 0) {
-    goalData.forEach((item) => {
+  if (goalFilterData && Number(goalFilterData?.length) > 0) {
+    goalFilterData.forEach((item) => {
       if (item.GoalAssignee.length > 0) {
         item.GoalAssignee.forEach((user) => {
           if (user.assignee.UserDetails && user.assignee.UserDetails.slack_id) {
             let customText = GoalCustomizeMessage({
               header: `Hey ${user.assignee?.first_name ?? "mate"}`,
-              subText: "Your Goal Deadline is Coming.",
+              subText:
+                "You have a pending goal, please make sure to complete it on time.",
               link: `${process.env.NEXT_APP_URL}goals`,
               btnText: "Goals",
             });
