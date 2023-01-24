@@ -53,6 +53,14 @@ async function cronJobStart() {
         }
       );
     });
+    schedule.scheduleJob("monthly_schedule", "30 4 30 * *", async function () {
+      await axios.post(
+        `${process.env.NEXT_APP_URL}api/cronjobs/goalsmonthlynotifications`,
+        {
+          password: process.env.NEXT_APP_CRON_PASSWORD,
+        }
+      );
+    });
   } catch (error) {
     console.error(error?.message);
   }
