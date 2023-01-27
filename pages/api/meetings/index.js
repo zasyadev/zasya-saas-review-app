@@ -10,6 +10,8 @@ import { MEETING_SCHEMA } from "../../../yup-schema/meeting";
 const GOAL_TYPE = "Goal";
 const REVIEW_TYPE = "Review";
 const CASUAL_TYPE = "Casual";
+const minutesAdd = "30";
+const BASE_URL = process.env.NEXT_APP_URL;
 
 async function handle(req, res, prisma, user) {
   const { id: userId, organization_id } = user;
@@ -123,7 +125,7 @@ async function handle(req, res, prisma, user) {
               });
               const meeetingStartTime = moment(meetingData.meeting_at).format();
               const meeetingEndTime = moment(meeetingStartTime)
-                .add("30", "minutes")
+                .add(minutesAdd, "minutes")
                 .format();
 
               CreateGoogleCalenderApi({
@@ -147,7 +149,7 @@ async function handle(req, res, prisma, user) {
 
                 let notificationMessage = {
                   message: `${createdBy} has scheduled a meeting with you.`,
-                  link: `${process.env.NEXT_APP_URL}meetings`,
+                  link: `${BASE_URL}meetings`,
                 };
 
                 await prisma.userNotification.create({
@@ -171,7 +173,7 @@ async function handle(req, res, prisma, user) {
                   let customText = CustomizeSlackMessage({
                     header: "New Meeting Scheduled",
                     user: createdBy ?? "",
-                    link: `${process.env.NEXT_APP_URL}meetings`,
+                    link: `${BASE_URL}meetings`,
                     by: "Assigneed By",
                     text: reqBody.meeting_title,
                   });

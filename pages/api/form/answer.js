@@ -1,5 +1,6 @@
 import { mailService, mailTemplate } from "../../../lib/emailservice";
 import { RequestHandler } from "../../../lib/RequestHandler";
+const BASE_URL = process.env.NEXT_APP_URL;
 
 async function handle(req, res, prisma) {
   try {
@@ -106,7 +107,7 @@ async function handle(req, res, prisma) {
       html: mailTemplate({
         body: `<b>${assignedUser.first_name}</b> has filled your review.`,
         name: assignedByUser.first_name,
-        btnLink: `${process.env.NEXT_APP_URL}review`,
+        btnLink: `${BASE_URL}review`,
         btnText: "See Response",
       }),
     };

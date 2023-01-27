@@ -6,6 +6,7 @@ import {
   SlackPostMessage,
 } from "../../../helpers/slackHelper";
 import { RequestHandler } from "../../../lib/RequestHandler";
+const BASE_URL = process.env.NEXT_APP_URL;
 
 async function handle(req, res) {
   if (req.method != "POST") {
@@ -49,7 +50,7 @@ async function handle(req, res) {
     ) {
       let customText = CustomizeSlackMessage({
         header: "Feedback is pending.",
-        link: `${process.env.NEXT_APP_URL}review/id/${item.id}`,
+        link: `${BASE_URL}review/id/${item.id}`,
         user: item?.review?.created?.first_name ?? "",
         by: "Review Assigned By",
       });

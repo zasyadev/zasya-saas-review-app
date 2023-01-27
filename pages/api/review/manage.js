@@ -5,6 +5,7 @@ import {
 } from "../../../helpers/slackHelper";
 import { RequestHandler } from "../../../lib/RequestHandler";
 import { USER_SELECT_FEILDS } from "../../../constants";
+const BASE_URL = process.env.NEXT_APP_URL;
 
 async function handle(req, res, prisma) {
   if (req.method === "POST") {
@@ -125,7 +126,7 @@ async function handle(req, res, prisma) {
 
             let notificationMessage = {
               message: `${assignedFromData.first_name} has assigned you New Review.`,
-              link: `${process.env.NEXT_APP_URL}review/id/${assigneeData.id}`,
+              link: `${BASE_URL}review/id/${assigneeData.id}`,
             };
 
             await prisma.userNotification.create({
@@ -148,7 +149,7 @@ async function handle(req, res, prisma) {
                   html: mailTemplate({
                     body: `Will you take a moment to complete this review assigned by <b>${assignedFromData.first_name}</b>.`,
                     name: user.first_name,
-                    btnLink: `${process.env.NEXT_APP_URL}review/id/${assigneeData.id}`,
+                    btnLink: `${BASE_URL}review/id/${assigneeData.id}`,
                     btnText: "Get Started",
                   }),
                 };
@@ -163,7 +164,7 @@ async function handle(req, res, prisma) {
                   let customText = CustomizeSlackMessage({
                     header: "New Review Recieved",
                     user: assignedFromData.first_name ?? "",
-                    link: `${process.env.NEXT_APP_URL}review/id/${assigneeData.id}`,
+                    link: `${BASE_URL}review/id/${assigneeData.id}`,
                     by: "Review Assigned By",
                   });
                   SlackPostMessage({

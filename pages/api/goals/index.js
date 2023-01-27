@@ -5,6 +5,7 @@ import {
 } from "../../../helpers/slackHelper";
 import { RequestHandler } from "../../../lib/RequestHandler";
 import { GOALS_SCHEMA } from "../../../yup-schema/goals";
+const BASE_URL = process.env.NEXT_APP_URL;
 
 async function handle(req, res, prisma, user) {
   const { id: userId, organization_id } = user;
@@ -163,7 +164,7 @@ async function handle(req, res, prisma, user) {
 
               let notificationMessage = {
                 message: `${createdBy} has assigned you a Goal.`,
-                link: `${process.env.NEXT_APP_URL}goals`,
+                link: `${BASE_URL}goals`,
               };
 
               await prisma.userNotification.create({
@@ -187,7 +188,7 @@ async function handle(req, res, prisma, user) {
                 let customText = CustomizeSlackMessage({
                   header: "New Goal Recieved",
                   user: createdBy ?? "",
-                  link: `${process.env.NEXT_APP_URL}goals`,
+                  link: `${BASE_URL}goals`,
                   by: "Assigneed By",
                   text: header.goal_title,
                 });

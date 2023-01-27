@@ -169,6 +169,7 @@ function CreateMeetingTypeComponent({ user }) {
   const addMeetingsData = async (data) => {
     setLoadingSubmitSpin(true);
 
+    delete data.members;
     await httpService
       .post("/api/meetings", data)
       .then(({ data: response }) => {

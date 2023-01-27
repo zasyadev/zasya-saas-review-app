@@ -2,6 +2,7 @@ import { hashedPassword } from "../../../lib/auth";
 import { mailService, mailTemplate } from "../../../lib/emailservice";
 import { RequestHandler } from "../../../lib/RequestHandler";
 import { MEMBER_SCHEMA } from "../../../yup-schema/user";
+const BASE_URL = process.env.NEXT_APP_URL;
 
 async function handle(req, res, prisma, user) {
   if (req.method === "POST") {
@@ -72,7 +73,7 @@ async function handle(req, res, prisma, user) {
             html: mailTemplate({
               body: `You have successfully registered on Review App. Please login to get started.`,
               name: userData.first_name,
-              btnLink: `${process.env.NEXT_APP_URL}/auth/login`,
+              btnLink: `${BASE_URL}/auth/login`,
               btnText: "Get Started",
             }),
           };
@@ -119,7 +120,7 @@ async function handle(req, res, prisma, user) {
             html: mailTemplate({
               body: `You have been invited to collaborate on the Review app.`,
               name: userData.first_name,
-              btnLink: `${process.env.NEXT_APP_URL}/resetpassword?passtoken=${passwordResetData.token}&email=${userData.email}`,
+              btnLink: `${BASE_URL}/resetpassword?passtoken=${passwordResetData.token}&email=${userData.email}`,
               btnText: "Get Started",
             }),
           };

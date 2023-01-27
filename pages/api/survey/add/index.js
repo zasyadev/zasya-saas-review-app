@@ -1,6 +1,7 @@
 import { validateEmail } from "../../../../helpers/validateEmail";
 import { mailService, mailTemplate } from "../../../../lib/emailservice";
 import { RequestHandler } from "../../../../lib/RequestHandler";
+const BASE_URL = process.env.NEXT_APP_URL;
 
 async function handle(req, res, prisma, user) {
   const reqBody = req.body;
@@ -133,7 +134,7 @@ async function handle(req, res, prisma, user) {
                 html: mailTemplate({
                   body: ` Will you take a moment to complete this survey that I have shared to you. It won't take long.`,
                   name: userName ?? "",
-                  btnLink: `${process.env.NEXT_APP_URL}survey/rvc-${item.customer_url}`,
+                  btnLink: `${BASE_URL}survey/rvc-${item.customer_url}`,
                   btnText: "Get Started",
                 }),
               };

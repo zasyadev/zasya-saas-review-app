@@ -37,7 +37,7 @@ function AddEditMeetingComponent({ user, editMode = false }) {
       ...data,
       assigneeList,
     };
-
+    delete obj.members;
     setLoadingSubmitSpin(true);
 
     await httpService

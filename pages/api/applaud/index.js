@@ -4,6 +4,7 @@ import {
 } from "../../../helpers/slackHelper";
 import { RequestHandler } from "../../../lib/RequestHandler";
 import { APPLAUD_SCHEMA } from "../../../yup-schema/applaud";
+const BASE_URL = process.env.NEXT_APP_URL;
 
 async function handle(req, res, prisma, user) {
   if (req.method === "POST") {
@@ -35,7 +36,7 @@ async function handle(req, res, prisma, user) {
         if (data) {
           let notificationMessage = {
             message: `${createdData.first_name ?? ""} has applauded you`,
-            link: `${process.env.NEXT_APP_URL}applaud`,
+            link: `${BASE_URL}applaud`,
           };
 
           await prisma.userNotification.create({
@@ -58,7 +59,7 @@ async function handle(req, res, prisma, user) {
               let customText = CustomizeSlackMessage({
                 header: "New Applaud Recieved",
                 user: createdData.first_name ?? "",
-                link: `${process.env.NEXT_APP_URL}applaud`,
+                link: `${BASE_URL}applaud`,
                 by: "Applauded By",
                 text: reqBody.comment,
               });

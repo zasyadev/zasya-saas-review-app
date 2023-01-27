@@ -1,6 +1,7 @@
 import { hashedPassword } from "../../../../lib/auth";
 import { mailService, mailTemplate } from "../../../../lib/emailservice";
 import { RequestHandler } from "../../../../lib/RequestHandler";
+const BASE_URL = process.env.NEXT_APP_URL;
 
 async function handle(req, res, prisma) {
   const reqBody = req.body;
@@ -39,7 +40,7 @@ async function handle(req, res, prisma) {
       html: mailTemplate({
         body: `We recevied a request that you want to reset your password. To reset your password, click the button below.`,
         name: userData?.first_name ?? reqBody.email,
-        btnLink: `${process.env.NEXT_APP_URL}/resetpassword?passtoken=${generatedToken}&email=${reqBody.email}`,
+        btnLink: `${BASE_URL}/resetpassword?passtoken=${generatedToken}&email=${reqBody.email}`,
         btnText: "Reset Link",
       }),
     };
