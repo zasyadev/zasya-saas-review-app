@@ -309,6 +309,7 @@ model UserNotification {
   read_at         DateTime?
   organization    UserOrganization @relation(fields: [organization_id], references: [id], onDelete: Cascade)
   organization_id Int
+  created_date    DateTime?        @default(now())
 
   @@map("user_notification")
 }
