@@ -8,7 +8,7 @@ const CustomTable = ({
   ...props
 }) => {
   return (
-    <div className="overflow-auto rounded-md">
+    <div className="overflow-auto rounded-md bg-white">
       <Table
         bordered={false}
         className={`rounded-md bg-white custom-table ${className}`}

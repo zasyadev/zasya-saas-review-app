@@ -50,6 +50,7 @@ export function CustomizeSlackMessage({
   link,
   by = "",
   text = "",
+  btnText = "Review App",
 }) {
   let customText = [
     {
@@ -79,7 +80,7 @@ export function CustomizeSlackMessage({
           type: "button",
           text: {
             type: "plain_text",
-            text: "Review App",
+            text: btnText,
             emoji: true,
           },
           value: "details",

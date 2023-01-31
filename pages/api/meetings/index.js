@@ -187,9 +187,10 @@ async function handle(req, res, prisma, user) {
                   let customText = CustomizeSlackMessage({
                     header: "New Meeting Scheduled",
                     user: createdBy ?? "",
-                    link: `${BASE_URL}meetings`,
+                    link: `${BASE_URL}followups`,
                     by: "Assigneed By",
                     text: reqBody.meeting_title,
+                    btnText: "View Follow Up",
                   });
                   SlackPostMessage({
                     channel: assignedUser.UserDetails.slack_id,

@@ -16,7 +16,7 @@ function AddUsers() {
     <SuspenceWrapper>
       <WithMe>
         {({ user }) => (
-          <AdminLayout user={user} title="Create Users">
+          <AdminLayout user={user} title="Create User">
             <AddUpdateUsers user={user} />
           </AdminLayout>
         )}
