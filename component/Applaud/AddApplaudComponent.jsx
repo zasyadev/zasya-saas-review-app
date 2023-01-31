@@ -24,10 +24,12 @@ function AddApplaud({ user }) {
 
   async function fetchMember(user) {
     await httpService
-      .get(`/api/members/${user.id}`)
+      .get(`/api/member/${user.id}`)
       .then(({ data }) => {
         if (data.status === 200) {
-          let filterData = data.data.filter((item) => item.user_id != user.id);
+          let filterData = data.data.filter(
+            (item) => item.user_id != user.id && item.user.status
+          );
           setMembersList(filterData);
         }
       })
