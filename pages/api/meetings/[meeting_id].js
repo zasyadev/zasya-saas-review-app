@@ -1,3 +1,4 @@
+import { deleteGoogleCalenderApi } from "../../../helpers/googleHelper";
 import { RequestHandler } from "../../../lib/RequestHandler";
 import { MEETING_ASSIGNEE_SCHEMA } from "../../../yup-schema/meeting";
 
@@ -85,9 +86,17 @@ async function handle(req, res, prisma, user) {
         .json({ status: 404, message: "Internal server error" });
     }
   } else if (req.method === "DELETE") {
+    const eventData = await prisma.meetings.findUnique({
+      where: { id: meeting_id },
+    });
+    if (eventData?.google_event_id) {
+      await deleteGoogleCalenderApi({ eventId: eventData.google_event_id });
+    }
+
     const data = await prisma.meetings.delete({
       where: { id: meeting_id },
     });
+
     if (data) {
       return res.status(200).json({
         status: 200,

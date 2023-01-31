@@ -516,7 +516,9 @@ model Meetings {
   review_id           String?
   created_date        DateTime              @default(now())
   modified_date       DateTime              @default(now())
-  MeetingAssignee     MeetingAssignee[]
+  google_event_id     String?
+
+  MeetingAssignee MeetingAssignee[]
 
   @@map("meetings")
 }

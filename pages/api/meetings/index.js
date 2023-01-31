@@ -1,5 +1,8 @@
 import moment from "moment";
-import { CreateGoogleCalenderApi } from "../../../helpers/googleHelper";
+import {
+  CreateGoogleCalenderApi,
+  updateGoogleCalenderApi,
+} from "../../../helpers/googleHelper";
 import {
   CustomizeSlackMessage,
   SlackPostMessage,
@@ -128,12 +131,23 @@ async function handle(req, res, prisma, user) {
                 .add(minutesAdd, "minutes")
                 .format();
 
-              CreateGoogleCalenderApi({
+              const event = await CreateGoogleCalenderApi({
                 emailsList: emailsList,
                 meeetingStartTime: meeetingStartTime,
                 meetingTitle: meetingData.meeting_title,
                 meeetingEndTime: meeetingEndTime,
               });
+
+              if (event && event.id) {
+                await prisma.meetings.update({
+                  where: {
+                    id: createData.id,
+                  },
+                  data: {
+                    google_event_id: event.id,
+                  },
+                });
+              }
 
               meetingData.MeetingAssignee.filter(
                 (item) => item.assignee_id !== userId
@@ -252,6 +266,46 @@ async function handle(req, res, prisma, user) {
         MeetingAssignee: { create: assigneeData },
       },
     });
+
+    if (data.id) {
+      const meetingData = await prisma.meetings.findUnique({
+        where: { id: data.id },
+        include: {
+          MeetingAssignee: {
+            include: {
+              assignee: {
+                select: {
+                  email: true,
+                },
+              },
+            },
+          },
+        },
+      });
+
+      if (
+        Number(meetingData?.MeetingAssignee.length) > 0 &&
+        meetingData.google_event_id
+      ) {
+        const emailsList = meetingData?.MeetingAssignee.map((meeting) => {
+          return {
+            email: meeting.assignee.email,
+          };
+        });
+        const meeetingStartTime = moment(meetingData.meeting_at).format();
+        const meeetingEndTime = moment(meeetingStartTime)
+          .add(minutesAdd, "minutes")
+          .format();
+
+        await updateGoogleCalenderApi({
+          emailsList: emailsList,
+          meeetingStartTime: meeetingStartTime,
+          meetingTitle: meetingData.meeting_title,
+          meeetingEndTime: meeetingEndTime,
+          eventId: meetingData.google_event_id,
+        });
+      }
+    }
 
     if (data) {
       return res.status(200).json({
