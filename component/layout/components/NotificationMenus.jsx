@@ -8,7 +8,7 @@ const NotificationMenus = ({
 }) => {
   return (
     <div className="notification-wrapper border border-gray-100 bg-white shadow-xl rounded-md">
-      <div className="flex items-center justify-between border-b border-gray-300 p-2 gap-6">
+      <div className="flex items-center justify-between border-b border-gray-300 p-2 md:p-3 gap-6">
         <p className="text-sm lg:text-base font-bold mb-0">Notifications</p>
         {unSeenNotificationCount > 0 && (
           <button
@@ -34,8 +34,8 @@ const NotificationMenus = ({
               <Link href={item.data.link} passHref>
                 <p
                   className={`${
-                    item.read_at ? "text-gray-500" : "font-medium"
-                  } hover:bg-gray-50 text-sm p-2 mb-0 cursor-pointer`}
+                    item.read_at ? "text-gray-500" : ""
+                  } hover:bg-gray-50 text-sm p-2 font-medium md:p-3 mb-0 cursor-pointer`}
                 >
                   {item.data.message}
                 </p>
