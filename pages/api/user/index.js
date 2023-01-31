@@ -5,6 +5,7 @@ import { USER_SCHEMA } from "../../../yup-schema/user";
 
 const DEFAULT_USER_ROLE = 2;
 const DEFAULT_USER_STATUS = 1;
+const BASE_URL = process.env.NEXT_APP_URL;
 
 async function handle(req, res, prisma) {
   const { first_name, company_name, email, password } = req.body;
@@ -89,7 +90,7 @@ async function handle(req, res, prisma) {
     html: mailTemplate({
       body: `You have successfully registered on Review App. Please login to get started.`,
       name: transactionData.savedData.first_name,
-      btnLink: `${process.env.NEXT_APP_URL}/auth/login`,
+      btnLink: `${BASE_URL}/auth/login`,
       btnText: "Get Started",
     }),
   };

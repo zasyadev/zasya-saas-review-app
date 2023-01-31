@@ -4,7 +4,7 @@ import MeetingDetailComponent from "../../component/Meetings/MeetingDetailCompon
 import AdminLayout from "../../component/layout/AdminLayout";
 import WithMe from "../../component/layout/WithMe";
 
-function MeetingDetailPage() {
+function FollowUpMeetingDetailPage() {
   return (
     <SuspenceWrapper>
       <WithMe>
@@ -18,4 +18,4 @@ function MeetingDetailPage() {
   );
 }
 
-export default MeetingDetailPage;
+export default FollowUpMeetingDetailPage;

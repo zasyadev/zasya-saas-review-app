@@ -13,6 +13,7 @@ const GOOGLE_CLIENT_ID = process.env.NEXT_APP_GOOGLE_CLIENT_ID;
 const GOOGLE_CLIENT_SECRET = process.env.NEXT_APP_GOOGLE_CLIENT_SECRET;
 const GOOGLE_CLIENT_REFRESH_TOKEN =
   process.env.NEXT_APP_GOOGLE_CLIENT_REFRESH_TOKEN;
+const TIME_ZONE = "Asia/Kolkata";
 
 async function loadSavedCredentialsIfExist() {
   try {
@@ -73,11 +74,11 @@ export async function CreateGoogleCalenderApi({
       attendees: emailsList,
       start: {
         dateTime: meeetingStartTime,
-        timeZone: "Asia/Kolkata",
+        timeZone: TIME_ZONE,
       },
       end: {
         dateTime: meeetingEndTime,
-        timeZone: "Asia/Kolkata",
+        timeZone: TIME_ZONE,
       },
       reminders: {
         useDefault: false,

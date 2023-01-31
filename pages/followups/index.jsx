@@ -3,7 +3,7 @@ import MeetingsList from "../../component/Meetings/MeetingsList";
 import AdminLayout from "../../component/layout/AdminLayout";
 import WithMe from "../../component/layout/WithMe";
 
-function MeetingPage() {
+function FollowUpMeetingPage() {
   return (
     <WithMe>
       {({ user }) => (
@@ -15,4 +15,4 @@ function MeetingPage() {
   );
 }
 
-export default MeetingPage;
+export default FollowUpMeetingPage;

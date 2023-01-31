@@ -8,6 +8,8 @@ import {
 } from "../../../helpers/slackHelper";
 import { RequestHandler } from "../../../lib/RequestHandler";
 
+const BASE_URL = process.env.NEXT_APP_URL;
+
 async function handle(req, res) {
   if (req.method != "POST") {
     return res.status(401).json({
@@ -64,7 +66,7 @@ async function handle(req, res) {
               header: `Hey ${user.assignee?.first_name ?? "mate"}`,
               subText:
                 "You have a pending goal, please make sure to complete it on time.",
-              link: `${process.env.NEXT_APP_URL}goals`,
+              link: `${BASE_URL}goals`,
               btnText: "Goals",
             });
 

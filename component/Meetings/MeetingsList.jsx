@@ -71,7 +71,7 @@ function MeetingsList({ user }) {
     },
 
     {
-      title: "Meeting Date",
+      title: "Date / Time",
       key: "meeting_at",
       render: (_, record) =>
         moment(record.meeting_at).format(DEFAULT_DATETIME_FORMAT),

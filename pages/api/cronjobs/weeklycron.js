@@ -8,12 +8,13 @@ import {
   WeeklyCustomizeReviewMessage,
 } from "../../../helpers/slackHelper";
 import { RequestHandler } from "../../../lib/RequestHandler";
+const BASE_URL = process.env.NEXT_APP_URL;
 
 const ApplaudSlackMessage = (name) => ({
   header: `Hey ${name ?? "mate"}`,
   subText: "Did you tried to appreciate your team mates.",
   text: "Take a little time to appreciate them.",
-  link: `${process.env.NEXT_APP_URL}applaud/add`,
+  link: `${BASE_URL}applaud/add`,
   btnText: "Create Applaud ",
 });
 
@@ -21,7 +22,7 @@ const ReviewSlackMessage = (name) => ({
   header: `Hey ${name ?? "mate"}`,
   subText: "Did you tried to get a feedback from your peers",
   text: "It will help you to enhance your performance. Let's get some feedback.",
-  link: `${process.env.NEXT_APP_URL}review?create=true`,
+  link: `${BASE_URL}review?create=true`,
   btnText: "Create Review ",
 });
 

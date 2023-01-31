@@ -13,6 +13,8 @@ const timeBetween = {
   gte: moment().format(),
 };
 
+const BASE_URL = process.env.NEXT_APP_URL;
+
 async function handle(req, res) {
   if (req.method != "POST") {
     return res.status(401).json({
@@ -64,7 +66,7 @@ async function handle(req, res) {
             let customText = GoalCustomizeMessage({
               header: `Hey ${user.assignee?.first_name ?? "mate"}`,
               subText: "Your Goal Deadline is Coming.",
-              link: `${process.env.NEXT_APP_URL}goals`,
+              link: `${BASE_URL}goals`,
               btnText: "Goals",
             });
 

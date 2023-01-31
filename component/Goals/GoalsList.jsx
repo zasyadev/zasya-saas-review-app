@@ -401,7 +401,10 @@ function GoalsList({ user, isArchived = false }) {
             </Select>
           </Form.Item>
           <Form.Item name="comment" label="Comment">
-            <Input />
+            <Input
+              className=" h-12 rounded-md"
+              placeholder="Comment about the status"
+            />
           </Form.Item>
         </Form>
       </CustomModal>
