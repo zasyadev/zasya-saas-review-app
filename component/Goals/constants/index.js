@@ -34,7 +34,7 @@ export const goalsFilterList = [
   { value: "OnTrack", label: "On Track" },
   { value: "Completed", label: "Completed" },
   { value: "Delayed", label: "Delayed" },
-  { value: "AtRisk", label: "At Risk" },
+  // { value: "AtRisk", label: "At Risk" },
   { value: "Abandoned", label: "Abandoned" },
   { value: "Archived", label: "Archived" },
 ];

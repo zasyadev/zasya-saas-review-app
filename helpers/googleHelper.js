@@ -97,8 +97,8 @@ export async function CreateGoogleCalenderApi({
       },
     };
     // We make a request to Google Calendar API.
-    calendar.events.insert(
-      {
+    return await calendar.events
+      .insert({
         auth: auth,
         calendarId: GOOGLE_CALENDER_ID,
         resource: event,
@@ -106,18 +106,95 @@ export async function CreateGoogleCalenderApi({
         conferenceDataVersion: 1,
         sendUpdates: "all",
         sendNotifications: true,
-      },
-      function (err, event) {
-        if (err) {
-          // console.log(
-          //   "There was an error contacting the Calendar service: " + err
-          // );
-          return;
-        }
-        // console.log("Event created: %s", event.data.htmlLink);
-      }
-    );
+      })
+      .then((event) => {
+        return event.data;
+      })
+      .catch((error) => {
+        return null;
+      });
   }
+  try {
+    const auth = await authorize();
+    return await createEvents(auth);
+  } catch (error) {
+    return null;
+  }
+}
 
-  authorize().then(createEvents).catch(console.error);
+export async function deleteGoogleCalenderApi({ eventId }) {
+  try {
+    const auth = await authorize();
+    const calendar = google.calendar({ version: "v3", auth });
+    calendar.events.delete({
+      calendarId: GOOGLE_CALENDER_ID,
+      eventId: eventId,
+    });
+  } catch (error) {
+    return null;
+  }
+}
+
+export async function updateGoogleCalenderApi({
+  emailsList,
+  meeetingStartTime,
+  meetingTitle,
+  meeetingEndTime,
+  eventId,
+}) {
+  async function updateEvents(auth) {
+    const calendar = google.calendar({ version: "v3", auth });
+    const event = {
+      summary: meetingTitle,
+      description: "",
+      attendees: emailsList,
+      start: {
+        dateTime: meeetingStartTime,
+        timeZone: TIME_ZONE,
+      },
+      end: {
+        dateTime: meeetingEndTime,
+        timeZone: TIME_ZONE,
+      },
+      reminders: {
+        useDefault: false,
+        overrides: [
+          { method: "email", minutes: 24 * 60 },
+          { method: "popup", minutes: 10 },
+        ],
+      },
+      conferenceData: {
+        createRequest: {
+          conferenceSolutionKey: {
+            type: "hangoutsMeet",
+          },
+          requestId: randomString(8),
+        },
+      },
+    };
+    // We make a request to Google Calendar API.
+    return await calendar.events
+      .patch({
+        auth: auth,
+        calendarId: GOOGLE_CALENDER_ID,
+        eventId: eventId,
+        resource: event,
+        key: GOOGLE_CALENDER_KEY,
+        conferenceDataVersion: 1,
+        sendUpdates: "all",
+        sendNotifications: true,
+      })
+      .then((event) => {
+        return event.data;
+      })
+      .catch((error) => {
+        return null;
+      });
+  }
+  try {
+    const auth = await authorize();
+    return await updateEvents(auth);
+  } catch (error) {
+    return null;
+  }
 }
