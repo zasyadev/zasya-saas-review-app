@@ -82,7 +82,7 @@ function MeetingsList({ user }) {
         user.id === record.created_by && (
           <p>
             <Link
-              href={`${FOLLOW_UP_EDIT}/${record.id}/?tp=${CASUAL_MEETINGTYPE}`}
+              href={`${URLS.FOLLOW_UP_EDIT}/${record.id}/?tp=${CASUAL_MEETINGTYPE}`}
               passHref
             >
               <EditOutlined className="primary-color-blue text-xl mx-1  md:mx-2 cursor-pointer" />

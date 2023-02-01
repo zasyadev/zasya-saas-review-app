@@ -6,6 +6,7 @@ import CustomTable from "../common/CustomTable";
 import { openNotificationBox } from "../common/notification";
 import httpService from "../../lib/httpService";
 import { PrimaryButton, ButtonGray } from "../common/CustomButton";
+import { URLS } from "../../constants/urls";
 
 function TeamsListComponent({ user }) {
   const [loading, setLoading] = useState(false);
@@ -22,7 +23,6 @@ function TeamsListComponent({ user }) {
           }
         })
         .catch((err) => {
-          console.error(err.response.data?.message);
           openNotificationBox("error", err.response.data?.message);
         });
     }
@@ -76,7 +76,7 @@ function TeamsListComponent({ user }) {
       render: (_, record) =>
         user.role_id === 2 && (
           <p>
-            <Link href={`/teams/${record.id}/edit`} passHref>
+            <Link href={`${URLS.TEAMS}/${record.id}/edit`} passHref>
               <EditOutlined className="primary-color-blue text-xl mx-1  md:mx-2 cursor-pointer" />
             </Link>
 
@@ -99,13 +99,13 @@ function TeamsListComponent({ user }) {
         <ButtonGray
           withLink={true}
           className="px-2 md:px-4 "
-          linkHref="/users"
+          linkHref={URLS.USERS}
           title={"All Users"}
         />
         <PrimaryButton
           withLink={true}
           className="px-2 md:px-4 "
-          linkHref="/teams/add"
+          linkHref={URLS.TEAM_CREATE}
           title={"Create"}
         />
       </div>

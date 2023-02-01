@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { openNotificationBox } from "../../component/common/notification";
+import { URLS } from "../../constants/urls";
 import httpService from "../../lib/httpService";
 import { FormSlideComponent } from "../Review/formhelper/FormSlideComponent";
 import { SURVEY_TYPE } from "../Template/constants";
@@ -125,7 +126,7 @@ function SurveyReplyComponent({ urlId }) {
                   transition={{ duration: 0.8 }}
                 >
                   <div className="relative text-center bg-white rounded-md py-10 shadow-md md:w-10/12 2xl:w-8/12 mx-auto">
-                    <Link href="/" passHref>
+                    <Link href={URLS.ROOT} passHref>
                       <span className="absolute top-2 right-2 p-3 leading-0 cursor-pointer rounded-full hover:bg-gray-100">
                         <CloseOutlined />
                       </span>
@@ -146,7 +147,7 @@ function SurveyReplyComponent({ urlId }) {
                   transition={{ duration: 0.8 }}
                 >
                   <div className="relative text-center bg-white rounded-md py-10 shadow-md md:w-10/12 2xl:w-8/12 mx-auto">
-                    <Link href="/" passHref>
+                    <Link href={URLS.ROOT} passHref>
                       <span className="absolute top-2 right-2 p-3 leading-0 cursor-pointer rounded-full hover:bg-gray-100">
                         <CloseOutlined />
                       </span>

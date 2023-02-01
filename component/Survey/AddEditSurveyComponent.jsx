@@ -1,6 +1,7 @@
 import { Col, Form, Row } from "antd";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
+import { URLS } from "../../constants/urls";
 import httpService from "../../lib/httpService";
 import GetSurveySteps from "../common/GetSurveySteps";
 import { openNotificationBox } from "../common/notification";
@@ -41,7 +42,7 @@ function AddEditSurveyComponent({
       .then(({ data: response }) => {
         if (response.status === 200) {
           openNotificationBox("success", response.message, 3);
-          router.replace(`/survey/share/${response.data.id}`);
+          router.replace(`${URLS.SURVEY_SHARE}/${response.data.id}`);
         }
       })
       .catch((err) => {
@@ -143,7 +144,7 @@ function AddEditSurveyComponent({
 
   return (
     <div className="px-4 md:px-6 pb-28 pt-20 md:pt-20 md:pb-24  bg-gray-100 min-h-screen">
-      <StepFixedHeader title={pageTitle} backUrl={"/survey"} />
+      <StepFixedHeader title={pageTitle} backUrl={URLS.SURVEY} />
 
       <div className="">
         <Form layout="vertical" form={form} className="w-full">

@@ -9,6 +9,7 @@ import {
   SecondaryButton,
 } from "../../component/common/CustomButton";
 import { openNotificationBox } from "../../component/common/notification";
+import { URLS } from "../../constants/urls";
 import { MONTH_DATE_FORMAT } from "../../helpers/dateHelper";
 import getApplaudCategoryName from "../../helpers/getApplaudCategoryName";
 import httpService from "../../lib/httpService";
@@ -40,7 +41,7 @@ function Profile({ user }) {
           setLoading(false);
         }
       })
-      .catch((err) => console.error(err?.response?.data?.message));
+      .catch((err) => {});
   };
 
   async function fetchApplaudData() {
@@ -53,7 +54,6 @@ function Profile({ user }) {
       })
       .catch((err) => {
         setGivenApplaudList([]);
-        console.error(err.response.data?.message);
       });
   }
 
@@ -202,7 +202,7 @@ source=LinkedIn`);
                 <p className="mb-0 text-lg md:text-xl text-primary font-semibold">
                   General Information
                 </p>
-                <Link href="/profile/edit " passHref>
+                <Link href={URLS.PROFILE_EDIT} passHref>
                   <div className="hover:bg-gray-100 border border-gray-300  py-1 px-2 rounded-full cursor-pointer transition-all  duration-300 ease-in-out">
                     <EditOutlined className="text-base text-primary" />
                   </div>

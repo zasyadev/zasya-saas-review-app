@@ -1,8 +1,8 @@
 import { ApartmentOutlined, UnorderedListOutlined } from "@ant-design/icons";
 import { Form, Input, Select, Tooltip } from "antd";
 import moment from "moment";
-import { useRouter } from "next/router";
 import React, { useEffect, useMemo, useState } from "react";
+import { URLS } from "../../constants/urls";
 import { useLocalStorage } from "../../helpers/useStorage";
 import httpService from "../../lib/httpService";
 import {
@@ -45,7 +45,6 @@ const initialGoalCountModalData = {
 const ALL_STATUS = "All";
 
 function GoalsList({ user, isArchived = false }) {
-  const router = useRouter();
   const [searchText, setSearchText] = useState("");
   const [filterByMembersId, setFilterByMembersId] = useState([]);
   const [updateGoalForm] = Form.useForm();
@@ -134,11 +133,7 @@ function GoalsList({ user, isArchived = false }) {
   }, [isArchived]);
 
   const handleFilterChange = (value) => {
-    if (value === "Archived") {
-      router.push("/goals/archived");
-    } else {
-      fetchGoalList(value);
-    }
+    fetchGoalList(value);
   };
 
   const filteredGoalList = useMemo(() => {
@@ -193,7 +188,6 @@ function GoalsList({ user, isArchived = false }) {
         setLoading(false);
       })
       .catch((err) => {
-        console.error(err);
         setLoading(false);
       });
   };
@@ -302,7 +296,7 @@ function GoalsList({ user, isArchived = false }) {
             </div>
             <PrimaryButton
               withLink={true}
-              linkHref={`/goals/add`}
+              linkHref={URLS.GOAL_CREATE}
               title={"Create"}
             />
           </div>

@@ -2,6 +2,7 @@ import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { Popconfirm, Skeleton } from "antd";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
+import { URLS } from "../../constants/urls";
 import httpService from "../../lib/httpService";
 import { PrimaryButton } from "../common/CustomButton";
 import CustomTable from "../common/CustomTable";
@@ -26,7 +27,6 @@ function UserMembers({ user }) {
           }
         })
         .catch((err) => {
-          console.error(err.response.data?.message);
           openNotificationBox("error", err.response.data?.message);
         });
     }
@@ -46,7 +46,6 @@ function UserMembers({ user }) {
         setLoading(false);
       })
       .catch((err) => {
-        console.error(err.response.data?.message);
         setMembersList([]);
         setLoading(false);
       });
@@ -103,7 +102,7 @@ function UserMembers({ user }) {
       render: (_, record) =>
         record.role_id === 2 ? null : (
           <p>
-            <Link href={`/users/edit/${record.user_id}`} passHref>
+            <Link href={`${URLS.USER_EDIT}/${record.user_id}`} passHref>
               <EditOutlined className="primary-color-blue text-xl mx-1  md:mx-2 cursor-pointer" />
             </Link>
 
@@ -128,7 +127,7 @@ function UserMembers({ user }) {
         <PrimaryButton
           withLink={true}
           className="px-2 md:px-4 "
-          linkHref="/users/add"
+          linkHref={URLS.USER_CREATE}
           title={"Create"}
         />
       </div>
