@@ -1,10 +1,9 @@
 import {
+  CrownOutlined,
   DashboardOutlined,
   FormOutlined,
   LikeOutlined,
   SettingOutlined,
-  FileTextOutlined,
-  CrownOutlined,
   UsergroupAddOutlined,
 } from "@ant-design/icons";
 import { Grid, Layout } from "antd";
@@ -41,26 +40,22 @@ function AdminLayout({ user, title, isBack = false, children }) {
       "/dashboard",
       <DashboardOutlined className="sidebar-icon" />
     ),
-
-    getItem(
-      "Reviews",
-      "/review/received",
-      <FormOutlined className="sidebar-icon " />
-    ),
-
     getItem("Applaud", "/applaud", <LikeOutlined className="sidebar-icon " />),
-    getItem(
-      "Surveys",
-      "/survey",
-      <FileTextOutlined className="sidebar-icon " />
-    ),
-    getItem("Goals", "/goals", <CrownOutlined className="sidebar-icon " />),
+    getItem("Reviews", "review", <FormOutlined className="sidebar-icon " />, [
+      getItem("Received", "/review/received"),
+      getItem("Created", "/review"),
+      getItem("Surveys", "/survey"),
+    ]),
+
+    getItem("Goals", "goals", <CrownOutlined className="sidebar-icon " />, [
+      getItem("Goals", "/goals"),
+      getItem("Archived", "/goals/archived"),
+    ]),
     getItem(
       "Follow Ups",
       "/followups",
       <UsergroupAddOutlined className="sidebar-icon " />
     ),
-
     getItem(
       "Settings",
       "setting",

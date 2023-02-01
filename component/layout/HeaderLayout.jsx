@@ -50,8 +50,18 @@ function HeaderLayout({ isBack, title, user, collapsed, setCollapsed, lg }) {
       })
       .catch((err) => {
         setAllNotification([]);
-        console.error(err.response.data?.message);
       });
+  };
+
+  const handleDeleteAllNotifications = async () => {
+    await httpService
+      .delete(`/api/notification/${user.id}`)
+      .then(({ data: response }) => {
+        if (response.status === 200) {
+          getAllNotification();
+        }
+      })
+      .catch((err) => {});
   };
 
   const notificationViewed = async (data) => {
@@ -109,6 +119,7 @@ function HeaderLayout({ isBack, title, user, collapsed, setCollapsed, lg }) {
                 allNotification={allNotification}
                 unSeenNotificationCount={unSeenNotificationCount}
                 notificationViewed={notificationViewed}
+                deleteNotifications={handleDeleteAllNotifications}
               />
             }
             overlayClassName="notification-dropdown"

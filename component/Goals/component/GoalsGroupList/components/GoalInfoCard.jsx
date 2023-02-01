@@ -45,16 +45,25 @@ function GoalInfoCard({
                   <Menu.Item
                     className="text-gray-400 font-semibold"
                     key={"call-Archived"}
-                    onClick={() =>
-                      goalEditHandle({
-                        goal_id: item.goal.id,
-                        id: item.id,
-                        value: item.goal.is_archived ? false : true,
-                        type: "forArchived",
-                      })
-                    }
                   >
-                    {item.goal.is_archived ? "UnArchived" : "Archived"}
+                    <Popconfirm
+                      title={`Are you sure to ${
+                        item.goal.is_archived ? "unarchived" : "archived"
+                      } ${item.goal.goal_title} ？`}
+                      okText="Yes"
+                      cancelText="No"
+                      onConfirm={() =>
+                        goalEditHandle({
+                          goal_id: item.goal.id,
+                          id: item.id,
+                          value: item.goal.is_archived ? false : true,
+                          type: "forArchived",
+                        })
+                      }
+                      icon={false}
+                    >
+                      {item.goal.is_archived ? "UnArchived" : "Archived"}
+                    </Popconfirm>
                   </Menu.Item>
                   {isArchived && (
                     <Menu.Item

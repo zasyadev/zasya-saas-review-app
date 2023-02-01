@@ -1,5 +1,5 @@
 import { EllipsisOutlined } from "@ant-design/icons";
-import { Dropdown, Menu } from "antd";
+import { Dropdown, Menu, Popconfirm } from "antd";
 import Link from "next/link";
 import React from "react";
 import { ButtonGray } from "../../common/CustomButton";
@@ -24,7 +24,7 @@ function GoalsCustomTable({
       key: "goal_title",
       render: (_, record) => (
         <Link href={`/goals/${record.goal.id}/detail`} passHref>
-          <p className="cursor-pointer text-gray-500 mb-0">
+          <p className="cursor-pointer text-gray-500 mb-0 underline">
             {record.goal.goal_title}
           </p>
         </Link>
@@ -92,17 +92,50 @@ function GoalsCustomTable({
                 <Menu.Item
                   className="text-gray-400 font-semibold"
                   key={"call-Archived"}
-                  onClick={() =>
-                    goalEditHandle({
-                      goal_id: record.goal.id,
-                      id: record.id,
-                      value: record.goal.is_archived ? false : true,
-                      type: "forArchived",
-                    })
-                  }
                 >
-                  {record.goal.is_archived ? "UnArchived" : "Archived"}
+                  <Popconfirm
+                    title={`Are you sure to ${
+                      record.goal.is_archived ? "unarchived" : "archived"
+                    } ${record.goal.goal_title} ？`}
+                    okText="Yes"
+                    cancelText="No"
+                    onConfirm={() =>
+                      goalEditHandle({
+                        goal_id: record.goal.id,
+                        id: record.id,
+                        value: record.goal.is_archived ? false : true,
+                        type: "forArchived",
+                      })
+                    }
+                    icon={false}
+                  >
+                    {record.goal.is_archived ? "UnArchived" : "Archived"}
+                  </Popconfirm>
                 </Menu.Item>
+
+                {isArchived && (
+                  <Menu.Item
+                    className="text-red-600 font-semibold"
+                    key={"call-delete"}
+                  >
+                    <Popconfirm
+                      title={`Are you sure to delete ${record.goal.goal_title} ？`}
+                      okText="Yes"
+                      cancelText="No"
+                      onConfirm={() =>
+                        goalEditHandle({
+                          goal_id: record.goal.id,
+                          id: record.id,
+                          value: record.goal.is_archived ? false : true,
+                          type: "forDelete",
+                        })
+                      }
+                      icon={false}
+                    >
+                      Delete
+                    </Popconfirm>
+                  </Menu.Item>
+                )}
               </Menu>
             }
             placement="bottomRight"
