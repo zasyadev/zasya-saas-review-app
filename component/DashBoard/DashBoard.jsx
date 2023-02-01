@@ -10,6 +10,7 @@ import {
   FileRightIcon,
   SmallApplaudIcon,
 } from "../../assets/icons";
+import { URLS } from "../../constants/urls";
 import httpService from "../../lib/httpService";
 import CustomPopover from "../common/CustomPopover";
 import DefaultImages from "../common/DefaultImages";
@@ -19,37 +20,28 @@ const BarChart = dynamic(() => import("../../component/common/Charts"), {
   ssr: false,
 });
 
-function CountCard({
-  count,
-  title,
-  Icon,
-  href = "#",
-  className = "",
-  tooltipText = "",
-}) {
+function CountCard({ count, title, Icon, className = "", tooltipText = "" }) {
   return (
-    <Link href={href} passHref>
-      <div
-        className={`bg-white p-5 rounded-md shadow-md transition-all duration-300 ease-in hover:bg-gradient-to-r hover:from-peach hover:to-peach-light ${className}`}
-      >
-        <div className="flex flex-wrap items-stretch h-full gap-3">
-          <div className="bg-gradient-to-r from-peach to-peach-light text-white grid items-center w-10 h-10 py-1 px-1 justify-center shadow-lg-pink rounded-full">
-            <Icon />
+    <div
+      className={`bg-white p-5 rounded-md shadow-md transition-all duration-300 ease-in hover:bg-gradient-to-r hover:from-peach hover:to-peach-light ${className}`}
+    >
+      <div className="flex flex-wrap items-stretch h-full gap-3 select-none">
+        <div className="bg-gradient-to-r from-peach to-peach-light text-white grid items-center w-10 h-10 py-1 px-1 justify-center shadow-lg-pink rounded-full">
+          <Icon />
+        </div>
+        <div className="flex-1">
+          <div className="text-primary flex items-start justify-between font-semibold tracking-wide text-sm gap-2 mb-2">
+            <span className="flex-1">{title}</span>
+            {tooltipText && (
+              <span className="leading-4">{CustomPopover(tooltipText)}</span>
+            )}
           </div>
-          <div className="flex-1">
-            <div className="text-primary flex items-start justify-between font-semibold tracking-wide text-sm gap-2 mb-2">
-              <span className="flex-1">{title}</span>
-              {tooltipText && (
-                <span className="leading-4">{CustomPopover(tooltipText)}</span>
-              )}
-            </div>
-            <span className="text-lg xl:text-xl 2xl:text-2xl text-primary font-semibold leading-6">
-              {count}
-            </span>
-          </div>
+          <span className="text-lg xl:text-xl 2xl:text-2xl text-primary font-semibold leading-6">
+            {count}
+          </span>
         </div>
       </div>
-    </Link>
+    </div>
   );
 }
 
@@ -88,7 +80,6 @@ function DashBoard({ user }) {
         }
       })
       .catch((err) => {
-        console.error(err.response.data?.message);
         setDashboardData(defaultDashboardData);
       });
   }
@@ -103,9 +94,7 @@ function DashBoard({ user }) {
           setMonthlyLeaderBoardData(response.data);
         }
       })
-      .catch((err) => {
-        console.error(err.response.data?.message);
-      });
+      .catch((err) => {});
   }
 
   async function fetchFeedbackData() {
@@ -121,7 +110,6 @@ function DashBoard({ user }) {
       })
       .catch((err) => {
         setFeedbackList([]);
-        console.error(err.response.data?.message);
       });
   }
 
@@ -141,9 +129,7 @@ function DashBoard({ user }) {
         }
       })
 
-      .catch((err) => {
-        console.error(err.response.data?.message);
-      });
+      .catch((err) => {});
   }
 
   useEffect(() => {
@@ -158,30 +144,33 @@ function DashBoard({ user }) {
       <Col sm={24} md={24} lg={16} xxl={18}>
         <div className="container mx-auto max-w-full space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 2xl:gap-6">
-            <CountCard
-              title={"Review Created"}
-              count={dashBoardData.reviewCreatedCount}
-              href="/review"
-              className="cursor-pointer"
-              Icon={() => <SmallApplaudIcon />}
-              tooltipText="Count of Reviews Created by you."
-            />
+            <Link href={URLS.REVIEW_CREATED} passHref>
+              <CountCard
+                title={"Review Created"}
+                count={dashBoardData.reviewCreatedCount}
+                className="cursor-pointer"
+                Icon={() => <SmallApplaudIcon />}
+                tooltipText="Count of Reviews Created by you."
+              />
+            </Link>
 
-            <CountCard
-              title={"Review Answered"}
-              count={dashBoardData.reviewAnsweredCount}
-              className="cursor-pointer"
-              href="/review/received"
-              Icon={() => (
-                <Image
-                  src={"/media/images/reviewicon.png"}
-                  alt="logo"
-                  width={20}
-                  height={20}
-                />
-              )}
-              tooltipText="Count of Reviews Answered by you."
-            />
+            <Link href={URLS.REVIEW_RECEIVED} passHref>
+              <CountCard
+                title={"Review Answered"}
+                count={dashBoardData.reviewAnsweredCount}
+                className="cursor-pointer"
+                href={URLS.REVIEW_RECEIVED}
+                Icon={() => (
+                  <Image
+                    src={"/media/images/reviewicon.png"}
+                    alt="logo"
+                    width={20}
+                    height={20}
+                  />
+                )}
+                tooltipText="Count of Reviews Answered by you."
+              />
+            </Link>
 
             <CountCard
               title={"Members"}
@@ -255,7 +244,7 @@ function DashBoard({ user }) {
 
                   {allApplaud.length > 0 && (
                     <div className=" text-center mt-2">
-                      <Link href="/applaud/allapplaud" passHref>
+                      <Link href={URLS.ALL_APPLAUD} passHref>
                         <span className="text-primary text-sm inline  cursor-pointer font-medium hover:underline">
                           View All
                         </span>

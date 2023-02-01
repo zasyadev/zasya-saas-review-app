@@ -1,3 +1,4 @@
+import { URLS } from "../../constants/urls";
 import { PrimaryButton } from "../common/CustomButton";
 import CustomModal from "../common/CustomModal";
 import { REVIEW_TYPE, SURVEY_TYPE } from "../Template/constants";
@@ -23,7 +24,9 @@ export function TempateSelectWrapper({
           </p>
           <PrimaryButton
             withLink={true}
-            linkHref={`/${type === SURVEY_TYPE ? "survey" : "review"}/add`}
+            linkHref={
+              type === SURVEY_TYPE ? URLS.SURVEY_CREATE : URLS.REVIEW_CREATE
+            }
             title={"From Scratch"}
           />
         </div>
@@ -36,8 +39,8 @@ export function TempateSelectWrapper({
           </p>
           <PrimaryButton
             withLink={true}
-            linkHref={`/template/select/${
-              type === SURVEY_TYPE ? "survey" : "review"
+            linkHref={`${URLS.TEMPLATE_SELECT}${
+              type === SURVEY_TYPE ? URLS.SURVEY : URLS.REVIEW_CREATED
             }`}
             title={"From Template"}
           />
