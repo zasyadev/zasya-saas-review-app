@@ -9,7 +9,7 @@ export function TempateSelectWrapper({
 }) {
   return (
     <CustomModal
-      title="Create a Review"
+      title={`Create a ${type === SURVEY_TYPE ? "Survey" : "Review"}`}
       visible={createReviewModal}
       onCancel={() => setCreateReviewModal(false)}
       footer={false}

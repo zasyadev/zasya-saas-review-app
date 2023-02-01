@@ -11,6 +11,7 @@ import {
   REVIEW_MEETINGTYPE,
   REVIEW_TYPE,
 } from "./constants";
+import { INDIVIDUAL_TYPE } from "../Goals/constants";
 
 function CreateMeetingTypeComponent({ user }) {
   const router = useRouter();
@@ -90,7 +91,6 @@ function CreateMeetingTypeComponent({ user }) {
       })
       .catch((err) => {
         setUserList([]);
-        console.error(err.response?.data?.message);
       });
   }
 
@@ -121,27 +121,33 @@ function CreateMeetingTypeComponent({ user }) {
         meetingEditType === GOAL_MEETINGTYPE &&
         Number(goalsList.length) > 0
       ) {
-        const goalData = goalsList.find((item) => item.goal.id === type_id);
-
-        form.setFieldsValue({
-          meeting_description: goalData.goal.goal_title,
-          meeting_type: GOAL_TYPE,
-          type_id: [type_id],
-        });
-        setMeetingType(GOAL_TYPE);
-        setMeetingData(goalData);
+        const goalData = goalsList.find(
+          (item) =>
+            item.goal.id === type_id && item.goal.goal_type === INDIVIDUAL_TYPE
+        );
+        if (goalData) {
+          form.setFieldsValue({
+            meeting_description: goalData.goal.goal_title,
+            meeting_type: GOAL_TYPE,
+            type_id: [type_id],
+          });
+          setMeetingType(GOAL_TYPE);
+          setMeetingData(goalData);
+        }
       } else if (
         meetingEditType === REVIEW_MEETINGTYPE &&
         Number(reviewsList.length) > 0
       ) {
         const reviewData = reviewsList.find((item) => item.id === type_id);
-        form.setFieldsValue({
-          meeting_description: reviewData.review_name,
-          meeting_type: REVIEW_TYPE,
-          type_id: [type_id],
-        });
-        setMeetingType(REVIEW_TYPE);
-        setMeetingData(reviewData);
+        if (reviewData) {
+          form.setFieldsValue({
+            meeting_description: reviewData.review_name,
+            meeting_type: REVIEW_TYPE,
+            type_id: [type_id],
+          });
+          setMeetingType(REVIEW_TYPE);
+          setMeetingData(reviewData);
+        }
       }
     }
   };
@@ -184,7 +190,8 @@ function CreateMeetingTypeComponent({ user }) {
       });
   };
 
-  if (!meetingData) return <NoRecordFound title={"No Meeting Found"} />;
+  if (!meetingData)
+    return <NoRecordFound title={"No Follow Up Meeting Found"} />;
 
   return (
     <MeetingForm

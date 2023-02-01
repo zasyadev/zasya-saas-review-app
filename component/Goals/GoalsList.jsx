@@ -42,6 +42,7 @@ const initialGoalCountModalData = {
   GoalAssignee: [],
   isVisible: false,
 };
+const ALL_STATUS = "All";
 
 function GoalsList({ user, isArchived = false }) {
   const router = useRouter();
@@ -128,7 +129,7 @@ function GoalsList({ user, isArchived = false }) {
       fetchArchivedGoalList();
     } else {
       fetchUserData();
-      fetchGoalList("All");
+      fetchGoalList(ALL_STATUS);
     }
   }, [isArchived]);
 
@@ -185,7 +186,8 @@ function GoalsList({ user, isArchived = false }) {
       })
       .then(({ data: response }) => {
         if (response.status === 200) {
-          fetchGoalList("All");
+          if (isArchived) fetchArchivedGoalList();
+          else fetchGoalList(ALL_STATUS);
           setEditGoalModalVisible(initialModalVisible);
         }
         setLoading(false);
@@ -268,7 +270,7 @@ function GoalsList({ user, isArchived = false }) {
               className={" w-36 text-sm"}
               arrayList={goalsFilterList}
               handleOnChange={(selectedKey) => handleFilterChange(selectedKey)}
-              defaultValue={"All"}
+              defaultValue={ALL_STATUS}
             />
           </div>
           <div className=" flex items-center justify-center md:justify-end flex-wrap gap-4 flex-1">

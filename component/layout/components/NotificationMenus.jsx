@@ -43,11 +43,11 @@ const NotificationMenus = ({
               onClick={() => notificationViewed(item.id)}
             >
               <Link href={item.data.link} passHref>
-                <div className="p-2 md:p-3 ">
+                <div className="p-2 md:p-3 hover:bg-gray-50 cursor-pointer">
                   <p
                     className={`${
                       item.read_at ? "text-gray-500" : ""
-                    } hover:bg-gray-50 text-sm  font-medium  mb-0 cursor-pointer`}
+                    }  text-sm  font-medium  mb-0 `}
                   >
                     {item.data.message}
                   </p>
