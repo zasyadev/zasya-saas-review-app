@@ -4,7 +4,10 @@ import moment from "moment";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useMemo, useState } from "react";
-import { DEFAULT_DATE_FORMAT } from "../../helpers/dateHelper";
+import {
+  DEFAULT_DATETIME_FORMAT,
+  DEFAULT_DATE_FORMAT,
+} from "../../helpers/dateHelper";
 import httpService from "../../lib/httpService";
 import { PrimaryButton } from "../common/CustomButton";
 import CustomTable from "../common/CustomTable";
@@ -60,10 +63,10 @@ function GoalsDetailComponent({ user, isArchived = false }) {
     },
 
     {
-      title: "Meeting Date",
+      title: "Date / Time",
       key: "meeting_at",
       render: (_, record) =>
-        moment(record.meeting_at).format(DEFAULT_DATE_FORMAT),
+        moment(record.meeting_at).format(DEFAULT_DATETIME_FORMAT),
     },
   ];
 
@@ -230,7 +233,7 @@ function GoalsDetailComponent({ user, isArchived = false }) {
       {Number(goalData?.Meetings?.length) > 0 && (
         <div className="bg-white rounded-md  shadow-md relative p-4 lg:p-6 mt-4 md:mt-6">
           <p className=" text-primary font-bold text-lg md:text-xl mb-2">
-            Meetings
+            Follow Up Meetings
           </p>
           <CustomTable
             dataSource={goalData.Meetings}
