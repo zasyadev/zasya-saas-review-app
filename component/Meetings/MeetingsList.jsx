@@ -3,6 +3,7 @@ import { Popconfirm } from "antd";
 import moment from "moment";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
+import { URLS } from "../../constants/urls";
 import { DEFAULT_DATETIME_FORMAT } from "../../helpers/dateHelper";
 import httpService from "../../lib/httpService";
 import { PrimaryButton } from "../common/CustomButton";
@@ -27,9 +28,7 @@ function MeetingsList({ user }) {
         }
         setLoading(false);
       })
-      .catch((err) => {
-        console.error(err?.response?.data?.message);
-      });
+      .catch((err) => {});
   }
 
   useEffect(() => {
@@ -57,7 +56,7 @@ function MeetingsList({ user }) {
       title: "Title",
       key: "meeting_title",
       render: (_, record) => (
-        <Link href={`/followups/${record.id}`} passHref>
+        <Link href={`${URLS.FOLLOW_UP}/${record.id}`} passHref>
           <p className="cursor-pointer text-gray-500 mb-0 underline max-w-xs lg:max-w-md">
             {record.meeting_title}
           </p>
@@ -83,7 +82,7 @@ function MeetingsList({ user }) {
         user.id === record.created_by && (
           <p>
             <Link
-              href={`/followups/edit/${record.id}/?tp=${CASUAL_MEETINGTYPE}`}
+              href={`${FOLLOW_UP_EDIT}/${record.id}/?tp=${CASUAL_MEETINGTYPE}`}
               passHref
             >
               <EditOutlined className="primary-color-blue text-xl mx-1  md:mx-2 cursor-pointer" />
@@ -112,7 +111,7 @@ function MeetingsList({ user }) {
           <div className="flex  justify-end items-center gap-4 mb-4 md:mb-6 ">
             <PrimaryButton
               withLink={true}
-              linkHref={`/followups/add`}
+              linkHref={URLS.FOLLOW_UP_CREATE}
               title={"Create"}
             />
           </div>

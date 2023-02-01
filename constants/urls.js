@@ -14,6 +14,7 @@ export const URLS = {
   APPLAUD_CREATE: "/applaud/add",
   FOLLOW_UP: "/followups",
   FOLLOW_UP_CREATE: "/followups/add",
+  FOLLOW_UP_EDIT: "/followups/edit",
   SURVEY: "/survey",
   SURVEY_CREATE: "/survey/add",
   GOAL: "/goals",
