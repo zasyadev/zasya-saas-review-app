@@ -136,7 +136,7 @@ function Applaud({ user }) {
           <SecondaryButton
             withLink={true}
             className="mr-3"
-            linkHref="/applaud/allapplaud"
+            linkHref="/applaud/all"
             title={"View All"}
           />
 

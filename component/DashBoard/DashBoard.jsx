@@ -255,7 +255,7 @@ function DashBoard({ user }) {
 
                   {allApplaud.length > 0 && (
                     <div className=" text-center mt-2">
-                      <Link href="/applaud/allapplaud" passHref>
+                      <Link href="/applaud/all" passHref>
                         <span className="text-primary text-sm inline  cursor-pointer font-medium hover:underline">
                           View All
                         </span>

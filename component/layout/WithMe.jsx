@@ -36,7 +36,7 @@ const WithMe = (props) => {
           "/applaud",
           "/template",
           "/profile",
-          "/applaud/allapplaud",
+          "/applaud/all",
           "/survey",
         ].includes(router?.pathname) && (
           <ReviewPopUpModal userId={session.user.id} />

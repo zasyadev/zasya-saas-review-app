@@ -58,7 +58,7 @@ function MeetingsList({ user }) {
       key: "meeting_title",
       render: (_, record) => (
         <Link href={`/followups/${record.id}`} passHref>
-          <p className="cursor-pointer text-gray-500 mb-0 underline">
+          <p className="cursor-pointer text-gray-500 mb-0 underline max-w-xs lg:max-w-md">
             {record.meeting_title}
           </p>
         </Link>

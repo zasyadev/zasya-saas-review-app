@@ -191,6 +191,7 @@ async function handle(req, res, prisma, user) {
                   link: `${BASE_URL}goals`,
                   by: "Assigneed By",
                   text: header.goal_title,
+                  btnText: "View Goal",
                 });
                 SlackPostMessage({
                   channel: assignedUser.UserDetails.slack_id,
