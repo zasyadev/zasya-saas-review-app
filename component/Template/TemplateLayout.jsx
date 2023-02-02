@@ -14,6 +14,7 @@ import { PrimaryButton } from "../common/CustomButton";
 import SkeletonTemplateCard from "./components/SkeletonTemplateCard";
 import CreateTemplateCard from "./components/CreateTemplateCard";
 import TemplateCard from "./TemplateCard";
+import { URLS } from "../../constants/urls";
 
 function TemplateLayout({ user }) {
   const [templateList, setTemplateList] = useState([]);
@@ -93,7 +94,7 @@ function TemplateLayout({ user }) {
           <PrimaryButton
             withLink={true}
             className="md:hidden"
-            linkHref="/template/add"
+            linkHref={URLS.TEMPLATE_CREATE}
             title={"Create"}
           />
         )}
@@ -125,7 +126,7 @@ function TemplateLayout({ user }) {
                       description={template?.form_data?.description}
                       questionLength={template?.form_data?.questions?.length}
                       deleteTemplate={deleteTemplate}
-                      linkHref={`/template/edit/${template.id}`}
+                      linkHref={`${URLS.TEMPLATE_EDIT}/${template.id}`}
                       isDelete={true}
                     />
                   ))}

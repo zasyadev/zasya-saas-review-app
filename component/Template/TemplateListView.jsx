@@ -78,7 +78,6 @@ function TemplateListView({ user }) {
             description={template?.form_data?.description}
             questionLength={template?.form_data?.questions?.length}
             isDelete={false}
-            // linkHref={`/template/preview/${template.id}`}
           />
         );
       case SURVEY_TYPE:

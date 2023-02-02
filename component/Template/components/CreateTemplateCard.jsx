@@ -1,9 +1,10 @@
 import Link from "next/link";
 import React from "react";
 import { AddIcon } from "../../../assets/icons";
+import { URLS } from "../../../constants/urls";
 
 const CreateTemplateCard = () => (
-  <Link href="/template/add" passHref>
+  <Link href={URLS.TEMPLATE_CREATE} passHref>
     <div className="hidden template  template-list md:flex bg-white items-center justify-center flex-col  w-full rounded-md overflow-hdden shadow-md p-5  cursor-pointer  h-56 sm:h-full add-template-card">
       <div className="cursor-pointer">
         <AddIcon className="text-center " />
