@@ -1,6 +1,7 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
+import { URLS } from "../../constants/urls";
 import ReviewPopUpModal from "../common/ReviewPopUpModal";
 import LoadingSpinner from "../Loader/LoadingSpinner";
 
@@ -30,14 +31,14 @@ const WithMe = (props) => {
       {session &&
         session?.user?.id &&
         [
-          "/dashboard",
-          "/review/received",
-          "/review",
-          "/applaud",
-          "/template",
-          "/profile",
-          "/applaud/all",
-          "/survey",
+          URLS.DASHBOARD,
+          URLS.REVIEW_RECEIVED,
+          URLS.REVIEW_CREATED,
+          URLS.APPLAUD,
+          URLS.TEMPLATE,
+          URLS.PROFILE,
+          URLS.ALL_APPLAUD,
+          URLS.SURVEY,
         ].includes(router?.pathname) && (
           <ReviewPopUpModal userId={session.user.id} />
         )}
