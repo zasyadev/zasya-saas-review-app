@@ -66,7 +66,7 @@ function MeetingDetailComponent({ user }) {
     <div className="bg-white rounded-md  shadow-md relative p-4 lg:p-6">
       <div className="grid grid-cols-1 md:grid-cols-3 md:space-x-8">
         <div className=" space-y-5  col-span-2">
-          <p className=" text-primary font-bold text-lg md:text-xl mb-0">
+          <p className=" text-primary font-bold text-lg md:text-xl mb-0 break-all">
             {meetingData?.meeting_title}
           </p>
           <div className="space-y-1">

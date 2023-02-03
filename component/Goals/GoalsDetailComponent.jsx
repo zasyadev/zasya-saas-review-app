@@ -85,7 +85,7 @@ function GoalsDetailComponent({ user, isArchived = false }) {
         )}
         <div className="grid grid-cols-1 md:grid-cols-3 md:space-x-8">
           <div className=" space-y-5  col-span-2">
-            <p className=" text-primary font-bold text-lg md:text-xl mb-0">
+            <p className=" text-primary font-bold text-lg md:text-xl mb-0 break-all">
               {goalData?.goal_title}
             </p>
             <div className="space-y-1">

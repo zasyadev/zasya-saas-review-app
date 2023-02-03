@@ -76,14 +76,14 @@ function FormView({ user }) {
             <PrimaryButton
               withLink={true}
               className=" text-sm"
-              linkHref={`${URLS.REVIEW_ATTEMPT}${record.id}`}
+              linkHref={`${URLS.REVIEW_ATTEMPT}/${record.id}`}
               title={"Attempt"}
             />
           ) : (
             <ButtonGray
               withLink={true}
               className=" text-sm"
-              linkHref={`${URLS.REVIEW_PREVIEW}${record.id}`}
+              linkHref={`${URLS.REVIEW_PREVIEW}/${record.id}`}
               title={"View"}
             />
           )}

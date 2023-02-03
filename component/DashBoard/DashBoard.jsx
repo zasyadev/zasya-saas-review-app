@@ -145,31 +145,35 @@ function DashBoard({ user }) {
         <div className="container mx-auto max-w-full space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 2xl:gap-6">
             <Link href={URLS.REVIEW_CREATED} passHref>
-              <CountCard
-                title={"Review Created"}
-                count={dashBoardData.reviewCreatedCount}
-                className="cursor-pointer"
-                Icon={() => <SmallApplaudIcon />}
-                tooltipText="Count of Reviews Created by you."
-              />
+              <>
+                <CountCard
+                  title={"Review Created"}
+                  count={dashBoardData.reviewCreatedCount}
+                  className="cursor-pointer"
+                  Icon={() => <SmallApplaudIcon />}
+                  tooltipText="Count of Reviews Created by you."
+                />
+              </>
             </Link>
 
             <Link href={URLS.REVIEW_RECEIVED} passHref>
-              <CountCard
-                title={"Review Answered"}
-                count={dashBoardData.reviewAnsweredCount}
-                className="cursor-pointer"
-                href={URLS.REVIEW_RECEIVED}
-                Icon={() => (
-                  <Image
-                    src={"/media/images/reviewicon.png"}
-                    alt="logo"
-                    width={20}
-                    height={20}
-                  />
-                )}
-                tooltipText="Count of Reviews Answered by you."
-              />
+              <>
+                <CountCard
+                  title={"Review Answered"}
+                  count={dashBoardData.reviewAnsweredCount}
+                  className="cursor-pointer"
+                  href={URLS.REVIEW_RECEIVED}
+                  Icon={() => (
+                    <Image
+                      src={"/media/images/reviewicon.png"}
+                      alt="logo"
+                      width={20}
+                      height={20}
+                    />
+                  )}
+                  tooltipText="Count of Reviews Answered by you."
+                />
+              </>
             </Link>
 
             <CountCard

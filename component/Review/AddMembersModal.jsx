@@ -53,7 +53,9 @@ const AddMembersModal = ({
 
   return (
     <CustomModal
-      title={<p className="single-line-clamp mb-0 pr-6">{review_name}</p>}
+      title={
+        <p className="single-line-clamp mb-0 pr-6 break-all">{review_name}</p>
+      }
       visible={isVisible}
       onCancel={() => hideReviewAddMemberModal()}
       customFooter

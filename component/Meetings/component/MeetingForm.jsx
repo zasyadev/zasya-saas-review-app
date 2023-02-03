@@ -39,7 +39,7 @@ function MeetingForm({
         >
           <CustomInput
             placeholder="Meeting Title"
-            className=" h-12 rounded-md"
+            className="h-12 rounded-md"
           />
         </Form.Item>
         <Form.Item
