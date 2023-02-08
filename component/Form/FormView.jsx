@@ -7,6 +7,7 @@ import httpService from "../../lib/httpService";
 import ToggleButton from "../common/ToggleButton";
 import { ReviewToggleList, REVIEW_RECEIVED_KEY } from "../Review/constants";
 import { TempateSelectWrapper } from "../Review/TempateSelectWrapper";
+import { URLS } from "../../constants/urls.js";
 
 function FormView({ user }) {
   const router = useRouter();
@@ -26,9 +27,7 @@ function FormView({ user }) {
         }
         setLoading(false);
       })
-      .catch((err) => {
-        console.error(err.response.data?.message);
-      });
+      .catch((err) => {});
   }
 
   useEffect(() => {
@@ -77,14 +76,14 @@ function FormView({ user }) {
             <PrimaryButton
               withLink={true}
               className=" text-sm"
-              linkHref={`/review/id/${record.id}`}
+              linkHref={`${URLS.REVIEW_ATTEMPT}/${record.id}`}
               title={"Attempt"}
             />
           ) : (
             <ButtonGray
               withLink={true}
               className=" text-sm"
-              linkHref={`/review/preview/${record.id}`}
+              linkHref={`${URLS.REVIEW_PREVIEW}/${record.id}`}
               title={"View"}
             />
           )}
@@ -100,7 +99,8 @@ function FormView({ user }) {
           <ToggleButton
             arrayList={ReviewToggleList}
             handleToggle={(activeKey) => {
-              if (activeKey !== REVIEW_RECEIVED_KEY) router.push("/review");
+              if (activeKey !== REVIEW_RECEIVED_KEY)
+                router.push(URLS.REVIEW_CREATED);
             }}
             activeKey={REVIEW_RECEIVED_KEY}
           />

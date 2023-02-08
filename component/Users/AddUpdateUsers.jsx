@@ -6,15 +6,19 @@ import { openNotificationBox } from "../common/notification";
 import { maxLengthValidator } from "../../helpers/formValidations";
 import getErrors from "../../helpers/getErrors";
 import httpService from "../../lib/httpService";
+import { URLS } from "../../constants/urls";
 
 function AddUpdateUsers({ user, editMode, memberData }) {
   const router = useRouter();
   const [form] = Form.useForm();
   const [tagsList, setTagsList] = useState([]);
 
+  const redirectToUsersPage = () => router.push(URLS.USERS);
+
   async function onFinish(values) {
     editMode ? updatingMember(values) : addingMember(values);
   }
+
   async function addingMember(obj) {
     await httpService
       .post(`/api/member`, obj)
@@ -22,7 +26,7 @@ function AddUpdateUsers({ user, editMode, memberData }) {
         if (response.status === 200) {
           form.resetFields();
           openNotificationBox("success", response.message, 3);
-          router.push("/users");
+          redirectToUsersPage();
         }
       })
       .catch((err) => {
@@ -36,6 +40,7 @@ function AddUpdateUsers({ user, editMode, memberData }) {
         } else openNotificationBox("error", err.response.data?.message);
       });
   }
+
   async function updatingMember(obj) {
     if (memberData.id) {
       await httpService
@@ -45,7 +50,7 @@ function AddUpdateUsers({ user, editMode, memberData }) {
             form.resetFields();
 
             openNotificationBox("success", response.message, 3);
-            router.push("/users");
+            redirectToUsersPage();
           } else {
             openNotificationBox("error", response.message, 3);
           }
@@ -202,7 +207,7 @@ function AddUpdateUsers({ user, editMode, memberData }) {
             <div className="flex justify-end">
               <SecondaryButton
                 withLink={true}
-                linkHref="/users"
+                linkHref={URLS.TEAMS}
                 className="mx-4 my-1"
                 title="Cancel"
               />

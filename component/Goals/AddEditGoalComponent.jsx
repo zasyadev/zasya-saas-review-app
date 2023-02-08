@@ -3,6 +3,7 @@ import { Form, Select } from "antd";
 import moment from "moment";
 import { useRouter } from "next/router";
 import React, { useEffect, useMemo, useState } from "react";
+import { URLS } from "../../constants/urls";
 import { DEFAULT_DATE_FORMAT } from "../../helpers/dateHelper";
 import { maxLengthValidator } from "../../helpers/formValidations";
 import httpService from "../../lib/httpService";
@@ -69,6 +70,8 @@ function AddEditGoalComponent({ user, editMode = false }) {
       : addGoalsData(data);
   };
 
+  const redirectToGoalsPage = () => router.push(URLS.GOAL);
+
   const addGoalsData = async (data) => {
     setLoadingSubmitSpin(true);
 
@@ -77,7 +80,7 @@ function AddEditGoalComponent({ user, editMode = false }) {
       .then(({ data: response }) => {
         if (response.status === 200) {
           openNotificationBox("success", response.message, 3);
-          router.push("/goals");
+          redirectToGoalsPage();
         }
       })
       .catch((err) => {
@@ -94,7 +97,7 @@ function AddEditGoalComponent({ user, editMode = false }) {
         .then(({ data: response }) => {
           if (response.status === 200) {
             openNotificationBox("success", response.message, 3);
-            router.push("/goals");
+            redirectToGoalsPage();
           }
         })
         .catch((err) => {

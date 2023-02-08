@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { HeadersComponent } from "../../component/common/HeadersComponent";
 import { openNotificationBox } from "../../component/common/notification";
+import { URLS } from "../../constants/urls";
 import { PrimaryButton } from "../common/CustomButton";
 import AuthWrapper from "./AuthWrapper";
 
@@ -96,13 +97,13 @@ function LoginPage() {
 
         <div className="flex justify-between items-center mt-4 mb-6">
           <div className="form-group form-check">
-            <Link href="/forgotpassword" passHref>
+            <Link href={URLS.FORGOT_PASSWORD} passHref>
               <p className="text-primary  font-semibold transition duration-200 ease-in-out cursor-pointer underline">
                 Forgot password ?
               </p>
             </Link>
           </div>
-          <Link href="/auth/register" passHref>
+          <Link href={URLS.REGISTER} passHref>
             <span className="text-primary  font-semibold transition duration-200 ease-in-out cursor-pointer underline">
               Register
             </span>

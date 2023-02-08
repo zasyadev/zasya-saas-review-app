@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { HeadersComponent } from "../../component/common/HeadersComponent";
 import { openNotificationBox } from "../../component/common/notification";
+import { URLS } from "../../constants/urls";
 import { maxLengthValidator } from "../../helpers/formValidations";
 import getErrors from "../../helpers/getErrors";
 import httpService from "../../lib/httpService";
@@ -177,7 +178,7 @@ function RegisterPage() {
 
         <div className=" md:flex justify-end text-center lg:text-left">
           <p className="text-sm font-semibold mt-2 pt-1 mb-0">
-            <Link href="/auth/login" passHref>
+            <Link href={URLS.LOGIN} passHref>
               <span className="text-primary  font-semibold transition duration-200 ease-in-out cursor-pointer mb-2">
                 Back to Login
               </span>

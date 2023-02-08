@@ -7,6 +7,7 @@ import {
   SecondaryButton,
 } from "../../component/common/CustomButton";
 import ToggleButton from "../../component/common/ToggleButton";
+import { URLS } from "../../constants/urls";
 import {
   disableDates,
   MONTH_DATE_FORMAT,
@@ -136,13 +137,13 @@ function Applaud({ user }) {
           <SecondaryButton
             withLink={true}
             className="mr-3"
-            linkHref="/applaud/all"
+            linkHref={URLS.ALL_APPLAUD}
             title={"View All"}
           />
 
           <PrimaryButton
             withLink={true}
-            linkHref="/applaud/add"
+            linkHref={URLS.APPLAUD_CREATE}
             title={"Create"}
           />
         </div>

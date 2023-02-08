@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
+import { URLS } from "../../constants/urls";
 import httpService from "../../lib/httpService";
 import NoRecordFound from "../common/NoRecordFound";
 import TemplateBuildComponent from "../Template/TemplateBuildComponent";
@@ -22,7 +23,7 @@ function EditTemplateComponent({ user }) {
         if (response.status === 200) {
           setFormData(response.data);
           if (response.data.default_template) {
-            router.push(`/template/preview/${response.data.id}/review`);
+            router.push(`${URLS.TEMPLATE_PREVIEW}/${response.data.id}/review`);
           } else {
             setLoading(false);
           }

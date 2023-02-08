@@ -6,7 +6,8 @@ import {
   SecondaryButton,
 } from "../../component/common/CustomButton";
 import { openNotificationBox } from "../../component/common/notification";
-import { ApplaudCategoryList } from "../../constants";
+import { ApplaudCategoryList } from "../../constants/applaudCategoryList";
+
 import httpService from "../../lib/httpService";
 import { CustomTextArea } from "../common/CustomFormFeilds";
 import CustomPopover from "../common/CustomPopover";

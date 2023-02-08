@@ -7,6 +7,7 @@ import { PrimaryButton, SecondaryButton } from "../common/CustomButton";
 import { openNotificationBox } from "../common/notification";
 import { PulseLoader } from "../Loader/LoadingSpinner";
 import NoRecordFound from "../common/NoRecordFound";
+import { URLS } from "../../constants/urls";
 
 function AddUpdateTeamMember({ editMode = false, team_id }) {
   const router = useRouter();
@@ -15,9 +16,12 @@ function AddUpdateTeamMember({ editMode = false, team_id }) {
   const [selectedManagerId, setSelectedManagerId] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  const redirectToTeamsPage = () => router.push(URLS.TEAMS);
+
   async function onFinish(values) {
     editMode ? updatingMember(values) : addingMember(values);
   }
+
   async function addingMember(obj) {
     await httpService
       .post(`/api/teams`, obj)
@@ -25,7 +29,7 @@ function AddUpdateTeamMember({ editMode = false, team_id }) {
         if (response.status === 200) {
           form.resetFields();
           openNotificationBox("success", response.message, 3);
-          router.push("/teams");
+          redirectToTeamsPage();
         }
       })
       .catch((err) => {
@@ -35,6 +39,7 @@ function AddUpdateTeamMember({ editMode = false, team_id }) {
         );
       });
   }
+
   async function updatingMember(obj) {
     await httpService
       .put(`/api/teams`, { id: team_id, ...obj })
@@ -42,7 +47,7 @@ function AddUpdateTeamMember({ editMode = false, team_id }) {
         if (response.status === 200) {
           form.resetFields();
           openNotificationBox("success", response.message, 3);
-          router.push("/teams");
+          redirectToTeamsPage();
         }
       })
       .catch((err) => {
@@ -215,7 +220,7 @@ function AddUpdateTeamMember({ editMode = false, team_id }) {
             <div className="flex justify-end">
               <SecondaryButton
                 withLink={true}
-                linkHref="/teams"
+                linkHref={URLS.TEAMS}
                 className="mx-4 my-1"
                 title="Cancel"
               />

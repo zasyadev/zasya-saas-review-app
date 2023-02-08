@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { openNotificationBox } from "../../component/common/notification";
+import { URLS } from "../../constants/urls";
 import isEmptyStr from "../../helpers/isEmptyStr";
 import httpService from "../../lib/httpService";
 import {
@@ -183,6 +184,8 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
     editMode ? updateFormData(obj, id) : addNewForm(obj);
   }
 
+  const redirectToTemplate = () => router.push(URLS.TEMPLATE);
+
   async function updateFormData(obj, id) {
     if (id) {
       obj.id = id;
@@ -191,7 +194,7 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
         .put(`/api/template`, obj)
         .then(({ data: response }) => {
           if (response.status === 200) {
-            router.push("/template");
+            redirectToTemplate();
             openNotificationBox("success", response.message, 3);
           }
         })
@@ -208,7 +211,7 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
       .post(`/api/template`, obj)
       .then(({ data: response }) => {
         if (response.status === 200) {
-          router.push("/template");
+          redirectToTemplate();
           openNotificationBox("success", response.message, 3);
         }
       })
@@ -320,7 +323,7 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
     <div className=" md:px-6 pb-16 pt-14 md:pt-20 md:pb-24 bg-white  md:bg-gray-100 min-h-screen">
       <StepFixedHeader
         title={`${editMode ? "Edit" : "Create"} Template`}
-        backUrl={"/template"}
+        backUrl={URLS.TEMPLATE}
       />
       {activeStepState === 0 && (
         <div className="w-full md:w-1/2 bg-white pb-2  md:px-5 md:pt-5 md:pb-6 xl:p-8 xl:pt-6 md:rounded-md mx-auto space-y-2 md:space-y-6">

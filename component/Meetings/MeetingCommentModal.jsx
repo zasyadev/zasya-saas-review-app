@@ -39,7 +39,7 @@ function MeetingCommentModal({
   return (
     <CustomModal
       title={
-        <p className="single-line-clamp mb-0 pr-6">
+        <p className="single-line-clamp mb-0 pr-6 break-all">
           {meetingModalData?.meetingTitle}
         </p>
       }

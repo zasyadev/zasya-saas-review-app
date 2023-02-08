@@ -2,6 +2,7 @@ import { EllipsisOutlined } from "@ant-design/icons";
 import { Dropdown, Menu, Popconfirm } from "antd";
 import Link from "next/link";
 import React from "react";
+import { URLS } from "../../../constants/urls";
 import { ButtonGray } from "../../common/CustomButton";
 import CustomTable from "../../common/CustomTable";
 import { statusPill } from "../constants";
@@ -23,7 +24,7 @@ function GoalsCustomTable({
       title: "Goal Name",
       key: "goal_title",
       render: (_, record) => (
-        <Link href={`/goals/${record.goal.id}/detail`} passHref>
+        <Link href={`${URLS.GOAL}/${record.goal.id}/detail`} passHref>
           <p className="cursor-pointer text-gray-500 mb-0 underline">
             {record.goal.goal_title}
           </p>
@@ -86,7 +87,7 @@ function GoalsCustomTable({
             overlay={
               <Menu className="divide-y">
                 <Menu.Item className="font-semibold" key={"call-preview"}>
-                  <Link href={`/goals/${record.goal.id}/edit`}>Edit</Link>
+                  <Link href={`${URLS.GOAL}/${record.goal.id}/edit`}>Edit</Link>
                 </Menu.Item>
 
                 <Menu.Item

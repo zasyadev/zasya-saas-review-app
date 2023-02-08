@@ -22,7 +22,7 @@ const SurveyTemplateCard = ({
       className="template-list rounded-md shadow-md bg-white flex flex-col relative group overflow-hidden
       "
     >
-      <Link href={`/template/preview}/${id}/survey`} passHref>
+      <Link href={`${URLS.TEMPLATE_PREVIEW}/${id}/survey`} passHref>
         <div className="relative w-full h-40 cursor-pointer  ">
           <Image
             src={"/media/images/template_dummy.png"}
@@ -34,7 +34,7 @@ const SurveyTemplateCard = ({
       </Link>
 
       <div className=" border-gray-200  p-3 space-y-2 flex flex-1 flex-col ">
-        <Link href={`/template/preview}/${id}/survey`} passHref>
+        <Link href={`${URLS.TEMPLATE_PREVIEW}/${id}/survey`} passHref>
           <div className=" space-y-2 cursor-pointer flex-1">
             <p className="text-base xl:text-lg text-primary font-semibold mb-0 flex-1">
               {title}
@@ -55,13 +55,13 @@ const SurveyTemplateCard = ({
         <div className="space-y-4 ">
           <ButtonGray
             withLink={true}
-            linkHref={`/template/preview/${id}/survey`}
+            linkHref={`${URLS.TEMPLATE_PREVIEW}/${id}/survey`}
             className="w-full "
             title="Preview Template"
           />
           <ButtonGray
             withLink={true}
-            linkHref={`/survey/edit/${id}`}
+            linkHref={`${URLS.SURVEY_EDIT}/${id}`}
             className="w-full"
             title="Use Template"
           />

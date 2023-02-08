@@ -9,6 +9,7 @@ import {
 import { Grid, Layout } from "antd";
 import React, { useEffect, useMemo, useState } from "react";
 import { HeadersComponent } from "../../component/common/HeadersComponent";
+import { URLS } from "../../constants/urls";
 import HeaderLayout from "./HeaderLayout";
 import SiderLayout from "./SiderLayout";
 
@@ -37,34 +38,39 @@ function AdminLayout({ user, title, isBack = false, children }) {
   const allMenus = [
     getItem(
       "Dashboard",
-      "/dashboard",
+      URLS.DASHBOARD,
       <DashboardOutlined className="sidebar-icon" />
     ),
-    getItem("Applaud", "/applaud", <LikeOutlined className="sidebar-icon " />),
+
     getItem("Reviews", "review", <FormOutlined className="sidebar-icon " />, [
-      getItem("Received", "/review/received"),
-      getItem("Created", "/review"),
-      getItem("Surveys", "/survey"),
+      getItem("Received", URLS.REVIEW_RECEIVED),
+      getItem("Created", URLS.REVIEW_CREATED),
+      getItem("Surveys", URLS.SURVEY),
     ]),
 
     getItem("Goals", "goals", <CrownOutlined className="sidebar-icon " />, [
-      getItem("Goals", "/goals"),
-      getItem("Archived", "/goals/archived"),
+      getItem("Goals", URLS.GOAL),
+      getItem("Archived", URLS.GOAL_ARCHIVED),
     ]),
     getItem(
       "Follow Ups",
-      "/followups",
+      URLS.FOLLOW_UP,
       <UsergroupAddOutlined className="sidebar-icon " />
+    ),
+    getItem(
+      "Applaud",
+      URLS.APPLAUD,
+      <LikeOutlined className="sidebar-icon " />
     ),
     getItem(
       "Settings",
       "setting",
       <SettingOutlined className="sidebar-icon " />,
       [
-        getItem("Templates", "/template"),
-        getItem("Profile ", "/profile "),
-        getItem("Users", "/users"),
-        getItem("Teams", "/teams"),
+        getItem("Templates", URLS.TEMPLATE),
+        getItem("Profile ", URLS.PROFILE),
+        getItem("Users", URLS.USERS),
+        getItem("Teams", URLS.TEAMS),
       ]
     ),
   ];

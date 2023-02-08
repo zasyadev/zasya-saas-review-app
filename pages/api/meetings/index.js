@@ -3,6 +3,7 @@ import {
   CreateGoogleCalenderApi,
   updateGoogleCalenderApi,
 } from "../../../helpers/googleHelper";
+import { halfHourEndTime } from "../../../helpers/momentHelper";
 import {
   CustomizeSlackMessage,
   SlackPostMessage,
@@ -13,7 +14,6 @@ import { MEETING_SCHEMA } from "../../../yup-schema/meeting";
 const GOAL_TYPE = "Goal";
 const REVIEW_TYPE = "Review";
 const CASUAL_TYPE = "Casual";
-const minutesAdd = "30";
 const BASE_URL = process.env.NEXT_APP_URL;
 
 async function handle(req, res, prisma, user) {
@@ -127,9 +127,7 @@ async function handle(req, res, prisma, user) {
                 };
               });
               const meeetingStartTime = moment(meetingData.meeting_at).format();
-              const meeetingEndTime = moment(meeetingStartTime)
-                .add(minutesAdd, "minutes")
-                .format();
+              const meeetingEndTime = halfHourEndTime(meeetingStartTime);
 
               const event = await CreateGoogleCalenderApi({
                 emailsList: emailsList,
@@ -294,9 +292,7 @@ async function handle(req, res, prisma, user) {
           };
         });
         const meeetingStartTime = moment(meetingData.meeting_at).format();
-        const meeetingEndTime = moment(meeetingStartTime)
-          .add(minutesAdd, "minutes")
-          .format();
+        const meeetingEndTime = halfHourEndTime(meeetingStartTime);
 
         await updateGoogleCalenderApi({
           emailsList: emailsList,

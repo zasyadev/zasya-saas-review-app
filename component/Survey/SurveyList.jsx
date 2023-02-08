@@ -2,6 +2,7 @@ import { EllipsisOutlined, ShareAltOutlined } from "@ant-design/icons";
 import { Dropdown, Menu, Popconfirm, Skeleton } from "antd";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
+import { URLS } from "../../constants/urls";
 import httpService from "../../lib/httpService";
 import { ButtonGray, PrimaryButton } from "../common/CustomButton";
 import CustomTable from "../common/CustomTable";
@@ -25,9 +26,7 @@ function SurveyList({ user }) {
         }
         setLoading(false);
       })
-      .catch((err) => {
-        console.error(err.response.data?.message);
-      });
+      .catch((err) => {});
   }
 
   useEffect(() => {
@@ -61,7 +60,7 @@ function SurveyList({ user }) {
       title: "Survey Name",
       key: "survey_name",
       render: (_, survey) => (
-        <Link href={`/survey/response/${survey.id}`} passHref>
+        <Link href={`${URLS.SURVEY_RESPONSE}/${survey.id}`} passHref>
           <p className="cursor-pointer underline text-gray-500 mb-0">
             {survey.survey_name}
           </p>
@@ -89,7 +88,7 @@ function SurveyList({ user }) {
             rounded="rounded-full"
             title={<ShareAltOutlined className=" leading-0" title="Share" />}
             withLink={true}
-            linkHref={`/survey/share/${survey.id}`}
+            linkHref={`${URLS.SURVEY_SHARE}/${survey.id}`}
           />
 
           <Dropdown
@@ -97,7 +96,9 @@ function SurveyList({ user }) {
             overlay={
               <Menu className="divide-y">
                 <Menu.Item className="font-semibold" key={"call-preview"}>
-                  <Link href={`/survey/preview/${survey.id}`}>Preview</Link>
+                  <Link href={`${URLS.SURVEY_PREVIEW}/${survey.id}`}>
+                    Preview
+                  </Link>
                 </Menu.Item>
                 {survey.created_by === user.id && (
                   <Menu.Item

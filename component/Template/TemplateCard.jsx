@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import { DeleteTemplateIcon } from "../../assets/icons";
+import { URLS } from "../../constants/urls";
 import { ButtonGray } from "../common/CustomButton";
 
 const motionVariants = {
@@ -26,7 +27,10 @@ const TemplateCard = ({
       className="template-list rounded-md shadow-md bg-white flex flex-col relative group overflow-hidden
       "
     >
-      <Link href={`/template/${isDelete ? "edit" : "preview"}/${id}`} passHref>
+      <Link
+        href={`${URLS.TEMPLATE}/${isDelete ? "edit" : "preview"}/${id}`}
+        passHref
+      >
         <div className="relative w-full h-40 cursor-pointer  ">
           <Image
             src={"/media/images/template_dummy.png"}
@@ -39,7 +43,7 @@ const TemplateCard = ({
 
       <div className=" border-gray-200  p-3 space-y-2 flex flex-1 flex-col ">
         <Link
-          href={`/template/${isDelete ? "edit" : "preview"}/${id}`}
+          href={`${URLS.TEMPLATE}/${isDelete ? "edit" : "preview"}/${id}`}
           passHref
         >
           <div className=" space-y-2 cursor-pointer flex-1">
@@ -82,13 +86,13 @@ const TemplateCard = ({
           <div className="space-y-4 ">
             <ButtonGray
               withLink={true}
-              linkHref={`/template/preview/${id}/review`}
+              linkHref={`${URLS.TEMPLATE_PREVIEW}/${id}/review`}
               className="w-full "
               title="Preview Template"
             />
             <ButtonGray
               withLink={true}
-              linkHref={`/review/edit/${id}`}
+              linkHref={`${URLS.REVIEW_EDIT}/${id}`}
               className="w-full"
               title="Use Template"
             />

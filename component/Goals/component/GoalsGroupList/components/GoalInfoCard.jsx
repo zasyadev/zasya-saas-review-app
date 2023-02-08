@@ -2,6 +2,7 @@ import { EllipsisOutlined } from "@ant-design/icons";
 import { Dropdown, Menu, Popconfirm } from "antd";
 import Link from "next/link";
 import React from "react";
+import { URLS } from "../../../../../constants/urls";
 import { ButtonGray } from "../../../../common/CustomButton";
 import { statusPill } from "../../../constants";
 import { GoalAssigneeName } from "../../GoalAssigneeName";
@@ -21,7 +22,7 @@ function GoalInfoCard({
       <div className="px-4 space-y-4">
         <div className="flex items-center justify-between">
           <Link
-            href={`/goals/${item.goal.id}/${
+            href={`${URLS.GOAL}/${item.goal.id}/${
               isArchived ? "archived" : "detail"
             }`}
             passHref
@@ -38,7 +39,9 @@ function GoalInfoCard({
                 <Menu className="divide-y">
                   {!isArchived && (
                     <Menu.Item className="font-semibold" key={"call-preview"}>
-                      <Link href={`/goals/${item.goal.id}/edit`}>Edit</Link>
+                      <Link href={`${URLS.GOAL}/${item.goal.id}/edit`}>
+                        Edit
+                      </Link>
                     </Menu.Item>
                   )}
 
