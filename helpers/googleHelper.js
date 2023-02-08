@@ -111,14 +111,14 @@ export async function CreateGoogleCalenderApi({
         return event.data;
       })
       .catch((error) => {
-        return null;
+        throw error?.errors?.length ? error?.errors[0].message : error;
       });
   }
   try {
     const auth = await authorize();
     return await createEvents(auth);
   } catch (error) {
-    return null;
+    throw error;
   }
 }
 

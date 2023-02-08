@@ -20,7 +20,7 @@ const CustomTable = ({
         pagination={
           isPagination
             ? {
-                defaultPageSize: 10,
+                defaultPageSize: 50,
                 showSizeChanger: true,
                 pageSizeOptions: ["10", "50", "100", "200"],
                 className: "px-2 sm:px-4",

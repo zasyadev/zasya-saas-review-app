@@ -62,11 +62,13 @@ function MeetingsList({ user }) {
           </p>
         </Link>
       ),
+      sorter: (a, b) => a.meeting_title?.localeCompare(b.meeting_title),
     },
     {
       title: "Type",
       key: "meeting_type",
       dataIndex: "meeting_type",
+      sorter: (a, b) => a.meeting_type?.localeCompare(b.meeting_type),
     },
 
     {
@@ -74,6 +76,7 @@ function MeetingsList({ user }) {
       key: "meeting_at",
       render: (_, record) =>
         moment(record.meeting_at).format(DEFAULT_DATETIME_FORMAT),
+      sorter: (a, b) => new Date(b.meeting_at) - new Date(a.meeting_at),
     },
     {
       title: "Action",
