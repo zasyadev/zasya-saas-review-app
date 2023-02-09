@@ -124,57 +124,29 @@ async function handle(req, res) {
     },
   });
 
-  function groupArray(arr, parts) {
-    let result = [];
+  if (goalData.length > 0) {
+    goalData.reduce(async (prev, item, index) => {
+      await prev;
+      if (item?.Meetings?.length === 0) {
+        let meetingAt = getNextMeetingDate(item.created_date, index);
 
-    for (let i = 0; i < arr.length; i += parts) {
-      result.push(arr.slice(i, i + parts));
-    }
-    return result;
-  }
+        meetingCreateHandle({
+          goalItem: item,
+          meetingAt: meetingAt,
+        });
+      } else if (item?.Meetings?.length > 0) {
+        const lastMeetingDate = moment().isAfter(item.Meetings[0].meeting_at);
+        if (lastMeetingDate) {
+          let meetingAt = getNextMeetingDate(item.Meetings[0].meeting_at);
 
-  const groupedArray = groupArray(goalData, 10);
-
-  if (groupedArray.length > 0) {
-    groupedArray.reduce(async (acc, goal, i) => {
-      await acc;
-      goal.reduce(async (prev, item, index) => {
-        await prev;
-        if (item?.Meetings?.length === 0) {
-          let meetingAt = getNextMeetingDate(item.created_date, index);
-
-          meetingAt = moment(meetingAt).subtract(i, "days").format();
-
-          let checkIsAfterDate = moment().isAfter(meetingAt);
-
-          if (!checkIsAfterDate) {
-            meetingCreateHandle({
-              goalItem: item,
-              meetingAt: meetingAt,
-            });
-          } else {
-            let newMeetingAt = getNextMeetingDate(meetingAt, index);
-
-            meetingCreateHandle({
-              goalItem: item,
-              meetingAt: newMeetingAt,
-            });
-          }
-        } else if (item?.Meetings?.length > 0) {
-          const lastMeetingDate = moment().isAfter(item.Meetings[0].meeting_at);
-          if (lastMeetingDate) {
-            let meetingAt = getNextMeetingDate(item.Meetings[0].meeting_at);
-
-            meetingCreateHandle({
-              goalItem: item,
-              meetingAt: meetingAt,
-            });
-          }
+          meetingCreateHandle({
+            goalItem: item,
+            meetingAt: meetingAt,
+          });
         }
+      }
 
-        await wait(2000);
-      }, Promise.resolve());
-      await wait(5000);
+      await wait(2000);
     }, Promise.resolve());
   }
 
