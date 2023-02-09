@@ -101,8 +101,9 @@ function AdminLayout({ user, title, isBack = false, children }) {
           setCollapsed={setCollapsed}
           items={filteredMenus}
           lg={lg}
+          user={user}
         />
-        <Layout className="min-h-screen">
+        <Layout className="min-h-screen lg:ml-60">
           <Content className="bg-primary-gray ">
             <HeaderLayout
               isBack={isBack}
