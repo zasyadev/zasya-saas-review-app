@@ -64,28 +64,14 @@ export const afterTodayDates = (date) => {
 };
 
 export const getNextMeetingDate = (prevDate, index) => {
-  let newDate = moment(prevDate).add("30", "days");
+  let newDate = moment(prevDate).add("31", "days");
 
-  let subtractDays = 1;
   if (Number(index) > -1) {
-    if (index % 2 === 0) {
-      subtractDays = 2;
-    } else if (index % 3 === 0) {
-      subtractDays = 3;
-    } else if (index % 5 === 0) {
-      subtractDays = 4;
-    } else if (index % 7 === 0) {
-      subtractDays = 5;
-    } else {
-      subtractDays = 1;
-    }
-
     let hour = moment(newDate).hour();
     let miniute = moment(newDate).minute();
 
     let endMonthDate = moment(newDate)
       .endOf("month")
-      .subtract(subtractDays, "days")
       .hour(hour)
       .minute(miniute);
     newDate = endMonthDate;
