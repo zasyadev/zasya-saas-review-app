@@ -9,3 +9,7 @@ export function truncateString(str, num) {
 export const getFirstTwoLetter = (text) => {
   return text.substring(2, 0);
 };
+export const getFirstLetter = (text) => {
+  if (!text) return "U";
+  return text.substring(1, 0);
+};

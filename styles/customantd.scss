@@ -2,7 +2,6 @@
 
 $bg-color: linear-gradient(90deg, #ff6968 0%, #ffa3a3 100%);
 $primary: #0f123f;
-$primary-green: #64a15e;
 
 .dashboard-sider {
   .ant-menu-submenu {
@@ -24,7 +23,7 @@ $primary-green: #64a15e;
     }
     :hover {
       .ant-menu-submenu-arrow {
-        color: $primary-green;
+        @apply text-primary-green;
       }
     }
   }
@@ -33,7 +32,7 @@ $primary-green: #64a15e;
   }
   .ant-menu-submenu-active {
     .ant-menu-submenu-title {
-      color: $primary-green;
+      @apply text-primary-green;
     }
   }
 
@@ -53,26 +52,25 @@ $primary-green: #64a15e;
     border-radius: 2px;
   }
   .ant-menu-item::after {
-    border-right: 0;
+    @apply border-r-0;
   }
   .anticon + span {
-    margin-left: 0px;
+    @apply ml-0;
   }
 
   .ant-menu-item-selected,
   .ant-menu-item-active {
-    color: $primary-green;
-    background-color: transparent !important;
+    @apply text-primary-green bg-transparent;
   }
 }
 .ant-menu-light .ant-menu-item:hover {
-  color: $primary-green !important;
+  @apply text-primary-green;
 }
 .ant-menu.ant-menu-inline-collapsed {
-  border-right: 1px solid $primary !important;
+  @apply border-r border-primary-green;
 }
 .ant-menu-inline {
-  background: transparent;
+  @apply bg-transparent;
 }
 .ant-form input[type="checkbox"]:focus {
   outline: 0;

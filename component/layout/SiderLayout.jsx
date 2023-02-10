@@ -71,9 +71,9 @@ function SiderLayout({ collapsed, setCollapsed, items, lg, user }) {
       // collapsible
       collapsedWidth={lg ? "80" : "0"}
       collapsed={collapsed}
-      className="sider bg-brandGray-100 fixed top-0 left-0 bottom-0 overflow-auto min-h-screen z-10"
+      className="sider bg-brandGray-100 fixed top-0 left-0 bottom-0 overflow-auto min-h-screen z-10 no-scrollbar"
       onCollapse={(value) => setCollapsed(value)}
-      width={250}
+      width={240}
     >
       <div className="flex flex-col justify-between min-h-screen px-2 border-r border-gray-300">
         <div className="items-stretch min-h-full flex-nowrap px-0 relative space-y-2">
@@ -93,7 +93,7 @@ function SiderLayout({ collapsed, setCollapsed, items, lg, user }) {
               <p className="w-52 bg-brandGray-50 py-3 px-4 rounded-md mb-0 flex justify-between items-center text-17 font-medium cursor-pointer">
                 Create
                 <span>
-                  <PlusOutlined className="bg-primary-green text-white rounded-full text-lg w-8 h-8" />
+                  <PlusOutlined className="bg-primary-green text-white rounded-full text-lg w-8 h-8 grid place-content-center" />
                 </span>
               </p>
             </Dropdown>

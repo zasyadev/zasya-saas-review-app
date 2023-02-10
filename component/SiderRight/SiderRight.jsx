@@ -1,13 +1,19 @@
-import { Col, Radio, Row } from "antd";
+import { Col, Row } from "antd";
 import moment from "moment";
+import dynamic from "next/dynamic";
 import React, { useState } from "react";
 import {
   ApplaudIcon,
-  ApplaudIconSmall,
   ClockIcon,
+  FileLeftIcon,
+  FileRightIcon,
   StarIcon,
 } from "../../assets/icons";
 import DefaultImages from "../common/DefaultImages";
+
+const SemiDonutChart = dynamic(() => import("../common/SemiDonutChart"), {
+  ssr: false,
+});
 
 const ratingHandler = (data) => {
   if (data.length === 0) {
@@ -58,74 +64,95 @@ function SiderRight({ dashBoardData, monthlyLeaderBoardData }) {
   const onChangeRadioHandler = (e) => {
     setActiveMonthlyIndex(e.target.value);
   };
+  const feedbackList = [];
 
   return (
     <>
-      <div className="bg-white rounded-md shadow-md p-5">
-        <Row justify="space-around">
-          <Col xs={12} md={12} className="border-r border-slate-200">
-            <div className=" flex flex-col items-center justify-center">
-              <ApplaudIcon />
-
-              <div>
-                <p className="text-primary text-xl font-extrabold my-2">
-                  {applaudCount}
-                </p>
-              </div>
+      <div className="space-y-2">
+        <div className="border-b border-gray-300 pb-2 text-lg font-semibold">
+          Performance Stats
+        </div>
+        <div className="relative">
+          <SemiDonutChart />
+          <div className="w-20 h-20 bg-white rounded-full absolute bottom-5 left-32 grid place-content-center">
+            <div className="rounded-full bg-gray-300 w-16 h-16 grid place-content-center font-bold text-lg">
+              {ratingHandler(reviewRating)}
             </div>
-          </Col>
-          <Col xs={12} md={12}>
-            <div className=" flex flex-col items-center justify-center">
-              <StarIcon />
-
-              <div>
-                <p className="text-primary text-xl font-extrabold my-2">
-                  {ratingHandler(reviewRating)}
-                </p>
-              </div>
+          </div>
+        </div>
+        <div className="flex flex-wrap items-center justify-between px-4">
+          <div className="flex-shrink-0 grid place-content-center">
+            <ClockIcon />
+          </div>
+          <div className="flex-1 flex items-center justify-around">
+            <div className="text-center">
+              <p className=" text-xl font-extrabold my-2 ">{tempTime.days()}</p>
+              <p className="text-gray-500 text-sm xl:text-base mb-0">Day(s)</p>
             </div>
-          </Col>
-          <Col xs={24} md={24}>
-            <hr className="my-3" />
-          </Col>
 
-          <Col xs={24} md={24}>
-            <div className="flex flex-wrap items-center justify-between">
-              <div className="flex-shrink-0 grid place-content-center">
-                <ClockIcon />
-              </div>
-              <div className="flex-1 flex items-center justify-around">
-                <div className="text-center">
-                  <p className="text-primary text-xl font-extrabold my-2 ">
-                    {tempTime.days()}
-                  </p>
-                  <p className="text-gray-500 text-sm xl:text-base mb-0">
-                    Day(s)
-                  </p>
-                </div>
-
-                <div className="text-center">
-                  <p className="text-primary text-xl font-extrabold my-2 ">
-                    {tempTime.hours()}
-                  </p>
-                  <p className="text-gray-500 text-sm xl:text-base mb-0">
-                    Hour(s)
-                  </p>
-                </div>
-                <div className="text-center">
-                  <p className="text-primary text-xl font-extrabold my-2 ">
-                    {tempTime.minutes()}
-                  </p>
-                  <p className="text-gray-500 text-sm xl:text-base mb-0">
-                    Min(s).
-                  </p>
-                </div>
-              </div>
+            <div className="text-center">
+              <p className=" text-xl font-extrabold my-2 ">
+                {tempTime.hours()}
+              </p>
+              <p className="text-gray-500 text-sm xl:text-base mb-0">Hour(s)</p>
             </div>
-          </Col>
-        </Row>
+            <div className="text-center">
+              <p className=" text-xl font-extrabold my-2 ">
+                {tempTime.minutes()}
+              </p>
+              <p className="text-gray-500 text-sm xl:text-base mb-0">Min(s).</p>
+            </div>
+          </div>
+        </div>
       </div>
-      {monthlyLeaderBoardData.applaudData.length > 0 && (
+
+      <div>
+        <div className="border-b border-gray-300 pb-2 text-lg font-semibold">
+          Recent Activity
+        </div>
+      </div>
+      <div className="space-y-4">
+        <div className="border-b border-gray-300 pb-2 text-lg font-semibold ">
+          Leaderboard
+        </div>
+        {/* {feedbackList.length > 0 ? (
+                      feedbackList.map((feedback, idx) => { */}
+        {/* return  */}
+        <div className="flex px-4 space-x-4">
+          <div>
+            <DefaultImages imageSrc={""} width={70} height={70} />
+          </div>
+
+          <div className="">
+            <div className="px-4">
+              <p className="mb-2 text-primary font-medium text-sm">{"Name"}</p>
+              <p className="flex justify-between space-x-4">
+                <span className="flex" title="Feedback given">
+                  <FileRightIcon />
+                  <span className="pl-2 text-sm font-medium text-gray-500">
+                    {2}
+                  </span>
+                </span>
+                <span className="flex" title="Feedback received">
+                  <FileLeftIcon />
+                  <span className="pl-2 text-sm font-medium text-gray-500">
+                    {2}
+                  </span>
+                </span>
+              </p>
+            </div>
+          </div>
+        </div>
+        {/* ));
+                      })
+                    ) : (
+                      <div className="flex justify-center items-center h-48 ">
+                        <p className="text-center">No Record Found</p>
+                      </div>
+                    )} */}
+      </div>
+
+      {/* {monthlyLeaderBoardData.applaudData.length > 0 && (
         <div className="relative bg-white rounded-md shadow-md p-5  mt-6 ">
           <p className="mb-4 text-primary text-xl font-semibold pr-10 md:pr-14">
             Monthly Leaderboard
@@ -183,7 +210,7 @@ function SiderRight({ dashBoardData, monthlyLeaderBoardData }) {
             }
           })}
         </div>
-      )}
+      )} */}
     </>
   );
 }

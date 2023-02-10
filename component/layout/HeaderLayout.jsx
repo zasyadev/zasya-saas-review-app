@@ -32,12 +32,7 @@ function HeaderLayout({ isBack, title, user, collapsed, setCollapsed, lg }) {
             {title}
           </p>
         </div>
-        <UserProfileHeader
-          collapsed={collapsed}
-          setCollapsed={setCollapsed}
-          lg={lg}
-          user={user}
-        />
+        <UserProfileHeader user={user} />
         {!lg ? (
           <div
             onClick={() => setCollapsed(!collapsed)}

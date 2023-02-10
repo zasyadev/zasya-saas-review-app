@@ -1,7 +1,7 @@
 import {
   CrownOutlined,
   DashboardOutlined,
-  FormOutlined,
+  FileTextOutlined,
   LikeOutlined,
   SettingOutlined,
   UsergroupAddOutlined,
@@ -26,7 +26,13 @@ function getItem(label, key, icon, children, type) {
   };
 }
 
-function AdminLayout({ user, title, isBack = false, children }) {
+function AdminLayout({
+  user,
+  title,
+  isBack = false,
+  children,
+  isHeader = true,
+}) {
   const { lg } = useBreakpoint();
   const [collapsed, setCollapsed] = useState(false);
 
@@ -42,11 +48,16 @@ function AdminLayout({ user, title, isBack = false, children }) {
       <DashboardOutlined className="sidebar-icon" />
     ),
 
-    getItem("Reviews", "review", <FormOutlined className="sidebar-icon " />, [
-      getItem("Received", URLS.REVIEW_RECEIVED),
-      getItem("Created", URLS.REVIEW_CREATED),
-      getItem("Surveys", URLS.SURVEY),
-    ]),
+    getItem(
+      "Reviews",
+      "review",
+      <FileTextOutlined className="sidebar-icon " />,
+      [
+        getItem("Received", URLS.REVIEW_RECEIVED),
+        getItem("Created", URLS.REVIEW_CREATED),
+        getItem("Surveys", URLS.SURVEY),
+      ]
+    ),
 
     getItem("Goals", "goals", <CrownOutlined className="sidebar-icon " />, [
       getItem("Goals", URLS.GOAL),
@@ -105,15 +116,18 @@ function AdminLayout({ user, title, isBack = false, children }) {
         />
         <Layout className="min-h-screen lg:ml-60">
           <Content className="bg-primary-gray ">
-            <HeaderLayout
-              isBack={isBack}
-              title={title}
-              user={user}
-              setCollapsed={setCollapsed}
-              collapsed={collapsed}
-              lg={lg}
-            />
-            <div className="p-4 md:p-6">{children}</div>
+            {isHeader && (
+              <HeaderLayout
+                isBack={isBack}
+                title={title}
+                user={user}
+                setCollapsed={setCollapsed}
+                collapsed={collapsed}
+                lg={lg}
+              />
+            )}
+
+            <div className={` ${isHeader && "p-4 md:p-6"}`}>{children}</div>
           </Content>
           <Footer className="text-center bg-white p-3 font-medium text-primary">
             Review App © 2022 Created By Zasya Solution

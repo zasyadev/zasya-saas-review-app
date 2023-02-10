@@ -56,8 +56,8 @@ function UserProfileHeader({ user }) {
     getAllNotification();
   }, []);
   return (
-    <div className="flex flex-shrink-0 items-center justify-end md:w-60">
-      <div className="flex-1 flex-shrink-0 bg-white   cursor-pointer   transition-all  duration-300 rounded-full">
+    <div className="flex flex-shrink-0 items-center justify-between ">
+      <div className="flex-1 flex-shrink-0 bg-transparent   cursor-pointer   transition-all  duration-300 rounded-full">
         <div className="flex items-center md:space-x-3">
           <DefaultImages
             imageSrc={user?.UserDetails?.image}
@@ -81,10 +81,10 @@ function UserProfileHeader({ user }) {
         }
         overlayClassName="notification-dropdown"
         placement="bottomRight"
-        className=" bg-white  grid place-content-center  cursor-pointer transition-all  duration-300 hover:bg-gray-100 rounded-full w-11 h-11"
+        className=" bg-transparent  grid place-content-center  cursor-pointer transition-all border duration-300 rounded-full w-11 h-11"
       >
         <Badge count={unSeenNotificationCount} offset={[-5, 8]}>
-          <BellOutlined className="text-xl text-gray-600 hover:text-primary-green " />
+          <BellOutlined className="text-xl text-gray-600 hover:text-primary-green leading-0" />
         </Badge>
       </Dropdown>
     </div>

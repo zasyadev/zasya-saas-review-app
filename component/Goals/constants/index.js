@@ -54,6 +54,22 @@ export const statusPill = (key) => {
       return "";
   }
 };
+export const statusBackground = (key) => {
+  switch (key) {
+    case "Completed":
+      return " bg-green-500";
+    case "OnTrack":
+      return "bg-blue-500";
+    case "Delayed":
+      return "bg-orange-500";
+    case "AtRisk":
+      return "bg-red-500";
+    case "Abandoned":
+      return " bg-gray-500";
+    default:
+      return "";
+  }
+};
 
 export const getGoalFrequency = (number) => {
   switch (number) {

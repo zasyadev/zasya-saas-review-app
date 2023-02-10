@@ -14,6 +14,22 @@ module.exports = {
         brandGray: {
           50: "#F5F6FC",
           100: "#FCFCFC",
+          200: "#9399A9",
+        },
+        brandSkin: {
+          100: "#FFE7C1",
+        },
+        brandOrange: {
+          10: "rgb(254, 176, 25, 0.1)",
+          100: "rgb(254, 176, 25)",
+        },
+        brandBlue: {
+          10: "rgb(0, 143, 251, 0.1)",
+          100: "rgb(0, 143, 251)",
+        },
+        brandGreen: {
+          10: "rgb(0, 227, 150, 0.1)",
+          100: "rgb(0, 227, 150)",
         },
       },
       lineHeight: {
