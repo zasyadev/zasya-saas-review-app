@@ -3,12 +3,15 @@ import {
   ClockCircleOutlined,
   CrownOutlined,
   FileTextOutlined,
+  SearchOutlined,
 } from "@ant-design/icons";
 import { Select, Skeleton } from "antd";
 import moment from "moment";
 import dynamic from "next/dynamic";
+import Link from "next/link";
 import React, { useEffect, useMemo, useState } from "react";
 import { ColorApplaudIcon } from "../../assets/icons";
+import { URLS } from "../../constants/urls";
 import { dateDayName, dateTime } from "../../helpers/dateHelper";
 import httpService from "../../lib/httpService";
 import { GoalListHook, MeetingListHook, MemberListHook } from "../common/hooks";
@@ -25,16 +28,17 @@ const BarChart = dynamic(() => import("../common/BarChart"), {
 
 function DashBoard({ user }) {
   const defaultDashboardData = {
-    reviewCreatedCount: 0,
-    reviewAnsweredCount: 0,
-    userCount: 0,
-    applaudCount: 0,
     reviewRating: [],
     averageAnswerTime: 0,
+    totalGoals: 0,
+    totalApplauds: 0,
+    totalReviews: 0,
+    pendingGoals: 0,
+    goalsProgress: 0,
   };
   const defaultMonthlyLeaderboardData = {
-    applaudData: [],
-    reviewRating: [],
+    leaderBoardData: [],
+    leaderboardLoading: true,
   };
   const { membersList } = MemberListHook(user);
   const { goalList, goalListLoading } = GoalListHook("All");
@@ -63,16 +67,24 @@ function DashBoard({ user }) {
   }
   async function fetchMonthlyLeaderBoardData() {
     await httpService
-      .post(`/api/dashboard/monthly_leaderboard`, {
+      .post(`/api/dashboard/leaderboard`, {
         date: currentMonth,
         userId: user.id,
       })
       .then(({ data: response }) => {
         if (response.status === 200) {
-          setMonthlyLeaderBoardData(response.data);
+          setMonthlyLeaderBoardData({
+            leaderBoardData: response.data,
+            leaderboardLoading: false,
+          });
         }
       })
-      .catch((err) => {});
+      .catch((err) => {
+        setMonthlyLeaderBoardData({
+          leaderBoardData: [],
+          leaderboardLoading: false,
+        });
+      });
   }
 
   useEffect(() => {
@@ -112,14 +124,16 @@ function DashBoard({ user }) {
   return (
     <div className="grid grid-cols-7 gap-4">
       <div className="col-span-7 md:col-span-5  border-r border-gray-300 p-4 space-y-4">
-        <div className="">
+        <div className="flex justify-between items-center">
           <Select
             size="large"
             showSearch
             filterOption={(input, option) =>
               option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
             }
-            className="w-44"
+            className="w-44 md:w-52 lg:w-72"
+            placeholder="Search"
+            suffixIcon={<SearchOutlined />}
           >
             {membersList.map((data, index) => (
               <Select.Option key={index} value={data.user_id}>
@@ -127,38 +141,51 @@ function DashBoard({ user }) {
               </Select.Option>
             ))}
           </Select>
+          <div className=" md:hidden w-full">
+            <UserProfileHeader user={user} />
+          </div>
         </div>
         <div className="bg-brandSkin-100 p-4  rounded-md">
           <p className="font-bold  mb-0 uppercase">Hi {user.first_name}</p>
           <p className="mb-0 font-medium">
-            You have <span className="font-semibold text-primary-green">4</span>{" "}
+            You have{" "}
+            <span className="font-semibold text-primary-green">
+              {dashBoardData.pendingGoals}
+            </span>{" "}
             goals pending as you have completed{" "}
-            <span className="font-semibold text-primary-green">50%</span> of
-            goals.
+            <span className="font-semibold text-primary-green">
+              {dashBoardData.goalsProgress}%
+            </span>{" "}
+            of goals.
           </p>
         </div>
         <div className="bg-white  rounded-md">
           <div className="mb-4 grid md:grid-cols-3 border-b border-gray-300">
             <CountCard
               title={"Total Reviews"}
-              count={dashBoardData.reviewCreatedCount}
+              count={dashBoardData.totalReviews}
               className="cursor-pointer"
               Icon={() => <FileTextOutlined />}
               iconClassName={"text-brandOrange-100 bg-brandOrange-10 text-lg"}
+              href={URLS.REVIEW_CREATED}
             />
+
             <CountCard
               title={"Total Goals"}
-              count={dashBoardData.reviewCreatedCount}
+              count={dashBoardData.totalGoals}
               className="cursor-pointer"
               Icon={() => <CrownOutlined />}
               iconClassName={"text-brandGreen-100 bg-brandGreen-10 text-lg"}
+              href={URLS.GOAL}
             />
+
             <CountCard
               title={"Total Applaud"}
-              count={dashBoardData.reviewCreatedCount}
+              count={dashBoardData.totalApplauds}
               className="cursor-pointer"
               Icon={() => <ColorApplaudIcon color="#0091f6" />}
               iconClassName={"text-brandBlue-100 bg-brandBlue-10"}
+              href={URLS.APPLAUD}
             />
           </div>
           <div className="w-full p-4  overflow-hidden ">
@@ -169,9 +196,11 @@ function DashBoard({ user }) {
           <div className="w-full bg-white rounded-md overflow-hidden shadow-md h-full flex flex-col">
             <h2 className="text-lg font-semibold  mb-0 flex items-center justify-between gap-3 border-b border-gray-300 px-5 py-3">
               <span className="flex-1"> Upcoming Goals</span>
-              <span className=" text-sm font-medium text-primary-green cursor-pointer hover:underline">
-                View All
-              </span>
+              <Link href={URLS.GOAL} passHref>
+                <span className=" text-sm font-medium text-primary-green cursor-pointer hover:underline">
+                  View All
+                </span>
+              </Link>
             </h2>
             <div className="divide-y">
               {goalListLoading ? (
@@ -217,10 +246,12 @@ function DashBoard({ user }) {
           </div>
           <div className="w-full bg-white rounded-md overflow-hidden shadow-md h-full flex flex-col">
             <h2 className="text-lg font-semibold  mb-0 flex items-center justify-between gap-3 border-b border-gray-300 px-5 py-3">
-              <span className="flex-1"> Upcoming Meetings</span>
-              <span className=" text-sm font-medium text-primary-green cursor-pointer hover:underline">
-                View All
-              </span>
+              <span className="flex-1"> Upcoming Follow Ups</span>
+              <Link href={URLS.FOLLOW_UP} passHref>
+                <span className=" text-sm font-medium text-primary-green cursor-pointer hover:underline">
+                  View All
+                </span>
+              </Link>
             </h2>
             <div className="divide-y">
               {meetingListLoading ? (
@@ -265,87 +296,16 @@ function DashBoard({ user }) {
             </div>
           </div>
         </div>
-        <div className="container mx-auto max-w-full space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 2xl:gap-6"></div>
-          <div className="md:hidden">
-            <SiderRight
-              dashBoardData={dashBoardData}
-              monthlyLeaderBoardData={monthlyLeaderBoardData}
-            />
-          </div>
-          {/* 
-          <Row gutter={[24, 24]}>
-            <Col md={12} lg={12} xs={24}>
-              <div className="w-full bg-white rounded-md overflow-hidden shadow-md p-5 h-full">
-                <h2 className="text-xl text-primary  font-semibold mb-2 flex items-center gap-3 justify-between">
-                  <span className="flex-1"> Feedback Leaderboard</span>
-                  <span className="leading-4 text-base  text-gray-900">
-                    {CustomPopover(
-                      "Feedback received and given count by your team members"
-                    )}
-                  </span>
-                </h2>
-                <Row className="dashboard-feedback">
-                  <Col xs={24} md={24}>
-                    {feedbackList.length > 0 ? (
-                      feedbackList.map((feedback, idx) => {
-                        return Object.entries(feedback).map(([key, value]) => (
-                          <Row className="my-3" key={idx + key + "feedback"}>
-                            <Col xs={6} md={5}>
-                              <DefaultImages
-                                imageSrc={value?.image}
-                                width={70}
-                                height={70}
-                              />
-                            </Col>
-
-                            <Col xs={18} md={19}>
-                              <div className="px-4">
-                                <p className="mb-2 text-primary font-medium text-sm">
-                                  {key}
-                                </p>
-                                <p className="flex justify-between mr-0 md:mr-3">
-                                  <span className="flex" title="Feedback given">
-                                    <FileRightIcon />
-                                    <span className="pl-2 text-sm font-medium text-gray-500">
-                                      {value.feedbackGiven ?? 0}
-                                    </span>
-                                  </span>
-                                  <span
-                                    className="flex"
-                                    title="Feedback received"
-                                  >
-                                    <FileLeftIcon />
-                                    <span className="pl-2 text-sm font-medium text-gray-500">
-                                      {value.feedbackTaken ?? 0}
-                                    </span>
-                                  </span>
-                                </p>
-                              </div>
-                            </Col>
-                          </Row>
-                        ));
-                      })
-                    ) : (
-                      <div className="flex justify-center items-center h-48 ">
-                        <p className="text-center">No Record Found</p>
-                      </div>
-                    )}
-                  </Col>
-                </Row>
-              </div>
-            </Col>
-          </Row> */}
-        </div>
       </div>
-      <div className="col-span-7 md:col-span-2 space-y-4 p-4  pl-0 ">
-        <div className="w-full">
+      <div className="col-span-7 md:col-span-2 space-y-4 p-4  md:pl-0 ">
+        <div className="hidden md:block w-full">
           <UserProfileHeader user={user} />
         </div>
 
         <SiderRight
           dashBoardData={dashBoardData}
           monthlyLeaderBoardData={monthlyLeaderBoardData}
+          userId={user.id}
         />
       </div>
     </div>

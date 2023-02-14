@@ -1,15 +1,16 @@
-import { Col, Row } from "antd";
+import { ClockCircleOutlined } from "@ant-design/icons";
+import { Skeleton, Timeline } from "antd";
 import moment from "moment";
 import dynamic from "next/dynamic";
-import React, { useState } from "react";
+import React from "react";
 import {
-  ApplaudIcon,
-  ClockIcon,
+  ApplaudIconSmall,
   FileLeftIcon,
   FileRightIcon,
-  StarIcon,
 } from "../../assets/icons";
+import { getFirstLetter } from "../../helpers/truncateString";
 import DefaultImages from "../common/DefaultImages";
+import { NotificationListHook } from "../common/hooks";
 
 const SemiDonutChart = dynamic(() => import("../common/SemiDonutChart"), {
   ssr: false,
@@ -53,18 +54,23 @@ const ratingHandler = (data) => {
   let avgRating = 0;
   if (avgRatingSum > 0) avgRating = avgRatingSum / assigneAnswerLength.length;
 
-  return Number(avgRating).toFixed(2);
+  return Number(avgRating).toFixed(1);
 };
 
-function SiderRight({ dashBoardData, monthlyLeaderBoardData }) {
-  const { reviewRating, averageAnswerTime, applaudCount } = dashBoardData;
-  const tempTime = moment.duration(averageAnswerTime);
-  const [activeMonthlyIndex, setActiveMonthlyIndex] = useState(0);
+function SiderRight({ dashBoardData, monthlyLeaderBoardData, userId }) {
+  const { reviewRating, averageAnswerTime, totalGoals, totalApplauds } =
+    dashBoardData;
+  const { leaderBoardData, leaderboardLoading } = monthlyLeaderBoardData;
 
-  const onChangeRadioHandler = (e) => {
-    setActiveMonthlyIndex(e.target.value);
-  };
-  const feedbackList = [];
+  const tempTime = moment.duration(averageAnswerTime);
+  // const [activeMonthlyIndex, setActiveMonthlyIndex] = useState(0);
+
+  // const onChangeRadioHandler = (e) => {
+  //   setActiveMonthlyIndex(e.target.value);
+  // };
+
+  const { notificationList, notificationListLoading } =
+    NotificationListHook(userId);
 
   return (
     <>
@@ -72,84 +78,167 @@ function SiderRight({ dashBoardData, monthlyLeaderBoardData }) {
         <div className="border-b border-gray-300 pb-2 text-lg font-semibold">
           Performance Stats
         </div>
-        <div className="relative">
-          <SemiDonutChart />
-          <div className="w-20 h-20 bg-white rounded-full absolute bottom-5 left-32 grid place-content-center">
-            <div className="rounded-full bg-gray-300 w-16 h-16 grid place-content-center font-bold text-lg">
-              {ratingHandler(reviewRating)}
+        <div className="">
+          <SemiDonutChart
+            totalGoals={totalGoals}
+            totalApplauds={totalApplauds}
+          />
+          {/* <div className="relative">
+            <div className="w-20 h-20 md:w-16 md:h-16 2xl:w-20 2xl:h-20 bg-white rounded-full absolute bottom-8 left-36 lg:bottom-4 lg:left-28 xl:bottom-5  xl:left-28 2xl:bottom-20 2xl:left-48 grid place-content-center">
+              <div className="rounded-full bg-gray-300 w-16 h-16 md:w-12 md:h-12 2xl:w-16 2xl:h-16 grid place-content-center font-bold text-lg">
+                {ratingHandler(reviewRating)}
+              </div>
             </div>
-          </div>
+          </div> */}
         </div>
         <div className="flex flex-wrap items-center justify-between px-4">
           <div className="flex-shrink-0 grid place-content-center">
-            <ClockIcon />
+            <ClockCircleOutlined className="text-3xl md:text-2xl xl:text-4xl" />
           </div>
           <div className="flex-1 flex items-center justify-around">
             <div className="text-center">
-              <p className=" text-xl font-extrabold my-2 ">{tempTime.days()}</p>
-              <p className="text-gray-500 text-sm xl:text-base mb-0">Day(s)</p>
+              <p className=" text-xl md:text-base xl:text-xl font-extrabold my-2 ">
+                {tempTime.days()}
+              </p>
+              <p className="text-gray-500 text-sm md:text-xs xl:text-base mb-0">
+                Day(s)
+              </p>
             </div>
 
             <div className="text-center">
-              <p className=" text-xl font-extrabold my-2 ">
+              <p className=" text-xl md:text-base xl:text-xl font-extrabold my-2 ">
                 {tempTime.hours()}
               </p>
-              <p className="text-gray-500 text-sm xl:text-base mb-0">Hour(s)</p>
+              <p className="text-gray-500 text-sm md:text-xs xl:text-base mb-0">
+                Hour(s)
+              </p>
             </div>
             <div className="text-center">
-              <p className=" text-xl font-extrabold my-2 ">
+              <p className=" text-xl  md:text-base xl:text-xl font-extrabold my-2 ">
                 {tempTime.minutes()}
               </p>
-              <p className="text-gray-500 text-sm xl:text-base mb-0">Min(s).</p>
+              <p className="text-gray-500 text-sm md:text-xs xl:text-base mb-0">
+                Min(s).
+              </p>
             </div>
           </div>
         </div>
       </div>
-
-      <div>
+      <div className="space-y-2">
         <div className="border-b border-gray-300 pb-2 text-lg font-semibold">
           Recent Activity
         </div>
+
+        {notificationListLoading ? (
+          <Skeleton
+            avatar
+            active
+            paragraph={{
+              rows: 1,
+            }}
+          />
+        ) : (
+          notificationList && (
+            <Timeline className="px-4 pt-6 space-y-2 max-h-64 overflow-auto no-scrollbar">
+              {notificationList.map((item, index) => (
+                <Timeline.Item
+                  dot={
+                    <div
+                      className={`${
+                        index === 0
+                          ? "bg-cyan-500"
+                          : index === 1
+                          ? "bg-orange-600"
+                          : "bg-green-600"
+                      } 
+           
+           border text-white capitalize hover:cursor-pointer rounded-full w-7 h-7 grid place-content-center`}
+                    >
+                      {getFirstLetter(item.data.message)}
+                    </div>
+                  }
+                  className="recent-activity-timeline"
+                  key={item.id + "activity"}
+                >
+                  <div className="flex items-start gap-2 ">
+                    <p className="flex-1 font-semibold mb-0text-sm md:text-base">
+                      <span className="capitalize">{item.data.message}</span>
+                    </p>
+                  </div>
+
+                  {item.created_date && (
+                    <p className="mt-1 mb-0  text-gray-400  text-xs leading-6 ">
+                      {moment(item.created_date).fromNow()}
+                    </p>
+                  )}
+                </Timeline.Item>
+              ))}
+            </Timeline>
+          )
+        )}
       </div>
+
       <div className="space-y-4">
         <div className="border-b border-gray-300 pb-2 text-lg font-semibold ">
           Leaderboard
         </div>
-        {/* {feedbackList.length > 0 ? (
-                      feedbackList.map((feedback, idx) => { */}
-        {/* return  */}
-        <div className="flex px-4 space-x-4">
-          <div>
-            <DefaultImages imageSrc={""} width={70} height={70} />
-          </div>
-
-          <div className="">
-            <div className="px-4">
-              <p className="mb-2 text-primary font-medium text-sm">{"Name"}</p>
-              <p className="flex justify-between space-x-4">
-                <span className="flex" title="Feedback given">
-                  <FileRightIcon />
-                  <span className="pl-2 text-sm font-medium text-gray-500">
-                    {2}
-                  </span>
-                </span>
-                <span className="flex" title="Feedback received">
-                  <FileLeftIcon />
-                  <span className="pl-2 text-sm font-medium text-gray-500">
-                    {2}
-                  </span>
-                </span>
-              </p>
-            </div>
-          </div>
-        </div>
-        {/* ));
-                      })
-                    ) : (
-                      <div className="flex justify-center items-center h-48 ">
-                        <p className="text-center">No Record Found</p>
+        <div className=" px-4 space-y-4 max-h-64 overflow-y-auto no-scrollbar">
+          {leaderboardLoading
+            ? [...Array(3)].map((_, index) => (
+                <Skeleton
+                  avatar
+                  active
+                  paragraph={{
+                    rows: 1,
+                  }}
+                  key={index + "leaderboadLoading"}
+                />
+              ))
+            : leaderBoardData &&
+              leaderBoardData
+                .filter((i) => i.status)
+                .map((item, index) => {
+                  return (
+                    <div className="flex space-x-4" key={item.id + index}>
+                      <div>
+                        <DefaultImages
+                          imageSrc={item.UserDetails.image}
+                          width={65}
+                          height={65}
+                        />
                       </div>
-                    )} */}
+
+                      <div className="">
+                        <div className="px-4 md:pl-0 xl:pl-4">
+                          <p className="mb-2 text-primary font-medium text-sm">
+                            {item.first_name}
+                          </p>
+                          <p className="flex justify-between space-x-4">
+                            <span className="flex" title="Feedback given">
+                              <ApplaudIconSmall />
+                              <span className="pl-2 text-sm font-medium text-gray-500">
+                                {item?.userFeild?.length ?? 0}
+                              </span>
+                            </span>
+                            <span className="flex" title="Feedback given">
+                              <FileRightIcon />
+                              <span className="pl-2 text-sm font-medium text-gray-500">
+                                {item?.ReviewAssigneeAnswers?.length ?? 0}
+                              </span>
+                            </span>
+                            <span className="flex" title="Feedback received">
+                              <FileLeftIcon />
+                              <span className="pl-2 text-sm font-medium text-gray-500">
+                                {item?.taskReviewBy?.length ?? 0}
+                              </span>
+                            </span>
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+        </div>
       </div>
 
       {/* {monthlyLeaderBoardData.applaudData.length > 0 && (

@@ -5,6 +5,8 @@ import {
   LikeOutlined,
   SettingOutlined,
   UsergroupAddOutlined,
+  MenuUnfoldOutlined,
+  MenuFoldOutlined,
 } from "@ant-design/icons";
 import { Grid, Layout } from "antd";
 import React, { useEffect, useMemo, useState } from "react";
@@ -127,9 +129,22 @@ function AdminLayout({
               />
             )}
 
+            {!isHeader && !lg ? (
+              <div
+                onClick={() => setCollapsed(!collapsed)}
+                className="w-10 h-10 py-2 px-3 bg-transparent grid place-content-center rounded-md cursor-pointer absolute right-0 top-4"
+              >
+                {collapsed ? (
+                  <MenuUnfoldOutlined className="text-lg" />
+                ) : (
+                  <MenuFoldOutlined className="text-lg" />
+                )}
+              </div>
+            ) : null}
+
             <div className={` ${isHeader && "p-4 md:p-6"}`}>{children}</div>
           </Content>
-          <Footer className="text-center bg-white p-3 font-medium text-primary">
+          <Footer className="text-center bg-primary-gray p-3 font-medium border-t ">
             Review App © 2022 Created By Zasya Solution
           </Footer>
         </Layout>

@@ -71,7 +71,7 @@ function SiderLayout({ collapsed, setCollapsed, items, lg, user }) {
       // collapsible
       collapsedWidth={lg ? "80" : "0"}
       collapsed={collapsed}
-      className="sider bg-brandGray-100 fixed top-0 left-0 bottom-0 overflow-auto min-h-screen z-10 no-scrollbar"
+      className="sider bg-brandGray-100 fixed top-0 left-0 bottom-0 overflow-auto min-h-screen z-20 no-scrollbar"
       onCollapse={(value) => setCollapsed(value)}
       width={240}
     >

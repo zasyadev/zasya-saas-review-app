@@ -56,8 +56,8 @@ function UserProfileHeader({ user }) {
     getAllNotification();
   }, []);
   return (
-    <div className="flex flex-shrink-0 items-center justify-between ">
-      <div className="flex-1 flex-shrink-0 bg-transparent   cursor-pointer   transition-all  duration-300 rounded-full">
+    <div className="flex md:flex-shrink-0 items-center justify-end md:justify-between space-x-2 mr-6 md:mr-0">
+      <div className="md:flex-1 md:flex-shrink-0 bg-transparent   cursor-pointer   transition-all  duration-300 rounded-full">
         <div className="flex items-center md:space-x-3">
           <DefaultImages
             imageSrc={user?.UserDetails?.image}
@@ -70,7 +70,7 @@ function UserProfileHeader({ user }) {
         </div>
       </div>
       <Dropdown
-        trigger={"click"}
+        trigger={unSeenNotificationCount > 0 ? "click" : ""}
         overlay={
           <NotificationMenus
             allNotification={allNotification}

@@ -1,35 +1,36 @@
-import { USER_SELECT_FEILDS } from "../../../constants";
+import moment from "moment";
 import { calculateMiliDuration } from "../../../helpers/momentHelper";
 import { RequestHandler } from "../../../lib/RequestHandler";
 
-async function handle(req, res, prisma, user) {
+const currentYear = {
+  lte: moment().endOf("year").format(),
+  gte: moment().startOf("year").format(),
+};
+
+async function handle(_, res, prisma, user) {
   const { id: userId, organization_id } = user;
 
   if (!userId) {
     return res.status(401).json({ status: 401, message: "No User found" });
   }
 
+  let pendingGoals = 0;
+  let goalsProgress = 0;
+  let averageAnswerTime = 0;
+
   const reviewCreated = await prisma.review.findMany({
     where: {
       AND: [
         {
-          created_by: userId,
+          created_date: currentYear,
         },
         {
           organization_id: organization_id,
         },
-      ],
-    },
-    include: {
-      created: USER_SELECT_FEILDS,
-
-      form: {
-        include: {
-          questions: {
-            include: { options: true },
-          },
+        {
+          created_by: userId,
         },
-      },
+      ],
     },
   });
   const reviewRating = await prisma.review.findMany({
@@ -57,6 +58,9 @@ async function handle(req, res, prisma, user) {
     where: {
       AND: [
         {
+          created_date: currentYear,
+        },
+        {
           user_id: userId,
         },
         {
@@ -68,22 +72,39 @@ async function handle(req, res, prisma, user) {
     },
   });
 
-  const userData = await prisma.userOraganizationGroups.findMany({
-    where: {
-      AND: [{ organization_id: organization_id }, { status: true }],
-    },
-  });
-
   const applaudData = await prisma.userApplaud.findMany({
     where: {
-      AND: [{ user_id: userId }, { organization_id: organization_id }],
+      AND: [
+        { organization_id: organization_id },
+        {
+          created_by: userId,
+        },
+        {
+          created_date: currentYear,
+        },
+      ],
+    },
+  });
+  const goalsData = await prisma.goalAssignee.findMany({
+    where: {
+      AND: [
+        { assignee_id: userId },
+        {
+          goal: {
+            organization_id: organization_id,
+            is_archived: false,
+          },
+        },
+        {
+          created_date: currentYear,
+        },
+      ],
     },
     include: {
-      user: USER_SELECT_FEILDS,
+      goal: true,
     },
   });
 
-  let averageAnswerTime = 0;
   if (reviewAnswered.length > 0) {
     const totalMili = reviewAnswered.reduce((prev, curr) => {
       let time = calculateMiliDuration({
@@ -98,13 +119,24 @@ async function handle(req, res, prisma, user) {
       totalMili > 0 ? Math.round(totalMili / reviewAnswered.length) : 0;
   }
 
+  if (Number(goalsData.length) > 0) {
+    let completedGoals = goalsData.filter(
+      (item) => item?.status === "Completed"
+    ).length;
+    pendingGoals = goalsData.length - completedGoals;
+    goalsProgress = Math.round(
+      Number(completedGoals / goalsData?.length) * 100
+    );
+  }
+
   let data = {
-    reviewCreatedCount: reviewCreated.length,
-    reviewAnsweredCount: reviewAnswered.length,
-    userCount: userData.length,
-    applaudCount: applaudData.length,
+    totalReviews: Number(reviewCreated.length) + Number(reviewAnswered.length),
+    totalApplauds: Number(applaudData.length),
+    totalGoals: Number(goalsData.length),
     reviewRating: reviewRating,
     averageAnswerTime: averageAnswerTime,
+    pendingGoals,
+    goalsProgress,
   };
 
   if (data) {

@@ -1,39 +1,44 @@
-import { Skeleton } from "antd";
 import React, { useEffect, useState } from "react";
 import Chart from "react-apexcharts";
 
-function SemiDonutChart() {
-  const [options, setOptions] = useState({
-    series: [8.8, 10],
-    chart: {
-      type: "donut",
+const seriesOptions = {
+  chart: {
+    type: "donut",
+  },
+  legend: {
+    show: false,
+  },
+  labels: ["Goals", "Applauds"],
+  colors: ["#FF9F5B", "#64A15E"],
+  plotOptions: {
+    pie: {
+      startAngle: -90,
+      endAngle: 90,
+      offsetY: 10,
     },
-    legend: {
-      show: false,
+  },
+  grid: {
+    padding: {
+      bottom: -80,
     },
-    labels: ["Rate", "Total"],
-    colors: ["#FF9F5B", "#64A15E"],
-    plotOptions: {
-      pie: {
-        startAngle: -90,
-        endAngle: 90,
-        offsetY: 10,
-      },
+  },
+  stroke: {
+    show: false,
+  },
+  dataLabels: {
+    formatter: function (_, opts) {
+      return opts.w.config.series[opts.seriesIndex];
     },
-    grid: {
-      padding: {
-        bottom: -80,
-      },
-    },
-    stroke: {
-      show: false,
-    },
-    dataLabels: {
-      formatter: function (_, opts) {
-        return opts.w.config.series[opts.seriesIndex];
-      },
-    },
-  });
+  },
+  series: [0, 0],
+};
+
+function SemiDonutChart({ totalGoals, totalApplauds }) {
+  const [options, setOptions] = useState(seriesOptions);
+
+  useEffect(() => {
+    setOptions((prev) => ({ ...prev, series: [totalGoals, totalApplauds] }));
+  }, [totalGoals, totalApplauds]);
 
   return <Chart options={options} series={options.series} type="donut" />;
 }

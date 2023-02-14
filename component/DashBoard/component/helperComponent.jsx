@@ -1,4 +1,5 @@
 import moment from "moment";
+import Link from "next/link";
 import { DATE_FORMAT, SHORT_MONTH_FORMAT } from "../../../helpers/dateHelper";
 
 export function DateBox({ date, className }) {
@@ -23,24 +24,27 @@ export function CountCard({
   Icon,
   className = "",
   iconClassName = "",
+  href,
 }) {
   return (
-    <div
-      className={` px-5 py-3 rounded-t-md transition-all duration-300 ease-in border-t-4 border-transparent hover:bg-brandGray-100 hover:border-t-4 hover:border-primary-green ${className}`}
-    >
-      <div className="flex flex-wrap items-center  h-full gap-3 select-none">
-        <div className="flex-1">
-          <div className="flex items-start justify-between font-medium tracking-wide text-base mb-1">
-            <span className="flex-1">{title}</span>
+    <Link href={href} passHref>
+      <div
+        className={`px-5 py-3 rounded-t-md transition-all duration-300 ease-in border-t-4 border-transparent hover:bg-brandGray-100 hover:border-t-4 hover:border-primary-green ${className}`}
+      >
+        <div className="flex flex-wrap items-center  h-full gap-3 select-none">
+          <div className="flex-1">
+            <div className="flex items-start justify-between font-medium tracking-wide text-base mb-1">
+              <span className="flex-1">{title}</span>
+            </div>
+            <span className="text-xl xl:text-2xl   font-bold ">{count}</span>
           </div>
-          <span className="text-xl xl:text-2xl   font-bold ">{count}</span>
-        </div>
-        <div
-          className={`grid items-center w-10 h-10 py-1 px-1 justify-center shadow-md rounded-full ${iconClassName}`}
-        >
-          <Icon />
+          <div
+            className={`grid items-center w-10 h-10 py-1 px-1 justify-center shadow-md rounded-full ${iconClassName}`}
+          >
+            <Icon />
+          </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }
