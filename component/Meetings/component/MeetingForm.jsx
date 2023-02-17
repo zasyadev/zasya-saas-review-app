@@ -20,9 +20,16 @@ function MeetingForm({
   userList,
   disabledTypeField = false,
   editMode = false,
+  onValuesChange,
 }) {
   return (
-    <Form form={form} name="meeting" layout="vertical" onFinish={onFinish}>
+    <Form
+      form={form}
+      name="meeting"
+      layout="vertical"
+      onFinish={onFinish}
+      onValuesChange={onValuesChange}
+    >
       <div className="w-full bg-white rounded-md  shadow-md p-5 mt-2 md:px-8">
         <Form.Item
           label={`Title`}
@@ -88,42 +95,6 @@ function MeetingForm({
               <Select.Option value={CASUAL_TYPE}>Casual</Select.Option>
             </Select>
           </Form.Item>
-          {[GOAL_TYPE, REVIEW_TYPE].includes(meetingType) && (
-            <Form.Item
-              name="type_id"
-              label={`Select ${meetingType}`}
-              rules={[
-                {
-                  required: true,
-                  message: "required",
-                },
-              ]}
-            >
-              <Select
-                mode="multiple"
-                size="large"
-                placeholder={`Select ${meetingType}`}
-                showSearch
-                filterOption={(input, option) =>
-                  option.children.toLowerCase().indexOf(input.toLowerCase()) >=
-                  0
-                }
-                disabled={editMode}
-              >
-                {meetingType === REVIEW_TYPE
-                  ? reviewsList.map((data, index) => (
-                      <Select.Option key={index} value={data.id}>
-                        {data?.review_name}
-                      </Select.Option>
-                    ))
-                  : goalsList.map((data, index) => (
-                      <Select.Option key={index} value={data.goal_id}>
-                        {data?.goal?.goal_title}
-                      </Select.Option>
-                    ))}
-              </Select>
-            </Form.Item>
-          )}
 
           <Form.Item
             name="members"
@@ -156,6 +127,42 @@ function MeetingForm({
             </Select>
           </Form.Item>
 
+          {[GOAL_TYPE, REVIEW_TYPE].includes(meetingType) && (
+            <Form.Item
+              name="type_id"
+              label={`Select ${meetingType}`}
+              rules={[
+                {
+                  required: true,
+                  message: "required",
+                },
+              ]}
+            >
+              <Select
+                mode="multiple"
+                size="large"
+                placeholder={`Select ${meetingType}`}
+                showSearch
+                filterOption={(input, option) =>
+                  option.children.toLowerCase().indexOf(input.toLowerCase()) >=
+                  0
+                }
+                // disabled={editMode}
+              >
+                {meetingType === REVIEW_TYPE
+                  ? reviewsList.map((data, index) => (
+                      <Select.Option key={index} value={data.id}>
+                        {data?.review_name}
+                      </Select.Option>
+                    ))
+                  : goalsList.map((data, index) => (
+                      <Select.Option key={index} value={data.goal_id}>
+                        {data?.goal?.goal_title}
+                      </Select.Option>
+                    ))}
+              </Select>
+            </Form.Item>
+          )}
           <Form.Item
             label="Meeting Date"
             name="meeting_at"
