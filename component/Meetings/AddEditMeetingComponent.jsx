@@ -20,6 +20,7 @@ function AddEditMeetingComponent({ user, editMode = false }) {
   const [reviewsList, setReviewsList] = useState([]);
   const [goalsList, setGoalsList] = useState([]);
   const [userList, setUserList] = useState([]);
+  const [selectedMembers, setSelectedMembers] = useState([]);
 
   const onFinish = (values) => {
     editMode
@@ -146,17 +147,25 @@ function AddEditMeetingComponent({ user, editMode = false }) {
 
   const fillFormWithData = () => {
     setMeetingType(meetingData.meeting_type);
+
+    let typeID = [];
+
+    if (meetingData.meeting_type === GOAL_TYPE) {
+      typeID = meetingData.MeetingType.map((item) => {
+        return item.goal_id;
+      });
+    } else if (meetingData.meeting_type === REVIEW_TYPE) {
+      typeID = meetingData.MeetingType.map((item) => {
+        return item.review_id;
+      });
+    }
+
     form.setFieldsValue({
       meeting_at: moment(meetingData.meeting_at),
       meeting_description: meetingData.meeting_description,
       meeting_title: meetingData.meeting_title,
       meeting_type: meetingData.meeting_type,
-      type_id:
-        meetingData.meeting_type === GOAL_TYPE
-          ? meetingData?.goal_id
-          : meetingData.meeting_type === REVIEW_TYPE
-          ? meetingData?.review_id
-          : ["casual"],
+      type_id: typeID,
     });
   };
 
@@ -174,6 +183,24 @@ function AddEditMeetingComponent({ user, editMode = false }) {
       return [];
     }
   }, [meetingData?.MeetingAssignee?.length, userList.length, editMode]);
+
+  const filterGoalList = useMemo(() => {
+    let list = [];
+    if (Number(selectedMembers.length) > 0) {
+      selectedMembers?.forEach((member) => {
+        let filter = goalsList.filter((item) => {
+          return item.goal.GoalAssignee.find(
+            (assignee) => assignee.assignee_id === member
+          );
+        });
+        list.push(...filter);
+      });
+
+      return list;
+    } else {
+      return goalsList;
+    }
+  }, [selectedMembers, meetingData, goalsList]);
 
   useEffect(() => {
     if (editMode && Number(filterUserList?.length) > 0) {
@@ -198,6 +225,12 @@ function AddEditMeetingComponent({ user, editMode = false }) {
     }
   }, [meetingData]);
 
+  const onValuesChange = (value) => {
+    if (value && value?.members?.length) {
+      setSelectedMembers(value.members);
+    }
+  };
+
   if (loading)
     return (
       <div className="container mx-auto max-w-full">
@@ -218,8 +251,9 @@ function AddEditMeetingComponent({ user, editMode = false }) {
       editMode={editMode}
       disabledTypeField={editMode}
       reviewsList={reviewsList}
-      goalsList={goalsList}
+      goalsList={filterGoalList}
       userList={userList}
+      onValuesChange={onValuesChange}
     />
   );
 }

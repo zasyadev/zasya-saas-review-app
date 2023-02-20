@@ -87,6 +87,28 @@ async function handle(req, res) {
       status: 401,
     });
   }
+  const userOrgData = await prisma.userOrganization.findMany({
+    include: {
+      UserOraganizationGroups: {
+        where: {
+          user: {
+            status: 1,
+          },
+        },
+        include: {
+          user: {
+            select: {
+              first_name: true,
+              UserDetails: true,
+              email: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  // console.log(userOrgData[0].UserOraganizationGroups);
 
   const goalData = await prisma.goals.findMany({
     orderBy: {
@@ -124,31 +146,31 @@ async function handle(req, res) {
     },
   });
 
-  if (goalData.length > 0) {
-    goalData.reduce(async (prev, item, index) => {
-      await prev;
-      if (item?.Meetings?.length === 0) {
-        let meetingAt = getNextMeetingDate(item.created_date, index);
+  // if (goalData.length > 0) {
+  //   goalData.reduce(async (prev, item, index) => {
+  //     await prev;
+  //     if (item?.Meetings?.length === 0) {
+  //       let meetingAt = getNextMeetingDate(item.created_date, index);
 
-        meetingCreateHandle({
-          goalItem: item,
-          meetingAt: meetingAt,
-        });
-      } else if (item?.Meetings?.length > 0) {
-        const lastMeetingDate = moment().isAfter(item.Meetings[0].meeting_at);
-        if (lastMeetingDate) {
-          let meetingAt = getNextMeetingDate(item.Meetings[0].meeting_at);
+  //       meetingCreateHandle({
+  //         goalItem: item,
+  //         meetingAt: meetingAt,
+  //       });
+  //     } else if (item?.Meetings?.length > 0) {
+  //       const lastMeetingDate = moment().isAfter(item.Meetings[0].meeting_at);
+  //       if (lastMeetingDate) {
+  //         let meetingAt = getNextMeetingDate(item.Meetings[0].meeting_at);
 
-          meetingCreateHandle({
-            goalItem: item,
-            meetingAt: meetingAt,
-          });
-        }
-      }
+  //         meetingCreateHandle({
+  //           goalItem: item,
+  //           meetingAt: meetingAt,
+  //         });
+  //       }
+  //     }
 
-      await wait(2000);
-    }, Promise.resolve());
-  }
+  //     await wait(2000);
+  //   }, Promise.resolve());
+  // }
 
   prisma.$disconnect();
 
