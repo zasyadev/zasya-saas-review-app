@@ -8,6 +8,7 @@ import { PrimaryButton } from "../../common/CustomButton";
 import { CustomInput, CustomTextArea } from "../../common/CustomFormFeilds";
 import { CASUAL_TYPE, GOAL_TYPE, REVIEW_TYPE } from "../constants";
 import { maxLengthValidator } from "../../../helpers/formValidations";
+import moment from "moment";
 
 function MeetingForm({
   form,
@@ -22,6 +23,11 @@ function MeetingForm({
   editMode = false,
   onValuesChange,
 }) {
+  function onSelect(value) {
+    form.setFieldsValue({
+      meeting_at: value,
+    });
+  }
   return (
     <Form
       form={form}
@@ -180,6 +186,7 @@ function MeetingForm({
               showTime={{
                 format: "HH:mm",
               }}
+              onSelect={onSelect}
               format={DEFAULT_DATETIME_FORMAT}
             />
           </Form.Item>

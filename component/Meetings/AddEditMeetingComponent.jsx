@@ -200,7 +200,7 @@ function AddEditMeetingComponent({ user, editMode = false }) {
     } else {
       return goalsList;
     }
-  }, [selectedMembers, meetingData]);
+  }, [selectedMembers, meetingData, goalsList]);
 
   useEffect(() => {
     if (editMode && Number(filterUserList?.length) > 0) {
