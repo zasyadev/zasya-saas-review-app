@@ -132,7 +132,6 @@ model Review {
   modified_date         DateTime                @default(now())
   ReviewAssigneeAnswers ReviewAssigneeAnswers[]
   ReviewAssignee        ReviewAssignee[]
-  Meetings              Meetings[]
   MeetingType           MeetingType[]
 
   @@map("review")
@@ -442,7 +441,6 @@ model Goals {
   modified_date    DateTime          @default(now())
   GoalsTimeline    GoalsTimeline[]
   GoalAssignee     GoalAssignee[]
-  Meetings         Meetings[]
   MeetingType      MeetingType[]
 
   @@map("goals")
@@ -516,13 +514,9 @@ model Meetings {
   created_date        DateTime              @default(now())
   modified_date       DateTime              @default(now())
   google_event_id     String?
-
-  MeetingAssignee MeetingAssignee[]
-  Review          Review?           @relation(fields: [reviewId], references: [id])
-  reviewId        String?
-  Goals           Goals?            @relation(fields: [goalsId], references: [id])
-  goalsId         String?
-  MeetingType     MeetingType[]
+  generated_by        MeetingGenerateEnum?
+  MeetingAssignee     MeetingAssignee[]
+  MeetingType         MeetingType[]
 
   @@map("meetings")
 }
@@ -614,4 +608,9 @@ enum MeetingTypeEnum {
   Goal
   Review
   Casual
+}
+
+enum MeetingGenerateEnum {
+  System
+  User
 }

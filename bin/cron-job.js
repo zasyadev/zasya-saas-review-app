@@ -51,7 +51,7 @@ async function cronJobStart() {
         password: CRON_PASSWORD,
       });
     });
-    schedule.scheduleJob("monthly_schedule", "30 4 30 * *", async function () {
+    schedule.scheduleJob("monthly_schedule", "30 4 25 * *", async function () {
       await axios.post(`${BASE_URL}api/cronjobs/goalsmonthlynotifications`, {
         password: CRON_PASSWORD,
       });

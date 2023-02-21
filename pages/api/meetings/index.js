@@ -38,24 +38,6 @@ async function handle(req, res, prisma, user) {
         ],
       },
       include: {
-        // MeetingType: {
-        //   review: {
-        //     select: {
-        //       ReviewAssignee: true,
-        //       created_by: true,
-        //       review_name: true,
-        //       created_date: true,
-        //     },
-        //   },
-        //   goal: {
-        //     select: {
-        //       GoalAssignee: true,
-        //       goal_title: true,
-        //       end_date: true,
-        //     },
-        //   },
-        // },
-
         MeetingAssignee: true,
       },
     });
@@ -79,6 +61,7 @@ async function handle(req, res, prisma, user) {
         meeting_type: reqBody.meeting_type,
         frequency: reqBody?.frequency ?? "Once",
         meeting_at: reqBody.meeting_at,
+        generated_by: "User",
         organization: { connect: { id: organization_id } },
       };
       let meetingTypeData = [];
