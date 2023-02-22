@@ -131,7 +131,8 @@ function AddEditMeetingComponent({ user, editMode = false }) {
       .then(({ data: response }) => {
         if (response.status === 200) {
           let filterData = response.data.filter(
-            (item) => item.user.status && item.role_id !== 2
+            (item) =>
+              item.user.status && item.role_id !== 2 && item.user_id !== user.id
           );
           setUserList(filterData);
         }

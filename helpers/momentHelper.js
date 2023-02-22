@@ -1,4 +1,5 @@
 import moment from "moment";
+import "moment-timezone";
 
 const SUNDAY = "Sunday";
 
@@ -79,8 +80,7 @@ const endOfMonthRandomTime = (date) => {
 };
 
 export const getCronNextMeetingDate = (index) => {
-  let newDate = moment();
-
+  let newDate = moment().tz("Asia/Kolkata");
   if (Number(index) > -1) {
     let subtractDays = 1;
     if (index % 2 === 0) {
