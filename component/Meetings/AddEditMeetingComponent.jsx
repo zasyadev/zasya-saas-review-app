@@ -160,6 +160,7 @@ function AddEditMeetingComponent({ user, editMode = false }) {
       });
     }
 
+    setSelectedMembers(filterUserList.map((user) => user.user_id));
     form.setFieldsValue({
       meeting_at: moment(meetingData.meeting_at),
       meeting_description: meetingData.meeting_description,

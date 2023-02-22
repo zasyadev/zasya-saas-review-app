@@ -57,36 +57,43 @@ export const getGoalEndDays = (number) => {
 export const halfHourEndTime = (time) =>
   moment(time).add("30", "minutes").format();
 
+export const minutesAddInTime = (time, minutes) =>
+  moment(time).add(minutes, "minutes").format();
+
 export const afterTodayDates = (date) => {
   let diffrenceInDays = moment().diff(date, "days");
 
   return moment(date).add(diffrenceInDays + 1, "days");
 };
 
-export const getNextMeetingDate = (prevDate, index) => {
-  let newDate = moment(prevDate).add("31", "days");
+const randomMinutes = () => {
+  const stringsArray = ["0", "20", "40"];
+  const randomIndex = Math.floor(Math.random() * stringsArray.length);
+  return Number(stringsArray[randomIndex]);
+};
+
+const endOfMonthRandomTime = (date) => {
+  return date
+    .endOf("month")
+    .set({ hour: Math.floor(Math.random() * 4) + 14, minute: randomMinutes() });
+};
+
+export const getCronNextMeetingDate = (index) => {
+  let newDate = moment();
 
   if (Number(index) > -1) {
-    let hour = moment(newDate).hour();
-    let miniute = moment(newDate).minute();
-
-    let endMonthDate = moment(newDate)
-      .endOf("month")
-      .hour(hour)
-      .minute(miniute);
-    newDate = endMonthDate;
-  }
-
-  let checkIsAfterDate = moment().isAfter(newDate);
-
-  if (checkIsAfterDate) {
-    let addDaysToDate = afterTodayDates(newDate);
-    newDate = addDaysToDate;
+    let subtractDays = 1;
+    if (index % 2 === 0) {
+      subtractDays = Math.floor(Math.random() * 2) + 3;
+    } else if (index % 3 === 0 || index % 5 === 0) {
+      subtractDays = 2;
+    }
+    let endMonthDate = endOfMonthRandomTime(newDate);
+    newDate = endMonthDate.subtract(subtractDays, "days");
   }
 
   const weekDayName = newDate.format("dddd");
 
-  if (weekDayName === SUNDAY) return newDate.add("1", "days").format();
-
+  if (weekDayName === SUNDAY) return endOfMonthRandomTime(newDate).format();
   return newDate.format();
 };
