@@ -18,7 +18,7 @@ const meetingCreateHandle = async (data) => {
   try {
     let emailsList = [];
     let assigneeData = data?.assigneeList.map((assignee) => {
-      emailsList.push(assignee.email);
+      emailsList.push({ email: assignee.email });
       return {
         assignee: { connect: { id: assignee.id } },
         comment: "",
