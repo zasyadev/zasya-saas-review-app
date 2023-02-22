@@ -14,6 +14,31 @@ function wait(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+async function existingMeeting({ meeetingTime, organizationId }) {
+  let time = meeetingTime;
+
+  const meeting = await prisma.meetings.findMany({
+    where: {
+      AND: [
+        {
+          meeting_at: time,
+        },
+        { organization_id: organizationId },
+      ],
+    },
+  });
+
+  if (Number(meeting.length) > 0) {
+    time = await minutesAddInTime(time, 20);
+    return await existingMeeting({
+      meeetingTime: time,
+      organizationId: organizationId,
+    });
+  } else {
+    return time;
+  }
+}
+
 const meetingCreateHandle = async (data) => {
   try {
     let emailsList = [];
@@ -115,13 +140,18 @@ async function handle(req, res) {
 
           const meetingDate = await getCronNextMeetingDate(index);
 
-          let data = {
+          const meetingAtDate = await existingMeeting({
+            meeetingTime: meetingDate,
+            organizationId: adminData.organization_id,
+          });
+
+          const data = {
             created: { connect: { id: adminData.user_id } },
             meeting_title: `${user.user.first_name} monthly follow up meeting`,
             meeting_description: `${user.user.first_name} monthly follow up meeting`,
             meeting_type: GOAL_TYPE,
             frequency: "Once",
-            meeting_at: meetingDate,
+            meeting_at: meetingAtDate,
             generated_by: "System",
             organization: { connect: { id: adminData.organization_id } },
             assigneeList: assigneeList,

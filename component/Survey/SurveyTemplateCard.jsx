@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import { ButtonGray } from "../common/CustomButton";
+import { URLS } from "../../constants/urls";
 
 const motionVariants = {
   hidden: { y: 20, opacity: 0 },

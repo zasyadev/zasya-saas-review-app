@@ -2,6 +2,7 @@ import moment from "moment";
 import "moment-timezone";
 
 const SUNDAY = "Sunday";
+const SATURDAY = "Saturday";
 
 export const calculateDuration = ({ from, to }) => {
   let FromDate = moment(from);
@@ -95,5 +96,7 @@ export const getCronNextMeetingDate = (index) => {
   const weekDayName = newDate.format("dddd");
 
   if (weekDayName === SUNDAY) return endOfMonthRandomTime(newDate).format();
+  else if (weekDayName === SATURDAY)
+    return endOfMonthRandomTime(newDate).add(1, "days").format();
   return newDate.format();
 };
