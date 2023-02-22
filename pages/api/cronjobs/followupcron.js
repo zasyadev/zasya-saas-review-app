@@ -33,24 +33,22 @@ const meetingCreateHandle = async (data) => {
       const meeetingStartTime = data.meeting_at;
       const meeetingEndTime = await minutesAddInTime(meeetingStartTime, 20);
 
-      console.log({ meeetingStartTime });
+      const event = await CreateGoogleCalenderApi({
+        emailsList: emailsList,
+        meeetingStartTime: meeetingStartTime,
+        meetingTitle: data.meeting_title,
+        meeetingEndTime: meeetingEndTime,
+      });
+      if (event && event.id) {
+        data.google_event_id = event.id;
+        delete data.assigneeList;
 
-      // const event = await CreateGoogleCalenderApi({
-      //   emailsList: emailsList,
-      //   meeetingStartTime: meeetingStartTime,
-      //   meetingTitle: data.meeting_title,
-      //   meeetingEndTime: meeetingEndTime,
-      // });
-      // if (event && event.id) {
-      //   data.google_event_id = event.id;
-      //   delete data.assigneeList;
+        const createData = await prisma.meetings.create({
+          data: data,
+        });
 
-      //   const createData = await prisma.meetings.create({
-      //     data: data,
-      //   });
-
-      //   return createData;
-      // }
+        return createData;
+      }
     }
   } catch (error) {
     console.error(error);
