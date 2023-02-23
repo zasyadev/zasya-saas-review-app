@@ -132,7 +132,7 @@ model Review {
   modified_date         DateTime                @default(now())
   ReviewAssigneeAnswers ReviewAssigneeAnswers[]
   ReviewAssignee        ReviewAssignee[]
-  Meetings              Meetings[]
+  MeetingType           MeetingType[]
 
   @@map("review")
 }
@@ -441,7 +441,7 @@ model Goals {
   modified_date    DateTime          @default(now())
   GoalsTimeline    GoalsTimeline[]
   GoalAssignee     GoalAssignee[]
-  Meetings         Meetings[]
+  MeetingType      MeetingType[]
 
   @@map("goals")
 }
@@ -511,15 +511,12 @@ model Meetings {
   meeting_at          DateTime
   organization        UserOrganization?     @relation(fields: [organization_id], references: [id])
   organization_id     Int
-  goal                Goals?                @relation(fields: [goal_id], references: [id], onDelete: Cascade)
-  goal_id             String?
-  review              Review?               @relation(fields: [review_id], references: [id], onDelete: Cascade)
-  review_id           String?
   created_date        DateTime              @default(now())
   modified_date       DateTime              @default(now())
   google_event_id     String?
-
-  MeetingAssignee MeetingAssignee[]
+  generated_by        MeetingGenerateEnum?
+  MeetingAssignee     MeetingAssignee[]
+  MeetingType         MeetingType[]
 
   @@map("meetings")
 }
@@ -535,6 +532,18 @@ model MeetingAssignee {
   modified_date DateTime @default(now())
 
   @@map("meeting_assignee")
+}
+
+model MeetingType {
+  id         Int      @id @default(autoincrement())
+  goal       Goals?   @relation(fields: [goal_id], references: [id], onDelete: Cascade)
+  goal_id    String?
+  review     Review?  @relation(fields: [review_id], references: [id], onDelete: Cascade)
+  review_id  String?
+  meeting    Meetings @relation(fields: [meeting_id], references: [id], onDelete: Cascade)
+  meeting_id String
+
+  @@map("meeting_type")
 }
 
 enum RoleEnum {
@@ -599,4 +608,9 @@ enum MeetingTypeEnum {
   Goal
   Review
   Casual
+}
+
+enum MeetingGenerateEnum {
+  System
+  User
 }

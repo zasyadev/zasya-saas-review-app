@@ -1,11 +1,12 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
-import moment from "moment";
+import { GOAL_TYPE } from "../../../component/Meetings/constants";
+import { ADMIN_ROLE, MANAGER_ROLE, MEMBER_ROLE } from "../../../constants";
 import { CreateGoogleCalenderApi } from "../../../helpers/googleHelper";
 import {
-  getNextMeetingDate,
-  halfHourEndTime,
+  getCronNextMeetingDate,
+  minutesAddInTime,
 } from "../../../helpers/momentHelper";
 import { RequestHandler } from "../../../lib/RequestHandler";
 
@@ -13,52 +14,60 @@ function wait(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-const meetingCreateHandle = async ({ goalItem, meetingAt }) => {
-  try {
-    let data = {
-      created: { connect: { id: goalItem.created_by } },
-      meeting_title: goalItem.goal_title,
-      meeting_description: goalItem?.goal_description ?? "",
-      meeting_type: "Goal",
-      frequency: "Once",
-      meeting_at: meetingAt,
-      organization: { connect: { id: goalItem.organization_id } },
-      goal: { connect: { id: goalItem.id } },
-    };
+async function existingMeeting({ meeetingTime, organizationId }) {
+  let time = meeetingTime;
 
-    let assigneeData = [];
-    if (Number(goalItem?.GoalAssignee?.length) > 0) {
-      assigneeData = goalItem?.GoalAssignee.map((assignee) => {
-        return {
-          assignee: { connect: { id: assignee.assignee_id } },
-          comment: "",
-        };
-      });
-    }
+  const meeting = await prisma.meetings.findMany({
+    where: {
+      AND: [
+        {
+          meeting_at: time,
+        },
+        { organization_id: organizationId },
+      ],
+    },
+  });
+
+  if (Number(meeting.length) > 0) {
+    time = await minutesAddInTime(time, 20);
+    return await existingMeeting({
+      meeetingTime: time,
+      organizationId: organizationId,
+    });
+  } else {
+    return time;
+  }
+}
+
+const meetingCreateHandle = async (data) => {
+  try {
+    let emailsList = [];
+    let assigneeData = data?.assigneeList.map((assignee) => {
+      emailsList.push({ email: assignee.email });
+      return {
+        assignee: { connect: { id: assignee.id } },
+        comment: "",
+      };
+    });
 
     if (Number(assigneeData?.length) > 0) {
       data.MeetingAssignee = { create: assigneeData };
     }
 
-    const emailsList = await goalItem?.GoalAssignee.map((assignee) => {
-      return {
-        email: assignee.assignee.email,
-      };
-    });
-
     if (Number(emailsList.length) > 0) {
-      const meeetingStartTime = moment(meetingAt).format();
-      const meeetingEndTime = halfHourEndTime(meeetingStartTime);
+      const meeetingStartTime = data.meeting_at;
+      const meeetingEndTime = await minutesAddInTime(meeetingStartTime, 20);
 
       const event = await CreateGoogleCalenderApi({
         emailsList: emailsList,
         meeetingStartTime: meeetingStartTime,
-        meetingTitle: goalItem.goal_title,
+        meetingTitle: data.meeting_title,
         meeetingEndTime: meeetingEndTime,
       });
-
       if (event && event.id) {
         data.google_event_id = event.id;
+        delete data.assigneeList;
+
         const createData = await prisma.meetings.create({
           data: data,
         });
@@ -87,69 +96,117 @@ async function handle(req, res) {
       status: 401,
     });
   }
-
-  const goalData = await prisma.goals.findMany({
-    orderBy: {
-      created_date: "desc",
-    },
-    where: {
-      AND: [
-        { end_date: { gt: moment().format() } },
-        { is_archived: false },
-        { frequency: "halfyearly" },
-        { goal_type: "Individual" },
-      ],
-    },
+  const userOrgData = await prisma.userOrganization.findMany({
     include: {
-      GoalAssignee: {
+      UserOraganizationGroups: {
         where: {
-          status: "OnTrack",
+          user: {
+            status: 1,
+          },
         },
         include: {
-          assignee: {
+          user: {
             select: {
               first_name: true,
-              UserDetails: true,
               email: true,
             },
           },
         },
       },
-      Meetings: {
-        orderBy: {
-          created_date: "desc",
-        },
-        take: 1,
-      },
     },
   });
 
-  if (goalData.length > 0) {
-    goalData.reduce(async (prev, item, index) => {
-      await prev;
-      if (item?.Meetings?.length === 0) {
-        let meetingAt = getNextMeetingDate(item.created_date, index);
+  if (userOrgData.length > 0) {
+    userOrgData.reduce(async (previous, organization) => {
+      await previous;
+      const adminData = organization.UserOraganizationGroups.find(
+        (item) => item.role_id === ADMIN_ROLE
+      );
+      organization.UserOraganizationGroups.filter(
+        (item) => item.role_id === MEMBER_ROLE || item.role_id === MANAGER_ROLE
+      ).reduce(async (prev, user, index) => {
+        await prev;
+        if (adminData && adminData.user_id) {
+          const assigneeList = [
+            {
+              id: user.user_id,
+              email: user.user.email,
+            },
+            {
+              id: adminData.user_id,
+              email: adminData.user.email,
+            },
+          ];
 
-        meetingCreateHandle({
-          goalItem: item,
-          meetingAt: meetingAt,
-        });
-      } else if (item?.Meetings?.length > 0) {
-        const lastMeetingDate = moment().isAfter(item.Meetings[0].meeting_at);
-        if (lastMeetingDate) {
-          let meetingAt = getNextMeetingDate(item.Meetings[0].meeting_at);
+          const meetingDate = await getCronNextMeetingDate(index);
 
-          meetingCreateHandle({
-            goalItem: item,
-            meetingAt: meetingAt,
+          const meetingAtDate = await existingMeeting({
+            meeetingTime: meetingDate,
+            organizationId: adminData.organization_id,
           });
-        }
-      }
 
-      await wait(2000);
+          const data = {
+            created: { connect: { id: adminData.user_id } },
+            meeting_title: `${user.user.first_name} monthly follow up meeting`,
+            meeting_description: `${user.user.first_name} monthly follow up meeting`,
+            meeting_type: GOAL_TYPE,
+            frequency: "Once",
+            meeting_at: meetingAtDate,
+            generated_by: "System",
+            organization: { connect: { id: adminData.organization_id } },
+            assigneeList: assigneeList,
+          };
+
+          await meetingCreateHandle(data);
+        }
+
+        // const userGoalData = await prisma.user.findUnique({
+        //   where: {
+        //     id: user.user_id,
+        //   },
+        //   include: {
+        //     GoalAssignee: {
+        //       where: {
+        //         AND: [
+        //           { status: "OnTrack" },
+        //           {
+        //             goal: {
+        //               AND: [
+        //                 { end_date: { gt: moment().format() } },
+        //                 { is_archived: false },
+        //                 { frequency: "halfyearly" },
+        //                 { goal_type: "Individual" },
+        //                 { organization_id: user.organization_id },
+        //               ],
+        //             },
+        //           },
+        //         ],
+        //       },
+        //       include: {
+        //         goal: {
+        //           include: {
+        //             GoalAssignee: {
+        //               include: {
+        //                 assignee: {
+        //                   select: {
+        //                     id: true,
+        //                     email: true,
+        //                   },
+        //                 },
+        //               },
+        //             },
+        //           },
+        //         },
+        //       },
+        //     },
+        //   },
+        // });
+
+        await wait(2000);
+      }, Promise.resolve());
+      await wait(1000);
     }, Promise.resolve());
   }
-
   prisma.$disconnect();
 
   return res.status(201).json({

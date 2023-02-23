@@ -16,19 +16,23 @@ async function handle(req, res, prisma, user) {
     const data = await prisma.meetings.findUnique({
       where: { id: meeting_id },
       include: {
-        review: {
-          select: {
-            ReviewAssignee: true,
-            created_by: true,
-            review_name: true,
-            created_date: true,
-          },
-        },
-        goal: {
-          select: {
-            GoalAssignee: true,
-            goal_title: true,
-            end_date: true,
+        MeetingType: {
+          include: {
+            review: {
+              select: {
+                ReviewAssignee: true,
+                created_by: true,
+                review_name: true,
+                created_date: true,
+              },
+            },
+            goal: {
+              select: {
+                GoalAssignee: true,
+                goal_title: true,
+                end_date: true,
+              },
+            },
           },
         },
         MeetingAssignee: {
