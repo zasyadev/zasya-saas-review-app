@@ -25,7 +25,7 @@ async function handle(req, res, prisma, user) {
   if (req.method === "GET") {
     const data = await prisma.meetings.findMany({
       orderBy: {
-        modified_date: "desc",
+        meeting_at: "asc",
       },
       where: {
         AND: [

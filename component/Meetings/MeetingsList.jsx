@@ -12,6 +12,8 @@ import { openNotificationBox } from "../common/notification";
 import MeetingListSkeleton from "./component/MeetingListSkeleton";
 import { CASUAL_MEETINGTYPE } from "./constants";
 
+const currentTime = moment().format();
+
 function MeetingsList({ user }) {
   const [loading, setLoading] = useState(false);
   const [meetingsList, setMeetingsList] = useState([]);
@@ -24,7 +26,17 @@ function MeetingsList({ user }) {
       .get(`/api/meetings`)
       .then(({ data: response }) => {
         if (response.status === 200) {
-          setMeetingsList(response.data);
+          let sortData = response.data.sort((a, b) => {
+            if (a.meeting_at < currentTime && b.meeting_at >= currentTime) {
+              return 1; // a should come after b in the sorted order
+            }
+            if (b.meeting_at < currentTime && a.meeting_at >= currentTime) {
+              return -1; // a should come before b in the sorted order
+            }
+            return 0; // a and b are equal
+          });
+
+          setMeetingsList(sortData);
         }
         setLoading(false);
       })

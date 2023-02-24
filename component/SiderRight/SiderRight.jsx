@@ -12,7 +12,7 @@ import { getFirstLetter } from "../../helpers/truncateString";
 import DefaultImages from "../common/DefaultImages";
 import { NotificationListHook } from "../common/hooks";
 
-const SemiDonutChart = dynamic(() => import("../common/SemiDonutChart"), {
+const RadialBarChart = dynamic(() => import("../common/RadialBarChart"), {
   ssr: false,
 });
 
@@ -79,9 +79,10 @@ function SiderRight({ dashBoardData, monthlyLeaderBoardData, userId }) {
           Performance Stats
         </div>
         <div className="">
-          <SemiDonutChart
+          <RadialBarChart
             totalGoals={totalGoals}
             totalApplauds={totalApplauds}
+            reviewRating={ratingHandler(reviewRating)}
           />
           {/* <div className="relative">
             <div className="w-20 h-20 md:w-16 md:h-16 2xl:w-20 2xl:h-20 bg-white rounded-full absolute bottom-8 left-36 lg:bottom-4 lg:left-28 xl:bottom-5  xl:left-28 2xl:bottom-20 2xl:left-48 grid place-content-center">

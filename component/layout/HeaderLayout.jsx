@@ -6,6 +6,7 @@ import {
 import { Layout } from "antd";
 import { useRouter } from "next/router";
 import React from "react";
+import HeaderSearchBox from "./components/HeaderSearchBox";
 import UserProfileHeader from "./components/UserProfileHeader";
 
 const { Header } = Layout;
@@ -28,9 +29,7 @@ function HeaderLayout({ isBack, title, user, collapsed, setCollapsed, lg }) {
             </div>
           )}
 
-          <p className="font-bold text-lg md:text-2xl text-primary  max-w-xs lg:max-w-sm single-line-clamp mb-0">
-            {title}
-          </p>
+          <HeaderSearchBox user={user} />
         </div>
         <UserProfileHeader user={user} />
         {!lg ? (

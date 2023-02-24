@@ -28,15 +28,21 @@ const applaudCardVarient = {
 const ApplaudCard = ({ applaud, type }) => {
   return (
     <motion.div key={applaud.id} variants={applaudCardVarient}>
-      <div className="flex flex-col template-list h-full w-full rounded-md shadow-md bg-white space-y-4 p-5">
-        <div className="relative h-auto p-4 bg-teal-100 space-y-4 rounded-md flex flex-col flex-1">
+      <div className="flex flex-col template-list h-full w-full rounded-md shadow-md bg-white space-y-4 p-2">
+        <div className="relative h-auto p-2 bg-brandGray-150 space-y-4 rounded-md flex flex-col flex-1">
           <p className="mb-0 font-medium flex-1">{applaud.comment}</p>
           {applaud?.category?.length > 0 && (
             <p className="mb-0 flex flex-wrap gap-2">
               {applaud?.category.map((item, idx) => (
                 <span
                   key={idx + "cat"}
-                  className=" px-3 py-1 rounded-full bg-teal-200 text-xs "
+                  className={`px-3 py-1 rounded-full bg-transparent text-xs border-2 ${
+                    idx % 2 === 0
+                      ? "border-blue-400 "
+                      : idx % 3 === 0
+                      ? "border-cyan-400 "
+                      : "border-blue-700 -ml-2"
+                  }`}
                 >
                   {getApplaudCategoryName(item)}
                 </span>
@@ -45,7 +51,7 @@ const ApplaudCard = ({ applaud, type }) => {
           )}
         </div>
 
-        <div className=" border-gray-200  px-2 ">
+        <div className="flex justify-between items-center border-gray-200  px-2 ">
           <p className="text-base text-primary mb-0 ">
             {type === "received" ? "From " : "Sent To "}
 
@@ -110,15 +116,6 @@ function Applaud({ user }) {
     <div className="container mx-auto max-w-full">
       <div className="flex flex-col-reverse md:flex-row flex-wrap items-center justify-between  mb-4 md:mb-6 gap-3">
         <div className="w-full justify-between md:justify-start md:w-auto flex items-center gap-4">
-          <ToggleButton
-            arrayList={[
-              { label: APPLAUD_RECEIVED_KEY },
-              { label: APPLAUD_SENT_KEY },
-            ]}
-            handleToggle={(activeKey) => setChangeReceivedView(activeKey)}
-            activeKey={changeReceivedView}
-          />
-
           <div className="bg-white rounded-md shrink-0 py-1 px-2">
             <DatePicker
               onChange={onDateChange}
@@ -131,6 +128,15 @@ function Applaud({ user }) {
               disabledDate={disableDates}
             />
           </div>
+
+          <ToggleButton
+            arrayList={[
+              { label: APPLAUD_RECEIVED_KEY },
+              { label: APPLAUD_SENT_KEY },
+            ]}
+            handleToggle={(activeKey) => setChangeReceivedView(activeKey)}
+            activeKey={changeReceivedView}
+          />
         </div>
 
         <div className="w-full md:w-auto flex items-center justify-end flex-shrink-0">
@@ -150,7 +156,7 @@ function Applaud({ user }) {
       </div>
       <div className="container mx-auto max-w-full">
         <motion.div
-          className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-8 2xl:gap-12 "
+          className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 2xl:gap-12 "
           variants={DefaultMotionVarient}
           initial="hidden"
           animate="show"

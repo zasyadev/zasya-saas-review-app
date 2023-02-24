@@ -17,6 +17,7 @@ import httpService from "../../lib/httpService";
 import { GoalListHook, MeetingListHook, MemberListHook } from "../common/hooks";
 import NoRecordFound from "../common/NoRecordFound";
 import { statusBackground, statusPill } from "../Goals/constants";
+import HeaderSearchBox from "../layout/components/HeaderSearchBox";
 import UserProfileHeader from "../layout/components/UserProfileHeader";
 import SiderRight from "../SiderRight/SiderRight";
 import DashboardGoalsAvatar from "./component/DashboardGoalsAvatar";
@@ -40,7 +41,7 @@ function DashBoard({ user }) {
     leaderBoardData: [],
     leaderboardLoading: true,
   };
-  const { membersList } = MemberListHook(user);
+
   const { goalList, goalListLoading } = GoalListHook("All");
   const { meetingList, meetingListLoading } = MeetingListHook();
   const [dashBoardData, setDashboardData] = useState(defaultDashboardData);
@@ -125,22 +126,7 @@ function DashBoard({ user }) {
     <div className="grid grid-cols-7 gap-4">
       <div className="col-span-7 md:col-span-5  border-r border-gray-300 p-4 space-y-4">
         <div className="flex justify-between items-center">
-          <Select
-            size="large"
-            showSearch
-            filterOption={(input, option) =>
-              option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-            }
-            className="w-44 md:w-52 lg:w-72"
-            placeholder="Search"
-            suffixIcon={<SearchOutlined />}
-          >
-            {membersList.map((data, index) => (
-              <Select.Option key={index} value={data.user_id}>
-                {data?.user?.first_name}
-              </Select.Option>
-            ))}
-          </Select>
+          <HeaderSearchBox user={user} />
           <div className=" md:hidden w-full">
             <UserProfileHeader user={user} />
           </div>

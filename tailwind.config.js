@@ -14,6 +14,7 @@ module.exports = {
         brandGray: {
           50: "#F5F6FC",
           100: "#FCFCFC",
+          150: "#F4F4F4",
           200: "#9399A9",
         },
         brandSkin: {
