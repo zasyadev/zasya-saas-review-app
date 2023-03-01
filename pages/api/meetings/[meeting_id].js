@@ -40,6 +40,11 @@ async function handle(req, res, prisma, user) {
             assignee: {
               select: {
                 first_name: true,
+                GoalAssignee: {
+                  include: {
+                    goal: true,
+                  },
+                },
               },
             },
           },
@@ -47,10 +52,24 @@ async function handle(req, res, prisma, user) {
       },
     });
 
+    let goalData = [];
+    data.MeetingAssignee.filter(
+      (item) => item.assignee_id !== data.created_by
+    ).map((assignee) =>
+      assignee.assignee.GoalAssignee.filter((goalAssignee) => {
+        if (
+          goalAssignee.goal.created_by === data.created_by &&
+          goalAssignee.goal.is_archived === false
+        ) {
+          goalData.push(goalAssignee);
+        }
+      })
+    );
+
     if (data) {
       return res.status(200).json({
         status: 200,
-        data: data,
+        data: { ...data, goalData },
         message: "Meetings Details Retrieved",
       });
     }
@@ -74,6 +93,7 @@ async function handle(req, res, prisma, user) {
         },
         data: {
           comment: comment,
+          modified_date: new Date(),
         },
       });
       if (data) {

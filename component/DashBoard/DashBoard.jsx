@@ -3,9 +3,8 @@ import {
   ClockCircleOutlined,
   CrownOutlined,
   FileTextOutlined,
-  SearchOutlined,
 } from "@ant-design/icons";
-import { Select, Skeleton } from "antd";
+import { Skeleton } from "antd";
 import moment from "moment";
 import dynamic from "next/dynamic";
 import Link from "next/link";
@@ -14,7 +13,7 @@ import { ColorApplaudIcon } from "../../assets/icons";
 import { URLS } from "../../constants/urls";
 import { dateDayName, dateTime } from "../../helpers/dateHelper";
 import httpService from "../../lib/httpService";
-import { GoalListHook, MeetingListHook, MemberListHook } from "../common/hooks";
+import { GoalListHook, MeetingListHook } from "../common/hooks";
 import NoRecordFound from "../common/NoRecordFound";
 import { statusBackground, statusPill } from "../Goals/constants";
 import HeaderSearchBox from "../layout/components/HeaderSearchBox";
@@ -123,14 +122,14 @@ function DashBoard({ user }) {
   }, [meetingList]);
 
   return (
-    <div className="grid grid-cols-7 gap-4">
-      <div className="col-span-7 md:col-span-5  border-r border-gray-300 p-4 space-y-4">
-        <div className="flex justify-between items-center">
+    <div className="grid grid-cols-7 gap-4 md:gap-8 xl:gap:10 bg-brandGray-100">
+      <div className="col-span-7 md:col-span-5  border-r border-gray-300 p-4 md:p-6 xl:p-8 space-y-4 md:space-y-6 xl:space-y-8 bg-white">
+        {/* <div className="flex justify-between items-center">
           <HeaderSearchBox user={user} />
           <div className=" md:hidden w-full">
             <UserProfileHeader user={user} />
           </div>
-        </div>
+        </div> */}
         <div className="bg-brandSkin-100 p-4  rounded-md">
           <p className="font-bold  mb-0 uppercase">Hi {user.first_name}</p>
           <p className="mb-0 font-medium">
@@ -145,7 +144,7 @@ function DashBoard({ user }) {
             of goals.
           </p>
         </div>
-        <div className="bg-white  rounded-md">
+        <div className="bg-white  rounded-md shadow-brand">
           <div className="mb-4 grid md:grid-cols-3 border-b border-gray-300">
             <CountCard
               title={"Total Reviews"}
@@ -178,8 +177,8 @@ function DashBoard({ user }) {
             <BarChart user={user} />
           </div>
         </div>
-        <div className="grid md:grid-cols-2 gap-4">
-          <div className="w-full bg-white rounded-md overflow-hidden shadow-md h-full flex flex-col">
+        <div className="grid md:grid-cols-2 gap-4 md:gap-8 xl:gap:10">
+          <div className="w-full bg-white rounded-md overflow-hidden shadow-brand h-full flex flex-col">
             <h2 className="text-lg font-semibold  mb-0 flex items-center justify-between gap-3 border-b border-gray-300 px-5 py-3">
               <span className="flex-1"> Upcoming Goals</span>
               <Link href={URLS.GOAL} passHref>
@@ -230,7 +229,7 @@ function DashBoard({ user }) {
               )}
             </div>
           </div>
-          <div className="w-full bg-white rounded-md overflow-hidden shadow-md h-full flex flex-col">
+          <div className="w-full bg-white rounded-md overflow-hidden shadow-brand h-full flex flex-col">
             <h2 className="text-lg font-semibold  mb-0 flex items-center justify-between gap-3 border-b border-gray-300 px-5 py-3">
               <span className="flex-1"> Upcoming Follow Ups</span>
               <Link href={URLS.FOLLOW_UP} passHref>
@@ -257,14 +256,14 @@ function DashBoard({ user }) {
                             {item.meeting_title}
                           </p>
                           <div className="flex justify-between items-center">
-                            <span className="flex  items-center text-brandGray-200">
+                            <span className="flex  items-center text-brandGray-600">
                               <span className="leading-0 text-primary-green pr-1 text-base">
                                 <CalendarOutlined />
                               </span>
 
                               {dateDayName(item.meeting_at)}
                             </span>
-                            <span className="flex  items-center text-brandGray-200">
+                            <span className="flex  items-center text-brandGray-600">
                               <span className="leading-0 text-primary-green pr-1 text-base">
                                 <ClockCircleOutlined />
                               </span>
@@ -283,10 +282,10 @@ function DashBoard({ user }) {
           </div>
         </div>
       </div>
-      <div className="col-span-7 md:col-span-2 space-y-4 p-4  md:pl-0 ">
-        <div className="hidden md:block w-full">
+      <div className="col-span-7 md:col-span-2 space-y-4 p-4  md:pl-0 bg-brandGray-100">
+        {/* <div className="hidden md:block w-full">
           <UserProfileHeader user={user} />
-        </div>
+        </div> */}
 
         <SiderRight
           dashBoardData={dashBoardData}

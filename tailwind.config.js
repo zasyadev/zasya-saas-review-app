@@ -15,7 +15,7 @@ module.exports = {
           50: "#F5F6FC",
           100: "#FCFCFC",
           150: "#F4F4F4",
-          200: "#9399A9",
+          600: "#9399A9",
         },
         brandSkin: {
           100: "#FFE7C1",
@@ -23,14 +23,17 @@ module.exports = {
         brandOrange: {
           10: "rgb(254, 176, 25, 0.1)",
           100: "rgb(254, 176, 25)",
+          200: "#FFECDF",
         },
         brandBlue: {
           10: "rgb(0, 143, 251, 0.1)",
           100: "rgb(0, 143, 251)",
+          200: "#DEDEFF",
         },
         brandGreen: {
           10: "rgb(0, 227, 150, 0.1)",
           100: "rgb(0, 227, 150)",
+          200: "#E0F8E9",
         },
       },
       lineHeight: {
@@ -38,6 +41,9 @@ module.exports = {
       },
       fontSize: {
         17: "17px",
+      },
+      boxShadow: {
+        brand: "0px 20px 70px rgba(86, 89, 146, 0.1)",
       },
     },
   },

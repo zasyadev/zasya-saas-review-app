@@ -43,7 +43,11 @@ async function handle(req, res, prisma, user) {
             first_name: true,
           },
         },
-        Meetings: true,
+        MeetingType: {
+          select: {
+            meeting: true,
+          },
+        },
       },
     });
 

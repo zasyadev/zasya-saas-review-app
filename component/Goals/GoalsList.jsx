@@ -155,21 +155,31 @@ function GoalsList({ user, isArchived = false }) {
     return [];
   }, [goalsList, searchText, filterByMembersId]);
 
-  const sortListByEndDate = useMemo(() => {
-    if (Number(filteredGoalList?.length) > 0) {
-      const latestUpcomingGoalsList = filteredGoalList
-        .filter(
-          (item) => moment(item?.goal?.end_date).diff(moment(), "days") >= 0
-        )
-        .sort((a, b) =>
-          moment(a?.goal?.end_date).diff(moment(b?.goal?.end_date))
-        );
+  const goalListData = useMemo(() => {
+    let totalGoals = 0;
+    let completedGoals = 0;
+    let pendingGoals = 0;
 
-      if (latestUpcomingGoalsList.length < 3) return latestUpcomingGoalsList;
-
-      return latestUpcomingGoalsList.slice(0, 3);
-    } else return [];
-  }, [filteredGoalList]);
+    if (Number(goalsList?.length) > 0) {
+      totalGoals = goalsList.length;
+      completedGoals = goalsList.filter(
+        (item) => item.status === COMPLETED_STATUS
+      ).length;
+      pendingGoals = goalsList.filter(
+        (item) => item.status !== COMPLETED_STATUS
+      ).length;
+      return {
+        totalGoals,
+        completedGoals,
+        pendingGoals,
+      };
+    } else
+      return {
+        totalGoals,
+        completedGoals,
+        pendingGoals,
+      };
+  }, [goalsList]);
 
   const goalEditHandle = async ({ goal_id, id, value, type }) => {
     setLoading(true);
@@ -227,7 +237,7 @@ function GoalsList({ user, isArchived = false }) {
 
   return (
     <div className="container mx-auto max-w-full">
-      {!loading && !isArchived && Number(sortListByEndDate?.length) > 0 && (
+      {/* {!loading && !isArchived && Number(sortListByEndDate?.length) > 0 && (
         <div className="gap-4 mb-4 bg-white rounded-md">
           <GoalsCustomTable
             goalList={sortListByEndDate}
@@ -238,7 +248,51 @@ function GoalsList({ user, isArchived = false }) {
             ShowEditGoalModal={ShowEditGoalModal}
           />
         </div>
-      )}
+      )} */}
+
+      <div className="flex justify-between items-start mb-2 ">
+        <p className="text-xl font-semibold mb-0">Goals</p>
+        <PrimaryButton
+          withLink={true}
+          linkHref={URLS.GOAL_CREATE}
+          title={"Create"}
+        />
+      </div>
+      <div className="grid col-span-1 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-4 ">
+        <div className="bg-white rounded-md shadow-md flex space-x-4 p-4">
+          <div className="grid place-content-center w-14 h-14 bg-brandGreen-200 rounded-full">
+            <img src="/media/svg/contract-management.svg" />
+          </div>
+          <div>
+            <p className="text-lg font-medium ">Total Goals</p>
+            <p className="text-base font-medium text-gray-400">
+              {goalListData.totalGoals}
+            </p>
+          </div>
+        </div>
+        <div className="bg-white rounded-md shadow-md flex space-x-4 p-4">
+          <div className="grid place-content-center w-14 h-14 bg-brandOrange-200 rounded-full">
+            <img src="/media/svg/completed-goals.svg" />
+          </div>
+          <div>
+            <p className="text-lg font-medium ">Completed Goals</p>
+            <p className="text-base font-medium text-gray-400">
+              {goalListData.completedGoals}
+            </p>
+          </div>
+        </div>
+        <div className="bg-white rounded-md shadow-md flex space-x-4 p-4">
+          <div className="grid place-content-center w-14 h-14 bg-brandBlue-200 rounded-full">
+            <img src="/media/svg/contract-pending.svg" />
+          </div>
+          <div>
+            <p className="text-lg font-medium ">Pending Goals</p>
+            <p className="text-base font-medium text-gray-400">
+              {goalListData.pendingGoals}
+            </p>
+          </div>
+        </div>
+      </div>
       {!isArchived && (
         <div className="flex flex-col md:flex-row justify-between items-center  flex-wrap gap-4  mb-4 md:mb-6 ">
           <div className="flex justify-center md:justify-start items-center  flex-wrap gap-4 flex-1">
@@ -294,11 +348,6 @@ function GoalsList({ user, isArchived = false }) {
                 />
               </Tooltip>
             </div>
-            <PrimaryButton
-              withLink={true}
-              linkHref={URLS.GOAL_CREATE}
-              title={"Create"}
-            />
           </div>
         </div>
       )}
@@ -343,9 +392,9 @@ function GoalsList({ user, isArchived = false }) {
               userId={user.id}
               isArchived={isArchived}
               ShowAssigneeModal={ShowAssigneeModal}
-              showHeader
               isPagination
               ShowEditGoalModal={ShowEditGoalModal}
+              showHeader={false}
             />
           </div>
         )}

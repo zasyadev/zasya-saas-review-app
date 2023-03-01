@@ -32,7 +32,6 @@ export function PrimaryButton({
     }`,
     className
   );
-
   return withLink ? (
     <Link href={linkHref} passHref>
       <button className={btnClassName} {...restProp} disabled={isDisabled}>

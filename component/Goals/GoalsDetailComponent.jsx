@@ -56,7 +56,7 @@ function GoalsDetailComponent({ user, isArchived = false }) {
       render: (_, record) => (
         <Link href={`/followups/${record.id}`} passHref>
           <p className="cursor-pointer text-gray-500 mb-0">
-            {record.meeting_title}
+            {record.meeting.meeting_title}
           </p>
         </Link>
       ),
@@ -66,7 +66,7 @@ function GoalsDetailComponent({ user, isArchived = false }) {
       title: "Date / Time",
       key: "meeting_at",
       render: (_, record) =>
-        moment(record.meeting_at).format(DEFAULT_DATETIME_FORMAT),
+        moment(record.meeting.meeting_at).format(DEFAULT_DATETIME_FORMAT),
     },
   ];
 
@@ -230,16 +230,16 @@ function GoalsDetailComponent({ user, isArchived = false }) {
           )}
       </div>
 
-      {Number(goalData?.Meetings?.length) > 0 && (
+      {Number(goalData?.MeetingType?.length) > 0 && (
         <div className="bg-white rounded-md  shadow-md relative p-4 lg:p-6 mt-4 md:mt-6">
           <p className=" text-primary font-bold text-lg md:text-xl mb-2">
             Follow Up Meetings
           </p>
           <CustomTable
-            dataSource={goalData.Meetings}
+            dataSource={goalData.MeetingType}
             columns={columns}
             className="custom-table"
-            isPagination={goalData?.Meetings?.length > 10}
+            isPagination={goalData?.MeetingType?.length > 10}
           />
         </div>
       )}

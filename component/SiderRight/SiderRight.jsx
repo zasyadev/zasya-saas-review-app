@@ -92,7 +92,7 @@ function SiderRight({ dashBoardData, monthlyLeaderBoardData, userId }) {
             </div>
           </div> */}
         </div>
-        <div className="flex flex-wrap items-center justify-between px-4">
+        {/* <div className="flex flex-wrap items-center justify-between px-4">
           <div className="flex-shrink-0 grid place-content-center">
             <ClockCircleOutlined className="text-3xl md:text-2xl xl:text-4xl" />
           </div>
@@ -102,7 +102,7 @@ function SiderRight({ dashBoardData, monthlyLeaderBoardData, userId }) {
                 {tempTime.days()}
               </p>
               <p className="text-gray-500 text-sm md:text-xs xl:text-base mb-0">
-                Day(s)
+                Day
               </p>
             </div>
 
@@ -111,7 +111,7 @@ function SiderRight({ dashBoardData, monthlyLeaderBoardData, userId }) {
                 {tempTime.hours()}
               </p>
               <p className="text-gray-500 text-sm md:text-xs xl:text-base mb-0">
-                Hour(s)
+                Hour
               </p>
             </div>
             <div className="text-center">
@@ -119,11 +119,11 @@ function SiderRight({ dashBoardData, monthlyLeaderBoardData, userId }) {
                 {tempTime.minutes()}
               </p>
               <p className="text-gray-500 text-sm md:text-xs xl:text-base mb-0">
-                Min(s).
+                Min
               </p>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
       <div className="space-y-2">
         <div className="border-b border-gray-300 pb-2 text-lg font-semibold">
