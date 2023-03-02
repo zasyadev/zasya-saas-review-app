@@ -40,7 +40,12 @@ async function handle(req, res, prisma, user) {
   }
   const answerData = await prisma.reviewAssigneeAnswers.findMany({
     where: {
-      review_id: review_id,
+      AND: {
+        review_id: review_id,
+        review_assignee: {
+          status: "answered",
+        },
+      },
     },
     orderBy: { id: "desc" },
     include: {
