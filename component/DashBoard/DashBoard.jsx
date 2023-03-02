@@ -16,8 +16,6 @@ import httpService from "../../lib/httpService";
 import { GoalListHook, MeetingListHook } from "../common/hooks";
 import NoRecordFound from "../common/NoRecordFound";
 import { statusBackground, statusPill } from "../Goals/constants";
-import HeaderSearchBox from "../layout/components/HeaderSearchBox";
-import UserProfileHeader from "../layout/components/UserProfileHeader";
 import SiderRight from "../SiderRight/SiderRight";
 import DashboardGoalsAvatar from "./component/DashboardGoalsAvatar";
 import { CountCard, DateBox } from "./component/helperComponent";

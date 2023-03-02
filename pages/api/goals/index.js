@@ -32,22 +32,29 @@ async function handle(req, res, prisma, user) {
     ];
 
     if (req?.query?.status !== "All") {
-      filteredStatement1.push({
-        status: req.query.status,
-      });
-      filteredStatement2.push({
-        status: req.query.status,
-      });
-    }
-
-    if (req?.query?.isArchived) {
-      let filter = {
-        goal: {
-          is_archived: true,
-        },
-      };
-      filteredStatement1.push(filter);
-      filteredStatement2.push(filter);
+      if (req?.query?.status === "Archived") {
+        let filter = {
+          goal: {
+            is_archived: true,
+          },
+        };
+        filteredStatement1.push(filter);
+        filteredStatement2.push(filter);
+      } else {
+        let filter = {
+          goal: {
+            is_archived: false,
+          },
+        };
+        filteredStatement1.push(filter);
+        filteredStatement2.push(filter);
+        filteredStatement1.push({
+          status: req.query.status,
+        });
+        filteredStatement2.push({
+          status: req.query.status,
+        });
+      }
     } else {
       let filter = {
         goal: {
@@ -60,7 +67,7 @@ async function handle(req, res, prisma, user) {
 
     const data = await prisma.goalAssignee.findMany({
       orderBy: {
-        modified_date: "desc",
+        modified_date: "asc",
       },
       where: {
         OR: [{ AND: filteredStatement1 }, { AND: filteredStatement2 }],

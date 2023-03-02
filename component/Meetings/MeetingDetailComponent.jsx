@@ -2,7 +2,7 @@ import { CalendarOutlined } from "@ant-design/icons";
 import { Skeleton } from "antd";
 import moment from "moment";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { MONTH_DATE_FORMAT } from "../../helpers/dateHelper";
 import { getFirstLetter } from "../../helpers/truncateString";
 import httpService from "../../lib/httpService";
@@ -40,13 +40,11 @@ function MeetingDetailComponent({ user }) {
       .then(({ data: response }) => {
         if (response.status === 200) {
           setMeetingData(response.data);
-          if (response.data) {
-            setUserData(
-              response.data.MeetingAssignee.find(
-                (item) => item.assignee_id === user.id
-              )
-            );
-          }
+          setUserData(
+            response.data.MeetingAssignee.find(
+              (item) => item.assignee_id === user.id
+            )
+          );
         }
         setLoading(false);
       })
@@ -58,6 +56,24 @@ function MeetingDetailComponent({ user }) {
         setLoading(false);
       });
   }
+
+  const meetingTimeLinedata = useMemo(() => {
+    if (meetingData && meetingData.MeetingAssignee) {
+      let pastMeetingData = [];
+      if (
+        meetingData?.relatedMeetings &&
+        Number(meetingData.relatedMeetings.length) > 0
+      ) {
+        meetingData.relatedMeetings.map((item) => {
+          item.MeetingAssignee.map((i) => {
+            pastMeetingData.push(i);
+          });
+        });
+      } else pastMeetingData = [];
+
+      return [...meetingData.MeetingAssignee, ...pastMeetingData];
+    } else return [];
+  }, [meetingData]);
 
   const hideMeetingModal = () => {
     setMeetingModalData(initialMeetingModalData);
@@ -121,43 +137,47 @@ function MeetingDetailComponent({ user }) {
               )}
             </div>
           </div>
-          <div className="bg-brandGray-100 p-2 md:p-4 lg-p-6 space-y-3">
-            {Number(meetingData?.MeetingAssignee?.length) > 0 &&
-              meetingData?.MeetingAssignee.map((assignee, idx) => (
-                <div className="space-x-3 flex " key={idx + "assinee"}>
-                  <div
-                    className={`${
-                      idx === 0
-                        ? "bg-cyan-500 "
-                        : idx === 1
-                        ? "bg-orange-600"
-                        : "bg-green-600"
-                    }  
+          <div className="bg-brandGray-100 p-2 md:p-4 lg-p-6 space-y-3 max-h-96 overflow-auto custom-scrollbar">
+            {Number(meetingTimeLinedata?.length) > 0 &&
+              meetingTimeLinedata.map((assignee, idx) =>
+                assignee.comment !== "" ? (
+                  <div className="space-x-3 flex " key={idx + "assinee"}>
+                    <div
+                      className={`${
+                        idx === 0
+                          ? "bg-cyan-500 "
+                          : idx === 1
+                          ? "bg-orange-600"
+                          : "bg-green-600"
+                      }  
    text-white flex justify-center items-center capitalize rounded-full shrink-0 w-10 h-10`}
-                  >
-                    {getFirstLetter(assignee.assignee.first_name)}
+                    >
+                      {getFirstLetter(assignee.assignee.first_name)}
+                    </div>
+                    <div className="space-y-2">
+                      <p className="font-semibold text-base mb-0 ">
+                        {assignee.assignee.first_name}
+                        <span className="text-xs text-gray-400 ml-3">
+                          {moment(assignee.modified_date).format(
+                            MONTH_DATE_FORMAT
+                          )}
+                        </span>
+                      </p>
+                      <p className="font-medium text-sm mb-0 ">
+                        {assignee.comment}
+                      </p>
+                    </div>
                   </div>
-                  <div className="space-y-2">
-                    <p className="font-semibold text-base mb-0 ">
-                      {assignee.assignee.first_name}
-                      <span className="text-xs text-gray-400 ml-3">
-                        {moment(assignee.modified_date).fromNow()}
-                      </span>
-                    </p>
-                    <p className="font-medium text-sm mb-0 ">
-                      {assignee.comment}
-                    </p>
-                  </div>
-                </div>
-              ))}
+                ) : null
+              )}
           </div>
         </div>
-        <div className="space-y-3  rounded-md shadow-md border-2 border-brandGrey-100 divide-y">
+        <div className="rounded-md shadow-brand border-2 border-brandGrey-100 divide-y h-fit">
           <p className="p-4  font-bold text-lg md:text-xl">Related Goals</p>
 
-          <div className="space-y-2 p-4">
+          <div className="divide-y max-h-96 overflow-auto custom-scrollbar">
             {loading ? (
-              <div className="space-y-2 p-4">
+              <div className="space-y-2 ">
                 <Skeleton />
                 <Skeleton />
               </div>
@@ -165,7 +185,7 @@ function MeetingDetailComponent({ user }) {
               meetingData.goalData.map((item, idx) => {
                 return (
                   <div
-                    className="flex items-center space-x-4"
+                    className="flex items-center space-x-4  px-4 py-3"
                     key={idx + item.id}
                   >
                     <div className="shrink-0">
@@ -180,7 +200,7 @@ function MeetingDetailComponent({ user }) {
                       </p>
                       <p className="flex justify-between items-center">
                         <span
-                          className={`text-xs font-semibold px-2 py-1 uppercase rounded-md ${statusPill(
+                          className={`text-xs font-medium px-2 py-1 uppercase rounded-md ${statusPill(
                             item.status
                           )}`}
                         >

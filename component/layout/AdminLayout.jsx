@@ -61,10 +61,7 @@ function AdminLayout({
       ]
     ),
 
-    getItem("Goals", "goals", <CrownOutlined className="sidebar-icon " />, [
-      getItem("Goals", URLS.GOAL),
-      getItem("Archived", URLS.GOAL_ARCHIVED),
-    ]),
+    getItem("Goals", URLS.GOAL, <CrownOutlined className="sidebar-icon " />),
     getItem(
       "Follow Ups",
       URLS.FOLLOW_UP,

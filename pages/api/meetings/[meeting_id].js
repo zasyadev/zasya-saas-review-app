@@ -53,6 +53,7 @@ async function handle(req, res, prisma, user) {
     });
 
     let goalData = [];
+    let relatedMeetings = [];
     data.MeetingAssignee.filter(
       (item) => item.assignee_id !== data.created_by
     ).map((assignee) =>
@@ -65,11 +66,37 @@ async function handle(req, res, prisma, user) {
         }
       })
     );
+    if (data.generated_by && data.generated_by === "System") {
+      relatedMeetings = await prisma.meetings.findMany({
+        orderBy: {
+          meeting_at: "desc",
+        },
+        where: {
+          meeting_title: data.meeting_title,
+          generated_by: "System",
+          organization_id: data.organization_id,
+          NOT: {
+            id: data.id,
+          },
+        },
+        include: {
+          MeetingAssignee: {
+            include: {
+              assignee: {
+                select: {
+                  first_name: true,
+                },
+              },
+            },
+          },
+        },
+      });
+    }
 
     if (data) {
       return res.status(200).json({
         status: 200,
-        data: { ...data, goalData },
+        data: { ...data, goalData, relatedMeetings },
         message: "Meetings Details Retrieved",
       });
     }

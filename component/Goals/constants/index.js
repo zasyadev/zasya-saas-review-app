@@ -35,7 +35,7 @@ export const goalsFilterList = [
   { value: "Delayed", label: "Delayed" },
   { value: "Abandoned", label: "Abandoned" },
   // { value: "AtRisk", label: "At Risk" },
-  // { value: "Archived", label: "Archived" },
+  { value: "Archived", label: "Archived" },
 ];
 
 export const statusPill = (key) => {
@@ -57,9 +57,9 @@ export const statusPill = (key) => {
 export const statusBackground = (key) => {
   switch (key) {
     case "Completed":
-      return " bg-green-500";
+      return " bg-brandGreen-300";
     case "OnTrack":
-      return "bg-blue-500";
+      return "bg-brandBlue-300";
     case "Delayed":
       return "bg-orange-500";
     case "AtRisk":
