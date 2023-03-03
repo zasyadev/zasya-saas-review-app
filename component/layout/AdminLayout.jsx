@@ -5,8 +5,7 @@ import {
   LikeOutlined,
   SettingOutlined,
   UsergroupAddOutlined,
-  MenuUnfoldOutlined,
-  MenuFoldOutlined,
+  FileUnknownOutlined,
 } from "@ant-design/icons";
 import { Grid, Layout } from "antd";
 import React, { useEffect, useMemo, useState } from "react";
@@ -52,13 +51,8 @@ function AdminLayout({
 
     getItem(
       "Reviews",
-      "review",
-      <FileTextOutlined className="sidebar-icon " />,
-      [
-        getItem("Received", URLS.REVIEW_RECEIVED),
-        getItem("Created", URLS.REVIEW_CREATED),
-        getItem("Surveys", URLS.SURVEY),
-      ]
+      URLS.REVIEW_CREATED,
+      <FileTextOutlined className="sidebar-icon " />
     ),
 
     getItem("Goals", URLS.GOAL, <CrownOutlined className="sidebar-icon " />),
@@ -71,6 +65,11 @@ function AdminLayout({
       "Applaud",
       URLS.APPLAUD,
       <LikeOutlined className="sidebar-icon " />
+    ),
+    getItem(
+      "Surveys",
+      URLS.SURVEY,
+      <FileUnknownOutlined className="sidebar-icon " />
     ),
     getItem(
       "Settings",
@@ -123,20 +122,6 @@ function AdminLayout({
               collapsed={collapsed}
               lg={lg}
             />
-
-            {!isHeader && !lg ? (
-              <div
-                onClick={() => setCollapsed(!collapsed)}
-                className="w-10 h-10 py-2 px-3 bg-transparent grid place-content-center rounded-md cursor-pointer absolute right-0 top-4"
-              >
-                {collapsed ? (
-                  <MenuUnfoldOutlined className="text-lg" />
-                ) : (
-                  <MenuFoldOutlined className="text-lg" />
-                )}
-              </div>
-            ) : null}
-
             <div className={` ${isHeader && "p-4 md:p-6"}`}>{children}</div>
           </Content>
           <Footer className="text-center bg-primary-gray p-3 font-medium border-t ">

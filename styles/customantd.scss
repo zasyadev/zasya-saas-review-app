@@ -76,12 +76,13 @@ $primary: #0f123f;
   outline: 0;
 }
 .ant-modal-header {
-  background: $primary;
   width: 100% !important;
   border-radius: 5px 5px 0px 0px;
   height: 68px;
   display: flex;
   align-items: center;
+
+  @apply bg-primary-green;
 }
 .ant-modal-content {
   border-radius: 5px;

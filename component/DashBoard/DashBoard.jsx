@@ -194,7 +194,10 @@ function DashBoard({ user }) {
                 sortGoalListByEndDate.map((item, idx) => {
                   if (idx <= 2) {
                     return (
-                      <div className="flex items-center space-x-4 px-5 py-3">
+                      <div
+                        className="flex items-center space-x-4 px-5 py-3"
+                        key={item.id + idx}
+                      >
                         <div className="shrink-0">
                           <DateBox
                             date={item.goal.end_date}
@@ -245,7 +248,10 @@ function DashBoard({ user }) {
                 sortMeetingListByDate.map((item, idx) => {
                   if (idx <= 2) {
                     return (
-                      <div className="flex items-center space-x-4 px-5 py-3">
+                      <div
+                        className="flex items-center space-x-4 px-5 py-3"
+                        key={item.id + idx}
+                      >
                         <div className="shrink-0">
                           <DateBox date={item.meeting_at} />
                         </div>

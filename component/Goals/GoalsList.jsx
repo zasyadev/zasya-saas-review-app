@@ -94,22 +94,6 @@ function GoalsList({ user }) {
         console.error(err?.response?.data?.message);
       });
   }
-  // async function fetchArchivedGoalList() {
-  //   setLoading(true);
-  //   setGoalsList([]);
-
-  //   await httpService
-  //     .get(`/api/goals?isArchived=true`)
-  //     .then(({ data: response }) => {
-  //       if (response.status === 200) {
-  //         setGoalsList(response.data);
-  //       }
-  //       setLoading(false);
-  //     })
-  //     .catch((err) => {
-  //       console.error(err?.response?.data?.message);
-  //     });
-  // }
 
   async function fetchUserData() {
     setUserList([]);
@@ -251,19 +235,6 @@ function GoalsList({ user }) {
 
   return (
     <div className="container mx-auto max-w-full">
-      {/* {!loading && !isArchived && Number(sortListByEndDate?.length) > 0 && (
-        <div className="gap-4 mb-4 bg-white rounded-md">
-          <GoalsCustomTable
-            goalList={sortListByEndDate}
-            goalEditHandle={goalEditHandle}
-            userId={user.id}
-            isArchived={isArchived}
-            ShowAssigneeModal={ShowAssigneeModal}
-            ShowEditGoalModal={ShowEditGoalModal}
-          />
-        </div>
-      )} */}
-
       <div className="flex justify-between items-start mb-2 ">
         <p className="text-xl font-semibold mb-0">Goals</p>
         <PrimaryButton
@@ -275,7 +246,7 @@ function GoalsList({ user }) {
       <div className="grid col-span-1 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-4 ">
         <div className="bg-white rounded-md shadow-md flex space-x-4 p-4">
           <div className="grid place-content-center w-14 h-14 bg-brandGreen-200 rounded-full">
-            <img src="/media/svg/contract-management.svg" />
+            <img src="/media/svg/contract-management.svg" alt={"totalGoals"} />
           </div>
           <div>
             <p className="text-lg font-medium ">Total Goals</p>
@@ -286,7 +257,7 @@ function GoalsList({ user }) {
         </div>
         <div className="bg-white rounded-md shadow-md flex space-x-4 p-4">
           <div className="grid place-content-center w-14 h-14 bg-brandOrange-200 rounded-full">
-            <img src="/media/svg/completed-goals.svg" />
+            <img src="/media/svg/completed-goals.svg" alt={"completedGoals"} />
           </div>
           <div>
             <p className="text-lg font-medium ">Completed Goals</p>
@@ -297,7 +268,7 @@ function GoalsList({ user }) {
         </div>
         <div className="bg-white rounded-md shadow-md flex space-x-4 p-4">
           <div className="grid place-content-center w-14 h-14 bg-brandBlue-200 rounded-full">
-            <img src="/media/svg/contract-pending.svg" />
+            <img src="/media/svg/contract-pending.svg" alt={"pendingGoals"} />
           </div>
           <div>
             <p className="text-lg font-medium ">Pending Goals</p>

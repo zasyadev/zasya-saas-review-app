@@ -26,7 +26,7 @@ function GoalsCustomTable({
       key: "goal_title",
       render: (_, record) => (
         <Link href={`${URLS.GOAL}/${record.goal.id}/detail`} passHref>
-          <p className="cursor-pointer text-gray-500 mb-0 underline px-3">
+          <p className="cursor-pointer text-gray-500 mb-0 hover:underline px-3">
             {record.goal.goal_title}
           </p>
         </Link>

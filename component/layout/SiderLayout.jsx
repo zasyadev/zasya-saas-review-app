@@ -78,7 +78,7 @@ function SiderLayout({ collapsed, setCollapsed, items, lg, user }) {
       <div className="flex flex-col justify-between min-h-screen px-2 border-r border-gray-300">
         <div className="items-stretch min-h-full flex-nowrap px-0 relative space-y-2">
           <Link href="/dashboard" passHref>
-            <div className="h-28 2xl:h-32 grid place-content-center text-center w-full cursor-pointer px-3">
+            <div className="h-24 2xl:h-28 grid place-content-center text-center w-full cursor-pointer px-3">
               <Image
                 src={"/media/images/logos/review_app.png"}
                 width={100}

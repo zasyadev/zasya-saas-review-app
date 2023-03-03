@@ -23,6 +23,8 @@ export const ReviewStepsArray = [
 
 export const REVIEW_RECEIVED_KEY = "Received";
 export const REVIEW_CREATED_KEY = "Created";
+export const REVIEW_All_STATUS_KEY = "All";
+export const REVIEW_PENDING_KEY = "Pending";
 
 export const ReviewToggleList = [
   {

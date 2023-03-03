@@ -4,6 +4,7 @@ import moment from "moment";
 import { useRouter } from "next/router";
 import React, { useEffect, useMemo, useState } from "react";
 import { MONTH_DATE_FORMAT } from "../../helpers/dateHelper";
+import randomBgColor from "../../helpers/randomBgColor";
 import { getFirstLetter } from "../../helpers/truncateString";
 import httpService from "../../lib/httpService";
 import CustomAvatar from "../common/CustomAvatar";
@@ -143,14 +144,11 @@ function MeetingDetailComponent({ user }) {
                 assignee.comment !== "" ? (
                   <div className="space-x-3 flex " key={idx + "assinee"}>
                     <div
-                      className={`${
-                        idx === 0
-                          ? "bg-cyan-500 "
-                          : idx === 1
-                          ? "bg-orange-600"
-                          : "bg-green-600"
-                      }  
+                      className={`
    text-white flex justify-center items-center capitalize rounded-full shrink-0 w-10 h-10`}
+                      style={{
+                        backgroundColor: randomBgColor(idx),
+                      }}
                     >
                       {getFirstLetter(assignee.assignee.first_name)}
                     </div>
