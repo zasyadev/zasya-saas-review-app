@@ -164,7 +164,6 @@ $primary: #0f123f;
 .custom-table {
   .ant-table-thead {
     .ant-table-cell {
-      color: $primary;
       background-color: #fff;
       font-style: none;
       font-size: 16px;
@@ -194,12 +193,7 @@ $primary: #0f123f;
     font-weight: 600 !important;
   }
   .ant-table-thead {
-    .ant-table-column-sorter {
-      color: $primary;
-    }
-
     .ant-table-cell {
-      color: $primary;
       font-style: none;
       font-size: 15px;
       font-weight: 500;
@@ -209,7 +203,6 @@ $primary: #0f123f;
     }
   }
   .ant-table-cell-fix-left {
-    color: $primary;
     font-size: 15px;
     font-weight: 500;
   }
@@ -325,8 +318,8 @@ $primary: #0f123f;
 
 .ant-collapse-item-active {
   .ant-collapse-header {
-    background-color: $primary !important;
-    color: #fff !important;
+    @apply bg-brandGray-150;
+    color: #000 !important;
   }
 }
 .review-font-color {

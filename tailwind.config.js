@@ -39,6 +39,7 @@ module.exports = {
           100: "rgb(0, 227, 150)",
           200: "#E0F8E9",
           300: "#4CAF50",
+          400: "#C3FFBD",
         },
       },
       lineHeight: {

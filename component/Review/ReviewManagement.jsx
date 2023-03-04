@@ -432,8 +432,8 @@ function ReviewManagement({ user }) {
         </div>
 
         <div className="grid col-span-1 sm:grid-cols-2 md:grid-cols-4 bg-white rounded-t-md">
-          {statusFilter.map((item) => (
-            <ReviewStatusTabCard data={item} />
+          {statusFilter.map((item, idx) => (
+            <ReviewStatusTabCard data={item} key={idx + "tab-card"} />
           ))}
         </div>
 

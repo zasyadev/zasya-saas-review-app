@@ -5,6 +5,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { URLS } from "../../constants/urls";
 import { useLocalStorage } from "../../helpers/useStorage";
 import httpService from "../../lib/httpService";
+import CountHeaderCard from "../common/CountHeaderCard";
 import {
   ButtonGray,
   PrimaryButton,
@@ -244,39 +245,24 @@ function GoalsList({ user }) {
         />
       </div>
       <div className="grid col-span-1 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-4 ">
-        <div className="bg-white rounded-md shadow-md flex space-x-4 p-4">
-          <div className="grid place-content-center w-14 h-14 bg-brandGreen-200 rounded-full">
-            <img src="/media/svg/contract-management.svg" alt={"totalGoals"} />
-          </div>
-          <div>
-            <p className="text-lg font-medium ">Total Goals</p>
-            <p className="text-base font-medium text-gray-400">
-              {goalListData.totalGoals}
-            </p>
-          </div>
-        </div>
-        <div className="bg-white rounded-md shadow-md flex space-x-4 p-4">
-          <div className="grid place-content-center w-14 h-14 bg-brandOrange-200 rounded-full">
-            <img src="/media/svg/completed-goals.svg" alt={"completedGoals"} />
-          </div>
-          <div>
-            <p className="text-lg font-medium ">Completed Goals</p>
-            <p className="text-base font-medium text-gray-400">
-              {goalListData.completedGoals}
-            </p>
-          </div>
-        </div>
-        <div className="bg-white rounded-md shadow-md flex space-x-4 p-4">
-          <div className="grid place-content-center w-14 h-14 bg-brandBlue-200 rounded-full">
-            <img src="/media/svg/contract-pending.svg" alt={"pendingGoals"} />
-          </div>
-          <div>
-            <p className="text-lg font-medium ">Pending Goals</p>
-            <p className="text-base font-medium text-gray-400">
-              {goalListData.pendingGoals}
-            </p>
-          </div>
-        </div>
+        <CountHeaderCard
+          imgSrc="/media/svg/contract-management.svg"
+          imgSrcClassNames="bg-brandGreen-200"
+          title="Total Goals"
+          subTitle={goalListData.totalGoals}
+        />
+        <CountHeaderCard
+          imgSrc="/media/svg/completed-goals.svg"
+          imgSrcClassNames="bg-brandOrange-200"
+          title="Completed Goals"
+          subTitle={goalListData.completedGoals}
+        />
+        <CountHeaderCard
+          imgSrc="/media/svg/contract-pending.svg"
+          imgSrcClassNames="bg-brandBlue-200"
+          title="Pending Goals"
+          subTitle={goalListData.pendingGoals}
+        />
       </div>
 
       <div className="flex flex-col md:flex-row justify-between items-center  flex-wrap gap-4  mb-4 md:mb-6 ">
