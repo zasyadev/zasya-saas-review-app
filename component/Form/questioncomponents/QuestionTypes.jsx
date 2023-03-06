@@ -202,9 +202,7 @@ export function QuestionTypeCard({
       </div>
 
       <div className="flex-1">
-        <p className="mb-0 text-sm 2xl:text-base font-semibold text-primary">
-          {title}
-        </p>
+        <p className="mb-0 text-sm 2xl:text-base font-semibold ">{title}</p>
       </div>
     </div>
   );

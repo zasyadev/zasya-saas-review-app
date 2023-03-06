@@ -64,7 +64,7 @@ function CustomAvatar({ userList, avatarCount, className }) {
           placement="right"
         >
           <div
-            className={`bg-orange-200 -ml-2  border-2 z-40 text-primary flex justify-center items-center capitalize hover:cursor-pointer hover:z-50 transition-all duration-200 ease-in-out rounded-full ${className} `}
+            className={`bg-orange-200 -ml-2  border-2 z-40  flex justify-center items-center capitalize hover:cursor-pointer hover:z-50 transition-all duration-200 ease-in-out rounded-full ${className} `}
           >
             +{userList.length - avatarCount}
           </div>

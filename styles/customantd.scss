@@ -2,6 +2,7 @@
 
 $bg-color: linear-gradient(90deg, #ff6968 0%, #ffa3a3 100%);
 $primary: #0f123f;
+$primary-green: #64a15e;
 
 .dashboard-sider {
   .ant-menu-submenu {
@@ -107,8 +108,7 @@ $primary: #0f123f;
   }
   .ant-input:focus,
   .ant-input:hover {
-    border-color: $primary !important;
-    box-shadow: 0 0 0 1.5px rgba(0, 5, 204, 0.35) !important;
+    @apply border-primary-green;
   }
   .ant-form-item-control-input {
     .ant-select-focused {
@@ -116,15 +116,13 @@ $primary: #0f123f;
         margin: 5px 0px;
       }
       .ant-select-selector {
-        border-color: $primary !important;
-        box-shadow: 0 0 0 1.5px rgba(0, 5, 204, 0.35) !important;
+        @apply border-primary-green;
       }
     }
   }
   .ant-select-selector:focus,
   .ant-select-selector:hover {
-    border-color: $primary !important;
-    box-shadow: 0 0 0 1.5px rgba(0, 5, 204, 0.35) !important;
+    @apply border-primary-green;
   }
 
   .ant-modal-close {
@@ -412,14 +410,13 @@ $primary: #0f123f;
 
   .ant-input:focus,
   .ant-input:hover {
-    border-color: $primary;
+    @apply border-primary-green;
   }
 }
 .ant-popover {
   .ant-btn-primary {
-    background-color: $primary;
     color: #fff;
-    border-color: $primary;
+    @apply border-primary-green bg-primary-green;
   }
 }
 
@@ -475,8 +472,7 @@ $primary: #0f123f;
 .ant-form-item-control-input {
   .ant-input:hover,
   .ant-input:focus {
-    border-color: $primary;
-    box-shadow: 0 0 0 0px rgba(0, 5, 204, 0.35) !important;
+    @apply border-primary-green;
   }
 }
 
@@ -673,9 +669,9 @@ $primary: #0f123f;
   color: #fff;
 }
 .ant-radio-button-wrapper-checked {
-  background-color: $primary !important;
+  background-color: $primary-green !important;
   color: #fff !important;
-  border-color: $primary !important;
+  border-color: $primary-green !important;
 }
 
 .answer-preview {
@@ -855,7 +851,7 @@ $primary: #0f123f;
 .ant-steps-item-finish
   > .ant-steps-item-container
   > .ant-steps-item-tail::after {
-  background-color: $primary;
+  @apply bg-primary-green;
 }
 .ant-steps-item-finish
   .ant-steps-item-icon
@@ -865,12 +861,11 @@ $primary: #0f123f;
   .ant-steps-item-icon
   > .ant-steps-icon
   .ant-steps-icon-dot {
-  background-color: $primary;
+  @apply bg-primary-green;
 }
 .ant-input:focus,
 .ant-input:hover {
-  border-color: $primary !important;
-  box-shadow: 0 0 0 1.5px rgba(0, 5, 204, 0.35) !important;
+  @apply border-primary-green;
 }
 
 .custom-steps-wrapper {
@@ -881,7 +876,7 @@ $primary: #0f123f;
         color: $primary !important;
       }
       .ant-steps-item-icon {
-        background-color: $primary !important;
+        @apply bg-primary-green;
       }
     }
   }
@@ -893,21 +888,21 @@ $primary: #0f123f;
   }
 
   .ant-steps-item-finish .ant-steps-item-icon > .ant-steps-icon {
-    color: $primary !important;
+    @apply text-primary-green;
   }
 
   .ant-steps-item.ant-steps-item-active::before,
   .ant-steps-item::before {
-    background-color: $primary !important;
+    @apply bg-primary-green;
   }
 
   .ant-steps-item-icon {
-    border-color: $primary !important;
     line-height: 27px !important;
+    @apply border-primary-green;
   }
   .ant-steps-item-finish .ant-steps-item-icon {
-    border-color: $primary !important;
     line-height: 24px !important;
+    @apply border-primary-green;
   }
 }
 
@@ -931,7 +926,7 @@ $primary: #0f123f;
   }
   .ant-select-selector:focus,
   .ant-select-selector:hover {
-    border-color: $primary !important;
+    @apply border-primary-green;
   }
 }
 
@@ -939,8 +934,7 @@ $primary: #0f123f;
     .ant-select-disabled
   ).ant-select:not(.ant-select-customize-input)
   .ant-select-selector {
-  border-color: $primary !important;
-  box-shadow: 0 0 0 0px rgba(0, 5, 204, 0.35) !important ;
+  @apply border-primary-green;
 }
 .slider-radio {
   .ant-radio-wrapper-checked {
@@ -961,14 +955,13 @@ $primary: #0f123f;
 }
 
 .ant-select:not(.ant-select-disabled):hover .ant-select-selector {
-  border-color: $primary;
+  @apply border-primary-green;
 }
 .ant-select-focused:not(.ant-select-disabled).ant-select:not(
     .ant-select-customize-input
   )
   .ant-select-selector {
-  border-color: $primary;
-  box-shadow: 0 0 0 2px rgb(0, 5, 204, 0.35);
+  @apply border-primary-green;
 }
 
 .ant-picker-panel {

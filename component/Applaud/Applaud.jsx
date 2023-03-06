@@ -52,7 +52,7 @@ const ApplaudCard = ({ applaud, type }) => {
         </div>
 
         <div className="flex justify-between items-center border-gray-200  px-2 ">
-          <p className="text-base text-primary mb-0 ">
+          <p className="text-base  mb-0 ">
             {type === "received" ? "From " : "Sent To "}
 
             <span className="font-semibold">

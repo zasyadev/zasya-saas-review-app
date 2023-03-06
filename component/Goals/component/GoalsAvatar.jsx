@@ -98,7 +98,7 @@ function GoalsAvatar({
           }
           placement="bottomRight"
         >
-          <div className="bg-orange-200 -ml-2  border-2 z-40 text-primary flex justify-center items-center capitalize hover:cursor-pointer hover:z-50 transition-all duration-200 ease-in-out rounded-full w-10 h-10">
+          <div className="bg-orange-200 -ml-2  border-2 z-40  flex justify-center items-center capitalize hover:cursor-pointer hover:z-50 transition-all duration-200 ease-in-out rounded-full w-10 h-10">
             +{activeGoalUsers.length - avatarCount}
           </div>
         </Dropdown>

@@ -55,7 +55,7 @@ export default function ReviewPopUpModal({ userId }) {
       >
         <div className="relative">
           <CloseOutlined
-            className="text-primary absolute top-0 right-0 text-lg z-40"
+            className=" absolute top-0 right-0 text-lg z-40"
             onClick={() => handleReviewModalClose()}
           />
           <div className="w-56 h-56 md:w-72 md:h-72 mx-auto relative">
