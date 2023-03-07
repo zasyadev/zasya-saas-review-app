@@ -415,15 +415,6 @@ function ReviewManagement({ user }) {
       <div className="grid grid-cols-1">
         <div className="flex flex-row items-center justify-between flex-wrap gap-4  mb-2 xl:mb-4 ">
           <p className="text-xl font-semibold mb-0">Review</p>
-          {/* <ToggleButton
-            arrayList={ReviewToggleList}
-            handleToggle={(activeKey) => {
-              if (activeKey !== REVIEW_CREATED_KEY)
-                router.push("/review/received");
-            }}
-            activeKey={REVIEW_CREATED_KEY}
-          /> */}
-
           <PrimaryButton
             withLink={false}
             onClick={() => setCreateReviewModal(true)}

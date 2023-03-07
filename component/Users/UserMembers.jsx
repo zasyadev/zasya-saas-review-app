@@ -123,7 +123,8 @@ function UserMembers({ user }) {
   ];
   return (
     <div className="container mx-auto max-w-full">
-      <div className="mb-4 md:mb-6 flex justify-end">
+      <div className="flex flex-row items-center justify-between flex-wrap gap-4  mb-2 xl:mb-4 ">
+        <p className="text-xl font-semibold mb-0">Users</p>
         <PrimaryButton
           withLink={true}
           className="px-2 md:px-4 "

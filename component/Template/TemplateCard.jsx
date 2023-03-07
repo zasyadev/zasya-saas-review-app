@@ -24,19 +24,18 @@ const TemplateCard = ({
     <motion.div
       key={id}
       variants={motionVariants}
-      className="template-list rounded-md shadow-md bg-white flex flex-col relative group overflow-hidden
+      className="template-list rounded-md shadow-md bg-white flex flex-col relative group overflow-hidden p-2
       "
     >
       <Link
         href={`${URLS.TEMPLATE}/${isDelete ? "edit" : "preview"}/${id}`}
         passHref
       >
-        <div className="relative w-full h-40 cursor-pointer  ">
+        <div className="relative w-full h-40 cursor-pointer  rounded-md">
           <Image
             src={"/media/images/template_dummy.png"}
             layout="fill"
             alt="template"
-            objectFit="cover"
           />
         </div>
       </Link>
@@ -47,17 +46,26 @@ const TemplateCard = ({
           passHref
         >
           <div className=" space-y-2 cursor-pointer flex-1">
-            <p className="text-base xl:text-lg text-primary font-semibold mb-0 flex-1">
+            <p className="text-base xl:text-lg  font-semibold mb-0 flex-1">
               {title}
             </p>
-            <p className="text-sm xl:text-base text-primary  mb-0 flex-1  two-line-clamp ">
+            <p className="text-sm xl:text-base   mb-0 flex-1  two-line-clamp ">
               {description}
             </p>
           </div>
         </Link>
         <div className="flex items-center justify-between">
-          <p className="text-sm xl:text-base text-primary mb-0 flex-1">
-            <span className="font-semibold">{questionLength}</span> Questions
+          <p className="flex items-center space-x-1 text-sm xl:text-base  mb-0 flex-1">
+            <Image
+              src="/media/svg/question-mark.svg"
+              alt="plus-sign"
+              width={15}
+              height={15}
+            />
+            <span className="font-semibold text-primary-green">
+              {questionLength}
+            </span>
+            <span className="text-primary-green">Questions</span>{" "}
           </p>
           {isDelete && (
             <Popconfirm
@@ -72,9 +80,12 @@ const TemplateCard = ({
               icon={false}
               onConfirm={() => deleteTemplate(id)}
             >
-              <div className="text-sm text-primary  flex items-center  justify-center p-2 border hover:bg-gray-100 hover:border-red-600 rounded-full cursor-pointer">
+              <div className="text-sm   flex items-center  justify-center p-2 border hover:bg-gray-100 hover:border-primary-green rounded-full cursor-pointer">
                 <span className="font-semibold whitespace-nowrap ">
-                  <DeleteTemplateIcon size="20" className=" text-red-500" />
+                  <DeleteTemplateIcon
+                    size="20"
+                    className=" text-primary-green"
+                  />
                 </span>
               </div>
             </Popconfirm>

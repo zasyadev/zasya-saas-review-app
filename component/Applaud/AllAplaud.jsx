@@ -1,13 +1,12 @@
-import { ClockCircleOutlined } from "@ant-design/icons";
-import { DatePicker, Timeline } from "antd";
+import { DatePicker } from "antd";
 import moment from "moment";
 import React, { useEffect, useMemo, useState } from "react";
 import { ApplaudGiven, ApplaudIconSmall } from "../../assets/icons";
 import { disableDates, MONTH_FORMAT } from "../../helpers/dateHelper";
 import httpService from "../../lib/httpService";
 import DefaultImages from "../common/DefaultImages";
-import NoRecordFound from "../common/NoRecordFound";
 import { openNotificationBox } from "../common/notification";
+import ApplaudTimeline from "./component/ApplaudTimeline";
 
 function AllAplaud({ user }) {
   const [allApplaud, setAllApplaud] = useState([]);
@@ -166,45 +165,7 @@ function AllAplaud({ user }) {
         </div>
         <div className="flex-1">
           <div className=" bg-white rounded-md  shadow-md flex-1 p-4  lg:p-5 received--all-applaud">
-            <Timeline className="pl-1 py-2">
-              {allFilterOrgApplaud?.length ? (
-                allFilterOrgApplaud.map((item) => {
-                  return (
-                    <Timeline.Item
-                      dot={
-                        <ClockCircleOutlined
-                          style={{
-                            fontSize: "16px",
-                            color: "#0f123f",
-                          }}
-                        />
-                      }
-                      key={item.id}
-                    >
-                      <div className="flex items-start gap-2">
-                        <p className="flex-1 font-semibold mb-1 text-sm md:text-base">
-                          <span className="capitalize  ">
-                            {item.created.first_name}
-                          </span>{" "}
-                          has Applauded {item.user.first_name}.
-                        </p>
-                        {item.created_date && (
-                          <p className=" mb-0  text-gray-400  text-xs leading-6 ">
-                            {moment(item.created_date).fromNow()}
-                          </p>
-                        )}
-                      </div>
-
-                      <p className=" mb-0 text-sm md:text-base">
-                        {item.comment}
-                      </p>
-                    </Timeline.Item>
-                  );
-                })
-              ) : (
-                <NoRecordFound title={"No Applaud Found"} />
-              )}
-            </Timeline>
+            <ApplaudTimeline list={allFilterOrgApplaud} />
           </div>
         </div>
       </div>

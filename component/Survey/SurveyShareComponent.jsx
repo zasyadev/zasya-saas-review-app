@@ -200,7 +200,7 @@ function SurveyResponsePage({ user }) {
               overlayClassName="max-w-sm"
             >
               <CopyOutlined
-                className="primary-color-blue text-xl mx-1  md:mx-2 cursor-pointer"
+                className=" text-xl mx-1  md:mx-2 cursor-pointer"
                 onClick={() => handleCopyUrl(SURVEY_BASE_URL + record.url)}
               />
             </Popover>
@@ -311,38 +311,40 @@ function SurveyResponsePage({ user }) {
         <>
           <div className="container mx-auto rounded-md bg-white max-w-full">
             <div className="p-4 md:p-6 ">
-              <h3 className="text-center text-lg lg:text-xl font-bold leading-6 text-primary -tracking-wider">
+              <h3 className="text-center text-lg lg:text-xl font-bold leading-6  -tracking-wider">
                 Link To Share
               </h3>
               <div className="flex items-center max-w-3xl mx-auto my-4">
                 <Input
                   size="large"
-                  className="rounded-l-md font-semibold text-primary leading-6"
+                  className="rounded-l-md font-semibold  leading-6"
                   value={defaultUrl}
                 />
                 <button
                   className={`text-white text-center px-4 py-2 h-10 w-24 flex-shrink-0 rounded-r-md
-              bg-primary
+              bg-primary-green
                 `}
                   onClick={() => handleCopyUrl(defaultUrl)}
                 >
                   Copy Url
                 </button>
               </div>
-              <h3 className="px-1 text-lg lg:text-xl font-bold leading-6 -tracking-wider my-4 mt-6  text-primary text-center">
+              <h3 className="px-1 text-lg lg:text-xl font-bold leading-6 -tracking-wider my-4 mt-6   text-center">
                 Create New Shares
               </h3>
               <div className="md:flex justify-center items-center md:space-x-4  space-y-3 md:space-y-0  mx-4 md:mx-0">
                 <div
-                  className="w-full md:w-36 h-20 md:h-28 cursor-pointer border border-black flex flex-col justify-center items-center rounded-md"
+                  className="w-full md:w-36 h-20 md:h-28 cursor-pointer border border-primary-green flex flex-col justify-center items-center rounded-md"
                   onClick={() => {
                     setEmailModalVisible(true);
                   }}
                 >
                   <div>
-                    <MailOutlined className="text-prmary text-xl md:text-2xl" />
+                    <MailOutlined className="text-primary-green text-xl md:text-2xl" />
                   </div>
-                  <p className="mb-0 text-base md:text-lg">Send Email</p>
+                  <p className="mb-0 text-base md:text-lg text-primary-green">
+                    Send Email
+                  </p>
                 </div>
                 <Popconfirm
                   title={`Are you sure you want to Create new Link`}
@@ -351,18 +353,20 @@ function SurveyResponsePage({ user }) {
                   onConfirm={() => onNewUrlHandler()}
                   icon={false}
                 >
-                  <div className="w-full md:w-36 h-20 md:h-28 cursor-pointer border border-black flex flex-col justify-center items-center rounded-md">
+                  <div className="w-full md:w-36 h-20 md:h-28 cursor-pointer border border-primary-green flex flex-col justify-center items-center rounded-md">
                     <div>
-                      <LinkOutlined className="text-prmary text-xl md:text-2xl" />
+                      <LinkOutlined className="text-primary-green text-xl md:text-2xl" />
                     </div>
-                    <p className="mb-0 text-base md:text-lg">Create Url</p>
+                    <p className="mb-0 text-base md:text-lg text-primary-green">
+                      Create Url
+                    </p>
                   </div>
                 </Popconfirm>
               </div>
             </div>
           </div>
 
-          <h3 className="px-1 text-lg lg:text-xl font-bold leading-6 -tracking-wider my-4 text-primary">
+          <h3 className="px-1 text-lg lg:text-xl font-bold leading-6 -tracking-wider my-4 ">
             All Shares
           </h3>
           <div className="w-full bg-white rounded-md overflow-hdden ">

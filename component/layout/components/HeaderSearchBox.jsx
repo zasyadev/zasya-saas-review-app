@@ -1,9 +1,11 @@
 import { SearchOutlined } from "@ant-design/icons";
 import { Select } from "antd";
+import { useRouter } from "next/router";
 import React from "react";
 import { MemberListHook } from "../../common/hooks";
 
 function HeaderSearchBox({ user }) {
+  const route = useRouter();
   const { membersList } = MemberListHook(user);
   return (
     <Select
@@ -15,6 +17,9 @@ function HeaderSearchBox({ user }) {
       className="w-44 md:w-52 lg:w-72"
       placeholder="Search"
       suffixIcon={<SearchOutlined />}
+      onSelect={(e) => {
+        route.push(`/profile/preview/${e}`);
+      }}
     >
       {membersList.map((data, index) => (
         <Select.Option key={index} value={data.user_id}>

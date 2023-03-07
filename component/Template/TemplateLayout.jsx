@@ -84,20 +84,13 @@ function TemplateLayout({ user }) {
 
   return (
     <div className="container mx-auto max-w-full">
-      <div className="flex flex-row items-center justify-between flex-wrap gap-4 mb-4 md:mb-6">
+      <div className="flex flex-row items-center justify-between flex-wrap gap-4  mb-2 xl:mb-4 ">
+        <p className="text-xl font-semibold mb-0">Templates</p>
         <ToggleButton
           arrayList={TemplateToggleList}
           handleToggle={(activeKey) => setChangeTemplateView(activeKey)}
           activeKey={changeTemplateView}
         />
-        {changeTemplateView === MY_TEMPLATE_KEY && (
-          <PrimaryButton
-            withLink={true}
-            className="md:hidden"
-            linkHref={URLS.TEMPLATE_CREATE}
-            title={"Create"}
-          />
-        )}
       </div>
 
       <div className="container mx-auto max-w-full">

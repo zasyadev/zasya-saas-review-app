@@ -1,14 +1,29 @@
+import moment from "moment";
 import { RequestHandler } from "../../../lib/RequestHandler";
 import { UPDATE_PROFILE_SCHEMA } from "../../../yup-schema/user";
 
-async function handle(req, res, prisma) {
+async function handle(req, res, prisma, user) {
   const { user_id } = req.query;
+
+  const { organization_id } = user;
+
+  const currentMonth = {
+    lte: moment().endOf("month").format(),
+    gte: moment().startOf("month").format(),
+  };
 
   if (!user_id) {
     return res.status(401).json({ status: 401, message: "No User found" });
   }
 
   if (req.method === "GET") {
+    const whereCondition = {
+      AND: [
+        { organization_id: organization_id },
+        { created_date: currentMonth },
+      ],
+    };
+
     const userData = await prisma.userDetails.findUnique({
       where: { user_id: user_id },
       include: {
@@ -18,6 +33,19 @@ async function handle(req, res, prisma) {
             organization: true,
             role: true,
             email: true,
+            Goals: {
+              where: { AND: [...whereCondition.AND, { is_archived: false }] },
+            },
+            userCreated: {
+              where: whereCondition,
+            },
+
+            taskReviewBy: {
+              where: whereCondition,
+            },
+            Meetings: {
+              where: whereCondition,
+            },
           },
         },
       },

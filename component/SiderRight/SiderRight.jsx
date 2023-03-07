@@ -162,7 +162,7 @@ function SiderRight({ dashBoardData, monthlyLeaderBoardData, userId }) {
                   key={item.id + "activity"}
                 >
                   <div className="flex items-start gap-2 ">
-                    <p className="flex-1 font-semibold mb-0text-sm md:text-base">
+                    <p className="flex-1 font-semibold mb-0 text-sm md:text-base">
                       <span className="capitalize">{item.data.message}</span>
                     </p>
                   </div>

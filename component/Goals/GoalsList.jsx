@@ -248,19 +248,19 @@ function GoalsList({ user }) {
         <CountHeaderCard
           imgSrc="/media/svg/contract-management.svg"
           imgSrcClassNames="bg-brandGreen-200"
-          title="Total Goals"
+          title="Total"
           subTitle={goalListData.totalGoals}
         />
         <CountHeaderCard
           imgSrc="/media/svg/completed-goals.svg"
           imgSrcClassNames="bg-brandOrange-200"
-          title="Completed Goals"
+          title="Completed"
           subTitle={goalListData.completedGoals}
         />
         <CountHeaderCard
           imgSrc="/media/svg/contract-pending.svg"
           imgSrcClassNames="bg-brandBlue-200"
-          title="Pending Goals"
+          title="Pending"
           subTitle={goalListData.pendingGoals}
         />
       </div>

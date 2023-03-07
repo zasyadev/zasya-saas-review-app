@@ -133,8 +133,8 @@ $primary-green: #64a15e;
 .ant-modal-footer {
   .ant-btn-primary {
     height: 45px;
-    border-color: $primary;
-    background-color: $primary;
+    border-color: $primary-green;
+    background-color: $primary-green;
     border-radius: 5px;
   }
 
@@ -179,11 +179,11 @@ $primary-green: #64a15e;
     }
   }
   .ant-pagination-item-active {
-    border-color: $primary;
-    color: $primary;
+    border-color: $primary-green;
+    color: $primary-green;
   }
   .ant-pagination-item-active a {
-    color: $primary;
+    color: $primary-green;
   }
 }
 .review-question-table {
@@ -280,24 +280,23 @@ $primary-green: #64a15e;
   .ant-radio:focus,
   .ant-radio:hover {
     .ant-radio-inner {
-      border-color: $primary !important;
+      border-color: $primary-green !important;
     }
   }
 
   .ant-radio-wrapper:focus,
   .ant-radio-wrapper:hover {
     .ant-checkbox-inner {
-      border-color: $primary;
+      border-color: $primary-green;
     }
   }
   .ant-radio-checked {
     .ant-radio-inner {
-      border-color: $primary;
-      box-shadow: 0 0 0 1.5px rgba(0, 5, 204, 0.35) !important;
+      border-color: $primary-green;
     }
   }
   .ant-radio-inner::after {
-    background-color: $primary;
+    background-color: $primary-green;
   }
 
   .question-edit-view {
@@ -321,23 +320,23 @@ $primary-green: #64a15e;
   }
 }
 .review-font-color {
-  color: $primary;
+  color: $primary-green;
 }
 
 .primary-bg-btn {
-  background-color: $primary;
+  background-color: $primary-green;
 }
 .primary-bg-btn:hover {
-  border-color: $primary;
+  border-color: $primary-green;
 }
 .primary-bg-color {
-  background: $primary;
+  background: $primary-green;
 }
 .toggle-btn-bg {
   background: $bg-color;
 }
 .toggle-btn-bg:hover {
-  border-color: $primary;
+  border-color: $primary-green;
 }
 
 .modal-answer-wrapper {
@@ -346,14 +345,10 @@ $primary-green: #64a15e;
   }
 }
 
-.loaderimg,
-.login-image-wrapper {
+.loaderimg {
   background-image: url("/media/images/bg/banner-bg-shape.webp");
 }
 .login-image-wrapper {
-  background-color: $primary;
-  height: 100%;
-
   .image-wrapper {
     width: 650px;
     height: 450px;
@@ -481,8 +476,8 @@ $primary-green: #64a15e;
   height: 100% !important;
   font-size: 15px;
   border-radius: 5px;
-  background-color: $primary !important;
-  border-color: $primary !important;
+  background-color: $primary-green !important;
+  border-color: $primary-green !important;
 }
 
 .bg-delete-icon {
@@ -986,5 +981,11 @@ $primary-green: #64a15e;
 .recent-activity-timeline {
   .ant-timeline-item-head {
     @apply bg-transparent;
+  }
+}
+.profile-timeline {
+  max-height: calc(100vh - 120px);
+  .ant-timeline-item-tail {
+    border-left: 4px solid #f0f0f0;
   }
 }

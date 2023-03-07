@@ -27,8 +27,8 @@ export function ReviewStatusTabCard({ data }) {
         <img src={imageSrc} className="w-5 h-5" alt={title} />
       </div>
       <div>
-        <p className="text-lg font-medium ">{title}</p>
-        <p className="text-base font-medium text-gray-400">{countData}</p>
+        <p className="text-lg font-medium mb-0">{title}</p>
+        <p className="text-base font-medium text-gray-400 mb-0">{countData}</p>
       </div>
     </div>
   );
