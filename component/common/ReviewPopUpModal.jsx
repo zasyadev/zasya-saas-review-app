@@ -1,4 +1,3 @@
-import { CloseOutlined } from "@ant-design/icons";
 import moment from "moment";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
@@ -44,48 +43,42 @@ export default function ReviewPopUpModal({ userId }) {
     return () => clearTimeout(timerId);
   }, [userId]);
   return (
-    <>
-      <CustomModal
-        title={false}
-        visible={notificationModal}
-        onCancel={() => handleReviewModalClose()}
-        footer={null}
-        customFooter
-        modalProps={{ wrapClassName: "view_form_modal" }}
-      >
-        <div className="relative">
-          <CloseOutlined
-            className=" absolute top-0 right-0 text-lg z-40"
+    <CustomModal
+      title={false}
+      visible={notificationModal}
+      onCancel={() => handleReviewModalClose()}
+      footer={null}
+      customFooter
+      modalProps={{ wrapClassName: "view_form_modal" }}
+    >
+      <div className="relative">
+        <div className="w-56 h-56 md:w-72 md:h-72 mx-auto relative">
+          <Image
+            src="/media/images/review.webp"
+            layout="fill"
+            alt="reivew img"
+          />
+        </div>
+
+        <h3 className="text-lg md:text-xl text-center font-bold -tracking-wider">
+          Did you tried to get a feedback from your peers
+        </h3>
+        <p className="text-base text-center font-medium -tracking-wider mb-0">
+          It will help you to enhance your performance.
+        </p>
+        <p className="text-base text-center font-medium -tracking-wider mb-0">
+          Let's get some feedback.
+        </p>
+        <div className="mt-4 text-center">
+          <PrimaryButton
+            withLink={true}
+            linkHref="/review?create=true"
+            className="mr-2 lg:mx-4 rounded my-1"
+            title="Create a Review"
             onClick={() => handleReviewModalClose()}
           />
-          <div className="w-56 h-56 md:w-72 md:h-72 mx-auto relative">
-            <Image
-              src="/media/images/review.webp"
-              layout="fill"
-              alt="reivew img"
-            />
-          </div>
-
-          <h3 className="text-lg md:text-xl text-center font-bold -tracking-wider">
-            Did you tried to get a feedback from your peers
-          </h3>
-          <p className="text-base text-center font-medium -tracking-wider mb-0">
-            It will help you to enhance your performance.
-          </p>
-          <p className="text-base text-center font-medium -tracking-wider mb-0">
-            Let's get some feedback.
-          </p>
-          <div className="mt-4 text-center">
-            <PrimaryButton
-              withLink={true}
-              linkHref="/review?create=true"
-              className="mr-2 lg:mx-4 rounded my-1"
-              title="Create a Review"
-              onClick={() => handleReviewModalClose()}
-            />
-          </div>
         </div>
-      </CustomModal>
-    </>
+      </div>
+    </CustomModal>
   );
 }

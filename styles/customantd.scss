@@ -82,8 +82,6 @@ $primary-green: #64a15e;
   height: 68px;
   display: flex;
   align-items: center;
-
-  @apply bg-primary-green;
 }
 .ant-modal-content {
   border-radius: 5px;
@@ -126,7 +124,6 @@ $primary-green: #64a15e;
   }
 
   .ant-modal-close {
-    color: #fff;
     font-size: 22px;
   }
 }

@@ -114,6 +114,7 @@ function Applaud({ user }) {
 
   return (
     <div className="container mx-auto max-w-full">
+      <p className="text-xl font-semibold  mb-4 md:mb-6">Applaud</p>
       <div className="flex flex-col-reverse md:flex-row flex-wrap items-center justify-between  mb-4 md:mb-6 gap-3">
         <div className="w-full justify-between md:justify-start md:w-auto flex items-center gap-4">
           <div className="bg-white rounded-md shrink-0 py-1 px-2">

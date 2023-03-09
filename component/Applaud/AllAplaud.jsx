@@ -79,7 +79,8 @@ function AllAplaud({ user }) {
 
   return (
     <>
-      <div className="flex justify-start w-full mb-4 md:mb-6">
+      <div className="flex justify-between w-full mb-4 md:mb-6">
+        <p className="text-xl font-semibold mb-0">All Applaud</p>
         <div className="bg-white rounded-md py-1 px-4 ">
           <DatePicker
             onChange={onDateChange}

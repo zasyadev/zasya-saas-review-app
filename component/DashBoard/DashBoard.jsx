@@ -18,6 +18,7 @@ import NoRecordFound from "../common/NoRecordFound";
 import { statusBackground, statusPill } from "../Goals/constants";
 import SiderRight from "../SiderRight/SiderRight";
 import DashboardGoalsAvatar from "./component/DashboardGoalsAvatar";
+import HeaderNotification from "./component/HeaderNotification";
 import { CountCard, DateBox } from "./component/helperComponent";
 
 const BarChart = dynamic(() => import("../common/BarChart"), {
@@ -122,26 +123,7 @@ function DashBoard({ user }) {
   return (
     <div className="grid grid-cols-7 gap-4 md:gap-8 xl:gap:10 bg-brandGray-100">
       <div className="col-span-7 md:col-span-5  border-r border-gray-300 p-4 md:p-6 xl:p-8 space-y-4 md:space-y-6 xl:space-y-8 bg-white">
-        {/* <div className="flex justify-between items-center">
-          <HeaderSearchBox user={user} />
-          <div className=" md:hidden w-full">
-            <UserProfileHeader user={user} />
-          </div>
-        </div> */}
-        <div className="bg-brandSkin-100 p-4  rounded-md">
-          <p className="font-bold  mb-0 uppercase">Hi {user.first_name}</p>
-          <p className="mb-0 font-medium">
-            You have{" "}
-            <span className="font-semibold text-primary-green">
-              {dashBoardData.pendingGoals}
-            </span>{" "}
-            goals pending as you have completed{" "}
-            <span className="font-semibold text-primary-green">
-              {dashBoardData.goalsProgress}%
-            </span>{" "}
-            of goals.
-          </p>
-        </div>
+        <HeaderNotification user={user} dashBoardData={dashBoardData} />
         <div className="bg-white  rounded-md shadow-brand">
           <div className="mb-4 grid md:grid-cols-3 border-b border-gray-300">
             <CountCard
@@ -287,10 +269,6 @@ function DashBoard({ user }) {
         </div>
       </div>
       <div className="col-span-7 md:col-span-2 space-y-4 p-4  md:pl-0 bg-brandGray-100">
-        {/* <div className="hidden md:block w-full">
-          <UserProfileHeader user={user} />
-        </div> */}
-
         <SiderRight
           dashBoardData={dashBoardData}
           monthlyLeaderBoardData={monthlyLeaderBoardData}
