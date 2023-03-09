@@ -99,7 +99,7 @@ function SiderLayout({ collapsed, setCollapsed, items, lg, user }) {
             </Dropdown>
           </div>
 
-          <div className="overflow-y-auto max-h-96 no-scrollbar">
+          <div className="overflow-y-auto overflow-x-hidden max-h-96 custom-scrollbar">
             <Menu
               onClick={onClickSideTab}
               mode="inline"

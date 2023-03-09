@@ -11,11 +11,19 @@ import UserProfileHeader from "./components/UserProfileHeader";
 
 const { Header } = Layout;
 
-function HeaderLayout({ isBack, title, user, collapsed, setCollapsed, lg }) {
+function HeaderLayout({ isBack, user, collapsed, setCollapsed, lg }) {
   const router = useRouter();
 
   return (
-    <Header className=" bg-white border-b border-b-neutral-300 p-0">
+    <Header
+      className=" bg-white border-b border-b-neutral-300 p-0"
+      style={{
+        position: "sticky",
+        top: 0,
+        zIndex: 100,
+        width: "100%",
+      }}
+    >
       <div className="flex items-center h-full justify-between mx-4 md:mx-6">
         <div className="flex items-center">
           {isBack && (

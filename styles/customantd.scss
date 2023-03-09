@@ -446,18 +446,18 @@ $primary-green: #64a15e;
   }
   .ant-slider-track {
     height: 6px;
-    background-color: $primary !important;
+    background-color: $primary-green !important;
   }
   .ant-slider-handle {
     margin-top: -7px !important;
     width: 20px;
     height: 20px;
-    background-color: $primary !important;
-    border: 2px solid $primary;
+    background-color: $primary-green !important;
+    border: 2px solid $primary-green;
     cursor: grab;
   }
   .ant-slider-handle:not(.ant-tooltip-open) {
-    border-color: $primary !important;
+    border-color: $primary-green !important;
   }
 }
 
@@ -570,7 +570,7 @@ $primary-green: #64a15e;
 }
 .template-title-input {
   .input-box {
-    border-bottom: 2px solid $primary;
+    border-bottom: 2px solid $primary-green;
     font-size: 22px !important;
   }
 }
@@ -657,7 +657,7 @@ $primary-green: #64a15e;
   border-radius: 5px;
 }
 .answer-radio-button:hover {
-  background-color: $primary;
+  background-color: $primary-green;
   color: #fff;
 }
 .ant-radio-button-wrapper-checked {
@@ -685,14 +685,6 @@ $primary-green: #64a15e;
     .notification-inner {
       max-height: 219px;
       overflow: auto;
-      // .notification-border-bottom {
-      //   border-bottom: 1px solid #e3e3e3;
-      // }
-
-      // .notification-box:hover {
-      //   background: $bg-color;
-      //   color: #fff;
-      // }
     }
   }
 }
@@ -752,7 +744,7 @@ $primary-green: #64a15e;
 .question-rating {
   text-align: center;
   .ant-rate {
-    color: $primary;
+    color: $primary-green;
 
     .ant-rate-star {
       font-size: 40px;
@@ -762,7 +754,7 @@ $primary-green: #64a15e;
 .question-view-rating {
   text-align: center;
   .ant-rate {
-    color: $primary;
+    color: $primary-green;
     .ant-rate-star {
       font-size: 40px;
     }
@@ -770,7 +762,7 @@ $primary-green: #64a15e;
 }
 .review-question-rating {
   .ant-rate {
-    color: $primary;
+    color: $primary-green;
     .ant-rate-star {
       font-size: 22px;
     }
@@ -797,13 +789,13 @@ $primary-green: #64a15e;
 }
 .ant-picker-cell-selected {
   .ant-picker-cell-inner {
-    background: $primary !important;
+    background: $primary-green !important;
   }
 }
 .chart-title {
   font-size: 20px;
   font-weight: 600;
-  color: $primary;
+  color: $primary-green;
 }
 
 .image_crop_modal {
@@ -820,14 +812,14 @@ $primary-green: #64a15e;
   margin-bottom: 0 !important;
 }
 .ant-checkbox-checked .ant-checkbox-inner {
-  background-color: $primary;
-  border-color: $primary !important;
+  background-color: $primary-green;
+  border-color: $primary-green !important;
 }
 .ant-checkbox-wrapper:hover .ant-checkbox-inner {
-  border-color: $primary !important;
+  border-color: $primary-green !important;
 }
 .ant-checkbox-checked::after {
-  border: 1px solid $primary;
+  border: 1px solid $primary-green;
 }
 
 .ant-select-item-group {
@@ -865,7 +857,7 @@ $primary-green: #64a15e;
     .ant-steps-item-container {
       &:hover,
       &:focus {
-        color: $primary !important;
+        color: $primary-green !important;
       }
       .ant-steps-item-icon {
         @apply bg-primary-green;
@@ -876,7 +868,7 @@ $primary-green: #64a15e;
   .ant-steps-item:not(.ant-steps-item-active)
     > .ant-steps-item-container[role="button"]:hover
     .ant-steps-item-title {
-    color: $primary !important;
+    color: $primary-green !important;
   }
 
   .ant-steps-item-finish .ant-steps-item-icon > .ant-steps-icon {
@@ -899,17 +891,17 @@ $primary-green: #64a15e;
 }
 
 .ant-tabs-ink-bar {
-  background-color: $primary !important;
+  background-color: $primary-green !important;
 }
 
 .ant-tabs-tab:hover {
-  color: $primary !important;
+  color: $primary-green !important;
 }
 
 .ant-tabs-tab-active {
-  color: $primary !important;
+  color: $primary-green !important;
   .ant-tabs-tab-btn {
-    color: $primary !important;
+    color: $primary-green !important;
   }
 }
 .question-select-box {
@@ -931,15 +923,15 @@ $primary-green: #64a15e;
 .slider-radio {
   .ant-radio-wrapper-checked {
     .ant-radio-inner {
-      background: $primary;
-      border-color: $primary;
+      background: $primary-green;
+      border-color: $primary-green;
     }
     .ant-radio-inner::after {
       background: transparent;
     }
   }
   .ant-radio:hover .ant-radio-inner {
-    border-color: $primary;
+    border-color: $primary-green;
   }
 }
 .add-template-card {
@@ -958,21 +950,21 @@ $primary-green: #64a15e;
 
 .ant-picker-panel {
   .ant-btn-primary {
-    border-color: $primary;
-    background: $primary;
+    border-color: $primary-green;
+    background: $primary-green;
     color: #fff;
   }
 }
 .ant-picker-input > input:hover {
-  border-color: $primary;
+  border-color: $primary-green;
   border-right-width: 1px;
 }
 .ant-picker:hover,
 .ant-picker-focused {
-  border-color: $primary;
+  border-color: $primary-green;
 }
 .ant-picker-focused {
-  border-color: $primary;
+  border-color: $primary-green;
   box-shadow: 0 0 0 2px rgb(0, 5, 204, 0.35);
 }
 .recent-activity-timeline {
@@ -985,4 +977,24 @@ $primary-green: #64a15e;
   .ant-timeline-item-tail {
     border-left: 4px solid #f0f0f0;
   }
+}
+
+.ant-picker-calendar-full {
+  .ant-picker-panel .ant-picker-calendar-date-content {
+    height: 70px;
+  }
+  .ant-picker-calendar-date-today {
+    border-color: #000000 !important;
+  }
+  .ant-picker-cell-selected .ant-picker-cell-inner {
+    background: #edf4ff !important;
+    border-color: #000000 !important;
+    .ant-picker-calendar-date-value {
+      color: #000 !important;
+      font-weight: 600 !important;
+    }
+  }
+}
+.ant-picker-calendar-date-content::-webkit-scrollbar {
+  display: none;
 }

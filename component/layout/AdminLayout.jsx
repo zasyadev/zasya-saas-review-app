@@ -113,15 +113,15 @@ function AdminLayout({
           user={user}
         />
         <Layout className="min-h-screen lg:ml-60">
+          <HeaderLayout
+            isBack={isBack}
+            title={title}
+            user={user}
+            setCollapsed={setCollapsed}
+            collapsed={collapsed}
+            lg={lg}
+          />
           <Content className="bg-brandGray-200 ">
-            <HeaderLayout
-              isBack={isBack}
-              title={title}
-              user={user}
-              setCollapsed={setCollapsed}
-              collapsed={collapsed}
-              lg={lg}
-            />
             <div className={` ${isHeader && "p-4 md:p-6"}`}>{children}</div>
           </Content>
           <Footer className="text-center bg-primary-gray p-3 font-medium border-t ">

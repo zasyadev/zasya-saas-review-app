@@ -68,14 +68,15 @@ function ReviewCreatedComponent({
     sorter: (a, b) => a.name?.localeCompare(b.name),
     render: (_, record) => (
       <div>
-        <p className="mb-0">{record.name}</p>
-        <p className="mb-0 flex items-center gap-2  text-sm ">
-          {calculateDuration({
-            from: reviewData.created_date,
-            to: record.answer_date,
-          })}
-
-          {CustomPopover("Reactive Time")}
+        <p className="mb-0 flex justify-between items-center">
+          <span>{record.name}</span>
+          {CustomPopover(
+            "Reactivity Time: " +
+              calculateDuration({
+                from: reviewData.created_date,
+                to: record.answer_date,
+              })
+          )}
         </p>
       </div>
     ),

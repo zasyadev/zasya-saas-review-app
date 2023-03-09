@@ -73,7 +73,7 @@ function ReceivedReviewComponent({ user, reviewId }) {
           if (response.status === 200) {
             openNotificationBox("success", response.message, 3);
             setUpdateAnswerApiLoading(false);
-            router.replace("/review/received");
+            router.replace("/review");
           }
         })
         .catch((err) => {
@@ -175,7 +175,7 @@ function ReceivedReviewComponent({ user, reviewId }) {
         </div>
       ) : reviewData?.status ? (
         <div className="relative  text-center bg-white rounded-md py-10 shadow-md md:w-10/12 2xl:w-8/12 mx-auto">
-          <Link href="/review/received" passHref>
+          <Link href="/review" passHref>
             <span className="absolute top-2 right-2 p-3 leading-0 cursor-pointer rounded-full hover:bg-gray-100">
               <CloseOutlined />
             </span>
@@ -220,7 +220,7 @@ function ReceivedReviewComponent({ user, reviewId }) {
                     transition={{ duration: 0.8 }}
                   >
                     <div className="relative text-center bg-white rounded-md py-10 shadow-md md:w-10/12 2xl:w-8/12 mx-auto">
-                      <Link href="/review/received" passHref>
+                      <Link href="/review" passHref>
                         <span className="absolute top-2 right-2 p-3 leading-0 cursor-pointer rounded-full hover:bg-gray-100">
                           <CloseOutlined />
                         </span>

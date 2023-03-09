@@ -43,6 +43,9 @@ module.exports = {
           300: "#4CAF50",
           400: "#C3FFBD",
         },
+        brandRed: {
+          100: "#F44336",
+        },
       },
       lineHeight: {
         0: "0",
