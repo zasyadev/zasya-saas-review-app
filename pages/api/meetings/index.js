@@ -1,4 +1,5 @@
 import moment from "moment";
+import { activityTitle, ACTIVITY_TYPE_ENUM } from "../../../constants";
 import {
   CreateGoogleCalenderApi,
   updateGoogleCalenderApi,
@@ -158,6 +159,35 @@ async function handle(req, res, prisma, user) {
                 user: { connect: { id: assignee.assignee_id } },
                 data: notificationMessage,
                 read_at: null,
+                organization: {
+                  connect: { id: organization_id },
+                },
+              },
+            });
+
+            await prisma.userActivity.create({
+              data: {
+                user: { connect: { id: assignee.assignee_id } },
+                type: ACTIVITY_TYPE_ENUM.FOLLOWUP,
+                title: activityTitle(ACTIVITY_TYPE_ENUM.FOLLOWUP, createdBy),
+                description: meetingData.meeting_title,
+                link: notificationMessage.link,
+                organization: {
+                  connect: { id: organization_id },
+                },
+              },
+            });
+
+            await prisma.userActivity.create({
+              data: {
+                user: { connect: { id: userId } },
+                type: ACTIVITY_TYPE_ENUM.FOLLOWUP,
+                title: activityTitle(
+                  ACTIVITY_TYPE_ENUM.FOLLOWUPGIVEN,
+                  assignedUser.first_name
+                ),
+                description: meetingData.meeting_title,
+                link: notificationMessage.link,
                 organization: {
                   connect: { id: organization_id },
                 },

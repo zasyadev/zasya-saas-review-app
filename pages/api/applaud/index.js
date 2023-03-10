@@ -1,3 +1,4 @@
+import { activityTitle, ACTIVITY_TYPE_ENUM } from "../../../constants";
 import {
   CustomizeSlackMessage,
   SlackPostMessage,
@@ -49,6 +50,39 @@ async function handle(req, res, prisma, user) {
               },
             },
           });
+
+          await prisma.userActivity.create({
+            data: {
+              user: { connect: { id: reqBody.user_id } },
+              type: ACTIVITY_TYPE_ENUM.APPLAUD,
+              title: activityTitle(
+                ACTIVITY_TYPE_ENUM.APPLAUD,
+                createdData.first_name
+              ),
+              description: data.comment,
+              link: notificationMessage.link,
+              organization: {
+                connect: { id: userData.organization_id },
+              },
+            },
+          });
+
+          await prisma.userActivity.create({
+            data: {
+              user: { connect: { id: userId } },
+              type: ACTIVITY_TYPE_ENUM.APPLAUD,
+              title: activityTitle(
+                ACTIVITY_TYPE_ENUM.APPLAUDGIVEN,
+                userData.first_name
+              ),
+              description: data.comment,
+              link: notificationMessage.link,
+              organization: {
+                connect: { id: userData.organization_id },
+              },
+            },
+          });
+
           if (
             userData?.UserDetails &&
             userData?.UserDetails?.notification &&

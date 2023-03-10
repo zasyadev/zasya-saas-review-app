@@ -70,7 +70,7 @@ function ReviewManagement({ user }) {
     setLoading(true);
     setReviewList([]);
     await httpService
-      .get(`/api/review/get_by_status?status=${status}`)
+      .get(`/api/review/get_by_status?status=${status ?? reviewDataStatus}`)
       .then(({ data: response }) => {
         if (response.status === 200) {
           setReviewList(response.data.list);
@@ -108,14 +108,14 @@ function ReviewManagement({ user }) {
         .delete(`/api/review/manage`, { data: obj })
         .then(({ data: response }) => {
           if (response.status === 200) {
-            fetchReviewAssignList();
+            fetchReviewAssignList(reviewDataStatus);
             openNotificationBox("success", response.message, 3);
           } else {
             openNotificationBox("error", response.message, 3);
           }
         })
         .catch((err) => {
-          fetchReviewAssignList([]);
+          fetchReviewAssignList(reviewDataStatus);
         });
     }
   }

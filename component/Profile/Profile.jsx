@@ -30,8 +30,8 @@ function Profile({ user, previewMode = false }) {
   const [loading, setLoading] = useState(false);
   const [organizationModal, setOrganizationModal] = useState(false);
   const [userDetails, setUserDetails] = useState({});
-  const [applaudLimit, setApplaudLimit] = useState([]);
-  const [applaudList, setApplaudList] = useState(0);
+  const [applaudLimit, setApplaudLimit] = useState(0);
+  const [activityList, setActivityList] = useState([]);
   const [showSlackEditModal, setShowSlackEditModal] = useState(false);
 
   const getProfileData = async (userId) => {
@@ -50,31 +50,26 @@ function Profile({ user, previewMode = false }) {
       });
   };
 
-  async function fetchApplaudData(userId) {
-    setApplaudList([]);
+  async function fetchActivityData(userId) {
+    setActivityList([]);
     await httpService
-      .get(`/api/applaud/${userId}`)
+      .get(`/api/activity/${userId}`)
       .then(({ data: res }) => {
-        let sortArray = [
-          ...res.data.receivedApplaud,
-          ...res.data.givenApplaud,
-        ].sort((a, b) => {
-          return moment(b.created_date) - moment(a.created_date);
-        });
-        setApplaudList(sortArray);
+        setActivityList(res.data);
       })
       .catch((err) => {
-        setApplaudList([]);
+        setActivityList([]);
       });
   }
 
   useEffect(() => {
     if (previewMode) {
       getProfileData(user);
-      fetchApplaudData(user);
+      fetchActivityData(user);
     } else {
       getProfileData(user.id);
-      fetchApplaudData(user.id);
+      fetchActivityData(user.id);
+
       if (user.role_id === 2) fetchOrgData();
     }
   }, [user]);
@@ -282,9 +277,9 @@ function Profile({ user, previewMode = false }) {
                 iconClassName={"text-brandOrange-500 bg-brandOrange-500 "}
               />
             </div>
-            {Number(applaudList.length) > 0 && (
+            {Number(activityList.length) > 0 && (
               <Timeline className=" pl-8  space-y-2  p-4 profile-timeline overflow-auto no-scrollbar">
-                {applaudList.map((item, index) => (
+                {activityList.map((item, index) => (
                   <Timeline.Item
                     dot={
                       <div
@@ -293,7 +288,7 @@ function Profile({ user, previewMode = false }) {
                         }
                         style={{ backgroundColor: randomBgColor(index * 3) }}
                       >
-                        {getFirstLetter(item.created.first_name)}
+                        {getFirstLetter(item.type)}
                       </div>
                     }
                     className="recent-activity-timeline"
@@ -301,9 +296,11 @@ function Profile({ user, previewMode = false }) {
                   >
                     <div className="px-3">
                       <p className="flex-1 font-semibold mb-0 text-base capitalize">
-                        {item.created.first_name}
+                        {item.title}
                       </p>
-                      <p className="flex-1  mb-0 text-sm ">{item.comment}</p>
+                      <p className="flex-1  mb-0 text-sm ">
+                        {item.description}
+                      </p>
                       {item.created_date && (
                         <p className="mt-1 mb-0   text-xs leading-6 ">
                           {moment(item.created_date).fromNow()}

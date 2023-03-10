@@ -47,6 +47,7 @@ model User {
   UserTeamsGroups       UserTeamsGroups[]
   Meetings              Meetings[]
   MeetingAssignee       MeetingAssignee[]
+  UserActivity          UserActivity[]
 
   @@map("users")
 }
@@ -223,6 +224,7 @@ model UserOrganization {
   Goals                 Goals[]
   UserTeams             UserTeams[]
   Meetings              Meetings[]
+  UserActivity          UserActivity[]
 
   @@map("user_organization")
 }
@@ -522,16 +524,28 @@ model Meetings {
 }
 
 model MeetingAssignee {
-  id            Int      @id @default(autoincrement())
-  assignee      User     @relation(fields: [assignee_id], references: [id])
-  assignee_id   String
-  comment       String?  @db.LongText
-  meeting       Meetings @relation(fields: [meeting_id], references: [id], onDelete: Cascade)
-  meeting_id    String
-  created_date  DateTime @default(now())
-  modified_date DateTime @default(now())
+  id                     Int                      @id @default(autoincrement())
+  assignee               User                     @relation(fields: [assignee_id], references: [id])
+  assignee_id            String
+  comment                String?                  @db.LongText
+  meeting                Meetings                 @relation(fields: [meeting_id], references: [id], onDelete: Cascade)
+  meeting_id             String
+  created_date           DateTime                 @default(now())
+  modified_date          DateTime                 @default(now())
+  MeetingAssigneeComment MeetingAssigneeComment[]
 
   @@map("meeting_assignee")
+}
+
+model MeetingAssigneeComment {
+  id                  Int              @id @default(autoincrement())
+  meeting_assignee    MeetingAssignee? @relation(fields: [meeting_assignee_id], references: [id])
+  meeting_assignee_id Int?
+  comment             String?          @db.LongText
+  created_date        DateTime         @default(now())
+  modified_date       DateTime         @default(now())
+
+  @@map("meeting_assignee_comment")
 }
 
 model MeetingType {
@@ -544,6 +558,22 @@ model MeetingType {
   meeting_id String
 
   @@map("meeting_type")
+}
+
+model UserActivity {
+  id              Int               @id @default(autoincrement())
+  user            User              @relation(fields: [user_id], references: [id])
+  user_id         String
+  type            ActivityTypeEnum
+  title           String
+  description     String            @db.LongText
+  link            String
+  organization    UserOrganization? @relation(fields: [organization_id], references: [id])
+  organization_id Int
+  created_date    DateTime          @default(now())
+  modified_date   DateTime          @default(now())
+
+  @@map("user_activity")
 }
 
 enum RoleEnum {
@@ -613,4 +643,13 @@ enum MeetingTypeEnum {
 enum MeetingGenerateEnum {
   System
   User
+}
+
+enum ActivityTypeEnum {
+  Review
+  Goal
+  Applaud
+  FollowUp
+  Survey
+  ReviewAnswer
 }

@@ -1,3 +1,4 @@
+import { activityTitle, ACTIVITY_TYPE_ENUM } from "../../../constants";
 import { getGoalEndDays } from "../../../helpers/momentHelper";
 import {
   CustomizeSlackMessage,
@@ -179,6 +180,35 @@ async function handle(req, res, prisma, user) {
                   user: { connect: { id: assignee } },
                   data: notificationMessage,
                   read_at: null,
+                  organization: {
+                    connect: { id: organization_id },
+                  },
+                },
+              });
+
+              await prisma.userActivity.create({
+                data: {
+                  user: { connect: { id: assignee } },
+                  type: ACTIVITY_TYPE_ENUM.GOAL,
+                  title: activityTitle(ACTIVITY_TYPE_ENUM.GOALGIVEN, createdBy),
+                  description: header.goal_title,
+                  link: notificationMessage.link,
+                  organization: {
+                    connect: { id: organization_id },
+                  },
+                },
+              });
+
+              await prisma.userActivity.create({
+                data: {
+                  user: { connect: { id: userId } },
+                  type: ACTIVITY_TYPE_ENUM.GOAL,
+                  title: activityTitle(
+                    ACTIVITY_TYPE_ENUM.GOAL,
+                    assignedUser.first_name
+                  ),
+                  description: header.goal_title,
+                  link: notificationMessage.link,
                   organization: {
                     connect: { id: organization_id },
                   },

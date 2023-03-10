@@ -137,3 +137,36 @@ export const NotificationListHook = (userId) => {
     notificationListLoading,
   };
 };
+
+export const ActivityListHook = (userId) => {
+  const [activityList, setActivityList] = useState([]);
+  const [activityListError, setActivityListError] = useState("");
+  const [activityListLoading, setActivityListLoading] = useState(false);
+
+  async function fetchActivities() {
+    setActivityListLoading(true);
+    await httpService
+      .get(`/api/activity/${userId}`)
+      .then(({ data: response }) => {
+        if (response.status === 200) {
+          setActivityList(response.data);
+        }
+        setActivityListLoading(false);
+      })
+      .catch((err) => {
+        setActivityListLoading(false);
+        setActivityListError(NotFound);
+        setActivityList([]);
+      });
+  }
+
+  useEffect(() => {
+    fetchActivities();
+  }, []);
+
+  return {
+    activityList,
+    activityListError,
+    activityListLoading,
+  };
+};
