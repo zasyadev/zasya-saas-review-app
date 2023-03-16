@@ -154,6 +154,7 @@ async function handle(req, res, prisma) {
                 ),
                 description: resData.review_name,
                 link: `${BASE_URL}review`,
+                type_id: transactionData.savedData.id,
                 organization: {
                   connect: { id: assignedFromData.organization_id },
                 },
@@ -170,6 +171,7 @@ async function handle(req, res, prisma) {
                 ),
                 description: resData.review_name,
                 link: `${BASE_URL}review`,
+                type_id: transactionData.savedData.id,
                 organization: {
                   connect: { id: assignedFromData.organization_id },
                 },

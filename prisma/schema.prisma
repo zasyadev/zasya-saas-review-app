@@ -566,8 +566,9 @@ model UserActivity {
   user_id         String
   type            ActivityTypeEnum
   title           String
-  description     String            @db.LongText
+  description     String?           @db.LongText
   link            String
+  type_id         String?
   organization    UserOrganization? @relation(fields: [organization_id], references: [id])
   organization_id Int
   created_date    DateTime          @default(now())

@@ -8,7 +8,7 @@ const NotificationMenus = ({
   notificationViewed,
   // deleteNotifications,
 }) => {
-  return (
+  return unSeenNotificationCount > 0 ? (
     <div className="notification-wrapper border border-gray-100 bg-white shadow-xl rounded-md">
       <div className="flex items-center justify-between border-b border-gray-300 p-2 md:p-3 gap-6">
         {unSeenNotificationCount > 0 && (
@@ -76,7 +76,7 @@ const NotificationMenus = ({
         )}
       </div>
     </div>
-  );
+  ) : null;
 };
 
 export default NotificationMenus;

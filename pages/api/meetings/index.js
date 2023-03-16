@@ -172,6 +172,7 @@ async function handle(req, res, prisma, user) {
                 title: activityTitle(ACTIVITY_TYPE_ENUM.FOLLOWUP, createdBy),
                 description: meetingData.meeting_title,
                 link: notificationMessage.link,
+                type_id: createData.id,
                 organization: {
                   connect: { id: organization_id },
                 },
@@ -188,6 +189,7 @@ async function handle(req, res, prisma, user) {
                 ),
                 description: meetingData.meeting_title,
                 link: notificationMessage.link,
+                type_id: createData.id,
                 organization: {
                   connect: { id: organization_id },
                 },

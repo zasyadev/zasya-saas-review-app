@@ -61,6 +61,7 @@ async function handle(req, res, prisma, user) {
               ),
               description: data.comment,
               link: notificationMessage.link,
+              type_id: data.id,
               organization: {
                 connect: { id: userData.organization_id },
               },
@@ -77,6 +78,7 @@ async function handle(req, res, prisma, user) {
               ),
               description: data.comment,
               link: notificationMessage.link,
+              type_id: data.id,
               organization: {
                 connect: { id: userData.organization_id },
               },

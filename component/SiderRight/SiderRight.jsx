@@ -1,4 +1,3 @@
-import { ClockCircleOutlined } from "@ant-design/icons";
 import { Skeleton, Timeline } from "antd";
 import moment from "moment";
 import dynamic from "next/dynamic";
@@ -8,9 +7,10 @@ import {
   FileLeftIcon,
   FileRightIcon,
 } from "../../assets/icons";
+import randomBgColor from "../../helpers/randomBgColor";
 import { getFirstLetter } from "../../helpers/truncateString";
 import DefaultImages from "../common/DefaultImages";
-import { NotificationListHook } from "../common/hooks";
+import { ActivityListHook } from "../common/hooks";
 
 const RadialBarChart = dynamic(() => import("../common/RadialBarChart"), {
   ssr: false,
@@ -58,19 +58,10 @@ const ratingHandler = (data) => {
 };
 
 function SiderRight({ dashBoardData, monthlyLeaderBoardData, userId }) {
-  const { reviewRating, averageAnswerTime, totalGoals, totalApplauds } =
-    dashBoardData;
+  const { reviewRating, totalGoals, totalApplauds } = dashBoardData;
   const { leaderBoardData, leaderboardLoading } = monthlyLeaderBoardData;
 
-  const tempTime = moment.duration(averageAnswerTime);
-  // const [activeMonthlyIndex, setActiveMonthlyIndex] = useState(0);
-
-  // const onChangeRadioHandler = (e) => {
-  //   setActiveMonthlyIndex(e.target.value);
-  // };
-
-  const { notificationList, notificationListLoading } =
-    NotificationListHook(userId);
+  const { activityList, activityListLoading } = ActivityListHook(userId);
 
   return (
     <>
@@ -84,53 +75,14 @@ function SiderRight({ dashBoardData, monthlyLeaderBoardData, userId }) {
             totalApplauds={totalApplauds}
             reviewRating={ratingHandler(reviewRating)}
           />
-          {/* <div className="relative">
-            <div className="w-20 h-20 md:w-16 md:h-16 2xl:w-20 2xl:h-20 bg-white rounded-full absolute bottom-8 left-36 lg:bottom-4 lg:left-28 xl:bottom-5  xl:left-28 2xl:bottom-20 2xl:left-48 grid place-content-center">
-              <div className="rounded-full bg-gray-300 w-16 h-16 md:w-12 md:h-12 2xl:w-16 2xl:h-16 grid place-content-center font-bold text-lg">
-                {ratingHandler(reviewRating)}
-              </div>
-            </div>
-          </div> */}
         </div>
-        {/* <div className="flex flex-wrap items-center justify-between px-4">
-          <div className="flex-shrink-0 grid place-content-center">
-            <ClockCircleOutlined className="text-3xl md:text-2xl xl:text-4xl" />
-          </div>
-          <div className="flex-1 flex items-center justify-around">
-            <div className="text-center">
-              <p className=" text-xl md:text-base xl:text-xl font-extrabold my-2 ">
-                {tempTime.days()}
-              </p>
-              <p className="text-gray-500 text-sm md:text-xs xl:text-base mb-0">
-                Day
-              </p>
-            </div>
-
-            <div className="text-center">
-              <p className=" text-xl md:text-base xl:text-xl font-extrabold my-2 ">
-                {tempTime.hours()}
-              </p>
-              <p className="text-gray-500 text-sm md:text-xs xl:text-base mb-0">
-                Hour
-              </p>
-            </div>
-            <div className="text-center">
-              <p className=" text-xl  md:text-base xl:text-xl font-extrabold my-2 ">
-                {tempTime.minutes()}
-              </p>
-              <p className="text-gray-500 text-sm md:text-xs xl:text-base mb-0">
-                Min
-              </p>
-            </div>
-          </div>
-        </div> */}
       </div>
       <div className="space-y-2">
         <div className="border-b border-gray-300 pb-2 text-lg font-semibold">
           Recent Activity
         </div>
 
-        {notificationListLoading ? (
+        {activityListLoading ? (
           <Skeleton
             avatar
             active
@@ -139,23 +91,18 @@ function SiderRight({ dashBoardData, monthlyLeaderBoardData, userId }) {
             }}
           />
         ) : (
-          notificationList && (
+          activityList && (
             <Timeline className="px-4 pt-6 space-y-2 max-h-64 overflow-auto no-scrollbar">
-              {notificationList.map((item, index) => (
+              {activityList.map((item, index) => (
                 <Timeline.Item
                   dot={
                     <div
-                      className={`${
-                        index === 0
-                          ? "bg-cyan-500"
-                          : index === 1
-                          ? "bg-orange-600"
-                          : "bg-green-600"
-                      } 
-           
-           border text-white capitalize hover:cursor-pointer rounded-full w-7 h-7 grid place-content-center`}
+                      className={
+                        "border text-white capitalize  rounded-full w-7 h-7 grid place-content-center"
+                      }
+                      style={{ backgroundColor: randomBgColor(index * 3) }}
                     >
-                      {getFirstLetter(item.data.message)}
+                      {getFirstLetter(item.type)}
                     </div>
                   }
                   className="recent-activity-timeline"
@@ -163,7 +110,7 @@ function SiderRight({ dashBoardData, monthlyLeaderBoardData, userId }) {
                 >
                   <div className="flex items-start gap-2 ">
                     <p className="flex-1 font-semibold mb-0 text-sm md:text-base">
-                      <span className="capitalize">{item.data.message}</span>
+                      <span className="capitalize">{item.title}</span>
                     </p>
                   </div>
 
@@ -242,7 +189,11 @@ function SiderRight({ dashBoardData, monthlyLeaderBoardData, userId }) {
         </div>
       </div>
 
-      {/* {monthlyLeaderBoardData.applaudData.length > 0 && (
+      {/*
+      
+      //ToDo : This is monthly leaderborad 
+
+      {monthlyLeaderBoardData.applaudData.length > 0 && (
         <div className="relative bg-white rounded-md shadow-md p-5  mt-6 ">
           <p className="mb-4 text-primary text-xl font-semibold pr-10 md:pr-14">
             Monthly Leaderboard

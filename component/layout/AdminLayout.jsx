@@ -122,7 +122,7 @@ function AdminLayout({
             lg={lg}
           />
           <Content className="bg-brandGray-200 ">
-            <div className={` ${isHeader && "p-4 md:p-6"}`}>{children}</div>
+            <div className={` ${isHeader && "p-4 md:p-6 "}`}>{children}</div>
           </Content>
           <Footer className="text-center bg-primary-gray p-3 font-medium border-t ">
             Review App © 2022 Created By Zasya Solution

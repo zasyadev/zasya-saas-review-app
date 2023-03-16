@@ -157,7 +157,7 @@ async function handle(req, res, prisma, user) {
 
             data.GoalAssignee = { create: assigneeData };
           }
-          await prisma.goals.create({
+          const goalData = await prisma.goals.create({
             data: data,
           });
           if (reqBody.goal_type === "Individual") {
@@ -190,9 +190,10 @@ async function handle(req, res, prisma, user) {
                 data: {
                   user: { connect: { id: assignee } },
                   type: ACTIVITY_TYPE_ENUM.GOAL,
-                  title: activityTitle(ACTIVITY_TYPE_ENUM.GOALGIVEN, createdBy),
+                  title: activityTitle(ACTIVITY_TYPE_ENUM.GOAL, createdBy),
                   description: header.goal_title,
                   link: notificationMessage.link,
+                  type_id: goalData.id,
                   organization: {
                     connect: { id: organization_id },
                   },
@@ -204,11 +205,12 @@ async function handle(req, res, prisma, user) {
                   user: { connect: { id: userId } },
                   type: ACTIVITY_TYPE_ENUM.GOAL,
                   title: activityTitle(
-                    ACTIVITY_TYPE_ENUM.GOAL,
+                    ACTIVITY_TYPE_ENUM.GOALGIVEN,
                     assignedUser.first_name
                   ),
                   description: header.goal_title,
                   link: notificationMessage.link,
+                  type_id: goalData.id,
                   organization: {
                     connect: { id: organization_id },
                   },

@@ -295,7 +295,7 @@ function Profile({ user, previewMode = false }) {
                     key={item.id + index + "activity"}
                   >
                     <div className="px-3">
-                      <p className="flex-1 font-semibold mb-0 text-base capitalize">
+                      <p className="flex-1 font-semibold mb-0 text-base">
                         {item.title}
                       </p>
                       <p className="flex-1  mb-0 text-sm ">
