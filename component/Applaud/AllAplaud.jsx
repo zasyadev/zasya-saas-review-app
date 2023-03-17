@@ -129,7 +129,7 @@ function AllAplaud({ user }) {
                     </div>
 
                     <div className="flex-1 space-y-2 ">
-                      <p className="  font-semibold text-sm md:text-base">
+                      <p className="font-semibold text-sm md:text-base">
                         {key}
                       </p>
 
