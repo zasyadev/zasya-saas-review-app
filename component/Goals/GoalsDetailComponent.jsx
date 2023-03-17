@@ -169,8 +169,8 @@ function GoalsDetailComponent({ user, isArchived = false }) {
                 </span>
               </div>
               <div className="space-y-1">
-                <p className="  font-semibold text-base mb-0">End Date</p>
-                <p className=" text-gray-700 font-medium text-xs md:text-sm mb-0">
+                <p className="font-semibold text-base mb-0">End Date</p>
+                <p className="text-gray-700 font-medium text-xs md:text-sm mb-0">
                   {moment(goalData?.end_date).format(DEFAULT_DATE_FORMAT)}
                 </p>
               </div>
