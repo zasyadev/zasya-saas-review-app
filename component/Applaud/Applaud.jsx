@@ -1,7 +1,9 @@
 import { DatePicker, Skeleton } from "antd";
+import clsx from "clsx";
 import { motion } from "framer-motion";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
+import { twMerge } from "tailwind-merge";
 import {
   PrimaryButton,
   SecondaryButton,
@@ -36,13 +38,13 @@ const ApplaudCard = ({ applaud, type }) => {
               {applaud?.category.map((item, idx) => (
                 <span
                   key={idx + "cat"}
-                  className={`px-3 py-1 rounded-full bg-transparent text-xs border-2 ${
-                    idx % 2 === 0
-                      ? "border-blue-400 "
-                      : idx % 3 === 0
-                      ? "border-cyan-400 "
-                      : "border-blue-700 -ml-2"
-                  }`}
+                  className={twMerge(
+                    clsx(
+                      "px-3 py-1 rounded-full bg-transparent text-xs border-2 border-blue-700",
+                      { "border-blue-400": idx % 2 === 0 },
+                      { "border-cyan-400": idx % 3 === 0 }
+                    )
+                  )}
                 >
                   {getApplaudCategoryName(item)}
                 </span>
