@@ -5,6 +5,7 @@ import {
   FileTextOutlined,
 } from "@ant-design/icons";
 import { Skeleton } from "antd";
+import clsx from "clsx";
 import moment from "moment";
 import dynamic from "next/dynamic";
 import Link from "next/link";
@@ -192,9 +193,10 @@ function DashBoard({ user }) {
                           </p>
                           <p className="flex justify-between items-center">
                             <span
-                              className={`text-xs font-semibold px-2 py-1 uppercase rounded-md ${statusPill(
-                                item.goal.status
-                              )}`}
+                              className={clsx(
+                                "text-xs font-semibold px-2 py-1 uppercase rounded-md ",
+                                statusPill(item.goal.status)
+                              )}
                             >
                               {item.goal.status}
                             </span>

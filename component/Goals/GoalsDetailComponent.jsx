@@ -1,5 +1,6 @@
 import { ClockCircleOutlined } from "@ant-design/icons";
 import { Skeleton, Timeline } from "antd";
+import clsx from "clsx";
 import moment from "moment";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -161,9 +162,10 @@ function GoalsDetailComponent({ user, isArchived = false }) {
               <div className="space-y-1">
                 <p className="  font-semibold text-base mb-1">Status</p>
                 <span
-                  className={` px-2 py-1 font-medium text-xs md:text-sm mb-0 uppercase rounded-md ${statusPill(
-                    goalStatus
-                  )}`}
+                  className={clsx(
+                    "px-2 py-1 font-medium text-xs md:text-sm mb-0 uppercase rounded-md",
+                    statusPill(goalStatus)
+                  )}
                 >
                   {goalStatus}
                 </span>
