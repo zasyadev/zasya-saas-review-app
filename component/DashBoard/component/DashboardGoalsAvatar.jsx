@@ -1,5 +1,7 @@
 import { Dropdown, Tooltip } from "antd";
+import clsx from "clsx";
 import React from "react";
+import { twMerge } from "tailwind-merge";
 import { getFirstLetter } from "../../../helpers/truncateString";
 
 const avatarCount = 1;
@@ -17,15 +19,17 @@ function DashboardGoalsAvatar({ activeGoalUsers }) {
               key={index + "users"}
             >
               <div
-                className={`${
-                  index === 0
-                    ? "bg-cyan-500 "
-                    : index === 1
-                    ? "bg-orange-600 -ml-2"
-                    : "bg-green-600 -ml-2"
-                } 
-            z-${index === 0 ? "0" : `${index}0`}
-           border-2 text-white flex justify-center items-center capitalize hover:cursor-pointer hover:z-50 transition-all duration-200 ease-in-out rounded-full w-7 h-7`}
+                className={twMerge(
+                  clsx(
+                    "border-2 text-white flex justify-center items-center capitalize hover:cursor-pointer hover:z-50",
+                    "transition-all duration-200 ease-in-out rounded-full w-7 h-7 bg-green-600 -ml-2",
+                    `z${index}0`,
+                    {
+                      "bg-cyan-500 ml-0 z-0": index === 0,
+                      "bg-orange-600": index === 1,
+                    }
+                  )
+                )}
               >
                 {getFirstLetter(data?.assignee?.first_name)}
               </div>
@@ -45,14 +49,16 @@ function DashboardGoalsAvatar({ activeGoalUsers }) {
                   >
                     <div className={`flex mb-0 items-center space-x-2`}>
                       <div
-                        className={`${
-                          index === 0
-                            ? "bg-cyan-500 "
-                            : index === 1
-                            ? "bg-orange-600"
-                            : "bg-green-600"
-                        } 
-             border-2 text-white flex justify-center items-center capitalize hover:cursor-pointer hover:z-50 transition-all duration-200 ease-in-out rounded-full text-xs w-8 h-8`}
+                        className={twMerge(
+                          clsx(
+                            "border-2  flex justify-center items-center capitalize hover:cursor-pointer hover:z-50",
+                            "transition-all duration-200 ease-in-out rounded-full text-xs w-8 h-8 text-white",
+                            {
+                              "bg-cyan-500 ": index === 0,
+                              "bg-orange-600 ": index === 1,
+                            }
+                          )
+                        )}
                       >
                         {getFirstLetter(data?.assignee?.first_name)}
                       </div>

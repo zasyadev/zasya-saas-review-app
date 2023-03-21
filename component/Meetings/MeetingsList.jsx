@@ -8,6 +8,7 @@ import clsx from "clsx";
 import moment from "moment";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
+import { twMerge } from "tailwind-merge";
 import { URLS } from "../../constants/urls";
 import { dateDayName, dateTime } from "../../helpers/dateHelper";
 import httpService from "../../lib/httpService";
@@ -94,13 +95,14 @@ function MeetingsList({ user }) {
               overlayClassName="max-w-sm"
             >
               <span
-                className={clsx(
-                  "relative  inline-block w-1 h-1 rounded-full mr-0.5 mb-0.5",
-                  item.meeting_type === REVIEW_TYPE
-                    ? "bg-brandBlue-300"
-                    : item.meeting_type === GOAL_TYPE
-                    ? "bg-brandGreen-300"
-                    : "bg-brandRed-100"
+                className={twMerge(
+                  clsx(
+                    "relative  inline-block w-1 h-1 rounded-full mr-0.5 mb-0.5 bg-brandRed-100",
+                    {
+                      "bg-brandBlue-300": item.meeting_type === REVIEW_TYPE,
+                      "bg-brandGreen-300": item.meeting_type === REVIEW_TYPE,
+                    }
+                  )
                 )}
               ></span>
               {item.meeting_title}
@@ -174,13 +176,14 @@ function MeetingsList({ user }) {
                       <div className="shrink-0">
                         <DateBox
                           date={item.meeting_at}
-                          className={
-                            item.meeting_type === REVIEW_TYPE
-                              ? "bg-brandBlue-300"
-                              : item.meeting_type === GOAL_TYPE
-                              ? "bg-brandGreen-300"
-                              : "bg-brandRed-100"
-                          }
+                          className={twMerge(
+                            clsx("bg-brandRed-100", {
+                              "bg-brandBlue-300":
+                                item.meeting_type === REVIEW_TYPE,
+                              "bg-brandGreen-300":
+                                item.meeting_type === GOAL_TYPE,
+                            })
+                          )}
                         />
                       </div>
 

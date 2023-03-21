@@ -1,5 +1,7 @@
 import { Dropdown, Tooltip } from "antd";
+import clsx from "clsx";
 import React from "react";
+import { twMerge } from "tailwind-merge";
 import { getFirstLetter } from "../../helpers/truncateString";
 
 function CustomAvatar({ userList, avatarCount, className }) {
@@ -15,15 +17,18 @@ function CustomAvatar({ userList, avatarCount, className }) {
               key={index + "users"}
             >
               <div
-                className={`${
-                  index === 0
-                    ? "bg-cyan-500 "
-                    : index === 1
-                    ? "bg-orange-600 -ml-2"
-                    : "bg-green-600 -ml-2"
-                } 
-            z-${index === 0 ? "0" : `${index}0`}
-           border-2 text-white flex justify-center items-center capitalize hover:cursor-pointer hover:z-50 transition-all duration-200 ease-in-out rounded-full ${className}`}
+                className={twMerge(
+                  clsx(
+                    "border-2 text-white flex justify-center items-center capitalize hover:cursor-pointer hover:z-50",
+                    "transition-all duration-200 ease-in-out rounded-full bg-green-600 -ml-2",
+                    `z${index}0`,
+                    {
+                      "bg-cyan-500 ml-0 z-0": index === 0,
+                      "bg-orange-600": index === 1,
+                    },
+                    className
+                  )
+                )}
               >
                 {getFirstLetter(data?.assignee?.first_name)}
               </div>
@@ -43,14 +48,17 @@ function CustomAvatar({ userList, avatarCount, className }) {
                   >
                     <div className={`flex mb-0 items-center space-x-2`}>
                       <div
-                        className={`${
-                          index === 0
-                            ? "bg-cyan-500 "
-                            : index === 1
-                            ? "bg-orange-600"
-                            : "bg-green-600"
-                        } 
-             border-2 text-white flex justify-center items-center capitalize hover:cursor-pointer hover:z-50 transition-all duration-200 ease-in-out rounded-full text-xs ${className}`}
+                        className={twMerge(
+                          clsx(
+                            "flex justify-center bg-green-600 items-center capitalize hover:cursor-pointer hover:z-50",
+                            "transition-all duration-200 ease-in-out rounded-full text-xs border-2 text-white",
+                            {
+                              "bg-cyan-500 ": index === 0,
+                              "bg-orange-600 ": index === 1,
+                            },
+                            className
+                          )
+                        )}
                       >
                         {getFirstLetter(data?.assignee?.first_name)}
                       </div>
