@@ -23,7 +23,7 @@ function DashboardGoalsAvatar({ activeGoalUsers }) {
                   clsx(
                     "border-2 text-white flex justify-center items-center capitalize hover:cursor-pointer hover:z-50",
                     "transition-all duration-200 ease-in-out rounded-full w-7 h-7 bg-green-600 -ml-2",
-                    `z${index}0`,
+                    `z-${index}0`,
                     {
                       "bg-cyan-500 ml-0 z-0": index === 0,
                       "bg-orange-600": index === 1,
