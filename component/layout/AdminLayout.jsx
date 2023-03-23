@@ -1,10 +1,11 @@
 import {
   CrownOutlined,
   DashboardOutlined,
-  FormOutlined,
+  FileTextOutlined,
   LikeOutlined,
   SettingOutlined,
   UsergroupAddOutlined,
+  FileUnknownOutlined,
 } from "@ant-design/icons";
 import { Grid, Layout } from "antd";
 import React, { useEffect, useMemo, useState } from "react";
@@ -26,7 +27,13 @@ function getItem(label, key, icon, children, type) {
   };
 }
 
-function AdminLayout({ user, title, isBack = false, children }) {
+function AdminLayout({
+  user,
+  title,
+  isBack = false,
+  children,
+  isHeader = true,
+}) {
   const { lg } = useBreakpoint();
   const [collapsed, setCollapsed] = useState(false);
 
@@ -42,16 +49,13 @@ function AdminLayout({ user, title, isBack = false, children }) {
       <DashboardOutlined className="sidebar-icon" />
     ),
 
-    getItem("Reviews", "review", <FormOutlined className="sidebar-icon " />, [
-      getItem("Received", URLS.REVIEW_RECEIVED),
-      getItem("Created", URLS.REVIEW_CREATED),
-      getItem("Surveys", URLS.SURVEY),
-    ]),
+    getItem(
+      "Reviews",
+      URLS.REVIEW_CREATED,
+      <FileTextOutlined className="sidebar-icon " />
+    ),
 
-    getItem("Goals", "goals", <CrownOutlined className="sidebar-icon " />, [
-      getItem("Goals", URLS.GOAL),
-      getItem("Archived", URLS.GOAL_ARCHIVED),
-    ]),
+    getItem("Goals", URLS.GOAL, <CrownOutlined className="sidebar-icon " />),
     getItem(
       "Follow Ups",
       URLS.FOLLOW_UP,
@@ -61,6 +65,11 @@ function AdminLayout({ user, title, isBack = false, children }) {
       "Applaud",
       URLS.APPLAUD,
       <LikeOutlined className="sidebar-icon " />
+    ),
+    getItem(
+      "Surveys",
+      URLS.SURVEY,
+      <FileUnknownOutlined className="sidebar-icon " />
     ),
     getItem(
       "Settings",
@@ -101,20 +110,21 @@ function AdminLayout({ user, title, isBack = false, children }) {
           setCollapsed={setCollapsed}
           items={filteredMenus}
           lg={lg}
+          user={user}
         />
-        <Layout className="min-h-screen">
-          <Content className="bg-primary-gray ">
-            <HeaderLayout
-              isBack={isBack}
-              title={title}
-              user={user}
-              setCollapsed={setCollapsed}
-              collapsed={collapsed}
-              lg={lg}
-            />
-            <div className="p-4 md:p-6">{children}</div>
+        <Layout className="min-h-screen lg:ml-60">
+          <HeaderLayout
+            isBack={isBack}
+            title={title}
+            user={user}
+            setCollapsed={setCollapsed}
+            collapsed={collapsed}
+            lg={lg}
+          />
+          <Content className="bg-brandGray-200 ">
+            <div className={` ${isHeader && "p-4 md:p-6 "}`}>{children}</div>
           </Content>
-          <Footer className="text-center bg-white p-3 font-medium text-primary">
+          <Footer className="text-center bg-primary-gray p-3 font-medium border-t ">
             Review App © 2022 Created By Zasya Solution
           </Footer>
         </Layout>

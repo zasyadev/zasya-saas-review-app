@@ -82,6 +82,17 @@ const endOfMonthRandomTime = (date) => {
 
 export const getCronNextMeetingDate = (index) => {
   let newDate = moment().tz("Asia/Kolkata");
+  // if (Number(index) > -1) {
+  //   let counter = 1; // Start with 1
+  //   for (let i = 0; i < length; i++) {
+  //     if (i % 5 === 0 && i > 0 && i <= index) {
+  //       counter++; // Increment counter every 5 elements
+  //     }
+  //   }
+  //   let endMonthDate = endOfMonthRandomTime(newDate);
+  //   newDate = endMonthDate.subtract(counter, "days");
+  // }
+
   if (Number(index) > -1) {
     let subtractDays = 1;
     if (index % 2 === 0) {

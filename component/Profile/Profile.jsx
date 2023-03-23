@@ -1,82 +1,78 @@
-import { EditOutlined, ShareAltOutlined } from "@ant-design/icons";
-import { Col, Form, Input, Row, Skeleton } from "antd";
+import {
+  CrownOutlined,
+  EditOutlined,
+  FileTextOutlined,
+  HomeOutlined,
+  PhoneOutlined,
+  SlackOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
+import { Form, Input, Skeleton, Timeline } from "antd";
 import moment from "moment";
-import Image from "next/image";
-import Link from "next/link";
 import React, { useEffect, useState } from "react";
+import { ColoFollowUpIcon, ColorApplaudIcon } from "../../assets/icons";
 import {
   PrimaryButton,
   SecondaryButton,
 } from "../../component/common/CustomButton";
 import { openNotificationBox } from "../../component/common/notification";
 import { URLS } from "../../constants/urls";
-import { MONTH_DATE_FORMAT } from "../../helpers/dateHelper";
-import getApplaudCategoryName from "../../helpers/getApplaudCategoryName";
+import randomBgColor from "../../helpers/randomBgColor";
+import { getFirstLetter } from "../../helpers/truncateString";
 import httpService from "../../lib/httpService";
 import CustomModal from "../common/CustomModal";
-import CustomPopover from "../common/CustomPopover";
 import DefaultImages from "../common/DefaultImages";
+import { ProfileDetailCard } from "./component/ProfileDetailCard";
 
-const BASE = process.env.NEXT_PUBLIC_APP_URL;
-
-function Profile({ user }) {
+function Profile({ user, previewMode = false }) {
   const [orgForm] = Form.useForm();
   const [slackForm] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [organizationModal, setOrganizationModal] = useState(false);
   const [userDetails, setUserDetails] = useState({});
   const [applaudLimit, setApplaudLimit] = useState(0);
-  const [receivedApplaudList, setReceivedApplaudList] = useState([]);
-  const [givenApplaudList, setGivenApplaudList] = useState([]);
+  const [activityList, setActivityList] = useState([]);
   const [showSlackEditModal, setShowSlackEditModal] = useState(false);
 
-  const getProfileData = async () => {
+  const getProfileData = async (userId) => {
     setUserDetails({});
     setLoading(true);
     await httpService
-      .get(`/api/profile/${user.id}`)
+      .get(`/api/profile/${userId}`)
       .then(({ data: response }) => {
         if (response.status === 200) {
           setUserDetails(response.data);
-          setLoading(false);
         }
-      })
-      .catch((err) => {});
-  };
-
-  async function fetchApplaudData() {
-    setGivenApplaudList([]);
-    await httpService
-      .get(`/api/applaud/${user.id}`)
-      .then(({ data: res }) => {
-        setGivenApplaudList(res.data.givenApplaud);
-        setReceivedApplaudList(res.data.receivedApplaud);
+        setLoading(false);
       })
       .catch((err) => {
-        setGivenApplaudList([]);
+        setLoading(false);
+      });
+  };
+
+  async function fetchActivityData(userId) {
+    setActivityList([]);
+    await httpService
+      .get(`/api/activity/${userId}`)
+      .then(({ data: res }) => {
+        setActivityList(res.data);
+      })
+      .catch((err) => {
+        setActivityList([]);
       });
   }
 
   useEffect(() => {
-    getProfileData();
-    fetchApplaudData();
-    if (user.role_id === 2) fetchOrgData();
-  }, []);
+    if (previewMode) {
+      getProfileData(user);
+      fetchActivityData(user);
+    } else {
+      getProfileData(user.id);
+      fetchActivityData(user.id);
 
-  const shareLinkedinUrl = (data) => {
-    let urlEncoded = encodeURI(`https://www.linkedin.com/shareArticle?\
-mini=true&\
-url=${BASE}&\
-title=${data?.created?.first_name + " has given you a Applaud."}&\
-summary=${data?.comment}&\
-source=LinkedIn`);
-
-    window.open(
-      urlEncoded,
-      "_blank",
-      "width=550,height=431,location=no,menubar=no,scrollbars=no,status=no,toolbar=no"
-    );
-  };
+      if (user.role_id === 2) fetchOrgData();
+    }
+  }, [user]);
 
   const onChangeOrgData = async (values) => {
     await httpService
@@ -138,231 +134,186 @@ source=LinkedIn`);
       });
   };
 
-  return loading ? (
-    <div className="grid grid-cols-1 xl:grid-cols-6 mt-1">
-      <div className="xl:col-start-1 xl:col-end-7 px-4 ">
-        <div className="w-full bg-white rounded-md  shadow-md p-5 mt-2">
-          <Row gutter={16}>
-            <Col lg={24} xs={24} className="mt-4 items-center">
-              <Skeleton active />
-            </Col>
-          </Row>
-        </div>
-      </div>
-    </div>
-  ) : (
+  return (
     <>
-      <Row gutter={[24, 24]}>
-        <Col md={24} xs={24}>
-          <div className="bg-white relative rounded-md overflow-hidden transition-all duration-300 ease-in-out shadow-md">
-            <div className="relative h-28 lg:h-48">
-              <Image
-                src={"/media/images/profile-cover.webp"}
-                alt="profileCover"
-                layout="fill"
-              />
-            </div>
-            <div className="px-2 py-2 text-center absolute bottom-32 right-0 left-0 lg:bottom-2 lg:top-auto lg:right-auto lg:left-12 ">
-              <div className="relative rounded-full w-24 h-24 overflow-hidden  mx-auto">
+      <div className="flex flex-row items-center justify-between flex-wrap gap-4  mb-2 xl:mb-4 ">
+        <p className="text-xl font-semibold mb-0">My Profile</p>
+      </div>
+
+      {loading ? (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6">
+          <div className="w-full bg-white rounded-md  shadow-md p-5 mt-2">
+            <Skeleton active />
+          </div>
+          <div className="col-span-2 w-full bg-white rounded-md  shadow-md p-5 mt-2">
+            <Skeleton active />
+          </div>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6">
+          <div className="bg-white relative rounded-md overflow-hidden transition-all duration-300 ease-in-out shadow-md p-3 lg:py-5 lg:px-4 space-y-4">
+            <div className="text-center space-y-2">
+              <div className="relative rounded-full shadow-md w-24 h-24 overflow-hidden  mx-auto">
                 <DefaultImages imageSrc={userDetails?.image} layout="fill" />
               </div>
-            </div>
-
-            <div className="md:flex justify-between items-center pt-14 px-4 md:px-6 lg:pt-2 pb-3 gap-4">
-              <div className="lg:ml-36 mb-2 lg:mb-0">
-                <p className="text-base font-semibold text-center  text-primary md:text-left mb-0">
-                  {userDetails?.user?.first_name}
-                </p>
-                <p className="text-sm font-medium text-center  text-gray-600 md:text-left mb-0">
+              <div className="font-semibold ">
+                {userDetails?.user?.first_name}
+                <div className="font-medium text-primary-green">
                   {userDetails?.user?.role?.name},
                   {userDetails?.user?.organization?.company_name}
-                </p>
-              </div>
-              <div className="flex flex-wrap justify-around lg:justify-between items-center pb-2 md:pb-0 gap-3">
-                <div className="text-center ">
-                  <p className="text-xl font-semibold mb-0">
-                    {givenApplaudList?.length}
-                  </p>
-                  <p className="text-sm  font-medium mb-0">Appalud Given</p>
-                </div>
-                <div className="text-center">
-                  <p className="text-xl font-semibold mb-0">
-                    {receivedApplaudList?.length}
-                  </p>
-                  <p className="text-sm  font-medium mb-0">Appalud Received</p>
                 </div>
               </div>
+            </div>
+            <div className="divide-y">
+              <div className="grid grid-cols-4 gap-4 py-4">
+                <div className="col-span-1 grid place-content-center">
+                  <HomeOutlined className="text-xl" />
+                </div>
+                <div className="col-span-3 ">
+                  <p className="font-semibold text-17 mb-0">Address </p>
+                  <p className="text-gray-500 break-all">
+                    {userDetails?.address1} {userDetails?.address2}
+                  </p>
+                </div>
+              </div>
+              <div className="grid grid-cols-4 gap-4 py-4">
+                <div className="col-span-1 grid place-content-center">
+                  <PhoneOutlined className="text-xl" rotate={90} />
+                </div>
+                <div className="col-span-3 ">
+                  <p className="font-semibold text-17 mb-0">Phone No </p>
+                  <p className="text-gray-500">{userDetails?.mobile}</p>
+                </div>
+              </div>
+              <div className="grid grid-cols-4 gap-4 py-4">
+                <div className="col-span-1 grid place-content-center">
+                  <UserOutlined className="text-xl" />
+                </div>
+                <div className="col-span-3 ">
+                  <p className="font-semibold text-17 mb-0">About </p>
+                  <p className="text-gray-500 break-all">
+                    {userDetails?.about}
+                  </p>
+                </div>
+              </div>
+              <div className="grid grid-cols-4 gap-4 py-4">
+                <div className="col-span-1 grid place-content-center">
+                  <SlackOutlined className="text-xl" />
+                </div>
+                <div className="col-span-3 ">
+                  <p className="font-semibold text-17 mb-0 flex justify-between items-center">
+                    <span>Slack Email</span>
+                    {!previewMode && (
+                      <span
+                        className=" cursor-pointer transition-all  duration-300 ease-in-out"
+                        onClick={() => handleEditSlack()}
+                      >
+                        <EditOutlined className="text-sm pr-2" />
+                      </span>
+                    )}
+                  </p>
+                  <p className="text-gray-500">{userDetails?.slack_email}</p>
+                </div>
+              </div>
+              {user.role_id === 2 && user.organization_id && !previewMode && (
+                <div className="grid grid-cols-4 gap-4 py-4">
+                  <div className="col-span-1 grid place-content-center">
+                    <ColorApplaudIcon color="#000000" className="text-xl" />
+                  </div>
+                  <div className="col-span-3 ">
+                    <p className="font-semibold text-17 mb-0 flex justify-between items-center">
+                      <span>Applaud Limit</span>
+                      <span
+                        className=" cursor-pointer transition-all  duration-300 ease-in-out"
+                        onClick={() => handleEditApplaudLimit(applaudLimit)}
+                      >
+                        <EditOutlined className="text-sm pr-2" />
+                      </span>
+                    </p>
+                    <p className="text-gray-500">{applaudLimit}</p>
+                  </div>
+                </div>
+              )}
+              {!previewMode && (
+                <div className="grid place-content-center pt-4">
+                  <PrimaryButton
+                    withLink={true}
+                    className=" h-full  "
+                    title={"Edit Profile"}
+                    linkHref={URLS.PROFILE_EDIT}
+                  />
+                </div>
+              )}
             </div>
           </div>
-        </Col>
-        <Col md={10} xs={24}>
-          <div className="space-y-6">
-            <div className="bg-white rounded-md transition-all duration-300 ease-in-out shadow-md p-5 xl:py-5  xl:px-6 space-y-4">
-              <div className="flex justify-between items-center gap-4 flex-wrap">
-                <p className="mb-0 text-lg md:text-xl text-primary font-semibold">
-                  General Information
-                </p>
-                <Link href={URLS.PROFILE_EDIT} passHref>
-                  <div className="hover:bg-gray-100 border border-gray-300  py-1 px-2 rounded-full cursor-pointer transition-all  duration-300 ease-in-out">
-                    <EditOutlined className="text-base text-primary" />
-                  </div>
-                </Link>
-              </div>
-
-              <div>
-                <p className="text-sm 2xl:text-base text-primary font-semibold mb-1">
-                  Address
-                </p>
-                <p className="text-base font-medium text-gray-600 mb-1">
-                  {userDetails?.address1} {userDetails?.address2}
-                </p>
-              </div>
-              <div>
-                <p className="text-sm 2xl:text-base text-primary font-semibold mb-1">
-                  Phone No.
-                </p>
-                <p className="text-text-sm 2xl:text-base font-medium text-gray-600 mb-1">
-                  {userDetails?.mobile}
-                </p>
-              </div>
-
-              <div>
-                <p className="text-sm 2xl:text-base text-primary font-semibold mb-1">
-                  About
-                </p>
-                <p className="text-sm 2xl:text-base font-medium text-gray-600 mb-1">
-                  {userDetails?.about}
-                </p>
-              </div>
+          <div className="col-span-2  bg-white relative rounded-md overflow-hidden transition-all duration-300 ease-in-out shadow-md space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-x border-b ">
+              <ProfileDetailCard
+                title={"Review"}
+                count={userDetails?.user?.taskReviewBy?.length ?? 0}
+                className="p-3 lg:py-5 lg:px-4"
+                Icon={() => <FileTextOutlined />}
+                iconClassName={"text-brandOrange-100 bg-brandOrange-10 text-lg"}
+              />
+              <ProfileDetailCard
+                title={"Goal"}
+                count={userDetails?.user?.Goals?.length ?? 0}
+                className=""
+                Icon={() => <CrownOutlined />}
+                iconClassName={"text-brandGreen-100 bg-brandGreen-10 text-lg"}
+              />
+              <ProfileDetailCard
+                title={"Applaud"}
+                count={userDetails?.user?.userCreated?.length ?? 0}
+                className=""
+                Icon={() => <ColorApplaudIcon color="#0091f6" />}
+                iconClassName={"text-brandBlue-100 bg-brandBlue-10 "}
+              />
+              <ProfileDetailCard
+                title={"Follow Up"}
+                count={userDetails?.user?.Meetings?.length ?? 0}
+                className=""
+                Icon={() => <ColoFollowUpIcon color="#C77700" />}
+                iconClassName={"text-brandOrange-500 bg-brandOrange-500 "}
+              />
             </div>
-            <div className="bg-white rounded-md transition-all duration-300 ease-in-out shadow-md p-5 py-4 xl:py-5  xl:px-6 space-y-4">
-              <div className="flex justify-between items-center gap-4 flex-wrap">
-                <p className="mb-0 text-lg md:text-xl text-primary font-semibold">
-                  Slack Information
-                </p>
-
-                <div
-                  className="hover:bg-gray-100 border border-gray-300  py-1 px-2 rounded-full cursor-pointer transition-all  duration-300 ease-in-out"
-                  onClick={() => handleEditSlack()}
-                >
-                  <EditOutlined className="text-base text-primary" />
-                </div>
-              </div>
-
-              <div>
-                <p className="text-sm 2xl:text-base text-primary font-semibold mb-1">
-                  Slack Email
-                </p>
-                <p className="text-base font-medium text-gray-600 mb-1">
-                  {userDetails?.slack_email}
-                </p>
-              </div>
-            </div>
-            {user.role_id === 2 && user.organization_id && (
-              <div className="bg-white rounded-md transition-all duration-300 ease-in-out shadow-md p-5 py-4 xl:py-5  xl:px-6 space-y-4">
-                <div className="flex justify-between items-center gap-4 flex-wrap">
-                  <p className="mb-0 text-lg md:text-xl text-primary font-semibold">
-                    Applaud Information
-                  </p>
-
-                  <div
-                    className="hover:bg-gray-100 border border-gray-300  py-1 px-2 rounded-full cursor-pointer transition-all  duration-300 ease-in-out"
-                    onClick={() => handleEditApplaudLimit(applaudLimit)}
+            {Number(activityList.length) > 0 && (
+              <Timeline className=" pl-8  space-y-2  p-4 profile-timeline overflow-auto no-scrollbar">
+                {activityList.map((item, index) => (
+                  <Timeline.Item
+                    dot={
+                      <div
+                        className={
+                          " text-white capitalize rounded-full w-9 h-9 grid place-content-center"
+                        }
+                        style={{ backgroundColor: randomBgColor(index * 3) }}
+                      >
+                        {getFirstLetter(item.type)}
+                      </div>
+                    }
+                    className="recent-activity-timeline"
+                    key={item.id + index + "activity"}
                   >
-                    <EditOutlined className="text-base text-primary" />
-                  </div>
-                </div>
-                <div>
-                  <p className="text-sm 2xl:text-base text-primary font-semibold mb-1 flex items-center">
-                    Applaud Limit
-                    <span className="leading-[0] ml-2">
-                      {CustomPopover(
-                        "Count of Applauds that can be given by members in a month."
+                    <div className="px-3">
+                      <p className="flex-1 font-semibold mb-0 text-base">
+                        {item.title}
+                      </p>
+                      <p className="flex-1  mb-0 text-sm ">
+                        {item.description}
+                      </p>
+                      {item.created_date && (
+                        <p className="mt-1 mb-0   text-xs leading-6 ">
+                          {moment(item.created_date).fromNow()}
+                        </p>
                       )}
-                    </span>
-                  </p>
-
-                  <p className="text-base font-medium text-gray-600 mb-1">
-                    {applaudLimit}
-                  </p>
-                </div>
-              </div>
+                    </div>
+                  </Timeline.Item>
+                ))}
+              </Timeline>
             )}
           </div>
-        </Col>
-
-        <Col md={14} xs={24}>
-          <div className=" profile-applaud-card no-scrollbar rounded-md">
-            <div className="bg-white rounded-md transition-all duration-300 ease-in-out shadow-md mb-4  relative">
-              <p className=" text-lg md:text-xl text-primary font-semibold mb-0 sticky top-0 bg-white  p-5  xl:py-5  xl:px-6 z-20 rounded-md overflow-hidden">
-                Applaud Recieved
-              </p>
-              <div className="p-5  xl:py-5  xl:px-6 space-y-4  md:space-y-6">
-                {receivedApplaudList.length > 0 ? (
-                  receivedApplaudList.map((item, idx) => {
-                    return (
-                      <div key={idx + "applaud"}>
-                        <div className="flex justify-between items-start">
-                          <div className="flex items-center gap-4">
-                            <DefaultImages
-                              imageSrc={item?.created?.UserDetails?.image}
-                              width={40}
-                              height={40}
-                            />
-
-                            <div>
-                              <p className="text-base font-semibold mb-0">
-                                {item.created.first_name}
-                              </p>
-                              <p className="font-medium text-xs mb-0">
-                                {moment(item.created_date).format(
-                                  MONTH_DATE_FORMAT
-                                )}
-                              </p>
-                            </div>
-                          </div>
-
-                          <div
-                            className="flex justify-end cursor-pointer"
-                            onClick={() => shareLinkedinUrl(item)}
-                          >
-                            <div className="hover:bg-gray-100 border border-gray-300  py-1 px-2 rounded-full cursor-pointer transition-all  duration-300 ease-in-out">
-                              <ShareAltOutlined className="text-base text-primary" />
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="mt-3">
-                          <p className="text-base font-normal mb-2">
-                            {item?.comment}
-                          </p>
-                          <p className="mb-0 flex flex-wrap gap-2">
-                            {item?.category?.length > 0 &&
-                              item?.category.map((category, idx) => {
-                                return (
-                                  <span
-                                    key={idx + "cat"}
-                                    className=" px-2 py-1 rounded-full bg-gray-100 text-xs "
-                                  >
-                                    {getApplaudCategoryName(category)}
-                                  </span>
-                                );
-                              })}
-                          </p>
-                        </div>
-                      </div>
-                    );
-                  })
-                ) : (
-                  <p className="text-base font-normal mb-2">
-                    No Applauds Recieved Yet
-                  </p>
-                )}
-              </div>
-            </div>
-          </div>
-        </Col>
-      </Row>
+        </div>
+      )}
 
       <CustomModal
         title="Update Applaud Limit"

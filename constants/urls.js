@@ -10,6 +10,7 @@ export const URLS = {
   REVIEW_PREVIEW: "/review/preview",
   REVIEW_ATTEMPT: "/review/id",
   REVIEW_EDIT: "/review/edit",
+  REVIEW_QUESTION_PREVIEW: "/review/question/preview",
   APPLAUD: "/applaud",
   ALL_APPLAUD: "/applaud/all",
   APPLAUD_CREATE: "/applaud/add",

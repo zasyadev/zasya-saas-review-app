@@ -55,7 +55,7 @@ function RegisterPage() {
         layout="vertical"
         autoComplete="off"
         onFinish={handleSubmit}
-        className="login-form"
+        className="login-form mx-2 md:mx-6"
       >
         <Form.Item
           className="mb-3 lg:mb-5"
@@ -179,7 +179,7 @@ function RegisterPage() {
         <div className=" md:flex justify-end text-center lg:text-left">
           <p className="text-sm font-semibold mt-2 pt-1 mb-0">
             <Link href={URLS.LOGIN} passHref>
-              <span className="text-primary  font-semibold transition duration-200 ease-in-out cursor-pointer mb-2">
+              <span className="text-primary-green  font-semibold transition duration-200 ease-in-out cursor-pointer mb-2">
                 Back to Login
               </span>
             </Link>

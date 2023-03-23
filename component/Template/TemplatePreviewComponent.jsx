@@ -14,7 +14,7 @@ export function TemplatePreviewComponent({
     <div className="answer-preview space-y-2 md:space-y-4">
       <div className="bg-white border-b border-gray-200 p-4 md:p-5 md:shadow-md md:w-10/12 2xl:w-8/12 mx-auto md:rounded-md flex items-start justify-between gap-3">
         <div className="flex-1   space-y-3">
-          <p className="text-lg font-bold text-primary mb-1">{formTitle}</p>
+          <p className="text-lg font-bold  mb-1">{formTitle}</p>
           <p className="mb-1 font-medium">{length} Questions</p>
         </div>
         {isQuestionPreviewMode && templateId && (

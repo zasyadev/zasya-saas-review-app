@@ -3,6 +3,7 @@ import { Dropdown, Menu, Popconfirm } from "antd";
 import Link from "next/link";
 import React from "react";
 import { URLS } from "../../../constants/urls";
+import CustomAvatar from "../../common/CustomAvatar";
 import { ButtonGray } from "../../common/CustomButton";
 import CustomTable from "../../common/CustomTable";
 import { statusPill } from "../constants";
@@ -25,22 +26,17 @@ function GoalsCustomTable({
       key: "goal_title",
       render: (_, record) => (
         <Link href={`${URLS.GOAL}/${record.goal.id}/detail`} passHref>
-          <p className="cursor-pointer text-gray-500 mb-0 underline">
+          <p className="cursor-pointer text-gray-500 mb-0 hover:underline px-3">
             {record.goal.goal_title}
           </p>
         </Link>
       ),
     },
+
     {
-      title: "Assignee",
-      key: "goal_assignee",
-      render: (_, record) => (
-        <GoalAssigneeName
-          record={record}
-          userId={userId}
-          ShowAssigneeModal={ShowAssigneeModal}
-        />
-      ),
+      title: <p className="mb-0 text-center">End Date</p>,
+      key: "end_date",
+      render: (_, record) => <DateInfoCard endDate={record?.goal.end_date} />,
     },
     {
       title: "Status",
@@ -63,7 +59,7 @@ function GoalsCustomTable({
           }}
         >
           <span
-            className={`text-xs font-semibold px-2 py-1 uppercase rounded-md ${statusPill(
+            className={`text-xs font-medium px-3 py-2 uppercase rounded-md ${statusPill(
               record.status
             )}`}
           >
@@ -73,9 +69,20 @@ function GoalsCustomTable({
       ),
     },
     {
-      title: <p className="mb-0 text-center">End Date</p>,
-      key: "end_date",
-      render: (_, record) => <DateInfoCard endDate={record?.goal.end_date} />,
+      title: "Assignee",
+      key: "goal_assignee",
+      render: (_, record) => (
+        // <GoalAssigneeName
+        //   record={record}
+        //   userId={userId}
+        //   ShowAssigneeModal={ShowAssigneeModal}
+        // />
+        <CustomAvatar
+          userList={record?.goal?.GoalAssignee}
+          avatarCount={2}
+          className="w-8 h-8 text-sm"
+        />
+      ),
     },
     {
       title: "Action",
@@ -159,6 +166,7 @@ function GoalsCustomTable({
       className="custom-table rounded-md"
       showHeader={showHeader}
       isPagination={isPagination}
+      size="middle"
     />
   );
 }

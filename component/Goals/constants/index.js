@@ -35,37 +35,37 @@ export const goalsFilterList = [
   { value: "Delayed", label: "Delayed" },
   { value: "Abandoned", label: "Abandoned" },
   // { value: "AtRisk", label: "At Risk" },
-  // { value: "Archived", label: "Archived" },
+  { value: "Archived", label: "Archived" },
 ];
 
-export const statusPill = (key) => {
-  switch (key) {
-    case "Completed":
-      return "text-green-600 bg-green-200";
-    case "OnTrack":
-      return "text-blue-600 bg-blue-200";
-    case "Delayed":
-      return "text-orange-600 bg-orange-200";
-    case "AtRisk":
-      return "text-red-600 bg-red-200";
-    case "Abandoned":
-      return "text-gray-500 bg-gray-100";
-    default:
-      return "";
-  }
+export const statusPill = (type) => {
+  const statusType = {
+    Completed: "text-green-600 bg-green-200",
+    OnTrack: "text-blue-600 bg-blue-200",
+    Delayed: "text-orange-600 bg-orange-200",
+    AtRisk: "text-red-600 bg-red-200",
+    Abandoned: "text-gray-500 bg-gray-100",
+  };
+  return statusType[type] || "";
+};
+
+export const statusBackground = (type) => {
+  const statusType = {
+    Completed: "bg-brandGreen-300",
+    OnTrack: "bg-brandBlue-300",
+    Delayed: "bg-orange-500",
+    AtRisk: "bg-red-500",
+    Abandoned: "bg-gray-500",
+  };
+  return statusType[type] || "";
 };
 
 export const getGoalFrequency = (number) => {
-  switch (number) {
-    case 0:
-      return "daily";
-    case 1:
-      return "weekly";
-    case 2:
-      return "monthly";
-    case 3:
-      return "halfyearly";
-    default:
-      return 0;
-  }
+  const frequencyType = {
+    0: "daily",
+    1: "weekly",
+    2: "monthly",
+    3: "halfyearly",
+  };
+  return frequencyType[number] || "";
 };

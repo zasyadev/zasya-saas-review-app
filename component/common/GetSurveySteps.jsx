@@ -7,13 +7,11 @@ import { CustomInput, CustomTextArea } from "./CustomFormFeilds";
 const SurveyTitleStep = () => {
   return (
     <div className="w-full md:w-1/2 bg-white  mx-auto rounded-md">
-      <div className="text-primary text-base md:text-lg  font-bold border-b border-gray-200 p-4 md:py-5 md:px-6">
+      <div className=" text-base md:text-lg  font-bold border-b border-gray-200 p-4 md:py-5 md:px-6">
         Share a Survey
       </div>
       <div className="p-4 md:py-5 md:px-6 space-y-5">
-        <p className="text-base font-bold  text-primary">
-          Please enter your survey title
-        </p>
+        <p className="text-base font-bold  ">Please enter your survey title</p>
 
         <Form.Item
           name="survey_name"
@@ -27,7 +25,7 @@ const SurveyTitleStep = () => {
           <CustomInput placeholder="for eg: Monthly survey , Lastest trip survey , weekly survey ... " />
         </Form.Item>
 
-        <p className="text-base font-bold  text-primary">
+        <p className="text-base font-bold  ">
           Please enter your survey description
         </p>
         <Form.Item

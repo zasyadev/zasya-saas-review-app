@@ -1,3 +1,4 @@
+import { activityTitle, ACTIVITY_TYPE_ENUM } from "../../../constants";
 import { getGoalEndDays } from "../../../helpers/momentHelper";
 import {
   CustomizeSlackMessage,
@@ -32,22 +33,29 @@ async function handle(req, res, prisma, user) {
     ];
 
     if (req?.query?.status !== "All") {
-      filteredStatement1.push({
-        status: req.query.status,
-      });
-      filteredStatement2.push({
-        status: req.query.status,
-      });
-    }
-
-    if (req?.query?.isArchived) {
-      let filter = {
-        goal: {
-          is_archived: true,
-        },
-      };
-      filteredStatement1.push(filter);
-      filteredStatement2.push(filter);
+      if (req?.query?.status === "Archived") {
+        let filter = {
+          goal: {
+            is_archived: true,
+          },
+        };
+        filteredStatement1.push(filter);
+        filteredStatement2.push(filter);
+      } else {
+        let filter = {
+          goal: {
+            is_archived: false,
+          },
+        };
+        filteredStatement1.push(filter);
+        filteredStatement2.push(filter);
+        filteredStatement1.push({
+          status: req.query.status,
+        });
+        filteredStatement2.push({
+          status: req.query.status,
+        });
+      }
     } else {
       let filter = {
         goal: {
@@ -60,7 +68,7 @@ async function handle(req, res, prisma, user) {
 
     const data = await prisma.goalAssignee.findMany({
       orderBy: {
-        modified_date: "desc",
+        modified_date: "asc",
       },
       where: {
         OR: [{ AND: filteredStatement1 }, { AND: filteredStatement2 }],
@@ -149,7 +157,7 @@ async function handle(req, res, prisma, user) {
 
             data.GoalAssignee = { create: assigneeData };
           }
-          await prisma.goals.create({
+          const goalData = await prisma.goals.create({
             data: data,
           });
           if (reqBody.goal_type === "Individual") {
@@ -172,6 +180,37 @@ async function handle(req, res, prisma, user) {
                   user: { connect: { id: assignee } },
                   data: notificationMessage,
                   read_at: null,
+                  organization: {
+                    connect: { id: organization_id },
+                  },
+                },
+              });
+
+              await prisma.userActivity.create({
+                data: {
+                  user: { connect: { id: assignee } },
+                  type: ACTIVITY_TYPE_ENUM.GOAL,
+                  title: activityTitle(ACTIVITY_TYPE_ENUM.GOAL, createdBy),
+                  description: header.goal_title,
+                  link: notificationMessage.link,
+                  type_id: goalData.id,
+                  organization: {
+                    connect: { id: organization_id },
+                  },
+                },
+              });
+
+              await prisma.userActivity.create({
+                data: {
+                  user: { connect: { id: userId } },
+                  type: ACTIVITY_TYPE_ENUM.GOAL,
+                  title: activityTitle(
+                    ACTIVITY_TYPE_ENUM.GOALGIVEN,
+                    assignedUser.first_name
+                  ),
+                  description: header.goal_title,
+                  link: notificationMessage.link,
+                  type_id: goalData.id,
                   organization: {
                     connect: { id: organization_id },
                   },

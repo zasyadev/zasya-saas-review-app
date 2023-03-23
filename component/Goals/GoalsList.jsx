@@ -5,6 +5,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { URLS } from "../../constants/urls";
 import { useLocalStorage } from "../../helpers/useStorage";
 import httpService from "../../lib/httpService";
+import CountHeaderCard from "../common/CountHeaderCard";
 import {
   ButtonGray,
   PrimaryButton,
@@ -43,9 +44,11 @@ const initialGoalCountModalData = {
   isVisible: false,
 };
 const ALL_STATUS = "All";
+const currentTime = moment().format();
 
-function GoalsList({ user, isArchived = false }) {
+function GoalsList({ user }) {
   const [searchText, setSearchText] = useState("");
+  const [isArchived, setIsArchived] = useState(false);
   const [filterByMembersId, setFilterByMembersId] = useState([]);
   const [updateGoalForm] = Form.useForm();
   const [loading, setLoading] = useState(false);
@@ -69,23 +72,22 @@ function GoalsList({ user, isArchived = false }) {
       .get(`/api/goals?status=${status}`)
       .then(({ data: response }) => {
         if (response.status === 200) {
-          setGoalsList(response.data);
-        }
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error(err?.response?.data?.message);
-      });
-  }
-  async function fetchArchivedGoalList() {
-    setLoading(true);
-    setGoalsList([]);
-
-    await httpService
-      .get(`/api/goals?isArchived=true`)
-      .then(({ data: response }) => {
-        if (response.status === 200) {
-          setGoalsList(response.data);
+          let sortData = response.data.sort((a, b) => {
+            if (
+              a.goal.end_date < currentTime &&
+              b.goal.end_date >= currentTime
+            ) {
+              return 1; // a should come after b in the sorted order
+            }
+            if (
+              b.goal.end_date < currentTime &&
+              a.goal.end_date >= currentTime
+            ) {
+              return -1; // a should come before b in the sorted order
+            }
+            return 0; // a and b are equal
+          });
+          setGoalsList(sortData);
         }
         setLoading(false);
       })
@@ -124,15 +126,13 @@ function GoalsList({ user, isArchived = false }) {
   }, [goalsList, userList]);
 
   useEffect(() => {
-    if (isArchived) {
-      fetchArchivedGoalList();
-    } else {
-      fetchUserData();
-      fetchGoalList(ALL_STATUS);
-    }
-  }, [isArchived]);
+    fetchUserData();
+    fetchGoalList(ALL_STATUS);
+  }, []);
 
   const handleFilterChange = (value) => {
+    if (value === "Archived") setIsArchived(true);
+    else setIsArchived(false);
     fetchGoalList(value);
   };
 
@@ -155,21 +155,31 @@ function GoalsList({ user, isArchived = false }) {
     return [];
   }, [goalsList, searchText, filterByMembersId]);
 
-  const sortListByEndDate = useMemo(() => {
-    if (Number(filteredGoalList?.length) > 0) {
-      const latestUpcomingGoalsList = filteredGoalList
-        .filter(
-          (item) => moment(item?.goal?.end_date).diff(moment(), "days") >= 0
-        )
-        .sort((a, b) =>
-          moment(a?.goal?.end_date).diff(moment(b?.goal?.end_date))
-        );
+  const goalListData = useMemo(() => {
+    let totalGoals = 0;
+    let completedGoals = 0;
+    let pendingGoals = 0;
 
-      if (latestUpcomingGoalsList.length < 3) return latestUpcomingGoalsList;
-
-      return latestUpcomingGoalsList.slice(0, 3);
-    } else return [];
-  }, [filteredGoalList]);
+    if (Number(goalsList?.length) > 0) {
+      totalGoals = goalsList.length;
+      completedGoals = goalsList.filter(
+        (item) => item.status === COMPLETED_STATUS
+      ).length;
+      pendingGoals = goalsList.filter(
+        (item) => item.status !== COMPLETED_STATUS
+      ).length;
+      return {
+        totalGoals,
+        completedGoals,
+        pendingGoals,
+      };
+    } else
+      return {
+        totalGoals,
+        completedGoals,
+        pendingGoals,
+      };
+  }, [goalsList]);
 
   const goalEditHandle = async ({ goal_id, id, value, type }) => {
     setLoading(true);
@@ -181,8 +191,7 @@ function GoalsList({ user, isArchived = false }) {
       })
       .then(({ data: response }) => {
         if (response.status === 200) {
-          if (isArchived) fetchArchivedGoalList();
-          else fetchGoalList(ALL_STATUS);
+          fetchGoalList(ALL_STATUS);
           setEditGoalModalVisible(initialModalVisible);
         }
         setLoading(false);
@@ -227,81 +236,91 @@ function GoalsList({ user, isArchived = false }) {
 
   return (
     <div className="container mx-auto max-w-full">
-      {!loading && !isArchived && Number(sortListByEndDate?.length) > 0 && (
-        <div className="gap-4 mb-4 bg-white rounded-md">
-          <GoalsCustomTable
-            goalList={sortListByEndDate}
-            goalEditHandle={goalEditHandle}
-            userId={user.id}
-            isArchived={isArchived}
-            ShowAssigneeModal={ShowAssigneeModal}
-            ShowEditGoalModal={ShowEditGoalModal}
+      <div className="flex justify-between items-start mb-2 ">
+        <p className="text-xl font-semibold mb-0">Goals</p>
+        <PrimaryButton
+          withLink={true}
+          linkHref={URLS.GOAL_CREATE}
+          title={"Create"}
+        />
+      </div>
+      <div className="grid col-span-1 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-4 ">
+        <CountHeaderCard
+          imgSrc="/media/svg/contract-management.svg"
+          imgSrcClassNames="bg-brandGreen-200"
+          title="Total"
+          subTitle={goalListData.totalGoals}
+        />
+        <CountHeaderCard
+          imgSrc="/media/svg/completed-goals.svg"
+          imgSrcClassNames="bg-brandOrange-200"
+          title="Completed"
+          subTitle={goalListData.completedGoals}
+        />
+        <CountHeaderCard
+          imgSrc="/media/svg/contract-pending.svg"
+          imgSrcClassNames="bg-brandBlue-200"
+          title="Pending"
+          subTitle={goalListData.pendingGoals}
+        />
+      </div>
+
+      <div className="flex flex-col md:flex-row justify-between items-center  flex-wrap gap-4  mb-4 md:mb-6 ">
+        <div className="flex justify-center md:justify-start items-center  flex-wrap gap-4 flex-1">
+          <Input
+            size="large"
+            className="rounded-md"
+            placeholder="Search"
+            style={{ maxWidth: 200 }}
+            onChange={(event) => {
+              let value = event.target.value;
+              value = value?.trim() || "";
+              setSearchText(value.toLowerCase());
+            }}
+          />
+
+          <GoalsAvatar
+            activeGoalUsers={activeGoalUsers}
+            filterByMembersId={filterByMembersId}
+            setFilterByMembersId={setFilterByMembersId}
+          />
+
+          <CustomSelectBox
+            className={" w-36 text-sm"}
+            arrayList={goalsFilterList}
+            handleOnChange={(selectedKey) => handleFilterChange(selectedKey)}
+            defaultValue={ALL_STATUS}
           />
         </div>
-      )}
-      {!isArchived && (
-        <div className="flex flex-col md:flex-row justify-between items-center  flex-wrap gap-4  mb-4 md:mb-6 ">
-          <div className="flex justify-center md:justify-start items-center  flex-wrap gap-4 flex-1">
-            <Input
-              size="large"
-              className="rounded-md"
-              placeholder="Search"
-              style={{ maxWidth: 200 }}
-              onChange={(event) => {
-                let value = event.target.value;
-                value = value?.trim() || "";
-                setSearchText(value.toLowerCase());
-              }}
-            />
-
-            <GoalsAvatar
-              activeGoalUsers={activeGoalUsers}
-              filterByMembersId={filterByMembersId}
-              setFilterByMembersId={setFilterByMembersId}
-            />
-
-            <CustomSelectBox
-              className={" w-36 text-sm"}
-              arrayList={goalsFilterList}
-              handleOnChange={(selectedKey) => handleFilterChange(selectedKey)}
-              defaultValue={ALL_STATUS}
-            />
-          </div>
-          <div className=" flex items-center justify-center md:justify-end flex-wrap gap-4 flex-1">
-            <div className="space-x-2">
-              <Tooltip title="Grid View">
-                <ButtonGray
-                  withLink={false}
-                  onClick={() => setDisplayMode(GRID_DISPLAY)}
-                  title={<ApartmentOutlined />}
-                  className={`leading-0 ${
-                    displayMode === GRID_DISPLAY
-                      ? "border-2 border-primary bg-gray-200"
-                      : " "
-                  }`}
-                />
-              </Tooltip>
-              <Tooltip title="List View">
-                <ButtonGray
-                  withLink={false}
-                  onClick={() => setDisplayMode(LIST_DISPLAY)}
-                  title={<UnorderedListOutlined />}
-                  className={`leading-0 ${
-                    displayMode === LIST_DISPLAY
-                      ? "border-2 border-primary bg-gray-200"
-                      : " "
-                  }`}
-                />
-              </Tooltip>
-            </div>
-            <PrimaryButton
-              withLink={true}
-              linkHref={URLS.GOAL_CREATE}
-              title={"Create"}
-            />
+        <div className=" flex items-center justify-center md:justify-end flex-wrap gap-4 flex-1">
+          <div className="space-x-2">
+            <Tooltip title="Grid View">
+              <ButtonGray
+                withLink={false}
+                onClick={() => setDisplayMode(GRID_DISPLAY)}
+                title={<ApartmentOutlined />}
+                className={`leading-0 ${
+                  displayMode === GRID_DISPLAY
+                    ? "border-2 border-primary bg-gray-200"
+                    : " "
+                }`}
+              />
+            </Tooltip>
+            <Tooltip title="List View">
+              <ButtonGray
+                withLink={false}
+                onClick={() => setDisplayMode(LIST_DISPLAY)}
+                title={<UnorderedListOutlined />}
+                className={`leading-0 ${
+                  displayMode === LIST_DISPLAY
+                    ? "border-2 border-primary bg-gray-200"
+                    : " "
+                }`}
+              />
+            </Tooltip>
           </div>
         </div>
-      )}
+      </div>
 
       <div
         className={`grid grid-cols-1 ${
@@ -324,7 +343,7 @@ function GoalsList({ user, isArchived = false }) {
             <GoalsGroupList
               goalsList={filteredGoalList}
               userId={user.id}
-              fetchGoalList={isArchived ? fetchArchivedGoalList : fetchGoalList}
+              fetchGoalList={fetchGoalList}
               title={groupItem.title}
               key={groupItem.type}
               type={groupItem.type}
@@ -343,9 +362,9 @@ function GoalsList({ user, isArchived = false }) {
               userId={user.id}
               isArchived={isArchived}
               ShowAssigneeModal={ShowAssigneeModal}
-              showHeader
               isPagination
               ShowEditGoalModal={ShowEditGoalModal}
+              showHeader={false}
             />
           </div>
         )}

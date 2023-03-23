@@ -47,12 +47,12 @@ const GetAssigneesList = ({ userId, GoalAssignee }) => {
                 </div>
 
                 <div className="flex-1">
-                  <p className="mb-0 text-primary font-medium text-base">
+                  <p className="mb-0  font-medium text-base">
                     {assignee?.assignee?.first_name}
                   </p>
                 </div>
                 <div className="flex-1">
-                  <p className="mb-0 text-primary font-medium text-base">
+                  <p className="mb-0  font-medium text-base">
                     {assignee?.status}
                   </p>
                 </div>

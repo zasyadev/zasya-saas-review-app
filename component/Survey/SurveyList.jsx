@@ -136,7 +136,8 @@ function SurveyList({ user }) {
   return (
     <div className="container mx-auto max-w-full">
       <div className="grid grid-cols-1 mb-16">
-        <div className="flex flex-row items-center justify-end flex-wrap gap-4  mb-4 md:mb-6 ">
+        <div className="flex flex-row items-center justify-between flex-wrap gap-4  mb-4 md:mb-6 ">
+          <p className="text-xl font-semibold mb-0">Surveys</p>
           <PrimaryButton
             withLink={false}
             onClick={() => setCreateSurveyModal(true)}

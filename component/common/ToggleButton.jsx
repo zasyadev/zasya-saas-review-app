@@ -4,7 +4,7 @@ import CustomSelectBox from "./CustomSelectBox";
 export default function ToggleButton({ arrayList, activeKey, handleToggle }) {
   return (
     <>
-      <div className="md:flex hidden">
+      {/* <div className="md:flex hidden">
         {arrayList.map((item, idx) => (
           <button
             className={` w-1/2  md:w-fit rounded-md text-center px-4 py-2 border font-medium ${
@@ -24,10 +24,10 @@ export default function ToggleButton({ arrayList, activeKey, handleToggle }) {
             {item.label}
           </button>
         ))}
-      </div>
+      </div> */}
 
       <CustomSelectBox
-        className={"block md:hidden w-36 text-sm question-select-box"}
+        className={"block  w-36 text-sm question-select-box"}
         arrayList={arrayList}
         valueInLabel
         value={activeKey}

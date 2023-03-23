@@ -4,7 +4,11 @@ import {
   SlackPostMessage,
 } from "../../../helpers/slackHelper";
 import { RequestHandler } from "../../../lib/RequestHandler";
-import { USER_SELECT_FEILDS } from "../../../constants";
+import {
+  activityTitle,
+  ACTIVITY_TYPE_ENUM,
+  USER_SELECT_FEILDS,
+} from "../../../constants";
 const BASE_URL = process.env.NEXT_APP_URL;
 
 async function handle(req, res, prisma) {
@@ -134,6 +138,40 @@ async function handle(req, res, prisma) {
                 user: { connect: { id: user.id } },
                 data: notificationMessage,
                 read_at: null,
+                organization: {
+                  connect: { id: assignedFromData.organization_id },
+                },
+              },
+            });
+
+            await prisma.userActivity.create({
+              data: {
+                user: { connect: { id: user.id } },
+                type: ACTIVITY_TYPE_ENUM.REVIEW,
+                title: activityTitle(
+                  ACTIVITY_TYPE_ENUM.REVIEW,
+                  assignedFromData.first_name
+                ),
+                description: resData.review_name,
+                link: `${BASE_URL}review`,
+                type_id: transactionData.savedData.id,
+                organization: {
+                  connect: { id: assignedFromData.organization_id },
+                },
+              },
+            });
+
+            await prisma.userActivity.create({
+              data: {
+                user: { connect: { id: resData.created_by } },
+                type: ACTIVITY_TYPE_ENUM.REVIEW,
+                title: activityTitle(
+                  ACTIVITY_TYPE_ENUM.REVIEWGIVEN,
+                  user.first_name
+                ),
+                description: resData.review_name,
+                link: `${BASE_URL}review`,
+                type_id: transactionData.savedData.id,
                 organization: {
                   connect: { id: assignedFromData.organization_id },
                 },

@@ -70,9 +70,9 @@ function MeetingCommentModal({
         onFinish={onFinishUpdatingComment}
       >
         <Form.Item name="comment" label="Comment">
-          <Input
-            rows={2}
-            className=" h-12 rounded-md"
+          <Input.TextArea
+            rows={3}
+            className="rounded-md"
             placeholder="Add your thoughts abouts the follow up meetings"
           />
         </Form.Item>

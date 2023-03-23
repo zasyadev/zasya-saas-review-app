@@ -21,7 +21,9 @@ const CustomModal = ({
     <Modal
       title={
         title ? (
-          <div className="text-white text-base xl:text-lg mb-0">{title}</div>
+          <div className=" text-base xl:text-lg font-semibold mb-0">
+            {title}
+          </div>
         ) : null
       }
       className={`${className}`}

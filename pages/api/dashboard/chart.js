@@ -1,6 +1,6 @@
 import { RequestHandler } from "../../../lib/RequestHandler";
 
-async function handle(req, res, prisma, user) {
+async function handle(_, res, prisma, user) {
   const { id: userId } = user;
 
   if (!userId) {
@@ -10,24 +10,52 @@ async function handle(req, res, prisma, user) {
     where: { id: userId },
   });
 
-  let query =
+  const monthWiseDataHandle = (query) => {
+    const data = [...Array(12)].map((_, indx) => {
+      const checkMonth = query.find((i) => i.month == indx + 1);
+      if (checkMonth) {
+        return Number(checkMonth.count);
+      }
+      return 0;
+    });
+    return data;
+  };
+
+  let reviewQuery =
     await prisma.$queryRawUnsafe`SELECT     COUNT(*) as count,MONTH( created_date) as month 
         FROM      review 
         WHERE     YEAR(created_date) =  YEAR(CURDATE()) AND organization_id = ${userTableData.organization_id}
         GROUP BY  MONTH(created_date)`;
 
-  const chartData = [...Array(12)].map((_, indx) => {
-    const checkMonth = query.find((i) => i.month == indx + 1);
-    if (checkMonth) {
-      return Number(checkMonth.count);
-    }
-    return 0;
-  });
+  const reviewChartData = monthWiseDataHandle(reviewQuery);
 
-  if (chartData.length) {
+  let goalQuery =
+    await prisma.$queryRawUnsafe`SELECT     COUNT(*) as count,MONTH( created_date) as month 
+      FROM      goals 
+      WHERE     YEAR(created_date) =  YEAR(CURDATE()) AND organization_id = ${userTableData.organization_id}
+      GROUP BY  MONTH(created_date)`;
+  const goalChartData = monthWiseDataHandle(goalQuery);
+
+  let applaudQuery =
+    await prisma.$queryRawUnsafe`SELECT     COUNT(*) as count,MONTH( created_date) as month 
+    FROM      user_applaud 
+    WHERE     YEAR(created_date) =  YEAR(CURDATE()) AND organization_id = ${userTableData.organization_id}
+    GROUP BY  MONTH(created_date)`;
+
+  const applaudChartData = monthWiseDataHandle(applaudQuery);
+
+  if (
+    reviewChartData.length &&
+    goalChartData.length &&
+    applaudChartData.length
+  ) {
     return res.status(200).json({
       status: 200,
-      data: chartData,
+      data: {
+        reviewChartData,
+        goalChartData,
+        applaudChartData,
+      },
       message: "Chart Data Received",
     });
   }

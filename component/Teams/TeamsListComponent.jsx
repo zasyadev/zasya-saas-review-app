@@ -95,19 +95,22 @@ function TeamsListComponent({ user }) {
   ];
   return (
     <div className="container mx-auto max-w-full">
-      <div className="mb-4 md:mb-6 flex justify-end space-x-3">
-        <ButtonGray
-          withLink={true}
-          className="px-2 md:px-4 "
-          linkHref={URLS.USERS}
-          title={"All Users"}
-        />
-        <PrimaryButton
-          withLink={true}
-          className="px-2 md:px-4 "
-          linkHref={URLS.TEAM_CREATE}
-          title={"Create"}
-        />
+      <div className="flex flex-row items-center justify-between flex-wrap gap-4  mb-2 xl:mb-4 ">
+        <p className="text-xl font-semibold mb-0">Teams</p>
+        <div className="flex justify-end space-x-2">
+          <ButtonGray
+            withLink={true}
+            className="px-2 md:px-4 "
+            linkHref={URLS.USERS}
+            title={"All Users"}
+          />
+          <PrimaryButton
+            withLink={true}
+            className="px-2 md:px-4 "
+            linkHref={URLS.TEAM_CREATE}
+            title={"Create"}
+          />
+        </div>
       </div>
 
       <div className="w-full bg-white rounded-md overflow-hdden shadow-md">

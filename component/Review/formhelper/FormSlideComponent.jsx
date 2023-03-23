@@ -72,9 +72,7 @@ export function FormSlideComponent({
               okText="Yes"
               cancelText="No"
               onConfirm={() =>
-                router.replace(
-                  fromType === REVIEW_TYPE ? "/review/received" : "/"
-                )
+                router.replace(fromType === REVIEW_TYPE ? "/review" : "/")
               }
               placement="right"
               overlayClassName="max-w-sm"

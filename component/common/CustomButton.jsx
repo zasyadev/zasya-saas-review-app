@@ -28,11 +28,10 @@ export function PrimaryButton({
 
   const btnClassName = twMerge(
     `text-white text-center px-4 py-2 rounded-md  ${
-      isDisabled ? "bg-primary/70" : "bg-primary"
+      isDisabled ? "bg-primary-green/70" : "bg-primary-green"
     }`,
     className
   );
-
   return withLink ? (
     <Link href={linkHref} passHref>
       <button className={btnClassName} {...restProp} disabled={isDisabled}>
@@ -65,8 +64,8 @@ export function SecondaryButton({
   const isDisabled = disabled || loading;
 
   const btnClassName = twMerge(
-    `rounded-md text-white text-center px-4 py-2  ${
-      isDisabled ? "bg-secondary/70" : "bg-secondary"
+    `rounded-md text-primary-green text-center px-4 py-2 border-2 border-primary-green ${
+      isDisabled ? "bg-secondary/70" : "bg-white"
     }`,
     className
   );

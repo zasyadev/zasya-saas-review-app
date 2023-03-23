@@ -4,7 +4,7 @@ import React from "react";
 export function CustomInput(props) {
   return (
     <Input
-      className={`focus:border-primary text-base font-medium hover:border-primary shadow hover:shadow-primary  focus:shadow-primary h-12 rounded-md placeholder-gray-500  ${props.customclassname}`}
+      className={`focus:border-primary-green text-base font-medium hover:border-primary-green shadow hover:shadow-primary-green  focus:shadow-primary-green h-12 rounded-md placeholder-gray-500  ${props.customclassname}`}
       {...props}
     />
   );
@@ -12,7 +12,7 @@ export function CustomInput(props) {
 export function CustomTextArea(props) {
   return (
     <Input.TextArea
-      className={`focus:border-primary text-base font-medium hover:border-primary shadow hover:shadow-primary  focus:shadow-primary  rounded-md placeholder-gray-500  ${props.customclassname}`}
+      className={`focus:border-primary-green text-base font-medium hover:border-primary-green shadow hover:shadow-primary-green  focus:shadow-primary-green  rounded-md placeholder-gray-500  ${props.customclassname}`}
       {...props}
     />
   );
