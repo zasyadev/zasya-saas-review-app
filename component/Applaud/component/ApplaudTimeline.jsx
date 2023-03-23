@@ -11,9 +11,7 @@ function ApplaudTimeline({ list }) {
         <Timeline.Item
           dot={
             <div
-              className={
-                " text-white capitalize rounded-full w-9 h-9 grid place-content-center"
-              }
+              className="text-white capitalize rounded-full w-9 h-9 grid place-content-center"
               style={{ backgroundColor: randomBgColor(index * 3) }}
             >
               {getFirstLetter(item.created.first_name)}

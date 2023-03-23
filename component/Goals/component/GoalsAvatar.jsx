@@ -60,11 +60,14 @@ function GoalsAvatar({
               {activeGoalUsers.map((data, index) =>
                 index > remainingAvatarCount ? (
                   <div
-                    className={`font-semibold px-4 py-2 cursor-pointer hover:bg-gray-50 ${
-                      filterByMembersId.includes(data?.user?.id)
-                        ? " bg-gray-100"
-                        : ""
-                    }`}
+                    className={clsx(
+                      "font-semibold px-4 py-2 cursor-pointer hover:bg-gray-50",
+                      {
+                        "bg-gray-100": filterByMembersId.includes(
+                          data?.user?.id
+                        ),
+                      }
+                    )}
                     key={data?.user?.first_name + index}
                     onClick={() => {
                       if (filterByMembersId.includes(data?.user?.id)) {

@@ -7,9 +7,6 @@ import { CustomInput, CustomTextArea } from "./CustomFormFeilds";
 const FeedbackTitleStep = () => {
   return (
     <div className="w-full md:w-1/2 bg-white  mx-auto rounded-md">
-      {/* <div className=" text-base md:text-lg  font-bold border-b border-gray-200 p-4 md:py-5 md:px-6">
-        Assign a review
-      </div> */}
       <div className="p-4 md:py-5 md:px-6 space-y-5">
         <p className="text-base font-medium  ">
           Please enter your feedback title
