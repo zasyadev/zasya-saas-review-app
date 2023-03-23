@@ -1,4 +1,5 @@
 import { DatePicker } from "antd";
+import clsx from "clsx";
 import moment from "moment";
 import React, { useEffect, useMemo, useState } from "react";
 import { ApplaudGiven, ApplaudIconSmall } from "../../assets/icons";
@@ -101,11 +102,14 @@ function AllAplaud({ user }) {
               allApplaud.map((item, idx) =>
                 Object.entries(item).map(([key, value]) => (
                   <div
-                    className={`bg-white rounded-md overflow-hidden shadow-md  p-4 mb-3 cursor-pointer flex gap-4 shrink-0 items-center ${
-                      filterByUserId === value.user_id
-                        ? "border border-blue-800"
-                        : ""
-                    }`}
+                    className={clsx(
+                      "bg-white rounded-md overflow-hidden shadow-md  p-4 mb-3",
+                      "flex gap-4 shrink-0 items-center cursor-pointer",
+                      {
+                        "border border-blue-800":
+                          filterByUserId === value.user_id,
+                      }
+                    )}
                     onClick={() => {
                       setFilterByUserId((prev) =>
                         prev === value.user_id ? "" : value.user_id

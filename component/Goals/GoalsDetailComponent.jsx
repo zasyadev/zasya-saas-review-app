@@ -85,20 +85,20 @@ function GoalsDetailComponent({ user, isArchived = false }) {
           </div>
         )}
         <div className="grid grid-cols-1 md:grid-cols-3 md:space-x-8">
-          <div className=" space-y-5  col-span-2">
-            <p className="  font-bold text-lg md:text-xl mb-0 break-all">
+          <div className="space-y-5  col-span-2">
+            <p className="font-bold text-lg md:text-xl mb-0 break-all">
               {goalData?.goal_title}
             </p>
             <div className="space-y-1">
-              <p className="  font-semibold text-base md:text-lg mb-0">
+              <p className="font-semibold text-base md:text-lg mb-0">
                 Description
               </p>
-              <p className="  font-medium text-xs md:text-sm mb-0">
+              <p className="font-medium text-xs md:text-sm mb-0">
                 {goalData?.goal_description}
               </p>
             </div>
             <div className="space-y-1">
-              <p className="  font-semibold text-base md:text-lg mb-0 mt-6">
+              <p className="font-semibold text-base md:text-lg mb-0 mt-6">
                 Timeline
               </p>
               <Timeline className="p-4 py-6 lg:w-11/12">
@@ -125,7 +125,7 @@ function GoalsDetailComponent({ user, isArchived = false }) {
                       </div>
                       {item?.comment && (
                         <div className="border border-gray-300 rounded-md px-4 py-3 mt-2">
-                          <p className=" mb-0 text-sm md:text-base">
+                          <p className="mb-0 text-sm md:text-base">
                             {item.comment}
                           </p>
                         </div>
@@ -144,23 +144,23 @@ function GoalsDetailComponent({ user, isArchived = false }) {
               </Timeline>
             </div>
           </div>
-          <div className="">
-            <p className="  font-bold text-lg md:text-xl mb-2">Details</p>
+          <div>
+            <p className="font-bold text-lg md:text-xl mb-2">Details</p>
             <div className="border-2 border-gray-100 p-4 space-y-4 rounded-md shadow-sm">
               <div className="space-y-1">
-                <p className="  font-semibold text-base mb-0">Created By</p>
-                <p className=" text-gray-700 font-medium text-xs md:text-sm mb-0">
+                <p className="font-semibold text-base mb-0">Created By</p>
+                <p className="text-gray-700 font-medium text-xs md:text-sm mb-0">
                   {goalData?.created?.first_name}
                 </p>
               </div>
               <div className="space-y-1">
-                <p className="  font-semibold text-base mb-0">Goal Scope</p>
-                <p className=" text-gray-700 font-medium text-xs md:text-sm capitalize mb-0">
+                <p className="font-semibold text-base mb-0">Goal Scope</p>
+                <p className="text-gray-700 font-medium text-xs md:text-sm capitalize mb-0">
                   {goalData?.frequency}
                 </p>
               </div>
               <div className="space-y-1">
-                <p className="  font-semibold text-base mb-1">Status</p>
+                <p className="font-semibold text-base mb-1">Status</p>
                 <span
                   className={clsx(
                     "px-2 py-1 font-medium text-xs md:text-sm mb-0 uppercase rounded-md",
@@ -179,22 +179,23 @@ function GoalsDetailComponent({ user, isArchived = false }) {
 
               {goalData && Number(goalData?.GoalAssignee?.length) > 1 && (
                 <div className="space-y-1">
-                  <p className="  font-semibold text-base mb-0">Assignees</p>
+                  <p className="font-semibold text-base mb-0">Assignees</p>
                   <div className="grid md:grid-cols-2 gap-2 max-h-40 overflow-auto custom-scrollbar">
                     {goalData?.GoalAssignee?.filter(
                       (item) => item.assignee_id !== goalData?.created_by
                     )?.map((item) => (
                       <>
                         <p
-                          className=" text-gray-700 font-medium text-xs md:text-sm mb-0"
+                          className="text-gray-700 font-medium text-xs md:text-sm mb-0"
                           key={item.id + "name"}
                         >
                           {item?.assignee?.first_name}
                         </p>
                         <span
-                          className={`w-28 px-2 py-1  font-medium text-xs md:text-sm mb-0 text-center uppercase rounded-md ${statusPill(
-                            item?.status
-                          )}`}
+                          className={clsx(
+                            "w-28 px-2 py-1  font-medium text-xs md:text-sm mb-0 text-center uppercase rounded-md",
+                            statusPill(item?.status)
+                          )}
                           key={item.id + "status"}
                         >
                           {item?.status}
@@ -222,7 +223,7 @@ function GoalsDetailComponent({ user, isArchived = false }) {
 
       {Number(goalData?.MeetingType?.length) > 0 && (
         <div className="bg-white rounded-md  shadow-md relative p-4 lg:p-6 mt-4 md:mt-6">
-          <p className="  font-bold text-lg md:text-xl mb-2">
+          <p className="font-bold text-lg md:text-xl mb-2">
             Follow Up Meetings
           </p>
           <CustomTable

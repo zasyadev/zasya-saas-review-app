@@ -1,5 +1,6 @@
 import { ApartmentOutlined, UnorderedListOutlined } from "@ant-design/icons";
 import { Form, Input, Select, Tooltip } from "antd";
+import clsx from "clsx";
 import moment from "moment";
 import React, { useEffect, useMemo, useState } from "react";
 import { URLS } from "../../constants/urls";
@@ -299,11 +300,10 @@ function GoalsList({ user }) {
                 withLink={false}
                 onClick={() => setDisplayMode(GRID_DISPLAY)}
                 title={<ApartmentOutlined />}
-                className={`leading-0 ${
-                  displayMode === GRID_DISPLAY
-                    ? "border-2 border-primary bg-gray-200"
-                    : " "
-                }`}
+                className={clsx("leading-0", {
+                  "border-2 border-primary-green bg-gray-200":
+                    displayMode === GRID_DISPLAY,
+                })}
               />
             </Tooltip>
             <Tooltip title="List View">
@@ -311,11 +311,10 @@ function GoalsList({ user }) {
                 withLink={false}
                 onClick={() => setDisplayMode(LIST_DISPLAY)}
                 title={<UnorderedListOutlined />}
-                className={`leading-0 ${
-                  displayMode === LIST_DISPLAY
-                    ? "border-2 border-primary bg-gray-200"
-                    : " "
-                }`}
+                className={clsx("leading-0", {
+                  "border-2 border-primary-green bg-gray-200":
+                    displayMode === LIST_DISPLAY,
+                })}
               />
             </Tooltip>
           </div>
@@ -323,9 +322,9 @@ function GoalsList({ user }) {
       </div>
 
       <div
-        className={`grid grid-cols-1 ${
-          displayMode === GRID_DISPLAY ? "sm:grid-cols-2 xl:grid-cols-4" : ""
-        } gap-4`}
+        className={clsx("grid grid-cols-1 gap-4", {
+          "sm:grid-cols-2 xl:grid-cols-4": displayMode === GRID_DISPLAY,
+        })}
       >
         {loading ? (
           displayMode === GRID_DISPLAY ? (
