@@ -38,45 +38,12 @@ const seriesOptions = {
   labels: ["Rating"],
   series: [0],
 };
-// const seriesOptions = {
-//   chart: {
-//     type: "donut",
-//   },
-//   legend: {
-//     show: false,
-//   },
-//   labels: ["Goals", "Applauds"],
-//   colors: ["#FF9F5B", "#64A15E"],
-//   plotOptions: {
-//     pie: {
-//       donut: {
-//         labels: {
-//           show: true,
-//           total: {
-//             show: true,
-//             label: "",
-//             formatter: () => "Text you want",
-//           },
-//         },
-//       },
-//     },
-//   },
-
-//   stroke: {
-//     show: false,
-//   },
-//   dataLabels: {
-//     formatter: function (_, opts) {
-//       return opts.w.config.series[opts.seriesIndex];
-//     },
-//   },
-// };
 
 function RadialBarChart({ totalGoals, totalApplauds, reviewRating }) {
   const [options, setOptions] = useState(seriesOptions);
 
   useEffect(() => {
-    setOptions((prev) => ({ ...prev, series: [8.5 * 10] }));
+    setOptions((prev) => ({ ...prev, series: [reviewRating * 10] }));
   }, [reviewRating]);
 
   return <Chart options={options} series={options.series} type="radialBar" />;
