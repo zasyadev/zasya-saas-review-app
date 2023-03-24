@@ -100,7 +100,7 @@ function MeetingsList({ user }) {
                     "relative  inline-block w-1 h-1 rounded-full mr-0.5 mb-0.5 bg-brandRed-100",
                     {
                       "bg-brandBlue-300": item.meeting_type === REVIEW_TYPE,
-                      "bg-brandGreen-300": item.meeting_type === REVIEW_TYPE,
+                      "bg-brandGreen-300": item.meeting_type === GOAL_TYPE,
                     }
                   )
                 )}
