@@ -24,16 +24,12 @@ function ResetPassword() {
       await httpService
         .post(`/api/user/password/resetpassword`, obj)
         .then(({ data: response }) => {
-          if (response.status === 200) {
-            openNotificationBox("success", response.message, 3);
-
-            resetForm.resetFields();
-            router.push("/auth/login");
-          }
+          openNotificationBox("success", response.message, 3);
+          resetForm.resetFields();
+          router.push("/auth/login");
           setLoading(false);
         })
         .catch((err) => {
-          console.error(err.response.data?.message);
           openNotificationBox("error", err.response.data?.message);
           setLoading(false);
         });

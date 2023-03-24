@@ -8,6 +8,11 @@ export const INITIAL_CRON_TYPES = {
   REVIEW: "REVIEW",
 };
 
+export const USER_STATUS_TYPE = {
+  ACTIVE: 1,
+  INACTIVE: 0,
+};
+
 export const ACTIVITY_TYPE_ENUM = {
   REVIEW: "Review",
   GOAL: "Goal",

@@ -27,11 +27,9 @@ function RegisterPage() {
     await httpService
       .post(`/api/user`, values)
       .then(({ data: response }) => {
-        if (response.status === 200) {
-          openNotificationBox("success", response.message, 3);
-          registerForm.resetFields();
-          router.push("/auth/login");
-        }
+        openNotificationBox("success", response.message, 3);
+        registerForm.resetFields();
+        router.push("/auth/login");
         setLoading(false);
       })
       .catch((err) => {
@@ -41,7 +39,6 @@ function RegisterPage() {
           Number(err?.response?.data?.inner?.length) > 0
         ) {
           const errorNode = getErrors(err?.response?.data?.inner);
-
           openNotificationBox("error", "Errors", 5, "error-reg", errorNode);
         } else openNotificationBox("error", err.response.data?.message);
       });
