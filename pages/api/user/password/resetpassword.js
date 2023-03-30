@@ -1,5 +1,6 @@
 import { USER_STATUS_TYPE } from "../../../../constants";
 import { hashedPassword } from "../../../../lib/auth";
+import { BadRequestException } from "../../../../lib/BadRequestExcpetion";
 import { mailService, mailTemplate } from "../../../../lib/emailservice";
 import { RequestHandler } from "../../../../lib/RequestHandler";
 
@@ -12,10 +13,9 @@ async function handle(req, res, prisma) {
     where: { token: token },
   });
 
-  if (!data) return res.status(400).json({ message: "Invalid token" });
+  if (!data) throw new BadRequestException("Invalid token.");
 
-  if (!password)
-    return res.status(400).json({ message: "Password is required" });
+  if (!password) throw new BadRequestException("Password is required.");
 
   const updateData = await prisma.user.update({
     where: { email: data.email_id },
@@ -25,14 +25,14 @@ async function handle(req, res, prisma) {
     },
   });
 
-  if (!updateData) return res.status(404).json({ message: "No record found" });
+  if (!updateData) throw new BadRequestException("No record found.");
 
   await prisma.passwordReset.delete({
     where: { email_id: data.email_id },
   });
 
   if (data.created_by_id) {
-    let userData = await prisma.user.findUnique({
+    const userData = await prisma.user.findUnique({
       where: { id: data.created_by_id },
     });
 

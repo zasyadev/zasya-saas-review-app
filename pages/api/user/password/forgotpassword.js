@@ -1,4 +1,5 @@
 import { hashedPassword } from "../../../../lib/auth";
+import { BadRequestException } from "../../../../lib/BadRequestExcpetion";
 import { mailService, mailTemplate } from "../../../../lib/emailservice";
 import { RequestHandler } from "../../../../lib/RequestHandler";
 
@@ -15,9 +16,9 @@ async function handle(req, res, prisma) {
   });
 
   if (alreadyResetData)
-    return res.status(402).json({
-      message: "Already email has been sent to reset the password.",
-    });
+    throw new BadRequestException(
+      "Already email has been sent to reset the password."
+    );
 
   const userData = await prisma.user.findUnique({
     where: {
@@ -25,10 +26,7 @@ async function handle(req, res, prisma) {
     },
   });
 
-  if (!userData)
-    return res.status(402).json({
-      message: "Email address not found.",
-    });
+  if (!userData) throw new BadRequestException("Email address not found.");
 
   const generatedToken = await hashedPassword(email);
 
@@ -40,7 +38,7 @@ async function handle(req, res, prisma) {
   });
 
   if (!passwordResetData)
-    return res.status(400).json({ message: "Reset password mail not sent." });
+    throw new BadRequestException("Reset password mail not sent.");
 
   let mailData = {
     from: SMTP_USER,
@@ -48,7 +46,7 @@ async function handle(req, res, prisma) {
     subject: `Review App Forgot Password`,
     html: mailTemplate({
       body: `We recevied a request that you want to reset your password. To reset your password, click the button below.`,
-      name: userData?.first_name ?? email,
+      name: userData.first_name ?? email,
       btnLink: `${BASE_URL}/resetpassword?passtoken=${generatedToken}&email=${email}`,
       btnText: "Reset Link",
     }),
@@ -56,11 +54,8 @@ async function handle(req, res, prisma) {
 
   const mailResponse = await new Promise((resolve, reject) => {
     mailService.sendMail(mailData, function (err) {
-      if (err) {
-        reject("FAILED");
-      } else {
-        resolve("SUCCESS");
-      }
+      if (err) reject("FAILED");
+      resolve("SUCCESS");
     });
   });
 
@@ -68,10 +63,9 @@ async function handle(req, res, prisma) {
     await prisma.passwordReset.delete({
       where: { id: passwordResetData.id },
     });
-    return res.status(402).json({
-      message: "Reset password mail not sent.",
-    });
+    throw new BadRequestException("Reset password mail not sent.");
   }
+
   return res.status(201).json({
     message: "Reset password email sent successfully",
   });
