@@ -2,12 +2,13 @@ import {
   CalendarOutlined,
   ClockCircleOutlined,
   EllipsisOutlined,
+  SearchOutlined,
 } from "@ant-design/icons";
-import { Calendar, Dropdown, Menu, Popconfirm, Popover } from "antd";
+import { Calendar, Dropdown, Menu, Popconfirm, Popover, Select } from "antd";
 import clsx from "clsx";
 import moment from "moment";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { twMerge } from "tailwind-merge";
 import { URLS } from "../../constants/urls";
 import { dateDayName, dateTime } from "../../helpers/dateHelper";
@@ -17,19 +18,22 @@ import { openNotificationBox } from "../common/notification";
 import { DateBox } from "../DashBoard/component/helperComponent";
 import MeetingListSkeleton from "./component/MeetingListSkeleton";
 import { CASUAL_MEETINGTYPE, GOAL_TYPE, REVIEW_TYPE } from "./constants";
+import { MemberListHook } from "../../component/common/hooks";
 
 const currentTime = moment().format();
 
 function MeetingsList({ user }) {
   const [loading, setLoading] = useState(false);
   const [meetingsList, setMeetingsList] = useState([]);
+  const [filterId, setFilterId] = useState("ALL");
+  const { membersList } = MemberListHook(user);
 
   async function fetchMeetingList() {
     setLoading(true);
     setMeetingsList([]);
 
     await httpService
-      .get(`/api/meetings`)
+      .get(`/api/meetings?filterId=${filterId}`)
       .then(({ data: response }) => {
         if (response.status === 200) {
           let sortData = response.data.sort((a, b) => {
@@ -51,7 +55,7 @@ function MeetingsList({ user }) {
 
   useEffect(() => {
     fetchMeetingList();
-  }, []);
+  }, [filterId]);
 
   async function handleOnDelete(id) {
     if (id) {
@@ -153,13 +157,39 @@ function MeetingsList({ user }) {
 
   return (
     <div className="container mx-auto max-w-full">
-      <div className="flex  justify-between items-center gap-4 mb-4 md:mb-6 ">
+      <div className="md:flex  justify-between items-center gap-4 mb-4 md:mb-6 ">
         <p className="text-xl font-semibold mb-0">Follow Ups</p>
-        <PrimaryButton
-          withLink={true}
-          linkHref={URLS.FOLLOW_UP_CREATE}
-          title={"Create"}
-        />
+        <div className="space-x-2 flex items-center justify-end">
+          <Select
+            size="large"
+            showSearch
+            filterOption={(input, option) =>
+              option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+            }
+            allowClear
+            className="w-44 text-sm"
+            placeholder="Search Member"
+            suffixIcon={<SearchOutlined />}
+            onSelect={(e) => {
+              setFilterId(e);
+            }}
+          >
+            <Select.Option value={"ALL"}>All</Select.Option>
+            {membersList.map((data) => (
+              <Select.Option
+                key={data.user_id + "_memnber"}
+                value={data.user_id}
+              >
+                {data.user.first_name}
+              </Select.Option>
+            ))}
+          </Select>
+          <PrimaryButton
+            withLink={true}
+            linkHref={URLS.FOLLOW_UP_CREATE}
+            title={"Create"}
+          />
+        </div>
       </div>
       {loading ? (
         <MeetingListSkeleton />

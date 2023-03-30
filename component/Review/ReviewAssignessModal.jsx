@@ -101,7 +101,7 @@ const GetAssigneesList = ({ type, reviewAssignee }) => {
             </div>
 
             <div className="flex-1">
-              <p className="mb-0 text-primary font-medium text-base">
+              <p className="mb-0  font-medium text-base">
                 {assignee?.assigned_to?.first_name}
               </p>
               <p className="text-gray-400 font-medium text-sm mb-0">
