@@ -24,19 +24,31 @@ async function handle(req, res, prisma, user) {
   }
 
   if (req.method === "GET") {
+    const { filterId } = req.query;
+    let flterCondition = [
+      { organization_id: organization_id },
+      { created_by: userId },
+    ];
+    if (filterId && filterId !== "ALL") {
+      flterCondition.push({
+        MeetingAssignee: {
+          some: { assignee_id: filterId },
+        },
+      });
+    } else {
+      flterCondition.push({
+        MeetingAssignee: {
+          some: { assignee_id: userId },
+        },
+      });
+    }
+
     const data = await prisma.meetings.findMany({
       orderBy: {
         meeting_at: "asc",
       },
       where: {
-        AND: [
-          { organization_id: organization_id },
-          {
-            MeetingAssignee: {
-              some: { assignee_id: userId },
-            },
-          },
-        ],
+        AND: flterCondition,
       },
       include: {
         MeetingAssignee: true,

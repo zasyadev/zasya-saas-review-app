@@ -69,13 +69,11 @@ function SiderRight({ dashBoardData, monthlyLeaderBoardData, userId }) {
         <div className="border-b border-gray-300 pb-2 text-lg font-semibold">
           Performance Stats
         </div>
-        <div className="">
-          <RadialBarChart
-            totalGoals={totalGoals}
-            totalApplauds={totalApplauds}
-            reviewRating={ratingHandler(reviewRating)}
-          />
-        </div>
+        <RadialBarChart
+          totalGoals={totalGoals}
+          totalApplauds={totalApplauds}
+          reviewRating={ratingHandler(reviewRating)}
+        />
       </div>
       <div className="space-y-2">
         <div className="border-b border-gray-300 pb-2 text-lg font-semibold">
@@ -126,11 +124,11 @@ function SiderRight({ dashBoardData, monthlyLeaderBoardData, userId }) {
         )}
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-2">
         <div className="border-b border-gray-300 pb-2 text-lg font-semibold ">
           Leaderboard
         </div>
-        <div className=" px-4 space-y-4 max-h-64 overflow-y-auto no-scrollbar">
+        <div className="px-4 space-y-4 max-h-64 md:max-h-80 lg:max-h-64 overflow-y-auto no-scrollbar">
           {leaderboardLoading
             ? [...Array(3)].map((_, index) => (
                 <Skeleton
@@ -156,9 +154,9 @@ function SiderRight({ dashBoardData, monthlyLeaderBoardData, userId }) {
                         />
                       </div>
 
-                      <div className="">
+                      <div>
                         <div className="px-4 md:pl-0 xl:pl-4">
-                          <p className="mb-2 text-primary font-medium text-sm">
+                          <p className="mb-2 font-medium text-sm">
                             {item.first_name}
                           </p>
                           <p className="flex justify-between space-x-4">

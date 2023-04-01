@@ -182,7 +182,14 @@ function ReviewManagement({ user }) {
       render: (_, record) => (
         <div className="flex ">
           {!record.is_published ? (
-            <p className=" text-gray-500">{record.review.review_name}</p>
+            <Link
+              href={`/review/${record.status ? "preview" : "id"}/${record.id}`}
+              passHref
+            >
+              <p className="cursor-pointer hover:underline text-gray-500">
+                {record.review.review_name}
+              </p>
+            </Link>
           ) : (
             <Link href={`/review/${record.id}`} passHref>
               <p className="cursor-pointer hover:underline text-gray-500">

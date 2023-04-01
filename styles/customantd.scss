@@ -994,6 +994,9 @@ $primary-green: #64a15e;
       font-weight: 600 !important;
     }
   }
+  .ant-picker-calendar-mode-switch {
+    display: none;
+  }
 }
 .ant-picker-calendar-date-content::-webkit-scrollbar {
   display: none;
