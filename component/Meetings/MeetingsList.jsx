@@ -8,8 +8,9 @@ import { Calendar, Dropdown, Menu, Popconfirm, Popover, Select } from "antd";
 import clsx from "clsx";
 import moment from "moment";
 import Link from "next/link";
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
+import { MemberListHook } from "../../component/common/hooks";
 import { URLS } from "../../constants/urls";
 import { dateDayName, dateTime } from "../../helpers/dateHelper";
 import httpService from "../../lib/httpService";
@@ -18,7 +19,6 @@ import { openNotificationBox } from "../common/notification";
 import { DateBox } from "../DashBoard/component/helperComponent";
 import MeetingListSkeleton from "./component/MeetingListSkeleton";
 import { CASUAL_MEETINGTYPE, GOAL_TYPE, REVIEW_TYPE } from "./constants";
-import { MemberListHook } from "../../component/common/hooks";
 
 const currentTime = moment().format();
 
@@ -86,14 +86,20 @@ function MeetingsList({ user }) {
     });
 
     return (
-      <div className="space-y-2 ">
+      <div className="space-y-2">
         {filterList.map((item) => (
           <p
             key={item.id}
-            className={clsx("text-xs single-line-clamp px-1 rounded-sm")}
+            className="text-xs single-line-clamp px-1 rounded-sm"
           >
             <Popover
-              content={<p className="font-medium mb-0">{item.meeting_title}</p>}
+              content={
+                <Link href={`${URLS.FOLLOW_UP}/${item.id}`} passHref>
+                  <span className="hover:underline cursor-pointer font-medium">
+                    {item.meeting_title}
+                  </span>
+                </Link>
+              }
               trigger={["click", "hover"]}
               placement="top"
               overlayClassName="max-w-sm"
@@ -101,7 +107,7 @@ function MeetingsList({ user }) {
               <span
                 className={twMerge(
                   clsx(
-                    "relative  inline-block w-1 h-1 rounded-full mr-0.5 mb-0.5 bg-brandRed-100",
+                    "relative inline-block w-1 h-1 rounded-full mr-0.5 mb-0.5 bg-brandRed-100",
                     {
                       "bg-brandBlue-300": item.meeting_type === REVIEW_TYPE,
                       "bg-brandGreen-300": item.meeting_type === REVIEW_TYPE,
@@ -166,7 +172,6 @@ function MeetingsList({ user }) {
             filterOption={(input, option) =>
               option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
             }
-            allowClear
             className="w-44 text-sm"
             placeholder="Search Member"
             suffixIcon={<SearchOutlined />}
@@ -174,10 +179,10 @@ function MeetingsList({ user }) {
               setFilterId(e);
             }}
           >
-            <Select.Option value={"ALL"}>All</Select.Option>
+            <Select.Option value="ALL">All</Select.Option>
             {membersList.map((data) => (
               <Select.Option
-                key={data.user_id + "_memnber"}
+                key={data.user_id + "_member"}
                 value={data.user_id}
               >
                 {data.user.first_name}
