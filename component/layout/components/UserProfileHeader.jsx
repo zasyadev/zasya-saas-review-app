@@ -1,6 +1,8 @@
 import { BellOutlined } from "@ant-design/icons";
 import { Badge, Dropdown } from "antd";
+import Link from "next/link";
 import React, { useEffect, useMemo, useState } from "react";
+import { URLS } from "../../../constants/urls";
 import httpService from "../../../lib/httpService";
 import DefaultImages from "../../common/DefaultImages";
 import NotificationMenus from "./NotificationMenus";
@@ -56,19 +58,22 @@ function UserProfileHeader({ user }) {
     getAllNotification();
   }, []);
   return (
-    <div className="flex md:flex-shrink-0 items-center justify-end md:justify-between space-x-2 mr-6 md:mr-0">
-      <div className="md:flex-1 md:flex-shrink-0 bg-transparent   cursor-pointer   transition-all  duration-300 rounded-full">
-        <div className="flex items-center md:space-x-3">
-          <DefaultImages
-            imageSrc={user?.UserDetails?.image}
-            width={38}
-            height={38}
-          />
-          <div className="user-deatils hidden md:block m-0 text-base font-semibold">
-            {user.first_name}
+    <div className="flex md:flex-shrink-0 items-center justify-end md:justify-between space-x-2 mr-4 md:mr-0">
+      <Link href={URLS.PROFILE} passHref>
+        <div className="md:flex-1 md:flex-shrink-0 bg-transparent cursor-pointer transition-all duration-300 rounded-full">
+          <div className="flex items-center md:space-x-3">
+            <DefaultImages
+              imageSrc={user?.UserDetails?.image}
+              width={38}
+              height={38}
+            />
+            <div className="user-deatils hidden md:block m-0 text-base font-semibold">
+              {user.first_name}
+            </div>
           </div>
         </div>
-      </div>
+      </Link>
+
       <Dropdown
         trigger={unSeenNotificationCount > 0 ? "click" : ""}
         overlay={
@@ -81,7 +86,7 @@ function UserProfileHeader({ user }) {
         }
         overlayClassName="notification-dropdown"
         placement="bottomRight"
-        className=" bg-transparent  grid place-content-center  cursor-pointer transition-all border duration-300 rounded-full w-11 h-11"
+        className=" bg-transparent grid place-content-center cursor-pointer transition-all border duration-300 rounded-full w-11 h-11"
       >
         <Badge count={unSeenNotificationCount} offset={[-5, 8]}>
           <BellOutlined className="text-xl text-gray-600 hover:text-primary-green leading-0" />

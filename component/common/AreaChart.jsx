@@ -3,18 +3,33 @@ import React, { useEffect, useState } from "react";
 import Chart from "react-apexcharts";
 import httpService from "../../lib/httpService";
 
+const DEFAULT_MONTH_DATA = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+const DEFAULT_MONTH_NAME = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
 const defaultChartSeries = [
   {
     name: "Appaluds",
-    data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    data: DEFAULT_MONTH_DATA,
   },
   {
     name: "Goals",
-    data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    data: DEFAULT_MONTH_DATA,
   },
   {
     name: "Review",
-    data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    data: DEFAULT_MONTH_DATA,
   },
 ];
 
@@ -26,20 +41,7 @@ const defaultOptions = {
     height: "300px",
   },
   xaxis: {
-    categories: [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ],
+    categories: DEFAULT_MONTH_NAME,
     axisBorder: {
       show: false,
     },
@@ -49,7 +51,7 @@ const defaultOptions = {
   },
 };
 
-const BarChart = ({ user }) => {
+const AreaChart = ({ user }) => {
   const [chartData, setChartData] = useState(defaultChartSeries);
   const [loading, setLoading] = useState(true);
 
@@ -113,4 +115,4 @@ const BarChart = ({ user }) => {
   );
 };
 
-export default BarChart;
+export default AreaChart;
