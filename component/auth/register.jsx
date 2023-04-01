@@ -27,23 +27,20 @@ function RegisterPage() {
     await httpService
       .post(`/api/user`, values)
       .then(({ data: response }) => {
-        if (response.status === 200) {
-          openNotificationBox("success", response.message, 3);
-          registerForm.resetFields();
-          router.push("/auth/login");
-        }
-        setLoading(false);
+        openNotificationBox("success", response.message, 3);
+        registerForm.resetFields();
+        router.push("/auth/login");
       })
       .catch((err) => {
-        setLoading(false);
-        if (
-          err?.response?.status === 400 &&
-          Number(err?.response?.data?.inner?.length) > 0
-        ) {
+        if (!err?.response?.data?.inner?.length) {
+          openNotificationBox("error", err.response.data?.message);
+        } else {
           const errorNode = getErrors(err?.response?.data?.inner);
-
           openNotificationBox("error", "Errors", 5, "error-reg", errorNode);
-        } else openNotificationBox("error", err.response.data?.message);
+        }
+      })
+      .finally(() => {
+        setLoading(false);
       });
   }
 
