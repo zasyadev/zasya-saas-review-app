@@ -34,3 +34,12 @@ export const ReviewToggleList = [
     label: REVIEW_CREATED_KEY,
   },
 ];
+
+export const REVIEW_FREQUENCY = {
+  ONCE: "once",
+  DAILY: "daily",
+  WEEKLY: "weekly",
+  MONTHLY: "monthly",
+};
+
+export const REVIEW_RATING_QUESTION = "Rating";

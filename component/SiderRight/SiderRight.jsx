@@ -11,6 +11,8 @@ import randomBgColor from "../../helpers/randomBgColor";
 import { getFirstLetter } from "../../helpers/truncateString";
 import DefaultImages from "../common/DefaultImages";
 import { ActivityListHook } from "../common/hooks";
+import { SCALE_TYPE } from "../Form/questioncomponents/constants";
+import { REVIEW_RATING_QUESTION } from "../Review/constants";
 
 const RadialBarChart = dynamic(() => import("../common/RadialBarChart"), {
   ssr: false,
@@ -20,23 +22,28 @@ const ratingHandler = (data) => {
   if (data.length === 0) {
     return 0;
   }
+
   let sum = 0;
   let total = data.map((item) => {
     if (item.ReviewAssigneeAnswers.length > 0) {
       let totalrating = item.ReviewAssigneeAnswers.reduce((prev, curr) => {
-        if (curr?.ReviewAssigneeAnswerOption?.length > 0) {
-          if (isNaN(Number(curr?.ReviewAssigneeAnswerOption[0].option))) {
+        if (curr.ReviewAssigneeAnswerOption?.length > 0) {
+          let ratingQuestion = curr.ReviewAssigneeAnswerOption.find(
+            (i) =>
+              i.question.questionText === REVIEW_RATING_QUESTION &&
+              i.question.type === SCALE_TYPE
+          );
+          if (!ratingQuestion) return 0;
+          if (isNaN(Number(ratingQuestion.option))) {
             return 0;
           } else {
-            return (
-              Number(prev) + Number(curr?.ReviewAssigneeAnswerOption[0].option)
-            );
+            return Number(prev) + Number(ratingQuestion.option);
           }
         } else return 0;
       }, sum);
 
       let averageRating =
-        Number(totalrating) / Number(item?.ReviewAssigneeAnswers?.length);
+        Number(totalrating) / Number(item.ReviewAssigneeAnswers.length);
 
       return averageRating;
     } else return 0;

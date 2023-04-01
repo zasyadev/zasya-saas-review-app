@@ -111,3 +111,7 @@ export const getCronNextMeetingDate = (index) => {
     return endOfMonthRandomTime(newDate).add(1, "days").format();
   return newDate.format();
 };
+
+export const daysDiffrenceInDates = (date) => {
+  return moment().diff(date, "days");
+};

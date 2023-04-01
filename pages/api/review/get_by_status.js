@@ -82,7 +82,7 @@ async function handle(req, res, prisma, user) {
     } else if (status === "Pending") {
       data = receviedData.filter((item) => !item.status);
     }
-    data.sort((a, b) => b.created_date - a.created_date);
+    data.sort((a, b) => b.modified_date - a.modified_date);
 
     const listCount = {
       all: receviedData.length + createdData.length,

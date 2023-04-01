@@ -202,8 +202,8 @@ function ReviewManagement({ user }) {
     },
     {
       title: "Date",
-      key: "created_date",
-      render: (_, record) => <DateInfoCard endDate={record?.created_date} />,
+      key: "modified_date",
+      render: (_, record) => <DateInfoCard endDate={record.modified_date} />,
     },
     {
       title: "progress",
