@@ -12,8 +12,8 @@ export function DateBox({ date, className }) {
     <div
       className={twMerge(
         clsx(
-          "grid place-content-center text-center font-semibold text-base",
-          "w-14 h-14 text-white rounded-md bg-primary-green",
+          "grid place-content-center text-center font-semibold text-sm lg:text-base",
+          "w-12 h-12 lg:w-14 lg:h-14 text-white rounded-md bg-primary-green",
           className
         )
       )}

@@ -22,7 +22,7 @@ import DashboardGoalsAvatar from "./component/DashboardGoalsAvatar";
 import HeaderNotification from "./component/HeaderNotification";
 import { CountCard, DateBox } from "./component/helperComponent";
 
-const BarChart = dynamic(() => import("../common/BarChart"), {
+const AreaChart = dynamic(() => import("../common/AreaChart"), {
   ssr: false,
 });
 
@@ -122,7 +122,7 @@ function DashBoard({ user }) {
   }, [meetingList]);
 
   return (
-    <div className="grid grid-cols-7 gap-4 md:gap-8 xl:gap:10 bg-brandGray-100">
+    <div className="grid grid-cols-7 gap-4 lg:gap-8 xl:gap:10 bg-brandGray-100">
       <div className="col-span-7 md:col-span-5  border-r border-gray-300 p-4 md:p-6 xl:p-8 space-y-4 md:space-y-6 xl:space-y-8 bg-white">
         <HeaderNotification user={user} dashBoardData={dashBoardData} />
         <div className="bg-white  rounded-md shadow-brand">
@@ -155,10 +155,10 @@ function DashBoard({ user }) {
             />
           </div>
           <div className="w-full p-4  overflow-hidden ">
-            <BarChart user={user} />
+            <AreaChart user={user} />
           </div>
         </div>
-        <div className="grid md:grid-cols-2 gap-4 md:gap-8 xl:gap:10">
+        <div className="grid md:grid-cols-2 gap-4 lg:gap-8 xl:gap:10">
           <div className="w-full bg-white rounded-md overflow-hidden shadow-brand h-full flex flex-col">
             <h2 className="text-lg font-semibold  mb-0 flex items-center justify-between gap-3 border-b border-gray-300 px-5 py-3">
               <span className="flex-1"> Upcoming Goals</span>
@@ -244,15 +244,15 @@ function DashBoard({ user }) {
                             {item.meeting_title}
                           </p>
                           <div className="flex justify-between items-center">
-                            <span className="flex  items-center text-brandGray-600">
-                              <span className="leading-0 text-primary-green pr-1 text-base">
+                            <span className="flex items-center text-brandGray-600 text-sm lg:text-base">
+                              <span className="leading-0 text-primary-green pr-1">
                                 <CalendarOutlined />
                               </span>
 
                               {dateDayName(item.meeting_at)}
                             </span>
-                            <span className="flex  items-center text-brandGray-600">
-                              <span className="leading-0 text-primary-green pr-1 text-base">
+                            <span className="flex items-center text-brandGray-600 text-sm lg:text-base">
+                              <span className="leading-0 text-primary-green pr-1">
                                 <ClockCircleOutlined />
                               </span>
                               {dateTime(item.meeting_at)}
