@@ -80,7 +80,7 @@ const AddMembersModal = ({
     >
       <div>
         <Form layout="vertical" form={addMembersForm} onFinish={onFinish}>
-          <p className="text-base font-bold mb-2 text-primary">
+          <p className="text-base font-bold mb-2">
             Please select your feedback members
           </p>
           <Form.Item

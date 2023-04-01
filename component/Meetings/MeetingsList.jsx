@@ -2,13 +2,15 @@ import {
   CalendarOutlined,
   ClockCircleOutlined,
   EllipsisOutlined,
+  SearchOutlined,
 } from "@ant-design/icons";
-import { Calendar, Dropdown, Menu, Popconfirm, Popover } from "antd";
+import { Calendar, Dropdown, Menu, Popconfirm, Popover, Select } from "antd";
 import clsx from "clsx";
 import moment from "moment";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
+import { MemberListHook } from "../../component/common/hooks";
 import { URLS } from "../../constants/urls";
 import { dateDayName, dateTime } from "../../helpers/dateHelper";
 import httpService from "../../lib/httpService";
@@ -23,13 +25,15 @@ const currentTime = moment().format();
 function MeetingsList({ user }) {
   const [loading, setLoading] = useState(false);
   const [meetingsList, setMeetingsList] = useState([]);
+  const [filterId, setFilterId] = useState("ALL");
+  const { membersList } = MemberListHook(user);
 
   async function fetchMeetingList() {
     setLoading(true);
     setMeetingsList([]);
 
     await httpService
-      .get(`/api/meetings`)
+      .get(`/api/meetings?filterId=${filterId}`)
       .then(({ data: response }) => {
         if (response.status === 200) {
           let sortData = response.data.sort((a, b) => {
@@ -51,7 +55,7 @@ function MeetingsList({ user }) {
 
   useEffect(() => {
     fetchMeetingList();
-  }, []);
+  }, [filterId]);
 
   async function handleOnDelete(id) {
     if (id) {
@@ -82,14 +86,20 @@ function MeetingsList({ user }) {
     });
 
     return (
-      <div className="space-y-2 ">
+      <div className="space-y-2">
         {filterList.map((item) => (
           <p
             key={item.id}
-            className={clsx("text-xs single-line-clamp px-1 rounded-sm")}
+            className="text-xs single-line-clamp px-1 rounded-sm"
           >
             <Popover
-              content={<p className="font-medium mb-0">{item.meeting_title}</p>}
+              content={
+                <Link href={`${URLS.FOLLOW_UP}/${item.id}`} passHref>
+                  <span className="hover:underline cursor-pointer font-medium">
+                    {item.meeting_title}
+                  </span>
+                </Link>
+              }
               trigger={["click", "hover"]}
               placement="top"
               overlayClassName="max-w-sm"
@@ -97,7 +107,7 @@ function MeetingsList({ user }) {
               <span
                 className={twMerge(
                   clsx(
-                    "relative  inline-block w-1 h-1 rounded-full mr-0.5 mb-0.5 bg-brandRed-100",
+                    "relative inline-block w-1 h-1 rounded-full mr-0.5 mb-0.5 bg-brandRed-100",
                     {
                       "bg-brandBlue-300": item.meeting_type === REVIEW_TYPE,
                       "bg-brandGreen-300": item.meeting_type === REVIEW_TYPE,
@@ -153,13 +163,38 @@ function MeetingsList({ user }) {
 
   return (
     <div className="container mx-auto max-w-full">
-      <div className="flex  justify-between items-center gap-4 mb-4 md:mb-6 ">
+      <div className="md:flex  justify-between items-center gap-4 mb-4 md:mb-6 ">
         <p className="text-xl font-semibold mb-0">Follow Ups</p>
-        <PrimaryButton
-          withLink={true}
-          linkHref={URLS.FOLLOW_UP_CREATE}
-          title={"Create"}
-        />
+        <div className="space-x-2 flex items-center justify-end">
+          <Select
+            size="large"
+            showSearch
+            filterOption={(input, option) =>
+              option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+            }
+            className="w-44 text-sm"
+            placeholder="Search Member"
+            suffixIcon={<SearchOutlined />}
+            onSelect={(e) => {
+              setFilterId(e);
+            }}
+          >
+            <Select.Option value="ALL">All</Select.Option>
+            {membersList.map((data) => (
+              <Select.Option
+                key={data.user_id + "_member"}
+                value={data.user_id}
+              >
+                {data.user.first_name}
+              </Select.Option>
+            ))}
+          </Select>
+          <PrimaryButton
+            withLink={true}
+            linkHref={URLS.FOLLOW_UP_CREATE}
+            title={"Create"}
+          />
+        </div>
       </div>
       {loading ? (
         <MeetingListSkeleton />
