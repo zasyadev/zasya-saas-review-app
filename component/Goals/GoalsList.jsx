@@ -1,35 +1,28 @@
 import { ApartmentOutlined, UnorderedListOutlined } from "@ant-design/icons";
-import { Form, Input, Select, Tooltip } from "antd";
+import { Input, Tooltip } from "antd";
 import clsx from "clsx";
 import moment from "moment";
 import React, { useEffect, useMemo, useState } from "react";
 import { URLS } from "../../constants/urls";
 import { useLocalStorage } from "../../helpers/useStorage";
 import httpService from "../../lib/httpService";
-import CountHeaderCard from "../common/CountHeaderCard";
-import {
-  ButtonGray,
-  PrimaryButton,
-  SecondaryButton,
-} from "../common/CustomButton";
-import CustomModal from "../common/CustomModal";
-import CustomSelectBox from "../common/CustomSelectBox";
 import { PulseLoader } from "../Loader/LoadingSpinner";
+import CountHeaderCard from "../common/CountHeaderCard";
+import { ButtonGray, PrimaryButton } from "../common/CustomButton";
+import CustomSelectBox from "../common/CustomSelectBox";
+import GoalAssignessModal from "./GoalAssignessModal";
+import GoalStatusModal from "./GoalStatusModal";
 import GoalsAvatar from "./component/GoalsAvatar";
 import GoalsCustomTable from "./component/GoalsCustomTable";
 import GoalsGroupList from "./component/GoalsGroupList";
 import GoalsGroupListSkeleton from "./component/GoalsGroupListSkeleton";
 import {
-  ABANDONED_STATUS,
   COMPLETED_STATUS,
-  DELAYED_STATUS,
-  goalsFilterList,
   GRID_DISPLAY,
-  groupItems,
   LIST_DISPLAY,
-  ONTRACK_STATUS,
+  goalsFilterList,
+  groupItems,
 } from "./constants";
-import GoalAssignessModal from "./GoalAssignessModal";
 
 const initialModalVisible = {
   visible: false,
@@ -51,7 +44,6 @@ function GoalsList({ user }) {
   const [searchText, setSearchText] = useState("");
   const [isArchived, setIsArchived] = useState(false);
   const [filterByMembersId, setFilterByMembersId] = useState([]);
-  const [updateGoalForm] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [goalsList, setGoalsList] = useState([]);
   const [editGoalModalVisible, setEditGoalModalVisible] =
@@ -215,10 +207,6 @@ function GoalsList({ user }) {
   };
 
   const ShowEditGoalModal = ({ record }) => {
-    updateGoalForm.resetFields();
-    updateGoalForm.setFieldValue({
-      status: record.status,
-    });
     setEditGoalModalVisible({
       visible: true,
       id: record.id,
@@ -230,9 +218,6 @@ function GoalsList({ user }) {
 
   const hideEditGoalModal = () => {
     setEditGoalModalVisible(initialModalVisible);
-    updateGoalForm.setFieldValue({
-      status: "",
-    });
   };
 
   return (
@@ -348,7 +333,6 @@ function GoalsList({ user }) {
               type={groupItem.type}
               isArchived={isArchived}
               goalEditHandle={goalEditHandle}
-              updateGoalForm={updateGoalForm}
               setEditGoalModalVisible={setEditGoalModalVisible}
               ShowAssigneeModal={ShowAssigneeModal}
             />
@@ -368,60 +352,14 @@ function GoalsList({ user }) {
           </div>
         )}
       </div>
-      <CustomModal
-        title={
-          <p className="single-line-clamp mb-0 pr-6 break-all">
-            {editGoalModalVisible.goal_title}
-          </p>
-        }
-        visible={editGoalModalVisible.visible}
-        onCancel={() => hideEditGoalModal()}
-        customFooter
-        footer={[
-          <>
-            <SecondaryButton
-              onClick={() => hideEditGoalModal()}
-              className=" h-full mr-2"
-              title="Cancel"
-            />
-            <PrimaryButton
-              onClick={() => updateGoalForm.submit()}
-              className=" h-full  "
-              title="Update"
-              disabled={loading}
-              loading={loading}
-            />
-          </>,
-        ]}
-      >
-        <Form
-          layout="vertical"
-          form={updateGoalForm}
-          onFinish={(value) =>
-            goalEditHandle({
-              goal_id: editGoalModalVisible.goal_id,
-              id: editGoalModalVisible.id,
-              value: value,
-              type: "forStatus",
-            })
-          }
-        >
-          <Form.Item name="status" label="Status">
-            <Select defaultValue={editGoalModalVisible.defaultValue}>
-              <Select.Option value={ONTRACK_STATUS}>On Track</Select.Option>
-              <Select.Option value={COMPLETED_STATUS}>Completed</Select.Option>
-              <Select.Option value={DELAYED_STATUS}>Delayed</Select.Option>
-              <Select.Option value={ABANDONED_STATUS}>Abandoned</Select.Option>
-            </Select>
-          </Form.Item>
-          <Form.Item name="comment" label="Comment">
-            <Input
-              className=" h-12 rounded-md"
-              placeholder="Comment about the status"
-            />
-          </Form.Item>
-        </Form>
-      </CustomModal>
+      {editGoalModalVisible?.visible && (
+        <GoalStatusModal
+          editGoalModalVisible={editGoalModalVisible}
+          hideEditGoalModal={hideEditGoalModal}
+          goalEditHandle={goalEditHandle}
+          loading={loading}
+        />
+      )}
 
       {goalAssigneeModalData?.isVisible && (
         <GoalAssignessModal
