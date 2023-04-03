@@ -291,44 +291,28 @@ async function handle(req, res, prisma) {
         where: { id: reqBody.id },
         data: {
           frequency: reqBody.frequency,
+          modified_date: new Date(),
         },
       });
 
-      if (updateReview) {
-        return res.status(200).json({
-          message: "Review Frequency Changed!",
-          status: 200,
-        });
-      } else {
+      if (!updateReview)
         return res.status(400).json({
           message: "Frequency Not Changed!",
-          status: 400,
+        });
+
+      if (updateReview?.review_parent_id) {
+        await prisma.review.update({
+          where: { id: updateReview.review_parent_id },
+          data: {
+            frequency: reqBody.frequency,
+            modified_date: new Date(),
+          },
         });
       }
-
-      // let assigneeData = resData.assigned_to_id.map((item) => {
-      //   return {
-      //     assigned_to_id: item,
-      //   };
-      // });
-
-      // const data = await prisma.review.update({
-      //   where: { id: resData.id },
-      //   data: {
-      //     created_by: resData.review_assigned_by,
-      //     is_published: resData.is_published,
-      //     ReviewAssignee: {
-      //       create: assigneeData,
-      //     },
-      //   },
-      // });
-      // prisma.$disconnect();
-
-      // return res.status(200).json({
-      //   message: "Assign Updated Successfully.",
-      //   status: 200,
-      //   data: data,
-      // });
+      return res.status(200).json({
+        message: "Review Frequency Changed!",
+        status: 200,
+      });
     } catch (error) {
       return res
         .status(500)
