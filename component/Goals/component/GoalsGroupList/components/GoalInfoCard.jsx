@@ -12,7 +12,6 @@ function GoalInfoCard({
   item,
   isArchived,
   userId,
-  updateGoalForm,
   goalEditHandle,
   setEditGoalModalVisible,
   ShowAssigneeModal,
@@ -131,7 +130,6 @@ function GoalInfoCard({
                   defaultValue: item.status,
                   goal_id: item.goal.id,
                 });
-                updateGoalForm.resetFields();
               }
             }}
           >

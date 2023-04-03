@@ -10,7 +10,6 @@ const GoalsGroupList = ({
   fetchGoalList,
   isArchived,
   goalEditHandle,
-  updateGoalForm,
   setEditGoalModalVisible,
   ShowAssigneeModal,
 }) => {
@@ -58,7 +57,6 @@ const GoalsGroupList = ({
               userId={userId}
               fetchGoalList={fetchGoalList}
               goalEditHandle={goalEditHandle}
-              updateGoalForm={updateGoalForm}
               setEditGoalModalVisible={setEditGoalModalVisible}
               ShowAssigneeModal={ShowAssigneeModal}
             />
