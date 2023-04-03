@@ -136,7 +136,6 @@ export function FormSlideComponent({
               {nextSlide > 0 && (
                 <SecondaryButton
                   title={"Previous"}
-                  className="bg-gray-400"
                   onClick={() => setNextSlide(nextSlide - 1)}
                 />
               )}

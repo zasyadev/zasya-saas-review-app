@@ -14,22 +14,18 @@ async function cronJobStart() {
         password: CRON_PASSWORD,
       });
 
-      await axios.post(`${BASE_URL}api/cronjobs/dailyfrequencycron`, {
-        password: CRON_PASSWORD,
-      });
-
       await axios.post(`${BASE_URL}api/cronjobs/goalsnotifications`, {
         password: CRON_PASSWORD,
       });
+
+      // await axios.post(`${BASE_URL}api/cronjobs/reviewfrequencycron`, {
+      //   password: CRON_PASSWORD,
+      // });
     });
     schedule.scheduleJob("weekly_schedule", "30 4 * * 1", async function () {
       await axios.post(`${BASE_URL}api/cronjobs/weeklycron`, {
         password: CRON_PASSWORD,
         type: APPLAUD_TYPE,
-      });
-
-      await axios.post(`${BASE_URL}api/cronjobs/weeklyfrequencycron`, {
-        password: CRON_PASSWORD,
       });
     });
     schedule.scheduleJob("weekly_schedule", "30 4 * * 3", async function () {
@@ -40,10 +36,6 @@ async function cronJobStart() {
     });
     schedule.scheduleJob("monthly_schedule", "30 4 1 * *", async function () {
       await axios.post(`${BASE_URL}api/cronjobs/monthlycron`, {
-        password: CRON_PASSWORD,
-      });
-
-      await axios.post(`${BASE_URL}api/cronjobs/monthlyfrequencycron`, {
         password: CRON_PASSWORD,
       });
 

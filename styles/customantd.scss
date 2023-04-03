@@ -347,15 +347,15 @@ $primary-green: #64a15e;
 }
 .login-image-wrapper {
   .image-wrapper {
-    width: 650px;
-    height: 450px;
+    width: 560px;
+    height: 560px;
     @include desktop {
-      width: 500px;
-      height: 340px;
+      width: 560px;
+      height: 560px;
     }
     @include tab {
       width: 450px;
-      height: 300px;
+      height: 450px;
     }
   }
 }

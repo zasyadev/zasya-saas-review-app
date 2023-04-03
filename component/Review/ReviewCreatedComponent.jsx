@@ -17,6 +17,7 @@ import { PrimaryButton, SecondaryButton } from "../common/CustomButton";
 import CustomModal from "../common/CustomModal";
 import CustomPopover from "../common/CustomPopover";
 import CustomTable from "../common/CustomTable";
+import { REVIEW_FREQUENCY } from "./constants";
 import { ResizableTitle } from "./ResizableTitle";
 import ReviewAssignessModal from "./ReviewAssignessModal";
 
@@ -319,7 +320,7 @@ function ReviewCreatedComponent({
                     <EditOutlined className="primary-color-bluetext-base " />
                   </div>
                 </Tooltip>
-                {reviewData.frequency != "once" &&
+                {reviewData.frequency != REVIEW_FREQUENCY.ONCE &&
                   reviewId &&
                   !reviewData.frequency_status && (
                     <Popconfirm
@@ -331,7 +332,12 @@ function ReviewCreatedComponent({
                       }
                       okText="Yes"
                       cancelText="No"
-                      onConfirm={() => jobChangeHandler(reviewId)}
+                      onConfirm={() =>
+                        jobChangeHandler({
+                          id: reviewId,
+                          frequency: REVIEW_FREQUENCY.ONCE,
+                        })
+                      }
                       placement="topRight"
                       overlayClassName="max-w-sm"
                     >

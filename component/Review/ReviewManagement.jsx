@@ -27,6 +27,7 @@ import {
 } from "./constants";
 import ReviewAssignessModal from "./ReviewAssignessModal";
 import { TempateSelectWrapper } from "./TempateSelectWrapper";
+import { twMerge } from "tailwind-merge";
 
 const initialReviewCountModalData = {
   review_name: "",
@@ -203,7 +204,7 @@ function ReviewManagement({ user }) {
     {
       title: "Date",
       key: "created_date",
-      render: (_, record) => <DateInfoCard endDate={record?.created_date} />,
+      render: (_, record) => <DateInfoCard endDate={record.created_date} />,
     },
     {
       title: "progress",
@@ -264,15 +265,23 @@ function ReviewManagement({ user }) {
             </>
           ) : (
             <>
-              {record.status === "answered" ? (
-                <div className="text-brandBlue-700 px-4 py-1 bg-brandBlue-200 rounded-md">
-                  Answered
+              <Link
+                href={`/review/${record.status ? "preview" : "id"}/${
+                  record.id
+                }`}
+                passHref
+              >
+                <div
+                  className={twMerge(
+                    clsx(
+                      "px-4 py-1 rounded-md cursor-pointer text-brandOrange-400 bg-brandOrange-300",
+                      { "text-brandBlue-700 bg-brandBlue-200": record.status }
+                    )
+                  )}
+                >
+                  {record.status ? "Answered" : "Pending"}
                 </div>
-              ) : (
-                <div className="text-brandOrange-400 px-4 py-1 bg-brandOrange-300 rounded-md">
-                  Pending
-                </div>
-              )}
+              </Link>
               <div
                 className="w-8 h-8 grid place-content-center rounded-full text-xs text-white capitalize"
                 style={{

@@ -126,6 +126,7 @@ model Review {
   role                  Role?                   @relation(fields: [role_id], references: [id])
   role_id               Int?
   parent_id             String?
+  review_parent_id      String?
   frequency_status      Boolean                 @default(false)
   is_published          String?
   template_data         Json?
