@@ -23,6 +23,7 @@ import {
   goalsFilterList,
   groupItems,
 } from "./constants";
+import { openNotificationBox } from "../common/notification";
 
 const initialModalVisible = {
   visible: false,
@@ -183,13 +184,14 @@ function GoalsList({ user }) {
         id,
       })
       .then(({ data: response }) => {
-        if (response.status === 200) {
-          fetchGoalList(ALL_STATUS);
-          setEditGoalModalVisible(initialModalVisible);
-        }
-        setLoading(false);
+        fetchGoalList(ALL_STATUS);
+        setEditGoalModalVisible(initialModalVisible);
+        openNotificationBox("success", response.message, 3);
       })
       .catch((err) => {
+        openNotificationBox("error", err.response.data?.message);
+      })
+      .finally(() => {
         setLoading(false);
       });
   };

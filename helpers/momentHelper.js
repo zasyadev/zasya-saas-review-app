@@ -115,3 +115,10 @@ export const getCronNextMeetingDate = (index) => {
 export const daysDiffrenceInDates = (date) => {
   return moment().diff(date, "days");
 };
+
+export const startOfDate = (value) => {
+  return moment(value).startOf("day");
+};
+export const endOfDate = (value) => {
+  return moment(value).endOf("day");
+};

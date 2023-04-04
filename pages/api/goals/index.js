@@ -280,7 +280,7 @@ async function handle(req, res, prisma, user) {
       return res.status(200).json({
         status: 200,
         data: transactionData.formdata,
-        message: "Goals Details Updated",
+        message: "Goal Updated",
       });
     }
     return res.status(404).json({ status: 404, message: "No Record Found" });
