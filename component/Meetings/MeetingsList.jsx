@@ -273,7 +273,13 @@ function MeetingsList({ user }) {
               title={card.title}
               subTitle={card.subTitle}
               onClick={() => setFilterType(card.title)}
-              className="cursor-pointer"
+              className={clsx(
+                "cursor-pointer border-t-4 border-transparent hover:border-primary-green  hover:bg-brandGray-100 hover:border-t-4",
+                {
+                  "border-primary-green bg-brandGray-100 border-t-4":
+                    card.title === filterType,
+                }
+              )}
               key={card.title + index}
             />
           ))}
