@@ -107,6 +107,7 @@ function DashBoard({ user }) {
       return latestUpcomingGoalsList.slice(0, 3);
     } else return [];
   }, [goalList]);
+
   const sortMeetingListByDate = useMemo(() => {
     if (Number(meetingList?.length) > 0) {
       const latestMeetingList = meetingList
@@ -188,9 +189,14 @@ function DashBoard({ user }) {
                           />
                         </div>
                         <div className="flex-1">
-                          <p className="mb-2 font-medium text-base break-all single-line-clamp">
-                            {item.goal.goal_title}
-                          </p>
+                          <Link
+                            href={`${URLS.GOAL}/${item.goal.id}/detail`}
+                            passHref
+                          >
+                            <p className="mb-2 font-medium text-base break-all single-line-clamp cursor-pointer hover:underline">
+                              {item.goal.goal_title}
+                            </p>
+                          </Link>
                           <p className="flex justify-between items-center">
                             <span
                               className={clsx(
@@ -240,9 +246,11 @@ function DashBoard({ user }) {
                           <DateBox date={item.meeting_at} />
                         </div>
                         <div className="flex-1">
-                          <p className="mb-2 font-medium text-base break-all single-line-clamp">
-                            {item.meeting_title}
-                          </p>
+                          <Link href={`${URLS.FOLLOW_UP}/${item.id}`} passHref>
+                            <p className="mb-2 font-medium text-base break-all single-line-clamp cursor-pointer hover:underline">
+                              {item.meeting_title}
+                            </p>
+                          </Link>
                           <div className="flex justify-between items-center">
                             <span className="flex items-center text-brandGray-600 text-sm lg:text-base">
                               <span className="leading-0 text-primary-green pr-1">
