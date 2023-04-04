@@ -7,15 +7,15 @@ function CountHeaderCard({
   imgSrcClassNames,
   title,
   subTitle,
-  onClick = () => {},
   className = "",
+  ...rest
 }) {
   return (
     <div
       className={twMerge(
         clsx("bg-white rounded-md shadow-md flex space-x-4 p-4", className)
       )}
-      onClick={onClick}
+      {...rest}
     >
       <div
         className={clsx(
