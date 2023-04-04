@@ -208,7 +208,7 @@ function GoalsList({ user }) {
     setGoalAssigneeModalData(initialGoalCountModalData);
   };
 
-  const ShowEditGoalModal = ({ record }) => {
+  const showEditGoalModal = ({ record }) => {
     setEditGoalModalVisible({
       visible: true,
       id: record.id,
@@ -346,9 +346,8 @@ function GoalsList({ user }) {
               goalEditHandle={goalEditHandle}
               userId={user.id}
               isArchived={isArchived}
-              ShowAssigneeModal={ShowAssigneeModal}
               isPagination
-              ShowEditGoalModal={ShowEditGoalModal}
+              showEditGoalModal={showEditGoalModal}
               showHeader={false}
             />
           </div>

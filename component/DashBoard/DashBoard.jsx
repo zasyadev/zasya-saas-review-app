@@ -107,6 +107,7 @@ function DashBoard({ user }) {
       return latestUpcomingGoalsList.slice(0, 3);
     } else return [];
   }, [goalList]);
+
   const sortMeetingListByDate = useMemo(() => {
     if (Number(meetingList?.length) > 0) {
       const latestMeetingList = meetingList

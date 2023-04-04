@@ -38,12 +38,30 @@ const meetingCardVarient = {
   hidden: { y: 20, opacity: 0 },
   show: { y: 0, opacity: 1 },
 };
+const startOfDay = startOfDate(moment());
+const endOfDay = endOfDate(moment());
+
+const meetingFilterData = (list, type) => {
+  return list.filter((record) => {
+    const meetingTime = moment(record.meeting_at);
+    switch (type) {
+      case SORT_BY_TIME.TODAY:
+        return meetingTime <= endOfDay && meetingTime >= startOfDay;
+      case SORT_BY_TIME.UPCOMING:
+        return meetingTime >= endOfDay;
+      case SORT_BY_TIME.COMPLETED:
+        return meetingTime <= startOfDay;
+      default:
+        return record;
+    }
+  });
+};
 
 function MeetingsList({ user }) {
   const [loading, setLoading] = useState(false);
   const [meetingsList, setMeetingsList] = useState([]);
   const [filterId, setFilterId] = useState("ALL");
-  const [filtertime, setFilterTime] = useState(SORT_BY_TIME.TODAY);
+  const [filterType, setFilterType] = useState(SORT_BY_TIME.TODAY);
   const { membersList } = MemberListHook(user);
 
   async function fetchMeetingList() {
@@ -92,13 +110,11 @@ function MeetingsList({ user }) {
   }
 
   const dateCellRender = (value) => {
-    const filterList = sortedList.filter((item) => {
-      if (
+    const filterList = filteredMeetingList.filter(
+      (item) =>
         moment(item.meeting_at) < endOfDate(value) &&
         moment(item.meeting_at) >= startOfDate(value)
-      )
-        return item;
-    });
+    );
 
     return (
       <div className="space-y-2">
@@ -176,37 +192,12 @@ function MeetingsList({ user }) {
     );
   };
 
-  const sortedList = useMemo(() => {
-    return meetingsList.filter((record) => {
-      if (filtertime === SORT_BY_TIME.TODAY) {
-        return (
-          moment(record.meeting_at) <= endOfDate(moment()) &&
-          moment(record.meeting_at) >= startOfDate(moment())
-        );
-      } else if (filtertime === SORT_BY_TIME.UPCOMING) {
-        return moment(record.meeting_at) >= endOfDate(moment());
-      } else if (filtertime === SORT_BY_TIME.COMPLETED) {
-        return moment(record.meeting_at) <= startOfDate(moment());
-      } else return record;
-    });
-  }, [meetingsList, filtertime]);
+  const filteredMeetingList = useMemo(() => {
+    return meetingFilterData(meetingsList, filterType);
+  }, [meetingsList, filterType]);
 
   const getCountBySort = (data) => {
-    if (SORT_BY_TIME.TODAY === data) {
-      return meetingsList.filter(
-        (record) =>
-          moment(record.meeting_at) <= endOfDate(moment()) &&
-          moment(record.meeting_at) >= startOfDate(moment())
-      ).length;
-    } else if (SORT_BY_TIME.UPCOMING == data) {
-      return meetingsList.filter(
-        (record) => moment(record.meeting_at) >= endOfDate(moment())
-      ).length;
-    } else if (SORT_BY_TIME.COMPLETED == data) {
-      return meetingsList.filter(
-        (record) => moment(record.meeting_at) <= startOfDate(moment())
-      ).length;
-    } else return meetingsList.length;
+    return meetingFilterData(meetingsList, data).length;
   };
 
   const headerCard = [
@@ -215,36 +206,24 @@ function MeetingsList({ user }) {
       imgSrcClassNames: "bg-brandGreen-200",
       title: SORT_BY_TIME.TODAY,
       subTitle: getCountBySort(SORT_BY_TIME.TODAY),
-      onClick: () => {
-        setFilterTime(SORT_BY_TIME.TODAY);
-      },
     },
     {
       imgSrc: "/media/svg/completed-goals.svg",
       imgSrcClassNames: "bg-brandOrange-200",
       title: SORT_BY_TIME.COMPLETED,
       subTitle: getCountBySort(SORT_BY_TIME.COMPLETED),
-      onClick: () => {
-        setFilterTime(SORT_BY_TIME.COMPLETED);
-      },
     },
     {
       imgSrc: "/media/svg/contract-pending.svg",
       imgSrcClassNames: "bg-brandBlue-200",
       title: SORT_BY_TIME.UPCOMING,
       subTitle: getCountBySort(SORT_BY_TIME.UPCOMING),
-      onClick: () => {
-        setFilterTime(SORT_BY_TIME.UPCOMING);
-      },
     },
     {
       imgSrc: "/media/svg/assign-user.svg",
       imgSrcClassNames: "bg-brandGreen-400",
       title: SORT_BY_TIME.ALL,
       subTitle: getCountBySort(SORT_BY_TIME.ALL),
-      onClick: () => {
-        setFilterTime(SORT_BY_TIME.ALL);
-      },
     },
   ];
 
@@ -287,94 +266,88 @@ function MeetingsList({ user }) {
         </div>
 
         <div className="grid col-span-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-          {headerCard.map((card, index) => {
-            return (
-              <CountHeaderCard
-                imgSrc={card.imgSrc}
-                imgSrcClassNames={card.imgSrcClassNames}
-                title={card.title}
-                subTitle={card.subTitle}
-                onClick={card.onClick}
-                className="cursor-pointer"
-                key={card.title + index}
-              />
-            );
-          })}
+          {headerCard.map((card, index) => (
+            <CountHeaderCard
+              imgSrc={card.imgSrc}
+              imgSrcClassNames={card.imgSrcClassNames}
+              title={card.title}
+              subTitle={card.subTitle}
+              onClick={() => setFilterType(card.title)}
+              className="cursor-pointer"
+              key={card.title + index}
+            />
+          ))}
         </div>
       </div>
       {loading ? (
         <MeetingListSkeleton />
       ) : (
-        <>
-          <div className="grid grid-cols-1 md:grid-cols-3 md:gap-4 ">
-            <motion.div
-              className="space-y-4 max-h-screen overflow-auto custom-scrollbar mb-4 md:mb-0"
-              variants={DefaultMotionVarient}
-              initial="hidden"
-              animate="show"
-            >
-              {Number(sortedList.length) > 0 ? (
-                sortedList.map((item, idx) => (
-                  <motion.div
-                    className="flex items-center space-x-3 px-3 py-2 bg-white rounded-md shadow-md"
-                    key={idx + "list"}
-                    variants={meetingCardVarient}
-                  >
-                    <div className="shrink-0">
-                      <DateBox
-                        date={item.meeting_at}
-                        className={twMerge(
-                          clsx("bg-brandRed-100", {
-                            "bg-brandBlue-300":
-                              item.meeting_type === REVIEW_TYPE,
-                            "bg-brandGreen-300":
-                              item.meeting_type === GOAL_TYPE,
-                          })
-                        )}
-                      />
-                    </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 md:gap-4 ">
+          <motion.div
+            className="space-y-4 max-h-screen overflow-auto custom-scrollbar mb-4 md:mb-0"
+            variants={DefaultMotionVarient}
+            initial="hidden"
+            animate="show"
+          >
+            {Number(filteredMeetingList.length) > 0 ? (
+              filteredMeetingList.map((item, idx) => (
+                <motion.div
+                  className="flex items-center space-x-3 px-3 py-2 bg-white rounded-md shadow-md"
+                  key={idx + "list"}
+                  variants={meetingCardVarient}
+                >
+                  <div className="shrink-0">
+                    <DateBox
+                      date={item.meeting_at}
+                      className={twMerge(
+                        clsx("bg-brandRed-100", {
+                          "bg-brandBlue-300": item.meeting_type === REVIEW_TYPE,
+                          "bg-brandGreen-300": item.meeting_type === GOAL_TYPE,
+                        })
+                      )}
+                    />
+                  </div>
 
-                    <div className="flex-1">
-                      <p className="flex justify-between items-center  mb-2 font-medium text-sm break-all single-line-clamp">
-                        <Link href={`${URLS.FOLLOW_UP}/${item.id}`} passHref>
-                          <span className="hover:underline cursor-pointer">
-                            {item.meeting_title}
-                          </span>
-                        </Link>
-
-                        {user.id === item.created_by && (
-                          <span className="ml-2">
-                            <ActionButton record={item} />
-                          </span>
-                        )}
-                      </p>
-                      <div className="flex justify-between items-center">
-                        <span className="flex  items-center text-brandGray-600">
-                          <span className="leading-0 text-primary-green pr-1 text-sm">
-                            <CalendarOutlined />
-                          </span>
-
-                          {dateDayName(item.meeting_at)}
+                  <div className="flex-1">
+                    <p className="flex justify-between items-center  mb-2 font-medium text-sm break-all single-line-clamp">
+                      <Link href={`${URLS.FOLLOW_UP}/${item.id}`} passHref>
+                        <span className="hover:underline cursor-pointer">
+                          {item.meeting_title}
                         </span>
-                        <span className="flex  items-center text-brandGray-600">
-                          <span className="leading-0 text-primary-green pr-1 text-sm">
-                            <ClockCircleOutlined />
-                          </span>
-                          {dateTime(item.meeting_at)}
+                      </Link>
+
+                      {user.id === item.created_by && (
+                        <span className="ml-2">
+                          <ActionButton record={item} />
                         </span>
-                      </div>
+                      )}
+                    </p>
+                    <div className="flex justify-between items-center">
+                      <span className="flex  items-center text-brandGray-600">
+                        <span className="leading-0 text-primary-green pr-1 text-sm">
+                          <CalendarOutlined />
+                        </span>
+
+                        {dateDayName(item.meeting_at)}
+                      </span>
+                      <span className="flex  items-center text-brandGray-600">
+                        <span className="leading-0 text-primary-green pr-1 text-sm">
+                          <ClockCircleOutlined />
+                        </span>
+                        {dateTime(item.meeting_at)}
+                      </span>
                     </div>
-                  </motion.div>
-                ))
-              ) : (
-                <NoRecordFound title="No Meetings Found" />
-              )}
-            </motion.div>
-            <div className="col-span-2 p-2 bg-white rounded-md shadow-md">
-              <Calendar dateCellRender={dateCellRender} />
-            </div>
+                  </div>
+                </motion.div>
+              ))
+            ) : (
+              <NoRecordFound title="No Meetings Found" />
+            )}
+          </motion.div>
+          <div className="col-span-2 p-2 bg-white rounded-md shadow-md">
+            <Calendar dateCellRender={dateCellRender} />
           </div>
-        </>
+        </div>
       )}
     </div>
   );

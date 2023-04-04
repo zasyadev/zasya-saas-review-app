@@ -7,16 +7,14 @@ import CustomAvatar from "../../common/CustomAvatar";
 import { ButtonGray } from "../../common/CustomButton";
 import CustomTable from "../../common/CustomTable";
 import { statusPill } from "../constants";
-import { GoalAssigneeName } from "./GoalAssigneeName";
 import DateInfoCard from "./GoalsGroupList/components/DateInfoCard";
 
 function GoalsCustomTable({
   goalList,
-  ShowEditGoalModal,
+  showEditGoalModal,
   goalEditHandle,
   userId,
   isArchived,
-  ShowAssigneeModal,
   showHeader = false,
   isPagination = false,
 }) {
@@ -52,7 +50,7 @@ function GoalsCustomTable({
                 record.assignee_id === userId) &&
               !isArchived
             ) {
-              ShowEditGoalModal({
+              showEditGoalModal({
                 record: record,
               });
             }
