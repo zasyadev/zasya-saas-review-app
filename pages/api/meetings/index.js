@@ -29,11 +29,14 @@ async function handle(req, res, prisma, user) {
     let flterCondition = [{ organization_id: organization_id }];
 
     if (filterId && filterId !== "ALL") {
-      flterCondition.push({
-        MeetingAssignee: {
-          some: { assignee_id: filterId },
+      flterCondition.push(
+        {
+          MeetingAssignee: {
+            some: { assignee_id: filterId },
+          },
         },
-      });
+        { created_by: userId }
+      );
     } else {
       flterCondition.push({
         MeetingAssignee: {
