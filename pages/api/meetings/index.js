@@ -25,10 +25,9 @@ async function handle(req, res, prisma, user) {
 
   if (req.method === "GET") {
     const { filterId } = req.query;
-    let flterCondition = [
-      { organization_id: organization_id },
-      { created_by: userId },
-    ];
+
+    let flterCondition = [{ organization_id: organization_id }];
+
     if (filterId && filterId !== "ALL") {
       flterCondition.push({
         MeetingAssignee: {
