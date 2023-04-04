@@ -86,7 +86,7 @@ function GoalsAvatar({
                       <div
                         className={twMerge(
                           clsx(
-                            "border-2  flex justify-center items-center capitalize hover:cursor-pointer hover:z-50",
+                            "border-2 bg-green-600 flex justify-center items-center capitalize hover:cursor-pointer hover:z-50",
                             "transition-all duration-200 ease-in-out rounded-full text-xs w-8 h-8 text-white",
                             {
                               "bg-cyan-500": index === 0,

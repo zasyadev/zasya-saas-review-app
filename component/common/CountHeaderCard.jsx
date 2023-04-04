@@ -1,5 +1,6 @@
 import clsx from "clsx";
 import React from "react";
+import { twMerge } from "tailwind-merge";
 
 function CountHeaderCard({
   imgSrc,
@@ -11,9 +12,8 @@ function CountHeaderCard({
 }) {
   return (
     <div
-      className={clsx(
-        "bg-white rounded-md shadow-md flex space-x-4 p-4",
-        className
+      className={twMerge(
+        clsx("bg-white rounded-md shadow-md flex space-x-4 p-4", className)
       )}
       onClick={onClick}
     >
