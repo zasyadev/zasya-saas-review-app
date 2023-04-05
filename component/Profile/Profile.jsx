@@ -251,28 +251,24 @@ function Profile({ user, previewMode = false }) {
               <ProfileDetailCard
                 title={"Review"}
                 count={userDetails?.user?.taskReviewBy?.length ?? 0}
-                className="p-3 lg:py-5 lg:px-4"
                 Icon={() => <FileTextOutlined />}
                 iconClassName={"text-brandOrange-100 bg-brandOrange-10 text-lg"}
               />
               <ProfileDetailCard
                 title={"Goal"}
                 count={userDetails?.user?.Goals?.length ?? 0}
-                className=""
                 Icon={() => <CrownOutlined />}
                 iconClassName={"text-brandGreen-100 bg-brandGreen-10 text-lg"}
               />
               <ProfileDetailCard
                 title={"Applaud"}
                 count={userDetails?.user?.userCreated?.length ?? 0}
-                className=""
                 Icon={() => <ColorApplaudIcon color="#0091f6" />}
                 iconClassName={"text-brandBlue-100 bg-brandBlue-10 "}
               />
               <ProfileDetailCard
                 title={"Follow Up"}
                 count={userDetails?.user?.Meetings?.length ?? 0}
-                className=""
                 Icon={() => <ColoFollowUpIcon color="#C77700" />}
                 iconClassName={"text-brandOrange-500 bg-brandOrange-500 "}
               />

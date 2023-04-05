@@ -1001,3 +1001,17 @@ $primary-green: #64a15e;
 .ant-picker-calendar-date-content::-webkit-scrollbar {
   display: none;
 }
+.ant-upload-list-item-list-type-picture-card {
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 50% !important;
+  .ant-upload-list-item-info {
+    border-radius: 50% !important;
+  }
+  .ant-upload-list-item-info::before {
+    left: 0 !important;
+  }
+}
+.ant-upload-select-picture-card {
+  border-radius: 50% !important;
+}
