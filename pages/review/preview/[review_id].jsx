@@ -14,7 +14,7 @@ function PreviewPage() {
         <>
           <HeadersComponent />
           <AdminLayout user={user} title="Preview Answer" isBack>
-            <PreviewComponent user={user} reviewId={review_id} />
+            <PreviewComponent reviewId={review_id} />
           </AdminLayout>
         </>
       )}

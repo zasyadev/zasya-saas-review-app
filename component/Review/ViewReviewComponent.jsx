@@ -24,14 +24,10 @@ function ViewReviewComponent({ user }) {
         review_id: reviewId,
       })
       .then(({ data: response }) => {
-        if (response.status === 200) {
-          setReviewData(response.data);
-        }
+        setReviewData(response.data);
         setLoading(false);
       })
-      .catch((err) => {
-        setLoading(false);
-      });
+      .catch(() => setLoading(false));
   };
 
   useEffect(() => {
