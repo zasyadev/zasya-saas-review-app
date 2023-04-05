@@ -1,115 +1,20 @@
+import { BadRequestException } from "../../../lib/BadRequestExcpetion";
 import { RequestHandler } from "../../../lib/RequestHandler";
 
-async function handle(req, res, prisma) {
+async function handle(req, res, prisma, user) {
   const { userId } = req.query;
+  const { organization_id } = user;
 
-  if (!userId) {
-    return res.status(401).json({ status: 401, message: "No User found" });
-  }
+  if (!userId) throw BadRequestException("No user found");
 
-  if (req.method === "GET") {
-    const userData = await prisma.user.findUnique({
-      where: {
-        id: userId,
-      },
-    });
-
-    const givenData = await prisma.userApplaud.findMany({
-      orderBy: {
-        created_date: "desc",
-      },
-
-      where: {
-        AND: [
-          { created_by: userId },
-          { organization_id: userData.organization_id },
-        ],
-      },
-      include: {
-        user: {
-          select: {
-            first_name: true,
-            UserDetails: {
-              select: {
-                image: true,
-              },
-            },
-          },
-        },
-        created: {
-          select: {
-            first_name: true,
-            UserDetails: {
-              select: {
-                image: true,
-              },
-            },
-          },
-        },
-      },
-    });
-
-    const receivedData = await prisma.userApplaud.findMany({
-      orderBy: {
-        created_date: "desc",
-      },
-
-      where: {
-        AND: [
-          { user_id: userId },
-          { organization_id: userData.organization_id },
-        ],
-      },
-      include: {
-        user: {
-          select: {
-            first_name: true,
-            UserDetails: {
-              select: {
-                image: true,
-              },
-            },
-          },
-        },
-        created: {
-          select: {
-            first_name: true,
-            UserDetails: {
-              select: {
-                image: true,
-              },
-            },
-          },
-        },
-      },
-    });
-
-    if (receivedData && givenData) {
-      return res.status(200).json({
-        status: 200,
-        data: {
-          receivedApplaud: receivedData,
-          givenApplaud: givenData,
-        },
-        message: "Applaud Data Received",
-      });
-    }
-
-    return res.status(404).json({ status: 404, message: "No Record Found" });
-  } else if (req.method === "POST") {
-    const { currentMonth } = req.body;
-
-    const userData = await prisma.user.findUnique({
-      where: {
-        id: userId,
-      },
-    });
-    const receivedData = await prisma.userApplaud.findMany({
+  const { currentMonth } = req.body;
+  const transactionData = await prisma.$transaction(async (transaction) => {
+    const receivedApplaud = await transaction.userApplaud.findMany({
       where: {
         AND: [
           { user_id: userId },
           { created_date: currentMonth },
-          { organization_id: userData.organization_id },
+          { organization_id: organization_id },
         ],
       },
       include: {
@@ -136,16 +41,15 @@ async function handle(req, res, prisma) {
       },
     });
 
-    const givenData = await prisma.userApplaud.findMany({
+    const givenApplaud = await transaction.userApplaud.findMany({
       orderBy: {
         created_date: "desc",
       },
-
       where: {
         AND: [
           { created_by: userId },
           { created_date: currentMonth },
-          { organization_id: userData.organization_id },
+          { organization_id: organization_id },
         ],
       },
       include: {
@@ -172,26 +76,22 @@ async function handle(req, res, prisma) {
       },
     });
 
-    if (receivedData && givenData) {
-      return res.status(200).json({
-        status: 200,
-        data: {
-          receivedApplaud: receivedData,
-          givenApplaud: givenData,
-        },
-        message: "Data Received",
-      });
-    }
+    return { receivedApplaud, givenApplaud };
+  });
 
-    return res.status(404).json({ status: 404, message: "No Record Found" });
-  }
+  if (!transactionData) throw BadRequestException("No Record Found");
+
+  return res.status(200).json({
+    data: transactionData,
+    message: "Data Received",
+  });
 }
 const functionHandle = (req, res) =>
   RequestHandler({
     req,
     res,
     callback: handle,
-    allowedMethods: ["POST", "GET"],
+    allowedMethods: ["POST"],
     protectedRoute: true,
   });
 

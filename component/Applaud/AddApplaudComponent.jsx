@@ -23,16 +23,14 @@ function AddApplaud({ user }) {
     required: "${label} is required!",
   };
 
-  async function fetchMember(user) {
+  async function fetchMember() {
     await httpService
       .get(`/api/member/${user.id}`)
       .then(({ data }) => {
-        if (data.status === 200) {
-          let filterData = data.data.filter(
-            (item) => item.user_id != user.id && item.user.status
-          );
-          setMembersList(filterData);
-        }
+        let filterData = data.data.filter(
+          (item) => item.user_id != user.id && item.user.status
+        );
+        setMembersList(filterData);
       })
       .catch((err) => {
         openNotificationBox("error", err.response.data?.message);
@@ -44,9 +42,7 @@ function AddApplaud({ user }) {
     await httpService
       .get(`/api/applaud/applaudlimit`)
       .then(({ data }) => {
-        if (data.status === 200) {
-          setApplaudLimit(data);
-        }
+        setApplaudLimit(data);
       })
       .catch((err) => {
         openNotificationBox("error", err.response.data?.message);
@@ -73,21 +69,18 @@ function AddApplaud({ user }) {
     await httpService
       .post("/api/applaud", obj)
       .then(({ data: response }) => {
-        if (response.status === 200) {
-          openNotificationBox("success", response.message, 3);
-          router.push("/applaud");
-        }
+        openNotificationBox("success", response.message, 3);
+        router.push("/applaud");
       })
       .catch((err) => {
-        console.error(err);
         openNotificationBox("error", err.response.data?.message);
         setLoadingSubmitSpin(false);
       });
   }
 
   useEffect(() => {
-    fetchMember(user);
-    fetchApplaudLimit(user);
+    fetchMember();
+    fetchApplaudLimit();
   }, []);
 
   return (
