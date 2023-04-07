@@ -49,16 +49,13 @@ export const GoalListHook = (status) => {
     await httpService
       .get(`/api/goals?status=${status}`)
       .then(({ data: response }) => {
-        if (response.status === 200) {
-          setGoalList(response.data);
-        }
-        setGoalListLoading(false);
+        setGoalList(response.data);
       })
-      .catch((err) => {
-        setGoalListLoading(false);
+      .catch(() => {
         setGoalListError(NotFound);
         setGoalList([]);
-      });
+      })
+      .finally(() => setGoalListLoading(false));
   }
 
   useEffect(() => {

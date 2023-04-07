@@ -1,14 +1,11 @@
+import { BadRequestException } from "../../../lib/BadRequestExcpetion";
 import { RequestHandler } from "../../../lib/RequestHandler";
 
 async function handle(req, res, prisma, user) {
   const { id: userId } = user;
-  if (!userId) {
-    return res.status(401).json({ status: 401, message: "No User found" });
-  }
+  if (!userId) throw BadRequestException("No User found");
   const { goal_id } = req.query;
-  if (!goal_id) {
-    return res.status(401).json({ status: 401, message: "No Goal found" });
-  }
+  if (!goal_id) throw BadRequestException("No Goal found");
 
   if (req.method === "GET") {
     const data = await prisma.goals.findUnique({
@@ -51,14 +48,12 @@ async function handle(req, res, prisma, user) {
       },
     });
 
-    if (data) {
-      return res.status(200).json({
-        status: 200,
-        data: data,
-        message: "Goals Details Retrieved",
-      });
-    }
-    return res.status(404).json({ status: 404, message: "No Record Found" });
+    if (!data) throw BadRequestException("No data found");
+
+    return res.status(200).json({
+      data: data,
+      message: "Goals Details Retrieved",
+    });
   } else if (req.method === "POST") {
     const data = await prisma.goals.findUnique({
       where: { id: goal_id },
@@ -67,19 +62,16 @@ async function handle(req, res, prisma, user) {
       },
     });
 
-    if (data) {
-      return res.status(200).json({
-        status: 200,
-        data: data,
-        message: "Goals Details Retrieved",
-      });
-    }
-    return res.status(404).json({ status: 404, message: "No Record Found" });
+    if (data) throw BadRequestException("No data found");
+
+    return res.status(200).json({
+      data: data,
+      message: "Goals Details Retrieved",
+    });
   } else if (req.method === "PUT") {
     const reqBody = req.body;
 
     let objData = {};
-
     let data = {};
 
     if (reqBody.type === "forStatus") {
@@ -115,14 +107,12 @@ async function handle(req, res, prisma, user) {
       });
     }
 
-    if (data) {
-      return res.status(200).json({
-        status: 200,
-        data: data,
-        message: "Goals Details Updated",
-      });
-    }
-    return res.status(404).json({ status: 404, message: "No Record Found" });
+    if (!data) throw BadRequestException("Goals details not updated");
+
+    return res.status(200).json({
+      data: data,
+      message: "Goals Details Updated",
+    });
   }
 }
 const functionHandle = (req, res) =>
