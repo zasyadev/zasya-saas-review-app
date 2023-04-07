@@ -141,7 +141,7 @@ function MeetingDetailComponent({ user }) {
             </div>
           </div>
 
-          {Number(meetingTimeLinedata?.length) > 0 && (
+          {meetingTimeLinedata.length > 0 && (
             <div className="bg-brandGray-100 p-2 md:p-4 lg-p-6 space-y-3 max-h-96 overflow-auto custom-scrollbar">
               {meetingTimeLinedata.map(
                 (assignee, idx) =>
