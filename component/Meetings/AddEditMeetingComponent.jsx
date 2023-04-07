@@ -44,10 +44,8 @@ function AddEditMeetingComponent({ user, editMode = false }) {
     await httpService
       .post("/api/meetings", obj)
       .then(({ data: response }) => {
-        if (response.status === 200) {
-          openNotificationBox("success", response.message, 3);
-          router.push("/followups");
-        }
+        openNotificationBox("success", response.message, 3);
+        router.push("/followups");
       })
       .catch((err) => {
         openNotificationBox("error", err.response.data?.message);
@@ -61,10 +59,8 @@ function AddEditMeetingComponent({ user, editMode = false }) {
       await httpService
         .put("/api/meetings", data)
         .then(({ data: response }) => {
-          if (response.status === 200) {
-            openNotificationBox("success", response.message, 3);
-            router.push("/followups");
-          }
+          openNotificationBox("success", response.message, 3);
+          router.push("/followups");
         })
         .catch((err) => {
           openNotificationBox("error", err.response.data?.message);
@@ -80,9 +76,7 @@ function AddEditMeetingComponent({ user, editMode = false }) {
       .get(`/api/meetings/${meeting_id}`)
       .then(({ data: response }) => {
         setLoading(false);
-        if (response.status === 200) {
-          setMeetingData(response.data);
-        }
+        setMeetingData(response.data);
       })
       .catch((err) => {
         openNotificationBox(
@@ -97,9 +91,7 @@ function AddEditMeetingComponent({ user, editMode = false }) {
     await httpService
       .get(`/api/review/${user.id}`)
       .then(({ data: response }) => {
-        if (response.status === 200) {
-          setReviewsList(response.data);
-        }
+        setReviewsList(response.data);
       })
       .catch((err) => {
         openNotificationBox(
@@ -113,9 +105,7 @@ function AddEditMeetingComponent({ user, editMode = false }) {
     await httpService
       .get(`/api/goals?status=All`)
       .then(({ data: response }) => {
-        if (response.status === 200) {
-          setGoalsList(response.data);
-        }
+        setGoalsList(response.data);
       })
       .catch((err) => {
         openNotificationBox(
@@ -129,13 +119,11 @@ function AddEditMeetingComponent({ user, editMode = false }) {
     await httpService
       .get(`/api/user/organizationId`)
       .then(({ data: response }) => {
-        if (response.status === 200) {
-          let filterData = response.data.filter(
-            (item) =>
-              item.user.status && item.role_id !== 2 && item.user_id !== user.id
-          );
-          setUserList(filterData);
-        }
+        let filterData = response.data.filter(
+          (item) =>
+            item.user.status && item.role_id !== 2 && item.user_id !== user.id
+        );
+        setUserList(filterData);
       })
       .catch((err) => {
         setUserList([]);

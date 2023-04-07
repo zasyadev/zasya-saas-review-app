@@ -49,9 +49,7 @@ function CreateMeetingTypeComponent({ user }) {
     await httpService
       .get(`/api/review/${user.id}`)
       .then(({ data: response }) => {
-        if (response.status === 200) {
-          setReviewsList(response.data);
-        }
+        setReviewsList(response.data);
       })
       .catch((err) => {
         openNotificationBox(
@@ -65,16 +63,14 @@ function CreateMeetingTypeComponent({ user }) {
     await httpService
       .get(`/api/goals?status=All`)
       .then(({ data: response }) => {
-        if (response.status === 200) {
-          setGoalsList(response.data);
-        }
+        setGoalsList(response.data);
       })
-      .catch((err) => {
+      .catch((err) =>
         openNotificationBox(
           "error",
           err?.response?.data?.message || "Failed! Please try again"
-        );
-      });
+        )
+      );
   }
 
   async function fetchUserData() {
@@ -82,14 +78,12 @@ function CreateMeetingTypeComponent({ user }) {
     await httpService
       .get(`/api/user/organizationId`)
       .then(({ data: response }) => {
-        if (response.status === 200) {
-          let filterData = response.data.filter(
-            (item) => item.user.status && item.user_id != user.id
-          );
-          setUserList(filterData);
-        }
+        let filterData = response.data.filter(
+          (item) => item.user.status && item.user_id != user.id
+        );
+        setUserList(filterData);
       })
-      .catch((err) => {
+      .catch(() => {
         setUserList([]);
       });
   }
@@ -179,10 +173,8 @@ function CreateMeetingTypeComponent({ user }) {
     await httpService
       .post("/api/meetings", data)
       .then(({ data: response }) => {
-        if (response.status === 200) {
-          router.push("/followups");
-          openNotificationBox("success", response.message, 3);
-        }
+        router.push("/followups");
+        openNotificationBox("success", response.message, 3);
       })
       .catch((err) => {
         openNotificationBox("error", err.response.data?.message);

@@ -11,17 +11,19 @@ import {
 } from "../../../helpers/slackHelper";
 import { RequestHandler } from "../../../lib/RequestHandler";
 import { MEETING_SCHEMA } from "../../../yup-schema/meeting";
+import { BadRequestException } from "../../../lib/BadRequestExcpetion";
 
-const GOAL_TYPE = "Goal";
-const REVIEW_TYPE = "Review";
-const CASUAL_TYPE = "Casual";
+const TYPE = {
+  GOAL: "Goal",
+  REVIEW: "Review",
+  CASUAL: "Casual",
+};
+
 const BASE_URL = process.env.NEXT_APP_URL;
 
 async function handle(req, res, prisma, user) {
   const { id: userId, organization_id } = user;
-  if (!userId) {
-    return res.status(401).json({ status: 401, message: "No User found" });
-  }
+  if (!userId) throw BadRequestException("No user found");
 
   if (req.method === "GET") {
     const { filterId } = req.query;
@@ -57,14 +59,13 @@ async function handle(req, res, prisma, user) {
       },
     });
 
-    if (data) {
-      return res.status(200).json({
-        status: 200,
-        data: data,
-        message: "Meetings Details Retrieved",
-      });
-    }
-    return res.status(404).json({ status: 404, message: "No Record Found" });
+    if (!data) throw BadRequestException("No record found");
+
+    return res.status(200).json({
+      status: 200,
+      data: data,
+      message: "Meetings details retrieved",
+    });
   } else if (req.method === "POST") {
     try {
       const reqBody = req.body;
@@ -80,11 +81,11 @@ async function handle(req, res, prisma, user) {
         organization: { connect: { id: organization_id } },
       };
       let meetingTypeData = [];
-      if (reqBody.meeting_type !== CASUAL_TYPE) {
+      if (reqBody.meeting_type !== TYPE.CASUAL) {
         meetingTypeData = reqBody.type_id.map((item) => {
-          if (reqBody.meeting_type === GOAL_TYPE) {
+          if (reqBody.meeting_type === TYPE.GOAL) {
             return { goal: { connect: { id: item } } };
-          } else if (reqBody.meeting_type === REVIEW_TYPE) {
+          } else if (reqBody.meeting_type === TYPE.REVIEW) {
             return { review: { connect: { id: item } } };
           }
         });
@@ -235,17 +236,14 @@ async function handle(req, res, prisma, user) {
         }
       }
 
-      if (createData) {
-        return res.status(200).json({
-          status: 200,
-          message: "Meeting Details Saved Successfully",
-        });
-      }
-      return res.status(404).json({ status: 404, message: "No Record Found" });
+      if (!createData) throw BadRequestException("Record not saved");
+
+      return res.status(200).json({
+        status: 200,
+        message: "Meeting Details Saved Successfully",
+      });
     } catch (error) {
-      return res
-        .status(404)
-        .json({ status: 404, message: "Internal server error" });
+      throw BadRequestException("Record not saved");
     }
   } else if (req.method === "PUT") {
     try {
@@ -291,11 +289,11 @@ async function handle(req, res, prisma, user) {
       });
 
       let meetingTypeData = [];
-      if (meetingData.meeting_type !== CASUAL_TYPE) {
+      if (meetingData.meeting_type !== TYPE.CASUAL) {
         meetingTypeData = reqBody.type_id.map((item) => {
-          if (meetingData.meeting_type === GOAL_TYPE) {
+          if (meetingData.meeting_type === TYPE.GOAL) {
             return { goal: { connect: { id: item } } };
-          } else if (meetingData.meeting_type === REVIEW_TYPE) {
+          } else if (meetingData.meeting_type === TYPE.REVIEW) {
             return { review: { connect: { id: item } } };
           }
         });
@@ -356,19 +354,15 @@ async function handle(req, res, prisma, user) {
         }
       }
 
-      if (data) {
-        return res.status(200).json({
-          status: 200,
-          data: data,
-          message: "Meeting Details Updated",
-        });
-      }
-      return res.status(404).json({ status: 404, message: "No Record Found" });
+      if (!data) throw BadRequestException("Record not updated");
+
+      return res.status(200).json({
+        status: 200,
+        data: data,
+        message: "Meeting Details Updated",
+      });
     } catch (error) {
-      console.log(error);
-      return res
-        .status(404)
-        .json({ status: 404, message: "Internal server error" });
+      throw BadRequestException("Record not updated");
     }
   }
 }
