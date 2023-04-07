@@ -15,6 +15,8 @@ import { DateBox } from "../DashBoard/component/helperComponent";
 import { statusBackground, statusPill } from "../Goals/constants";
 import { PulseLoader } from "../Loader/LoadingSpinner";
 import MeetingCommentModal from "./MeetingCommentModal";
+import Link from "next/link";
+import { URLS } from "../../constants/urls";
 
 const initialMeetingModalData = {
   meetingTitle: null,
@@ -111,8 +113,8 @@ function MeetingDetailComponent({ user }) {
               {moment(meetingData?.meeting_at).format(MONTH_DATE_FORMAT)}
             </span>
           </p>
-          <div className="">
-            <p className="  font-bold text-lg md:text-xl mb-2">
+          <div className="space-y-2">
+            <p className="font-semibold text-lg md:text-xl mb-0">
               Meeting Members
             </p>
             <div className="flex justify-between items-center space-y-2 pr-2">
@@ -138,40 +140,43 @@ function MeetingDetailComponent({ user }) {
               )}
             </div>
           </div>
-          <div className="bg-brandGray-100 p-2 md:p-4 lg-p-6 space-y-3 max-h-96 overflow-auto custom-scrollbar">
-            {Number(meetingTimeLinedata?.length) > 0 &&
-              meetingTimeLinedata.map((assignee, idx) =>
-                assignee.comment !== "" ? (
-                  <div className="space-x-3 flex " key={idx + "assinee"}>
-                    <div
-                      className={`
+
+          {meetingTimeLinedata.length > 0 && (
+            <div className="bg-brandGray-100 p-2 md:p-4 lg-p-6 space-y-3 max-h-96 overflow-auto custom-scrollbar">
+              {meetingTimeLinedata.map(
+                (assignee, idx) =>
+                  assignee.comment !== "" && (
+                    <div className="space-x-3 flex " key={idx + "assinee"}>
+                      <div
+                        className={`
    text-white flex justify-center items-center capitalize rounded-full shrink-0 w-10 h-10`}
-                      style={{
-                        backgroundColor: randomBgColor(idx),
-                      }}
-                    >
-                      {getFirstLetter(assignee.assignee.first_name)}
+                        style={{
+                          backgroundColor: randomBgColor(idx),
+                        }}
+                      >
+                        {getFirstLetter(assignee.assignee.first_name)}
+                      </div>
+                      <div className="space-y-2">
+                        <p className="font-semibold text-base mb-0 ">
+                          {assignee.assignee.first_name}
+                          <span className="text-xs text-gray-400 ml-3">
+                            {moment(assignee.modified_date).format(
+                              MONTH_DATE_FORMAT
+                            )}
+                          </span>
+                        </p>
+                        <p className="font-medium text-sm mb-0 ">
+                          {assignee.comment}
+                        </p>
+                      </div>
                     </div>
-                    <div className="space-y-2">
-                      <p className="font-semibold text-base mb-0 ">
-                        {assignee.assignee.first_name}
-                        <span className="text-xs text-gray-400 ml-3">
-                          {moment(assignee.modified_date).format(
-                            MONTH_DATE_FORMAT
-                          )}
-                        </span>
-                      </p>
-                      <p className="font-medium text-sm mb-0 ">
-                        {assignee.comment}
-                      </p>
-                    </div>
-                  </div>
-                ) : null
+                  )
               )}
-          </div>
+            </div>
+          )}
         </div>
         <div className="rounded-md shadow-brand border-2 border-brandGrey-100 divide-y h-fit">
-          <p className="p-4  font-bold text-lg md:text-xl">Related Goals</p>
+          <p className="p-4 font-semibold text-lg md:text-xl">Related Goals</p>
 
           <div className="divide-y max-h-96 overflow-auto custom-scrollbar">
             {loading ? (
@@ -193,9 +198,15 @@ function MeetingDetailComponent({ user }) {
                       />
                     </div>
                     <div className="flex-1">
-                      <p className="mb-2 font-medium text-base break-all single-line-clamp">
-                        {item.goal.goal_title}
-                      </p>
+                      <Link
+                        href={`${URLS.GOAL}/${item.goal.id}/detail`}
+                        passHref
+                      >
+                        <p className="mb-2 font-medium text-base break-all single-line-clamp cursor-pointer hover:underline">
+                          {item.goal.goal_title}
+                        </p>
+                      </Link>
+
                       <p className="flex justify-between items-center">
                         <span
                           className={`text-xs font-medium px-2 py-1 uppercase rounded-md ${statusPill(
