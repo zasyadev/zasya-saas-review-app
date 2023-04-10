@@ -1,4 +1,5 @@
 import { validateEmail } from "../../../../helpers/validateEmail";
+import { BadRequestException } from "../../../../lib/BadRequestExcpetion";
 import { mailService, mailTemplate } from "../../../../lib/emailservice";
 import { RequestHandler } from "../../../../lib/RequestHandler";
 const BASE_URL = process.env.NEXT_APP_URL;
@@ -65,23 +66,15 @@ async function handle(req, res, prisma, user) {
         return { formdata };
       });
 
-      if (transactionData.formdata) {
-        return res.status(201).json({
-          message: "Survey Created Successfully",
-          data: transactionData.formdata,
-          status: 200,
-        });
-      } else {
-        return res.status(400).json({
-          message: "Survey Not Created",
-          status: 400,
-        });
-      }
-    } catch (error) {
-      return res.status(500).json({
-        error: error,
-        message: "Internal Server Error",
+      if (!transactionData || !transactionData.formdata)
+        throw BadRequestException("Survey not created");
+
+      return res.status(201).json({
+        message: "Survey Created Successfully",
+        data: transactionData.formdata,
       });
+    } catch (error) {
+      throw BadRequestException("Survey not created");
     }
   }
 
@@ -139,10 +132,7 @@ async function handle(req, res, prisma, user) {
                 }),
               };
 
-              await mailService.sendMail(mailData, function (err, info) {
-                // if (err) console.log("failed");
-                // else console.log("successfull");
-              });
+              await mailService.sendMail(mailData);
             }
           });
 
@@ -162,23 +152,14 @@ async function handle(req, res, prisma, user) {
         }
       });
 
-      if (!transactionData.channeldata) {
-        return res.status(400).json({
-          message: "Survey  Channnel Not Created",
-          status: 400,
-        });
-      } else {
-        return res.status(201).json({
-          message: "Survey Channel Created Successfully",
-          data: transactionData.channeldata,
-          status: 200,
-        });
-      }
-    } catch (error) {
-      return res.status(500).json({
-        error: error,
-        message: "Internal Server Error",
+      if (!transactionData.channeldata)
+        throw BadRequestException("Survey channel not created");
+      return res.status(201).json({
+        message: "Survey Channel Created Successfully",
+        data: transactionData.channeldata,
       });
+    } catch (error) {
+      throw BadRequestException("Survey channel not created");
     }
   }
 }

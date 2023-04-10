@@ -1,12 +1,11 @@
+import { BadRequestException } from "../../../lib/BadRequestExcpetion";
 import { RequestHandler } from "../../../lib/RequestHandler";
 
 async function handle(req, res, prisma, user) {
   const { surveyId } = req.body;
   const { id: userId } = user;
 
-  if (!surveyId && !userId) {
-    return res.status(401).json({ status: 401, message: "No Survey found" });
-  }
+  if (!surveyId && !userId) throw BadRequestException("No survey found");
 
   const surveyData = await prisma.survey.findFirst({
     where: { AND: [{ id: surveyId }, { created_by: userId }] },
@@ -23,15 +22,9 @@ async function handle(req, res, prisma, user) {
     },
   });
 
-  if (!surveyData) {
-    res.status(400).json({
-      status: 400,
-      message: "No Data Found",
-    });
-  }
+  if (!surveyData) throw BadRequestException("No data found");
 
   return res.status(200).json({
-    status: 200,
     data: surveyData,
     message: "Survey Details Retrieved",
   });

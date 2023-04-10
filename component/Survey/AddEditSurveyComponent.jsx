@@ -40,10 +40,8 @@ function AddEditSurveyComponent({
     await httpService
       .post(`/api/survey/add`, obj)
       .then(({ data: response }) => {
-        if (response.status === 200) {
-          openNotificationBox("success", response.message, 3);
-          router.replace(`${URLS.SURVEY_SHARE}/${response.data.id}`);
-        }
+        openNotificationBox("success", response.message, 3);
+        router.replace(`${URLS.SURVEY_SHARE}/${response.data.id}`);
       })
       .catch((err) => {
         openNotificationBox("error", err?.message ?? "Failed", 3);

@@ -15,22 +15,19 @@ function SurveyQuestionPreviewWrapper({ surveyId, user }) {
         surveyId: surveyId,
       })
       .then(({ data: response }) => {
-        if (response.status === 200) {
-          let filterQuestion = response.data?.SurveyQuestions.map((item) => {
-            return {
-              ...item,
-              options: item.SurveyQuestionOption,
-            };
-          });
-
-          setQuestions(filterQuestion);
-          setSurveyTitle(response.data?.survey_name);
-        }
-        setLoading(false);
+        let filterQuestion = response.data?.SurveyQuestions.map((item) => {
+          return {
+            ...item,
+            options: item.SurveyQuestionOption,
+          };
+        });
+        setQuestions(filterQuestion);
+        setSurveyTitle(response.data?.survey_name);
       })
-      .catch((err) => {
-        setLoading(false);
-      });
+      .catch(() => {
+        setQuestions({});
+      })
+      .finally(() => setLoading(false));
   };
 
   useEffect(() => {

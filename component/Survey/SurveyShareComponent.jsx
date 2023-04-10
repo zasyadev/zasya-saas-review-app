@@ -69,14 +69,10 @@ function SurveyResponsePage({ user }) {
         surveyId: surveyId,
       })
       .then(({ data: response }) => {
-        if (response.status === 200) {
-          setSurveyData(response.data);
-        }
+        setSurveyData(response.data);
         setLoading(false);
       })
-      .catch((err) => {
-        setLoading(false);
-      });
+      .catch(() => setLoading(false));
   };
 
   useEffect(() => {
@@ -104,15 +100,10 @@ function SurveyResponsePage({ user }) {
         status: status,
       })
       .then(({ data: response }) => {
-        if (response.status === 200) {
-          fetchSurveyData(false);
-          openNotificationBox("success", response.message, 3, "updateKey");
-        }
+        fetchSurveyData(false);
+        openNotificationBox("success", response.message, 3, "updateKey");
       })
-      .catch((err) => {
-        setSurveyData(oldSurveyData);
-        setLoading(false);
-      });
+      .catch(() => setSurveyData(oldSurveyData));
   };
 
   async function onDelete(channelId) {
@@ -124,16 +115,12 @@ function SurveyResponsePage({ user }) {
           },
         })
         .then(({ data: response }) => {
-          if (response.status === 200) {
-            fetchSurveyData(false);
-            openNotificationBox("success", response.message, 3);
-          } else {
-            openNotificationBox("error", response.message, 3);
-          }
+          fetchSurveyData(false);
+          openNotificationBox("success", response.message, 3);
         })
-        .catch((err) => {
-          fetchReviewAssignList([]);
-        });
+        .catch((err) =>
+          openNotificationBox("error", err.response?.data?.message, 3)
+        );
     }
   }
 
@@ -270,35 +257,25 @@ function SurveyResponsePage({ user }) {
         status: "Pending",
       })
       .then(({ data: response }) => {
-        if (response.status === 200) {
-          fetchSurveyData();
-          openNotificationBox("success", response.message, 3, "newChannelKey");
-          setEmailModalVisible(false);
-          emailForm.resetFields();
-        }
+        fetchSurveyData();
+        openNotificationBox("success", response.message, 3, "newChannelKey");
+        setEmailModalVisible(false);
+        emailForm.resetFields();
       })
-      .catch((err) => {
-        setSurveyData(oldSurveyData);
-        setLoading(false);
-      });
+      .catch(() => setSurveyData(oldSurveyData));
   };
 
   const onNewUrlHandler = async () => {
     await httpService
       .put(`/api/survey/add`, {
         surveyId: surveyId,
-
         channelType: "Link",
       })
       .then(({ data: response }) => {
-        if (response.status === 200) {
-          fetchSurveyData();
-          openNotificationBox("success", response.message, 3, "newChannelKey");
-        }
+        fetchSurveyData();
+        openNotificationBox("success", response.message, 3, "newChannelKey");
       })
-      .catch((err) => {
-        setLoading(false);
-      });
+      .catch(() => {});
   };
 
   return (
@@ -372,7 +349,7 @@ function SurveyResponsePage({ user }) {
           <div className="w-full bg-white rounded-md overflow-hdden ">
             <CustomTable
               dataSource={
-                Number(surveyData?.SurveyChannels?.length) > 0
+                surveyData?.SurveyChannels?.length > 0
                   ? surveyData?.SurveyChannels
                   : []
               }

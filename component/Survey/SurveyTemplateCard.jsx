@@ -34,19 +34,19 @@ const SurveyTemplateCard = ({
         </div>
       </Link>
 
-      <div className=" border-gray-200  p-3 space-y-2 flex flex-1 flex-col ">
+      <div className="border-gray-200  p-3 space-y-2 flex flex-1 flex-col ">
         <Link href={`${URLS.TEMPLATE_PREVIEW}/${id}/survey`} passHref>
-          <div className=" space-y-2 cursor-pointer flex-1">
-            <p className="text-base xl:text-lg text-primary font-semibold mb-0 flex-1">
+          <div className="space-y-2 cursor-pointer flex-1">
+            <p className="text-base xl:text-lg font-semibold mb-0 flex-1">
               {title}
             </p>
-            <p className="text-sm xl:text-base text-primary  mb-0 flex-1  two-line-clamp ">
+            <p className="text-sm xl:text-base mb-0 flex-1  two-line-clamp">
               {description}
             </p>
           </div>
         </Link>
         <div className="flex items-center justify-between">
-          <p className="text-sm xl:text-base text-primary mb-0 flex-1">
+          <p className="text-sm xl:text-base  mb-0 flex-1">
             <span className="font-semibold">{questionLength}</span> Questions
           </p>
         </div>

@@ -65,11 +65,9 @@ function SurveyReplyComponent({ urlId }) {
       await httpService
         .post(`/api/survey/answer`, obj)
         .then(({ data: response }) => {
-          if (response.status === 200) {
-            openNotificationBox("success", response.message, 3);
-            setUpdateAnswerApiLoading(false);
-            setThankyouResponse(true);
-          }
+          openNotificationBox("success", response.message, 3);
+          setUpdateAnswerApiLoading(false);
+          setThankyouResponse(true);
         })
         .catch((err) => {
           openNotificationBox("error", err.response.data?.message, 3);
@@ -85,22 +83,21 @@ function SurveyReplyComponent({ urlId }) {
         urlId: urlId,
       })
       .then(({ data: response }) => {
-        if (response.status === 200) {
-          setSurveyData(response.data);
-          setQuestions(response.data?.SurveyQuestions);
-        } else if (response.status === 403) {
+        setSurveyData(response.data);
+        setQuestions(response.data?.SurveyQuestions);
+      })
+      .catch((err) => {
+        openNotificationBox("error", err.response.data?.message);
+        if (response.status === 403) {
           setInactiveResponse({
             status: true,
-            message: response?.message,
+            message: err.response?.data?.message ?? "Inactive",
           });
         } else if (response.status === 402) {
           setThankyouResponse(true);
         }
-        setLoading(false);
       })
-      .catch((err) => {
-        openNotificationBox("error", err.response.data?.message);
-      });
+      .finally(() => setLoading(false));
   };
 
   useEffect(() => {
@@ -159,7 +156,7 @@ function SurveyReplyComponent({ urlId }) {
                 </motion.div>
               </div>
             ) : (
-              Number(questions?.length) > 0 &&
+              questions.length > 0 &&
               questions
                 ?.filter((_, index) => index === nextSlide)
                 ?.map((question, idx) => (

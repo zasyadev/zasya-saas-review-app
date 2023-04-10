@@ -21,14 +21,10 @@ function SurveyResponsePage({ user }) {
         surveyId: surveyId,
       })
       .then(({ data: response }) => {
-        if (response.status === 200) {
-          setSurveyData(response.data);
-        }
-        setLoading(false);
+        setSurveyData(response.data);
       })
-      .catch((err) => {
-        setLoading(false);
-      });
+      .catch(() => setSurveyData({}))
+      .finally(() => setLoading(false));
   };
 
   useEffect(() => {
@@ -41,7 +37,7 @@ function SurveyResponsePage({ user }) {
         <div className="container bg-white rounded-md p-5 mx-auto max-w-full">
           <Skeleton active />
         </div>
-      ) : Number(surveyData?.SurveyQuestions?.length) > 0 ? (
+      ) : surveyData.SurveyQuestions.length > 0 ? (
         <SurveyResponseComponent
           user={user}
           surveyName={surveyData.survey_name}
