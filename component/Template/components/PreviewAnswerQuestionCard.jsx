@@ -7,7 +7,7 @@ const PreviewAnswerQuestionCard = ({
 }) => {
   return (
     <div className="space-y-2 ">
-      <p className="text-primary font-medium text-base">
+      <p className="font-medium text-base">
         <span className="mr-2">{questionNumber + 1 + "."}</span>
         {questionText}
       </p>

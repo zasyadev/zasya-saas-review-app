@@ -1,11 +1,10 @@
+import { BadRequestException } from "../../../lib/BadRequestExcpetion";
 import { RequestHandler } from "../../../lib/RequestHandler";
 
 async function handle(req, res, prisma) {
   const { userId } = req.query;
 
-  if (!userId) {
-    return res.status(401).json({ status: 401, message: "No User found" });
-  }
+  if (!userId) throw BadRequestException("No User found");
 
   const data = await prisma.reviewTemplate.findMany({
     where: {
@@ -13,15 +12,14 @@ async function handle(req, res, prisma) {
     },
   });
 
-  if (data) {
-    return res.status(200).json({
-      status: 200,
-      data: data,
-      message: "Templates Retrieved",
-    });
-  }
-  return res.status(404).json({ status: 404, message: "No Record Found" });
+  if (!data) throw BadRequestException("No record found");
+
+  return res.status(200).json({
+    data: data,
+    message: "Templates Retrieved",
+  });
 }
+
 const functionHandle = (req, res) =>
   RequestHandler({
     req,

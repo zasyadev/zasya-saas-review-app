@@ -1,3 +1,4 @@
+import { BadRequestException } from "../../../lib/BadRequestExcpetion";
 import { RequestHandler } from "../../../lib/RequestHandler";
 import { TEMPLATE_SCHEMA } from "../../../yup-schema/template";
 
@@ -16,24 +17,21 @@ async function handle(req, res, prisma, user) {
         default_template: resData.default_template,
       },
     });
+    if (!templateData) throw BadRequestException("Record not saved");
 
     return res.status(201).json({
-      message: "Saved  Successfully",
+      message: "Saved Successfully",
       data: templateData,
-      status: 200,
     });
   } else if (req.method === "GET") {
     const data = await prisma.reviewTemplate.findMany();
 
-    if (data) {
-      return res.status(200).json({
-        status: 200,
-        data: data,
-        message: "All Templates Retrieved",
-      });
-    }
+    if (!data) throw BadRequestException("No record found");
 
-    return res.status(404).json({ status: 404, message: "No Record Found" });
+    return res.status(200).json({
+      data: data,
+      message: "All Templates Retrieved",
+    });
   } else if (req.method === "PUT") {
     const resData = req.body;
     const { id: userId } = user;
@@ -49,34 +47,28 @@ async function handle(req, res, prisma, user) {
       },
     });
 
+    if (!templateData) throw BadRequestException("Record not updated");
+
     return res.status(201).json({
-      message: "Updated   Successfully",
+      message: "Updated Successfully",
       data: templateData,
-      status: 200,
     });
   } else if (req.method === "DELETE") {
     const reqBody = req.body;
 
-    if (reqBody.id) {
-      const deletaData = await prisma.reviewTemplate.update({
-        where: { id: reqBody.id },
-        data: {
-          status: false,
-          delete_date: new Date(),
-        },
-      });
+    const deletaData = await prisma.reviewTemplate.update({
+      where: { id: reqBody.id },
+      data: {
+        status: false,
+        delete_date: new Date(),
+      },
+    });
 
-      if (deletaData) {
-        return res.status(200).json({
-          status: 200,
-          message: "Template Deleted Successfully.",
-        });
-      }
-      return res.status(400).json({
-        status: 400,
-        message: "Failed To Delete Record.",
-      });
-    }
+    if (!deletaData) throw BadRequestException("Failed to delete record");
+
+    return res.status(200).json({
+      message: "Template Deleted Successfully.",
+    });
   }
 }
 const functionHandle = (req, res) =>

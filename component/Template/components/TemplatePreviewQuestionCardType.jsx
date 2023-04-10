@@ -15,11 +15,9 @@ const TemplatePreviewQuestionCardType = ({
   return (
     <div className="space-y-3">
       <div>
-        <p className="text-primary font-semibold text-sm">
-          {QuestiontypeText(type)}
-        </p>
+        <p className="font-semibold text-sm">{QuestiontypeText(type)}</p>
       </div>
-      <div className="p-4 2xl:p-5  font-medium bg-gray-200 rounded-md space-y-3">
+      <div className="p-4 2xl:p-5 font-medium bg-gray-200 rounded-md space-y-3">
         <p className="mb-0 text-base">{questionText}</p>
         {type === MULTIPLE_CHOICE_TYPE && options?.length && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

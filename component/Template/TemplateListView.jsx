@@ -31,29 +31,22 @@ function TemplateListView({ user }) {
     await httpService
       .get(`/api/template/${user.id}`)
       .then(({ data: response }) => {
-        if (response.status === 200) {
-          let filterData = response.data.filter((item) => item.status);
-          setUserTemplateList(filterData);
-        }
-        setLoading(false);
+        let filterData = response.data.filter((item) => item.status);
+        setUserTemplateList(filterData);
       })
-      .catch((err) => {
-        setLoading(false);
-        setUserTemplateList([]);
-      });
+      .catch(() => setUserTemplateList([]))
+      .finally(() => setLoading(false));
   }
+
   async function fetchDefaultTemplateList() {
     setDefaultTemplateList([]);
-
     await httpService
       .get(`/api/template/default_template`)
       .then(({ data: response }) => {
-        if (response.status === 200) {
-          let filterData = response.data.filter((item) => item.status);
-          setDefaultTemplateList(filterData);
-        }
+        let filterData = response.data.filter((item) => item.status);
+        setDefaultTemplateList(filterData);
       })
-      .catch((err) => {
+      .catch(() => {
         setDefaultTemplateList([]);
       });
   }
@@ -62,6 +55,7 @@ function TemplateListView({ user }) {
     fetchUserTemplateList();
     fetchDefaultTemplateList();
   }, []);
+
   useEffect(() => {
     if (userTemplateList && Number(userTemplateList.length) === 0)
       setChangeTemplateView(DEFAULT_TEMPLATE_KEY);
@@ -98,7 +92,7 @@ function TemplateListView({ user }) {
 
   return (
     <div className="container mx-auto max-w-full">
-      <div className="  mb-4 md:mb-6">
+      <div className="mb-4 md:mb-6">
         <ToggleButton
           arrayList={TemplateToggleList}
           handleToggle={(activeKey) => setChangeTemplateView(activeKey)}
@@ -116,7 +110,7 @@ function TemplateListView({ user }) {
           {changeTemplateView === MY_TEMPLATE_KEY ? (
             <>
               {loading ? (
-                [...Array(3)].map((_, idx) => (
+                [1, 2, 3].map((_, idx) => (
                   <SkeletonTemplateCard
                     key={idx + "temp"}
                     index={idx + "temp"}

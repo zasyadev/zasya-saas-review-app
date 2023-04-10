@@ -20,18 +20,15 @@ function EditTemplateComponent({ user }) {
         template_id: template_id,
       })
       .then(({ data: response }) => {
-        if (response.status === 200) {
-          setFormData(response.data);
-          if (response.data.default_template) {
-            router.push(`${URLS.TEMPLATE_PREVIEW}/${response.data.id}/review`);
-          } else {
-            setLoading(false);
-          }
+        setFormData(response.data);
+        if (response.data.default_template) {
+          router.push(`${URLS.TEMPLATE_PREVIEW}/${response.data.id}/review`);
+        } else {
+          setLoading(false);
         }
       })
       .catch((err) => {
-        console.error(err.response.data?.message);
-        setFormData([]);
+        setFormData({});
         setLoading(false);
       });
   }
