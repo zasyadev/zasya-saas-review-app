@@ -40,14 +40,11 @@ function Profile({ user, previewMode = false }) {
     await httpService
       .get(`/api/profile/${userId}`)
       .then(({ data: response }) => {
-        if (response.status === 200) {
-          setUserDetails(response.data);
-        }
+        setUserDetails(response.data);
         setLoading(false);
       })
-      .catch((err) => {
-        setLoading(false);
-      });
+      .catch(() => setUserDetails({}))
+      .finally(() => setLoading(false));
   };
 
   async function fetchActivityData(userId) {
@@ -57,9 +54,7 @@ function Profile({ user, previewMode = false }) {
       .then(({ data: res }) => {
         setActivityList(res.data);
       })
-      .catch((err) => {
-        setActivityList([]);
-      });
+      .catch(() => setActivityList([]));
   }
 
   useEffect(() => {
@@ -81,27 +76,23 @@ function Profile({ user, previewMode = false }) {
         orgId: user.organization_id,
       })
       .then(({ data: response }) => {
-        if (response.status === 200) {
-          setOrganizationModal(false);
-          openNotificationBox("success", response.message, 3);
-          fetchOrgData();
-        }
+        setOrganizationModal(false);
+        openNotificationBox("success", response.message, 3);
+        fetchOrgData();
       })
-      .catch((err) => {
-        openNotificationBox("error", err.response.data?.message, 3);
-      });
+      .catch((err) =>
+        openNotificationBox("error", err.response.data?.message, 3)
+      );
   };
   const fetchOrgData = async () => {
     await httpService
       .get(`/api/profile/organization`)
       .then(({ data: response }) => {
-        if (response.status === 200) {
-          setApplaudLimit(response.data.organization.applaud_count);
-        }
+        setApplaudLimit(response.data.organization.applaud_count);
       })
-      .catch((err) => {
-        openNotificationBox("error", err.response.data?.message, 3);
-      });
+      .catch((err) =>
+        openNotificationBox("error", err.response.data?.message, 3)
+      );
   };
 
   const handleEditApplaudLimit = (applaud_count) => {
@@ -122,16 +113,14 @@ function Profile({ user, previewMode = false }) {
     await httpService
       .post(`/api/profile/slack/${user.id}`, values)
       .then(({ data: response }) => {
-        if (response.status === 200) {
-          slackForm.resetFields();
-          setShowSlackEditModal(false);
-          openNotificationBox("success", response.message, 3);
-          getProfileData();
-        }
+        slackForm.resetFields();
+        setShowSlackEditModal(false);
+        openNotificationBox("success", response.message, 3);
+        getProfileData();
       })
-      .catch((err) => {
-        openNotificationBox("error", err.response.data?.message, 3);
-      });
+      .catch((err) =>
+        openNotificationBox("error", err.response.data?.message, 3)
+      );
   };
 
   return (
