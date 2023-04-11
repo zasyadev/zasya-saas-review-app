@@ -27,10 +27,7 @@ function MeetingCommentModal({
         hideMeetingModal();
         fetchMeetingData();
       })
-      .catch((err) => {
-        openNotificationBox("error", err.response.data?.message);
-        setLoadingSubmitSpin(false);
-      })
+      .catch((err) => openNotificationBox("error", err.response.data?.message))
       .finally(() => setLoadingSubmitSpin(false));
   };
 

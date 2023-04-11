@@ -74,17 +74,14 @@ function AddEditMeetingComponent({ user, editMode = false }) {
 
     await httpService
       .get(`/api/meetings/${meeting_id}`)
-      .then(({ data: response }) => {
-        setLoading(false);
-        setMeetingData(response.data);
-      })
-      .catch((err) => {
+      .then(({ data: response }) => setMeetingData(response.data))
+      .catch((err) =>
         openNotificationBox(
           "error",
           err?.response?.data?.message || "Failed! Please try again"
-        );
-        setLoading(false);
-      });
+        )
+      )
+      .finally(() => setLoading(false));
   }
 
   async function fetchReviewsList() {
