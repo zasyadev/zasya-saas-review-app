@@ -71,12 +71,8 @@ function ReviewManagement({ user }) {
         setReviewList(response.data.list);
         setCountData(response.data.listCount);
       })
-      .catch((err) => {
-        console.error(err.response.data?.message);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+      .catch(() => setReviewList([]))
+      .finally(() => setLoading(false));
   }
 
   async function fetchAllMembers() {
@@ -89,9 +85,7 @@ function ReviewManagement({ user }) {
         );
         setUserList(filterData);
       })
-      .catch((err) => {
-        setUserList([]);
-      });
+      .catch(() => setUserList([]));
   }
   async function onDelete(id) {
     if (id) {

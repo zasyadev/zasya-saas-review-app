@@ -70,16 +70,13 @@ function AddEditReviewComponent({
     await httpService
       .post(`/api/review/manage`, obj)
       .then(({ data: response }) => {
-        if (response.status === 200) {
-          router.push("/review");
-          openNotificationBox("success", response.message, 3);
-        }
+        router.push("/review");
+        openNotificationBox("success", response.message, 3);
       })
-      .catch((err) => {
-        console.error(err.response.data?.message);
-        openNotificationBox("error", err.response.data?.message, 3);
-        setLoadingSubmitSpin(false);
-      });
+      .catch((err) =>
+        openNotificationBox("error", err.response.data?.message, 3)
+      )
+      .finally(() => setLoadingSubmitSpin(false));
   }
 
   async function fetchUserData() {
@@ -87,17 +84,12 @@ function AddEditReviewComponent({
     await httpService
       .get(`/api/user/organizationId`)
       .then(({ data: response }) => {
-        if (response.status === 200) {
-          let filterData = response.data.filter(
-            (item) => item.user.status && item.user_id != user.id
-          );
-          setUserList(filterData);
-        }
+        let filterData = response.data.filter(
+          (item) => item.user.status && item.user_id != user.id
+        );
+        setUserList(filterData);
       })
-      .catch((err) => {
-        setUserList([]);
-        console.error(err.response.data?.message);
-      });
+      .catch(() => setUserList([]));
   }
 
   const initialData = (data) => {
@@ -119,47 +111,6 @@ function AddEditReviewComponent({
       initialData(reviewPreviewData);
     }
   }, []);
-
-  // const handlePreviewForm = async () => {
-  //   setReviewFormData({});
-  //   setQuestionList([]);
-  //   setLoadingSpin(true);
-
-  //   let values = form.getFieldsValue(true);
-
-  //   if (values) {
-  //     let templateData = {};
-  //     if (values.template_id) {
-  //       templateData = formList.find((item) => item.id == values.template_id);
-
-  //       if (values.review_type === "feedback") {
-  //         templateData.form_data.questions.length > 0
-  //           ? templateData.form_data.questions.push(defaultRatingQuestion)
-  //           : null;
-  //       }
-
-  //       await httpService
-  //         .post(`/api/review/manage`, {
-  //           ...values,
-  //           template_data: templateData,
-  //           is_published: "draft",
-  //           status: values.status ?? "pending",
-  //           role_id: user.role_id,
-  //           created_by: user.id,
-  //         })
-  //         .then(({ data: response }) => {
-  //           if (response.status === 200 && response.data.id) {
-  //             router.push(`/review/edit/${response.data.id}`);
-  //           }
-  //         })
-  //         .catch((err) => {
-  //           console.error(err.response.data?.message);
-  //         });
-  //     } else {
-  //       openNotificationBox("error", "Need to Select Template", 3);
-  //     }
-  //   }
-  // };
 
   const nextTitleStep = (type) => {
     let values = form.getFieldsValue(true);
