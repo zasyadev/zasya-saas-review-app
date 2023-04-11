@@ -10,7 +10,6 @@ import {
   TemplateToggleList,
   DefaultMotionVarient,
 } from "./constants";
-import { PrimaryButton } from "../common/CustomButton";
 import SkeletonTemplateCard from "./components/SkeletonTemplateCard";
 import CreateTemplateCard from "./components/CreateTemplateCard";
 import TemplateCard from "./TemplateCard";
@@ -43,9 +42,7 @@ function TemplateLayout({ user }) {
         let filterData = response.data.filter((item) => item.status);
         setDefaultTemplateList(filterData);
       })
-      .catch((err) => {
-        setTemplateList([]);
-      });
+      .catch(() => setDefaultTemplateList([]));
   }
 
   async function deleteTemplate(id) {
@@ -60,9 +57,9 @@ function TemplateLayout({ user }) {
           fetchUserTemplateList();
           openNotificationBox("success", response.message, 3);
         })
-        .catch((err) => {
-          openNotificationBox("error", err.response.data?.message);
-        });
+        .catch((err) =>
+          openNotificationBox("error", err.response.data?.message)
+        );
     }
   }
 

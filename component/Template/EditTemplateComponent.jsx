@@ -9,12 +9,12 @@ import EditiorTitlePageLoader from "./components/EditiorTitlePageLoader";
 function EditTemplateComponent({ user }) {
   const router = useRouter();
   const { template_id } = router.query;
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState(null);
   const [loading, setLoading] = useState(false);
 
   async function fetchTemplateData() {
     setLoading(true);
-    setFormData([]);
+    setFormData(null);
     await httpService
       .post(`/api/template/edit`, {
         template_id: template_id,
@@ -23,14 +23,10 @@ function EditTemplateComponent({ user }) {
         setFormData(response.data);
         if (response.data.default_template) {
           router.push(`${URLS.TEMPLATE_PREVIEW}/${response.data.id}/review`);
-        } else {
-          setLoading(false);
         }
       })
-      .catch((err) => {
-        setFormData({});
-        setLoading(false);
-      });
+      .catch(() => setFormData(null))
+      .finally(() => setLoading(false));
   }
 
   useEffect(() => {
