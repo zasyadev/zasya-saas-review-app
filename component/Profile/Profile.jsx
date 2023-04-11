@@ -29,21 +29,20 @@ function Profile({ user, previewMode = false }) {
   const [slackForm] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [organizationModal, setOrganizationModal] = useState(false);
-  const [userDetails, setUserDetails] = useState({});
+  const [userDetails, setUserDetails] = useState(null);
   const [applaudLimit, setApplaudLimit] = useState(0);
   const [activityList, setActivityList] = useState([]);
   const [showSlackEditModal, setShowSlackEditModal] = useState(false);
 
   const getProfileData = async (userId) => {
-    setUserDetails({});
+    setUserDetails(null);
     setLoading(true);
     await httpService
       .get(`/api/profile/${userId}`)
       .then(({ data: response }) => {
         setUserDetails(response.data);
-        setLoading(false);
       })
-      .catch(() => setUserDetails({}))
+      .catch(() => setUserDetails(null))
       .finally(() => setLoading(false));
   };
 
