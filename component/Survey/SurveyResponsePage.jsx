@@ -9,12 +9,12 @@ import SurveyResponseComponent from "./SurveyResponseComponent";
 function SurveyResponsePage({ user }) {
   const router = useRouter();
   const { surveyId } = router.query;
-  const [surveyData, setSurveyData] = useState({});
+  const [surveyData, setSurveyData] = useState(null);
   const [loading, setLoading] = useState(true);
 
   const fetchSurveyData = async (surveyId) => {
     setLoading(true);
-    setSurveyData({});
+    setSurveyData(null);
 
     await httpService
       .post(`/api/survey/get_que_ans`, {
@@ -23,7 +23,7 @@ function SurveyResponsePage({ user }) {
       .then(({ data: response }) => {
         setSurveyData(response.data);
       })
-      .catch(() => setSurveyData({}))
+      .catch(() => setSurveyData(null))
       .finally(() => setLoading(false));
   };
 

@@ -3,8 +3,8 @@ import httpService from "../../lib/httpService";
 import { PulseLoader } from "../Loader/LoadingSpinner";
 import { TemplatePreviewComponent } from "../Template/TemplatePreviewComponent";
 
-function SurveyQuestionPreviewWrapper({ surveyId, user }) {
-  const [question, setQuestions] = useState({});
+function SurveyQuestionPreviewWrapper({ surveyId }) {
+  const [question, setQuestions] = useState(null);
   const [surveyTitle, setSurveyTitle] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -24,9 +24,7 @@ function SurveyQuestionPreviewWrapper({ surveyId, user }) {
         setQuestions(filterQuestion);
         setSurveyTitle(response.data?.survey_name);
       })
-      .catch(() => {
-        setQuestions({});
-      })
+      .catch(() => setQuestions(null))
       .finally(() => setLoading(false));
   };
 

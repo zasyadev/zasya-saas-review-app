@@ -66,13 +66,12 @@ function SurveyReplyComponent({ urlId }) {
         .post(`/api/survey/answer`, obj)
         .then(({ data: response }) => {
           openNotificationBox("success", response.message, 3);
-          setUpdateAnswerApiLoading(false);
           setThankyouResponse(true);
         })
-        .catch((err) => {
-          openNotificationBox("error", err.response.data?.message, 3);
-          setUpdateAnswerApiLoading(false);
-        });
+        .catch((err) =>
+          openNotificationBox("error", err.response.data?.message, 3)
+        )
+        .finally(() => setUpdateAnswerApiLoading(false));
     }
   };
 
