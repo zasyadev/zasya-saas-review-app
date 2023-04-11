@@ -21,10 +21,11 @@ function AllAplaud({ user }) {
     await httpService
       .post("/api/applaud/all", { date: currentMonth, userId: user.id })
       .then(({ data: response }) => {
-        let sortData = response.data.sort(
-          (a, b) =>
-            b[Object.keys(b)]?.taken?.length - a[Object.keys(a)]?.taken?.length
-        );
+        let sortData = response.data.sort((a, b) => {
+          const aTakenLength = a[Object.keys(a)].taken?.length || 0;
+          const bTakenLength = b[Object.keys(b)].taken?.length || 0;
+          return bTakenLength - aTakenLength;
+        });
         setAllApplaud(sortData);
       })
 

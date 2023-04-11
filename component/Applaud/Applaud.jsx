@@ -101,13 +101,12 @@ function Applaud({ user }) {
       .then(({ data: res }) => {
         setReceivedApplaudList(res.data.receivedApplaud);
         setApplaudList(res.data.givenApplaud);
-        setLoading(false);
       })
       .catch((err) => {
         openNotificationBox("error", err.response.data?.message);
         setReceivedApplaudList([]);
-        setLoading(false);
-      });
+      })
+      .finally(() => setLoading(false));
   };
   function onDateChange(date, _) {
     setCurrentMonth({
