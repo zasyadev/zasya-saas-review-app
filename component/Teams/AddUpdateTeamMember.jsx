@@ -26,83 +26,74 @@ function AddUpdateTeamMember({ editMode = false, team_id }) {
     await httpService
       .post(`/api/teams`, obj)
       .then(({ data: response }) => {
-        if (response.status === 200) {
-          form.resetFields();
-          openNotificationBox("success", response.message, 3);
-          redirectToTeamsPage();
-        }
+        form.resetFields();
+        openNotificationBox("success", response.message, 3);
+        redirectToTeamsPage();
       })
-      .catch((err) => {
+      .catch((err) =>
         openNotificationBox(
           "error",
           err.response.data?.message || "Failed ! Please try again"
-        );
-      });
+        )
+      );
   }
 
   async function updatingMember(obj) {
     await httpService
       .put(`/api/teams`, { id: team_id, ...obj })
       .then(({ data: response }) => {
-        if (response.status === 200) {
-          form.resetFields();
-          openNotificationBox("success", response.message, 3);
-          redirectToTeamsPage();
-        }
+        form.resetFields();
+        openNotificationBox("success", response.message, 3);
+        redirectToTeamsPage();
       })
-      .catch((err) => {
+      .catch((err) =>
         openNotificationBox(
           "error",
           err.response.data?.message || "Failed ! Please try again"
-        );
-      });
+        )
+      );
   }
 
   async function fetchTeamData(id) {
     await httpService
       .get(`/api/teams/${id}`)
       .then(({ data: response }) => {
-        if (response.status === 200) {
-          if (Number(response.data?.UserTeamsGroups?.length) > 0) {
-            const memberList = response.data?.UserTeamsGroups.filter(
-              (group) => !group.isManager
-            ).map((group) => group.member_id);
+        if (Number(response.data?.UserTeamsGroups?.length) > 0) {
+          const memberList = response.data?.UserTeamsGroups.filter(
+            (group) => !group.isManager
+          ).map((group) => group.member_id);
 
-            const managerId = response.data?.UserTeamsGroups.find(
-              (group) => group.isManager
-            )?.member_id;
+          const managerId = response.data?.UserTeamsGroups.find(
+            (group) => group.isManager
+          )?.member_id;
 
-            if (memberList && managerId) {
-              setSelectedManagerId(managerId);
-              form.setFieldsValue({
-                name: response.data?.team_name,
-                manager: managerId,
-                members: memberList,
-              });
-            }
+          if (memberList && managerId) {
+            setSelectedManagerId(managerId);
+            form.setFieldsValue({
+              name: response.data?.team_name,
+              manager: managerId,
+              members: memberList,
+            });
           }
         }
-        setLoading(false);
       })
-      .catch((err) => {
-        setLoading(false);
+      .catch((err) =>
         openNotificationBox(
           "error",
           err.response.data?.message || "Failed ! Please try again"
-        );
-      });
+        )
+      )
+      .finally(() => setLoading(false));
   }
 
   const fetchUserData = useCallback(async () => {
     await httpService
       .get(`/api/user/organizationId`)
       .then(({ data: response }) => {
-        if (response.status === 200) {
-          let filterData = response.data.filter(
-            (item) => item.user.status && item.role_id !== 2
-          );
-          setUserList(filterData);
-        }
+        let filterData = response.data.filter(
+          (item) => item.user.status && item.role_id !== 2
+        );
+        setUserList(filterData);
       })
       .catch((err) => {
         setUserList([]);

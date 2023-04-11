@@ -1,4 +1,5 @@
 import { hashedPassword } from "../../../lib/auth";
+import { BadRequestException } from "../../../lib/BadRequestExcpetion";
 import { mailService, mailTemplate } from "../../../lib/emailservice";
 import { RequestHandler } from "../../../lib/RequestHandler";
 import { MEMBER_SCHEMA } from "../../../yup-schema/user";
@@ -28,12 +29,8 @@ async function handle(req, res, prisma, user) {
           },
         });
 
-        if (existingOrgUser.length > 0) {
-          return res.status(409).json({
-            error: "409",
-            message: "User with email id already exists!",
-          });
-        }
+        if (existingOrgUser.length > 0)
+          throw BadRequestException("User with email id already exists");
       }
 
       const transactionData = await prisma.$transaction(async (transaction) => {
@@ -78,10 +75,7 @@ async function handle(req, res, prisma, user) {
             }),
           };
 
-          await mailService.sendMail(mailData, function (err, info) {
-            // if (err) console.log("failed");
-            // else console.log("successfull");
-          });
+          await mailService.sendMail(mailData);
         } else {
           userData = await transaction.user.create({
             data: userobj,
@@ -125,10 +119,7 @@ async function handle(req, res, prisma, user) {
             }),
           };
 
-          await mailService.sendMail(mailData, function (err, info) {
-            // if (err) console.log("failed");
-            // else console.log("successfull");
-          });
+          await mailService.sendMail(mailData);
         }
         let newTags = [];
         if (organizationTags.length > 0) {
@@ -165,6 +156,8 @@ async function handle(req, res, prisma, user) {
           passwordResetData,
         };
       });
+      if (!transactionData || !transactionData.userData)
+        throw BadRequestException("Member not saved");
 
       return res.status(201).json({
         message: "Member Saved Successfully",
@@ -266,54 +259,44 @@ async function handle(req, res, prisma, user) {
         };
       });
 
-      if (transactionData.userData) {
-        return res.status(200).json({
-          message: "Members Updated Successfully.",
-          status: 200,
-          data: transactionData.userData,
-        });
-      } else {
-        return res.status(500).json({ error: 500, message: "No record Found" });
-      }
+      if (!transactionData || !transactionData.userData)
+        throw BadRequestException("Member not updated");
+
+      return res.status(200).json({
+        message: "Members Updated Successfully.",
+        status: 200,
+        data: transactionData.userData,
+      });
     } catch (error) {
-      return res
-        .status(500)
-        .json({ error: error, message: "Internal Server Error" });
+      throw BadRequestException("Internal Server Error");
     }
   } else if (req.method === "DELETE") {
     const reqBody = req.body;
     const { organization_id } = user;
 
-    if (reqBody.email) {
-      let existingData = await prisma.user.findUnique({
-        where: { email: reqBody.email },
-      });
+    let existingData = await prisma.user.findUnique({
+      where: { email: reqBody.email },
+    });
 
-      let existingOrgUser = await prisma.userOraganizationGroups.findFirst({
-        where: {
-          AND: [
-            { user_id: existingData.id },
-            { organization_id: organization_id },
-          ],
-        },
-      });
+    let existingOrgUser = await prisma.userOraganizationGroups.findFirst({
+      where: {
+        AND: [
+          { user_id: existingData.id },
+          { organization_id: organization_id },
+        ],
+      },
+    });
 
-      if (existingOrgUser) {
-        await prisma.userOraganizationGroups.delete({
-          where: { id: existingOrgUser.id },
-        });
+    if (!existingOrgUser) throw BadRequestException("Member not deleted");
 
-        return res.status(200).json({
-          status: 200,
-          message: "Member Deleted Successfully.",
-        });
-      }
+    await prisma.userOraganizationGroups.delete({
+      where: { id: existingOrgUser.id },
+    });
 
-      return res.status(400).json({
-        status: 400,
-        message: "Failed To Delete Record.",
-      });
-    }
+    return res.status(200).json({
+      status: 200,
+      message: "Member Deleted Successfully.",
+    });
   }
 }
 const functionHandle = (req, res) =>

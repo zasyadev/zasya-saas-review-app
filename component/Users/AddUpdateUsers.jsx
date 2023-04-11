@@ -23,11 +23,9 @@ function AddUpdateUsers({ user, editMode, memberData }) {
     await httpService
       .post(`/api/member`, obj)
       .then(({ data: response }) => {
-        if (response.status === 200) {
-          form.resetFields();
-          openNotificationBox("success", response.message, 3);
-          redirectToUsersPage();
-        }
+        form.resetFields();
+        openNotificationBox("success", response.message, 3);
+        redirectToUsersPage();
       })
       .catch((err) => {
         if (
@@ -46,18 +44,13 @@ function AddUpdateUsers({ user, editMode, memberData }) {
       await httpService
         .put(`/api/member`, { id: memberData.id, ...obj })
         .then(({ data: response }) => {
-          if (response.status === 200) {
-            form.resetFields();
-
-            openNotificationBox("success", response.message, 3);
-            redirectToUsersPage();
-          } else {
-            openNotificationBox("error", response.message, 3);
-          }
+          form.resetFields();
+          openNotificationBox("success", response.message, 3);
+          redirectToUsersPage();
         })
-        .catch((err) => {
-          openNotificationBox("error", err.response.data?.message);
-        });
+        .catch((err) =>
+          openNotificationBox("error", err.response.data?.message)
+        );
     }
   }
 
@@ -65,14 +58,8 @@ function AddUpdateUsers({ user, editMode, memberData }) {
     if (user.id) {
       await httpService
         .get(`/api/member/tags/${user.id}`)
-        .then(({ data: response }) => {
-          if (response.status === 200) {
-            setTagsList(response.data);
-          }
-        })
-        .catch((err) => {
-          setTagsList([]);
-        });
+        .then(({ data: response }) => setTagsList(response.data))
+        .catch(() => setTagsList([]));
     }
   }
 
