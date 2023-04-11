@@ -191,21 +191,15 @@ function AddEditGoalComponent({ user, editMode = false }) {
         );
         setUserList(filterData);
       })
-      .catch(() => {
-        setUserList([]);
-      });
+      .catch(() => setUserList([]));
   }
 
   async function fetchTeamData() {
     setTeamList([]);
     await httpService
       .get(`/api/teams`)
-      .then(({ data: response }) => {
-        setTeamList(response.data);
-      })
-      .catch((err) => {
-        setTeamList([]);
-      });
+      .then(({ data: response }) => setTeamList(response.data))
+      .catch(() => setTeamList([]));
   }
 
   const onMemberInputChange = (value) => {
