@@ -21,12 +21,10 @@ function SurveyList({ user }) {
     await httpService
       .get(`/api/survey/${user.id}`)
       .then(({ data: response }) => {
-        if (response.status === 200) {
-          setSurveyList(response.data);
-        }
-        setLoading(false);
+        setSurveyList(response.data);
       })
-      .catch((err) => {});
+      .catch(() => {})
+      .finally(() => setLoading(false));
   }
 
   useEffect(() => {
@@ -42,15 +40,11 @@ function SurveyList({ user }) {
       await httpService
         .delete(`/api/survey/getSurveyByUrl`, { data: obj })
         .then(({ data: response }) => {
-          if (response.status === 200) {
-            fetchSurveyList();
-            openNotificationBox("success", response.message, 3);
-          } else {
-            openNotificationBox("error", response.message, 3);
-          }
+          fetchSurveyList();
+          openNotificationBox("success", response.message, 3);
         })
         .catch((err) => {
-          fetchReviewAssignList([]);
+          openNotificationBox("error", err.response?.data?.message, 3);
         });
     }
   }

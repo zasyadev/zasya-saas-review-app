@@ -3,8 +3,8 @@ import httpService from "../../lib/httpService";
 import { PulseLoader } from "../Loader/LoadingSpinner";
 import { TemplatePreviewComponent } from "../Template/TemplatePreviewComponent";
 
-function SurveyQuestionPreviewWrapper({ surveyId, user }) {
-  const [question, setQuestions] = useState({});
+function SurveyQuestionPreviewWrapper({ surveyId }) {
+  const [question, setQuestions] = useState(null);
   const [surveyTitle, setSurveyTitle] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -15,22 +15,17 @@ function SurveyQuestionPreviewWrapper({ surveyId, user }) {
         surveyId: surveyId,
       })
       .then(({ data: response }) => {
-        if (response.status === 200) {
-          let filterQuestion = response.data?.SurveyQuestions.map((item) => {
-            return {
-              ...item,
-              options: item.SurveyQuestionOption,
-            };
-          });
-
-          setQuestions(filterQuestion);
-          setSurveyTitle(response.data?.survey_name);
-        }
-        setLoading(false);
+        let filterQuestion = response.data?.SurveyQuestions.map((item) => {
+          return {
+            ...item,
+            options: item.SurveyQuestionOption,
+          };
+        });
+        setQuestions(filterQuestion);
+        setSurveyTitle(response.data?.survey_name);
       })
-      .catch((err) => {
-        setLoading(false);
-      });
+      .catch(() => setQuestions(null))
+      .finally(() => setLoading(false));
   };
 
   useEffect(() => {

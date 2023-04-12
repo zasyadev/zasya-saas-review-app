@@ -1,3 +1,4 @@
+import { BadRequestException } from "../../../../lib/BadRequestExcpetion";
 import { RequestHandler } from "../../../../lib/RequestHandler";
 
 async function handle(req, res, prisma) {
@@ -14,11 +15,7 @@ async function handle(req, res, prisma) {
           channel: true,
         },
       });
-      if (!data) {
-        return res
-          .status(404)
-          .json({ status: 404, message: "No Record Found" });
-      }
+      if (!data) throw BadRequestException("No Record Found");
 
       if (!data.channel.status) {
         return res.status(200).json({
@@ -79,12 +76,9 @@ async function handle(req, res, prisma) {
       }
     }
 
-    if (!surveyData) {
-      return res.status(404).json({ status: 404, message: "No Record Found" });
-    }
+    if (!surveyData) throw BadRequestException("No data found");
 
     return res.status(200).json({
-      status: 200,
       data: surveyData,
       message: "Survey Details Retrieved",
     });
@@ -102,13 +96,12 @@ async function handle(req, res, prisma) {
           id: id,
         },
       });
-      if (deleteSurvey) {
-        return res.status(200).json({
-          status: 200,
-          data: deleteSurvey,
-          message: "Survey Details Delete",
-        });
-      }
+      if (!deleteSurvey) throw BadRequestException("Survey not deleted");
+
+      return res.status(200).json({
+        data: deleteSurvey,
+        message: "Survey Details Delete",
+      });
     }
   }
 }

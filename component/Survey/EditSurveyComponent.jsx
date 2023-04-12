@@ -21,14 +21,10 @@ function EditReviewComponent({ user }) {
         template_id: template_id,
       })
       .then(({ data: response }) => {
-        if (response.status === 200) {
-          setSurveyData(response.data);
-        }
-        setLoading(false);
+        setSurveyData(response.data);
       })
-      .catch((err) => {
-        setLoading(false);
-      });
+      .catch(() => {})
+      .finally(() => setLoading(false));
   };
 
   useEffect(() => {

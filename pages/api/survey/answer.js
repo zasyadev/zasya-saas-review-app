@@ -1,18 +1,14 @@
+import { BadRequestException } from "../../../lib/BadRequestExcpetion";
 import { RequestHandler } from "../../../lib/RequestHandler";
 
 async function handle(req, res, prisma) {
   try {
     const { answerValue, survey_id, created_survey_date, urlId } = req.body;
-    if (!answerValue && !survey_id && !created_survey_date && !urlId) {
-      return res.status(400).json({
-        message: "Bad Request! All fields are required",
-      });
-    }
-    if (Number(answerValue?.length) === 0) {
-      return res.status(400).json({
-        message: "Bad Request! All answers are required",
-      });
-    }
+    if (!answerValue && !survey_id && !created_survey_date && !urlId)
+      throw BadRequestException("Bad Request! All fields are required");
+
+    if (Number(answerValue?.length) === 0)
+      throw BadRequestException("Bad Request! All answers are required");
 
     const transactionData = await prisma.$transaction(async (transaction) => {
       let formdata = {};
@@ -61,23 +57,15 @@ async function handle(req, res, prisma) {
       return { formdata };
     });
 
-    if (!transactionData.formdata || !transactionData) {
-      return res.status(500).json({
-        status: 500,
-        message: "Internal Server Error!",
-        data: {},
-      });
-    }
+    if (!transactionData.formdata || !transactionData)
+      throw BadRequestException("Internal server error");
 
-    return res.status(201).json({
+    return res.status(200).json({
       message: "Survey Answered Sucessfully.",
       data: transactionData.formdata,
-      status: 200,
     });
   } catch (error) {
-    return res
-      .status(500)
-      .json({ error: error, message: "Internal Server Error" });
+    throw BadRequestException("Internal server error");
   }
 }
 const functionHandle = (req, res) =>
