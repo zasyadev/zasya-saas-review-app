@@ -1,12 +1,11 @@
+import { BadRequestException } from "../../../../lib/BadRequestExcpetion";
 import { RequestHandler } from "../../../../lib/RequestHandler";
 
 async function handle(req, res, prisma, user) {
   const { date } = req.body;
   const { id: userId, organization_id } = user;
 
-  if (!userId) {
-    return res.status(401).json({ status: 401, message: "No User found" });
-  }
+  if (!userId) throw BadRequestException("No User found");
 
   const orgData = await prisma.userOraganizationGroups.findMany({
     where: { organization_id: organization_id },
@@ -59,6 +58,8 @@ async function handle(req, res, prisma, user) {
       },
     },
   });
+
+  if (!applaudData) throw BadRequestException("No applaud found");
 
   let fetchData = {};
   if (orgData.length > 0) {
@@ -162,7 +163,6 @@ async function handle(req, res, prisma, user) {
   }
 
   return res.status(200).json({
-    status: 200,
     data: fetchData,
     message: "Applaud Data Received",
   });

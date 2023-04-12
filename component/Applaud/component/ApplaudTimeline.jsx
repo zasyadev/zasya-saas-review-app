@@ -22,7 +22,7 @@ function ApplaudTimeline({ list }) {
         >
           <div className="px-3">
             <p className="flex-1 font-semibold mb-0 text-base ">
-              <span className="capitalize  ">{item.created.first_name}</span>{" "}
+              <span className="capitalize  ">{item.created.first_name}</span>
               has Applauded {item.user.first_name}.
             </p>
             <p className="flex-1  mb-0 text-sm ">{item.comment}</p>

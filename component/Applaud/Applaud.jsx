@@ -19,9 +19,13 @@ import getApplaudCategoryName from "../../helpers/getApplaudCategoryName";
 import httpService from "../../lib/httpService";
 import { openNotificationBox } from "../common/notification";
 import { DefaultMotionVarient } from "../Template/constants";
+import { defaultCurrentMonth } from "../../helpers/momentHelper";
 
-const APPLAUD_RECEIVED_KEY = "Received";
-const APPLAUD_SENT_KEY = "Sent";
+const APPLAUD_FILTER_KEY = {
+  RECEIVED: "Received",
+  SENT: "Sent",
+};
+
 const applaudCardVarient = {
   hidden: { y: 20, opacity: 0 },
   show: { y: 0, opacity: 1 },
@@ -75,14 +79,12 @@ const ApplaudCard = ({ applaud, type }) => {
 function Applaud({ user }) {
   const [applaudList, setApplaudList] = useState([]);
   const [receivedApplaudList, setReceivedApplaudList] = useState([]);
-  const [changeReceivedView, setChangeReceivedView] =
-    useState(APPLAUD_RECEIVED_KEY);
+  const [changeReceivedView, setChangeReceivedView] = useState(
+    APPLAUD_FILTER_KEY.RECEIVED
+  );
 
   const [loading, setLoading] = useState(true);
-  const [currentMonth, setCurrentMonth] = useState({
-    lte: moment().endOf("month"),
-    gte: moment().startOf("month"),
-  });
+  const [currentMonth, setCurrentMonth] = useState(defaultCurrentMonth);
 
   useEffect(() => {
     fetchApplaudData();
@@ -99,13 +101,12 @@ function Applaud({ user }) {
       .then(({ data: res }) => {
         setReceivedApplaudList(res.data.receivedApplaud);
         setApplaudList(res.data.givenApplaud);
-        setLoading(false);
       })
       .catch((err) => {
         openNotificationBox("error", err.response.data?.message);
         setReceivedApplaudList([]);
-        setLoading(false);
-      });
+      })
+      .finally(() => setLoading(false));
   };
   function onDateChange(date, _) {
     setCurrentMonth({
@@ -134,8 +135,8 @@ function Applaud({ user }) {
 
           <ToggleButton
             arrayList={[
-              { label: APPLAUD_RECEIVED_KEY },
-              { label: APPLAUD_SENT_KEY },
+              { label: APPLAUD_FILTER_KEY.RECEIVED },
+              { label: APPLAUD_FILTER_KEY.SENT },
             ]}
             handleToggle={(activeKey) => setChangeReceivedView(activeKey)}
             activeKey={changeReceivedView}
@@ -180,7 +181,7 @@ function Applaud({ user }) {
                 </div>
               </motion.div>
             ))
-          ) : changeReceivedView === APPLAUD_RECEIVED_KEY ? (
+          ) : changeReceivedView === APPLAUD_FILTER_KEY.RECEIVED ? (
             receivedApplaudList.length > 0 ? (
               receivedApplaudList.map((item) => (
                 <ApplaudCard applaud={item} type={"received"} key={item.id} />

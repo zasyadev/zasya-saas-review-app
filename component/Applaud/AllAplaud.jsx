@@ -8,28 +8,25 @@ import httpService from "../../lib/httpService";
 import DefaultImages from "../common/DefaultImages";
 import { openNotificationBox } from "../common/notification";
 import ApplaudTimeline from "./component/ApplaudTimeline";
+import { defaultCurrentMonth } from "../../helpers/momentHelper";
+import NoRecordFound from "../common/NoRecordFound";
 
 function AllAplaud({ user }) {
   const [allApplaud, setAllApplaud] = useState([]);
   const [allOrgApplaud, setAllOrgApplaud] = useState([]);
   const [filterByUserId, setFilterByUserId] = useState("");
-  const [currentMonth, setCurrentMonth] = useState({
-    lte: moment().endOf("month"),
-    gte: moment().startOf("month"),
-  });
+  const [currentMonth, setCurrentMonth] = useState(defaultCurrentMonth);
 
   async function fetchApplaudData() {
     await httpService
       .post("/api/applaud/all", { date: currentMonth, userId: user.id })
       .then(({ data: response }) => {
-        if (response.status === 200) {
-          let sortData = response.data.sort(
-            (a, b) =>
-              b[Object.keys(b)]?.taken?.length -
-              a[Object.keys(a)]?.taken?.length
-          );
-          setAllApplaud(sortData);
-        }
+        let sortData = response.data.sort((a, b) => {
+          const aTakenLength = a[Object.keys(a)].taken?.length || 0;
+          const bTakenLength = b[Object.keys(b)].taken?.length || 0;
+          return bTakenLength - aTakenLength;
+        });
+        setAllApplaud(sortData);
       })
 
       .catch((err) => {
@@ -41,9 +38,7 @@ function AllAplaud({ user }) {
     await httpService
       .post("/api/applaud/timeline", { date: currentMonth })
       .then(({ data: response }) => {
-        if (response.status === 200) {
-          setAllOrgApplaud(response.data);
-        }
+        setAllOrgApplaud(response.data);
       })
 
       .catch((err) => {
@@ -170,7 +165,11 @@ function AllAplaud({ user }) {
         </div>
         <div className="flex-1">
           <div className=" bg-white rounded-md  shadow-md flex-1 p-4  lg:p-5 received--all-applaud">
-            <ApplaudTimeline list={allFilterOrgApplaud} />
+            {allFilterOrgApplaud.length ? (
+              <ApplaudTimeline list={allFilterOrgApplaud} />
+            ) : (
+              <NoRecordFound title="No Applaud Found" />
+            )}
           </div>
         </div>
       </div>

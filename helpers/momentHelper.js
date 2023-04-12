@@ -122,3 +122,8 @@ export const startOfDate = (value) => {
 export const endOfDate = (value) => {
   return moment(value).endOf("day");
 };
+
+export const defaultCurrentMonth = {
+  lte: moment().endOf("month"),
+  gte: moment().startOf("month"),
+};

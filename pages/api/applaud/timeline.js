@@ -1,24 +1,18 @@
+import { BadRequestException } from "../../../lib/BadRequestExcpetion";
 import { RequestHandler } from "../../../lib/RequestHandler";
 
 async function handle(req, res, prisma, user) {
   const { date } = req.body;
   const { id: userId, organization_id } = user;
-  if (!userId) {
-    return res.status(401).json({ status: 401, message: "No User found" });
-  }
+
+  if (!userId) throw BadRequestException("No User found");
 
   const allApplaudData = await prisma.userApplaud.findMany({
     orderBy: {
       created_date: "desc",
     },
-
     where: {
-      AND: [
-        { organization_id: organization_id },
-        {
-          created_date: date,
-        },
-      ],
+      AND: [{ organization_id: organization_id }, { created_date: date }],
     },
     include: {
       user: {
@@ -39,8 +33,9 @@ async function handle(req, res, prisma, user) {
     },
   });
 
+  if (!allApplaudData) throw BadRequestException("No Record found");
+
   return res.status(200).json({
-    status: 200,
     data: allApplaudData,
     message: "Applaud Data Received",
   });

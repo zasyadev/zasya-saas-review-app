@@ -1,5 +1,6 @@
 import moment from "moment";
 import { RequestHandler } from "../../../lib/RequestHandler";
+import { BadRequestException } from "../../../lib/BadRequestExcpetion";
 
 const currentMonth = {
   lte: moment().endOf("month").format(),
@@ -9,9 +10,7 @@ const currentMonth = {
 async function handle(req, res, prisma, user) {
   const { id: userId, organization_id } = user;
 
-  if (!userId) {
-    return res.status(401).json({ status: 401, message: "No User found" });
-  }
+  if (!userId) throw BadRequestException("No user found.");
 
   const userOrgData = await prisma.userOrganization.findUnique({
     where: {
@@ -28,25 +27,17 @@ async function handle(req, res, prisma, user) {
     },
   });
 
-  if (data && userOrgData) {
-    if (data.length > userOrgData.applaud_count) {
-      return res.status(400).json({
-        status: 400,
-        data: userOrgData.applaud_count,
-        message: "Max Appluad Reached For This Month",
-      });
-    } else {
-      return res.status(200).json({
-        status: 200,
-        data: data.length,
-        message: "Applaud Still Pending",
-      });
-    }
-  } else {
-    return res.status(400).json({
-      status: 400,
+  if (!data && !userOrgData) throw BadRequestException("No record found.");
 
-      message: "Internal Server Error",
+  if (data.length > userOrgData.applaud_count) {
+    return res.status(400).json({
+      data: userOrgData.applaud_count,
+      message: "Maximum Appluad Reached For This Month",
+    });
+  } else {
+    return res.status(200).json({
+      data: data.length,
+      message: "Applaud Still Pending",
     });
   }
 }
