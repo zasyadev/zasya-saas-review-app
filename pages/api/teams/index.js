@@ -25,7 +25,6 @@ async function handle(req, res, prisma, user) {
     });
     if (!data) throw BadRequestException("No record found");
     return res.status(200).json({
-      status: 200,
       data: data,
       message: "Teams Details Retrieved",
     });
@@ -76,7 +75,6 @@ async function handle(req, res, prisma, user) {
       throw BadRequestException("No record found");
 
     return res.status(200).json({
-      status: 200,
       data: transactionData.formdata,
       message: "Team Created  Successfully ",
     });
@@ -135,7 +133,6 @@ async function handle(req, res, prisma, user) {
       throw BadRequestException("No record found");
 
     return res.status(200).json({
-      status: 200,
       data: transactionData.formdata,
       message: "Teams Details Updated",
     });
