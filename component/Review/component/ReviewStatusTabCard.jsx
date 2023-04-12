@@ -1,15 +1,8 @@
 import clsx from "clsx";
 import { twMerge } from "tailwind-merge";
 
-export function ReviewStatusTabCard({ data }) {
-  const {
-    onClickStatus,
-    countData,
-    className,
-    title,
-    imageSrc,
-    isActive = false,
-  } = data;
+export function ReviewStatusTabCard({ data, setReviewDataStatus }) {
+  const { countData, className, title, imageSrc, isActive = false } = data;
   return (
     <div
       className={twMerge(
@@ -19,7 +12,7 @@ export function ReviewStatusTabCard({ data }) {
           { "border-primary-green bg-brandGray-100 border-t-4": isActive }
         )
       )}
-      onClick={onClickStatus}
+      onClick={() => setReviewDataStatus(title)}
     >
       <div
         className={`grid place-content-center w-12 h-12 rounded-full ${className}`}

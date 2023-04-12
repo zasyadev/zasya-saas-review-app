@@ -8,6 +8,7 @@ import clsx from "clsx";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
+import { twMerge } from "tailwind-merge";
 import { ButtonGray, PrimaryButton } from "../../component/common/CustomButton";
 import CustomTable from "../../component/common/CustomTable";
 import { openNotificationBox } from "../../component/common/notification";
@@ -18,16 +19,10 @@ import httpService from "../../lib/httpService";
 import DateInfoCard from "../Goals/component/GoalsGroupList/components/DateInfoCard";
 import { REVIEW_MEETINGTYPE } from "../Meetings/constants";
 import AddMembersModal from "./AddMembersModal";
-import { ReviewStatusTabCard } from "./component/ReviewStatusTabCard";
-import {
-  REVIEW_All_STATUS_KEY,
-  REVIEW_CREATED_KEY,
-  REVIEW_PENDING_KEY,
-  REVIEW_RECEIVED_KEY,
-} from "./constants";
 import ReviewAssignessModal from "./ReviewAssignessModal";
 import { TempateSelectWrapper } from "./TempateSelectWrapper";
-import { twMerge } from "tailwind-merge";
+import { ReviewStatusTabCard } from "./component/ReviewStatusTabCard";
+import { REVIEW_FILTER_KEY } from "./constants";
 
 const initialReviewCountModalData = {
   review_name: "",
@@ -55,7 +50,7 @@ function ReviewManagement({ user }) {
   const [loading, setLoading] = useState(false);
   const [createReviewModal, setCreateReviewModal] = useState(false);
   const [reviewDataStatus, setReviewDataStatus] = useState(
-    REVIEW_All_STATUS_KEY
+    REVIEW_FILTER_KEY.ALL
   );
   const [countData, setCountData] = useState(initialCountData);
   const [addMembersReviewModal, setAddMembersReviewModal] = useState(
@@ -73,15 +68,11 @@ function ReviewManagement({ user }) {
     await httpService
       .get(`/api/review/get_by_status?status=${status ?? reviewDataStatus}`)
       .then(({ data: response }) => {
-        if (response.status === 200) {
-          setReviewList(response.data.list);
-          setCountData(response.data.listCount);
-        }
-        setLoading(false);
+        setReviewList(response.data.list);
+        setCountData(response.data.listCount);
       })
-      .catch((err) => {
-        console.error(err.response.data?.message);
-      });
+      .catch(() => setReviewList([]))
+      .finally(() => setLoading(false));
   }
 
   async function fetchAllMembers() {
@@ -89,16 +80,12 @@ function ReviewManagement({ user }) {
     await httpService
       .get(`/api/user/organizationId`)
       .then(({ data: response }) => {
-        if (response.status === 200) {
-          let filterData = response.data.filter(
-            (item) => item.user.status && item.user_id != user.id
-          );
-          setUserList(filterData);
-        }
+        let filterData = response.data.filter(
+          (item) => item.user.status && item.user_id != user.id
+        );
+        setUserList(filterData);
       })
-      .catch((err) => {
-        setUserList([]);
-      });
+      .catch(() => setUserList([]));
   }
   async function onDelete(id) {
     if (id) {
@@ -108,14 +95,11 @@ function ReviewManagement({ user }) {
       await httpService
         .delete(`/api/review/manage`, { data: obj })
         .then(({ data: response }) => {
-          if (response.status === 200) {
-            fetchReviewAssignList(reviewDataStatus);
-            openNotificationBox("success", response.message, 3);
-          } else {
-            openNotificationBox("error", response.message, 3);
-          }
+          fetchReviewAssignList(reviewDataStatus);
+          openNotificationBox("success", response.message, 3);
         })
         .catch((err) => {
+          openNotificationBox("error", err.response?.data?.message, 3);
           fetchReviewAssignList(reviewDataStatus);
         });
     }
@@ -393,36 +377,32 @@ function ReviewManagement({ user }) {
 
   const statusFilter = [
     {
-      onClickStatus: () => setReviewDataStatus(REVIEW_All_STATUS_KEY),
       imageSrc: "/media/svg/all-review.svg",
       countData: countData.all,
-      title: "All",
+      title: REVIEW_FILTER_KEY.ALL,
       className: "bg-brandBlue-200",
-      isActive: reviewDataStatus === REVIEW_All_STATUS_KEY,
+      isActive: reviewDataStatus === REVIEW_FILTER_KEY.ALL,
     },
     {
-      onClickStatus: () => setReviewDataStatus(REVIEW_RECEIVED_KEY),
       imageSrc: "/media/svg/contract-management.svg",
       countData: countData.recevied,
-      title: "Received",
+      title: REVIEW_FILTER_KEY.RECEIVED,
       className: "bg-brandGreen-200",
-      isActive: reviewDataStatus === REVIEW_RECEIVED_KEY,
+      isActive: reviewDataStatus === REVIEW_FILTER_KEY.RECEIVED,
     },
     {
-      onClickStatus: () => setReviewDataStatus(REVIEW_CREATED_KEY),
       imageSrc: "/media/svg/completed-goals.svg",
       countData: countData.created,
-      title: "Created",
+      title: REVIEW_FILTER_KEY.CREATED,
       className: "bg-brandOrange-200",
-      isActive: reviewDataStatus === REVIEW_CREATED_KEY,
+      isActive: reviewDataStatus === REVIEW_FILTER_KEY.CREATED,
     },
     {
-      onClickStatus: () => setReviewDataStatus(REVIEW_PENDING_KEY),
       imageSrc: "/media/svg/contract-pending.svg",
       countData: countData.pending,
-      title: "Pending",
+      title: REVIEW_FILTER_KEY.PENDING,
       className: "bg-brandBlue-200",
-      isActive: reviewDataStatus === REVIEW_PENDING_KEY,
+      isActive: reviewDataStatus === REVIEW_FILTER_KEY.PENDING,
     },
   ];
 
@@ -440,7 +420,11 @@ function ReviewManagement({ user }) {
 
         <div className="grid col-span-1 sm:grid-cols-2 md:grid-cols-4 bg-white rounded-t-md">
           {statusFilter.map((item, idx) => (
-            <ReviewStatusTabCard data={item} key={idx + "tab-card"} />
+            <ReviewStatusTabCard
+              data={item}
+              key={idx + "tab-card"}
+              setReviewDataStatus={setReviewDataStatus}
+            />
           ))}
         </div>
 

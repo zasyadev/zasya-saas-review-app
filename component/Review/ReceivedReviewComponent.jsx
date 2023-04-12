@@ -70,16 +70,13 @@ function ReceivedReviewComponent({ user, reviewId }) {
       await httpService
         .post(`/api/form/answer`, obj)
         .then(({ data: response }) => {
-          if (response.status === 200) {
-            openNotificationBox("success", response.message, 3);
-            setUpdateAnswerApiLoading(false);
-            router.replace("/review");
-          }
+          openNotificationBox("success", response.message, 3);
+          router.replace("/review");
         })
-        .catch((err) => {
-          openNotificationBox("error", err.response.data?.message, 3);
-          setUpdateAnswerApiLoading(false);
-        });
+        .catch((err) =>
+          openNotificationBox("error", err.response.data?.message, 3)
+        )
+        .finally(() => setUpdateAnswerApiLoading(false));
     }
   };
 
@@ -105,16 +102,13 @@ function ReceivedReviewComponent({ user, reviewId }) {
 
       await httpService
         .post(`/api/form/update_answer`, obj)
-        .then(({ data: response }) => {
-          if (response.status === 200) {
-            setUpdateAnswerApiLoading(false);
-            setNextSlide(nextSlide + 1);
-          }
+        .then(() => {
+          setNextSlide(nextSlide + 1);
         })
-        .catch((err) => {
-          openNotificationBox("error", err.response.data?.message, 3);
-          setUpdateAnswerApiLoading(false);
-        });
+        .catch((err) =>
+          openNotificationBox("error", err.response.data?.message, 3)
+        )
+        .finally(() => setUpdateAnswerApiLoading(false));
     }
   };
 

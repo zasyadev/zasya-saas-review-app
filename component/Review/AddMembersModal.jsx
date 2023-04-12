@@ -37,17 +37,14 @@ const AddMembersModal = ({
           reviewId: review_id,
           assignedIds: values?.assignedIds,
         })
-        .then(({ data: response }) => {
-          if (response.status === 200) {
-            fetchReviewAssignList();
-            hideReviewAddMemberModal();
-          }
-          setLoading(false);
+        .then(() => {
+          fetchReviewAssignList();
+          hideReviewAddMemberModal();
         })
-        .catch((err) => {
-          setLoading(false);
-          openNotificationBox("error", err.response.data?.message);
-        });
+        .catch((err) =>
+          openNotificationBox("error", err.response.data?.message)
+        )
+        .finally(() => setLoading(false));
     }
   };
 

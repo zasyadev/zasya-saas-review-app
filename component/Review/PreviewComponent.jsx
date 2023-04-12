@@ -4,7 +4,8 @@ import httpService from "../../lib/httpService";
 import PreviewAnswer from "./formhelper/PreviewAnswer";
 
 const defaultLoading = { questionLoading: false, answerLoading: false };
-function PreviewComponent({ user, reviewId }) {
+
+function PreviewComponent({ reviewId }) {
   const [questions, setQuestions] = useState([]);
   const [answers, setAnswers] = useState([]);
   const [reviewTitle, setReviewTitle] = useState("");
@@ -13,27 +14,23 @@ function PreviewComponent({ user, reviewId }) {
 
   const fetchAnswer = async () => {
     setLoading((prev) => ({ ...prev, answerLoading: true }));
-    if (reviewId) {
-      await httpService
-        .get(`/api/review/answer/id/${reviewId}`)
-        .then(({ data: response }) => {
-          if (response.status === 200 && response.data) {
-            setAnswers(response.data.ReviewAssigneeAnswerOption);
-          }
-          setLoading((prev) => ({ ...prev, answerLoading: false }));
-        })
-        .catch((err) => {
-          console.error(err.response.data?.message);
-          setLoading((prev) => ({ ...prev, answerLoading: false }));
-        });
-    }
+
+    await httpService
+      .get(`/api/review/answer/${reviewId}`)
+      .then(({ data: response }) => {
+        setAnswers(response.data.ReviewAssigneeAnswerOption);
+        setLoading((prev) => ({ ...prev, answerLoading: false }));
+      })
+      .catch((err) => {
+        setLoading((prev) => ({ ...prev, answerLoading: false }));
+      });
   };
 
   const previewAnswer = (answers, questions) => {
     if (questions?.length > 0) {
       let feedBackArray = [];
 
-      let filterData = questions.map((questionitem) => {
+      questions.forEach((questionitem) => {
         if (answers?.length > 0) {
           answers.filter((answerItem) => {
             if (answerItem.question_id === questionitem.id) {
@@ -53,26 +50,23 @@ function PreviewComponent({ user, reviewId }) {
       }
     }
   };
-  const fetchReviewData = async (reviewId) => {
+  const fetchReviewData = async () => {
     setLoading((prev) => ({ ...prev, questionLoading: true }));
     await httpService
       .post(`/api/review/received/${reviewId}`, {})
       .then(({ data: response }) => {
-        if (response.status === 200) {
-          setQuestions(response.data?.review?.form?.questions);
-          setReviewTitle(response.data?.review?.review_name);
-        }
+        setQuestions(response.data?.review?.form?.questions);
+        setReviewTitle(response.data?.review?.review_name);
         setLoading((prev) => ({ ...prev, questionLoading: false }));
       })
       .catch((err) => {
-        console.error(err.response.data?.message);
         setLoading((prev) => ({ ...prev, questionLoading: false }));
       });
   };
 
   useEffect(() => {
     if (reviewId) {
-      fetchReviewData(reviewId);
+      fetchReviewData();
       fetchAnswer();
     }
   }, []);

@@ -4,7 +4,7 @@ import { PulseLoader } from "../Loader/LoadingSpinner";
 import { TemplatePreviewComponent } from "../Template/TemplatePreviewComponent";
 
 function ReviewQuestionPreviewWrapper({ user, reviewId }) {
-  const [question, setQuestions] = useState({});
+  const [question, setQuestions] = useState(null);
   const [reviewTitle, setReviewTitle] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -13,15 +13,11 @@ function ReviewQuestionPreviewWrapper({ user, reviewId }) {
     await httpService
       .get(`/api/review/received/${reviewId}`)
       .then(({ data: response }) => {
-        if (response.status === 200) {
-          setQuestions(response.data?.form?.questions);
-          setReviewTitle(response.data?.form?.form_title);
-        }
-        setLoading(false);
+        setQuestions(response.data?.form?.questions);
+        setReviewTitle(response.data?.form?.form_title);
       })
-      .catch((err) => {
-        setLoading(false);
-      });
+      .catch(() => setQuestions(null))
+      .finally(() => setLoading(false));
   };
 
   useEffect(() => {
