@@ -21,14 +21,12 @@ function UserMembers({ user }) {
           },
         })
         .then(({ data: response }) => {
-          if (response.status === 200) {
-            fetchMembersData();
-            openNotificationBox("success", response.message, 3);
-          }
+          fetchMembersData();
+          openNotificationBox("success", response.message, 3);
         })
-        .catch((err) => {
-          openNotificationBox("error", err.response.data?.message);
-        });
+        .catch((err) =>
+          openNotificationBox("error", err.response.data?.message)
+        );
     }
   }
 
@@ -38,17 +36,11 @@ function UserMembers({ user }) {
     await httpService
       .get(`/api/member/${user.id}`)
       .then(({ data: response }) => {
-        if (response.status === 200) {
-          let data = response.data.filter((item) => item.user_id != user.id);
-
-          setMembersList(data);
-        }
-        setLoading(false);
+        let data = response.data.filter((item) => item.user_id != user.id);
+        setMembersList(data);
       })
-      .catch((err) => {
-        setMembersList([]);
-        setLoading(false);
-      });
+      .catch(() => setMembersList([]))
+      .finally(() => setLoading(false));
   }
 
   useEffect(() => {
