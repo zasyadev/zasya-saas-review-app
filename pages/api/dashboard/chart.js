@@ -1,11 +1,11 @@
+import { BadRequestException } from "../../../lib/BadRequestExcpetion";
 import { RequestHandler } from "../../../lib/RequestHandler";
 
 async function handle(_, res, prisma, user) {
   const { id: userId } = user;
 
-  if (!userId) {
-    return res.status(401).json({ status: 401, message: "No User found" });
-  }
+  if (!userId) throw BadRequestException("No user found");
+
   const userTableData = await prisma.user.findUnique({
     where: { id: userId },
   });

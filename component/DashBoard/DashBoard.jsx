@@ -56,14 +56,8 @@ function DashBoard({ user }) {
   async function fetchDashboardData() {
     await httpService
       .get(`/api/dashboard`)
-      .then(({ data: response }) => {
-        if (response.status === 200) {
-          setDashboardData(response.data);
-        }
-      })
-      .catch((err) => {
-        setDashboardData(defaultDashboardData);
-      });
+      .then(({ data: response }) => setDashboardData(response.data))
+      .catch(() => setDashboardData(defaultDashboardData));
   }
   async function fetchMonthlyLeaderBoardData() {
     await httpService
@@ -71,20 +65,18 @@ function DashBoard({ user }) {
         date: currentMonth,
         userId: user.id,
       })
-      .then(({ data: response }) => {
-        if (response.status === 200) {
-          setMonthlyLeaderBoardData({
-            leaderBoardData: response.data,
-            leaderboardLoading: false,
-          });
-        }
-      })
-      .catch((err) => {
+      .then(({ data: response }) =>
+        setMonthlyLeaderBoardData({
+          leaderBoardData: response.data,
+          leaderboardLoading: false,
+        })
+      )
+      .catch(() =>
         setMonthlyLeaderBoardData({
           leaderBoardData: [],
           leaderboardLoading: false,
-        });
-      });
+        })
+      );
   }
 
   useEffect(() => {

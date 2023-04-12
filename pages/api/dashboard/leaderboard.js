@@ -1,11 +1,12 @@
+import { BadRequestException } from "../../../lib/BadRequestExcpetion";
 import { RequestHandler } from "../../../lib/RequestHandler";
 
 async function handle(req, res, prisma, user) {
   const { date } = req.body;
   const { id: userId, organization_id } = user;
-  if (!userId) {
-    return res.status(401).json({ status: 401, message: "No User found" });
-  }
+
+  if (!userId) throw BadRequestException("No user found");
+
   const orgData = await prisma.userOraganizationGroups.findMany({
     where: { organization_id: organization_id },
   });
@@ -14,52 +15,48 @@ async function handle(req, res, prisma, user) {
     AND: [{ organization_id: organization_id }, { created_date: date }],
   };
   let userData = [];
-  if (Number(orgData.length) > 0) {
-    await orgData.reduce(async (prev, user) => {
-      await prev;
-      let userDataObj = await prisma.user.findUnique({
-        where: {
-          id: user.user_id,
-        },
-        select: {
-          first_name: true,
-          id: true,
-          status: true,
-          Goals: {
-            where: whereCondition,
-          },
-          userFeild: {
-            where: whereCondition,
-          },
-          ReviewAssigneeAnswers: {
-            where: whereCondition,
-          },
-          taskReviewBy: {
-            where: whereCondition,
-          },
-          UserDetails: {
-            select: {
-              image: true,
-            },
-          },
-        },
-      });
+  if (!orgData || !orgData.length) throw BadRequestException("No record found");
 
-      userData.push(await userDataObj);
-    }, Promise.resolve());
+  await orgData.reduce(async (prev, user) => {
+    await prev;
+    let userDataObj = await prisma.user.findUnique({
+      where: {
+        id: user.user_id,
+      },
+      select: {
+        first_name: true,
+        id: true,
+        status: true,
+        Goals: {
+          where: whereCondition,
+        },
+        userFeild: {
+          where: whereCondition,
+        },
+        ReviewAssigneeAnswers: {
+          where: whereCondition,
+        },
+        taskReviewBy: {
+          where: whereCondition,
+        },
+        UserDetails: {
+          select: {
+            image: true,
+          },
+        },
+      },
+    });
 
-    if (Number(userData.length) > 0) {
-      return res.status(200).json({
-        status: 200,
-        data: userData,
-        message: "Monthly Leaderboard Data Received",
-      });
-    } else {
-      return res.status(401).json({ status: 401, message: "No Record found" });
-    }
-  } else {
-    return res.status(401).json({ status: 401, message: "No Record found" });
-  }
+    userData.push(await userDataObj);
+  }, Promise.resolve());
+
+  if (!userData || !userData.length)
+    throw BadRequestException("No record found");
+
+  return res.status(200).json({
+    data: userData,
+    message: "Monthly Leaderboard Data Received",
+  });
 }
 const functionHandle = (req, res) =>
   RequestHandler({
