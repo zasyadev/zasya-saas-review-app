@@ -14,7 +14,7 @@ async function handle(req, res, prisma, user) {
   if (!user_id) throw BadRequestException("No User found");
 
   if (req.method === "GET") {
-    const whereCondition = {
+    const queryCondition = {
       AND: [
         { organization_id: organization_id },
         { created_date: currentMonth },
@@ -31,17 +31,17 @@ async function handle(req, res, prisma, user) {
             role: true,
             email: true,
             Goals: {
-              where: { AND: [...whereCondition.AND, { is_archived: false }] },
+              where: { AND: [...queryCondition.AND, { is_archived: false }] },
             },
             userCreated: {
-              where: whereCondition,
+              where: queryCondition,
             },
 
             taskReviewBy: {
-              where: whereCondition,
+              where: queryCondition,
             },
             Meetings: {
-              where: whereCondition,
+              where: queryCondition,
             },
           },
         },
