@@ -144,12 +144,9 @@ function AddEditGoalComponent({ user, editMode = false }) {
   const filterUserList = useMemo(() => {
     if (editMode && assigneeList.length > 0) {
       return userList?.filter((item) => {
-        if (assigneeList.length > 0) {
-          return assigneeList.find(
-            (assignee) => assignee.assignee_id === item.user_id
-          );
-        }
-        return null;
+        return assigneeList.find(
+          (assignee) => assignee.assignee_id === item.user_id
+        );
       });
     } else {
       return userList;
