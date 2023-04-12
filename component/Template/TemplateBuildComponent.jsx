@@ -193,13 +193,10 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
       await httpService
         .put(`/api/template`, obj)
         .then(({ data: response }) => {
-          if (response.status === 200) {
-            redirectToTemplate();
-            openNotificationBox("success", response.message, 3);
-          }
+          redirectToTemplate();
+          openNotificationBox("success", response.message, 3);
         })
         .catch((err) => {
-          console.error(err.response.data?.message);
           setTemplateSaveLoading(false);
           openNotificationBox("error", err.response.data?.message);
         });
@@ -210,13 +207,10 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
     await httpService
       .post(`/api/template`, obj)
       .then(({ data: response }) => {
-        if (response.status === 200) {
-          redirectToTemplate();
-          openNotificationBox("success", response.message, 3);
-        }
+        redirectToTemplate();
+        openNotificationBox("success", response.message, 3);
       })
       .catch((err) => {
-        console.error(err.response.data?.message);
         setTemplateSaveLoading(false);
         openNotificationBox("error", err.response.data?.message);
       });
@@ -327,11 +321,11 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
       />
       {activeStepState === 0 && (
         <div className="w-full md:w-1/2 bg-white pb-2  md:px-5 md:pt-5 md:pb-6 xl:p-8 xl:pt-6 md:rounded-md mx-auto space-y-2 md:space-y-6">
-          <div className="text-primary text-base md:text-lg xl:text-xl font-bold md:border-b border-gray-200 px-4 py-3">
+          <div className="text-base md:text-lg xl:text-xl font-bold md:border-b border-gray-200 pb-3">
             Create a Custom Template
           </div>
           <div className="px-4 md:p-0 space-y-2">
-            <div className="text-primary text-base font-semibold">Title</div>
+            <div className="text-base font-semibold">Title</div>
 
             <CustomInput
               placeholder="E.g. Template Title"
@@ -345,9 +339,7 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
             <ErrorBox error={formTitle?.error} />
           </div>
           <div className="px-4 md:p-0">
-            <div className="text-primary text-base font-semibold mb-2">
-              Description
-            </div>
+            <div className="text-base font-semibold mb-2">Description</div>
 
             <CustomTextArea
               placeholder="E.g. Template Description"

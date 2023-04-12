@@ -1,25 +1,24 @@
+import { BadRequestException } from "../../../../lib/BadRequestExcpetion";
 import { RequestHandler } from "../../../../lib/RequestHandler";
 
 async function handle(req, res, prisma) {
   const { template_id } = req.body;
 
-  if (template_id) {
-    const data = await prisma.reviewTemplate.findUnique({
-      where: {
-        id: template_id,
-      },
-    });
+  if (!template_id) throw BadRequestException("Bad request");
 
-    if (data) {
-      return res.status(200).json({
-        status: 200,
-        data: data,
-        message: "Templates Retrieved",
-      });
-    }
+  const data = await prisma.reviewTemplate.findUnique({
+    where: {
+      id: template_id,
+    },
+  });
 
-    return res.status(404).json({ status: 404, message: "No Record Found" });
-  }
+  if (!data) throw BadRequestException("No record found");
+
+  return res.status(200).json({
+    status: 200,
+    data: data,
+    message: "Templates Retrieved",
+  });
 }
 const functionHandle = (req, res) =>
   RequestHandler({

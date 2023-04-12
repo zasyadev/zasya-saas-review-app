@@ -21,15 +21,10 @@ function TemplatePreviewWrapperComponent() {
         template_id: template_id,
       })
       .then(({ data: response }) => {
-        if (response.status === 200) {
-          setTemplateData(response.data);
-        }
-        setLoading(false);
+        setTemplateData(response.data);
       })
-      .catch((err) => {
-        setTemplateData({});
-        setLoading(false);
-      });
+      .catch(() => setTemplateData({}))
+      .finally(() => setLoading(false));
   }
 
   useEffect(() => {

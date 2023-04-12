@@ -10,7 +10,6 @@ import {
   TemplateToggleList,
   DefaultMotionVarient,
 } from "./constants";
-import { PrimaryButton } from "../common/CustomButton";
 import SkeletonTemplateCard from "./components/SkeletonTemplateCard";
 import CreateTemplateCard from "./components/CreateTemplateCard";
 import TemplateCard from "./TemplateCard";
@@ -28,32 +27,22 @@ function TemplateLayout({ user }) {
     await httpService
       .get(`/api/template/${user.id}`)
       .then(({ data: response }) => {
-        if (response.status === 200) {
-          let filterData = response.data.filter((item) => item.status);
-
-          setTemplateList(filterData);
-        }
-        setLoading(false);
+        let filterData = response.data.filter((item) => item.status);
+        setTemplateList(filterData);
       })
-      .catch((err) => {
-        setLoading(false);
-        setTemplateList([]);
-      });
+      .catch(() => setTemplateList([]))
+      .finally(() => setLoading(false));
   }
+
   async function fetchDefaultTemplateList() {
     setDefaultTemplateList([]);
     await httpService
       .get(`/api/template/default_template`)
       .then(({ data: response }) => {
-        if (response.status === 200) {
-          let filterData = response.data.filter((item) => item.status);
-
-          setDefaultTemplateList(filterData);
-        }
+        let filterData = response.data.filter((item) => item.status);
+        setDefaultTemplateList(filterData);
       })
-      .catch((err) => {
-        setTemplateList([]);
-      });
+      .catch(() => setDefaultTemplateList([]));
   }
 
   async function deleteTemplate(id) {
@@ -65,15 +54,12 @@ function TemplateLayout({ user }) {
           },
         })
         .then(({ data: response }) => {
-          if (response.status === 200) {
-            fetchUserTemplateList();
-            openNotificationBox("success", response.message, 3);
-          }
+          fetchUserTemplateList();
+          openNotificationBox("success", response.message, 3);
         })
-        .catch((err) => {
-          console.error(err.response.data?.message);
-          openNotificationBox("error", err.response.data?.message);
-        });
+        .catch((err) =>
+          openNotificationBox("error", err.response.data?.message)
+        );
     }
   }
 
@@ -104,7 +90,7 @@ function TemplateLayout({ user }) {
             <>
               <CreateTemplateCard />
               {loading
-                ? [...Array(3)].map((_, idx) => (
+                ? [1, 2, 3].map((_, idx) => (
                     <SkeletonTemplateCard
                       key={idx + "temp"}
                       index={idx + "temp"}
