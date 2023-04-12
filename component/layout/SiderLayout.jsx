@@ -33,38 +33,44 @@ function SiderLayout({ collapsed, setCollapsed, items, lg, user }) {
         roleId: org.role_id,
       })
       .then(({ data: response }) => {
-        if (response.status === 200) {
-          openNotificationBox("success", response.message, 3);
-          router.reload();
-        }
+        openNotificationBox("success", response.message, 3);
+        router.reload();
       })
-      .catch((err) => {
-        console.error(err.response.data?.message);
-      });
+      .catch((err) =>
+        openNotificationBox("error", err.response.data?.message, 3)
+      );
   };
   const logoutHandler = () => {
     signOut();
   };
 
-  const createItems = (
-    <Menu className="divide-y p-0">
-      <Menu.Item className="font-semibold" key={"call-review"}>
-        <Link href={`${URLS.REVIEW_CREATE}`}>Review</Link>
-      </Menu.Item>
-      <Menu.Item className="font-semibold" key={"call-goals"}>
-        <Link href={`${URLS.GOAL_CREATE}`}>Goals</Link>
-      </Menu.Item>
-      <Menu.Item className="font-semibold" key={"call-applauds"}>
-        <Link href={`${URLS.APPLAUD_CREATE}`}>Applauds</Link>
-      </Menu.Item>
-      <Menu.Item className="font-semibold" key={"call-follow"}>
-        <Link href={`${URLS.FOLLOW_UP_CREATE}`}>Follow Up</Link>
-      </Menu.Item>
-      <Menu.Item className="font-semibold" key={"call-template"}>
-        <Link href={`${URLS.TEMPLATE_CREATE}`}>Template</Link>
-      </Menu.Item>
-    </Menu>
-  );
+  const createItems = [
+    {
+      key: "call-review",
+      link: URLS.REVIEW_CREATE,
+      name: "Review",
+    },
+    {
+      key: "call-goals",
+      link: URLS.GOAL_CREATE,
+      name: "Goals",
+    },
+    {
+      key: "call-applauds",
+      link: URLS.APPLAUD_CREATE,
+      name: "Applauds",
+    },
+    {
+      key: "call-follow",
+      link: URLS.FOLLOW_UP_CREATE,
+      name: "Follow Up",
+    },
+    {
+      key: "call-template",
+      link: URLS.TEMPLATE_CREATE,
+      name: "Template",
+    },
+  ];
 
   return (
     <Sider
@@ -89,7 +95,18 @@ function SiderLayout({ collapsed, setCollapsed, items, lg, user }) {
           </Link>
 
           <div className="w-full grid place-content-center ">
-            <Dropdown trigger={"click"} overlay={createItems}>
+            <Dropdown
+              trigger={"click"}
+              overlay={
+                <Menu className="divide-y p-0">
+                  {createItems.map((item) => (
+                    <Menu.Item className="font-semibold" key={item.key}>
+                      <Link href={item.link}>{item.name}</Link>
+                    </Menu.Item>
+                  ))}
+                </Menu>
+              }
+            >
               <p className="w-52 bg-brandGray-50 py-3 px-4 rounded-md mb-0 flex justify-between items-center text-17 font-medium cursor-pointer">
                 Create
                 <span>

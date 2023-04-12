@@ -1,3 +1,4 @@
+import { BadRequestException } from "../../../lib/BadRequestExcpetion";
 import { RequestHandler } from "../../../lib/RequestHandler";
 
 async function handle(req, res, prisma) {
@@ -11,19 +12,16 @@ async function handle(req, res, prisma) {
       orderBy: {
         id: "desc",
       },
-
       where: {
         AND: [
           { user_id: user_id },
-          {
-            organization_id: userData.organization_id,
-          },
+          { organization_id: userData.organization_id },
         ],
       },
     });
+    if (!notificationData) throw BadRequestException("Data not retreived");
 
     return res.status(200).json({
-      status: 200,
       data: notificationData,
       message: "All Data Retrieved",
     });
@@ -38,10 +36,9 @@ async function handle(req, res, prisma) {
         ],
       },
     });
+    if (!notificationData) throw BadRequestException("Data not deleted");
 
     return res.status(200).json({
-      status: 200,
-
       message: "All Notification Deleted Successfully.",
     });
   }

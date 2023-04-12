@@ -12,25 +12,15 @@ function UserProfileHeader({ user }) {
   const getAllNotification = async () => {
     await httpService
       .get(`/api/notification/${user.id}`)
-      .then(({ data: response }) => {
-        if (response.status === 200) {
-          setAllNotification(response.data);
-        }
-      })
-      .catch((err) => {
-        setAllNotification([]);
-      });
+      .then(({ data: response }) => setAllNotification(response.data))
+      .catch(() => setAllNotification([]));
   };
 
   const handleDeleteAllNotifications = async () => {
     await httpService
       .delete(`/api/notification/${user.id}`)
-      .then(({ data: response }) => {
-        if (response.status === 200) {
-          getAllNotification();
-        }
-      })
-      .catch((err) => {});
+      .then(() => getAllNotification())
+      .catch(() => {});
   };
 
   const notificationViewed = async (data) => {
@@ -38,12 +28,8 @@ function UserProfileHeader({ user }) {
       .post(`/api/notification`, {
         id: data,
       })
-      .then(({ data: response }) => {
-        if (response.status === 200) {
-          getAllNotification();
-        }
-      })
-      .catch((err) => {});
+      .then(() => getAllNotification())
+      .catch(() => {});
   };
 
   const unSeenNotificationCount = useMemo(
