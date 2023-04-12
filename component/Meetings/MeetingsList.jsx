@@ -71,22 +71,19 @@ function MeetingsList({ user }) {
     await httpService
       .get(`/api/meetings?filterId=${filterId}`)
       .then(({ data: response }) => {
-        if (response.status === 200) {
-          let sortData = response.data.sort((a, b) => {
-            if (a.meeting_at < currentTime && b.meeting_at >= currentTime) {
-              return 1; // a should come after b in the sorted order
-            }
-            if (b.meeting_at < currentTime && a.meeting_at >= currentTime) {
-              return -1; // a should come before b in the sorted order
-            }
-            return 0; // a and b are equal
-          });
-
-          setMeetingsList(sortData);
-        }
-        setLoading(false);
+        let sortData = response.data.sort((a, b) => {
+          if (a.meeting_at < currentTime && b.meeting_at >= currentTime) {
+            return 1; // a should come after b in the sorted order
+          }
+          if (b.meeting_at < currentTime && a.meeting_at >= currentTime) {
+            return -1; // a should come before b in the sorted order
+          }
+          return 0; // a and b are equal
+        });
+        setMeetingsList(sortData);
       })
-      .catch((err) => {});
+      .catch(() => setMeetingsList([]))
+      .finally(() => setLoading(false));
   }
 
   useEffect(() => {
@@ -98,10 +95,8 @@ function MeetingsList({ user }) {
       await httpService
         .delete(`/api/meetings/${id}`, {})
         .then(({ data: response }) => {
-          if (response.status === 200) {
-            fetchMeetingList();
-            openNotificationBox("success", response.message, 3);
-          }
+          fetchMeetingList();
+          openNotificationBox("success", response.message, 3);
         })
         .catch((err) => {
           openNotificationBox("error", err.response.data?.message);

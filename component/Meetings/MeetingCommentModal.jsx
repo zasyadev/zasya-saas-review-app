@@ -23,17 +23,12 @@ function MeetingCommentModal({
     await httpService
       .post(`/api/meetings/${meetingModalData.meetingId}`, obj)
       .then(({ data: response }) => {
-        if (response.status === 200) {
-          openNotificationBox("success", response.message, 3);
-          hideMeetingModal();
-          fetchMeetingData();
-        }
-        setLoadingSubmitSpin(false);
+        openNotificationBox("success", response.message, 3);
+        hideMeetingModal();
+        fetchMeetingData();
       })
-      .catch((err) => {
-        openNotificationBox("error", err.response.data?.message);
-        setLoadingSubmitSpin(false);
-      });
+      .catch((err) => openNotificationBox("error", err.response.data?.message))
+      .finally(() => setLoadingSubmitSpin(false));
   };
 
   return (

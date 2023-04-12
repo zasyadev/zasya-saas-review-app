@@ -41,23 +41,20 @@ function MeetingDetailComponent({ user }) {
     await httpService
       .get(`/api/meetings/${meeting_id}`)
       .then(({ data: response }) => {
-        if (response.status === 200) {
-          setMeetingData(response.data);
-          setUserData(
-            response.data.MeetingAssignee.find(
-              (item) => item.assignee_id === user.id
-            )
-          );
-        }
-        setLoading(false);
+        setMeetingData(response.data);
+        setUserData(
+          response.data.MeetingAssignee.find(
+            (item) => item.assignee_id === user.id
+          )
+        );
       })
-      .catch((err) => {
+      .catch((err) =>
         openNotificationBox(
           "error",
           err?.response?.data?.message || "Failed! Please try again"
-        );
-        setLoading(false);
-      });
+        )
+      )
+      .finally(() => setLoading(false));
   }
 
   const meetingTimeLinedata = useMemo(() => {
@@ -65,7 +62,7 @@ function MeetingDetailComponent({ user }) {
       let pastMeetingData = [];
       if (
         meetingData?.relatedMeetings &&
-        Number(meetingData.relatedMeetings.length) > 0
+        meetingData.relatedMeetings.length > 0
       ) {
         meetingData.relatedMeetings.map((item) => {
           item.MeetingAssignee.map((i) => {
@@ -184,7 +181,7 @@ function MeetingDetailComponent({ user }) {
                 <Skeleton />
                 <Skeleton />
               </div>
-            ) : Number(meetingData.goalData.length) > 0 ? (
+            ) : meetingData.goalData.length > 0 ? (
               meetingData.goalData.map((item, idx) => {
                 return (
                   <div

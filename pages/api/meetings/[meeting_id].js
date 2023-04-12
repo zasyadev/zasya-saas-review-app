@@ -1,16 +1,14 @@
 import { deleteGoogleCalenderApi } from "../../../helpers/googleHelper";
+import { BadRequestException } from "../../../lib/BadRequestExcpetion";
 import { RequestHandler } from "../../../lib/RequestHandler";
 import { MEETING_ASSIGNEE_SCHEMA } from "../../../yup-schema/meeting";
 
 async function handle(req, res, prisma, user) {
   const { id: userId } = user;
-  if (!userId) {
-    return res.status(401).json({ status: 401, message: "No User found" });
-  }
+  if (!userId) throw BadRequestException("No user found");
+
   const { meeting_id } = req.query;
-  if (!meeting_id) {
-    return res.status(401).json({ status: 401, message: "No Meeting found" });
-  }
+  if (!meeting_id) throw BadRequestException("No meeting found");
 
   if (req.method === "GET") {
     const data = await prisma.meetings.findUnique({
@@ -93,14 +91,13 @@ async function handle(req, res, prisma, user) {
       });
     }
 
-    if (data) {
-      return res.status(200).json({
-        status: 200,
-        data: { ...data, goalData, relatedMeetings },
-        message: "Meetings Details Retrieved",
-      });
-    }
-    return res.status(404).json({ status: 404, message: "No Record Found" });
+    if (!data) throw BadRequestException("No data found");
+
+    return res.status(200).json({
+      status: 200,
+      data: { ...data, goalData, relatedMeetings },
+      message: "Meetings Details Retrieved",
+    });
   } else if (req.method === "POST") {
     try {
       const { comment, assigneeId } = req.body;
@@ -109,11 +106,9 @@ async function handle(req, res, prisma, user) {
           AND: [{ meeting_id: meeting_id }, { assignee_id: assigneeId }],
         },
       });
-      if (!meetingAssigneeData.id) {
-        return res
-          .status(404)
-          .json({ status: 404, message: "No Record Found" });
-      }
+
+      if (!meetingAssigneeData.id) throw BadRequestException("No record found");
+
       const data = await prisma.meetingAssignee.update({
         where: {
           id: meetingAssigneeData.id,
@@ -123,18 +118,14 @@ async function handle(req, res, prisma, user) {
           modified_date: new Date(),
         },
       });
-      if (data) {
-        return res.status(200).json({
-          status: 200,
-          data: data,
-          message: "Meetings Comment Updated",
-        });
-      }
-      return res.status(404).json({ status: 404, message: "No Record Found" });
+      if (!data) throw BadRequestException("Meetings not updated");
+      return res.status(200).json({
+        status: 200,
+        data: data,
+        message: "Meetings comment updated",
+      });
     } catch (error) {
-      return res
-        .status(404)
-        .json({ status: 404, message: "Internal server error" });
+      throw BadRequestException("Meetings not updated");
     }
   } else if (req.method === "DELETE") {
     const eventData = await prisma.meetings.findUnique({
@@ -148,14 +139,12 @@ async function handle(req, res, prisma, user) {
       where: { id: meeting_id },
     });
 
-    if (data) {
-      return res.status(200).json({
-        status: 200,
-        data: data,
-        message: "Meetings Deleted",
-      });
-    }
-    return res.status(404).json({ status: 404, message: "No Record Found" });
+    if (!data) throw BadRequestException("Meetings not deleted");
+    return res.status(200).json({
+      status: 200,
+      data: data,
+      message: "Meetings deleted",
+    });
   }
 }
 const functionHandle = (req, res) =>
