@@ -7,23 +7,17 @@ import {
   SlackPostMessage,
 } from "../../../helpers/slackHelper";
 import { RequestHandler } from "../../../lib/RequestHandler";
+import { BadRequestException } from "../../../lib/BadRequestExcpetion";
 
 const BASE_URL = process.env.NEXT_APP_URL;
 
 async function handle(req, res) {
-  if (req.method != "POST") {
-    return res.status(401).json({
-      status: 404,
-      message: "Method not allowed",
-    });
-  }
+  if (req.method != "POST") throw BadRequestException("Method not allowed");
+
   const { password } = req.body;
-  if (password != process.env.NEXT_APP_CRON_PASSWORD) {
-    return res.status(401).json({
-      message: "Wrong Password",
-      status: 401,
-    });
-  }
+  if (password != process.env.NEXT_APP_CRON_PASSWORD)
+    throw BadRequestException("Wrong Password");
+
   const goalData = await prisma.goals.findMany({
     where: {
       AND: [
@@ -83,7 +77,6 @@ async function handle(req, res) {
 
   return res.status(201).json({
     message: " Success",
-    status: 200,
   });
 }
 
