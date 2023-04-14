@@ -85,7 +85,7 @@ function DashBoard({ user }) {
   }, []);
 
   const sortGoalListByEndDate = useMemo(() => {
-    if (Number(goalList?.length) > 0) {
+    if (goalList?.length > 0) {
       const latestUpcomingGoalsList = goalList
         .filter(
           (item) => moment(item?.goal?.end_date).diff(moment(), "days") >= 0
@@ -101,7 +101,7 @@ function DashBoard({ user }) {
   }, [goalList]);
 
   const sortMeetingListByDate = useMemo(() => {
-    if (Number(meetingList?.length) > 0) {
+    if (meetingList?.length > 0) {
       const latestMeetingList = meetingList
         .filter(
           (item) => moment(item?.meeting_at).diff(moment(), "minutes") >= 0

@@ -76,14 +76,14 @@ const ReviewAssignessModal = ({
 };
 
 const getFilteredAssigneeList = (type, reviewAssignee) => {
-  if (!Number(reviewAssignee.length) > 0) return [];
+  if (!reviewAssignee.length > 0) return [];
   return type === "ALL"
     ? reviewAssignee
     : reviewAssignee.filter((assignee) => assignee.status === type);
 };
 
 const GetAssigneesList = ({ type, reviewAssignee }) => {
-  if (Number(reviewAssignee?.length) === 0) return null;
+  if (reviewAssignee?.length === 0) return null;
 
   const filteredAssigneeList = getFilteredAssigneeList(type, reviewAssignee);
 

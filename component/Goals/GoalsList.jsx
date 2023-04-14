@@ -112,7 +112,7 @@ function GoalsList({ user }) {
           goalUsers.push(assignee?.assignee_id);
       });
     });
-    if (Number(goalUsers.length) > 0) {
+    if (goalUsers.length > 0) {
       return userList.filter((user) =>
         goalUsers.find((item) => item === user?.user_id)
       );
@@ -131,7 +131,7 @@ function GoalsList({ user }) {
   };
 
   const filteredGoalList = useMemo(() => {
-    if (Number(goalsList?.length) > 0) {
+    if (goalsList?.length > 0) {
       const searchTextFilteredRes = goalsList.filter((item) =>
         item.goal.goal_title.toLowerCase().includes(searchText)
       );
@@ -154,7 +154,7 @@ function GoalsList({ user }) {
     let completedGoals = 0;
     let pendingGoals = 0;
 
-    if (Number(goalsList?.length) > 0) {
+    if (goalsList?.length > 0) {
       totalGoals = goalsList.length;
       completedGoals = goalsList.filter(
         (item) => item.status === COMPLETED_STATUS

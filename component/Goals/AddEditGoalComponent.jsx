@@ -152,9 +152,9 @@ function AddEditGoalComponent({ user, editMode = false }) {
   }, []);
 
   const filterUserList = useMemo(() => {
-    if (editMode && Number(assigneeList.length) > 0) {
+    if (editMode && assigneeList.length > 0) {
       return userList?.filter((item) => {
-        if (Number(assigneeList.length) > 0) {
+        if (assigneeList.length > 0) {
           return assigneeList.find(
             (assignee) => assignee.assignee_id === item.user_id
           );
@@ -167,7 +167,7 @@ function AddEditGoalComponent({ user, editMode = false }) {
   }, [assigneeList.length, userList.length, editMode]);
 
   useEffect(() => {
-    if (editMode && Number(filterUserList.length) > 0) {
+    if (editMode && filterUserList.length > 0) {
       setMemberList(true);
       form.setFieldsValue({
         goal_assignee: filterUserList.map((user) => user.user_id),

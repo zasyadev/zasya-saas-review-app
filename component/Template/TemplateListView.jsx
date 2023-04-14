@@ -57,7 +57,7 @@ function TemplateListView({ user }) {
   }, []);
 
   useEffect(() => {
-    if (userTemplateList && Number(userTemplateList.length) === 0)
+    if (userTemplateList && userTemplateList.length === 0)
       setChangeTemplateView(DEFAULT_TEMPLATE_KEY);
   }, []);
 

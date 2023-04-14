@@ -91,7 +91,7 @@ function ReviewCreatedComponent({
 
   useEffect(() => {
     let headersData = [];
-    if (Number(answerData.length) > 0) {
+    if (answerData.length > 0) {
       headersData = answerData[0].ReviewAssigneeAnswerOption.map((item, i) => {
         return {
           title: item.question.questionText,
@@ -214,7 +214,7 @@ function ReviewCreatedComponent({
     setIsExporting(true);
 
     Object.entries(data).forEach(([key, values]) => {
-      if (Number(values?.length) > 0) {
+      if (values?.length > 0) {
         let sheetObj = {};
 
         sheetObj["sheet"] = key;

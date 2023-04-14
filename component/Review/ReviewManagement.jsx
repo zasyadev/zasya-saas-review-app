@@ -151,7 +151,7 @@ function ReviewManagement({ user }) {
   };
 
   const reviewProgressValue = (data) => {
-    if (Number(data.length) > 0) {
+    if (data.length > 0) {
       const completedData =
         data.filter((item) => item.status == "answered")?.length ?? 0;
       return Math.round((completedData / data.length) * 100);

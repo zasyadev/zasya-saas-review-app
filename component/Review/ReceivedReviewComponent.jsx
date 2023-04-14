@@ -121,10 +121,10 @@ function ReceivedReviewComponent({ user, reviewId }) {
         if (response.status === 200) {
           setReviewData(response.data);
           setQuestions(response.data?.review?.form?.questions);
-          if (Number(response?.data?.ReviewAssigneeAnswers?.length) > 0) {
+          if (response?.data?.ReviewAssigneeAnswers?.length > 0) {
             let answersList = [];
 
-            if (Number(response.data?.review?.form?.questions?.length) > 0) {
+            if (response.data?.review?.form?.questions?.length > 0) {
               response.data?.review?.form?.questions.forEach((question) => {
                 response?.data?.ReviewAssigneeAnswers.forEach(
                   (ReviewAssigneeAnswer) => {
@@ -181,7 +181,7 @@ function ReceivedReviewComponent({ user, reviewId }) {
       ) : (
         <Form layout="vertical" className="py-4 w-11/12" form={answerForm}>
           <AnimatePresence>
-            {Number(questions?.length) > 0 ? (
+            {questions?.length > 0 ? (
               questions
                 ?.filter((_, index) => index === nextSlide)
                 ?.map((question, idx) => (

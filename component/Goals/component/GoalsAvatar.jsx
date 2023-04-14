@@ -14,7 +14,7 @@ function GoalsAvatar({
 }) {
   return (
     <div className="flex items-center">
-      {Number(activeGoalUsers.length) > 0 &&
+      {activeGoalUsers.length > 0 &&
         activeGoalUsers.map((data, index) =>
           index < avatarCount ? (
             <Tooltip
@@ -52,7 +52,7 @@ function GoalsAvatar({
             </Tooltip>
           ) : null
         )}
-      {Number(activeGoalUsers.length - avatarCount) > 0 && (
+      {activeGoalUsers.length - avatarCount > 0 && (
         <Dropdown
           trigger={"click"}
           overlay={

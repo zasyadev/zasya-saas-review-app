@@ -290,7 +290,7 @@ function MeetingsList({ user }) {
             initial="hidden"
             animate="show"
           >
-            {Number(filteredMeetingList.length) > 0 ? (
+            {filteredMeetingList.length > 0 ? (
               filteredMeetingList.map((item, idx) => (
                 <motion.div
                   className="flex items-center space-x-3 px-3 py-2 bg-white rounded-md shadow-md"

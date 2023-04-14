@@ -29,7 +29,7 @@ const GoalAssignessModal = ({
 };
 
 const GetAssigneesList = ({ userId, GoalAssignee }) => {
-  if (Number(GoalAssignee?.length) === 0) return null;
+  if (GoalAssignee?.length === 0) return null;
 
   return (
     <div className="divide-y space-y-1 max-h-96 overflow-y-auto custom-scrollbar">
