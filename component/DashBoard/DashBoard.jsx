@@ -115,8 +115,8 @@ function DashBoard({ user }) {
   }, [meetingList]);
 
   return (
-    <div className="grid grid-cols-7 gap-4 lg:gap-8 xl:gap:10 bg-brandGray-100">
-      <div className="col-span-7 md:col-span-5  border-r border-gray-300 p-4 md:p-6 xl:p-8 space-y-4 md:space-y-6 xl:space-y-8 bg-white">
+    <div className="grid grid-cols-7 gap-4 lg:gap-8 xl:gap:10 bg-brandGray-100 ">
+      <div className="col-span-7 dashboard-screen custom-scrollbar md:col-span-5  border-r border-gray-300 overflow-auto p-4 md:p-6 xl:p-8 space-y-4 md:space-y-6 xl:space-y-8 bg-white">
         <HeaderNotification user={user} dashBoardData={dashBoardData} />
         <div className="bg-white  rounded-md shadow-brand">
           <div className="mb-4 grid md:grid-cols-3 border-b border-gray-300">
@@ -270,7 +270,7 @@ function DashBoard({ user }) {
           </div>
         </div>
       </div>
-      <div className="col-span-7 md:col-span-2 space-y-4 p-4  md:pl-0 bg-brandGray-100">
+      <div className="col-span-7 dashboard-screen custom-scrollbar md:col-span-2 space-y-4 p-4  md:pl-0 bg-brandGray-100 overflow-auto">
         <SiderRight
           dashBoardData={dashBoardData}
           monthlyLeaderBoardData={monthlyLeaderBoardData}
