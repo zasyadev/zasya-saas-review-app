@@ -11,6 +11,7 @@ import {
   defaultRatingQuestion,
 } from "../Form/questioncomponents/constants";
 import { ReviewStepsArray } from "./constants";
+import { OrganizationUserListHook } from "../common/hooks";
 
 function AddEditReviewComponent({
   user,
@@ -20,10 +21,10 @@ function AddEditReviewComponent({
 }) {
   const router = useRouter();
   const [form] = Form.useForm();
-  const [userList, setUserList] = useState([]);
   const [questionList, setQuestionList] = useState([defaultQuestionConfig]);
   const [activeReviewStep, setActiveReviewStep] = useState(0);
   const [loadingSubmitSpin, setLoadingSubmitSpin] = useState(false);
+  const { userList } = OrganizationUserListHook(user.id);
 
   const onBarInputChange = (value, name) => {
     if (value && name) {
@@ -79,19 +80,6 @@ function AddEditReviewComponent({
       .finally(() => setLoadingSubmitSpin(false));
   }
 
-  async function fetchUserData() {
-    setUserList([]);
-    await httpService
-      .get(`/api/user/organizationId`)
-      .then(({ data: response }) => {
-        let filterData = response.data.filter(
-          (item) => item.user.status && item.user_id != user.id
-        );
-        setUserList(filterData);
-      })
-      .catch(() => setUserList([]));
-  }
-
   const initialData = (data) => {
     setQuestionList(data.form_data.questions);
     form.setFieldsValue({
@@ -101,8 +89,6 @@ function AddEditReviewComponent({
   };
 
   useEffect(() => {
-    fetchUserData();
-
     if (
       reviewPreviewData &&
       Object.keys(reviewPreviewData).length &&

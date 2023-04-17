@@ -12,6 +12,7 @@ import {
   REVIEW_TYPE,
 } from "./constants";
 import { INDIVIDUAL_TYPE } from "../Goals/constants";
+import { OrganizationUserListHook } from "../common/hooks";
 
 function CreateMeetingTypeComponent({ user }) {
   const router = useRouter();
@@ -22,7 +23,7 @@ function CreateMeetingTypeComponent({ user }) {
   const [meetingType, setMeetingType] = useState(null);
   const [reviewsList, setReviewsList] = useState([]);
   const [goalsList, setGoalsList] = useState([]);
-  const [userList, setUserList] = useState([]);
+  const { userList } = OrganizationUserListHook(user.id);
 
   const assigneeList = useMemo(() => {
     if (meetingEditType === GOAL_MEETINGTYPE && Number(goalsList.length) > 0) {
@@ -71,21 +72,6 @@ function CreateMeetingTypeComponent({ user }) {
           err?.response?.data?.message || "Failed! Please try again"
         )
       );
-  }
-
-  async function fetchUserData() {
-    setUserList([]);
-    await httpService
-      .get(`/api/user/organizationId`)
-      .then(({ data: response }) => {
-        let filterData = response.data.filter(
-          (item) => item.user.status && item.user_id != user.id
-        );
-        setUserList(filterData);
-      })
-      .catch(() => {
-        setUserList([]);
-      });
   }
 
   const filterUserList = useMemo(() => {
@@ -149,7 +135,6 @@ function CreateMeetingTypeComponent({ user }) {
   useEffect(() => {
     fetchReviewsList();
     fetchGoalList();
-    fetchUserData();
     handleMeetingData(type_id, meetingEditType);
   }, [goalsList.length, reviewsList.length]);
 
