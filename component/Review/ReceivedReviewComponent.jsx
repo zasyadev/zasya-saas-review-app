@@ -112,54 +112,48 @@ function ReceivedReviewComponent({ user, reviewId }) {
     }
   };
 
-  const fetchReviewData = async (reviewId) => {
+  const fetchReviewData = async () => {
     setLoading(true);
 
     await httpService
       .post(`/api/review/received/${reviewId}`, {})
       .then(({ data: response }) => {
-        if (response.status === 200) {
-          setReviewData(response.data);
-          setQuestions(response.data?.review?.form?.questions);
-          if (Number(response?.data?.ReviewAssigneeAnswers?.length) > 0) {
-            let answersList = [];
+        setReviewData(response.data);
+        setQuestions(response.data?.review?.form?.questions);
+        if (response?.data?.ReviewAssigneeAnswers?.length > 0) {
+          let answersList = [];
 
-            if (Number(response.data?.review?.form?.questions?.length) > 0) {
-              response.data?.review?.form?.questions.forEach((question) => {
-                response?.data?.ReviewAssigneeAnswers.forEach(
-                  (ReviewAssigneeAnswer) => {
-                    let findAnswer =
-                      ReviewAssigneeAnswer.ReviewAssigneeAnswerOption.find(
-                        (answer) => answer.question_id === question.id
-                      );
+          if (response.data?.review?.form?.questions?.length > 0) {
+            response.data?.review?.form?.questions.forEach((question) => {
+              response?.data?.ReviewAssigneeAnswers.forEach(
+                (ReviewAssigneeAnswer) => {
+                  let findAnswer =
+                    ReviewAssigneeAnswer.ReviewAssigneeAnswerOption.find(
+                      (answer) => answer.question_id === question.id
+                    );
 
-                    if (findAnswer) {
-                      answersList.push({
-                        questionId: question.id,
-                        answer: findAnswer.option,
-                      });
-                    }
+                  if (findAnswer) {
+                    answersList.push({
+                      questionId: question.id,
+                      answer: findAnswer.option,
+                    });
                   }
-                );
-              });
-            }
-
-            if (answersList.length > 0) {
-              setFormValues(answersList);
-            }
+                }
+              );
+            });
+          }
+          if (answersList.length > 0) {
+            setFormValues(answersList);
           }
         }
-
-        setLoading(false);
       })
-      .catch((err) => {
-        openNotificationBox("error", err.response.data?.message);
-      });
+      .catch((err) => openNotificationBox("error", err.response.data?.message))
+      .finally(() => setLoading(false));
   };
 
   useEffect(() => {
-    if (reviewId) fetchReviewData(reviewId);
-  }, []);
+    if (reviewId) fetchReviewData();
+  }, [reviewId]);
 
   return (
     <div className="answer-bg px-2 py-4 md:p-4 flex items-center justify-center">

@@ -125,3 +125,7 @@ body {
 ::selection {
   background: #6f75b3;
 }
+.dashboard-screen {
+  height: calc(100vh - 110px);
+  max-height: calc(100vh - 110px);
+}

@@ -40,7 +40,7 @@ export function CountCard({
           className
         )}
       >
-        <div className="flex flex-wrap items-center  h-full gap-3 select-none">
+        <div className="flex flex-wrap items-center h-full gap-2 select-none">
           <div className="flex-1">
             <div className="flex items-start justify-between font-medium tracking-wide text-base mb-1">
               <span className="flex-1">{title}</span>

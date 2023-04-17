@@ -3,8 +3,8 @@ import httpService from "../../lib/httpService";
 import { PulseLoader } from "../Loader/LoadingSpinner";
 import { TemplatePreviewComponent } from "../Template/TemplatePreviewComponent";
 
-function ReviewQuestionPreviewWrapper({ user, reviewId }) {
-  const [question, setQuestions] = useState(null);
+function ReviewQuestionPreviewWrapper({ reviewId }) {
+  const [question, setQuestions] = useState([]);
   const [reviewTitle, setReviewTitle] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -16,7 +16,7 @@ function ReviewQuestionPreviewWrapper({ user, reviewId }) {
         setQuestions(response.data?.form?.questions);
         setReviewTitle(response.data?.form?.form_title);
       })
-      .catch(() => setQuestions(null))
+      .catch(() => setQuestions([]))
       .finally(() => setLoading(false));
   };
 

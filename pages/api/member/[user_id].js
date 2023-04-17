@@ -1,29 +1,33 @@
 import { USER_SELECT_FEILDS } from "../../../constants";
+import { BadRequestException } from "../../../lib/BadRequestExcpetion";
 import { RequestHandler } from "../../../lib/RequestHandler";
 
 async function handle(req, res, prisma) {
   const { user_id } = req.query;
 
-  if (user_id) {
-    const userData = await prisma.user.findUnique({
-      where: { id: user_id },
-    });
-    const data = await prisma.userOraganizationGroups.findMany({
-      where: {
-        AND: [{ organization_id: userData.organization_id }, { status: true }],
-      },
+  const userData = await prisma.user.findUnique({
+    where: { id: user_id },
+  });
 
-      include: {
-        user: USER_SELECT_FEILDS,
-      },
-    });
+  if (!userData) throw BadRequestException("No user found");
 
-    return res.status(200).json({
-      status: 200,
-      data: data,
-      message: "All Data Retrieved",
-    });
-  }
+  const data = await prisma.userOraganizationGroups.findMany({
+    where: {
+      AND: [{ organization_id: userData.organization_id }, { status: true }],
+    },
+
+    include: {
+      user: USER_SELECT_FEILDS,
+    },
+  });
+
+  if (!data) throw BadRequestException("No records found");
+
+  return res.status(200).json({
+    status: 200,
+    data: data,
+    message: "All Data Retrieved",
+  });
 }
 const functionHandle = (req, res) =>
   RequestHandler({

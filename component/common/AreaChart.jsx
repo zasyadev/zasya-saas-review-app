@@ -64,33 +64,27 @@ const AreaChart = ({ user }) => {
         userId: user.id,
       })
       .then(({ data: response }) => {
-        if (response.status === 200) {
-          let chartArray = [];
-          if (response.data) {
-            chartArray = [
-              {
-                name: "Appaluds",
-                data: response.data.applaudChartData,
-              },
-              {
-                name: "Goals",
-                data: response.data.goalChartData,
-              },
-              {
-                name: "Review",
-                data: response.data.reviewChartData,
-              },
-            ];
-          }
-
-          setChartData(chartArray);
-          setLoading(false);
+        let chartArray = [];
+        if (response.data) {
+          chartArray = [
+            {
+              name: "Appaluds",
+              data: response.data.applaudChartData,
+            },
+            {
+              name: "Goals",
+              data: response.data.goalChartData,
+            },
+            {
+              name: "Review",
+              data: response.data.reviewChartData,
+            },
+          ];
         }
+        setChartData(chartArray);
       })
-      .catch((err) => {
-        setLoading(false);
-        setChartData(defaultChartSeries);
-      });
+      .catch(() => setChartData(defaultChartSeries))
+      .finally(() => setLoading(false));
   }
   useEffect(() => {
     fetchChartData();

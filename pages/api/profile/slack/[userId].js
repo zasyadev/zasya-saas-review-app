@@ -1,5 +1,6 @@
 import { RequestHandler } from "../../../../lib/RequestHandler";
 import { SlackUserList } from "../../../../helpers/slackHelper";
+import { BadRequestException } from "../../../../lib/BadRequestExcpetion";
 
 async function handle(req, res, prisma) {
   const { userId } = req.query;
@@ -11,12 +12,10 @@ async function handle(req, res, prisma) {
     },
   });
 
-  if (userDetails?.slack_email === reqBody.slack_email) {
-    return res.status(402).json({
-      message: "The new email you have entered is same as your old email.",
-      status: 402,
-    });
-  }
+  if (userDetails?.slack_email === reqBody.slack_email)
+    throw BadRequestException(
+      "The new email you have entered is same as your old email."
+    );
 
   let slackUserList = await SlackUserList();
 
@@ -28,33 +27,22 @@ async function handle(req, res, prisma) {
       item.profile.email ? item.profile.email == reqBody.slack_email : false
     );
 
-    if (slackDetails) {
-      valid_slack_email = slackDetails.profile.email;
-      valid_slack_id = slackDetails.id;
-      const userDetailData = await prisma.userDetails.update({
-        where: { user_id: userId },
-        data: {
-          slack_email: valid_slack_email,
-          slack_id: valid_slack_id,
-        },
-      });
-      if (userDetailData) {
-        return res.status(200).json({
-          message: "Slack Email Updated Succesfully.",
-          status: 200,
-        });
-      } else {
-        return res.status(401).json({
-          message: "Email Not Saved",
-          status: 401,
-        });
-      }
-    } else {
-      return res.status(401).json({
-        message: "Email Not Found",
-        status: 401,
-      });
-    }
+    if (!slackDetails) throw BadRequestException("Email Not Found");
+
+    valid_slack_email = slackDetails.profile.email;
+    valid_slack_id = slackDetails.id;
+    const userDetailData = await prisma.userDetails.update({
+      where: { user_id: userId },
+      data: {
+        slack_email: valid_slack_email,
+        slack_id: valid_slack_id,
+      },
+    });
+    if (!userDetailData) throw BadRequestException("Email Not Saved");
+
+    return res.status(200).json({
+      message: "Slack Email Updated Succesfully.",
+    });
   }
 }
 

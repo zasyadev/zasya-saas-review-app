@@ -96,8 +96,8 @@ function SiderRight({ dashBoardData, monthlyLeaderBoardData, userId }) {
             }}
           />
         ) : (
-          activityList && (
-            <Timeline className="px-4 pt-6 space-y-2 max-h-64 overflow-auto no-scrollbar">
+          activityList.length > 0 && (
+            <Timeline className="px-4 pt-6 space-y-2 max-h-72 overflow-auto no-scrollbar">
               {activityList.map((item, index) => (
                 <Timeline.Item
                   dot={
@@ -137,7 +137,7 @@ function SiderRight({ dashBoardData, monthlyLeaderBoardData, userId }) {
         </div>
         <div className="px-4 space-y-4 max-h-64 md:max-h-80 lg:max-h-64 overflow-y-auto no-scrollbar">
           {leaderboardLoading
-            ? [...Array(3)].map((_, index) => (
+            ? [1, 2, 3].map((_, index) => (
                 <Skeleton
                   avatar
                   active
@@ -147,7 +147,7 @@ function SiderRight({ dashBoardData, monthlyLeaderBoardData, userId }) {
                   key={index + "leaderboadLoading"}
                 />
               ))
-            : leaderBoardData &&
+            : leaderBoardData.length > 0 &&
               leaderBoardData
                 .filter((i) => i.status)
                 .map((item, index) => {

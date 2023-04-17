@@ -8,6 +8,7 @@ import {
   WeeklyCustomizeReviewMessage,
 } from "../../../helpers/slackHelper";
 import { RequestHandler } from "../../../lib/RequestHandler";
+import { BadRequestException } from "../../../lib/BadRequestExcpetion";
 const BASE_URL = process.env.NEXT_APP_URL;
 
 const ApplaudSlackMessage = (name) => ({
@@ -34,12 +35,8 @@ const currentMonth = {
 async function handle(req, res) {
   const { password, type } = req.body;
 
-  if (password !== process.env.NEXT_APP_CRON_PASSWORD) {
-    return res.status(401).json({
-      message: " Wrong Password",
-      status: 401,
-    });
-  }
+  if (password !== process.env.NEXT_APP_CRON_PASSWORD)
+    throw BadRequestException("Wrong Password");
 
   const userData = await prisma.user.findMany({
     where: {
@@ -120,8 +117,7 @@ async function handle(req, res) {
   }
 
   return res.status(201).json({
-    message: " Success",
-    status: 200,
+    message: "Success",
   });
 }
 

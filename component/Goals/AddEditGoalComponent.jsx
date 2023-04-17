@@ -57,7 +57,7 @@ function AddEditGoalComponent({ user, editMode = false }) {
       frequency: getGoalFrequency(values.end_date),
       end_date: values.end_date,
       goal_assignee:
-        values?.goal_assignee && Number(values?.goal_assignee?.length) > 0
+        values?.goal_assignee && values.goal_assignee.length > 0
           ? values?.goal_assignee
           : [],
     };
@@ -78,10 +78,8 @@ function AddEditGoalComponent({ user, editMode = false }) {
     await httpService
       .post("/api/goals", data)
       .then(({ data: response }) => {
-        if (response.status === 200) {
-          openNotificationBox("success", response.message, 3);
-          redirectToGoalsPage();
-        }
+        openNotificationBox("success", response.message, 3);
+        redirectToGoalsPage();
       })
       .catch((err) => {
         openNotificationBox("error", err.response.data?.message);
@@ -95,10 +93,8 @@ function AddEditGoalComponent({ user, editMode = false }) {
       await httpService
         .put("/api/goals", data)
         .then(({ data: response }) => {
-          if (response.status === 200) {
-            openNotificationBox("success", response.message, 3);
-            redirectToGoalsPage();
-          }
+          openNotificationBox("success", response.message, 3);
+          redirectToGoalsPage();
         })
         .catch((err) => {
           openNotificationBox("error", err.response.data?.message);
@@ -110,20 +106,14 @@ function AddEditGoalComponent({ user, editMode = false }) {
   const fetchGoalData = async () => {
     if (router.query.goal_id) {
       setLoading(true);
-
       await httpService
         .get(`/api/goals/${router.query.goal_id}`)
         .then(({ data: response }) => {
-          if (response.status === 200) {
-            setFormFeilds(response.data);
-            setGoalData(true);
-          }
-          setLoading(false);
+          setFormFeilds(response.data);
+          setGoalData(true);
         })
-        .catch((err) => {
-          setGoalData(false);
-          setLoading(false);
-        });
+        .catch(() => setGoalData(false))
+        .finally(() => setLoading(false));
     }
   };
 
@@ -152,14 +142,11 @@ function AddEditGoalComponent({ user, editMode = false }) {
   }, []);
 
   const filterUserList = useMemo(() => {
-    if (editMode && Number(assigneeList.length) > 0) {
+    if (editMode && assigneeList.length > 0) {
       return userList?.filter((item) => {
-        if (Number(assigneeList.length) > 0) {
-          return assigneeList.find(
-            (assignee) => assignee.assignee_id === item.user_id
-          );
-        }
-        return null;
+        return assigneeList.find(
+          (assignee) => assignee.assignee_id === item.user_id
+        );
       });
     } else {
       return userList;
@@ -167,7 +154,7 @@ function AddEditGoalComponent({ user, editMode = false }) {
   }, [assigneeList.length, userList.length, editMode]);
 
   useEffect(() => {
-    if (editMode && Number(filterUserList.length) > 0) {
+    if (editMode && filterUserList.length > 0) {
       setMemberList(true);
       form.setFieldsValue({
         goal_assignee: filterUserList.map((user) => user.user_id),
@@ -176,10 +163,10 @@ function AddEditGoalComponent({ user, editMode = false }) {
   }, [filterUserList.length, editMode]);
 
   const handleGoalType = (val) => {
-    if (val === "Individual") {
+    if (val === INDIVIDUAL_TYPE) {
       setMemberList(true);
       setTeamListBox(false);
-    } else if (val === "Team") {
+    } else if (val === TEAM_TYPE) {
       setTeamListBox(true);
       setMemberList(false);
     } else {
@@ -196,32 +183,20 @@ function AddEditGoalComponent({ user, editMode = false }) {
     await httpService
       .get(`/api/user/organizationId`)
       .then(({ data: response }) => {
-        if (response.status === 200) {
-          let filterData = response.data.filter(
-            (item) => item.user.status && item.user_id != user.id
-          );
-          setUserList(filterData);
-        }
+        let filterData = response.data.filter(
+          (item) => item.user.status && item.user_id != user.id
+        );
+        setUserList(filterData);
       })
-      .catch((err) => {
-        setUserList([]);
-        console.error(err.response.data?.message);
-      });
+      .catch(() => setUserList([]));
   }
 
   async function fetchTeamData() {
     setTeamList([]);
     await httpService
       .get(`/api/teams`)
-      .then(({ data: response }) => {
-        if (response.status === 200) {
-          setTeamList(response.data);
-        }
-      })
-      .catch((err) => {
-        setTeamList([]);
-        console.error(err.response.data?.message);
-      });
+      .then(({ data: response }) => setTeamList(response.data))
+      .catch(() => setTeamList([]));
   }
 
   const onMemberInputChange = (value) => {
@@ -237,13 +212,15 @@ function AddEditGoalComponent({ user, editMode = false }) {
     }
   };
 
-  return loading ? (
-    <div className="container mx-auto max-w-full">
-      <PulseLoader />
-    </div>
-  ) : !goalData ? (
-    <NoRecordFound title="No Goal Found" />
-  ) : (
+  if (loading)
+    return (
+      <div className="container mx-auto max-w-full">
+        <PulseLoader />
+      </div>
+    );
+
+  if (!goalData) return <NoRecordFound title="No Goal Found" />;
+  return (
     <Form
       form={form}
       name="goals"

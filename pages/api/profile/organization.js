@@ -1,3 +1,4 @@
+import { BadRequestException } from "../../../lib/BadRequestExcpetion";
 import { RequestHandler } from "../../../lib/RequestHandler";
 
 async function handle(req, res, prisma, user) {
@@ -12,18 +13,12 @@ async function handle(req, res, prisma, user) {
       },
     });
 
-    if (userData) {
-      return res.status(200).json({
-        status: 200,
-        data: userData,
-        message: "Organization Data Received",
-      });
-    } else {
-      return res.status(400).json({
-        status: 400,
-        message: "Internal Server Error",
-      });
-    }
+    if (!userData) throw BadRequestException("Bad request");
+
+    return res.status(200).json({
+      data: userData,
+      message: "Organization Data Received",
+    });
   }
   if (req.method === "PUT") {
     const { applaud_count } = req.body;
@@ -37,19 +32,12 @@ async function handle(req, res, prisma, user) {
         applaud_count: applaud_count,
       },
     });
+    if (!data) throw BadRequestException("Bad request");
 
-    if (data) {
-      return res.status(200).json({
-        status: 200,
-        data: data,
-        message: "Organization Data Updated",
-      });
-    } else {
-      return res.status(400).json({
-        status: 400,
-        message: "Internal Server Error",
-      });
-    }
+    return res.status(200).json({
+      data: data,
+      message: "Organization Data Updated",
+    });
   }
 }
 

@@ -1,17 +1,14 @@
 import { USER_SELECT_FEILDS } from "../../../constants";
+import { BadRequestException } from "../../../lib/BadRequestExcpetion";
 import { RequestHandler } from "../../../lib/RequestHandler";
 
 async function handle(req, res, prisma, user) {
   const { id: userId } = user;
   const { team_id } = req.query;
   const teamId = Number(team_id);
-  if (!userId) {
-    return res.status(401).json({ status: 401, message: "No User found" });
-  }
+  if (!userId) throw BadRequestException("No user found");
 
-  if (!teamId) {
-    return res.status(401).json({ status: 401, message: "No Team found" });
-  }
+  if (!teamId) throw BadRequestException("No team found");
 
   if (req.method === "GET") {
     const data = await prisma.userTeams.findUnique({
@@ -25,14 +22,11 @@ async function handle(req, res, prisma, user) {
       },
     });
 
-    if (data) {
-      return res.status(200).json({
-        status: 200,
-        data: data,
-        message: "Teams Details Retrieved",
-      });
-    }
-    return res.status(404).json({ status: 404, message: "No Record Found" });
+    if (!data) throw BadRequestException("No record found");
+    return res.status(200).json({
+      data: data,
+      message: "Teams Details Retrieved",
+    });
   } else if (req.method === "DELETE") {
     const data = await prisma.userTeams.delete({
       where: {
@@ -40,14 +34,10 @@ async function handle(req, res, prisma, user) {
       },
     });
 
-    if (data) {
-      return res.status(200).json({
-        status: 200,
-
-        message: "Team Deleted Successfully",
-      });
-    }
-    return res.status(404).json({ status: 404, message: "No Record Found" });
+    if (!data) throw BadRequestException("No record found");
+    return res.status(200).json({
+      message: "Team Deleted Successfully",
+    });
   }
 }
 const functionHandle = (req, res) =>

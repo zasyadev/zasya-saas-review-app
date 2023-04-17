@@ -1,4 +1,5 @@
 import { hashedPassword, compareHashedPassword } from "../../../../lib/auth";
+import { BadRequestException } from "../../../../lib/BadRequestExcpetion";
 import { RequestHandler } from "../../../../lib/RequestHandler";
 import { USER_PASSWORD_SCHEMA } from "../../../../yup-schema/user";
 
@@ -11,30 +12,18 @@ async function handle(req, res, prisma, user) {
       where: { id: userId },
     });
     const compare = await compareHashedPassword(old_password, data.password);
-    if (compare) {
-      const updateData = await prisma.user.update({
-        where: { email: data.email },
-        data: {
-          password: await hashedPassword(new_password),
-        },
-      });
-
-      if (updateData) {
-        return res.status(200).json({
-          status: 200,
-          data: updateData,
-          message: "Password Updated",
-        });
-      } else {
-        return res
-          .status(404)
-          .json({ status: 404, message: "No Record Found!" });
-      }
-    } else {
-      return res
-        .status(400)
-        .json({ status: 400, message: "Old Password incorrect!" });
-    }
+    if (!compare) throw BadRequestException("Old Password incorrect!");
+    const updateData = await prisma.user.update({
+      where: { email: data.email },
+      data: {
+        password: await hashedPassword(new_password),
+      },
+    });
+    if (!updateData) throw BadRequestException("No record found!");
+    return res.status(200).json({
+      data: updateData,
+      message: "Password Updated",
+    });
   }
 }
 const functionHandle = (req, res) =>

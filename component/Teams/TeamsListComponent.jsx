@@ -17,14 +17,12 @@ function TeamsListComponent({ user }) {
       await httpService
         .delete(`/api/teams/${id}`, {})
         .then(({ data: response }) => {
-          if (response.status === 200) {
-            fetchTeamsData();
-            openNotificationBox("success", response.message, 3);
-          }
+          fetchTeamsData();
+          openNotificationBox("success", response.message, 3);
         })
-        .catch((err) => {
-          openNotificationBox("error", err.response.data?.message);
-        });
+        .catch((err) =>
+          openNotificationBox("error", err.response.data?.message)
+        );
     }
   }
 
@@ -33,16 +31,9 @@ function TeamsListComponent({ user }) {
     setTeamsList([]);
     await httpService
       .get(`/api/teams`)
-      .then(({ data: response }) => {
-        if (response.status === 200) {
-          setTeamsList(response.data);
-        }
-        setLoading(false);
-      })
-      .catch((err) => {
-        setTeamsList([]);
-        setLoading(false);
-      });
+      .then(({ data: response }) => setTeamsList(response.data))
+      .catch(() => setTeamsList([]))
+      .finally(() => setLoading(false));
   }
 
   useEffect(() => {
