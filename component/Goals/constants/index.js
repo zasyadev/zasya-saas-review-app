@@ -10,7 +10,7 @@ export const ATRISK_STATUS = "AtRisk";
 export const GRID_DISPLAY = "grid";
 export const LIST_DISPLAY = "list";
 
-export const groupItems = [
+export const GROUP_ITEMS = [
   {
     title: "Daily",
     type: "daily",
@@ -28,13 +28,12 @@ export const groupItems = [
     type: "halfyearly",
   },
 ];
-export const goalsFilterList = [
+export const GOALS_FILTER_LIST = [
   { value: "All", label: "All" },
   { value: "OnTrack", label: "On Track" },
   { value: "Completed", label: "Completed" },
   { value: "Delayed", label: "Delayed" },
   { value: "Abandoned", label: "Abandoned" },
-  // { value: "AtRisk", label: "At Risk" },
   { value: "Archived", label: "Archived" },
 ];
 
@@ -68,4 +67,9 @@ export const getGoalFrequency = (number) => {
     3: "halfyearly",
   };
   return frequencyType[number] || "";
+};
+
+export const GOALS_FILTER_STATUS = {
+  ALL: "All",
+  ARCHIVED: "Archived",
 };
