@@ -25,15 +25,8 @@ function EditUsers() {
       .post(`/api/member/edit/${id}`, {
         org_user: id,
       })
-      .then(({ data: response }) => {
-        if (response.status === 200) {
-          setMemberData(response.data);
-        }
-      })
-      .catch((err) => {
-        console.error(err.response.data?.message);
-        setMemberData([]);
-      });
+      .then(({ data: response }) => setMemberData(response.data))
+      .catch(() => setMemberData([]));
   }
 
   useEffect(() => {

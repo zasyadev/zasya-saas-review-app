@@ -160,22 +160,19 @@ function ReviewCreatedComponent({
     await httpService
       .put(`/api/review/manage`, obj)
       .then(({ data: response }) => {
-        if (response.status === 200) {
-          openNotificationBox("success", response.message, 3);
-          fetchReviewData(reviewId);
-          setUpdateFreqApiLoading(false);
-          if (editFreqModalVisible) {
-            setEditFreqModalVisible(false);
-          }
+        openNotificationBox("success", response.message, 3);
+        fetchReviewData(reviewId);
+        if (editFreqModalVisible) {
+          setEditFreqModalVisible(false);
         }
       })
-      .catch((err) => {
+      .catch((err) =>
         openNotificationBox(
           "error",
           err?.response?.data?.message || "Unable to update! Please try again"
-        );
-        setUpdateFreqApiLoading(false);
-      });
+        )
+      )
+      .finally(() => setUpdateFreqApiLoading(false));
   };
 
   const handleResize =

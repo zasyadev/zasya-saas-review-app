@@ -1,3 +1,4 @@
+import { BadRequestException } from "../../../lib/BadRequestExcpetion";
 import { mailService, mailTemplate } from "../../../lib/emailservice";
 import { RequestHandler } from "../../../lib/RequestHandler";
 const BASE_URL = process.env.NEXT_APP_URL;
@@ -89,6 +90,9 @@ async function handle(req, res, prisma) {
       }
     });
 
+    if (!transactionData.formdata || !transactionData)
+      throw BadRequestException("No record found");
+
     const assignedByFromData = await prisma.review.findFirst({
       where: { id: transactionData.review_id },
     });
@@ -127,28 +131,14 @@ async function handle(req, res, prisma) {
       },
     });
 
-    await mailService.sendMail(mailData, function (err, info) {
-      // if (err) console.log("failed");
-      // else console.log("successfull");
-    });
-
-    if (!transactionData.formdata || !transactionData) {
-      return res.status(500).json({
-        status: 500,
-        message: "Internal Server Error!",
-        data: {},
-      });
-    }
+    await mailService.sendMail(mailData);
 
     return res.status(201).json({
       message: "Review Saved Sucessfully.",
       data: transactionData.formdata,
-      status: 200,
     });
   } catch (error) {
-    return res
-      .status(500)
-      .json({ error: error, message: "Internal Server Error" });
+    throw BadRequestException("Internal Server Error");
   }
 }
 const functionHandle = (req, res) =>

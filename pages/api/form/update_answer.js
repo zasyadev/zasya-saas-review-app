@@ -1,3 +1,4 @@
+import { BadRequestException } from "../../../lib/BadRequestExcpetion";
 import { RequestHandler } from "../../../lib/RequestHandler";
 
 async function handle(req, res, prisma) {
@@ -82,23 +83,14 @@ async function handle(req, res, prisma) {
       }
     });
 
-    if (!transactionData.formdata) {
-      return res.status(500).json({
-        status: 500,
-        message: "Internal Server Error!",
-        data: {},
-      });
-    }
+    if (!transactionData.formdata) throw BadRequestException("No record found");
 
     return res.status(201).json({
       message: `Review ${isUpdateRecord ? "Updated" : "Saved"} Sucessfully.`,
       data: transactionData.formdata,
-      status: 200,
     });
   } catch (error) {
-    return res
-      .status(500)
-      .json({ error: error, message: "Internal Server Error" });
+    throw BadRequestException("Internal Server Error");
   }
 }
 const functionHandle = (req, res) =>

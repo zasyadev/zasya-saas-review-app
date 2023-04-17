@@ -15,7 +15,6 @@ async function handle(req, res, prisma) {
   if (!data) throw BadRequestException("No record found");
 
   return res.status(200).json({
-    status: 200,
     data: data,
     message: "Templates Retrieved",
   });

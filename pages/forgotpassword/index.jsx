@@ -21,18 +21,14 @@ function ForgotPassword() {
       await httpService
         .post(`/api/user/password/forgotpassword`, obj)
         .then(({ data: response }) => {
-          if (response.status === 200) {
-            openNotificationBox("success", response.message, 3);
-            forgotForm.resetFields();
-            router.push("/auth/login");
-          }
-          setLoading(false);
+          openNotificationBox("success", response.message, 3);
+          forgotForm.resetFields();
+          router.push("/auth/login");
         })
-        .catch((err) => {
-          console.error(err.response.data?.message);
-          setLoading(false);
-          openNotificationBox("error", err.response.data?.message);
-        });
+        .catch((err) =>
+          openNotificationBox("error", err.response.data?.message)
+        )
+        .finally(() => setLoading(false));
     }
   }
 
