@@ -14,10 +14,15 @@ import { ColorApplaudIcon } from "../../assets/icons";
 import { URLS } from "../../constants/urls";
 import { dateDayName, dateTime } from "../../helpers/dateHelper";
 import httpService from "../../lib/httpService";
-import { GoalListHook, MeetingListHook } from "../common/hooks";
-import NoRecordFound from "../common/NoRecordFound";
-import { statusBackground, statusPill } from "../Goals/constants";
+import {
+  GOALS_FILTER_STATUS,
+  statusBackground,
+  statusPill,
+} from "../Goals/constants";
 import SiderRight from "../SiderRight/SiderRight";
+import NoRecordFound from "../common/NoRecordFound";
+import { useGoal } from "../common/hooks/useGoal";
+import { useMeeting } from "../common/hooks/useMeeting";
 import DashboardGoalsAvatar from "./component/DashboardGoalsAvatar";
 import HeaderNotification from "./component/HeaderNotification";
 import { CountCard, DateBox } from "./component/helperComponent";
@@ -41,8 +46,8 @@ function DashBoard({ user }) {
     leaderboardLoading: true,
   };
 
-  const { goalList, goalListLoading } = GoalListHook("All");
-  const { meetingList, meetingListLoading } = MeetingListHook();
+  const { goalList, goalListLoading } = useGoal(GOALS_FILTER_STATUS.ALL);
+  const { meetingList, meetingListLoading } = useMeeting();
   const [dashBoardData, setDashboardData] = useState(defaultDashboardData);
   const [monthlyLeaderBoardData, setMonthlyLeaderBoardData] = useState(
     defaultMonthlyLeaderboardData

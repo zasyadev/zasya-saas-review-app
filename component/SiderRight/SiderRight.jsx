@@ -9,10 +9,10 @@ import {
 } from "../../assets/icons";
 import randomBgColor from "../../helpers/randomBgColor";
 import { getFirstLetter } from "../../helpers/truncateString";
-import DefaultImages from "../common/DefaultImages";
-import { ActivityListHook } from "../common/hooks";
 import { SCALE_TYPE } from "../Form/questioncomponents/constants";
 import { REVIEW_RATING_QUESTION } from "../Review/constants";
+import DefaultImages from "../common/DefaultImages";
+import { useActivity } from "../common/hooks/useActivity";
 
 const RadialBarChart = dynamic(() => import("../common/RadialBarChart"), {
   ssr: false,
@@ -68,7 +68,7 @@ function SiderRight({ dashBoardData, monthlyLeaderBoardData, userId }) {
   const { reviewRating, totalGoals, totalApplauds } = dashBoardData;
   const { leaderBoardData, leaderboardLoading } = monthlyLeaderBoardData;
 
-  const { activityList, activityListLoading } = ActivityListHook(userId);
+  const { activityList, activityListLoading } = useActivity(userId);
 
   return (
     <>

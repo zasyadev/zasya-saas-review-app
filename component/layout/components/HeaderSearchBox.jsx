@@ -2,11 +2,11 @@ import { SearchOutlined } from "@ant-design/icons";
 import { Select } from "antd";
 import { useRouter } from "next/router";
 import React from "react";
-import { MemberListHook } from "../../common/hooks";
+import { useMember } from "../../common/hooks/useMember";
 
 function HeaderSearchBox({ user }) {
   const route = useRouter();
-  const { membersList } = MemberListHook(user);
+  const { membersList } = useMember(user);
   return (
     <Select
       size="large"

@@ -11,14 +11,14 @@ import { ApplaudCategoryList } from "../../constants/applaudCategoryList";
 import httpService from "../../lib/httpService";
 import { CustomTextArea } from "../common/CustomFormFeilds";
 import CustomPopover from "../common/CustomPopover";
-import { MemberListHook } from "../common/hooks";
+import { useMember } from "../common/hooks/useMember";
 
 function AddApplaud({ user }) {
   const router = useRouter();
   const [applaudform] = Form.useForm();
   const [applaudLimit, setApplaudLimit] = useState(0);
   const [loadingSubmitSpin, setLoadingSubmitSpin] = useState(false);
-  const { membersList } = MemberListHook(user);
+  const { membersList } = useMember(user);
 
   const validateMessages = {
     required: "${label} is required!",

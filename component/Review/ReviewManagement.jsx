@@ -18,12 +18,12 @@ import { getFirstTwoLetter } from "../../helpers/truncateString";
 import httpService from "../../lib/httpService";
 import DateInfoCard from "../Goals/component/GoalsGroupList/components/DateInfoCard";
 import { REVIEW_MEETINGTYPE } from "../Meetings/constants";
+import { useOrganizationUser } from "../common/hooks/useOrganizationUser";
 import AddMembersModal from "./AddMembersModal";
 import ReviewAssignessModal from "./ReviewAssignessModal";
 import { TempateSelectWrapper } from "./TempateSelectWrapper";
 import { ReviewStatusTabCard } from "./component/ReviewStatusTabCard";
 import { REVIEW_FILTER_KEY } from "./constants";
-import { OrganizationUserListHook } from "../common/hooks";
 
 const initialReviewCountModalData = {
   review_name: "",
@@ -61,7 +61,7 @@ function ReviewManagement({ user }) {
   const [reviewCountModalData, setReviewCountModalData] = useState(
     initialReviewCountModalData
   );
-  const { userList } = OrganizationUserListHook(user.id);
+  const { userList } = useOrganizationUser(user.id);
 
   async function fetchReviewAssignList(status) {
     setLoading(true);
