@@ -1,32 +1,24 @@
+import { BadRequestException } from "../../../../lib/BadRequestExcpetion";
 import { RequestHandler } from "../../../../lib/RequestHandler";
 
 async function handle(req, res, prisma, user) {
   const { id: userId } = user;
-  const reqBody = req.body;
+  const { org_id, roleId } = req.body;
 
-  if (userId && reqBody.org_id && reqBody.roleId) {
-    let userData = await prisma.user.update({
-      where: { id: userId },
-      data: {
-        organization_id: reqBody.org_id,
-        role_id: reqBody.roleId,
-      },
-    });
+  if (!userId && !org_id && !roleId) throw BadRequestException("Bad request");
+  const userData = await prisma.user.update({
+    where: { id: userId },
+    data: {
+      organization_id: org_id,
+      role_id: roleId,
+    },
+  });
 
-    if (userData) {
-      return res.status(200).json({
-        status: 200,
-        data: userData,
-        message: "Organization Updated",
-      });
-    }
-    return res.status(400).json({
-      status: 400,
-      message: "Organization Not Updated",
-    });
-  }
-
-  return res.status(404).json({ status: 404, message: "No Record Found" });
+  if (!userData) throw BadRequestException("Organization not updated");
+  return res.status(200).json({
+    data: userData,
+    message: "Organization Updated",
+  });
 }
 const functionHandle = (req, res) =>
   RequestHandler({

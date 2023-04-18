@@ -13,19 +13,16 @@ export const MemberListHook = (user) => {
     await httpService
       .get(`/api/member/${user.id}`)
       .then(({ data }) => {
-        if (data.status === 200) {
-          let filterData = data.data.filter(
-            (item) => item.user_id != user.id && item.user.status
-          );
-          setMemberList(filterData);
-        }
-        setMemberListLoading(false);
+        let filterData = data.data.filter(
+          (item) => item.user_id != user.id && item.user.status
+        );
+        setMemberList(filterData);
       })
-      .catch((err) => {
+      .catch(() => {
         setMemberList([]);
         setMemberListError(NotFound);
-        setMemberListLoading(false);
-      });
+      })
+      .finally(() => setMemberListLoading(false));
   }
 
   useEffect(() => {
@@ -48,9 +45,7 @@ export const GoalListHook = (status) => {
     setGoalListLoading(true);
     await httpService
       .get(`/api/goals?status=${status}`)
-      .then(({ data: response }) => {
-        setGoalList(response.data);
-      })
+      .then(({ data: response }) => setGoalList(response.data))
       .catch(() => {
         setGoalListError(NotFound);
         setGoalList([]);
@@ -78,17 +73,12 @@ export const MeetingListHook = () => {
     setMeetingListLoading(true);
     await httpService
       .get(`/api/meetings`)
-      .then(({ data: response }) => {
-        if (response.status === 200) {
-          setMeetingList(response.data);
-        }
-        setMeetingListLoading(false);
-      })
-      .catch((err) => {
-        setMeetingListLoading(false);
+      .then(({ data: response }) => setMeetingList(response.data))
+      .catch(() => {
         setMeetingListError(NotFound);
         setMeetingList([]);
-      });
+      })
+      .finally(() => setMeetingListLoading(false));
   }
 
   useEffect(() => {
@@ -111,17 +101,12 @@ export const NotificationListHook = (userId) => {
     setNotificationListLoading(true);
     await httpService
       .get(`/api/notification/${userId}`)
-      .then(({ data: response }) => {
-        if (response.status === 200) {
-          setNotificationList(response.data);
-        }
-        setNotificationListLoading(false);
-      })
-      .catch((err) => {
-        setNotificationListLoading(false);
+      .then(({ data: response }) => setNotificationList(response.data))
+      .catch(() => {
         setNotificationListError(NotFound);
         setNotificationList([]);
-      });
+      })
+      .finally(() => setNotificationListLoading(false));
   }
 
   useEffect(() => {
@@ -144,17 +129,12 @@ export const ActivityListHook = (userId) => {
     setActivityListLoading(true);
     await httpService
       .get(`/api/activity/${userId}`)
-      .then(({ data: response }) => {
-        if (response.status === 200) {
-          setActivityList(response.data);
-        }
-        setActivityListLoading(false);
-      })
-      .catch((err) => {
-        setActivityListLoading(false);
+      .then(({ data: response }) => setActivityList(response.data))
+      .catch(() => {
         setActivityListError(NotFound);
         setActivityList([]);
-      });
+      })
+      .finally(() => setActivityListLoading(false));
   }
 
   useEffect(() => {

@@ -29,7 +29,6 @@ async function handle(req, res, prisma, user) {
     }
 
     return res.status(200).json({
-      status: 200,
       data: data,
       message: "Notification Updated",
     });

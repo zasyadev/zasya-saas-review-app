@@ -9,16 +9,16 @@ import CustomModal from "./CustomModal";
 export default function ReviewPopUpModal({ userId }) {
   const [notificationModal, setNotificationModal] = useState(false);
 
-  const getUserWeeklyReviews = async (userId) => {
+  const getUserWeeklyReviews = async () => {
     await httpService
       .get("/api/user/getweeklyreivewscount")
       .then(({ data: response }) => {
-        if (response.status === 200 && response?.count === 0) {
+        if (response?.count === 0) {
           setNotificationModal(true);
           setReviewPopupTime(moment());
         }
       })
-      .catch((err) => {});
+      .catch(() => {});
   };
 
   const getUserWeeklyReviewCount = () => {
