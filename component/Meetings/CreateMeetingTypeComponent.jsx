@@ -11,7 +11,8 @@ import {
   REVIEW_MEETINGTYPE,
   REVIEW_TYPE,
 } from "./constants";
-import { INDIVIDUAL_TYPE } from "../Goals/constants";
+import { GOALS_FILTER_STATUS, INDIVIDUAL_TYPE } from "../Goals/constants";
+import { GoalListHook } from "../common/hooks";
 
 function CreateMeetingTypeComponent({ user }) {
   const router = useRouter();
@@ -21,12 +22,12 @@ function CreateMeetingTypeComponent({ user }) {
   const [meetingData, setMeetingData] = useState(null);
   const [meetingType, setMeetingType] = useState(null);
   const [reviewsList, setReviewsList] = useState([]);
-  const [goalsList, setGoalsList] = useState([]);
   const [userList, setUserList] = useState([]);
+  const { goalList } = GoalListHook(GOALS_FILTER_STATUS.ALL);
 
   const assigneeList = useMemo(() => {
-    if (meetingEditType === GOAL_MEETINGTYPE && goalsList.length > 0) {
-      const goalData = goalsList.find((item) => item.goal.id === type_id);
+    if (meetingEditType === GOAL_MEETINGTYPE && goalList.length > 0) {
+      const goalData = goalList.find((item) => item.goal.id === type_id);
       return goalData?.goal?.GoalAssignee.map((i) => {
         return i.assignee_id;
       });
@@ -43,7 +44,7 @@ function CreateMeetingTypeComponent({ user }) {
 
       return list;
     } else return [];
-  }, [goalsList, reviewsList, type_id, meetingEditType]);
+  }, [goalList, reviewsList, type_id, meetingEditType]);
 
   async function fetchReviewsList() {
     await httpService
@@ -57,20 +58,6 @@ function CreateMeetingTypeComponent({ user }) {
           err?.response?.data?.message || "Failed! Please try again"
         );
       });
-  }
-
-  async function fetchGoalList() {
-    await httpService
-      .get(`/api/goals?status=All`)
-      .then(({ data: response }) => {
-        setGoalsList(response.data);
-      })
-      .catch((err) =>
-        openNotificationBox(
-          "error",
-          err?.response?.data?.message || "Failed! Please try again"
-        )
-      );
   }
 
   async function fetchUserData() {
@@ -111,8 +98,8 @@ function CreateMeetingTypeComponent({ user }) {
 
   const handleMeetingData = (type_id, meetingEditType) => {
     if (type_id) {
-      if (meetingEditType === GOAL_MEETINGTYPE && goalsList.length > 0) {
-        const goalData = goalsList.find(
+      if (meetingEditType === GOAL_MEETINGTYPE && goalList.length > 0) {
+        const goalData = goalList.find(
           (item) =>
             item.goal.id === type_id && item.goal.goal_type === INDIVIDUAL_TYPE
         );
@@ -145,10 +132,9 @@ function CreateMeetingTypeComponent({ user }) {
 
   useEffect(() => {
     fetchReviewsList();
-    fetchGoalList();
     fetchUserData();
     handleMeetingData(type_id, meetingEditType);
-  }, [goalsList.length, reviewsList.length]);
+  }, [goalList.length, reviewsList.length]);
 
   const onFinish = (values) => {
     const reqAssigneeList = [...values.members];
@@ -191,7 +177,7 @@ function CreateMeetingTypeComponent({ user }) {
       loadingSubmitSpin={loadingSubmitSpin}
       disabledTypeField={true}
       reviewsList={reviewsList}
-      goalsList={goalsList}
+      goalsList={goalList}
       userList={userList}
     />
   );

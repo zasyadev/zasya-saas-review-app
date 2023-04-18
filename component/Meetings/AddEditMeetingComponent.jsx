@@ -8,6 +8,8 @@ import { openNotificationBox } from "../common/notification";
 import { PulseLoader } from "../Loader/LoadingSpinner";
 import MeetingForm from "./component/MeetingForm";
 import { CASUAL_MEETINGTYPE, GOAL_TYPE, REVIEW_TYPE } from "./constants";
+import { GoalListHook } from "../common/hooks";
+import { GOALS_FILTER_STATUS } from "../Goals/constants";
 
 function AddEditMeetingComponent({ user, editMode = false }) {
   const router = useRouter();
@@ -18,9 +20,9 @@ function AddEditMeetingComponent({ user, editMode = false }) {
   const [meetingData, setMeetingData] = useState(null);
   const [meetingType, setMeetingType] = useState(null);
   const [reviewsList, setReviewsList] = useState([]);
-  const [goalsList, setGoalsList] = useState([]);
   const [userList, setUserList] = useState([]);
   const [selectedMembers, setSelectedMembers] = useState([]);
+  const { goalList } = GoalListHook(GOALS_FILTER_STATUS.ALL);
 
   const onFinish = (values) => {
     editMode
@@ -98,20 +100,6 @@ function AddEditMeetingComponent({ user, editMode = false }) {
       });
   }
 
-  async function fetchGoalList() {
-    await httpService
-      .get(`/api/goals?status=All`)
-      .then(({ data: response }) => {
-        setGoalsList(response.data);
-      })
-      .catch((err) => {
-        openNotificationBox(
-          "error",
-          err?.response?.data?.message || "Failed! Please try again"
-        );
-      });
-  }
-
   const fetchUserData = useCallback(async () => {
     await httpService
       .get(`/api/user/organizationId`)
@@ -175,7 +163,7 @@ function AddEditMeetingComponent({ user, editMode = false }) {
     let list = [];
     if (selectedMembers.length > 0) {
       selectedMembers?.forEach((member) => {
-        let filter = goalsList.filter((item) => {
+        let filter = goalList.filter((item) => {
           return item.goal.GoalAssignee.find(
             (assignee) => assignee.assignee_id === member
           );
@@ -185,9 +173,9 @@ function AddEditMeetingComponent({ user, editMode = false }) {
 
       return list;
     } else {
-      return goalsList;
+      return goalList;
     }
-  }, [selectedMembers, meetingData, goalsList]);
+  }, [selectedMembers, meetingData, goalList]);
 
   useEffect(() => {
     if (editMode && filterUserList?.length > 0) {
@@ -202,7 +190,6 @@ function AddEditMeetingComponent({ user, editMode = false }) {
       fetchMeetingData();
     }
     fetchReviewsList();
-    fetchGoalList();
     fetchUserData();
   }, [editMode, meeting_id]);
 

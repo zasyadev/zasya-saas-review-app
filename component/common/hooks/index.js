@@ -92,34 +92,6 @@ export const MeetingListHook = () => {
   };
 };
 
-export const NotificationListHook = (userId) => {
-  const [notificationList, setNotificationList] = useState([]);
-  const [notificationListError, setNotificationListError] = useState("");
-  const [notificationListLoading, setNotificationListLoading] = useState(false);
-
-  async function fetchNotification() {
-    setNotificationListLoading(true);
-    await httpService
-      .get(`/api/notification/${userId}`)
-      .then(({ data: response }) => setNotificationList(response.data))
-      .catch(() => {
-        setNotificationListError(NotFound);
-        setNotificationList([]);
-      })
-      .finally(() => setNotificationListLoading(false));
-  }
-
-  useEffect(() => {
-    fetchNotification();
-  }, []);
-
-  return {
-    notificationList,
-    notificationListError,
-    notificationListLoading,
-  };
-};
-
 export const ActivityListHook = (userId) => {
   const [activityList, setActivityList] = useState([]);
   const [activityListError, setActivityListError] = useState("");
