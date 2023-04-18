@@ -20,6 +20,7 @@ import {
   SELF_TYPE,
   TEAM_TYPE,
 } from "./constants";
+import { OrganizationUserListHook } from "../common/hooks";
 
 function AddEditGoalComponent({ user, editMode = false }) {
   const router = useRouter();
@@ -28,10 +29,10 @@ function AddEditGoalComponent({ user, editMode = false }) {
   const [loading, setLoading] = useState(false);
   const [goalData, setGoalData] = useState(false);
   const [memberList, setMemberList] = useState(false);
-  const [userList, setUserList] = useState([]);
   const [teamListBox, setTeamListBox] = useState(false);
   const [teamList, setTeamList] = useState([]);
   const [assigneeList, setAssigneeList] = useState([]);
+  const { userList } = OrganizationUserListHook(user.id);
 
   const onFinish = (values) => {
     if (values.goal_type === TEAM_TYPE && teamList.length > 0) {
@@ -132,7 +133,6 @@ function AddEditGoalComponent({ user, editMode = false }) {
   };
 
   useEffect(() => {
-    fetchUserData();
     fetchTeamData();
     if (editMode) {
       fetchGoalData();
@@ -177,19 +177,6 @@ function AddEditGoalComponent({ user, editMode = false }) {
       });
     }
   };
-
-  async function fetchUserData() {
-    setUserList([]);
-    await httpService
-      .get(`/api/user/organizationId`)
-      .then(({ data: response }) => {
-        let filterData = response.data.filter(
-          (item) => item.user.status && item.user_id != user.id
-        );
-        setUserList(filterData);
-      })
-      .catch(() => setUserList([]));
-  }
 
   async function fetchTeamData() {
     setTeamList([]);

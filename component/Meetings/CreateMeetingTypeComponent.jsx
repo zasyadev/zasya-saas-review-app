@@ -12,7 +12,7 @@ import {
   REVIEW_TYPE,
 } from "./constants";
 import { GOALS_FILTER_STATUS, INDIVIDUAL_TYPE } from "../Goals/constants";
-import { GoalListHook } from "../common/hooks";
+import { OrganizationUserListHook, GoalListHook } from "../common/hooks";
 
 function CreateMeetingTypeComponent({ user }) {
   const router = useRouter();
@@ -22,8 +22,8 @@ function CreateMeetingTypeComponent({ user }) {
   const [meetingData, setMeetingData] = useState(null);
   const [meetingType, setMeetingType] = useState(null);
   const [reviewsList, setReviewsList] = useState([]);
-  const [userList, setUserList] = useState([]);
   const { goalList } = GoalListHook(GOALS_FILTER_STATUS.ALL);
+  const { userList } = OrganizationUserListHook(user.id);
 
   const assigneeList = useMemo(() => {
     if (meetingEditType === GOAL_MEETINGTYPE && goalList.length > 0) {
@@ -57,21 +57,6 @@ function CreateMeetingTypeComponent({ user }) {
           "error",
           err?.response?.data?.message || "Failed! Please try again"
         );
-      });
-  }
-
-  async function fetchUserData() {
-    setUserList([]);
-    await httpService
-      .get(`/api/user/organizationId`)
-      .then(({ data: response }) => {
-        let filterData = response.data.filter(
-          (item) => item.user.status && item.user_id != user.id
-        );
-        setUserList(filterData);
-      })
-      .catch(() => {
-        setUserList([]);
       });
   }
 
@@ -132,7 +117,6 @@ function CreateMeetingTypeComponent({ user }) {
 
   useEffect(() => {
     fetchReviewsList();
-    fetchUserData();
     handleMeetingData(type_id, meetingEditType);
   }, [goalList.length, reviewsList.length]);
 
