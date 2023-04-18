@@ -7,20 +7,20 @@ import { URLS } from "../../constants/urls";
 import { DEFAULT_DATE_FORMAT } from "../../helpers/dateHelper";
 import { maxLengthValidator } from "../../helpers/formValidations";
 import httpService from "../../lib/httpService";
+import { PulseLoader } from "../Loader/LoadingSpinner";
 import { ButtonGray, PrimaryButton } from "../common/CustomButton";
 import { CustomInput, CustomTextArea } from "../common/CustomFormFeilds";
 import NoRecordFound from "../common/NoRecordFound";
+import { useOrganizationUser } from "../common/hooks/useOrganizationUser";
 import { openNotificationBox } from "../common/notification";
-import { PulseLoader } from "../Loader/LoadingSpinner";
 import {
-  getGoalFrequency,
   INDIVIDUAL_TYPE,
   ONTRACK_STATUS,
   ORGANIZATION_TYPE,
   SELF_TYPE,
   TEAM_TYPE,
+  getGoalFrequency,
 } from "./constants";
-import { OrganizationUserListHook } from "../common/hooks";
 
 function AddEditGoalComponent({ user, editMode = false }) {
   const router = useRouter();
@@ -32,7 +32,7 @@ function AddEditGoalComponent({ user, editMode = false }) {
   const [teamListBox, setTeamListBox] = useState(false);
   const [teamList, setTeamList] = useState([]);
   const [assigneeList, setAssigneeList] = useState([]);
-  const { userList } = OrganizationUserListHook(user.id);
+  const { userList } = useOrganizationUser(user.id);
 
   const onFinish = (values) => {
     if (values.goal_type === TEAM_TYPE && teamList.length > 0) {

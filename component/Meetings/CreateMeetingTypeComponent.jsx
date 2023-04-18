@@ -2,7 +2,10 @@ import { Form } from "antd";
 import { useRouter } from "next/router";
 import React, { useEffect, useMemo, useState } from "react";
 import httpService from "../../lib/httpService";
+import { GOALS_FILTER_STATUS, INDIVIDUAL_TYPE } from "../Goals/constants";
 import NoRecordFound from "../common/NoRecordFound";
+import { useGoal } from "../common/hooks/useGoal";
+import { useOrganizationUser } from "../common/hooks/useOrganizationUser";
 import { openNotificationBox } from "../common/notification";
 import MeetingForm from "./component/MeetingForm";
 import {
@@ -11,8 +14,6 @@ import {
   REVIEW_MEETINGTYPE,
   REVIEW_TYPE,
 } from "./constants";
-import { GOALS_FILTER_STATUS, INDIVIDUAL_TYPE } from "../Goals/constants";
-import { OrganizationUserListHook, GoalListHook } from "../common/hooks";
 
 function CreateMeetingTypeComponent({ user }) {
   const router = useRouter();
@@ -22,8 +23,8 @@ function CreateMeetingTypeComponent({ user }) {
   const [meetingData, setMeetingData] = useState(null);
   const [meetingType, setMeetingType] = useState(null);
   const [reviewsList, setReviewsList] = useState([]);
-  const { goalList } = GoalListHook(GOALS_FILTER_STATUS.ALL);
-  const { userList } = OrganizationUserListHook(user.id);
+  const { goalList } = useGoal(GOALS_FILTER_STATUS.ALL);
+  const { userList } = useOrganizationUser(user.id);
 
   const assigneeList = useMemo(() => {
     if (meetingEditType === GOAL_MEETINGTYPE && goalList.length > 0) {

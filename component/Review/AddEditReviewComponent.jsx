@@ -3,15 +3,15 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { openNotificationBox } from "../../component/common/notification";
 import httpService from "../../lib/httpService";
-import GetReviewSteps from "../common/GetReviewSteps";
-import StepFixedHeader from "../common/StepFixedHeader";
-import StepsBottomFixedBar from "../common/StepsBottomFixedBar";
 import {
   defaultQuestionConfig,
   defaultRatingQuestion,
 } from "../Form/questioncomponents/constants";
+import GetReviewSteps from "../common/GetReviewSteps";
+import StepFixedHeader from "../common/StepFixedHeader";
+import StepsBottomFixedBar from "../common/StepsBottomFixedBar";
+import { useOrganizationUser } from "../common/hooks/useOrganizationUser";
 import { ReviewStepsArray } from "./constants";
-import { OrganizationUserListHook } from "../common/hooks";
 
 function AddEditReviewComponent({
   user,
@@ -24,7 +24,7 @@ function AddEditReviewComponent({
   const [questionList, setQuestionList] = useState([defaultQuestionConfig]);
   const [activeReviewStep, setActiveReviewStep] = useState(0);
   const [loadingSubmitSpin, setLoadingSubmitSpin] = useState(false);
-  const { userList } = OrganizationUserListHook(user.id);
+  const { userList } = useOrganizationUser(user.id);
 
   const onBarInputChange = (value, name) => {
     if (value && name) {

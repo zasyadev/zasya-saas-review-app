@@ -11,7 +11,6 @@ import moment from "moment";
 import Link from "next/link";
 import React, { useEffect, useMemo, useState } from "react";
 import { twMerge } from "tailwind-merge";
-import { MemberListHook } from "../../component/common/hooks";
 import { URLS } from "../../constants/urls";
 import { dateDayName, dateTime } from "../../helpers/dateHelper";
 import { endOfDate, startOfDate } from "../../helpers/momentHelper";
@@ -24,6 +23,7 @@ import NoRecordFound from "../common/NoRecordFound";
 import { openNotificationBox } from "../common/notification";
 import MeetingListSkeleton from "./component/MeetingListSkeleton";
 import { CASUAL_MEETINGTYPE, GOAL_TYPE, REVIEW_TYPE } from "./constants";
+import { useMember } from "../common/hooks/useMember";
 
 const currentTime = moment().format();
 
@@ -62,7 +62,7 @@ function MeetingsList({ user }) {
   const [meetingsList, setMeetingsList] = useState([]);
   const [filterId, setFilterId] = useState("ALL");
   const [filterType, setFilterType] = useState(SORT_BY_TIME.TODAY);
-  const { membersList } = MemberListHook(user);
+  const { membersList } = useMember(user);
 
   async function fetchMeetingList() {
     setLoading(true);

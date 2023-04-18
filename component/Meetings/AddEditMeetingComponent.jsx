@@ -3,13 +3,13 @@ import moment from "moment";
 import { useRouter } from "next/router";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import httpService from "../../lib/httpService";
-import NoRecordFound from "../common/NoRecordFound";
-import { openNotificationBox } from "../common/notification";
+import { GOALS_FILTER_STATUS } from "../Goals/constants";
 import { PulseLoader } from "../Loader/LoadingSpinner";
+import NoRecordFound from "../common/NoRecordFound";
+import { useGoal } from "../common/hooks/useGoal";
+import { openNotificationBox } from "../common/notification";
 import MeetingForm from "./component/MeetingForm";
 import { CASUAL_MEETINGTYPE, GOAL_TYPE, REVIEW_TYPE } from "./constants";
-import { GoalListHook } from "../common/hooks";
-import { GOALS_FILTER_STATUS } from "../Goals/constants";
 
 function AddEditMeetingComponent({ user, editMode = false }) {
   const router = useRouter();
@@ -22,7 +22,7 @@ function AddEditMeetingComponent({ user, editMode = false }) {
   const [reviewsList, setReviewsList] = useState([]);
   const [userList, setUserList] = useState([]);
   const [selectedMembers, setSelectedMembers] = useState([]);
-  const { goalList } = GoalListHook(GOALS_FILTER_STATUS.ALL);
+  const { goalList } = useGoal(GOALS_FILTER_STATUS.ALL);
 
   const onFinish = (values) => {
     editMode
