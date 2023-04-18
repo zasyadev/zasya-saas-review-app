@@ -147,3 +147,36 @@ export const ActivityListHook = (userId) => {
     activityListLoading,
   };
 };
+
+export const OrganizationUserListHook = (userId) => {
+  const [userList, setUserList] = useState([]);
+  const [userListError, setUserListError] = useState("");
+  const [userListLoading, setUserListLoading] = useState(false);
+
+  async function fetchUserList() {
+    setUserListLoading(true);
+    await httpService
+      .get(`/api/user/organizationId`)
+      .then(({ data: response }) => {
+        let filterData = response.data.filter(
+          (item) => item.user.status && item.user_id != userId
+        );
+        setUserList(filterData);
+      })
+      .catch(() => {
+        setUserListLoading(false);
+        setUserListError(NotFound);
+        setUserList([]);
+      });
+  }
+
+  useEffect(() => {
+    fetchUserList();
+  }, []);
+
+  return {
+    userList,
+    userListError,
+    userListLoading,
+  };
+};

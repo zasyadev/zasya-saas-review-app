@@ -23,6 +23,7 @@ import ReviewAssignessModal from "./ReviewAssignessModal";
 import { TempateSelectWrapper } from "./TempateSelectWrapper";
 import { ReviewStatusTabCard } from "./component/ReviewStatusTabCard";
 import { REVIEW_FILTER_KEY } from "./constants";
+import { OrganizationUserListHook } from "../common/hooks";
 
 const initialReviewCountModalData = {
   review_name: "",
@@ -56,11 +57,11 @@ function ReviewManagement({ user }) {
   const [addMembersReviewModal, setAddMembersReviewModal] = useState(
     initialAddMembersReviewModal
   );
-  const [userList, setUserList] = useState([]);
   const [reviewList, setReviewList] = useState([]);
   const [reviewCountModalData, setReviewCountModalData] = useState(
     initialReviewCountModalData
   );
+  const { userList } = OrganizationUserListHook(user.id);
 
   async function fetchReviewAssignList(status) {
     setLoading(true);
@@ -75,18 +76,6 @@ function ReviewManagement({ user }) {
       .finally(() => setLoading(false));
   }
 
-  async function fetchAllMembers() {
-    setUserList([]);
-    await httpService
-      .get(`/api/user/organizationId`)
-      .then(({ data: response }) => {
-        let filterData = response.data.filter(
-          (item) => item.user.status && item.user_id != user.id
-        );
-        setUserList(filterData);
-      })
-      .catch(() => setUserList([]));
-  }
   async function onDelete(id) {
     if (id) {
       let obj = {
@@ -108,10 +97,6 @@ function ReviewManagement({ user }) {
   useEffect(() => {
     fetchReviewAssignList(reviewDataStatus);
   }, [reviewDataStatus]);
-
-  useEffect(() => {
-    fetchAllMembers();
-  }, []);
 
   useEffect(() => {
     let timeOutId = null;
