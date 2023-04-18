@@ -5,7 +5,7 @@ import { BadRequestException } from "../../../lib/BadRequestExcpetion";
 async function handle(req, res, prisma, user) {
   const { id: userId, organization_id } = user;
 
-  if (!userId) throw BadRequestException("No user found");
+  if (!userId || organization_id) throw BadRequestException("No user found");
 
   const lastSevenDays = {
     lte: moment().format(),
@@ -26,7 +26,7 @@ async function handle(req, res, prisma, user) {
   });
 
   return res.status(200).json({
-    count: data?.length > 0 ? data.length : 0,
+    count: data.length,
     message: "success",
   });
 }
