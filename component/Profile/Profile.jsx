@@ -261,7 +261,7 @@ function Profile({ user, previewMode = false }) {
                 iconClassName={"text-brandOrange-500 bg-brandOrange-500 "}
               />
             </div>
-            {Number(activityList.length) > 0 && (
+            {activityList.length > 0 && (
               <Timeline className=" pl-8  space-y-2  p-4 profile-timeline overflow-auto no-scrollbar">
                 {activityList.map((item, index) => (
                   <Timeline.Item

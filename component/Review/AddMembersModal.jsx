@@ -17,9 +17,9 @@ const AddMembersModal = ({
   const [loading, setLoading] = useState(false);
 
   const unassignedMembers =
-    Number(allTeamMembers?.length) > 0
+    allTeamMembers?.length > 0
       ? allTeamMembers.filter((member) => {
-          if (Number(reviewAssignee?.length) > 0) {
+          if (reviewAssignee?.length > 0) {
             return !Boolean(
               reviewAssignee.find(
                 (assignee) => assignee.assigned_to_id === member.user_id
@@ -30,7 +30,7 @@ const AddMembersModal = ({
       : [];
 
   const onFinish = async (values) => {
-    if (review_id && Number(values?.assignedIds?.length) > 0) {
+    if (review_id && values?.assignedIds?.length > 0) {
       setLoading(true);
       await httpService
         .post(`/api/review/add_members`, {

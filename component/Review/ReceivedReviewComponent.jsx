@@ -175,7 +175,7 @@ function ReceivedReviewComponent({ user, reviewId }) {
       ) : (
         <Form layout="vertical" className="py-4 w-11/12" form={answerForm}>
           <AnimatePresence>
-            {Number(questions?.length) > 0 ? (
+            {questions?.length > 0 ? (
               questions
                 ?.filter((_, index) => index === nextSlide)
                 ?.map((question, idx) => (

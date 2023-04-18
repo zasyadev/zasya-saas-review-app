@@ -87,7 +87,7 @@ export function FormSlideComponent({
             <p className="text-lg  lg:text-2xl font-bold text-primary">
               {questionText}
             </p>
-            {Number(options?.length) > 0 && type === MULTIPLE_CHOICE_TYPE && (
+            {options?.length > 0 && type === MULTIPLE_CHOICE_TYPE && (
               <MutipleChoiceForm
                 id={id}
                 defaultValue={defaultQuestionAnswer?.answer}

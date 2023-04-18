@@ -38,7 +38,7 @@ function SurveyResponseComponent({
   };
 
   const mapAnswerAccortingToTableHeader = (answerData) => {
-    if (Number(answerData?.length) > 0) {
+    if (answerData?.length > 0) {
       let data = answerData.map((item) => ({
         answers: item.SurveyAnswerOption,
         created_date: item.created_survey_date ?? item.created_date,
@@ -67,7 +67,7 @@ function SurveyResponseComponent({
 
   useEffect(() => {
     let headersData = [];
-    if (Number(surveyQuestions.length) > 0) {
+    if (surveyQuestions.length > 0) {
       headersData = surveyQuestions.map((item, i) => {
         return {
           title: item.questionText,
@@ -103,7 +103,7 @@ function SurveyResponseComponent({
   }));
 
   const handleExport = async (data) => {
-    if (Number(data?.length) > 0) {
+    if (data?.length > 0) {
       let excelData = [];
       setIsExporting(true);
       let sheetObj = {};
@@ -165,7 +165,7 @@ function SurveyResponseComponent({
   return (
     <div className="container mx-auto max-w-full">
       <div className="overflow-x-auto ">
-        {Number(dataSource?.length) > 0 ? (
+        {dataSource?.length > 0 ? (
           <>
             <div className="text-right mb-4">
               <ButtonGray

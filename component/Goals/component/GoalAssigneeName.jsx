@@ -15,7 +15,7 @@ import {
 export const GoalAssigneeName = ({ record, userId, ShowAssigneeModal }) => {
   const getAssigneeName = (record) => {
     let assigneeName = "";
-    if (Number(record?.GoalAssignee?.length) > 0) {
+    if (record?.GoalAssignee?.length > 0) {
       assigneeName = record?.GoalAssignee.find(
         (assignee) => assignee?.assignee_id !== record?.created_by
       )?.assignee?.first_name;
@@ -47,7 +47,7 @@ export const GoalAssigneeName = ({ record, userId, ShowAssigneeModal }) => {
       <span className="font-medium">
         {record?.goal?.created_by === userId ? (
           record?.goal?.goal_type === INDIVIDUAL_TYPE ? (
-            Number(record?.goal?.GoalAssignee?.length) === 2 ? (
+            record?.goal?.GoalAssignee?.length === 2 ? (
               getAssigneeName(record.goal)
             ) : (
               <>

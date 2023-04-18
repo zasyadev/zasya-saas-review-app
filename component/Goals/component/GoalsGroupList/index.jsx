@@ -48,7 +48,7 @@ const GoalsGroupList = ({
         )}
       </div>
       <div className="divide-y space-y-3 max-h-screen overflow-y-auto custom-scrollbar px-2">
-        {Number(filteredGoalList.length > 0) ? (
+        {filteredGoalList.length > 0 ? (
           filteredGoalList.map((item) => (
             <GoalInfoCard
               item={item}

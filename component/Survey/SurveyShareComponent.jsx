@@ -208,7 +208,7 @@ function SurveyResponsePage({ user }) {
   ];
 
   const defaultUrl = useMemo(() => {
-    if (Number(surveyData?.SurveyChannels?.length) > 0) {
+    if (surveyData?.SurveyChannels?.length > 0) {
       const findDefaultUrlObj = surveyData?.SurveyChannels.find(
         (share) => share.isDefault === true
       );
@@ -226,7 +226,7 @@ function SurveyResponsePage({ user }) {
       return !validateEmail(item);
     });
     let errorStr = "";
-    if (Number(notValidEmail.length) > 0) {
+    if (notValidEmail.length > 0) {
       notValidEmail.forEach((item, idx) => {
         errorStr = `${errorStr}  ${item} ${
           notValidEmail.length === 1

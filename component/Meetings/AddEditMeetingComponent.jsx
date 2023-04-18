@@ -157,9 +157,9 @@ function AddEditMeetingComponent({ user, editMode = false }) {
   };
 
   const filterUserList = useMemo(() => {
-    if (editMode && Number(userList.length) > 0) {
+    if (editMode && userList.length > 0) {
       return userList?.filter((item) => {
-        if (Number(meetingData?.MeetingAssignee?.length) > 0) {
+        if (meetingData?.MeetingAssignee?.length > 0) {
           return meetingData?.MeetingAssignee.find(
             (assignee) => assignee.assignee_id === item.user_id
           );
@@ -173,7 +173,7 @@ function AddEditMeetingComponent({ user, editMode = false }) {
 
   const filterGoalList = useMemo(() => {
     let list = [];
-    if (Number(selectedMembers.length) > 0) {
+    if (selectedMembers.length > 0) {
       selectedMembers?.forEach((member) => {
         let filter = goalsList.filter((item) => {
           return item.goal.GoalAssignee.find(
@@ -190,7 +190,7 @@ function AddEditMeetingComponent({ user, editMode = false }) {
   }, [selectedMembers, meetingData, goalsList]);
 
   useEffect(() => {
-    if (editMode && Number(filterUserList?.length) > 0) {
+    if (editMode && filterUserList?.length > 0) {
       form.setFieldsValue({
         members: filterUserList.map((user) => user.user_id),
       });

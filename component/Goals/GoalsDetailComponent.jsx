@@ -42,7 +42,7 @@ function GoalsDetailComponent({ user }) {
   }, [router?.query?.goal_id]);
 
   const goalStatus = useMemo(() => {
-    if (goalData && Number(goalData?.GoalAssignee?.length) > 0) {
+    if (goalData && goalData?.GoalAssignee?.length > 0) {
       return goalData?.GoalAssignee.find(
         (item) => item.assignee_id === goalData?.created_by
       )?.status;

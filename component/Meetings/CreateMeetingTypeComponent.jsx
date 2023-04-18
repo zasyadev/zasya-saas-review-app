@@ -25,14 +25,14 @@ function CreateMeetingTypeComponent({ user }) {
   const [userList, setUserList] = useState([]);
 
   const assigneeList = useMemo(() => {
-    if (meetingEditType === GOAL_MEETINGTYPE && Number(goalsList.length) > 0) {
+    if (meetingEditType === GOAL_MEETINGTYPE && goalsList.length > 0) {
       const goalData = goalsList.find((item) => item.goal.id === type_id);
       return goalData?.goal?.GoalAssignee.map((i) => {
         return i.assignee_id;
       });
     } else if (
       meetingEditType === REVIEW_MEETINGTYPE &&
-      Number(reviewsList.length) > 0
+      reviewsList.length > 0
     ) {
       let list = [];
       const reviewData = reviewsList.find((item) => item.id === type_id);
@@ -89,9 +89,9 @@ function CreateMeetingTypeComponent({ user }) {
   }
 
   const filterUserList = useMemo(() => {
-    if (Number(assigneeList.length) > 0) {
+    if (assigneeList.length > 0) {
       return userList?.filter((item) => {
-        if (Number(assigneeList.length) > 0) {
+        if (assigneeList.length > 0) {
           return assigneeList.find((assignee) => assignee === item.user_id);
         }
         return null;
@@ -102,7 +102,7 @@ function CreateMeetingTypeComponent({ user }) {
   }, [assigneeList, userList]);
 
   useEffect(() => {
-    if (Number(filterUserList.length) > 0) {
+    if (filterUserList.length > 0) {
       form.setFieldsValue({
         members: filterUserList.map((user) => user.user_id),
       });
@@ -111,10 +111,7 @@ function CreateMeetingTypeComponent({ user }) {
 
   const handleMeetingData = (type_id, meetingEditType) => {
     if (type_id) {
-      if (
-        meetingEditType === GOAL_MEETINGTYPE &&
-        Number(goalsList.length) > 0
-      ) {
+      if (meetingEditType === GOAL_MEETINGTYPE && goalsList.length > 0) {
         const goalData = goalsList.find(
           (item) =>
             item.goal.id === type_id && item.goal.goal_type === INDIVIDUAL_TYPE
@@ -130,7 +127,7 @@ function CreateMeetingTypeComponent({ user }) {
         }
       } else if (
         meetingEditType === REVIEW_MEETINGTYPE &&
-        Number(reviewsList.length) > 0
+        reviewsList.length > 0
       ) {
         const reviewData = reviewsList.find((item) => item.id === type_id);
         if (reviewData) {

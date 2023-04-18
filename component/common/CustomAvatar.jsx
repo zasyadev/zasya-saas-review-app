@@ -8,7 +8,7 @@ function CustomAvatar({ userList, avatarCount, className }) {
   const remainingAvatarCount = avatarCount - 1;
   return (
     <div className="flex items-center">
-      {Number(userList.length) > 0 &&
+      {userList.length > 0 &&
         userList.map((data, index) =>
           index < avatarCount ? (
             <Tooltip
@@ -35,7 +35,7 @@ function CustomAvatar({ userList, avatarCount, className }) {
             </Tooltip>
           ) : null
         )}
-      {Number(userList.length - avatarCount) > 0 && (
+      {userList.length - avatarCount > 0 && (
         <Dropdown
           trigger={"click"}
           overlay={
