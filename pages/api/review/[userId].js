@@ -1,30 +1,24 @@
 import { USER_SELECT_FEILDS } from "../../../constants";
+import { BadRequestException } from "../../../lib/BadRequestExcpetion";
 import { RequestHandler } from "../../../lib/RequestHandler";
 
 async function handle(req, res, prisma) {
   const { userId } = req.query;
 
-  if (!userId) {
-    return res.status(401).json({ status: 401, message: "No User found" });
-  }
+  if (!userId) throw BadRequestException("No user found");
+
   const userData = await prisma.user.findUnique({
     where: { id: userId },
   });
 
-  let data = await prisma.review.findMany({
+  const data = await prisma.review.findMany({
     orderBy: {
       modified_date: "desc",
     },
-
     where: {
       AND: [
-        {
-          created_by: userId,
-        },
-        {
-          organization_id: userData.organization_id,
-          // is_published: "draft",
-        },
+        { created_by: userId },
+        { organization_id: userData.organization_id },
       ],
     },
     include: {
@@ -49,8 +43,9 @@ async function handle(req, res, prisma) {
     },
   });
 
+  if (!data) throw BadRequestException("No record found");
+
   return res.status(200).json({
-    status: 200,
     data: data,
     message: "All Data Retrieved",
   });

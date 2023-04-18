@@ -20,8 +20,9 @@ import {
   COMPLETED_STATUS,
   GRID_DISPLAY,
   LIST_DISPLAY,
-  goalsFilterList,
-  groupItems,
+  GOALS_FILTER_LIST,
+  GROUP_ITEMS,
+  GOALS_FILTER_STATUS,
 } from "./constants";
 import { openNotificationBox } from "../common/notification";
 
@@ -38,7 +39,7 @@ const initialGoalCountModalData = {
   GoalAssignee: [],
   isVisible: false,
 };
-const ALL_STATUS = "All";
+
 const currentTime = moment().format();
 
 function GoalsList({ user }) {
@@ -65,29 +66,19 @@ function GoalsList({ user }) {
     await httpService
       .get(`/api/goals?status=${status}`)
       .then(({ data: response }) => {
-        if (response.status === 200) {
-          let sortData = response.data.sort((a, b) => {
-            if (
-              a.goal.end_date < currentTime &&
-              b.goal.end_date >= currentTime
-            ) {
-              return 1; // a should come after b in the sorted order
-            }
-            if (
-              b.goal.end_date < currentTime &&
-              a.goal.end_date >= currentTime
-            ) {
-              return -1; // a should come before b in the sorted order
-            }
-            return 0; // a and b are equal
-          });
-          setGoalsList(sortData);
-        }
-        setLoading(false);
+        const sortData = response.data.sort((a, b) => {
+          if (a.goal.end_date < currentTime && b.goal.end_date >= currentTime) {
+            return 1; // a should come after b in the sorted order
+          }
+          if (b.goal.end_date < currentTime && a.goal.end_date >= currentTime) {
+            return -1; // a should come before b in the sorted order
+          }
+          return 0; // a and b are equal
+        });
+        setGoalsList(sortData);
       })
-      .catch((err) => {
-        console.error(err?.response?.data?.message);
-      });
+      .catch(() => setGoalsList([]))
+      .finally(() => setLoading(false));
   }
 
   async function fetchUserData() {
@@ -95,13 +86,9 @@ function GoalsList({ user }) {
     await httpService
       .get(`/api/user/organizationId`)
       .then(({ data: response }) => {
-        if (response.status === 200) {
-          setUserList(response.data);
-        }
+        setUserList(response.data);
       })
-      .catch(() => {
-        setUserList([]);
-      });
+      .catch(() => setUserList([]));
   }
 
   const activeGoalUsers = useMemo(() => {
@@ -121,11 +108,11 @@ function GoalsList({ user }) {
 
   useEffect(() => {
     fetchUserData();
-    fetchGoalList(ALL_STATUS);
+    fetchGoalList(GOALS_FILTER_STATUS.ALL);
   }, []);
 
   const handleFilterChange = (value) => {
-    if (value === "Archived") setIsArchived(true);
+    if (value === GOALS_FILTER_STATUS.ARCHIVED) setIsArchived(true);
     else setIsArchived(false);
     fetchGoalList(value);
   };
@@ -184,16 +171,12 @@ function GoalsList({ user }) {
         id,
       })
       .then(({ data: response }) => {
-        fetchGoalList(ALL_STATUS);
+        fetchGoalList(GOALS_FILTER_STATUS.ALL);
         setEditGoalModalVisible(initialModalVisible);
         openNotificationBox("success", response.message, 3);
       })
-      .catch((err) => {
-        openNotificationBox("error", err.response.data?.message);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+      .catch((err) => openNotificationBox("error", err.response.data?.message))
+      .finally(() => setLoading(false));
   };
 
   const ShowAssigneeModal = ({ goal_title, GoalAssignee }) => {
@@ -274,10 +257,10 @@ function GoalsList({ user }) {
           />
 
           <CustomSelectBox
-            className={" w-36 text-sm"}
-            arrayList={goalsFilterList}
+            className={"w-36 text-sm"}
+            arrayList={GOALS_FILTER_LIST}
             handleOnChange={(selectedKey) => handleFilterChange(selectedKey)}
-            defaultValue={ALL_STATUS}
+            defaultValue={GOALS_FILTER_STATUS.ALL}
           />
         </div>
         <div className=" flex items-center justify-center md:justify-end flex-wrap gap-4 flex-1">
@@ -315,7 +298,7 @@ function GoalsList({ user }) {
       >
         {loading ? (
           displayMode === GRID_DISPLAY ? (
-            groupItems.map((groupItem) => (
+            GROUP_ITEMS.map((groupItem) => (
               <GoalsGroupListSkeleton
                 title={groupItem.title}
                 key={groupItem.type + "skeleton"}
@@ -325,7 +308,7 @@ function GoalsList({ user }) {
             <PulseLoader />
           )
         ) : displayMode === GRID_DISPLAY ? (
-          groupItems.map((groupItem) => (
+          GROUP_ITEMS.map((groupItem) => (
             <GoalsGroupList
               goalsList={filteredGoalList}
               userId={user.id}

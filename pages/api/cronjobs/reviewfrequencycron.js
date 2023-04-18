@@ -3,6 +3,7 @@ const prisma = new PrismaClient();
 
 import { REVIEW_FREQUENCY } from "../../../component/Review/constants";
 import { daysDiffrenceInDates } from "../../../helpers/momentHelper";
+import { BadRequestException } from "../../../lib/BadRequestExcpetion";
 import { RequestHandler } from "../../../lib/RequestHandler";
 
 const createFrequencyData = async (review) => {
@@ -45,24 +46,17 @@ const createFrequencyData = async (review) => {
 };
 
 async function handle(req, res) {
-  if (req.method !== "POST")
-    return res.status(401).json({
-      message: "Method not found",
-    });
+  if (req.method !== "POST") throw BadRequestException("Method not found");
 
   const { password } = req.body;
 
   if (password !== process.env.NEXT_APP_CRON_PASSWORD)
-    return res.status(401).json({
-      message: "Wrong Password",
-    });
+    throw BadRequestException("Wrong Password");
 
   const reviewData = await prisma.review.findMany({
     where: {
       AND: [{ frequency_status: false }, { is_published: "published" }],
-      NOT: {
-        frequency: REVIEW_FREQUENCY.ONCE,
-      },
+      NOT: { frequency: REVIEW_FREQUENCY.ONCE },
     },
     include: {
       ReviewAssignee: true,

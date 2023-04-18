@@ -8,6 +8,7 @@ import {
   getCronNextMeetingDate,
   minutesAddInTime,
 } from "../../../helpers/momentHelper";
+import { BadRequestException } from "../../../lib/BadRequestExcpetion";
 import { RequestHandler } from "../../../lib/RequestHandler";
 
 function wait(ms) {
@@ -28,15 +29,13 @@ async function existingMeeting({ meeetingTime, organizationId }) {
     },
   });
 
-  if (Number(meeting.length) > 0) {
-    time = await minutesAddInTime(time, 20);
-    return await existingMeeting({
-      meeetingTime: time,
-      organizationId: organizationId,
-    });
-  } else {
-    return time;
-  }
+  if (meeting.length <= 0) return time;
+
+  time = await minutesAddInTime(time, 20);
+  return await existingMeeting({
+    meeetingTime: time,
+    organizationId: organizationId,
+  });
 }
 
 const meetingCreateHandle = async (data) => {
@@ -50,11 +49,11 @@ const meetingCreateHandle = async (data) => {
       };
     });
 
-    if (Number(assigneeData?.length) > 0) {
+    if (assigneeData?.length > 0) {
       data.MeetingAssignee = { create: assigneeData };
     }
 
-    if (Number(emailsList.length) > 0) {
+    if (emailsList.length > 0) {
       const meeetingStartTime = data.meeting_at;
       const meeetingEndTime = await minutesAddInTime(meeetingStartTime, 20);
 
@@ -81,21 +80,13 @@ const meetingCreateHandle = async (data) => {
 };
 
 async function handle(req, res) {
-  if (req.method != "POST") {
-    return res.status(401).json({
-      status: 404,
-      message: "Method not allowed",
-    });
-  }
+  if (req.method != "POST") throw BadRequestException("Method not allowed");
 
   const { password } = req.body;
 
-  if (password != process.env.NEXT_APP_CRON_PASSWORD) {
-    return res.status(401).json({
-      message: "Wrong Password",
-      status: 401,
-    });
-  }
+  if (password != process.env.NEXT_APP_CRON_PASSWORD)
+    throw BadRequestException("Wrong Password");
+
   const userOrgData = await prisma.userOrganization.findMany({
     include: {
       UserOraganizationGroups: {
@@ -159,49 +150,6 @@ async function handle(req, res) {
 
           await meetingCreateHandle(data);
         }
-
-        // const userGoalData = await prisma.user.findUnique({
-        //   where: {
-        //     id: user.user_id,
-        //   },
-        //   include: {
-        //     GoalAssignee: {
-        //       where: {
-        //         AND: [
-        //           { status: "OnTrack" },
-        //           {
-        //             goal: {
-        //               AND: [
-        //                 { end_date: { gt: moment().format() } },
-        //                 { is_archived: false },
-        //                 { frequency: "halfyearly" },
-        //                 { goal_type: "Individual" },
-        //                 { organization_id: user.organization_id },
-        //               ],
-        //             },
-        //           },
-        //         ],
-        //       },
-        //       include: {
-        //         goal: {
-        //           include: {
-        //             GoalAssignee: {
-        //               include: {
-        //                 assignee: {
-        //                   select: {
-        //                     id: true,
-        //                     email: true,
-        //                   },
-        //                 },
-        //               },
-        //             },
-        //           },
-        //         },
-        //       },
-        //     },
-        //   },
-        // });
-
         await wait(2000);
       }, Promise.resolve());
       await wait(1000);
@@ -211,7 +159,6 @@ async function handle(req, res) {
 
   return res.status(201).json({
     message: "Success",
-    status: 200,
   });
 }
 

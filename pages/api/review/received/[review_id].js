@@ -1,4 +1,5 @@
 import { USER_SELECT_FEILDS } from "../../../../constants";
+import { BadRequestException } from "../../../../lib/BadRequestExcpetion";
 import { RequestHandler } from "../../../../lib/RequestHandler";
 
 async function handle(req, res, prisma, user) {
@@ -6,9 +7,7 @@ async function handle(req, res, prisma, user) {
 
   if (req.method === "POST") {
     const { id: userId } = user;
-    if (!userId && !review_id) {
-      return res.status(401).json({ status: 401, message: "No Record found" });
-    }
+    if (!userId && !review_id) throw BadRequestException("Bad request");
 
     const data = await prisma.reviewAssignee.findFirst({
       where: {
@@ -39,9 +38,9 @@ async function handle(req, res, prisma, user) {
         },
       },
     });
+    if (!data) throw BadRequestException("No record found");
 
     return res.status(200).json({
-      status: 200,
       data: data,
       message: "Review Details Retrieved",
     });
@@ -64,8 +63,9 @@ async function handle(req, res, prisma, user) {
       },
     });
 
+    if (!data) throw BadRequestException("No record found");
+
     return res.status(200).json({
-      status: 200,
       data: data,
       message: "Review Details Retrieved",
     });
