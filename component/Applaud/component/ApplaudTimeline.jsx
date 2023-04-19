@@ -1,8 +1,8 @@
 import { Timeline } from "antd";
 import moment from "moment";
 import React from "react";
-import randomBgColor from "../../../helpers/randomBgColor";
 import { getFirstLetter } from "../../../helpers/truncateString";
+import { getRandomBgColor } from "../../../helpers/utils";
 
 function ApplaudTimeline({ list }) {
   return (
@@ -12,7 +12,7 @@ function ApplaudTimeline({ list }) {
           dot={
             <div
               className="text-white capitalize rounded-full w-9 h-9 grid place-content-center"
-              style={{ backgroundColor: randomBgColor(index * 3) }}
+              style={{ backgroundColor: getRandomBgColor(index * 3) }}
             >
               {getFirstLetter(item.created.first_name)}
             </div>

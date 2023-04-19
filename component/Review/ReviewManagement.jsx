@@ -13,7 +13,6 @@ import { ButtonGray, PrimaryButton } from "../../component/common/CustomButton";
 import CustomTable from "../../component/common/CustomTable";
 import { openNotificationBox } from "../../component/common/notification";
 import { URLS } from "../../constants/urls";
-import randomBgColor from "../../helpers/randomBgColor";
 import { getFirstTwoLetter } from "../../helpers/truncateString";
 import httpService from "../../lib/httpService";
 import DateInfoCard from "../Goals/component/GoalsGroupList/components/DateInfoCard";
@@ -24,6 +23,7 @@ import ReviewAssignessModal from "./ReviewAssignessModal";
 import { TempateSelectWrapper } from "./TempateSelectWrapper";
 import { ReviewStatusTabCard } from "./component/ReviewStatusTabCard";
 import { REVIEW_FILTER_KEY } from "./constants";
+import { getRandomBgColor } from "../../helpers/utils";
 
 const initialReviewCountModalData = {
   review_name: "",
@@ -254,7 +254,7 @@ function ReviewManagement({ user }) {
               <div
                 className="w-8 h-8 grid place-content-center rounded-full text-xs text-white capitalize"
                 style={{
-                  backgroundColor: randomBgColor(index),
+                  backgroundColor: getRandomBgColor(index),
                 }}
               >
                 {getFirstTwoLetter(

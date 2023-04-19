@@ -7,12 +7,12 @@ import {
   FileLeftIcon,
   FileRightIcon,
 } from "../../assets/icons";
-import randomBgColor from "../../helpers/randomBgColor";
 import { getFirstLetter } from "../../helpers/truncateString";
 import { SCALE_TYPE } from "../Form/questioncomponents/constants";
 import { REVIEW_RATING_QUESTION } from "../Review/constants";
 import DefaultImages from "../common/DefaultImages";
 import { useActivity } from "../common/hooks/useActivity";
+import { getRandomBgColor } from "../../helpers/utils";
 
 const RadialBarChart = dynamic(() => import("../common/RadialBarChart"), {
   ssr: false,
@@ -105,7 +105,7 @@ function SiderRight({ dashBoardData, monthlyLeaderBoardData, userId }) {
                       className={
                         "border text-white capitalize  rounded-full w-7 h-7 grid place-content-center"
                       }
-                      style={{ backgroundColor: randomBgColor(index * 3) }}
+                      style={{ backgroundColor: getRandomBgColor(index * 3) }}
                     >
                       {getFirstLetter(item.type)}
                     </div>

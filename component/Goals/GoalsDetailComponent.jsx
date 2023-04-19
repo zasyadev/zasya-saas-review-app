@@ -10,7 +10,6 @@ import {
   dateDayName,
   dateTime,
 } from "../../helpers/dateHelper";
-import randomBgColor from "../../helpers/randomBgColor";
 import { getFirstLetter } from "../../helpers/truncateString";
 import httpService from "../../lib/httpService";
 import { PulseLoader } from "../Loader/LoadingSpinner";
@@ -18,7 +17,8 @@ import { GOAL_MEETINGTYPE } from "../Meetings/constants";
 import { PrimaryButton } from "../common/CustomButton";
 import CustomTable from "../common/CustomTable";
 import NoRecordFound from "../common/NoRecordFound";
-import { INDIVIDUAL_TYPE, TEAM_TYPE, statusPill } from "./constants";
+import { INDIVIDUAL_TYPE, TEAM_TYPE } from "./constants";
+import { getStatusPillColor, getRandomBgColor } from "../../helpers/utils";
 
 function GoalsDetailComponent({ user }) {
   const router = useRouter();
@@ -122,7 +122,9 @@ function GoalsDetailComponent({ user }) {
                           className={
                             "border text-white capitalize  rounded-full w-10 h-10 grid place-content-center"
                           }
-                          style={{ backgroundColor: randomBgColor(index * 3) }}
+                          style={{
+                            backgroundColor: getRandomBgColor(index * 3),
+                          }}
                         >
                           {getFirstLetter(item.user.first_name)}
                         </div>
@@ -171,7 +173,7 @@ function GoalsDetailComponent({ user }) {
                   <span
                     className={clsx(
                       "px-2 py-1 font-medium text-xs md:text-sm mb-0 uppercase rounded-md",
-                      statusPill(goalStatus)
+                      getStatusPillColor(goalStatus)
                     )}
                   >
                     {goalStatus}
@@ -202,7 +204,7 @@ function GoalsDetailComponent({ user }) {
                         <span
                           className={clsx(
                             "lg:w-28 px-2 py-1 font-medium text-xs md:text-sm mb-0 text-center uppercase rounded-md",
-                            statusPill(item.status)
+                            getStatusPillColor(item.status)
                           )}
                           key={item.id + "status"}
                         >

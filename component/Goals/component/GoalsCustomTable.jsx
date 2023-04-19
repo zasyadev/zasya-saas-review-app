@@ -6,8 +6,8 @@ import { URLS } from "../../../constants/urls";
 import CustomAvatar from "../../common/CustomAvatar";
 import { ButtonGray } from "../../common/CustomButton";
 import CustomTable from "../../common/CustomTable";
-import { statusPill } from "../constants";
 import DateInfoCard from "./GoalsGroupList/components/DateInfoCard";
+import { getStatusPillColor } from "../../../helpers/utils";
 
 function GoalsCustomTable({
   goalList,
@@ -57,7 +57,7 @@ function GoalsCustomTable({
           }}
         >
           <span
-            className={`text-xs font-medium px-3 py-2 uppercase rounded-md ${statusPill(
+            className={`text-xs font-medium px-3 py-2 uppercase rounded-md ${getStatusPillColor(
               record.status
             )}`}
           >

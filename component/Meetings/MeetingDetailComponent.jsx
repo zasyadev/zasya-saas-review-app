@@ -4,7 +4,6 @@ import moment from "moment";
 import { useRouter } from "next/router";
 import React, { useEffect, useMemo, useState } from "react";
 import { MONTH_DATE_FORMAT } from "../../helpers/dateHelper";
-import randomBgColor from "../../helpers/randomBgColor";
 import { getFirstLetter } from "../../helpers/truncateString";
 import httpService from "../../lib/httpService";
 import CustomAvatar from "../common/CustomAvatar";
@@ -12,11 +11,15 @@ import { PrimaryButton } from "../common/CustomButton";
 import NoRecordFound from "../common/NoRecordFound";
 import { openNotificationBox } from "../common/notification";
 import { DateBox } from "../DashBoard/component/helperComponent";
-import { statusBackground, statusPill } from "../Goals/constants";
 import { PulseLoader } from "../Loader/LoadingSpinner";
 import MeetingCommentModal from "./MeetingCommentModal";
 import Link from "next/link";
 import { URLS } from "../../constants/urls";
+import {
+  getStatusBackground,
+  getStatusPillColor,
+  getRandomBgColor,
+} from "../../helpers/utils";
 
 const initialMeetingModalData = {
   meetingTitle: null,
@@ -148,7 +151,7 @@ function MeetingDetailComponent({ user }) {
                         className={`
    text-white flex justify-center items-center capitalize rounded-full shrink-0 w-10 h-10`}
                         style={{
-                          backgroundColor: randomBgColor(idx),
+                          backgroundColor: getRandomBgColor(idx),
                         }}
                       >
                         {getFirstLetter(assignee.assignee.first_name)}
@@ -191,7 +194,7 @@ function MeetingDetailComponent({ user }) {
                     <div className="shrink-0">
                       <DateBox
                         date={item.goal.end_date}
-                        className={statusBackground(item.status)}
+                        className={getStatusBackground(item.status)}
                       />
                     </div>
                     <div className="flex-1">
@@ -206,7 +209,7 @@ function MeetingDetailComponent({ user }) {
 
                       <p className="flex justify-between items-center">
                         <span
-                          className={`text-xs font-medium px-2 py-1 uppercase rounded-md ${statusPill(
+                          className={`text-xs font-medium px-2 py-1 uppercase rounded-md ${getStatusPillColor(
                             item.status
                           )}`}
                         >

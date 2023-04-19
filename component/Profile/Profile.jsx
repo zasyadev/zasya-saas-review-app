@@ -17,12 +17,12 @@ import {
 } from "../../component/common/CustomButton";
 import { openNotificationBox } from "../../component/common/notification";
 import { URLS } from "../../constants/urls";
-import randomBgColor from "../../helpers/randomBgColor";
 import { getFirstLetter } from "../../helpers/truncateString";
 import httpService from "../../lib/httpService";
 import CustomModal from "../common/CustomModal";
 import DefaultImages from "../common/DefaultImages";
 import { ProfileDetailCard } from "./component/ProfileDetailCard";
+import { getRandomBgColor } from "../../helpers/utils";
 
 function Profile({ user, previewMode = false }) {
   const [orgForm] = Form.useForm();
@@ -270,7 +270,7 @@ function Profile({ user, previewMode = false }) {
                         className={
                           " text-white capitalize rounded-full w-9 h-9 grid place-content-center"
                         }
-                        style={{ backgroundColor: randomBgColor(index * 3) }}
+                        style={{ backgroundColor: getRandomBgColor(index * 3) }}
                       >
                         {getFirstLetter(item.type)}
                       </div>
