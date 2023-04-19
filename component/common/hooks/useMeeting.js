@@ -1,22 +1,31 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { DATA_NOT_FOUND_MSG } from "../../../constants";
 import httpService from "../../../lib/httpService";
-import { HookNotFoundMsg } from "../../../constants";
+import { SET_ERROR, SET_LIST, SET_LOADING } from "../reducer/action";
+import { useCommonReducer } from "./useCommonReducer";
 
 export const useMeeting = () => {
-  const [meetingList, setMeetingList] = useState([]);
-  const [meetingListError, setMeetingListError] = useState("");
-  const [meetingListLoading, setMeetingListLoading] = useState(false);
+  const {
+    dataList: meetingList,
+    dataLoading: meetingListLoading,
+    dataError: meetingListError,
+    dispatch,
+  } = useCommonReducer();
 
   async function fetchMeeting() {
-    setMeetingListLoading(true);
-    await httpService
-      .get(`/api/meetings`)
-      .then(({ data: response }) => setMeetingList(response.data))
-      .catch(() => {
-        setMeetingListError(HookNotFoundMsg);
-        setMeetingList([]);
-      })
-      .finally(() => setMeetingListLoading(false));
+    dispatch({ type: SET_LOADING, payload: true });
+    try {
+      const { data: response } = await httpService.get(`/api/meetings`);
+      dispatch({ type: SET_LIST, payload: response.data });
+    } catch (error) {
+      dispatch({
+        type: SET_ERROR,
+        payload: error?.message ?? DATA_NOT_FOUND_MSG,
+      });
+      dispatch({ type: SET_LIST, payload: [] });
+    } finally {
+      dispatch({ type: SET_LOADING, payload: false });
+    }
   }
 
   useEffect(() => {

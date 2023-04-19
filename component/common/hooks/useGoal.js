@@ -1,22 +1,34 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { DATA_NOT_FOUND_MSG } from "../../../constants";
 import httpService from "../../../lib/httpService";
-import { HookNotFoundMsg } from "../../../constants";
+import { SET_ERROR, SET_LIST, SET_LOADING } from "../reducer/action";
+import { useCommonReducer } from "./useCommonReducer";
 
 export const useGoal = (status) => {
-  const [goalList, setGoalList] = useState([]);
-  const [goalListError, setGoalListError] = useState("");
-  const [goalListLoading, setGoalListLoading] = useState(false);
+  const {
+    dataList: goalList,
+    dataLoading: goalListLoading,
+    dataError: goalListError,
+    dispatch,
+  } = useCommonReducer();
 
   async function fetchGoals(status) {
-    setGoalListLoading(true);
-    await httpService
-      .get(`/api/goals?status=${status}`)
-      .then(({ data: response }) => setGoalList(response.data))
-      .catch(() => {
-        setGoalListError(HookNotFoundMsg);
-        setGoalList([]);
-      })
-      .finally(() => setGoalListLoading(false));
+    dispatch({ type: SET_LOADING, payload: true });
+
+    try {
+      const { data: response } = await httpService.get(
+        `/api/goals?status=${status}`
+      );
+      dispatch({ type: SET_LIST, payload: response.data });
+    } catch (error) {
+      dispatch({
+        type: SET_ERROR,
+        payload: error?.message ?? DATA_NOT_FOUND_MSG,
+      });
+      dispatch({ type: SET_LIST, payload: [] });
+    } finally {
+      dispatch({ type: SET_LOADING, payload: false });
+    }
   }
 
   useEffect(() => {
