@@ -5,10 +5,10 @@ async function handle(req, res, prisma) {
   try {
     const { answerValue, survey_id, created_survey_date, urlId } = req.body;
     if (!answerValue && !survey_id && !created_survey_date && !urlId)
-      throw BadRequestException("Bad Request! All fields are required");
+      throw new BadRequestException("Bad Request! All fields are required");
 
     if (Number(answerValue?.length) === 0)
-      throw BadRequestException("Bad Request! All answers are required");
+      throw new BadRequestException("Bad Request! All answers are required");
 
     const transactionData = await prisma.$transaction(async (transaction) => {
       let formdata = {};
@@ -58,14 +58,14 @@ async function handle(req, res, prisma) {
     });
 
     if (!transactionData.formdata || !transactionData)
-      throw BadRequestException("Internal server error");
+      throw new BadRequestException("Internal server error");
 
     return res.status(200).json({
       message: "Survey Answered Sucessfully.",
       data: transactionData.formdata,
     });
   } catch (error) {
-    throw BadRequestException("Internal server error");
+    throw new BadRequestException("Internal server error");
   }
 }
 const functionHandle = (req, res) =>

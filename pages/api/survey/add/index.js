@@ -67,14 +67,14 @@ async function handle(req, res, prisma, user) {
       });
 
       if (!transactionData || !transactionData.formdata)
-        throw BadRequestException("Survey not created");
+        throw new BadRequestException("Survey not created");
 
       return res.status(201).json({
         message: "Survey Created Successfully",
         data: transactionData.formdata,
       });
     } catch (error) {
-      throw BadRequestException("Survey not created");
+      throw new BadRequestException("Survey not created");
     }
   }
 
@@ -153,13 +153,13 @@ async function handle(req, res, prisma, user) {
       });
 
       if (!transactionData.channeldata)
-        throw BadRequestException("Survey channel not created");
+        throw new BadRequestException("Survey channel not created");
       return res.status(201).json({
         message: "Survey Channel Created Successfully",
         data: transactionData.channeldata,
       });
     } catch (error) {
-      throw BadRequestException("Survey channel not created");
+      throw new BadRequestException("Survey channel not created");
     }
   }
 }

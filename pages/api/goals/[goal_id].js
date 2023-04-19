@@ -3,9 +3,9 @@ import { RequestHandler } from "../../../lib/RequestHandler";
 
 async function handle(req, res, prisma, user) {
   const { id: userId } = user;
-  if (!userId) throw BadRequestException("No User found");
+  if (!userId) throw new BadRequestException("No User found");
   const { goal_id } = req.query;
-  if (!goal_id) throw BadRequestException("No Goal found");
+  if (!goal_id) throw new BadRequestException("No Goal found");
 
   if (req.method === "GET") {
     const data = await prisma.goals.findUnique({
@@ -48,7 +48,7 @@ async function handle(req, res, prisma, user) {
       },
     });
 
-    if (!data) throw BadRequestException("No data found");
+    if (!data) throw new BadRequestException("No data found");
 
     return res.status(200).json({
       data: data,
@@ -62,7 +62,7 @@ async function handle(req, res, prisma, user) {
       },
     });
 
-    if (data) throw BadRequestException("No data found");
+    if (data) throw new BadRequestException("No data found");
 
     return res.status(200).json({
       data: data,
@@ -107,7 +107,7 @@ async function handle(req, res, prisma, user) {
       });
     }
 
-    if (!data) throw BadRequestException("Goals details not updated");
+    if (!data) throw new BadRequestException("Goals details not updated");
 
     return res.status(200).json({
       data: data,

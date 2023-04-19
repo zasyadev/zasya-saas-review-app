@@ -13,7 +13,7 @@ async function handle(req, res, prisma, user) {
     const { id: userId } = user;
 
     if (!assignedIds && assignedIds.length <= 0)
-      throw BadRequestException("Assignee(s) are required");
+      throw new BadRequestException("Assignee(s) are required");
 
     assignedIds.forEach(async (item) => {
       await prisma.reviewAssignee.create({
@@ -96,7 +96,7 @@ async function handle(req, res, prisma, user) {
       message: "Review Updated Successfully",
     });
   } catch (error) {
-    throw BadRequestException("Internal Server Error");
+    throw new BadRequestException("Internal Server Error");
   }
 }
 const functionHandle = (req, res) =>

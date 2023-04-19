@@ -30,7 +30,7 @@ async function handle(req, res, prisma, user) {
         });
 
         if (existingOrgUser.length > 0)
-          throw BadRequestException("User with email id already exists");
+          throw new BadRequestException("User with email id already exists");
       }
 
       const transactionData = await prisma.$transaction(async (transaction) => {
@@ -157,7 +157,7 @@ async function handle(req, res, prisma, user) {
         };
       });
       if (!transactionData || !transactionData.userData)
-        throw BadRequestException("Member not saved");
+        throw new BadRequestException("Member not saved");
 
       return res.status(201).json({
         message: "Member Saved Successfully",
@@ -260,7 +260,7 @@ async function handle(req, res, prisma, user) {
       });
 
       if (!transactionData || !transactionData.userData)
-        throw BadRequestException("Member not updated");
+        throw new BadRequestException("Member not updated");
 
       return res.status(200).json({
         message: "Members Updated Successfully.",
@@ -268,7 +268,7 @@ async function handle(req, res, prisma, user) {
         data: transactionData.userData,
       });
     } catch (error) {
-      throw BadRequestException("Internal Server Error");
+      throw new BadRequestException("Internal Server Error");
     }
   } else if (req.method === "DELETE") {
     const reqBody = req.body;
@@ -287,7 +287,7 @@ async function handle(req, res, prisma, user) {
       },
     });
 
-    if (!existingOrgUser) throw BadRequestException("Member not deleted");
+    if (!existingOrgUser) throw new BadRequestException("Member not deleted");
 
     await prisma.userOraganizationGroups.delete({
       where: { id: existingOrgUser.id },

@@ -5,7 +5,7 @@ async function handle(req, res, prisma, user) {
   const { date } = req.body;
   const { id: userId, organization_id } = user;
 
-  if (!userId) throw BadRequestException("No User found");
+  if (!userId) throw new BadRequestException("No User found");
 
   const allApplaudData = await prisma.userApplaud.findMany({
     orderBy: {
@@ -33,7 +33,7 @@ async function handle(req, res, prisma, user) {
     },
   });
 
-  if (!allApplaudData) throw BadRequestException("No Record found");
+  if (!allApplaudData) throw new BadRequestException("No Record found");
 
   return res.status(200).json({
     data: allApplaudData,

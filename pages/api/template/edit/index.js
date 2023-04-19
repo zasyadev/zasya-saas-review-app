@@ -4,7 +4,7 @@ import { RequestHandler } from "../../../../lib/RequestHandler";
 async function handle(req, res, prisma) {
   const { template_id } = req.body;
 
-  if (!template_id) throw BadRequestException("Bad request");
+  if (!template_id) throw new BadRequestException("Bad request");
 
   const data = await prisma.reviewTemplate.findUnique({
     where: {
@@ -12,7 +12,7 @@ async function handle(req, res, prisma) {
     },
   });
 
-  if (!data) throw BadRequestException("No record found");
+  if (!data) throw new BadRequestException("No record found");
 
   return res.status(200).json({
     data: data,

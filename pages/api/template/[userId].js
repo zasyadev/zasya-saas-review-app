@@ -4,7 +4,7 @@ import { RequestHandler } from "../../../lib/RequestHandler";
 async function handle(req, res, prisma) {
   const { userId } = req.query;
 
-  if (!userId) throw BadRequestException("No User found");
+  if (!userId) throw new BadRequestException("No User found");
 
   const data = await prisma.reviewTemplate.findMany({
     where: {
@@ -12,7 +12,7 @@ async function handle(req, res, prisma) {
     },
   });
 
-  if (!data) throw BadRequestException("No record found");
+  if (!data) throw new BadRequestException("No record found");
 
   return res.status(200).json({
     data: data,

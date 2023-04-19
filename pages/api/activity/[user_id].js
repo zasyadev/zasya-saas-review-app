@@ -8,7 +8,7 @@ async function handle(req, res, prisma) {
     where: { id: user_id },
   });
 
-  if (!userData) throw BadRequestException("User not found");
+  if (!userData) throw new BadRequestException("User not found");
 
   const activityData = await prisma.userActivity.findMany({
     orderBy: {
@@ -22,7 +22,7 @@ async function handle(req, res, prisma) {
     },
   });
 
-  if (!activityData) throw BadRequestException("Record not found");
+  if (!activityData) throw new BadRequestException("Record not found");
 
   return res.status(200).json({
     data: activityData,

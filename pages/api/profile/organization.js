@@ -13,7 +13,7 @@ async function handle(req, res, prisma, user) {
       },
     });
 
-    if (!userData) throw BadRequestException("Bad request");
+    if (!userData) throw new BadRequestException("Bad request");
 
     return res.status(200).json({
       data: userData,
@@ -32,7 +32,7 @@ async function handle(req, res, prisma, user) {
         applaud_count: applaud_count,
       },
     });
-    if (!data) throw BadRequestException("Bad request");
+    if (!data) throw new BadRequestException("Bad request");
 
     return res.status(200).json({
       data: data,

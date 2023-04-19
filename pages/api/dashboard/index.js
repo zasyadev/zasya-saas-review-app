@@ -12,7 +12,7 @@ async function handle(_, res, prisma, user) {
   try {
     const { id: userId, organization_id } = user;
 
-    if (!userId) throw BadRequestException("No user found");
+    if (!userId) throw new BadRequestException("No user found");
 
     let pendingGoals = 0;
     let goalsProgress = 0;
@@ -146,7 +146,7 @@ async function handle(_, res, prisma, user) {
       goalsProgress,
     };
 
-    if (!data) throw BadRequestException("No record found");
+    if (!data) throw new BadRequestException("No record found");
 
     return res.status(200).json({
       data: data,

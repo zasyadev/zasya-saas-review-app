@@ -13,7 +13,7 @@ async function handle(req, res, prisma) {
   });
 
   if (userDetails?.slack_email === reqBody.slack_email)
-    throw BadRequestException(
+    throw new BadRequestException(
       "The new email you have entered is same as your old email."
     );
 
@@ -27,7 +27,7 @@ async function handle(req, res, prisma) {
       item.profile.email ? item.profile.email == reqBody.slack_email : false
     );
 
-    if (!slackDetails) throw BadRequestException("Email Not Found");
+    if (!slackDetails) throw new BadRequestException("Email Not Found");
 
     valid_slack_email = slackDetails.profile.email;
     valid_slack_id = slackDetails.id;
@@ -38,7 +38,7 @@ async function handle(req, res, prisma) {
         slack_id: valid_slack_id,
       },
     });
-    if (!userDetailData) throw BadRequestException("Email Not Saved");
+    if (!userDetailData) throw new BadRequestException("Email Not Saved");
 
     return res.status(200).json({
       message: "Slack Email Updated Succesfully.",

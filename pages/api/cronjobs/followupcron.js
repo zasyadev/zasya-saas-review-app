@@ -80,12 +80,12 @@ const meetingCreateHandle = async (data) => {
 };
 
 async function handle(req, res) {
-  if (req.method != "POST") throw BadRequestException("Method not allowed");
+  if (req.method != "POST") throw new BadRequestException("Method not allowed");
 
   const { password } = req.body;
 
   if (password != process.env.NEXT_APP_CRON_PASSWORD)
-    throw BadRequestException("Wrong Password");
+    throw new BadRequestException("Wrong Password");
 
   const userOrgData = await prisma.userOrganization.findMany({
     include: {

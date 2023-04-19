@@ -5,7 +5,7 @@ async function handle(req, res, prisma, user) {
   const { surveyId } = req.body;
   const { id: userId } = user;
 
-  if (!surveyId && !userId) throw BadRequestException("No survey found");
+  if (!surveyId && !userId) throw new BadRequestException("No survey found");
 
   const surveyData = await prisma.survey.findFirst({
     where: { AND: [{ id: surveyId }, { created_by: userId }] },
@@ -22,7 +22,7 @@ async function handle(req, res, prisma, user) {
     },
   });
 
-  if (!surveyData) throw BadRequestException("No data found");
+  if (!surveyData) throw new BadRequestException("No data found");
 
   return res.status(200).json({
     data: surveyData,
