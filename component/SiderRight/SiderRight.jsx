@@ -7,12 +7,12 @@ import {
   FileLeftIcon,
   FileRightIcon,
 } from "../../assets/icons";
-import { getFirstLetter } from "../../helpers/truncateString";
+
 import { SCALE_TYPE } from "../Form/questioncomponents/constants";
 import { REVIEW_RATING_QUESTION } from "../Review/constants";
 import DefaultImages from "../common/DefaultImages";
 import { useActivity } from "../common/hooks/useActivity";
-import { getRandomBgColor } from "../../helpers/utils";
+import { getFirstLetter, getRandomBgColor } from "../../helpers/utils";
 
 const RadialBarChart = dynamic(() => import("../common/RadialBarChart"), {
   ssr: false,

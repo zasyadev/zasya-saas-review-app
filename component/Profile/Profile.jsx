@@ -17,12 +17,11 @@ import {
 } from "../../component/common/CustomButton";
 import { openNotificationBox } from "../../component/common/notification";
 import { URLS } from "../../constants/urls";
-import { getFirstLetter } from "../../helpers/truncateString";
 import httpService from "../../lib/httpService";
 import CustomModal from "../common/CustomModal";
 import DefaultImages from "../common/DefaultImages";
 import { ProfileDetailCard } from "./component/ProfileDetailCard";
-import { getRandomBgColor } from "../../helpers/utils";
+import { getFirstLetter, getRandomBgColor } from "../../helpers/utils";
 
 function Profile({ user, previewMode = false }) {
   const [orgForm] = Form.useForm();

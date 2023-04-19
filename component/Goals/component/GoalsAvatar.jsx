@@ -2,7 +2,7 @@ import { Dropdown, Tooltip } from "antd";
 import clsx from "clsx";
 import React from "react";
 import { twMerge } from "tailwind-merge";
-import { getFirstTwoLetter } from "../../../helpers/truncateString";
+import { getFirstTwoLetter } from "../../../helpers/utils";
 
 const avatarCount = 3;
 const remainingAvatarCount = avatarCount - 1;

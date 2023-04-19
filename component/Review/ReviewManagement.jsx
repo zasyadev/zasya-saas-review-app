@@ -13,7 +13,6 @@ import { ButtonGray, PrimaryButton } from "../../component/common/CustomButton";
 import CustomTable from "../../component/common/CustomTable";
 import { openNotificationBox } from "../../component/common/notification";
 import { URLS } from "../../constants/urls";
-import { getFirstTwoLetter } from "../../helpers/truncateString";
 import httpService from "../../lib/httpService";
 import DateInfoCard from "../Goals/component/GoalsGroupList/components/DateInfoCard";
 import { REVIEW_MEETINGTYPE } from "../Meetings/constants";
@@ -23,7 +22,7 @@ import ReviewAssignessModal from "./ReviewAssignessModal";
 import { TempateSelectWrapper } from "./TempateSelectWrapper";
 import { ReviewStatusTabCard } from "./component/ReviewStatusTabCard";
 import { REVIEW_FILTER_KEY } from "./constants";
-import { getRandomBgColor } from "../../helpers/utils";
+import { getFirstTwoLetter, getRandomBgColor } from "../../helpers/utils";
 
 const initialReviewCountModalData = {
   review_name: "",

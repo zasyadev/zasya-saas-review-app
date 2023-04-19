@@ -10,7 +10,6 @@ import {
   dateDayName,
   dateTime,
 } from "../../helpers/dateHelper";
-import { getFirstLetter } from "../../helpers/truncateString";
 import httpService from "../../lib/httpService";
 import { PulseLoader } from "../Loader/LoadingSpinner";
 import { GOAL_MEETINGTYPE } from "../Meetings/constants";
@@ -18,7 +17,11 @@ import { PrimaryButton } from "../common/CustomButton";
 import CustomTable from "../common/CustomTable";
 import NoRecordFound from "../common/NoRecordFound";
 import { INDIVIDUAL_TYPE, TEAM_TYPE } from "./constants";
-import { getStatusPillColor, getRandomBgColor } from "../../helpers/utils";
+import {
+  getStatusPillColor,
+  getRandomBgColor,
+  getFirstLetter,
+} from "../../helpers/utils";
 
 function GoalsDetailComponent({ user }) {
   const router = useRouter();

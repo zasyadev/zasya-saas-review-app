@@ -4,7 +4,6 @@ import moment from "moment";
 import { useRouter } from "next/router";
 import React, { useEffect, useMemo, useState } from "react";
 import { MONTH_DATE_FORMAT } from "../../helpers/dateHelper";
-import { getFirstLetter } from "../../helpers/truncateString";
 import httpService from "../../lib/httpService";
 import CustomAvatar from "../common/CustomAvatar";
 import { PrimaryButton } from "../common/CustomButton";
@@ -19,6 +18,7 @@ import {
   getStatusBackground,
   getStatusPillColor,
   getRandomBgColor,
+  getFirstLetter,
 } from "../../helpers/utils";
 
 const initialMeetingModalData = {

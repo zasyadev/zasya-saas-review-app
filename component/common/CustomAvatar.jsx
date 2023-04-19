@@ -2,7 +2,7 @@ import { Dropdown, Tooltip } from "antd";
 import clsx from "clsx";
 import React from "react";
 import { twMerge } from "tailwind-merge";
-import { getFirstLetter } from "../../helpers/truncateString";
+import { getFirstLetter } from "../../helpers/utils";
 
 function CustomAvatar({ userList, avatarCount, className }) {
   const remainingAvatarCount = avatarCount - 1;

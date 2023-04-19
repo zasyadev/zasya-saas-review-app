@@ -1,8 +1,7 @@
 import { Timeline } from "antd";
 import moment from "moment";
 import React from "react";
-import { getFirstLetter } from "../../../helpers/truncateString";
-import { getRandomBgColor } from "../../../helpers/utils";
+import { getFirstLetter, getRandomBgColor } from "../../../helpers/utils";
 
 function ApplaudTimeline({ list }) {
   return (
