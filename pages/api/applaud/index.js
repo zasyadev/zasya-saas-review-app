@@ -23,7 +23,8 @@ async function handle(req, res, prisma, user) {
       where: { id: userId },
     });
 
-    if (!userData && !createdData) throw BadRequestException("User not found.");
+    if (!userData && !createdData)
+      throw new BadRequestException("User not found.");
 
     const data = await prisma.userApplaud.create({
       data: {

@@ -5,7 +5,8 @@ import { BadRequestException } from "../../../lib/BadRequestExcpetion";
 async function handle(req, res, prisma, user) {
   const { id: userId, organization_id } = user;
 
-  if (!userId || organization_id) throw BadRequestException("No user found");
+  if (!userId || organization_id)
+    throw new BadRequestException("No user found");
 
   const lastSevenDays = {
     lte: moment().format(),

@@ -6,9 +6,9 @@ async function handle(req, res, prisma, user) {
   const { id: userId } = user;
   const { team_id } = req.query;
   const teamId = Number(team_id);
-  if (!userId) throw BadRequestException("No user found");
+  if (!userId) throw new BadRequestException("No user found");
 
-  if (!teamId) throw BadRequestException("No team found");
+  if (!teamId) throw new BadRequestException("No team found");
 
   if (req.method === "GET") {
     const data = await prisma.userTeams.findUnique({
@@ -22,7 +22,7 @@ async function handle(req, res, prisma, user) {
       },
     });
 
-    if (!data) throw BadRequestException("No record found");
+    if (!data) throw new BadRequestException("No record found");
     return res.status(200).json({
       data: data,
       message: "Teams Details Retrieved",
@@ -34,7 +34,7 @@ async function handle(req, res, prisma, user) {
       },
     });
 
-    if (!data) throw BadRequestException("No record found");
+    if (!data) throw new BadRequestException("No record found");
     return res.status(200).json({
       message: "Team Deleted Successfully",
     });

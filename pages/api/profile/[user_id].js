@@ -11,7 +11,7 @@ async function handle(req, res, prisma, user) {
     gte: moment().startOf("month").format(),
   };
 
-  if (!user_id) throw BadRequestException("No User found");
+  if (!user_id) throw new BadRequestException("No User found");
 
   if (req.method === "GET") {
     const queryCondition = {
@@ -47,7 +47,7 @@ async function handle(req, res, prisma, user) {
         },
       },
     });
-    if (!userData) throw BadRequestException("No User Details Found");
+    if (!userData) throw new BadRequestException("No User Details Found");
 
     return res.status(200).json({
       data: userData,
@@ -110,7 +110,7 @@ async function handle(req, res, prisma, user) {
       return { userDeatilsTable };
     });
     if (!transactionData && !transactionData.userDeatilsTable)
-      throw BadRequestException("Profile Not Updated");
+      throw new BadRequestException("Profile Not Updated");
     return res.status(201).json({
       message: "Profile Updated Successfully",
       data: transactionData.userDeatilsTable,

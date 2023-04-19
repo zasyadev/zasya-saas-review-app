@@ -5,7 +5,7 @@ async function handle(req, res, prisma, user) {
   const { date } = req.body;
   const { id: userId, organization_id } = user;
 
-  if (!userId) throw BadRequestException("No User found");
+  if (!userId) throw new BadRequestException("No User found");
 
   const orgData = await prisma.userOraganizationGroups.findMany({
     where: { organization_id: organization_id },
@@ -59,7 +59,7 @@ async function handle(req, res, prisma, user) {
     },
   });
 
-  if (!applaudData) throw BadRequestException("No applaud found");
+  if (!applaudData) throw new BadRequestException("No applaud found");
 
   let fetchData = {};
   if (orgData.length > 0) {

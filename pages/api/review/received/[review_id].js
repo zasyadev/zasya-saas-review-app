@@ -7,7 +7,7 @@ async function handle(req, res, prisma, user) {
 
   if (req.method === "POST") {
     const { id: userId } = user;
-    if (!userId && !review_id) throw BadRequestException("Bad request");
+    if (!userId && !review_id) throw new BadRequestException("Bad request");
 
     const data = await prisma.reviewAssignee.findFirst({
       where: {
@@ -38,7 +38,7 @@ async function handle(req, res, prisma, user) {
         },
       },
     });
-    if (!data) throw BadRequestException("No record found");
+    if (!data) throw new BadRequestException("No record found");
 
     return res.status(200).json({
       data: data,
@@ -63,7 +63,7 @@ async function handle(req, res, prisma, user) {
       },
     });
 
-    if (!data) throw BadRequestException("No record found");
+    if (!data) throw new BadRequestException("No record found");
 
     return res.status(200).json({
       data: data,

@@ -5,7 +5,8 @@ async function handle(req, res, prisma, user) {
   const { id: userId } = user;
   const { org_id, roleId } = req.body;
 
-  if (!userId && !org_id && !roleId) throw BadRequestException("Bad request");
+  if (!userId && !org_id && !roleId)
+    throw new BadRequestException("Bad request");
   const userData = await prisma.user.update({
     where: { id: userId },
     data: {
@@ -14,7 +15,7 @@ async function handle(req, res, prisma, user) {
     },
   });
 
-  if (!userData) throw BadRequestException("Organization not updated");
+  if (!userData) throw new BadRequestException("Organization not updated");
   return res.status(200).json({
     data: userData,
     message: "Organization Updated",

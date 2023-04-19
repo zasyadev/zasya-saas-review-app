@@ -18,7 +18,7 @@ const BASE_URL = process.env.NEXT_APP_URL;
 
 async function handle(req, res, prisma, user) {
   const { id: userId, organization_id } = user;
-  if (!userId) throw BadRequestException("No User found");
+  if (!userId) throw new BadRequestException("No User found");
 
   if (req.method === "GET") {
     const { status } = req.query;
@@ -114,7 +114,7 @@ async function handle(req, res, prisma, user) {
       },
     });
 
-    if (!data) throw BadRequestException("No Record Found");
+    if (!data) throw new BadRequestException("No Record Found");
 
     return res.status(200).json({
       data: data,
@@ -124,7 +124,7 @@ async function handle(req, res, prisma, user) {
     try {
       const reqBody = req.body;
       if (!reqBody.goals_headers.length)
-        throw BadRequestException("Bad request");
+        throw new BadRequestException("Bad request");
 
       const reqData = reqBody.goals_headers.map(async (header) => {
         let data = {
@@ -255,7 +255,7 @@ async function handle(req, res, prisma, user) {
         });
       }
     } catch (error) {
-      throw BadRequestException("Internal server error");
+      throw new BadRequestException("Internal server error");
     }
   } else if (req.method === "PUT") {
     const reqBody = req.body;
@@ -270,7 +270,7 @@ async function handle(req, res, prisma, user) {
       },
     });
 
-    if (!data) throw BadRequestException("Goal not updated");
+    if (!data) throw new BadRequestException("Goal not updated");
 
     return res.status(200).json({
       data: data,

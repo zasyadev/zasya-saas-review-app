@@ -36,7 +36,7 @@ async function handle(req, res) {
   const { password, type } = req.body;
 
   if (password !== process.env.NEXT_APP_CRON_PASSWORD)
-    throw BadRequestException("Wrong Password");
+    throw new BadRequestException("Wrong Password");
 
   const userData = await prisma.user.findMany({
     where: {

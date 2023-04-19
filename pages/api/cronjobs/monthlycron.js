@@ -13,7 +13,7 @@ async function handle(req, res) {
   const { password } = req.body;
 
   if (!password === process.env.NEXT_APP_CRON_PASSWORD)
-    throw BadRequestException("Wrong Password");
+    throw new BadRequestException("Wrong Password");
 
   const lastMonth = {
     lte: moment().subtract(1, "months").endOf("month").format(),
@@ -31,7 +31,7 @@ async function handle(req, res) {
   prisma.$disconnect();
 
   if (!userData && userData.length <= 0)
-    throw BadRequestException("No user Found");
+    throw new BadRequestException("No user Found");
 
   userData.forEach(async (item) => {
     let reviewCreated = await prisma.review.findMany({

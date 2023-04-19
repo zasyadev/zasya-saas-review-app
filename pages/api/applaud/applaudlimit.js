@@ -10,7 +10,7 @@ const currentMonth = {
 async function handle(req, res, prisma, user) {
   const { id: userId, organization_id } = user;
 
-  if (!userId) throw BadRequestException("No user found.");
+  if (!userId) throw new BadRequestException("No user found.");
 
   const userOrgData = await prisma.userOrganization.findUnique({
     where: {
@@ -27,7 +27,7 @@ async function handle(req, res, prisma, user) {
     },
   });
 
-  if (!data && !userOrgData) throw BadRequestException("No record found.");
+  if (!data && !userOrgData) throw new BadRequestException("No record found.");
 
   if (data.length > userOrgData.applaud_count) {
     return res.status(400).json({

@@ -91,7 +91,7 @@ async function handle(req, res, prisma) {
     });
 
     if (!transactionData.formdata || !transactionData)
-      throw BadRequestException("No record found");
+      throw new BadRequestException("No record found");
 
     const assignedByFromData = await prisma.review.findFirst({
       where: { id: transactionData.review_id },
@@ -138,7 +138,7 @@ async function handle(req, res, prisma) {
       data: transactionData.formdata,
     });
   } catch (error) {
-    throw BadRequestException("Internal Server Error");
+    throw new BadRequestException("Internal Server Error");
   }
 }
 const functionHandle = (req, res) =>

@@ -15,7 +15,7 @@ async function handle(req, res, prisma) {
           channel: true,
         },
       });
-      if (!data) throw BadRequestException("No Record Found");
+      if (!data) throw new BadRequestException("No Record Found");
 
       if (!data.channel.status) {
         return res.status(200).json({
@@ -76,7 +76,7 @@ async function handle(req, res, prisma) {
       }
     }
 
-    if (!surveyData) throw BadRequestException("No data found");
+    if (!surveyData) throw new BadRequestException("No data found");
 
     return res.status(200).json({
       data: surveyData,
@@ -96,7 +96,7 @@ async function handle(req, res, prisma) {
           id: id,
         },
       });
-      if (!deleteSurvey) throw BadRequestException("Survey not deleted");
+      if (!deleteSurvey) throw new BadRequestException("Survey not deleted");
 
       return res.status(200).json({
         data: deleteSurvey,

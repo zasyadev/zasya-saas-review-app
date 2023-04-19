@@ -12,13 +12,13 @@ async function handle(req, res, prisma) {
     },
   });
 
-  if (!data) throw BadRequestException("No record found");
+  if (!data) throw new BadRequestException("No record found");
 
   const orgData = await prisma.user.findUnique({
     where: { id: resBody.org_user },
   });
 
-  if (!orgData) throw BadRequestException("No organization found");
+  if (!orgData) throw new BadRequestException("No organization found");
   let userOrgData = {};
 
   if (data?.UserOraganizationGroups.length > 0) {

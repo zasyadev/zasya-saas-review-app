@@ -5,7 +5,7 @@ async function handle(req, res, prisma, user) {
   const { date } = req.body;
   const { id: userId, organization_id } = user;
 
-  if (!userId) throw BadRequestException("No user found");
+  if (!userId) throw new BadRequestException("No user found");
 
   const orgData = await prisma.userOraganizationGroups.findMany({
     where: { organization_id: organization_id },
@@ -15,7 +15,8 @@ async function handle(req, res, prisma, user) {
     AND: [{ organization_id: organization_id }, { created_date: date }],
   };
   let userData = [];
-  if (!orgData || !orgData.length) throw BadRequestException("No record found");
+  if (!orgData || !orgData.length)
+    throw new BadRequestException("No record found");
 
   await orgData.reduce(async (prev, user) => {
     await prev;
@@ -51,7 +52,7 @@ async function handle(req, res, prisma, user) {
   }, Promise.resolve());
 
   if (!userData || !userData.length)
-    throw BadRequestException("No record found");
+    throw new BadRequestException("No record found");
 
   return res.status(200).json({
     data: userData,

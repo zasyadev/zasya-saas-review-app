@@ -9,7 +9,7 @@ async function handle(req, res, prisma, user) {
     where: { id: userId },
   });
 
-  if (!userOrgData) throw BadRequestException("No user found");
+  if (!userOrgData) throw new BadRequestException("No user found");
 
   const data = await prisma.userOraganizationGroups.findMany({
     where: { organization_id: userOrgData.organization_id },
@@ -17,7 +17,7 @@ async function handle(req, res, prisma, user) {
       user: USER_SELECT_FEILDS,
     },
   });
-  if (!data) throw BadRequestException("No record found");
+  if (!data) throw new BadRequestException("No record found");
 
   return res.status(200).json({
     data: data,
