@@ -23,7 +23,7 @@ const BASE_URL = process.env.NEXT_APP_URL;
 
 async function handle(req, res, prisma, user) {
   const { id: userId, organization_id } = user;
-  if (!userId) throw BadRequestException("No user found");
+  if (!userId) throw new BadRequestException("No user found");
 
   if (req.method === "GET") {
     const { filterId } = req.query;
@@ -59,7 +59,7 @@ async function handle(req, res, prisma, user) {
       },
     });
 
-    if (!data) throw BadRequestException("No record found");
+    if (!data) throw new BadRequestException("No record found");
 
     return res.status(200).json({
       status: 200,
@@ -236,14 +236,14 @@ async function handle(req, res, prisma, user) {
         }
       }
 
-      if (!createData) throw BadRequestException("Record not saved");
+      if (!createData) throw new BadRequestException("Record not saved");
 
       return res.status(200).json({
         status: 200,
         message: "Meeting Details Saved Successfully",
       });
     } catch (error) {
-      throw BadRequestException("Record not saved");
+      throw new BadRequestException("Record not saved");
     }
   } else if (req.method === "PUT") {
     try {
@@ -354,7 +354,7 @@ async function handle(req, res, prisma, user) {
         }
       }
 
-      if (!data) throw BadRequestException("Record not updated");
+      if (!data) throw new BadRequestException("Record not updated");
 
       return res.status(200).json({
         status: 200,
@@ -362,7 +362,7 @@ async function handle(req, res, prisma, user) {
         message: "Meeting Details Updated",
       });
     } catch (error) {
-      throw BadRequestException("Record not updated");
+      throw new BadRequestException("Record not updated");
     }
   }
 }

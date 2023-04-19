@@ -5,7 +5,7 @@ async function handle(req, res, prisma, user) {
   const { userId } = req.query;
   const { organization_id } = user;
 
-  if (!userId) throw BadRequestException("No user found");
+  if (!userId) throw new BadRequestException("No user found");
 
   const { currentMonth } = req.body;
   const transactionData = await prisma.$transaction(async (transaction) => {
@@ -79,7 +79,7 @@ async function handle(req, res, prisma, user) {
     return { receivedApplaud, givenApplaud };
   });
 
-  if (!transactionData) throw BadRequestException("No Record Found");
+  if (!transactionData) throw new BadRequestException("No Record Found");
 
   return res.status(200).json({
     data: transactionData,

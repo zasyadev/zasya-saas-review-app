@@ -5,10 +5,10 @@ import { MEETING_ASSIGNEE_SCHEMA } from "../../../yup-schema/meeting";
 
 async function handle(req, res, prisma, user) {
   const { id: userId } = user;
-  if (!userId) throw BadRequestException("No user found");
+  if (!userId) throw new BadRequestException("No user found");
 
   const { meeting_id } = req.query;
-  if (!meeting_id) throw BadRequestException("No meeting found");
+  if (!meeting_id) throw new BadRequestException("No meeting found");
 
   if (req.method === "GET") {
     const data = await prisma.meetings.findUnique({
@@ -91,7 +91,7 @@ async function handle(req, res, prisma, user) {
       });
     }
 
-    if (!data) throw BadRequestException("No data found");
+    if (!data) throw new BadRequestException("No data found");
 
     return res.status(200).json({
       status: 200,
@@ -107,7 +107,8 @@ async function handle(req, res, prisma, user) {
         },
       });
 
-      if (!meetingAssigneeData.id) throw BadRequestException("No record found");
+      if (!meetingAssigneeData.id)
+        throw new BadRequestException("No record found");
 
       const data = await prisma.meetingAssignee.update({
         where: {
@@ -118,14 +119,14 @@ async function handle(req, res, prisma, user) {
           modified_date: new Date(),
         },
       });
-      if (!data) throw BadRequestException("Meetings not updated");
+      if (!data) throw new BadRequestException("Meetings not updated");
       return res.status(200).json({
         status: 200,
         data: data,
         message: "Meetings comment updated",
       });
     } catch (error) {
-      throw BadRequestException("Meetings not updated");
+      throw new BadRequestException("Meetings not updated");
     }
   } else if (req.method === "DELETE") {
     const eventData = await prisma.meetings.findUnique({
@@ -139,7 +140,7 @@ async function handle(req, res, prisma, user) {
       where: { id: meeting_id },
     });
 
-    if (!data) throw BadRequestException("Meetings not deleted");
+    if (!data) throw new BadRequestException("Meetings not deleted");
     return res.status(200).json({
       status: 200,
       data: data,

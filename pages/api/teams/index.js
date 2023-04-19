@@ -5,7 +5,7 @@ import { RequestHandler } from "../../../lib/RequestHandler";
 async function handle(req, res, prisma, user) {
   const { id: userId, organization_id } = user;
 
-  if (!userId) throw BadRequestException("No user found");
+  if (!userId) throw new BadRequestException("No user found");
 
   if (req.method === "GET") {
     const data = await prisma.userTeams.findMany({
@@ -23,7 +23,7 @@ async function handle(req, res, prisma, user) {
         },
       },
     });
-    if (!data) throw BadRequestException("No record found");
+    if (!data) throw new BadRequestException("No record found");
     return res.status(200).json({
       data: data,
       message: "Teams Details Retrieved",
@@ -72,7 +72,7 @@ async function handle(req, res, prisma, user) {
       return { formdata };
     });
     if (!transactionData || !transactionData.formdata)
-      throw BadRequestException("No record found");
+      throw new BadRequestException("No record found");
 
     return res.status(200).json({
       data: transactionData.formdata,
@@ -82,7 +82,7 @@ async function handle(req, res, prisma, user) {
     const reqBody = req.body;
 
     let transactionData = {};
-    if (!reqBody.id) throw BadRequestException("No record found");
+    if (!reqBody.id) throw new BadRequestException("No record found");
 
     transactionData = await prisma.$transaction(async (transaction) => {
       await transaction.userTeams.delete({
@@ -130,7 +130,7 @@ async function handle(req, res, prisma, user) {
     });
 
     if (!transactionData || !transactionData.formdata)
-      throw BadRequestException("No record found");
+      throw new BadRequestException("No record found");
 
     return res.status(200).json({
       data: transactionData.formdata,

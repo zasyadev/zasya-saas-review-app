@@ -83,14 +83,15 @@ async function handle(req, res, prisma) {
       }
     });
 
-    if (!transactionData.formdata) throw BadRequestException("No record found");
+    if (!transactionData.formdata)
+      throw new BadRequestException("No record found");
 
     return res.status(201).json({
       message: `Review ${isUpdateRecord ? "Updated" : "Saved"} Sucessfully.`,
       data: transactionData.formdata,
     });
   } catch (error) {
-    throw BadRequestException("Internal Server Error");
+    throw new BadRequestException("Internal Server Error");
   }
 }
 const functionHandle = (req, res) =>

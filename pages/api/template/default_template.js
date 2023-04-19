@@ -7,7 +7,7 @@ async function handle(req, res, prisma) {
       AND: [{ status: true }, { default_template: true }],
     },
   });
-  if (!data) throw BadRequestException("No record found");
+  if (!data) throw new BadRequestException("No record found");
 
   return res.status(200).json({
     data: data,

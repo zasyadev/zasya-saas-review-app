@@ -46,12 +46,12 @@ const createFrequencyData = async (review) => {
 };
 
 async function handle(req, res) {
-  if (req.method !== "POST") throw BadRequestException("Method not found");
+  if (req.method !== "POST") throw new BadRequestException("Method not found");
 
   const { password } = req.body;
 
   if (password !== process.env.NEXT_APP_CRON_PASSWORD)
-    throw BadRequestException("Wrong Password");
+    throw new BadRequestException("Wrong Password");
 
   const reviewData = await prisma.review.findMany({
     where: {

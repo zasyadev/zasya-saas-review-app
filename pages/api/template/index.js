@@ -17,7 +17,7 @@ async function handle(req, res, prisma, user) {
         default_template: resData.default_template,
       },
     });
-    if (!templateData) throw BadRequestException("Record not saved");
+    if (!templateData) throw new BadRequestException("Record not saved");
 
     return res.status(201).json({
       message: "Saved Successfully",
@@ -26,7 +26,7 @@ async function handle(req, res, prisma, user) {
   } else if (req.method === "GET") {
     const data = await prisma.reviewTemplate.findMany();
 
-    if (!data) throw BadRequestException("No record found");
+    if (!data) throw new BadRequestException("No record found");
 
     return res.status(200).json({
       data: data,
@@ -47,7 +47,7 @@ async function handle(req, res, prisma, user) {
       },
     });
 
-    if (!templateData) throw BadRequestException("Record not updated");
+    if (!templateData) throw new BadRequestException("Record not updated");
 
     return res.status(201).json({
       message: "Updated Successfully",
@@ -64,7 +64,7 @@ async function handle(req, res, prisma, user) {
       },
     });
 
-    if (!deletaData) throw BadRequestException("Failed to delete record");
+    if (!deletaData) throw new BadRequestException("Failed to delete record");
 
     return res.status(200).json({
       message: "Template Deleted Successfully.",

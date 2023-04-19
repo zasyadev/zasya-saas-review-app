@@ -19,7 +19,7 @@ async function handle(req, res, prisma) {
         ],
       },
     });
-    if (!notificationData) throw BadRequestException("Data not retreived");
+    if (!notificationData) throw new BadRequestException("Data not retreived");
 
     return res.status(200).json({
       data: notificationData,
@@ -36,7 +36,7 @@ async function handle(req, res, prisma) {
         ],
       },
     });
-    if (!notificationData) throw BadRequestException("Data not deleted");
+    if (!notificationData) throw new BadRequestException("Data not deleted");
 
     return res.status(200).json({
       message: "All Notification Deleted Successfully.",

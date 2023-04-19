@@ -4,7 +4,7 @@ import { RequestHandler } from "../../../lib/RequestHandler";
 async function handle(_, res, prisma, user) {
   const { id: userId } = user;
 
-  if (!userId) throw BadRequestException("No user found");
+  if (!userId) throw new BadRequestException("No user found");
 
   const userTableData = await prisma.user.findUnique({
     where: { id: userId },

@@ -12,14 +12,14 @@ async function handle(req, res, prisma, user) {
       where: { id: userId },
     });
     const compare = await compareHashedPassword(old_password, data.password);
-    if (!compare) throw BadRequestException("Old Password incorrect!");
+    if (!compare) throw new BadRequestException("Old Password incorrect!");
     const updateData = await prisma.user.update({
       where: { email: data.email },
       data: {
         password: await hashedPassword(new_password),
       },
     });
-    if (!updateData) throw BadRequestException("No record found!");
+    if (!updateData) throw new BadRequestException("No record found!");
     return res.status(200).json({
       data: updateData,
       message: "Password Updated",
