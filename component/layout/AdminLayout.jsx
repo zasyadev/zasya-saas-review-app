@@ -104,7 +104,7 @@ function AdminLayout({
   return (
     <>
       <HeadersComponent />
-      <Layout>
+      <Layout className="h-screen">
         <SiderLayout
           collapsed={collapsed}
           setCollapsed={setCollapsed}
@@ -112,16 +112,15 @@ function AdminLayout({
           lg={lg}
           user={user}
         />
-        <Layout className="min-h-screen lg:ml-60">
+        <Layout className="lg:ml-60 h-screen">
           <HeaderLayout
             isBack={isBack}
             title={title}
             user={user}
             setCollapsed={setCollapsed}
             collapsed={collapsed}
-            lg={lg}
           />
-          <Content className="bg-brandGray-200 ">
+          <Content className="bg-brandGray-200 dashboard-screen overflow-auto custom-scrollbar">
             <div className={` ${isHeader && "p-4 md:p-6 "}`}>{children}</div>
           </Content>
           <Footer className="text-center bg-primary-gray p-3 font-medium border-t ">
