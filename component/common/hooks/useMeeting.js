@@ -22,9 +22,6 @@ export const useMeeting = () => {
         type: SET_ERROR,
         payload: error?.message ?? DATA_NOT_FOUND_MSG,
       });
-      dispatch({ type: SET_LIST, payload: [] });
-    } finally {
-      dispatch({ type: SET_LOADING, payload: false });
     }
   }
 

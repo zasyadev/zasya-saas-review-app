@@ -6,11 +6,13 @@ export const reducer = (state, action) => {
       return {
         ...state,
         dataList: action.payload,
+        dataLoading: false,
       };
     case SET_ERROR:
       return {
         ...state,
         dataError: action.payload,
+        dataLoading: false,
       };
     case SET_LOADING:
       return {
