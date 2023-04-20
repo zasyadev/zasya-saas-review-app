@@ -101,6 +101,7 @@ function EditorWrapperComponent({
   }
 
   function handleScaleOptionValue(text, idx, type) {
+    console.log({ text, idx, type });
     const key = type === "lowerLabel" ? "lowerLabel" : "higherLabel";
     setQuestionList((prev) =>
       prev.map((item, i) =>
@@ -113,6 +114,8 @@ function EditorWrapperComponent({
       )
     );
   }
+
+  console.log({ questions });
 
   function removeOption(idx, j) {
     setQuestionList((prev) =>

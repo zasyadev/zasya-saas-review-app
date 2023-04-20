@@ -26,6 +26,7 @@ import { useMeeting } from "../common/hooks/useMeeting";
 import DashboardGoalsAvatar from "./component/DashboardGoalsAvatar";
 import HeaderNotification from "./component/HeaderNotification";
 import { CountCard, DateBox } from "./component/helperComponent";
+import { defaultCurrentMonth } from "../../helpers/momentHelper";
 
 const AreaChart = dynamic(() => import("../common/AreaChart"), {
   ssr: false,
@@ -53,11 +54,6 @@ function DashBoard({ user }) {
     defaultMonthlyLeaderboardData
   );
 
-  const currentMonth = {
-    lte: moment().endOf("month"),
-    gte: moment().startOf("month"),
-  };
-
   async function fetchDashboardData() {
     await httpService
       .get(`/api/dashboard`)
@@ -67,7 +63,7 @@ function DashBoard({ user }) {
   async function fetchMonthlyLeaderBoardData() {
     await httpService
       .post(`/api/dashboard/leaderboard`, {
-        date: currentMonth,
+        date: defaultCurrentMonth,
         userId: user.id,
       })
       .then(({ data: response }) =>

@@ -82,10 +82,6 @@ function TemplateEditor({
                 ?.map((question) => (
                   <QuestionComponent
                     key={activeQuestionIndex + "QuestionComponent"}
-                    type={question?.type}
-                    questionText={question?.questionText}
-                    options={question?.options}
-                    error={question?.error}
                     idx={activeQuestionIndex}
                     removeElement={removeElement}
                     defineType={defineType}
@@ -99,6 +95,7 @@ function TemplateEditor({
                     setSelectTypeFeild={setSelectTypeFeild}
                     ratingState={ratingState}
                     totalQuestionCount={questions?.length}
+                    question={question}
                   />
                 ))}
           </div>
