@@ -4,9 +4,9 @@ import Link from "next/link";
 import React from "react";
 import { URLS } from "../../../../../constants/urls";
 import { ButtonGray } from "../../../../common/CustomButton";
-import { statusPill } from "../../../constants";
 import { GoalAssigneeName } from "../../GoalAssigneeName";
 import DateInfoCard from "./DateInfoCard";
+import { getStatusPillColor } from "../../../../../helpers/utils";
 
 function GoalInfoCard({
   item,
@@ -134,7 +134,7 @@ function GoalInfoCard({
             }}
           >
             <span
-              className={`text-xs font-semibold px-2 py-1 uppercase rounded-md ${statusPill(
+              className={`text-xs font-semibold px-2 py-1 uppercase rounded-md ${getStatusPillColor(
                 item.status
               )}`}
             >
