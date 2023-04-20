@@ -14,11 +14,7 @@ import { ColorApplaudIcon } from "../../assets/icons";
 import { URLS } from "../../constants/urls";
 import { dateDayName, dateTime } from "../../helpers/dateHelper";
 import httpService from "../../lib/httpService";
-import {
-  GOALS_FILTER_STATUS,
-  statusBackground,
-  statusPill,
-} from "../Goals/constants";
+import { GOALS_FILTER_STATUS } from "../Goals/constants";
 import SiderRight from "../SiderRight/SiderRight";
 import NoRecordFound from "../common/NoRecordFound";
 import { useGoal } from "../common/hooks/useGoal";
@@ -27,6 +23,7 @@ import DashboardGoalsAvatar from "./component/DashboardGoalsAvatar";
 import HeaderNotification from "./component/HeaderNotification";
 import { CountCard, DateBox } from "./component/helperComponent";
 import { defaultCurrentMonth } from "../../helpers/momentHelper";
+import { getStatusBackground, getStatusPillColor } from "../../helpers/utils";
 
 const AreaChart = dynamic(() => import("../common/AreaChart"), {
   ssr: false,
@@ -178,7 +175,7 @@ function DashBoard({ user }) {
                         <div className="shrink-0">
                           <DateBox
                             date={item.goal.end_date}
-                            className={statusBackground(item.goal.status)}
+                            className={getStatusBackground(item.goal.status)}
                           />
                         </div>
                         <div className="flex-1">
@@ -194,7 +191,7 @@ function DashBoard({ user }) {
                             <span
                               className={clsx(
                                 "text-xs font-semibold px-2 py-1 uppercase rounded-md ",
-                                statusPill(item.goal.status)
+                                getStatusPillColor(item.goal.status)
                               )}
                             >
                               {item.goal.status}

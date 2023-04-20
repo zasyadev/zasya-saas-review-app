@@ -19,8 +19,8 @@ import {
   ORGANIZATION_TYPE,
   SELF_TYPE,
   TEAM_TYPE,
-  getGoalFrequency,
 } from "./constants";
+import { getGoalFrequency } from "../../helpers/utils";
 
 function AddEditGoalComponent({ user, editMode = false }) {
   const router = useRouter();

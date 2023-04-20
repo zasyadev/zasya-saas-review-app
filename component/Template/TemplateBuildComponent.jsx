@@ -2,7 +2,6 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { openNotificationBox } from "../../component/common/notification";
 import { URLS } from "../../constants/urls";
-import isEmptyStr from "../../helpers/isEmptyStr";
 import httpService from "../../lib/httpService";
 import {
   CustomCheckbox,
@@ -22,6 +21,7 @@ import {
 import { TemplateStepsArray } from "./constants";
 import TemplateEditor from "./TemplateEditor";
 import { TemplatePreviewComponent } from "./TemplatePreviewComponent";
+import { isEmptyStr } from "../../helpers/utils";
 
 function TemplateBuildComponent({ user, editMode, editFormData }) {
   const router = useRouter();
