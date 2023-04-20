@@ -63,4 +63,4 @@ export const activityTitle = (key, name) => {
   }
 };
 
-export const HookNotFoundMsg = "List Not Found";
+export const DATA_NOT_FOUND_MSG = "List Not Found";

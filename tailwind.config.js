@@ -59,4 +59,16 @@ module.exports = {
     },
   },
   plugins: [],
+  safelist: [
+    "bg-green-200",
+    "text-blue-600",
+    "bg-blue-200",
+    "text-orange-600",
+    "bg-red-200",
+    "bg-brandGreen-300",
+    "bg-brandBlue-300",
+    "bg-orange-500",
+    "bg-red-500",
+    "bg-gray-500",
+  ],
 };
