@@ -27,6 +27,11 @@ import { useMember } from "../common/hooks/useMember";
 
 const currentTime = moment().format();
 
+const FILTER_NAME = {
+  PENDING: "Pending",
+  COMPLETED: "Completed",
+};
+
 const SORT_BY_TIME = {
   TODAY: "today",
   COMPLETED: "completed",
@@ -104,6 +109,16 @@ function MeetingsList({ user }) {
     }
   }
 
+  async function handleIsCompleted(data) {
+    await httpService
+      .put(`/api/meetings/${data.id}`, { isCompleted: !data.is_completed })
+      .then(({ data: response }) => {
+        fetchMeetingList();
+        openNotificationBox("success", response.message, 3);
+      })
+      .catch((err) => openNotificationBox("error", err.response.data?.message));
+  }
+
   const dateCellRender = (value) => {
     const filterList = filteredMeetingList.filter(
       (item) =>
@@ -155,7 +170,7 @@ function MeetingsList({ user }) {
         trigger={"click"}
         overlay={
           <Menu className="divide-y">
-            <Menu.Item>
+            <Menu.Item key={"call-edit"}>
               <Link
                 href={`${URLS.FOLLOW_UP_EDIT}/${record.id}/?tp=${CASUAL_MEETINGTYPE}`}
                 passHref
@@ -163,7 +178,20 @@ function MeetingsList({ user }) {
                 Edit
               </Link>
             </Menu.Item>
-            <Menu.Item>
+            <Menu.Item key={"call-update"}>
+              <Popconfirm
+                title={`Are you sure to change the Status？`}
+                okText="Yes"
+                cancelText="No"
+                onConfirm={() => handleIsCompleted(record)}
+                icon={false}
+              >
+                {!record.is_completed
+                  ? FILTER_NAME.COMPLETED
+                  : FILTER_NAME.PENDING}
+              </Popconfirm>
+            </Menu.Item>
+            <Menu.Item key={"call-delete"}>
               <Popconfirm
                 title={`Are you sure to delete ${record?.meeting_title}？`}
                 okText="Yes"
@@ -184,6 +212,80 @@ function MeetingsList({ user }) {
           title={<EllipsisOutlined rotate={90} className="text-sm leading-0" />}
         />
       </Dropdown>
+    );
+  };
+
+  const MettingCard = ({ item }) => {
+    return (
+      <motion.div
+        className={twMerge(
+          clsx(
+            "flex items-start space-x-3 px-3 py-2 bg-white rounded-md shadow-md",
+            { "bg-white/70": item.is_completed }
+          )
+        )}
+        variants={meetingCardVarient}
+      >
+        <div className="shrink-0">
+          <DateBox
+            date={item.meeting_at}
+            className={twMerge(
+              clsx("bg-brandRed-100", {
+                "bg-brandBlue-300": item.meeting_type === REVIEW_TYPE,
+                "bg-brandGreen-300": item.meeting_type === GOAL_TYPE,
+              })
+            )}
+          />
+        </div>
+
+        <div className="flex-1">
+          <p className="flex justify-between items-start  mb-2 font-medium text-sm break-all single-line-clamp">
+            <Link href={`${URLS.FOLLOW_UP}/${item.id}`} passHref>
+              <span className="hover:underline cursor-pointer">
+                {item.meeting_title}
+              </span>
+            </Link>
+
+            {user.id === item.created_by && (
+              <span className="ml-2">
+                <ActionButton record={item} />
+              </span>
+            )}
+          </p>
+          <div className="flex justify-between items-center">
+            <span className="flex  items-center text-brandGray-600">
+              <span className="leading-0 text-primary-green pr-1 text-sm">
+                <CalendarOutlined />
+              </span>
+
+              {dateDayName(item.meeting_at)}
+            </span>
+            <span className="flex  items-center text-brandGray-600">
+              <span className="leading-0 text-primary-green pr-1 text-sm">
+                <ClockCircleOutlined />
+              </span>
+              {dateTime(item.meeting_at)}
+            </span>
+          </div>
+        </div>
+      </motion.div>
+    );
+  };
+
+  const MeetingCardWrapper = ({ list }) => {
+    if (!list.length) return null;
+
+    return (
+      <motion.div
+        className="space-y-4 max-h-screen overflow-auto custom-scrollbar mb-4 md:mb-0"
+        variants={DefaultMotionVarient}
+        initial="hidden"
+        animate="show"
+      >
+        {list.map((item) => (
+          <MettingCard item={item} key={item.id} />
+        ))}
+      </motion.div>
     );
   };
 
@@ -284,67 +386,13 @@ function MeetingsList({ user }) {
         <MeetingListSkeleton />
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-3 md:gap-4 ">
-          <motion.div
-            className="space-y-4 max-h-screen overflow-auto custom-scrollbar mb-4 md:mb-0"
-            variants={DefaultMotionVarient}
-            initial="hidden"
-            animate="show"
-          >
+          <div className="space-y-2 xl:space-y-4 max-h-full mb-4 md:mb-0">
             {filteredMeetingList.length > 0 ? (
-              filteredMeetingList.map((item, idx) => (
-                <motion.div
-                  className="flex items-center space-x-3 px-3 py-2 bg-white rounded-md shadow-md"
-                  key={idx + "list"}
-                  variants={meetingCardVarient}
-                >
-                  <div className="shrink-0">
-                    <DateBox
-                      date={item.meeting_at}
-                      className={twMerge(
-                        clsx("bg-brandRed-100", {
-                          "bg-brandBlue-300": item.meeting_type === REVIEW_TYPE,
-                          "bg-brandGreen-300": item.meeting_type === GOAL_TYPE,
-                        })
-                      )}
-                    />
-                  </div>
-
-                  <div className="flex-1">
-                    <p className="flex justify-between items-center  mb-2 font-medium text-sm break-all single-line-clamp">
-                      <Link href={`${URLS.FOLLOW_UP}/${item.id}`} passHref>
-                        <span className="hover:underline cursor-pointer">
-                          {item.meeting_title}
-                        </span>
-                      </Link>
-
-                      {user.id === item.created_by && (
-                        <span className="ml-2">
-                          <ActionButton record={item} />
-                        </span>
-                      )}
-                    </p>
-                    <div className="flex justify-between items-center">
-                      <span className="flex  items-center text-brandGray-600">
-                        <span className="leading-0 text-primary-green pr-1 text-sm">
-                          <CalendarOutlined />
-                        </span>
-
-                        {dateDayName(item.meeting_at)}
-                      </span>
-                      <span className="flex  items-center text-brandGray-600">
-                        <span className="leading-0 text-primary-green pr-1 text-sm">
-                          <ClockCircleOutlined />
-                        </span>
-                        {dateTime(item.meeting_at)}
-                      </span>
-                    </div>
-                  </div>
-                </motion.div>
-              ))
+              <MeetingCardWrapper list={filteredMeetingList} />
             ) : (
               <NoRecordFound title="No Meetings Found" />
             )}
-          </motion.div>
+          </div>
           <div className="col-span-2 p-2 bg-white rounded-md shadow-md">
             <Calendar dateCellRender={dateCellRender} />
           </div>

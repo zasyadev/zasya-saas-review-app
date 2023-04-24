@@ -18,10 +18,15 @@ const CREATE_MEETING_ASSIGNEE_SCHEMA = yup.object().shape({
   comment: yup.string().label("Meeting Comment"),
 });
 
+const UPDATE_MEETING_IS_COMPELTE_SCHEMA = yup.object().shape({
+  isCompleted: yup.bool().label("Meeting Status"),
+});
+
 export const MEETING_SCHEMA = {
   POST: CREATE_MEETING_SCHEMA,
   PUT: UPDATE_MEETING_SCHEMA,
 };
 export const MEETING_ASSIGNEE_SCHEMA = {
   POST: CREATE_MEETING_ASSIGNEE_SCHEMA,
+  PUT: UPDATE_MEETING_IS_COMPELTE_SCHEMA,
 };

@@ -141,10 +141,26 @@ async function handle(req, res, prisma, user) {
     });
 
     if (!data) throw new BadRequestException("Meetings not deleted");
+
     return res.status(200).json({
-      status: 200,
       data: data,
       message: "Meetings deleted",
+    });
+  } else if (req.method === "PUT") {
+    const { isCompleted } = req.body;
+
+    const eventData = await prisma.meetings.update({
+      where: { id: meeting_id },
+      data: {
+        is_completed: isCompleted,
+      },
+    });
+
+    if (!eventData) throw new BadRequestException("Meetings not updated");
+
+    return res.status(200).json({
+      data: eventData,
+      message: "Meetings updated",
     });
   }
 }
@@ -153,7 +169,7 @@ const functionHandle = (req, res) =>
     req,
     res,
     callback: handle,
-    allowedMethods: ["GET", "DELETE", "POST"],
+    allowedMethods: ["GET", "DELETE", "POST", "PUT"],
     protectedRoute: true,
     schemaObj: MEETING_ASSIGNEE_SCHEMA,
   });
