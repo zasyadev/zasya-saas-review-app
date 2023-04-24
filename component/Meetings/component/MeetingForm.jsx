@@ -9,7 +9,7 @@ import { PrimaryButton } from "../../common/CustomButton";
 import { CustomInput, CustomTextArea } from "../../common/CustomFormFeilds";
 import { CASUAL_TYPE, GOAL_TYPE, REVIEW_TYPE } from "../constants";
 
-function MeetingForm({
+export function MeetingForm({
   form,
   onFinish,
   setMeetingType,
@@ -203,5 +203,3 @@ function MeetingForm({
     </Form>
   );
 }
-
-export default MeetingForm;

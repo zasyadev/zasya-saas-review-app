@@ -1,7 +1,7 @@
 import React from "react";
 import { Skeleton } from "antd";
 
-const MeetingListSkeleton = ({ title = "" }) => {
+export const MeetingListSkeleton = ({ title = "" }) => {
   return (
     <div className=" bg-white rounded-md pb-3">
       <div className=" items-center p-4 font-bold text-lg capitalize">
@@ -23,5 +23,3 @@ const MeetingListSkeleton = ({ title = "" }) => {
     </div>
   );
 };
-
-export default MeetingListSkeleton;

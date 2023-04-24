@@ -27,7 +27,7 @@ const meetingCardVarient = {
   show: { y: 0, opacity: 1 },
 };
 
-const MettingCard = ({ item, user, fetchMeetingList }) => {
+export const MettingCard = ({ item, user, fetchMeetingList }) => {
   async function handleOnDelete(id) {
     if (id) {
       await httpService
@@ -158,5 +158,3 @@ const MettingCard = ({ item, user, fetchMeetingList }) => {
     </motion.div>
   );
 };
-
-export default MettingCard;

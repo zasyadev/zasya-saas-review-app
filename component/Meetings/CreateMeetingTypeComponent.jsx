@@ -7,13 +7,13 @@ import NoRecordFound from "../common/NoRecordFound";
 import { useGoal } from "../common/hooks/useGoal";
 import { useOrganizationUser } from "../common/hooks/useOrganizationUser";
 import { openNotificationBox } from "../common/notification";
-import MeetingForm from "./component/MeetingForm";
 import {
   GOAL_MEETINGTYPE,
   GOAL_TYPE,
   REVIEW_MEETINGTYPE,
   REVIEW_TYPE,
 } from "./constants";
+import { MeetingForm } from "./component";
 
 function CreateMeetingTypeComponent({ user }) {
   const router = useRouter();

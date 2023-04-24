@@ -1,9 +1,9 @@
 import { motion } from "framer-motion";
 import React from "react";
 import { DefaultMotionVarient } from "../../Template/constants";
-import MettingCard from "./MettingCard";
+import { MettingCard } from "./MettingCard";
 
-const MeetingCardWrapper = ({ list, user, fetchMeetingList }) => {
+export const MeetingCardWrapper = ({ list, user, fetchMeetingList }) => {
   if (!list.length) return null;
 
   return (
@@ -24,5 +24,3 @@ const MeetingCardWrapper = ({ list, user, fetchMeetingList }) => {
     </motion.div>
   );
 };
-
-export default MeetingCardWrapper;

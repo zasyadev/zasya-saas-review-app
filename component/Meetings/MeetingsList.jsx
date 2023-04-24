@@ -12,9 +12,8 @@ import CountHeaderCard from "../common/CountHeaderCard";
 import { PrimaryButton } from "../common/CustomButton";
 import NoRecordFound from "../common/NoRecordFound";
 import { useMember } from "../common/hooks/useMember";
-import MeetingCardWrapper from "./component/MeetingCardWrapper";
-import MeetingListSkeleton from "./component/MeetingListSkeleton";
 import { REVIEW_TYPE } from "./constants";
+import { MeetingCardWrapper, MeetingListSkeleton } from "./component";
 
 const currentTime = moment().format();
 
