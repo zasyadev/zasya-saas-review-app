@@ -81,50 +81,46 @@ function SiderLayout({ collapsed, setCollapsed, items, lg, user }) {
       onCollapse={(value) => setCollapsed(value)}
       width={240}
     >
-      <div className="flex flex-col justify-between min-h-screen px-2 border-r border-gray-300">
-        <div className="items-stretch min-h-full flex-nowrap px-0 relative space-y-2">
-          <Link href="/dashboard" passHref>
-            <div className="h-24 2xl:h-28 grid place-content-center text-center w-full cursor-pointer px-3">
-              <Image
-                src={"/media/images/logos/review_app.png"}
-                width={100}
-                height={51}
-                alt="review_logo"
-              />
-            </div>
-          </Link>
-
-          <div className="w-full grid place-content-center ">
-            <Dropdown
-              trigger={"click"}
-              overlay={
-                <Menu className="divide-y p-0">
-                  {createItems.map((item) => (
-                    <Menu.Item className="font-semibold" key={item.key}>
-                      <Link href={item.link}>{item.name}</Link>
-                    </Menu.Item>
-                  ))}
-                </Menu>
-              }
-            >
-              <p className="w-52 bg-brandGray-50 py-3 px-4 rounded-md mb-0 flex justify-between items-center text-17 font-medium cursor-pointer">
-                Create
-                <span>
-                  <PlusOutlined className="bg-primary-green text-white rounded-full text-lg w-8 h-8 grid place-content-center" />
-                </span>
-              </p>
-            </Dropdown>
-          </div>
-
-          <div className="overflow-y-auto overflow-x-hidden max-h-96 custom-scrollbar">
-            <Menu
-              onClick={onClickSideTab}
-              mode="inline"
-              defaultSelectedKeys={router?.pathname}
-              className="dashboard-sider border-0 bg-brandGray-100 text-17 font-medium"
-              items={items}
+      <div className="flex flex-col justify-between h-screen px-2 border-r border-gray-300">
+        <Link href="/dashboard" passHref>
+          <div className="h-24 2xl:h-28 grid place-content-center text-center w-full cursor-pointer px-3">
+            <Image
+              src={"/media/images/logos/review_app.png"}
+              width={100}
+              height={51}
+              alt="review_logo"
             />
           </div>
+        </Link>
+
+        <Dropdown
+          trigger={"click"}
+          overlay={
+            <Menu className="divide-y p-0">
+              {createItems.map((item) => (
+                <Menu.Item className="font-semibold" key={item.key}>
+                  <Link href={item.link}>{item.name}</Link>
+                </Menu.Item>
+              ))}
+            </Menu>
+          }
+        >
+          <p className=" bg-brandGray-50 py-3 px-4 rounded-md mb-2  text-17 font-medium cursor-pointer flex justify-between items-center">
+            Create
+            <span>
+              <PlusOutlined className="bg-primary-green text-white rounded-full text-lg w-8 h-8 grid place-content-center" />
+            </span>
+          </p>
+        </Dropdown>
+
+        <div className="flex-1 items-stretch flex-nowrap px-0 space-y-2 overflow-x-hidden  custom-scrollbar">
+          <Menu
+            onClick={onClickSideTab}
+            mode="inline"
+            defaultSelectedKeys={router?.pathname}
+            className="dashboard-sider border-0 bg-brandGray-100 text-17 font-medium"
+            items={items}
+          />
         </div>
 
         <div className="w-full py-3 px-4 space-y-3">
