@@ -518,6 +518,7 @@ model Meetings {
   modified_date       DateTime              @default(now())
   google_event_id     String?
   generated_by        MeetingGenerateEnum?
+  is_completed        Boolean               @default(false)
   MeetingAssignee     MeetingAssignee[]
   MeetingType         MeetingType[]
 
