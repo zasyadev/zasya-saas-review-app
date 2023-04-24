@@ -275,7 +275,7 @@ function Profile({ user, previewMode = false }) {
                       </div>
                     }
                     className="recent-activity-timeline"
-                    key={item.id + "activity" + index}
+                    key={item.id}
                   >
                     <div className="px-3">
                       <p className="flex-1 font-semibold mb-0 text-base">
