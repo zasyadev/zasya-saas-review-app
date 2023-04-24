@@ -13,6 +13,7 @@ import { HeadersComponent } from "../../component/common/HeadersComponent";
 import { URLS } from "../../constants/urls";
 import HeaderLayout from "./HeaderLayout";
 import SiderLayout from "./SiderLayout";
+import clsx from "clsx";
 
 const { useBreakpoint } = Grid;
 const { Content, Footer } = Layout;
@@ -104,7 +105,7 @@ function AdminLayout({
   return (
     <>
       <HeadersComponent />
-      <Layout>
+      <Layout className="h-screen">
         <SiderLayout
           collapsed={collapsed}
           setCollapsed={setCollapsed}
@@ -112,17 +113,16 @@ function AdminLayout({
           lg={lg}
           user={user}
         />
-        <Layout className="min-h-screen lg:ml-60">
+        <Layout className="lg:ml-60 h-screen">
           <HeaderLayout
             isBack={isBack}
             title={title}
             user={user}
             setCollapsed={setCollapsed}
             collapsed={collapsed}
-            lg={lg}
           />
-          <Content className="bg-brandGray-200 ">
-            <div className={` ${isHeader && "p-4 md:p-6 "}`}>{children}</div>
+          <Content className="bg-brandGray-200 dashboard-screen overflow-auto custom-scrollbar">
+            <div className={clsx({ "p-4 md:p-6": isHeader })}>{children}</div>
           </Content>
           <Footer className="text-center bg-primary-gray p-3 font-medium border-t ">
             Review App © 2022 Created By Zasya Solution

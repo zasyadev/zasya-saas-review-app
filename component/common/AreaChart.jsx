@@ -39,6 +39,9 @@ const defaultOptions = {
       show: false,
     },
     height: "300px",
+    zoom: {
+      enabled: false,
+    },
   },
   xaxis: {
     categories: DEFAULT_MONTH_NAME,
