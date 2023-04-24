@@ -5,13 +5,13 @@ const SUNDAY = "Sunday";
 const SATURDAY = "Saturday";
 
 export const calculateDuration = ({ from, to }) => {
-  let FromDate = moment(from);
-  let ToDate = moment(to);
-  let numberOfHours = ToDate.diff(FromDate, "hours");
-  let numerOfMinutes = ToDate.diff(FromDate, "minutes");
+  let fromDate = moment(from);
+  let toDate = moment(to);
+  let numberOfHours = toDate.diff(fromDate, "hours");
+  let numerOfMinutes = toDate.diff(fromDate, "minutes");
   let days = Math.floor(numberOfHours / 24);
-  let Remainder = numberOfHours % 24;
-  let hours = Math.floor(Remainder);
+  let remainder = numberOfHours % 24;
+  let hours = Math.floor(remainder);
   let minutes = Math.floor(numerOfMinutes - 60 * numberOfHours);
 
   return customTimeString({
@@ -22,9 +22,9 @@ export const calculateDuration = ({ from, to }) => {
 };
 
 export const calculateMiliDuration = ({ from, to }) => {
-  let FromDate = moment(from);
-  let ToDate = moment(to);
-  let numberOfMiliSecond = ToDate.diff(FromDate);
+  let fromDate = moment(from);
+  let toDate = moment(to);
+  let numberOfMiliSecond = toDate.diff(fromDate);
 
   return numberOfMiliSecond;
 };
@@ -61,12 +61,6 @@ export const halfHourEndTime = (time) =>
 
 export const minutesAddInTime = (time, minutes) =>
   moment(time).add(minutes, "minutes").format();
-
-export const afterTodayDates = (date) => {
-  let diffrenceInDays = moment().diff(date, "days");
-
-  return moment(date).add(diffrenceInDays + 1, "days");
-};
 
 const randomMinutes = () => {
   const stringsArray = ["0", "20", "40"];

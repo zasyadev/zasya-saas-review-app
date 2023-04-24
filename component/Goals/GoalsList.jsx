@@ -263,7 +263,7 @@ function GoalsList({ user }) {
             defaultValue={GOALS_FILTER_STATUS.ALL}
           />
         </div>
-        <div className=" flex items-center justify-center md:justify-end flex-wrap gap-4 flex-1">
+        <div className=" flex items-center justify-center md:justify-end flex-wrap gap-4">
           <div className="space-x-2">
             <Tooltip title="Grid View">
               <ButtonGray

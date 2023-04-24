@@ -125,7 +125,7 @@ export function OpinionScaleType({
               <Select.Option value={0}>0</Select.Option>
               <Select.Option value={1}>1</Select.Option>
             </Select>
-            <p className="ml-4 font-medium mb-0">label </p>
+            <p className="ml-4 font-medium mb-0">Label </p>
           </div>
           {options.length > 1 && (
             <>
@@ -158,7 +158,7 @@ export function OpinionScaleType({
               <Select.Option value={5}>5</Select.Option>
               <Select.Option value={10}>10</Select.Option>
             </Select>
-            <p className="ml-4 font-medium mb-0">label </p>
+            <p className="ml-4 font-medium mb-0">Label </p>
           </div>
           {options.length > 1 && (
             <>

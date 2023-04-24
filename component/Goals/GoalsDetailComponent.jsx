@@ -206,7 +206,7 @@ function GoalsDetailComponent({ user }) {
                         </p>
                         <span
                           className={clsx(
-                            "lg:w-28 px-2 py-1 font-medium text-xs md:text-sm mb-0 text-center uppercase rounded-md",
+                            "lg:w-28 px-2 py-1 font-medium text-xs md:text-sm mb-0 text-center uppercase rounded-md h-fit",
                             getStatusPillColor(item.status)
                           )}
                           key={item.id + "status"}

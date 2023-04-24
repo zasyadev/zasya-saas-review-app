@@ -18,9 +18,9 @@ function GoalsAvatar({
         activeGoalUsers.map((data, index) =>
           index < avatarCount ? (
             <Tooltip
-              title={data?.user?.first_name}
+              title={data.user?.first_name}
               placement="top"
-              key={index + "users"}
+              key={data.user.id}
             >
               <div
                 className={twMerge(
@@ -31,23 +31,22 @@ function GoalsAvatar({
                     {
                       "bg-cyan-500 ml-0 z-0": index === 0,
                       "bg-orange-600": index === 1,
-                      "border-primary-green": filterByMembersId.includes(
-                        data?.user?.id
-                      ),
+                      "border-black shadow-sm shadow-black":
+                        filterByMembersId.includes(data.user.id),
                     }
                   )
                 )}
                 onClick={() => {
-                  if (filterByMembersId.includes(data?.user?.id)) {
+                  if (filterByMembersId.includes(data.user.id)) {
                     setFilterByMembersId((prev) =>
-                      prev.filter((item) => item !== data?.user?.id)
+                      prev.filter((item) => item !== data.user.id)
                     );
                   } else {
-                    setFilterByMembersId((prev) => [...prev, data?.user?.id]);
+                    setFilterByMembersId((prev) => [...prev, data.user.id]);
                   }
                 }}
               >
-                {getFirstTwoLetter(data?.user?.first_name)}
+                {getFirstTwoLetter(data.user?.first_name)}
               </div>
             </Tooltip>
           ) : null
@@ -57,57 +56,58 @@ function GoalsAvatar({
           trigger={"click"}
           overlay={
             <div className="divide-y w-48 max-h-48 overflow-auto bg-white rounded-md">
-              {activeGoalUsers.map((data, index) =>
-                index > remainingAvatarCount ? (
-                  <div
-                    className={clsx(
-                      "font-semibold px-4 py-2 cursor-pointer hover:bg-gray-50",
-                      {
-                        "bg-gray-100": filterByMembersId.includes(
-                          data?.user?.id
-                        ),
-                      }
-                    )}
-                    key={data?.user?.first_name + index}
-                    onClick={() => {
-                      if (filterByMembersId.includes(data?.user?.id)) {
-                        setFilterByMembersId((prev) =>
-                          prev.filter((item) => item !== data?.user?.id)
-                        );
-                      } else {
-                        setFilterByMembersId((prev) => [
-                          ...prev,
-                          data?.user?.id,
-                        ]);
-                      }
-                    }}
-                  >
-                    <div className={`flex mb-0 items-center space-x-2`}>
-                      <div
-                        className={twMerge(
-                          clsx(
-                            "border-2 bg-green-600 flex justify-center items-center capitalize hover:cursor-pointer hover:z-50",
-                            "transition-all duration-200 ease-in-out rounded-full text-xs w-8 h-8 text-white",
-                            {
-                              "bg-cyan-500": index === 0,
-                              "bg-orange-600": index === 1,
-                            }
-                          )
-                        )}
-                      >
-                        {getFirstTwoLetter(data?.user?.first_name)}
+              {activeGoalUsers.map(
+                (data, index) =>
+                  index > remainingAvatarCount && (
+                    <div
+                      className={clsx(
+                        "font-semibold px-4 py-2 cursor-pointer hover:bg-gray-50",
+                        {
+                          "bg-gray-300": filterByMembersId.includes(
+                            data.user.id
+                          ),
+                        }
+                      )}
+                      key={data.user.id}
+                      onClick={() => {
+                        if (filterByMembersId.includes(data.user.id)) {
+                          setFilterByMembersId((prev) =>
+                            prev.filter((item) => item !== data.user.id)
+                          );
+                        } else {
+                          setFilterByMembersId((prev) => [
+                            ...prev,
+                            data.user.id,
+                          ]);
+                        }
+                      }}
+                    >
+                      <div className={`flex mb-0 items-center space-x-2`}>
+                        <div
+                          className={twMerge(
+                            clsx(
+                              "border-2 bg-green-600 flex justify-center items-center capitalize hover:cursor-pointer hover:z-50",
+                              "transition-all duration-200 ease-in-out rounded-full text-xs w-8 h-8 text-white",
+                              {
+                                "bg-cyan-500": index === 0,
+                                "bg-orange-600": index === 1,
+                              }
+                            )
+                          )}
+                        >
+                          {getFirstTwoLetter(data.user?.first_name)}
+                        </div>
+                        <span>{data.user?.first_name} </span>
                       </div>
-                      <span>{data?.user?.first_name} </span>
                     </div>
-                  </div>
-                ) : null
+                  )
               )}
             </div>
           }
           placement="bottomRight"
         >
           <div className="bg-orange-200 -ml-2  border-2 z-40  flex justify-center items-center capitalize hover:cursor-pointer hover:z-50 transition-all duration-200 ease-in-out rounded-full w-10 h-10">
-            +{activeGoalUsers.length - avatarCount}
+            + {activeGoalUsers.length - avatarCount}
           </div>
         </Dropdown>
       )}
