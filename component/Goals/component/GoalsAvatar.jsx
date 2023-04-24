@@ -18,9 +18,9 @@ function GoalsAvatar({
         activeGoalUsers.map((data, index) =>
           index < avatarCount ? (
             <Tooltip
-              title={data?.user?.first_name}
+              title={data.user?.first_name}
               placement="top"
-              key={index + "users"}
+              key={data.user.id}
             >
               <div
                 className={twMerge(
@@ -32,21 +32,21 @@ function GoalsAvatar({
                       "bg-cyan-500 ml-0 z-0": index === 0,
                       "bg-orange-600": index === 1,
                       "border-black shadow-sm shadow-black":
-                        filterByMembersId.includes(data?.user?.id),
+                        filterByMembersId.includes(data.user.id),
                     }
                   )
                 )}
                 onClick={() => {
-                  if (filterByMembersId.includes(data?.user?.id)) {
+                  if (filterByMembersId.includes(data.user.id)) {
                     setFilterByMembersId((prev) =>
-                      prev.filter((item) => item !== data?.user?.id)
+                      prev.filter((item) => item !== data.user.id)
                     );
                   } else {
-                    setFilterByMembersId((prev) => [...prev, data?.user?.id]);
+                    setFilterByMembersId((prev) => [...prev, data.user.id]);
                   }
                 }}
               >
-                {getFirstTwoLetter(data?.user?.first_name)}
+                {getFirstTwoLetter(data.user?.first_name)}
               </div>
             </Tooltip>
           ) : null
@@ -64,20 +64,20 @@ function GoalsAvatar({
                         "font-semibold px-4 py-2 cursor-pointer hover:bg-gray-50",
                         {
                           "bg-gray-300": filterByMembersId.includes(
-                            data?.user?.id
+                            data.user.id
                           ),
                         }
                       )}
-                      key={data?.user?.first_name + index}
+                      key={data.user.id}
                       onClick={() => {
-                        if (filterByMembersId.includes(data?.user?.id)) {
+                        if (filterByMembersId.includes(data.user.id)) {
                           setFilterByMembersId((prev) =>
-                            prev.filter((item) => item !== data?.user?.id)
+                            prev.filter((item) => item !== data.user.id)
                           );
                         } else {
                           setFilterByMembersId((prev) => [
                             ...prev,
-                            data?.user?.id,
+                            data.user.id,
                           ]);
                         }
                       }}
@@ -95,9 +95,9 @@ function GoalsAvatar({
                             )
                           )}
                         >
-                          {getFirstTwoLetter(data?.user?.first_name)}
+                          {getFirstTwoLetter(data.user?.first_name)}
                         </div>
-                        <span>{data?.user?.first_name} </span>
+                        <span>{data.user?.first_name} </span>
                       </div>
                     </div>
                   )
@@ -107,7 +107,7 @@ function GoalsAvatar({
           placement="bottomRight"
         >
           <div className="bg-orange-200 -ml-2  border-2 z-40  flex justify-center items-center capitalize hover:cursor-pointer hover:z-50 transition-all duration-200 ease-in-out rounded-full w-10 h-10">
-            +{activeGoalUsers.length - avatarCount}
+            + {activeGoalUsers.length - avatarCount}
           </div>
         </Dropdown>
       )}

@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import React from "react";
 
 export function ProfileDetailCard({
@@ -9,11 +10,17 @@ export function ProfileDetailCard({
 }) {
   return (
     <div
-      className={`px-4 xl:px-5 py-3 rounded-t-md transition-all duration-300 ease-in   ${className}`}
+      className={clsx(
+        "px-4 xl:px-5 py-3 rounded-t-md transition-all duration-300 ease-in",
+        className
+      )}
     >
       <div className="flex flex-wrap items-center  h-full gap-3 select-none">
         <div
-          className={`grid items-center w-10 h-10 py-1 px-1 justify-center shadow-md rounded-full ${iconClassName}`}
+          className={clsx(
+            "grid items-center w-10 h-10 py-1 px-1 justify-center shadow-md rounded-full",
+            iconClassName
+          )}
         >
           <Icon />
         </div>
