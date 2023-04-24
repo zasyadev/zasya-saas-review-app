@@ -1,16 +1,17 @@
 import { useEffect } from "react";
-import Router from "next/router";
+import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 
 export default function Home() {
   const { data: session, status } = useSession();
+  const router = useRouter();
 
   useEffect(() => {
     if (status !== "loading") {
       if (status === "authenticated" && session) {
-        Router.push("/dashboard");
+        router.push("/dashboard");
       } else {
-        Router.push("/auth/login");
+        router.push("/auth/login");
       }
     }
   }, [session, status]);

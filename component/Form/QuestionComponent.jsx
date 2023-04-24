@@ -24,13 +24,13 @@ import {
 const QuestionEditViewComponent = ({
   idx,
   handleQuestionValue,
-  error,
+  error = "",
   type,
   handleOptionValue,
   removeOption,
   addOption,
-  lowerLabel,
-  higherLabel,
+  lowerLabel = 0,
+  higherLabel = 5,
   handleScaleOptionValue,
   defineType,
   addNextQuestionField,
@@ -148,26 +148,23 @@ const QuestionEditViewComponent = ({
 };
 
 const QuestionComponent = ({
-  type,
   idx,
   removeElement,
   defineType,
-  questionText,
-  options,
-  error = "",
   addOption,
   handleQuestionValue,
   handleOptionValue,
   removeOption,
-  lowerLabel,
-  higherLabel,
   handleScaleOptionValue,
   addNextQuestionField,
   selectTypeFeild,
   setSelectTypeFeild,
   ratingState,
   totalQuestionCount,
+  question,
 }) => {
+  const { options, questionText, type, error, lowerLabel, higherLabel } =
+    question;
   return selectTypeFeild ? (
     <>
       <div className="p-4 md:px-5  border-b border-gray-200">
