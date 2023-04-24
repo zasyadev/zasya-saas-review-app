@@ -20,20 +20,27 @@ export async function SlackUserList() {
 }
 
 export async function SlackPostMessage({ channel, text, blocks }) {
-  const resData = await httpService.post(
-    "https://slack.com/api/chat.postMessage",
-    {
-      channel: channel,
+  const resData = await httpService
+    .post(
+      "https://slack.com/api/chat.postMessage",
+      {
+        channel: channel,
 
-      blocks: blocks,
-      text: text,
-    },
-    {
-      headers: {
-        Authorization: "Bearer " + SLACK_BOT_TOKEN,
+        blocks: blocks,
+        text: text,
       },
-    }
-  );
+      {
+        headers: {
+          Authorization: "Bearer " + SLACK_BOT_TOKEN,
+        },
+      }
+    )
+    .then(({ data: response }) => {
+      // console.log(response);
+    })
+    .catch((err) => {
+      // console.log(response);
+    });
   return;
 }
 
@@ -43,6 +50,7 @@ export function CustomizeSlackMessage({
   link,
   by = "",
   text = "",
+  btnText = "Review App",
 }) {
   let customText = [
     {
@@ -72,7 +80,7 @@ export function CustomizeSlackMessage({
           type: "button",
           text: {
             type: "plain_text",
-            text: "Review App",
+            text: btnText,
             emoji: true,
           },
           value: "details",
@@ -186,12 +194,10 @@ export function WeeklyCustomizeReviewMessage({
     },
     {
       type: "section",
-      elements: [
-        {
-          type: "mrkdwn",
-          text: `*${subText}*`,
-        },
-      ],
+      text: {
+        type: "mrkdwn",
+        text: `*${subText}*`,
+      },
     },
     {
       type: "context",
@@ -202,6 +208,49 @@ export function WeeklyCustomizeReviewMessage({
         },
       ],
     },
+    {
+      type: "actions",
+      elements: [
+        {
+          type: "button",
+          text: {
+            type: "plain_text",
+            text: btnText,
+            emoji: true,
+          },
+          value: "details",
+          url: link,
+          action_id: "button-action",
+          style: "primary",
+        },
+      ],
+    },
+  ];
+  return customText;
+}
+
+export function GoalCustomizeMessage({
+  header,
+  link,
+  btnText = "Goals",
+  subText = "",
+}) {
+  let customText = [
+    {
+      type: "header",
+      text: {
+        type: "plain_text",
+        text: header,
+      },
+    },
+    {
+      type: "section",
+      text: {
+        type: "mrkdwn",
+        text: `*${subText}*`,
+      },
+    },
+
     {
       type: "actions",
       elements: [

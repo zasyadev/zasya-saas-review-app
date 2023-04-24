@@ -29,7 +29,7 @@ export function MultipleChoiceType({
                 value={op.optionText}
                 maxLength={180}
               />
-              {j !== 0 ? (
+              {j > 1 ? (
                 <button
                   onClick={() => {
                     removeOption(idx, j);
@@ -125,7 +125,7 @@ export function OpinionScaleType({
               <Select.Option value={0}>0</Select.Option>
               <Select.Option value={1}>1</Select.Option>
             </Select>
-            <p className="ml-4 font-medium mb-0">label </p>
+            <p className="ml-4 font-medium mb-0">Label </p>
           </div>
           {options.length > 1 && (
             <>
@@ -158,7 +158,7 @@ export function OpinionScaleType({
               <Select.Option value={5}>5</Select.Option>
               <Select.Option value={10}>10</Select.Option>
             </Select>
-            <p className="ml-4 font-medium mb-0">label </p>
+            <p className="ml-4 font-medium mb-0">Label </p>
           </div>
           {options.length > 1 && (
             <>
@@ -202,9 +202,7 @@ export function QuestionTypeCard({
       </div>
 
       <div className="flex-1">
-        <p className="mb-0 text-sm 2xl:text-base font-semibold text-primary">
-          {title}
-        </p>
+        <p className="mb-0 text-sm 2xl:text-base font-semibold ">{title}</p>
       </div>
     </div>
   );

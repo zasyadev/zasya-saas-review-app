@@ -8,12 +8,14 @@ import {
   WeeklyCustomizeReviewMessage,
 } from "../../../helpers/slackHelper";
 import { RequestHandler } from "../../../lib/RequestHandler";
+import { BadRequestException } from "../../../lib/BadRequestExcpetion";
+const BASE_URL = process.env.NEXT_APP_URL;
 
 const ApplaudSlackMessage = (name) => ({
   header: `Hey ${name ?? "mate"}`,
   subText: "Did you tried to appreciate your team mates.",
   text: "Take a little time to appreciate them.",
-  link: `${process.env.NEXT_APP_URL}applaud/add`,
+  link: `${BASE_URL}applaud/add`,
   btnText: "Create Applaud ",
 });
 
@@ -21,7 +23,7 @@ const ReviewSlackMessage = (name) => ({
   header: `Hey ${name ?? "mate"}`,
   subText: "Did you tried to get a feedback from your peers",
   text: "It will help you to enhance your performance. Let's get some feedback.",
-  link: `${process.env.NEXT_APP_URL}review?create=true`,
+  link: `${BASE_URL}review?create=true`,
   btnText: "Create Review ",
 });
 
@@ -33,12 +35,8 @@ const currentMonth = {
 async function handle(req, res) {
   const { password, type } = req.body;
 
-  if (password !== process.env.NEXT_APP_CRON_PASSWORD) {
-    return res.status(401).json({
-      message: " Wrong Password",
-      status: 401,
-    });
-  }
+  if (password !== process.env.NEXT_APP_CRON_PASSWORD)
+    throw new BadRequestException("Wrong Password");
 
   const userData = await prisma.user.findMany({
     where: {
@@ -66,7 +64,7 @@ async function handle(req, res) {
   let filteredReviewData = [];
 
   if (type === INITIAL_CRON_TYPES.APPLAUD) {
-    if (userData.length && applaudData.length) {
+    if (userData.length) {
       filteredApplaudData = userData.map((userItem) => {
         let applaudBy = applaudData.filter(
           (applaudItem) => userItem.id === applaudItem.created_by
@@ -80,7 +78,7 @@ async function handle(req, res) {
       if (
         item.UserDetails &&
         item.UserDetails.slack_id &&
-        item.applaudBy.length < 4
+        item.applaudBy.length < 3
       ) {
         let customText = WeeklyCustomizeReviewMessage(
           ApplaudSlackMessage(item.first_name)
@@ -92,7 +90,7 @@ async function handle(req, res) {
       }
     });
   } else {
-    if (userData.length && reviewData.length) {
+    if (userData.length) {
       filteredReviewData = userData.map((userItem) => {
         let reviewBy = reviewData.filter(
           (reviewItem) => userItem.id === reviewItem.created_by
@@ -105,7 +103,7 @@ async function handle(req, res) {
       if (
         item.UserDetails &&
         item.UserDetails.slack_id &&
-        item.reviewBy.length < 3
+        item.reviewBy.length < 2
       ) {
         let customText = WeeklyCustomizeReviewMessage(
           ReviewSlackMessage(item.first_name)
@@ -119,10 +117,16 @@ async function handle(req, res) {
   }
 
   return res.status(201).json({
-    message: " Success",
-    status: 200,
+    message: "Success",
   });
 }
 
-const functionHandle = (req, res) => RequestHandler(req, res, handle, ["POST"]);
+const functionHandle = (req, res) =>
+  RequestHandler({
+    req,
+    res,
+    callback: handle,
+    allowedMethods: ["POST"],
+    protectedRoute: false,
+  });
 export default functionHandle;

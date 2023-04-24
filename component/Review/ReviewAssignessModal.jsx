@@ -9,7 +9,10 @@ const ReviewAssignessModal = ({
 }) => {
   const tabItems = [
     {
-      label: "All Assignees",
+      label: `All Assignees (${
+        getFilteredAssigneeList("ALL", reviewCountModalData?.ReviewAssignee)
+          .length
+      })`,
       key: "All",
       children: (
         <GetAssigneesList
@@ -19,7 +22,12 @@ const ReviewAssignessModal = ({
       ),
     },
     {
-      label: "Submitted",
+      label: `Submitted (${
+        getFilteredAssigneeList(
+          "answered",
+          reviewCountModalData?.ReviewAssignee
+        ).length
+      })`,
       key: "Submitted",
       children: (
         <GetAssigneesList
@@ -29,7 +37,10 @@ const ReviewAssignessModal = ({
       ),
     },
     {
-      label: "Pending",
+      label: `Pending (${
+        getFilteredAssigneeList(null, reviewCountModalData?.ReviewAssignee)
+          .length
+      })`,
       key: "Pending",
       children: (
         <GetAssigneesList
@@ -43,9 +54,9 @@ const ReviewAssignessModal = ({
   return (
     <CustomModal
       title={
-        <div className="single-line-clamp mb-0 pr-6">
+        <p className="single-line-clamp mb-0 pr-6 break-all">
           {reviewCountModalData?.review_name}
-        </div>
+        </p>
       }
       visible={reviewCountModalData?.isVisible}
       onCancel={() => hideReviewCountModal()}
@@ -58,19 +69,23 @@ const ReviewAssignessModal = ({
           defaultActiveKey="All"
           className="font-semibold"
           items={tabItems}
-        />{" "}
+        />
       </div>
     </CustomModal>
   );
 };
 
-const GetAssigneesList = ({ type, reviewAssignee }) => {
-  if (Number(reviewAssignee?.length) === 0) return null;
+const getFilteredAssigneeList = (type, reviewAssignee) => {
+  if (!reviewAssignee.length > 0) return [];
+  return type === "ALL"
+    ? reviewAssignee
+    : reviewAssignee.filter((assignee) => assignee.status === type);
+};
 
-  const filteredAssigneeList =
-    type === "ALL"
-      ? reviewAssignee
-      : reviewAssignee.filter((assignee) => assignee.status === type);
+const GetAssigneesList = ({ type, reviewAssignee }) => {
+  if (reviewAssignee?.length === 0) return null;
+
+  const filteredAssigneeList = getFilteredAssigneeList(type, reviewAssignee);
 
   return (
     <div className="divide-y space-y-1 max-h-96 overflow-y-auto custom-scrollbar">
@@ -86,11 +101,11 @@ const GetAssigneesList = ({ type, reviewAssignee }) => {
             </div>
 
             <div className="flex-1">
-              <p className="mb-0 text-primary font-medium text-base">
-                {assignee?.assigned_to?.first_name}
+              <p className="mb-0  font-medium text-base">
+                {assignee.assigned_to.first_name}
               </p>
               <p className="text-gray-400 font-medium text-sm mb-0">
-                {assignee?.assigned_to?.email}
+                {assignee.assigned_to.email}
               </p>
             </div>
           </div>

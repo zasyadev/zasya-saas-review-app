@@ -39,6 +39,16 @@ model User {
   UserOraganizationTags UserOraganizationTags[]
   UserDetails           UserDetails?
   UserNotification      UserNotification[]
+  Survey                Survey[]
+  Goals                 Goals[]
+  GoalsTimeline         GoalsTimeline[]
+  UserTeams             UserTeams[]
+  GoalAssignee          GoalAssignee[]
+  UserTeamsGroups       UserTeamsGroups[]
+  Meetings              Meetings[]
+  MeetingAssignee       MeetingAssignee[]
+  UserActivity          UserActivity[]
+
   @@map("users")
 }
 
@@ -50,6 +60,8 @@ model Role {
   User                    User[]
   Review                  Review[]
   UserOraganizationGroups UserOraganizationGroups[]
+  Survey                  Survey[]
+  UserTeamsGroups         UserTeamsGroups[]
 
   @@map("users_role")
 }
@@ -114,6 +126,7 @@ model Review {
   role                  Role?                   @relation(fields: [role_id], references: [id])
   role_id               Int?
   parent_id             String?
+  review_parent_id      String?
   frequency_status      Boolean                 @default(false)
   is_published          String?
   template_data         Json?
@@ -121,6 +134,7 @@ model Review {
   modified_date         DateTime                @default(now())
   ReviewAssigneeAnswers ReviewAssigneeAnswers[]
   ReviewAssignee        ReviewAssignee[]
+  MeetingType           MeetingType[]
 
   @@map("review")
 }
@@ -157,6 +171,7 @@ model ReviewAssigneeAnswers {
 
   ReviewAssignTemplate   ReviewAssignTemplate? @relation(fields: [reviewAssignTemplateId], references: [id])
   reviewAssignTemplateId String?
+
   @@map("review_assignee_answers")
 }
 
@@ -206,9 +221,14 @@ model UserOrganization {
   UserOraganizationTags UserOraganizationTags[]
   ReviewAssigneeAnswers ReviewAssigneeAnswers[]
   UserNotification      UserNotification[]
+  Survey                Survey[]
+  Goals                 Goals[]
+  UserTeams             UserTeams[]
+  Meetings              Meetings[]
+  UserActivity          UserActivity[]
+
   @@map("user_organization")
 }
-
 
 model PasswordReset {
   id            Int      @id @default(autoincrement())
@@ -292,9 +312,271 @@ model UserNotification {
   read_at         DateTime?
   organization    UserOrganization @relation(fields: [organization_id], references: [id], onDelete: Cascade)
   organization_id Int
-
+  created_date    DateTime?        @default(now())
 
   @@map("user_notification")
+}
+
+model Survey {
+  id              String            @id @default(uuid())
+  created         User              @relation(fields: [created_by], references: [id])
+  created_by      String
+  survey_name     String?
+  organization    UserOrganization? @relation(fields: [organization_id], references: [id])
+  organization_id Int?
+  role            Role?             @relation(fields: [role_id], references: [id])
+  role_id         Int?
+  is_published    String?
+  created_date    DateTime          @default(now())
+  modified_date   DateTime          @default(now())
+  SurveyQuestions SurveyQuestions[]
+  SurveyAnswers   SurveyAnswers[]
+  SurveyChannels  SurveyChannels[]
+
+  @@map("survey")
+}
+
+model SurveyQuestions {
+  id                   Int                    @id @default(autoincrement())
+  survey               Survey                 @relation(fields: [survey_id], references: [id], onDelete: Cascade)
+  survey_id            String
+  questionText         String
+  type                 String
+  open                 Boolean
+  created_date         DateTime               @default(now())
+  modified_date        DateTime               @default(now())
+  SurveyQuestionOption SurveyQuestionOption[]
+  SurveyAnswerOption   SurveyAnswerOption[]
+
+  @@map("survey_questions")
+}
+
+model SurveyQuestionOption {
+  id            Int             @id @default(autoincrement())
+  question      SurveyQuestions @relation(fields: [question_id], references: [id], onDelete: Cascade)
+  question_id   Int
+  optionText    String?
+  lowerLabel    String?
+  higherLabel   String?
+  created_date  DateTime        @default(now())
+  modified_date DateTime        @default(now())
+
+  @@map("survey_question_option")
+}
+
+model SurveyAnswers {
+  id                  Int                  @id @default(autoincrement())
+  user_id             String               @default(uuid())
+  survey              Survey               @relation(fields: [survey_id], references: [id], onDelete: Cascade)
+  survey_id           String
+  name                String?
+  created_date        DateTime             @default(now())
+  modified_date       DateTime             @default(now())
+  created_survey_date DateTime?
+  delete_date         DateTime?
+  SurveyAnswerOption  SurveyAnswerOption[]
+
+  @@map("survey_answers")
+}
+
+model SurveyAnswerOption {
+  id            Int             @id @default(autoincrement())
+  survey        SurveyAnswers   @relation(fields: [survey_id], references: [id], onDelete: Cascade)
+  survey_id     Int
+  question      SurveyQuestions @relation(fields: [question_id], references: [id], onDelete: Cascade)
+  question_id   Int
+  option        String?         @db.Text
+  lowerLabel    String?
+  higherLabel   String?
+  created_date  DateTime        @default(now())
+  modified_date DateTime        @default(now())
+  delete_date   DateTime?
+
+  @@map("survey_answer_option")
+}
+
+model SurveyChannels {
+  id                Int                   @id @default(autoincrement())
+  survey            Survey                @relation(fields: [survey_id], references: [id], onDelete: Cascade)
+  survey_id         String
+  type              SurveyChannelTypeEnum
+  url               String?               @default(uuid())
+  isDefault         Boolean               @default(false)
+  name              String?
+  submission_count  Int
+  status            Boolean
+  created_date      DateTime              @default(now())
+  modified_date     DateTime              @default(now())
+  SurveyChannelUser SurveyChannelUser[]
+
+  @@map("survey_channels")
+}
+
+model SurveyChannelUser {
+  id            Int                         @id @default(autoincrement())
+  channel       SurveyChannels              @relation(fields: [channel_id], references: [id], onDelete: Cascade)
+  channel_id    Int
+  name          String
+  status        SurveyChannelUserStatusEnum
+  customer_url  String                      @unique @default(uuid())
+  created_date  DateTime                    @default(now())
+  modified_date DateTime                    @default(now())
+
+  @@map("survey_channels_user")
+}
+
+model Goals {
+  id               String            @id @default(uuid())
+  created          User              @relation(fields: [created_by], references: [id])
+  created_by       String
+  goal_title       String            @db.VarChar(120)
+  goal_description String            @db.LongText
+  goal_type        GoalTypeEnum
+  status           GoalStatusEnum
+  progress         Int?
+  frequency        GoalFrequencyEnum
+  start_date       DateTime?         @default(now())
+  end_date         DateTime?
+  is_archived      Boolean           @default(false)
+  organization     UserOrganization? @relation(fields: [organization_id], references: [id])
+  organization_id  Int
+  created_date     DateTime          @default(now())
+  modified_date    DateTime          @default(now())
+  GoalsTimeline    GoalsTimeline[]
+  GoalAssignee     GoalAssignee[]
+  MeetingType      MeetingType[]
+
+  @@map("goals")
+}
+
+model GoalsTimeline {
+  id            String         @id @default(uuid())
+  user          User           @relation(fields: [user_id], references: [id])
+  user_id       String
+  goals         Goals          @relation(fields: [goals_id], references: [id], onDelete: Cascade)
+  goals_id      String
+  status        GoalStatusEnum
+  comment       String?
+  created_date  DateTime       @default(now())
+  modified_date DateTime       @default(now())
+
+  @@map("goals_timeline")
+}
+
+model UserTeams {
+  id              Int               @id @default(autoincrement())
+  user            User              @relation(fields: [user_id], references: [id])
+  user_id         String
+  team_name       String            @db.VarChar(100)
+  organization    UserOrganization? @relation(fields: [organization_id], references: [id])
+  organization_id Int
+  created_date    DateTime          @default(now())
+  modified_date   DateTime          @default(now())
+  UserTeamsGroups UserTeamsGroups[]
+
+  @@map("user_teams")
+}
+
+model GoalAssignee {
+  id            Int            @id @default(autoincrement())
+  assignee      User           @relation(fields: [assignee_id], references: [id])
+  assignee_id   String
+  status        GoalStatusEnum
+  goal          Goals          @relation(fields: [goal_id], references: [id], onDelete: Cascade)
+  goal_id       String
+  created_date  DateTime       @default(now())
+  modified_date DateTime       @default(now())
+
+  @@map("goal_assignee")
+}
+
+model UserTeamsGroups {
+  id        Int       @id @default(autoincrement())
+  member    User      @relation(fields: [member_id], references: [id])
+  member_id String
+  team      UserTeams @relation(fields: [team_id], references: [id], onDelete: Cascade)
+  team_id   Int
+  role      Role      @relation(fields: [role_id], references: [id])
+  role_id   Int
+  isManager Boolean   @default(false)
+
+  @@map("user_teams_groups")
+}
+
+model Meetings {
+  id                  String                @id @default(uuid())
+  created             User                  @relation(fields: [created_by], references: [id])
+  created_by          String
+  meeting_title       String                @db.VarChar(120)
+  meeting_description String?               @db.LongText
+  meeting_type        MeetingTypeEnum
+  frequency           MeetingFrequencyEnum?
+  meeting_at          DateTime
+  organization        UserOrganization?     @relation(fields: [organization_id], references: [id])
+  organization_id     Int
+  created_date        DateTime              @default(now())
+  modified_date       DateTime              @default(now())
+  google_event_id     String?
+  generated_by        MeetingGenerateEnum?
+  is_completed        Boolean               @default(false)
+  MeetingAssignee     MeetingAssignee[]
+  MeetingType         MeetingType[]
+
+  @@map("meetings")
+}
+
+model MeetingAssignee {
+  id                     Int                      @id @default(autoincrement())
+  assignee               User                     @relation(fields: [assignee_id], references: [id])
+  assignee_id            String
+  comment                String?                  @db.LongText
+  meeting                Meetings                 @relation(fields: [meeting_id], references: [id], onDelete: Cascade)
+  meeting_id             String
+  created_date           DateTime                 @default(now())
+  modified_date          DateTime                 @default(now())
+  MeetingAssigneeComment MeetingAssigneeComment[]
+
+  @@map("meeting_assignee")
+}
+
+model MeetingAssigneeComment {
+  id                  Int              @id @default(autoincrement())
+  meeting_assignee    MeetingAssignee? @relation(fields: [meeting_assignee_id], references: [id])
+  meeting_assignee_id Int?
+  comment             String?          @db.LongText
+  created_date        DateTime         @default(now())
+  modified_date       DateTime         @default(now())
+
+  @@map("meeting_assignee_comment")
+}
+
+model MeetingType {
+  id         Int      @id @default(autoincrement())
+  goal       Goals?   @relation(fields: [goal_id], references: [id], onDelete: Cascade)
+  goal_id    String?
+  review     Review?  @relation(fields: [review_id], references: [id], onDelete: Cascade)
+  review_id  String?
+  meeting    Meetings @relation(fields: [meeting_id], references: [id], onDelete: Cascade)
+  meeting_id String
+
+  @@map("meeting_type")
+}
+
+model UserActivity {
+  id              Int               @id @default(autoincrement())
+  user            User              @relation(fields: [user_id], references: [id])
+  user_id         String
+  type            ActivityTypeEnum
+  title           String
+  description     String?           @db.LongText
+  link            String
+  type_id         String?
+  organization    UserOrganization? @relation(fields: [organization_id], references: [id])
+  organization_id Int
+  created_date    DateTime          @default(now())
+  modified_date   DateTime          @default(now())
+
+  @@map("user_activity")
 }
 
 enum RoleEnum {
@@ -314,4 +596,63 @@ enum Frequency {
 enum ReviewType {
   feedback
   other
+}
+
+enum SurveyChannelTypeEnum {
+  Email
+  Link
+}
+
+enum SurveyChannelUserStatusEnum {
+  Pending
+  Opened
+  Answered
+}
+
+enum GoalTypeEnum {
+  Organization
+  Individual
+  Team
+  Self
+}
+
+enum GoalStatusEnum {
+  OnTrack
+  Completed
+  Delayed
+  AtRisk
+  Abandoned
+}
+
+enum GoalFrequencyEnum {
+  daily
+  monthly
+  weekly
+  halfyearly
+}
+
+enum MeetingFrequencyEnum {
+  Once
+  Weekly
+  Monthly
+}
+
+enum MeetingTypeEnum {
+  Goal
+  Review
+  Casual
+}
+
+enum MeetingGenerateEnum {
+  System
+  User
+}
+
+enum ActivityTypeEnum {
+  Review
+  Goal
+  Applaud
+  FollowUp
+  Survey
+  ReviewAnswer
 }

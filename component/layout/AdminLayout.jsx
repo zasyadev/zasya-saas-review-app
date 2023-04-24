@@ -1,15 +1,19 @@
 import {
-  AppstoreOutlined,
+  CrownOutlined,
   DashboardOutlined,
-  FormOutlined,
+  FileTextOutlined,
   LikeOutlined,
   SettingOutlined,
+  UsergroupAddOutlined,
+  FileUnknownOutlined,
 } from "@ant-design/icons";
 import { Grid, Layout } from "antd";
 import React, { useEffect, useMemo, useState } from "react";
 import { HeadersComponent } from "../../component/common/HeadersComponent";
+import { URLS } from "../../constants/urls";
 import HeaderLayout from "./HeaderLayout";
 import SiderLayout from "./SiderLayout";
+import clsx from "clsx";
 
 const { useBreakpoint } = Grid;
 const { Content, Footer } = Layout;
@@ -24,8 +28,14 @@ function getItem(label, key, icon, children, type) {
   };
 }
 
-function AdminLayout({ user, title, isBack = false, children }) {
-  const { md, lg } = useBreakpoint();
+function AdminLayout({
+  user,
+  title,
+  isBack = false,
+  children,
+  isHeader = true,
+}) {
+  const { lg } = useBreakpoint();
   const [collapsed, setCollapsed] = useState(false);
 
   useEffect(() => {
@@ -36,62 +46,85 @@ function AdminLayout({ user, title, isBack = false, children }) {
   const allMenus = [
     getItem(
       "Dashboard",
-      "/dashboard",
+      URLS.DASHBOARD,
       <DashboardOutlined className="sidebar-icon" />
     ),
 
     getItem(
       "Reviews",
-      "/review/received",
-      <FormOutlined className="sidebar-icon " />
+      URLS.REVIEW_CREATED,
+      <FileTextOutlined className="sidebar-icon " />
     ),
 
+    getItem("Goals", URLS.GOAL, <CrownOutlined className="sidebar-icon " />),
     getItem(
-      "Team",
-      "/team/members",
-      <AppstoreOutlined className="sidebar-icon " />
+      "Follow Ups",
+      URLS.FOLLOW_UP,
+      <UsergroupAddOutlined className="sidebar-icon " />
     ),
-    getItem("Applaud", "/applaud", <LikeOutlined className="sidebar-icon " />),
-
+    getItem(
+      "Applaud",
+      URLS.APPLAUD,
+      <LikeOutlined className="sidebar-icon " />
+    ),
+    getItem(
+      "Surveys",
+      URLS.SURVEY,
+      <FileUnknownOutlined className="sidebar-icon " />
+    ),
     getItem(
       "Settings",
       "setting",
       <SettingOutlined className="sidebar-icon " />,
-      [getItem("Templates", "/template"), getItem("Profile ", "/profile ")]
+      [
+        getItem("Templates", URLS.TEMPLATE),
+        getItem("Profile ", URLS.PROFILE),
+        getItem("Users", URLS.USERS),
+        getItem("Teams", URLS.TEAMS),
+      ]
     ),
   ];
 
   const filteredMenus = useMemo(() => {
-    if (user.role_id !== 4) {
+    if (user?.role_id !== 4) {
       return allMenus;
     } else {
-      return allMenus.filter((item) => item.label !== "Team");
+      return allMenus.map((item) =>
+        item?.children && item?.children?.length > 0
+          ? {
+              ...item,
+              children: item?.children.filter(
+                (child) => child.label !== "Teams" && child.label !== "Users"
+              ),
+            }
+          : item
+      );
     }
   }, [user]);
 
   return (
     <>
       <HeadersComponent />
-      <Layout>
+      <Layout className="h-screen">
         <SiderLayout
           collapsed={collapsed}
           setCollapsed={setCollapsed}
           items={filteredMenus}
           lg={lg}
+          user={user}
         />
-        <Layout className="min-h-screen">
-          <Content className="bg-primary-gray ">
-            <HeaderLayout
-              isBack={isBack}
-              title={title}
-              user={user}
-              setCollapsed={setCollapsed}
-              collapsed={collapsed}
-              lg={lg}
-            />
-            <div className="p-4 md:p-6">{children}</div>
+        <Layout className="lg:ml-60 h-screen">
+          <HeaderLayout
+            isBack={isBack}
+            title={title}
+            user={user}
+            setCollapsed={setCollapsed}
+            collapsed={collapsed}
+          />
+          <Content className="bg-brandGray-200 dashboard-screen overflow-auto custom-scrollbar">
+            <div className={clsx({ "p-4 md:p-6": isHeader })}>{children}</div>
           </Content>
-          <Footer className="text-center bg-white p-3 font-medium text-primary">
+          <Footer className="text-center bg-primary-gray p-3 font-medium border-t ">
             Review App © 2022 Created By Zasya Solution
           </Footer>
         </Layout>

@@ -5,6 +5,9 @@ import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { HeadersComponent } from "../../component/common/HeadersComponent";
 import { openNotificationBox } from "../../component/common/notification";
+import { URLS } from "../../constants/urls";
+import { maxLengthValidator } from "../../helpers/formValidations";
+import getErrors from "../../helpers/getErrors";
 import httpService from "../../lib/httpService";
 import { PrimaryButton } from "../common/CustomButton";
 import AuthWrapper from "./AuthWrapper";
@@ -17,32 +20,39 @@ function RegisterPage() {
 
   async function handleSubmit(values) {
     setLoading(true);
-    values["role"] = 2;
-    values["status"] = 1;
 
+    if (values?.confirm_password) {
+      delete values?.confirm_password;
+    }
     await httpService
       .post(`/api/user`, values)
       .then(({ data: response }) => {
-        if (response.status === 200) {
-          openNotificationBox("success", response.message, 3);
-          registerForm.resetFields();
-          router.push("/auth/login");
-        }
-        setLoading(false);
+        openNotificationBox("success", response.message, 3);
+        registerForm.resetFields();
+        router.push("/auth/login");
       })
       .catch((err) => {
-        openNotificationBox("error", err.response.data?.message);
+        if (!err?.response?.data?.inner?.length) {
+          openNotificationBox("error", err.response.data?.message);
+        } else {
+          const errorNode = getErrors(err?.response?.data?.inner);
+          openNotificationBox("error", "Errors", 5, "error-reg", errorNode);
+        }
+      })
+      .finally(() => {
+        setLoading(false);
       });
   }
 
   const FormComponent = () => {
     return (
       <Form
+        name="register-form"
         form={registerForm}
         layout="vertical"
         autoComplete="off"
         onFinish={handleSubmit}
-        className="login-form"
+        className="login-form mx-2 md:mx-6"
       >
         <Form.Item
           className="mb-3 lg:mb-5"
@@ -51,8 +61,9 @@ function RegisterPage() {
           rules={[
             {
               required: true,
-              message: "Please enter your full name!",
+              message: "Please enter your name!",
             },
+            { validator: (_, value) => maxLengthValidator(value, 50) },
           ]}
         >
           <Input
@@ -71,6 +82,7 @@ function RegisterPage() {
               required: true,
               message: "Please enter your company name!",
             },
+            { validator: (_, value) => maxLengthValidator(value, 100) },
           ]}
         >
           <Input
@@ -88,6 +100,10 @@ function RegisterPage() {
             {
               required: true,
               message: "Please enter your email!",
+            },
+            {
+              type: "email",
+              message: "Please enter valid email!",
             },
           ]}
         >
@@ -107,6 +123,7 @@ function RegisterPage() {
               required: true,
               message: "Please enter your password!",
             },
+            { min: 6, message: "Password must be minimum 6 characters." },
           ]}
         >
           <Input
@@ -120,6 +137,7 @@ function RegisterPage() {
           className="mb-3 lg:mb-5"
           name="confirm_password"
           label="Confirm Password"
+          dependencies={["password"]}
           rules={[
             {
               required: true,
@@ -157,8 +175,8 @@ function RegisterPage() {
 
         <div className=" md:flex justify-end text-center lg:text-left">
           <p className="text-sm font-semibold mt-2 pt-1 mb-0">
-            <Link href="/auth/login" passHref>
-              <span className="text-primary  font-semibold transition duration-200 ease-in-out cursor-pointer mb-2">
+            <Link href={URLS.LOGIN} passHref>
+              <span className="text-primary-green  font-semibold transition duration-200 ease-in-out cursor-pointer mb-2">
                 Back to Login
               </span>
             </Link>

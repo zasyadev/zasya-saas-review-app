@@ -1,22 +1,24 @@
 import {
+  EditOutlined,
   CalendarOutlined,
-  FileTextOutlined,
-  HistoryOutlined,
   InfoCircleOutlined,
-  StarOutlined,
   StopOutlined,
-  UserOutlined,
 } from "@ant-design/icons";
-import { Collapse, Grid, Popconfirm, Tooltip } from "antd";
+import { Collapse, Form, Grid, Popconfirm, Select, Tooltip } from "antd";
+import xlsx from "json-as-xlsx";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { openNotificationBox } from "../../component/common/notification";
+import { MONTH_DATE_FORMAT, YEAR_DATE_FORMAT } from "../../helpers/dateHelper";
 import { calculateDuration } from "../../helpers/momentHelper";
 import httpService from "../../lib/httpService";
-import CustomTable from "../common/CustomTable";
-import { ResizableTitle } from "./ResizableTitle";
-import { MONTH_DATE_FORMAT, YEAR_DATE_FORMAT } from "../../helpers/dateHelper";
+import CountHeaderCard from "../common/CountHeaderCard";
+import { PrimaryButton, SecondaryButton } from "../common/CustomButton";
+import CustomModal from "../common/CustomModal";
 import CustomPopover from "../common/CustomPopover";
+import CustomTable from "../common/CustomTable";
+import { REVIEW_FREQUENCY } from "./constants";
+import { ResizableTitle } from "./ResizableTitle";
 import ReviewAssignessModal from "./ReviewAssignessModal";
 
 const { useBreakpoint } = Grid;
@@ -27,38 +29,18 @@ const initialReviewCountModalData = {
   isVisible: false,
 };
 
-function InfoCard({ count, title, Icon, className = "", ActionButton }) {
-  return (
-    <div className={`bg-white p-5 rounded-md  ${className}`}>
-      <div className="flex flex-wrap items-stretch h-full gap-3">
-        <div className="bg-primary-gray text-primary grid items-center w-10 h-10 py-1 px-1 justify-center shadow-lg-pink rounded-full">
-          <Icon />
-        </div>
-        <div className="flex-1">
-          <div className="text-primary font-semibold capitalize tracking-wide text-sm mb-2">
-            {title}
-          </div>
-          <div className="flex flex-wrap items-center">
-            <span className="flex-1 text-lg 2xl:text-xl capitalize text-primary font-semibold leading-6">
-              {count}
-            </span>
-            {ActionButton && <ActionButton />}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 function ReviewCreatedComponent({
   reviewData,
   reviewId,
   fetchReviewData,
   answerData,
 }) {
-  const { xs } = useBreakpoint();
+  const { lg } = useBreakpoint();
   const { Panel } = Collapse;
-
+  const [FrequencyUpdateForm] = Form.useForm();
+  const [editFreqModalVisible, setEditFreqModalVisible] = useState(false);
+  const [updateFreqApiLoading, setUpdateFreqApiLoading] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
   const [dataSource, setDataSource] = useState({});
   const [totalRating, setTotalRating] = useState(0);
   const [columns, setColumns] = useState([]);
@@ -83,18 +65,19 @@ function ReviewCreatedComponent({
     title: "Name",
     dataIndex: "name",
     width: 180,
-    fixed: xs ? false : true,
+    fixed: lg,
     sorter: (a, b) => a.name?.localeCompare(b.name),
     render: (_, record) => (
       <div>
-        <p className="mb-0">{record.name}</p>
-        <p className="mb-0 flex items-center gap-2 text-gray-400 text-sm ">
-          {calculateDuration({
-            from: reviewData.created_date,
-            to: record.answer_date,
-          })}
-
-          {CustomPopover("Reactive Time")}
+        <p className="mb-0 flex justify-between items-center">
+          <span>{record.name}</span>
+          {CustomPopover(
+            "Reactivity Time: " +
+              calculateDuration({
+                from: reviewData.created_date,
+                to: record.answer_date,
+              })
+          )}
         </p>
       </div>
     ),
@@ -108,21 +91,12 @@ function ReviewCreatedComponent({
 
   useEffect(() => {
     let headersData = [];
-    if (reviewData?.form?.form_data.length) {
-      headersData = reviewData?.form?.form_data.map((item, i) => {
+    if (answerData.length > 0) {
+      headersData = answerData[0].ReviewAssigneeAnswerOption.map((item, i) => {
         return {
-          title: item.questionText,
-          dataIndex: "option" + i,
-          width: getWidthLength(item),
-          sorter: (a, b) => a[`option${i}`]?.localeCompare(b[`option${i}`]),
-        };
-      });
-    } else {
-      headersData = reviewData?.form?.form_data.questions.map((item, i) => {
-        return {
-          title: item.questionText,
-          dataIndex: "option" + i,
-          width: getWidthLength(item),
+          title: item.question.questionText,
+          dataIndex: `question_${item.question_id}`,
+          width: getWidthLength(item.question),
           sorter: (a, b) => a[`option${i}`]?.localeCompare(b[`option${i}`]),
         };
       });
@@ -131,7 +105,7 @@ function ReviewCreatedComponent({
 
     handleAnswerChange(answerData);
     setColumns([...headersData]);
-  }, []);
+  }, [lg]);
 
   const handleAnswerChange = (answerData) => {
     let data = answerData.map((item) => ({
@@ -145,7 +119,7 @@ function ReviewCreatedComponent({
       let optionObj = {};
 
       item.answers.forEach((data, i) => {
-        optionObj[`option${i}`] = data.option;
+        optionObj[`question_${data.question_id}`] = data.option;
       });
 
       return {
@@ -181,20 +155,24 @@ function ReviewCreatedComponent({
     setTotalRating(totalRating.toFixed(2));
   };
 
-  const jobChangeHandler = async (id) => {
+  const jobChangeHandler = async (obj) => {
+    setUpdateFreqApiLoading(true);
     await httpService
-      .put(`/api/review/manage`, {
-        id: id,
-      })
+      .put(`/api/review/manage`, obj)
       .then(({ data: response }) => {
-        if (response.status === 200) {
-          openNotificationBox("success", response.message, 3);
-          fetchReviewData(reviewId);
+        openNotificationBox("success", response.message, 3);
+        fetchReviewData(reviewId);
+        if (editFreqModalVisible) {
+          setEditFreqModalVisible(false);
         }
       })
-      .catch((err) => {
-        console.error(err.response.data?.message);
-      });
+      .catch((err) =>
+        openNotificationBox(
+          "error",
+          err?.response?.data?.message || "Unable to update! Please try again"
+        )
+      )
+      .finally(() => setUpdateFreqApiLoading(false));
   };
 
   const handleResize =
@@ -228,76 +206,190 @@ function ReviewCreatedComponent({
     setReviewCountModalData(initialReviewCountModalData);
   };
 
+  const handleExport = async (data) => {
+    let excelData = [];
+    setIsExporting(true);
+
+    Object.entries(data).forEach(([key, values]) => {
+      if (values?.length > 0) {
+        let sheetObj = {};
+
+        sheetObj["sheet"] = key;
+
+        sheetObj["columns"] = columns.map((col) => {
+          return { label: col.title, value: col.dataIndex };
+        });
+        let duplicateCount = 0;
+        sheetObj["columns"] = sheetObj["columns"].map((col, idx) => {
+          const findSameLabelKey = sheetObj["columns"].find(
+            (data, index) => data.label === col.label && index != idx
+          );
+
+          if (findSameLabelKey) {
+            const underScoresString = new Array(duplicateCount)
+              .fill("_")
+              .toString();
+            duplicateCount++;
+            return {
+              label: `${col.label}${
+                underScoresString ? underScoresString : ""
+              }`,
+              value: col.value,
+            };
+          } else {
+            return col;
+          }
+        });
+
+        sheetObj["content"] = [];
+
+        values.forEach((answerData) => {
+          let obj = {};
+          columns.forEach((col, index) => {
+            obj[col.dataIndex] = answerData[col.dataIndex];
+          });
+
+          sheetObj["content"].push(obj);
+        });
+
+        excelData.push(sheetObj);
+      }
+    });
+
+    let settings = {
+      fileName: reviewData?.review_name ?? "Review",
+      extraLength: 3,
+      writeMode: "writeFile",
+      writeOptions: {},
+      RTL: false,
+    };
+    await xlsx(excelData, settings, function () {
+      openNotificationBox("success", "Exported Successfully", 3, "data-export");
+    });
+
+    setIsExporting(false);
+  };
+
+  const handleUpdateFrequency = (values) => {
+    jobChangeHandler({ id: reviewId, ...values });
+  };
+
   return (
     <div className="container mx-auto max-w-full">
-      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 2xl:gap-6">
-        <InfoCard
-          title={`Review Created At`}
-          count={moment(reviewData?.created_date).format(MONTH_DATE_FORMAT)}
-          Icon={() => <FileTextOutlined className="text-xl leading-0" />}
+      <div className="flex flex-row items-center justify-between flex-wrap gap-4  mb-2 xl:mb-4 ">
+        <p className="text-xl font-semibold mb-0">Personal Feedback</p>
+        {dataSource &&
+        typeof dataSource === "object" &&
+        Object.keys(dataSource).length ? (
+          <PrimaryButton
+            loading={isExporting}
+            disabled={isExporting}
+            title="Export"
+            withLink={false}
+            onClick={() => handleExport(dataSource)}
+          />
+        ) : null}
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 2xl:gap-6">
+        <CountHeaderCard
+          imgSrc="/media/svg/contract-pending.svg"
+          imgSrcClassNames="bg-brandBlue-200"
+          title="Created Date"
+          subTitle={moment(reviewData?.created_date).format(MONTH_DATE_FORMAT)}
         />
-        <InfoCard
-          title={`Review Frequency`}
-          count={reviewData?.frequency}
-          Icon={() => <HistoryOutlined className="text-xl leading-0" />}
-          ActionButton={() =>
-            reviewData.frequency != "once" &&
-            reviewId &&
-            !reviewData.frequency_status && (
-              <Popconfirm
-                title={
-                  <p className="font-medium mb-0">
-                    Are you sure you want to stop the frequency of this review?
-                  </p>
-                }
-                okText="Yes"
-                cancelText="No"
-                onConfirm={() => jobChangeHandler(reviewId)}
-                placement="topRight"
-                overlayClassName="max-w-sm"
-              >
+        <CountHeaderCard
+          imgSrc="/media/svg/completed-goals.svg"
+          imgSrcClassNames="bg-brandOrange-200"
+          title="Frequency"
+          subTitle={
+            <span className="flex justify-between items-center">
+              <span className="capitalize">{reviewData?.frequency} </span>
+              <span className="flex justify-between items-center">
                 <Tooltip
                   placement="bottom"
-                  title={"To stop the frequency of this review"}
+                  trigger={"hover"}
+                  title="Update Frequency"
                 >
-                  <StopOutlined className="text-base p-1 leading-0 bg-gray-100  text-center rounded-full mx-2" />
+                  <div
+                    className="w-8 h-8 primary-color-blue p-2 rounded-full bg-gray-100 text-base cursor-pointer grid place-content-center ml-2"
+                    onClick={() => setEditFreqModalVisible(true)}
+                  >
+                    <EditOutlined className="primary-color-bluetext-base " />
+                  </div>
                 </Tooltip>
-              </Popconfirm>
-            )
+                {reviewData.frequency != REVIEW_FREQUENCY.ONCE &&
+                  reviewId &&
+                  !reviewData.frequency_status && (
+                    <Popconfirm
+                      title={
+                        <p className="font-medium mb-0">
+                          Are you sure you want to stop the frequency of this
+                          review?
+                        </p>
+                      }
+                      okText="Yes"
+                      cancelText="No"
+                      onConfirm={() =>
+                        jobChangeHandler({
+                          id: reviewId,
+                          frequency: REVIEW_FREQUENCY.ONCE,
+                        })
+                      }
+                      placement="topRight"
+                      overlayClassName="max-w-sm"
+                    >
+                      <Tooltip
+                        placement="bottom"
+                        title={"To stop the frequency of this review"}
+                      >
+                        <StopOutlined className="text-base p-2 leading-0 bg-gray-100 text-red-700  text-center rounded-full ml-2" />
+                      </Tooltip>
+                    </Popconfirm>
+                  )}
+              </span>
+            </span>
           }
         />
-        <InfoCard
-          title={"Total Rating"}
-          count={totalRating ?? 0}
-          Icon={() => <StarOutlined className="text-xl leading-0" />}
+        <CountHeaderCard
+          imgSrc="/media/svg/contract-pending.svg"
+          imgSrcClassNames="bg-brandBlue-200"
+          title="Rating"
+          subTitle={totalRating ?? 0}
         />
 
-        <InfoCard
-          title={"Assign Count"}
-          count={reviewData?.ReviewAssignee?.length}
-          Icon={() => <UserOutlined className="text-xl leading-0" />}
-          ActionButton={() => (
-            <InfoCircleOutlined
-              className="text-gray-600 cursor-pointer select-none"
-              onClick={() =>
-                ShowReviewCountModal({
-                  review_name: reviewData?.review_name,
-                  ReviewAssignee: reviewData?.ReviewAssignee,
-                })
-              }
-            />
-          )}
+        <CountHeaderCard
+          imgSrc="/media/svg/assign-user.svg"
+          imgSrcClassNames="bg-brandGreen-400"
+          title="Assign Count"
+          subTitle={
+            <span className="flex justify-between items-center">
+              <span className="capitalize">
+                {reviewData?.ReviewAssignee?.length}{" "}
+              </span>
+              <span className="flex justify-between items-center">
+                <InfoCircleOutlined
+                  className="text-gray-600 cursor-pointer select-none"
+                  onClick={() =>
+                    ShowReviewCountModal({
+                      review_name: reviewData?.review_name,
+                      ReviewAssignee: reviewData?.ReviewAssignee,
+                    })
+                  }
+                />
+              </span>
+            </span>
+          }
         />
       </div>
 
-      <div className="overflow-x-auto mt-4 md:mt-6">
+      <div className="overflow-x-auto  mt-4 md:mt-6">
         {dataSource &&
         typeof dataSource === "object" &&
         Object.keys(dataSource).length ? (
           <Collapse
             accordion
             defaultActiveKey={["1"]}
-            className="review-collapse"
+            className="review-collapse "
             expandIconPosition="end"
           >
             {Object.entries(dataSource).map(([key, value], idx) => (
@@ -325,12 +417,7 @@ function ReviewCreatedComponent({
                     y: 500,
                   }}
                   bordered={true}
-                  pagination={{
-                    defaultPageSize: 10,
-                    showSizeChanger: true,
-                    pageSizeOptions: ["10", "50", "100", "200", "500"],
-                    className: "px-2 sm:px-4",
-                  }}
+                  size="middle"
                 />
               </Panel>
             ))}
@@ -345,6 +432,66 @@ function ReviewCreatedComponent({
         reviewCountModalData={reviewCountModalData}
         hideReviewCountModal={hideReviewCountModal}
       />
+
+      <CustomModal
+        title={
+          <p className="single-line-clamp mb-0 pr-6">Update Review Frequency</p>
+        }
+        visible={editFreqModalVisible}
+        onCancel={() => setEditFreqModalVisible(false)}
+        customFooter
+        footer={[
+          <>
+            <SecondaryButton
+              onClick={() => setEditFreqModalVisible(false)}
+              className=" h-full mr-2"
+              title="Cancel"
+            />
+            <PrimaryButton
+              onClick={() => FrequencyUpdateForm.submit()}
+              className=" h-full  "
+              title="Update"
+              disabled={updateFreqApiLoading}
+              loading={updateFreqApiLoading}
+            />
+          </>,
+        ]}
+      >
+        <Form
+          layout="vertical"
+          form={FrequencyUpdateForm}
+          onFinish={(value) => handleUpdateFrequency(value)}
+          initialValues={{
+            frequency: reviewData.frequency,
+          }}
+        >
+          <Form.Item
+            name="frequency"
+            className="mb-0 margin-b-0"
+            rules={[
+              {
+                required: true,
+                message: "Please select your frequency",
+              },
+            ]}
+          >
+            <Select
+              placeholder="Select Frequency"
+              showSearch
+              filterOption={(input, option) =>
+                option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+              }
+              size="large"
+              className="w-full font-bold"
+            >
+              <Select.Option value="once">Once</Select.Option>
+              <Select.Option value="daily">Daily</Select.Option>
+              <Select.Option value="weekly">Weekly</Select.Option>
+              <Select.Option value="monthly">Monthly</Select.Option>
+            </Select>
+          </Form.Item>
+        </Form>
+      </CustomModal>
     </div>
   );
 }

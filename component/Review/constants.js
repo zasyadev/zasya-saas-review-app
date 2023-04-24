@@ -21,14 +21,18 @@ export const ReviewStepsArray = [
   },
 ];
 
-export const REVIEW_RECEIVED_KEY = "Received";
-export const REVIEW_CREATED_KEY = "Created";
+export const REVIEW_FILTER_KEY = {
+  RECEIVED: "Received",
+  CREATED: "Created",
+  ALL: "All",
+  PENDING: "Pending",
+};
 
-export const ReviewToggleList = [
-  {
-    label: REVIEW_RECEIVED_KEY,
-  },
-  {
-    label: REVIEW_CREATED_KEY,
-  },
-];
+export const REVIEW_FREQUENCY = {
+  ONCE: "once",
+  DAILY: "daily",
+  WEEKLY: "weekly",
+  MONTHLY: "monthly",
+};
+
+export const REVIEW_RATING_QUESTION = "Rating";

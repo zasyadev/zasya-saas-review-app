@@ -3,31 +3,15 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { openNotificationBox } from "../../component/common/notification";
 import httpService from "../../lib/httpService";
+import {
+  defaultQuestionConfig,
+  defaultRatingQuestion,
+} from "../Form/questioncomponents/constants";
 import GetReviewSteps from "../common/GetReviewSteps";
 import StepFixedHeader from "../common/StepFixedHeader";
 import StepsBottomFixedBar from "../common/StepsBottomFixedBar";
+import { useOrganizationUser } from "../common/hooks/useOrganizationUser";
 import { ReviewStepsArray } from "./constants";
-
-const defaultOption = { optionText: "", error: "" };
-
-const defaultScaleQuestion = {
-  questionText: "Rating",
-  options: [{ optionText: "low" }, { optionText: "high" }],
-  lowerLabel: 1,
-  higherLabel: 10,
-  open: false,
-  type: "scale",
-  editableFeedback: true,
-  ratingFeedback: true,
-};
-const defaultQuestionConfig = {
-  questionText: "",
-  options: [defaultOption],
-  open: true,
-  type: "checkbox",
-  error: "",
-  active: true,
-};
 
 function AddEditReviewComponent({
   user,
@@ -37,10 +21,10 @@ function AddEditReviewComponent({
 }) {
   const router = useRouter();
   const [form] = Form.useForm();
-  const [userList, setUserList] = useState([]);
   const [questionList, setQuestionList] = useState([defaultQuestionConfig]);
   const [activeReviewStep, setActiveReviewStep] = useState(0);
   const [loadingSubmitSpin, setLoadingSubmitSpin] = useState(false);
+  const { userList } = useOrganizationUser(user.id);
 
   const onBarInputChange = (value, name) => {
     if (value && name) {
@@ -56,7 +40,7 @@ function AddEditReviewComponent({
       }
       if (name == "rating") {
         if (value === "feedback") {
-          setQuestionList((prev) => [...prev, defaultScaleQuestion]);
+          setQuestionList((prev) => [...prev, defaultRatingQuestion]);
         } else {
           setQuestionList((prev) =>
             prev.filter((item) => !item.ratingFeedback)
@@ -87,34 +71,13 @@ function AddEditReviewComponent({
     await httpService
       .post(`/api/review/manage`, obj)
       .then(({ data: response }) => {
-        if (response.status === 200) {
-          router.push("/review");
-          openNotificationBox("success", response.message, 3);
-        }
+        router.push("/review");
+        openNotificationBox("success", response.message, 3);
       })
-      .catch((err) => {
-        console.error(err.response.data?.message);
-        openNotificationBox("error", err.response.data?.message, 3);
-        setLoadingSubmitSpin(false);
-      });
-  }
-
-  async function fetchUserData() {
-    setUserList([]);
-    await httpService
-      .get(`/api/user/organizationId/${user.id}`)
-      .then(({ data: response }) => {
-        if (response.status === 200) {
-          let filterData = response.data.filter(
-            (item) => item.user.status && item.user_id != user.id
-          );
-          setUserList(filterData);
-        }
-      })
-      .catch((err) => {
-        setUserList([]);
-        console.error(err.response.data?.message);
-      });
+      .catch((err) =>
+        openNotificationBox("error", err.response.data?.message, 3)
+      )
+      .finally(() => setLoadingSubmitSpin(false));
   }
 
   const initialData = (data) => {
@@ -126,8 +89,6 @@ function AddEditReviewComponent({
   };
 
   useEffect(() => {
-    fetchUserData();
-
     if (
       reviewPreviewData &&
       Object.keys(reviewPreviewData).length &&
@@ -136,47 +97,6 @@ function AddEditReviewComponent({
       initialData(reviewPreviewData);
     }
   }, []);
-
-  // const handlePreviewForm = async () => {
-  //   setReviewFormData({});
-  //   setQuestionList([]);
-  //   setLoadingSpin(true);
-
-  //   let values = form.getFieldsValue(true);
-
-  //   if (values) {
-  //     let templateData = {};
-  //     if (values.template_id) {
-  //       templateData = formList.find((item) => item.id == values.template_id);
-
-  //       if (values.review_type === "feedback") {
-  //         templateData.form_data.questions.length > 0
-  //           ? templateData.form_data.questions.push(defaultScaleQuestion)
-  //           : null;
-  //       }
-
-  //       await httpService
-  //         .post(`/api/review/manage`, {
-  //           ...values,
-  //           template_data: templateData,
-  //           is_published: "draft",
-  //           status: values.status ?? "pending",
-  //           role_id: user.role_id,
-  //           created_by: user.id,
-  //         })
-  //         .then(({ data: response }) => {
-  //           if (response.status === 200 && response.data.id) {
-  //             router.push(`/review/edit/${response.data.id}`);
-  //           }
-  //         })
-  //         .catch((err) => {
-  //           console.error(err.response.data?.message);
-  //         });
-  //     } else {
-  //       openNotificationBox("error", "Need to Select Template", 3);
-  //     }
-  //   }
-  // };
 
   const nextTitleStep = (type) => {
     let values = form.getFieldsValue(true);
@@ -191,11 +111,11 @@ function AddEditReviewComponent({
     let values = form.getFieldsValue(true);
 
     if (!values.frequency) {
-      openNotificationBox("error", "Need to Select Frequency", 3);
+      openNotificationBox("error", "Need to Select Feedback Frequency", 3);
       return;
     }
-    if (!values.assigned_to_id) {
-      openNotificationBox("error", "Need to Select Members", 3);
+    if (!Number(values?.assigned_to_id?.length)) {
+      openNotificationBox("error", "Need to Select Feedback Members", 3);
       return;
     }
     setActiveReviewStep(type + 1);
@@ -208,6 +128,11 @@ function AddEditReviewComponent({
         error = "Question field required!";
       }
       let errorOptions = item.options;
+      if (item.type === "checkbox") {
+        if (item.options.length < 2) {
+          error = "Minimum 2 options  required!";
+        }
+      }
       if (
         item.options.length &&
         (item.type === "checkbox" || item.type === "scale")

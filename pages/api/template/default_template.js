@@ -1,3 +1,4 @@
+import { BadRequestException } from "../../../lib/BadRequestExcpetion";
 import { RequestHandler } from "../../../lib/RequestHandler";
 
 async function handle(req, res, prisma) {
@@ -6,16 +7,20 @@ async function handle(req, res, prisma) {
       AND: [{ status: true }, { default_template: true }],
     },
   });
+  if (!data) throw new BadRequestException("No record found");
 
-  if (data) {
-    return res.status(200).json({
-      status: 200,
-      data: data,
-      message: "Templates Retrieved",
-    });
-  }
-
-  return res.status(404).json({ status: 404, message: "No Record Found" });
+  return res.status(200).json({
+    data: data,
+    message: "Templates Retrieved",
+  });
 }
-const functionHandle = (req, res) => RequestHandler(req, res, handle, ["GET"]);
+const functionHandle = (req, res) =>
+  RequestHandler({
+    req,
+    res,
+    callback: handle,
+    allowedMethods: ["GET"],
+    protectedRoute: true,
+  });
+
 export default functionHandle;

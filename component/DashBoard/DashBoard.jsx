@@ -1,344 +1,281 @@
-import { Col, Row } from "antd";
+import {
+  CalendarOutlined,
+  ClockCircleOutlined,
+  CrownOutlined,
+  FileTextOutlined,
+} from "@ant-design/icons";
+import { Skeleton } from "antd";
+import clsx from "clsx";
 import moment from "moment";
 import dynamic from "next/dynamic";
-import Image from "next/image";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
-import {
-  ApplaudIconSmall,
-  FileLeftIcon,
-  FileRightIcon,
-  SmallApplaudIcon,
-} from "../../assets/icons";
+import React, { useEffect, useMemo, useState } from "react";
+import { ColorApplaudIcon } from "../../assets/icons";
+import { URLS } from "../../constants/urls";
+import { dateDayName, dateTime } from "../../helpers/dateHelper";
 import httpService from "../../lib/httpService";
-import CustomPopover from "../common/CustomPopover";
-import DefaultImages from "../common/DefaultImages";
+import { GOALS_FILTER_STATUS } from "../Goals/constants";
 import SiderRight from "../SiderRight/SiderRight";
+import NoRecordFound from "../common/NoRecordFound";
+import { useGoal } from "../common/hooks/useGoal";
+import { useMeeting } from "../common/hooks/useMeeting";
+import DashboardGoalsAvatar from "./component/DashboardGoalsAvatar";
+import HeaderNotification from "./component/HeaderNotification";
+import { CountCard, DateBox } from "./component/helperComponent";
+import { defaultCurrentMonth } from "../../helpers/momentHelper";
+import { getStatusBackground, getStatusPillColor } from "../../helpers/utils";
 
-const BarChart = dynamic(() => import("../../component/common/Charts"), {
+const AreaChart = dynamic(() => import("../common/AreaChart"), {
   ssr: false,
 });
 
-function CountCard({
-  count,
-  title,
-  Icon,
-  href = "#",
-  className = "",
-  tooltipText = "",
-}) {
-  return (
-    <Link href={href} passHref>
-      <div
-        className={`bg-white p-5 rounded-md shadow-md transition-all duration-300 ease-in hover:bg-gradient-to-r hover:from-peach hover:to-peach-light ${className}`}
-      >
-        <div className="flex flex-wrap items-stretch h-full gap-3">
-          <div className="bg-gradient-to-r from-peach to-peach-light text-white grid items-center w-10 h-10 py-1 px-1 justify-center shadow-lg-pink rounded-full">
-            <Icon />
-          </div>
-          <div className="flex-1">
-            <div className="text-primary flex items-start justify-between font-semibold tracking-wide text-sm gap-2 mb-2">
-              <span className="flex-1">{title}</span>
-              {tooltipText && (
-                <span className="leading-4">{CustomPopover(tooltipText)}</span>
-              )}
-            </div>
-            <span className="text-lg xl:text-xl 2xl:text-2xl text-primary font-semibold leading-6">
-              {count}
-            </span>
-          </div>
-        </div>
-      </div>
-    </Link>
-  );
-}
-
 function DashBoard({ user }) {
   const defaultDashboardData = {
-    reviewCreatedCount: 0,
-    reviewAnsweredCount: 0,
-    userCount: 0,
-    applaudCount: 0,
     reviewRating: [],
     averageAnswerTime: 0,
+    totalGoals: 0,
+    totalApplauds: 0,
+    totalReviews: 0,
+    pendingGoals: 0,
+    goalsProgress: 0,
   };
   const defaultMonthlyLeaderboardData = {
-    applaudData: [],
-    reviewRating: [],
+    leaderBoardData: [],
+    leaderboardLoading: true,
   };
 
+  const { goalList, goalListLoading } = useGoal(GOALS_FILTER_STATUS.ALL);
+  const { meetingList, meetingListLoading } = useMeeting();
   const [dashBoardData, setDashboardData] = useState(defaultDashboardData);
   const [monthlyLeaderBoardData, setMonthlyLeaderBoardData] = useState(
     defaultMonthlyLeaderboardData
   );
 
-  const [feedbackList, setFeedbackList] = useState([]);
-  const [allApplaud, setAllApplaud] = useState([]);
-  const currentMonth = {
-    lte: moment().endOf("month"),
-    gte: moment().startOf("month"),
-  };
-
   async function fetchDashboardData() {
     await httpService
-      .post(`/api/dashboard`, {
-        userId: user.id,
-        role: user.role_id,
-      })
-      .then(({ data: response }) => {
-        if (response.status === 200) {
-          setDashboardData(response.data);
-        }
-      })
-      .catch((err) => {
-        console.error(err.response.data?.message);
-        setDashboardData(defaultDashboardData);
-      });
+      .get(`/api/dashboard`)
+      .then(({ data: response }) => setDashboardData(response.data))
+      .catch(() => setDashboardData(defaultDashboardData));
   }
   async function fetchMonthlyLeaderBoardData() {
     await httpService
-      .post(`/api/dashboard/monthly_leaderboard`, {
-        date: currentMonth,
+      .post(`/api/dashboard/leaderboard`, {
+        date: defaultCurrentMonth,
         userId: user.id,
       })
-      .then(({ data: response }) => {
-        if (response.status === 200) {
-          setMonthlyLeaderBoardData(response.data);
-        }
-      })
-      .catch((err) => {
-        console.error(err.response.data?.message);
-      });
-  }
-
-  async function fetchFeedbackData() {
-    await httpService
-      .post(`/api/feedback/all`, {
-        currentMonth: currentMonth,
-        userId: user.id,
-      })
-      .then(({ data: response }) => {
-        if (response.status === 200) {
-          setFeedbackList(response.data);
-        }
-      })
-      .catch((err) => {
-        setFeedbackList([]);
-        console.error(err.response.data?.message);
-      });
-  }
-
-  async function fetchApplaudData() {
-    await httpService
-      .post(`/api/applaud/all`, {
-        date: currentMonth,
-        userId: user.id,
-      })
-      .then(({ data: response }) => {
-        if (response.status === 200) {
-          let data = response?.data?.sort(
-            (a, b) =>
-              b[Object.keys(b)]?.taken?.length -
-              a[Object.keys(a)]?.taken?.length
-          );
-          setAllApplaud(data);
-        }
-      })
-
-      .catch((err) => {
-        console.error(err.response.data?.message);
-      });
+      .then(({ data: response }) =>
+        setMonthlyLeaderBoardData({
+          leaderBoardData: response.data,
+          leaderboardLoading: false,
+        })
+      )
+      .catch(() =>
+        setMonthlyLeaderBoardData({
+          leaderBoardData: [],
+          leaderboardLoading: false,
+        })
+      );
   }
 
   useEffect(() => {
     fetchDashboardData();
-    fetchFeedbackData();
-    fetchApplaudData();
     fetchMonthlyLeaderBoardData();
   }, []);
 
+  const sortGoalListByEndDate = useMemo(() => {
+    if (goalList?.length > 0) {
+      const latestUpcomingGoalsList = goalList
+        .filter(
+          (item) => moment(item?.goal?.end_date).diff(moment(), "days") >= 0
+        )
+        .sort((a, b) =>
+          moment(a?.goal?.end_date).diff(moment(b?.goal?.end_date))
+        );
+
+      if (latestUpcomingGoalsList.length < 3) return latestUpcomingGoalsList;
+
+      return latestUpcomingGoalsList.slice(0, 3);
+    } else return [];
+  }, [goalList]);
+
+  const sortMeetingListByDate = useMemo(() => {
+    if (meetingList?.length > 0) {
+      const latestMeetingList = meetingList
+        .filter(
+          (item) => moment(item?.meeting_at).diff(moment(), "minutes") >= 0
+        )
+        .sort((a, b) => moment(a?.meeting_at).diff(moment(b?.meeting_at)));
+
+      if (latestMeetingList.length < 3) return latestMeetingList;
+
+      return latestMeetingList.slice(0, 3);
+    } else return [];
+  }, [meetingList]);
+
   return (
-    <Row gutter={[24, 24]}>
-      <Col sm={24} md={24} lg={16} xxl={18}>
-        <div className="container mx-auto max-w-full space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 2xl:gap-6">
+    <div className="grid grid-cols-7 gap-4 lg:gap-8 xl:gap:10 bg-brandGray-100 ">
+      <div className="col-span-7 dashboard-screen custom-scrollbar md:col-span-5  border-r border-gray-300 overflow-auto p-4 md:p-6 xl:p-8 space-y-4 md:space-y-6 xl:space-y-8 bg-white">
+        <HeaderNotification user={user} dashBoardData={dashBoardData} />
+        <div className="bg-white  rounded-md shadow-brand">
+          <div className="mb-4 grid md:grid-cols-3 border-b border-gray-300">
             <CountCard
-              title={"Review Created"}
-              count={dashBoardData.reviewCreatedCount}
-              href="/review"
+              title={"Total Reviews"}
+              count={dashBoardData.totalReviews}
               className="cursor-pointer"
-              Icon={() => <SmallApplaudIcon />}
-              tooltipText="Count of Reviews Created by you."
+              Icon={() => <FileTextOutlined />}
+              iconClassName={"text-brandOrange-100 bg-brandOrange-10 text-lg"}
+              href={URLS.REVIEW_CREATED}
             />
 
             <CountCard
-              title={"Review Answered"}
-              count={dashBoardData.reviewAnsweredCount}
+              title={"Total Goals"}
+              count={dashBoardData.totalGoals}
               className="cursor-pointer"
-              href="/review/received"
-              Icon={() => (
-                <Image
-                  src={"/media/images/reviewicon.png"}
-                  alt="logo"
-                  width={20}
-                  height={20}
-                />
-              )}
-              tooltipText="Count of Reviews Answered by you."
+              Icon={() => <CrownOutlined />}
+              iconClassName={"text-brandGreen-100 bg-brandGreen-10 text-lg"}
+              href={URLS.GOAL}
             />
 
             <CountCard
-              title={"Members"}
-              count={dashBoardData.userCount}
-              Icon={() => (
-                <Image
-                  src={"/media/images/threeusers.png"}
-                  alt="icon"
-                  width={20}
-                  height={20}
-                />
-              )}
-              tooltipText="Count of Members in your organization."
+              title={"Total Applaud"}
+              count={dashBoardData.totalApplauds}
+              className="cursor-pointer"
+              Icon={() => <ColorApplaudIcon color="#0091f6" />}
+              iconClassName={"text-brandBlue-100 bg-brandBlue-10"}
+              href={URLS.APPLAUD}
             />
           </div>
-          <div className="md:hidden">
-            <SiderRight
-              dashBoardData={dashBoardData}
-              monthlyLeaderBoardData={monthlyLeaderBoardData}
-            />
+          <div className="w-full p-4  overflow-hidden ">
+            <AreaChart user={user} />
           </div>
-
-          <div className="w-full bg-white rounded-md overflow-hidden shadow-md p-5 ">
-            <BarChart user={user} />
-          </div>
-          <Row gutter={[24, 24]}>
-            <Col xs={24} md={12} lg={12}>
-              <div className="w-full bg-white rounded-md overflow-hidden shadow-md p-5 h-full flex flex-col">
-                <h2 className="text-xl font-semibold text-primary mb-2 flex items-center justify-between gap-3">
-                  <span className="flex-1"> Applauds Leaderboard</span>
-                  <span className="leading-4 text-base  text-gray-900">
-                    {CustomPopover("Applauds count received by that member.")}
-                  </span>
-                </h2>
-                <div className="flex-1 flex flex-col justify-between mt-1 md:mt-3">
-                  <Row gutter={[16, 24]}>
-                    {allApplaud.length > 0 ? (
-                      allApplaud.map((item, idx) => {
-                        if (idx <= 3) {
-                          return Object.entries(item).map(([key, value]) => (
-                            <Col xs={24} sm={12} md={12} key={"applaud" + idx}>
-                              <div className="flex items-center space-x-4 ">
-                                <div className="shrink-0">
-                                  <DefaultImages imageSrc={value?.image} />
-                                </div>
-
-                                <div className="flex-1">
-                                  <p className="mb-2 text-primary font-medium text-sm">
-                                    {key}
-                                  </p>
-                                  <p className="flex">
-                                    <ApplaudIconSmall />
-                                    <span className="pl-2 text-sm font-medium text-gray-500">
-                                      {value?.taken?.length}
-                                    </span>
-                                  </p>
-                                </div>
-                              </div>
-                            </Col>
-                          ));
-                        }
-                      })
-                    ) : (
-                      <Col xs={24} md={24}>
-                        <div className="flex justify-center items-center h-48">
-                          <div className="text-center">No Applaud Found</div>
-                        </div>
-                      </Col>
-                    )}
-                  </Row>
-
-                  {allApplaud.length > 0 && (
-                    <div className=" text-center mt-2">
-                      <Link href="/applaud/allapplaud" passHref>
-                        <span className="text-primary text-sm inline  cursor-pointer font-medium hover:underline">
-                          View All
-                        </span>
-                      </Link>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </Col>
-            <Col md={12} lg={12} xs={24}>
-              <div className="w-full bg-white rounded-md overflow-hidden shadow-md p-5 h-full">
-                <h2 className="text-xl text-primary  font-semibold mb-2 flex items-center gap-3 justify-between">
-                  <span className="flex-1"> Feedback Leaderboard</span>
-                  <span className="leading-4 text-base  text-gray-900">
-                    {CustomPopover(
-                      "Feedback received and given count by your team members"
-                    )}
-                  </span>
-                </h2>
-                <Row className="dashboard-feedback">
-                  <Col xs={24} md={24}>
-                    {feedbackList.length > 0 ? (
-                      feedbackList.map((feedback, idx) => {
-                        return Object.entries(feedback).map(([key, value]) => (
-                          <Row className="my-3" key={idx + key + "feedback"}>
-                            <Col xs={6} md={5}>
-                              <DefaultImages
-                                imageSrc={value?.image}
-                                width={70}
-                                height={70}
-                              />
-                            </Col>
-
-                            <Col xs={18} md={19}>
-                              <div className="px-4">
-                                <p className="mb-2 text-primary font-medium text-sm">
-                                  {key}
-                                </p>
-                                <p className="flex justify-between mr-0 md:mr-3">
-                                  <span className="flex" title="Feedback given">
-                                    <FileRightIcon />
-                                    <span className="pl-2 text-sm font-medium text-gray-500">
-                                      {value.feedbackGiven ?? 0}
-                                    </span>
-                                  </span>
-                                  <span
-                                    className="flex"
-                                    title="Feedback received"
-                                  >
-                                    <FileLeftIcon />
-                                    <span className="pl-2 text-sm font-medium text-gray-500">
-                                      {value.feedbackTaken ?? 0}
-                                    </span>
-                                  </span>
-                                </p>
-                              </div>
-                            </Col>
-                          </Row>
-                        ));
-                      })
-                    ) : (
-                      <div className="flex justify-center items-center h-48 ">
-                        <p className="text-center">No Record Found</p>
-                      </div>
-                    )}
-                  </Col>
-                </Row>
-              </div>
-            </Col>
-          </Row>
         </div>
-      </Col>
-      <Col xs={24} md={24} lg={8} xxl={6} className="h-full hidden md:block">
+        <div className="grid md:grid-cols-2 gap-4 lg:gap-8 xl:gap:10">
+          <div className="w-full bg-white rounded-md overflow-hidden shadow-brand h-full flex flex-col">
+            <h2 className="text-lg font-semibold  mb-0 flex items-center justify-between gap-3 border-b border-gray-300 px-5 py-3">
+              <span className="flex-1"> Upcoming Goals</span>
+              <Link href={URLS.GOAL} passHref>
+                <span className=" text-sm font-medium text-primary-green cursor-pointer hover:underline">
+                  View All
+                </span>
+              </Link>
+            </h2>
+            <div className="divide-y">
+              {goalListLoading ? (
+                <div className="p-4">
+                  <Skeleton />
+                </div>
+              ) : sortGoalListByEndDate.length > 0 ? (
+                sortGoalListByEndDate.map((item, idx) => {
+                  if (idx <= 2) {
+                    return (
+                      <div
+                        className="flex items-center space-x-4 px-5 py-3"
+                        key={item.id + idx}
+                      >
+                        <div className="shrink-0">
+                          <DateBox
+                            date={item.goal.end_date}
+                            className={getStatusBackground(item.goal.status)}
+                          />
+                        </div>
+                        <div className="flex-1">
+                          <Link
+                            href={`${URLS.GOAL}/${item.goal.id}/detail`}
+                            passHref
+                          >
+                            <p className="mb-2 font-medium text-base break-all single-line-clamp cursor-pointer hover:underline">
+                              {item.goal.goal_title}
+                            </p>
+                          </Link>
+                          <p className="flex justify-between items-center">
+                            <span
+                              className={clsx(
+                                "text-xs font-semibold px-2 py-1 uppercase rounded-md ",
+                                getStatusPillColor(item.goal.status)
+                              )}
+                            >
+                              {item.goal.status}
+                            </span>
+                            <DashboardGoalsAvatar
+                              activeGoalUsers={item.goal.GoalAssignee}
+                            />
+                          </p>
+                        </div>
+                      </div>
+                    );
+                  }
+                })
+              ) : (
+                <NoRecordFound title="No Goals Found" />
+              )}
+            </div>
+          </div>
+          <div className="w-full bg-white rounded-md overflow-hidden shadow-brand h-full flex flex-col">
+            <h2 className="text-lg font-semibold  mb-0 flex items-center justify-between gap-3 border-b border-gray-300 px-5 py-3">
+              <span className="flex-1"> Upcoming Follow Ups</span>
+              <Link href={URLS.FOLLOW_UP} passHref>
+                <span className=" text-sm font-medium text-primary-green cursor-pointer hover:underline">
+                  View All
+                </span>
+              </Link>
+            </h2>
+            <div className="divide-y">
+              {meetingListLoading ? (
+                <div className="p-4">
+                  <Skeleton />
+                </div>
+              ) : sortMeetingListByDate.length > 0 ? (
+                sortMeetingListByDate.map((item, idx) => {
+                  if (idx <= 2) {
+                    return (
+                      <div
+                        className="flex items-center space-x-4 px-5 py-3"
+                        key={item.id + idx}
+                      >
+                        <div className="shrink-0">
+                          <DateBox date={item.meeting_at} />
+                        </div>
+                        <div className="flex-1">
+                          <Link href={`${URLS.FOLLOW_UP}/${item.id}`} passHref>
+                            <p className="mb-2 font-medium text-base break-all single-line-clamp cursor-pointer hover:underline">
+                              {item.meeting_title}
+                            </p>
+                          </Link>
+                          <div className="flex justify-between items-center">
+                            <span className="flex items-center text-brandGray-600 text-sm lg:text-base">
+                              <span className="leading-0 text-primary-green pr-1">
+                                <CalendarOutlined />
+                              </span>
+
+                              {dateDayName(item.meeting_at)}
+                            </span>
+                            <span className="flex items-center text-brandGray-600 text-sm lg:text-base">
+                              <span className="leading-0 text-primary-green pr-1">
+                                <ClockCircleOutlined />
+                              </span>
+                              {dateTime(item.meeting_at)}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  }
+                })
+              ) : (
+                <NoRecordFound title="No Meetings Found" />
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="col-span-7 dashboard-screen custom-scrollbar md:col-span-2 space-y-4 p-4  md:pl-0 bg-brandGray-100 overflow-auto">
         <SiderRight
           dashBoardData={dashBoardData}
           monthlyLeaderBoardData={monthlyLeaderBoardData}
+          userId={user.id}
         />
-      </Col>
-    </Row>
+      </div>
+    </div>
   );
 }
 

@@ -8,11 +8,17 @@ import {
   MY_TEMPLATE_KEY,
   TemplateToggleList,
   DefaultMotionVarient,
+  REVIEW_TYPE,
+  SURVEY_TYPE,
+  DEFAULT_TEMPLATE_KEY,
 } from "./constants";
 import SkeletonTemplateCard from "./components/SkeletonTemplateCard";
 import TemplateCard from "./TemplateCard";
+import { useRouter } from "next/router";
+import SurveyTemplateCard from "../Survey/SurveyTemplateCard";
 
 function TemplateListView({ user }) {
+  const router = useRouter();
   const [userTemplateList, setUserTemplateList] = useState([]);
   const [defaultTemplateList, setDefaultTemplateList] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -25,29 +31,22 @@ function TemplateListView({ user }) {
     await httpService
       .get(`/api/template/${user.id}`)
       .then(({ data: response }) => {
-        if (response.status === 200) {
-          let filterData = response.data.filter((item) => item.status);
-          setUserTemplateList(filterData);
-        }
-        setLoading(false);
+        let filterData = response.data.filter((item) => item.status);
+        setUserTemplateList(filterData);
       })
-      .catch((err) => {
-        setLoading(false);
-        setUserTemplateList([]);
-      });
+      .catch(() => setUserTemplateList([]))
+      .finally(() => setLoading(false));
   }
+
   async function fetchDefaultTemplateList() {
     setDefaultTemplateList([]);
-
     await httpService
       .get(`/api/template/default_template`)
       .then(({ data: response }) => {
-        if (response.status === 200) {
-          let filterData = response.data.filter((item) => item.status);
-          setDefaultTemplateList(filterData);
-        }
+        let filterData = response.data.filter((item) => item.status);
+        setDefaultTemplateList(filterData);
       })
-      .catch((err) => {
+      .catch(() => {
         setDefaultTemplateList([]);
       });
   }
@@ -57,9 +56,43 @@ function TemplateListView({ user }) {
     fetchDefaultTemplateList();
   }, []);
 
+  useEffect(() => {
+    if (userTemplateList && userTemplateList.length === 0)
+      setChangeTemplateView(DEFAULT_TEMPLATE_KEY);
+  }, []);
+
+  const getTypeCard = (type, template) => {
+    switch (type) {
+      case REVIEW_TYPE:
+        return (
+          <TemplateCard
+            key={template.id}
+            id={template.id}
+            title={template?.form_data?.title}
+            description={template?.form_data?.description}
+            questionLength={template?.form_data?.questions?.length}
+            isDelete={false}
+          />
+        );
+      case SURVEY_TYPE:
+        return (
+          <SurveyTemplateCard
+            key={template.id}
+            id={template.id}
+            title={template?.form_data?.title}
+            description={template?.form_data?.description}
+            questionLength={template?.form_data?.questions?.length}
+          />
+        );
+
+      default:
+        return null;
+    }
+  };
+
   return (
     <div className="container mx-auto max-w-full">
-      <div className="  mb-4 md:mb-6">
+      <div className="mb-4 md:mb-6">
         <ToggleButton
           arrayList={TemplateToggleList}
           handleToggle={(activeKey) => setChangeTemplateView(activeKey)}
@@ -77,42 +110,24 @@ function TemplateListView({ user }) {
           {changeTemplateView === MY_TEMPLATE_KEY ? (
             <>
               {loading ? (
-                [...Array(3)].map((_, idx) => (
+                [1, 2, 3].map((_, idx) => (
                   <SkeletonTemplateCard
                     key={idx + "temp"}
                     index={idx + "temp"}
                   />
                 ))
               ) : userTemplateList.length > 0 ? (
-                userTemplateList.map((form) => (
-                  <TemplateCard
-                    key={form.id}
-                    id={form.id}
-                    title={form?.form_data?.title}
-                    description={form?.form_data?.description}
-                    questionLength={form?.form_data?.questions?.length}
-                    isDelete={false}
-                    linkHref={`/template/preview/${form.id}`}
-                    // linkHref={`/review/edit/${form.id}`}
-                  />
-                ))
+                userTemplateList.map((form) =>
+                  getTypeCard(router.query.type, form)
+                )
               ) : (
                 <NoRecordFound title="No Templates Found" />
               )}
             </>
           ) : defaultTemplateList.length > 0 ? (
-            defaultTemplateList.map((form) => (
-              <TemplateCard
-                key={form.id}
-                id={form.id}
-                title={form?.form_data?.title}
-                description={form?.form_data?.description}
-                questionLength={form?.form_data?.questions?.length}
-                isDelete={false}
-                // linkHref={`/review/edit/${form.id}`}
-                linkHref={`/template/preview/${form.id}`}
-              />
-            ))
+            defaultTemplateList.map((form) =>
+              getTypeCard(router.query.type, form)
+            )
           ) : (
             <NoRecordFound title="No Templates Found" />
           )}

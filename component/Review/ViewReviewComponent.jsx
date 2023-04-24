@@ -2,6 +2,7 @@ import { Skeleton } from "antd";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import httpService from "../../lib/httpService";
+import NoRecordFound from "../common/NoRecordFound";
 import AdminLayout from "../layout/AdminLayout";
 import ReviewCreatedComponent from "./ReviewCreatedComponent";
 
@@ -23,15 +24,10 @@ function ViewReviewComponent({ user }) {
         review_id: reviewId,
       })
       .then(({ data: response }) => {
-        if (response.status === 200) {
-          setReviewData(response.data);
-        }
+        setReviewData(response.data);
         setLoading(false);
       })
-      .catch((err) => {
-        console.error(err.response.data?.message);
-        setLoading(false);
-      });
+      .catch(() => setLoading(false));
   };
 
   useEffect(() => {
@@ -60,7 +56,9 @@ function ViewReviewComponent({ user }) {
             answerData={reviewData.answerData}
           />
         ) : null
-      ) : null}
+      ) : (
+        <NoRecordFound />
+      )}
     </AdminLayout>
   );
 }

@@ -1,35 +1,49 @@
-import { Col, Radio, Row } from "antd";
+import { Skeleton, Timeline } from "antd";
 import moment from "moment";
-import React, { useState } from "react";
+import dynamic from "next/dynamic";
+import React from "react";
 import {
-  ApplaudIcon,
   ApplaudIconSmall,
-  ClockIcon,
-  StarIcon,
+  FileLeftIcon,
+  FileRightIcon,
 } from "../../assets/icons";
+
+import { SCALE_TYPE } from "../Form/questioncomponents/constants";
+import { REVIEW_RATING_QUESTION } from "../Review/constants";
 import DefaultImages from "../common/DefaultImages";
+import { useActivity } from "../common/hooks/useActivity";
+import { getFirstLetter, getRandomBgColor } from "../../helpers/utils";
+
+const RadialBarChart = dynamic(() => import("../common/RadialBarChart"), {
+  ssr: false,
+});
 
 const ratingHandler = (data) => {
   if (data.length === 0) {
     return 0;
   }
+
   let sum = 0;
   let total = data.map((item) => {
     if (item.ReviewAssigneeAnswers.length > 0) {
       let totalrating = item.ReviewAssigneeAnswers.reduce((prev, curr) => {
-        if (curr?.ReviewAssigneeAnswerOption?.length > 0) {
-          if (isNaN(Number(curr?.ReviewAssigneeAnswerOption[0].option))) {
+        if (curr.ReviewAssigneeAnswerOption?.length > 0) {
+          let ratingQuestion = curr.ReviewAssigneeAnswerOption.find(
+            (i) =>
+              i.question.questionText === REVIEW_RATING_QUESTION &&
+              i.question.type === SCALE_TYPE
+          );
+          if (!ratingQuestion) return 0;
+          if (isNaN(Number(ratingQuestion.option))) {
             return 0;
           } else {
-            return (
-              Number(prev) + Number(curr?.ReviewAssigneeAnswerOption[0].option)
-            );
+            return Number(prev) + Number(ratingQuestion.option);
           }
         } else return 0;
       }, sum);
 
       let averageRating =
-        Number(totalrating) / Number(item?.ReviewAssigneeAnswers?.length);
+        Number(totalrating) / Number(item.ReviewAssigneeAnswers.length);
 
       return averageRating;
     } else return 0;
@@ -47,84 +61,143 @@ const ratingHandler = (data) => {
   let avgRating = 0;
   if (avgRatingSum > 0) avgRating = avgRatingSum / assigneAnswerLength.length;
 
-  return Number(avgRating).toFixed(2);
+  return Number(avgRating).toFixed(1);
 };
 
-function SiderRight({ dashBoardData, monthlyLeaderBoardData }) {
-  const { reviewRating, averageAnswerTime, applaudCount } = dashBoardData;
-  const tempTime = moment.duration(averageAnswerTime);
-  const [activeMonthlyIndex, setActiveMonthlyIndex] = useState(0);
+function SiderRight({ dashBoardData, monthlyLeaderBoardData, userId }) {
+  const { reviewRating, totalGoals, totalApplauds } = dashBoardData;
+  const { leaderBoardData, leaderboardLoading } = monthlyLeaderBoardData;
 
-  const onChangeRadioHandler = (e) => {
-    setActiveMonthlyIndex(e.target.value);
-  };
+  const { activityList, activityListLoading } = useActivity(userId);
 
   return (
     <>
-      <div className="bg-white rounded-md shadow-md p-5">
-        <Row justify="space-around">
-          <Col xs={12} md={12} className="border-r border-slate-200">
-            <div className=" flex flex-col items-center justify-center">
-              <ApplaudIcon />
-
-              <div>
-                <p className="text-primary text-xl font-extrabold my-2">
-                  {applaudCount}
-                </p>
-              </div>
-            </div>
-          </Col>
-          <Col xs={12} md={12}>
-            <div className=" flex flex-col items-center justify-center">
-              <StarIcon />
-
-              <div>
-                <p className="text-primary text-xl font-extrabold my-2">
-                  {ratingHandler(reviewRating)}
-                </p>
-              </div>
-            </div>
-          </Col>
-          <Col xs={24} md={24}>
-            <hr className="my-3" />
-          </Col>
-
-          <Col xs={24} md={24}>
-            <div className="flex flex-wrap items-center justify-between">
-              <div className="flex-shrink-0 grid place-content-center">
-                <ClockIcon />
-              </div>
-              <div className="flex-1 flex items-center justify-around">
-                <div className="text-center">
-                  <p className="text-primary text-xl font-extrabold my-2 ">
-                    {tempTime.days()}
-                  </p>
-                  <p className="text-gray-500 text-sm xl:text-base mb-0">
-                    Day(s)
-                  </p>
-                </div>
-
-                <div className="text-center">
-                  <p className="text-primary text-xl font-extrabold my-2 ">
-                    {tempTime.hours()}
-                  </p>
-                  <p className="text-gray-500 text-sm xl:text-base mb-0">
-                    Hour(s)
-                  </p>
-                </div>
-                <div className="text-center">
-                  <p className="text-primary text-xl font-extrabold my-2 ">
-                    {tempTime.minutes()}
-                  </p>
-                  <p className="text-gray-500 text-sm xl:text-base mb-0">
-                    Min(s).
-                  </p>
-                </div>
-              </div>
-            </div>
-          </Col>
-        </Row>
+      <div className="space-y-2">
+        <div className="border-b border-gray-300 pb-2 text-lg font-semibold">
+          Performance Stats
+        </div>
+        <RadialBarChart
+          totalGoals={totalGoals}
+          totalApplauds={totalApplauds}
+          reviewRating={ratingHandler(reviewRating)}
+        />
       </div>
+      <div className="space-y-2">
+        <div className="border-b border-gray-300 pb-2 text-lg font-semibold">
+          Recent Activity
+        </div>
+
+        {activityListLoading ? (
+          <Skeleton
+            avatar
+            active
+            paragraph={{
+              rows: 1,
+            }}
+          />
+        ) : (
+          activityList.length > 0 && (
+            <Timeline className="px-4 pt-6 space-y-2 max-h-72 overflow-auto no-scrollbar">
+              {activityList.map((item, index) => (
+                <Timeline.Item
+                  dot={
+                    <div
+                      className={
+                        "border text-white capitalize  rounded-full w-7 h-7 grid place-content-center"
+                      }
+                      style={{ backgroundColor: getRandomBgColor(index * 3) }}
+                    >
+                      {getFirstLetter(item.type)}
+                    </div>
+                  }
+                  className="recent-activity-timeline"
+                  key={item.id + "activity"}
+                >
+                  <div className="flex items-start gap-2 ">
+                    <p className="flex-1 font-semibold mb-0 text-sm md:text-base">
+                      <span className="capitalize">{item.title}</span>
+                    </p>
+                  </div>
+
+                  {item.created_date && (
+                    <p className="mt-1 mb-0  text-gray-400  text-xs leading-6 ">
+                      {moment(item.created_date).fromNow()}
+                    </p>
+                  )}
+                </Timeline.Item>
+              ))}
+            </Timeline>
+          )
+        )}
+      </div>
+
+      <div className="space-y-2">
+        <div className="border-b border-gray-300 pb-2 text-lg font-semibold ">
+          Leaderboard
+        </div>
+        <div className="px-4 space-y-4 max-h-64 md:max-h-80 lg:max-h-64 overflow-y-auto no-scrollbar">
+          {leaderboardLoading
+            ? [1, 2, 3].map((_, index) => (
+                <Skeleton
+                  avatar
+                  active
+                  paragraph={{
+                    rows: 1,
+                  }}
+                  key={index + "leaderboadLoading"}
+                />
+              ))
+            : leaderBoardData.length > 0 &&
+              leaderBoardData
+                .filter((i) => i.status)
+                .map((item, index) => {
+                  return (
+                    <div className="flex space-x-4" key={item.id + index}>
+                      <div>
+                        <DefaultImages
+                          imageSrc={item.UserDetails.image}
+                          width={65}
+                          height={65}
+                        />
+                      </div>
+
+                      <div>
+                        <div className="px-4 md:pl-0 xl:pl-4">
+                          <p className="mb-2 font-medium text-sm">
+                            {item.first_name}
+                          </p>
+                          <p className="flex justify-between space-x-4">
+                            <span className="flex" title="Feedback given">
+                              <ApplaudIconSmall />
+                              <span className="pl-2 text-sm font-medium text-gray-500">
+                                {item?.userFeild?.length ?? 0}
+                              </span>
+                            </span>
+                            <span className="flex" title="Feedback given">
+                              <FileRightIcon />
+                              <span className="pl-2 text-sm font-medium text-gray-500">
+                                {item?.ReviewAssigneeAnswers?.length ?? 0}
+                              </span>
+                            </span>
+                            <span className="flex" title="Feedback received">
+                              <FileLeftIcon />
+                              <span className="pl-2 text-sm font-medium text-gray-500">
+                                {item?.taskReviewBy?.length ?? 0}
+                              </span>
+                            </span>
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+        </div>
+      </div>
+
+      {/*
+      
+      //ToDo : This is monthly leaderborad 
+
       {monthlyLeaderBoardData.applaudData.length > 0 && (
         <div className="relative bg-white rounded-md shadow-md p-5  mt-6 ">
           <p className="mb-4 text-primary text-xl font-semibold pr-10 md:pr-14">
@@ -183,7 +256,7 @@ function SiderRight({ dashBoardData, monthlyLeaderBoardData }) {
             }
           })}
         </div>
-      )}
+      )} */}
     </>
   );
 }

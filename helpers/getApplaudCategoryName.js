@@ -1,4 +1,4 @@
-import { ApplaudCategoryList } from "../constants";
+import { ApplaudCategoryList } from "../constants/applaudCategoryList";
 
 export default function getApplaudCategoryName(categoryValue) {
   if (!categoryValue) return "";

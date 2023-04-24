@@ -13,7 +13,8 @@ function ReceivedReviewComponent({ user, reviewId }) {
   const [answerForm] = Form.useForm();
   const [reviewData, setReviewData] = useState({});
   const [loading, setLoading] = useState(false);
-  const [loadingSpin, setLoadingSpin] = useState(false);
+
+  const [updateAnswerApiLoading, setUpdateAnswerApiLoading] = useState(false);
   const [formValues, setFormValues] = useState([]);
   const [questions, setQuestions] = useState([]);
   const [nextSlide, setNextSlide] = useState(0);
@@ -37,8 +38,7 @@ function ReceivedReviewComponent({ user, reviewId }) {
     }
   };
 
-  const handleSubmit = async () => {
-    setLoadingSpin(true);
+  const handleSubmit = async (questionId) => {
     if (formValues.length <= 0) {
       openNotificationBox("error", "You have to answer all question", 3);
       return;
@@ -49,11 +49,20 @@ function ReceivedReviewComponent({ user, reviewId }) {
     }
 
     if (user.id && reviewData.id) {
-      let ansValues = formValues.sort((a, b) => a.questionId - b.questionId);
+      let formValue = formValues.find((data) => data.questionId === questionId);
+
+      if (!formValue) {
+        openNotificationBox("error", "You have to answer this question", 3);
+        return;
+      }
+
+      setUpdateAnswerApiLoading(true);
+
       let obj = {
         user_id: user.id,
         review_assignee_id: reviewData.id,
-        answers: ansValues,
+        answer: formValue.answer,
+        questionId: formValue.questionId,
         review_id: reviewData.review.id,
         created_assignee_date: reviewData.created_date,
       };
@@ -61,43 +70,90 @@ function ReceivedReviewComponent({ user, reviewId }) {
       await httpService
         .post(`/api/form/answer`, obj)
         .then(({ data: response }) => {
-          if (response.status === 200) {
-            openNotificationBox("success", response.message, 3);
-            router.replace("/review/received");
-          }
-          // setLoadingSpin(false);
+          openNotificationBox("success", response.message, 3);
+          router.replace("/review");
         })
-        .catch((err) => {
-          openNotificationBox("error", err.response.data?.message, 3);
-          console.error(err.response.data?.message);
-          setLoadingSpin(false);
-        });
+        .catch((err) =>
+          openNotificationBox("error", err.response.data?.message, 3)
+        )
+        .finally(() => setUpdateAnswerApiLoading(false));
     }
   };
 
-  const fetchReviewData = async (user, reviewId) => {
+  const handleUpdateAnswer = async (questionId) => {
+    if (user.id && reviewData.id) {
+      let formValue = formValues.find((data) => data.questionId === questionId);
+
+      if (!formValue) {
+        openNotificationBox("error", "You have to answer this question", 3);
+        return;
+      }
+
+      setUpdateAnswerApiLoading(true);
+
+      let obj = {
+        user_id: user.id,
+        review_assignee_id: reviewData.id,
+        answer: formValue.answer,
+        questionId: formValue.questionId,
+        review_id: reviewData.review.id,
+        created_assignee_date: reviewData.created_date,
+      };
+
+      await httpService
+        .post(`/api/form/update_answer`, obj)
+        .then(() => {
+          setNextSlide(nextSlide + 1);
+        })
+        .catch((err) =>
+          openNotificationBox("error", err.response.data?.message, 3)
+        )
+        .finally(() => setUpdateAnswerApiLoading(false));
+    }
+  };
+
+  const fetchReviewData = async () => {
     setLoading(true);
 
     await httpService
-      .post(`/api/review/received/${reviewId}`, {
-        userId: user.id,
-      })
+      .post(`/api/review/received/${reviewId}`, {})
       .then(({ data: response }) => {
-        if (response.status === 200) {
-          setReviewData(response.data);
-          setQuestions(response.data?.review?.form?.questions);
-        }
+        setReviewData(response.data);
+        setQuestions(response.data?.review?.form?.questions);
+        if (response?.data?.ReviewAssigneeAnswers?.length > 0) {
+          let answersList = [];
 
-        setLoading(false);
+          if (response.data?.review?.form?.questions?.length > 0) {
+            response.data?.review?.form?.questions.forEach((question) => {
+              response?.data?.ReviewAssigneeAnswers.forEach(
+                (ReviewAssigneeAnswer) => {
+                  let findAnswer =
+                    ReviewAssigneeAnswer.ReviewAssigneeAnswerOption.find(
+                      (answer) => answer.question_id === question.id
+                    );
+
+                  if (findAnswer) {
+                    answersList.push({
+                      questionId: question.id,
+                      answer: findAnswer.option,
+                    });
+                  }
+                }
+              );
+            });
+          }
+          if (answersList.length > 0) {
+            setFormValues(answersList);
+          }
+        }
       })
-      .catch((err) => {
-        openNotificationBox("error", err.response.data?.message);
-      });
+      .catch((err) => openNotificationBox("error", err.response.data?.message))
+      .finally(() => setLoading(false));
   };
 
   useEffect(() => {
-    if (reviewId) fetchReviewData(user, reviewId);
-  }, []);
+    if (reviewId) fetchReviewData();
+  }, [reviewId]);
 
   return (
     <div className="answer-bg px-2 py-4 md:p-4 flex items-center justify-center">
@@ -107,7 +163,7 @@ function ReceivedReviewComponent({ user, reviewId }) {
         </div>
       ) : reviewData?.status ? (
         <div className="relative  text-center bg-white rounded-md py-10 shadow-md md:w-10/12 2xl:w-8/12 mx-auto">
-          <Link href="/review/received" passHref>
+          <Link href="/review" passHref>
             <span className="absolute top-2 right-2 p-3 leading-0 cursor-pointer rounded-full hover:bg-gray-100">
               <CloseOutlined />
             </span>
@@ -119,7 +175,7 @@ function ReceivedReviewComponent({ user, reviewId }) {
       ) : (
         <Form layout="vertical" className="py-4 w-11/12" form={answerForm}>
           <AnimatePresence>
-            {Number(questions?.length) > 0 ? (
+            {questions?.length > 0 ? (
               questions
                 ?.filter((_, index) => index === nextSlide)
                 ?.map((question, idx) => (
@@ -129,12 +185,16 @@ function ReceivedReviewComponent({ user, reviewId }) {
                     id={question?.id}
                     questionText={question?.questionText}
                     options={question?.options}
-                    error={question?.error}
+                    defaultQuestionAnswer={formValues?.find(
+                      (values) => values.questionId === question?.id
+                    )}
+                    updateAnswerApiLoading={updateAnswerApiLoading}
                     nextSlide={nextSlide}
                     setNextSlide={setNextSlide}
                     totalQuestions={questions.length}
                     handleSubmit={handleSubmit}
                     handleAnswerChange={handleAnswerChange}
+                    handleUpdateAnswer={handleUpdateAnswer}
                   />
                 ))
             ) : (
@@ -148,7 +208,7 @@ function ReceivedReviewComponent({ user, reviewId }) {
                     transition={{ duration: 0.8 }}
                   >
                     <div className="relative text-center bg-white rounded-md py-10 shadow-md md:w-10/12 2xl:w-8/12 mx-auto">
-                      <Link href="/review/received" passHref>
+                      <Link href="/review" passHref>
                         <span className="absolute top-2 right-2 p-3 leading-0 cursor-pointer rounded-full hover:bg-gray-100">
                           <CloseOutlined />
                         </span>

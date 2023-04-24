@@ -1,33 +1,33 @@
 import { RequestHandler } from "../../../../lib/RequestHandler";
+import { BadRequestException } from "../../../../lib/BadRequestExcpetion";
 
-async function handle(req, res, prisma) {
+async function handle(req, res, prisma, user) {
   const { review_id } = req.query;
+  const { id: userId } = user;
 
-  if (!review_id) {
-    return res.status(401).json({ status: 401, message: "No Review found" });
-  }
+  if (!userId && !review_id) throw new BadRequestException("No User found.");
 
-  const data = await prisma.reviewAssigneeAnswers.findMany({
+  const data = await prisma.reviewAssigneeAnswers.findFirst({
     where: {
-      review_id: review_id,
+      AND: [{ user_id: userId }, { review_assignee_id: review_id }],
     },
-    orderBy: { id: "desc" },
     include: {
-      ReviewAssigneeAnswerOption: {
-        include: { question: true },
-      },
-      user: {
-        select: { first_name: true, last_name: true },
-      },
+      ReviewAssigneeAnswerOption: true,
     },
   });
 
   return res.status(200).json({
-    status: 200,
     data: data,
-    message: "All Data Retrieved",
+    message: "Review Details Retrieved",
   });
 }
-const functionHandle = (req, res) => RequestHandler(req, res, handle, ["GET"]);
+const functionHandle = (req, res) =>
+  RequestHandler({
+    req,
+    res,
+    callback: handle,
+    allowedMethods: ["GET"],
+    protectedRoute: true,
+  });
 
 export default functionHandle;

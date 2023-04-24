@@ -80,3 +80,34 @@ export const QuestiontypeText = (key) => {
       return null;
   }
 };
+
+export const defaultOption = { optionText: "", error: "" };
+
+export const defaultScaleQuestion = {
+  questionText: "",
+  options: [defaultOption, defaultOption],
+  lowerLabel: 0,
+  higherLabel: 5,
+  open: true,
+  type: SCALE_TYPE,
+  error: "",
+};
+export const defaultQuestionConfig = {
+  questionText: "",
+  options: [defaultOption, defaultOption],
+  open: true,
+  type: MULTIPLE_CHOICE_TYPE,
+  error: "",
+  active: true,
+};
+
+export const defaultRatingQuestion = {
+  questionText: "Rating",
+  options: [{ optionText: "low" }, { optionText: "high" }],
+  lowerLabel: 1,
+  higherLabel: 10,
+  open: false,
+  type: SCALE_TYPE,
+  editableFeedback: true,
+  ratingFeedback: true,
+};

@@ -7,11 +7,8 @@ import { CustomInput, CustomTextArea } from "./CustomFormFeilds";
 const FeedbackTitleStep = () => {
   return (
     <div className="w-full md:w-1/2 bg-white  mx-auto rounded-md">
-      <div className="text-primary text-base md:text-lg  font-bold border-b border-gray-200 p-4 md:py-5 md:px-6">
-        Assign a review
-      </div>
       <div className="p-4 md:py-5 md:px-6 space-y-5">
-        <p className="text-base font-bold  text-primary">
+        <p className="text-base font-medium  ">
           Please enter your feedback title
         </p>
 
@@ -27,7 +24,7 @@ const FeedbackTitleStep = () => {
           <CustomInput placeholder="for eg: Monthly feedback , Lastest trip review , weekly feedback ... " />
         </Form.Item>
 
-        <p className="text-base font-bold  text-primary">
+        <p className="text-base font-medium  ">
           Please enter your feedback description
         </p>
         <Form.Item
@@ -53,11 +50,20 @@ const FeedbackTitleStep = () => {
 const FeedbackMemberStep = ({ onInputChange, userList }) => {
   return (
     <div className="w-full md:w-1/2 bg-white p-4 md:py-5 md:px-6 mx-auto rounded-md space-y-5">
-      <p className="text-base font-bold  text-primary">
+      <p className="text-base font-medium  ">
         Please enter your feedback frequency
       </p>
 
-      <Form.Item name="frequency" className="mb-0 margin-b-0">
+      <Form.Item
+        name="frequency"
+        className="mb-0 margin-b-0"
+        rules={[
+          {
+            required: true,
+            message: "Please select your frequency",
+          },
+        ]}
+      >
         <Select
           placeholder="Select Frequency"
           showSearch
@@ -74,11 +80,20 @@ const FeedbackMemberStep = ({ onInputChange, userList }) => {
         </Select>
       </Form.Item>
 
-      <p className="text-base font-bold  text-primary">
+      <p className="text-base font-medium  ">
         Please select your feedback members
       </p>
 
-      <Form.Item name="assigned_to_id" className="mb-0 margin-b-0">
+      <Form.Item
+        name="assigned_to_id"
+        className="mb-0 margin-b-0"
+        rules={[
+          {
+            required: true,
+            message: "Please select your Members",
+          },
+        ]}
+      >
         <Select
           mode="multiple"
           placeholder="Select Member"
@@ -106,7 +121,7 @@ const FeedbackMemberStep = ({ onInputChange, userList }) => {
         </Select>
       </Form.Item>
 
-      <p className="text-base font-bold  text-primary">
+      <p className="text-base font-medium  ">
         Would you like to let your team members rate you ?
       </p>
 
@@ -127,13 +142,13 @@ const FeedbackMemberStep = ({ onInputChange, userList }) => {
         >
           <Radio.Button
             value="feedback"
-            className="border-1 hover:text-primary focus:outline-none before:bg-transparent rounded-l-md"
+            className="border-1 hover: focus:outline-none before:bg-transparent rounded-l-md"
           >
             Yes
           </Radio.Button>
           <Radio.Button
             value="other"
-            className="border-1  hover:text-primary focus:outline-none before:bg-transparent rounded-r-md"
+            className="border-1  hover: focus:outline-none before:bg-transparent rounded-r-md"
           >
             No
           </Radio.Button>

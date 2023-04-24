@@ -10,10 +10,10 @@ import {
   TemplateToggleList,
   DefaultMotionVarient,
 } from "./constants";
-import { PrimaryButton } from "../common/CustomButton";
 import SkeletonTemplateCard from "./components/SkeletonTemplateCard";
 import CreateTemplateCard from "./components/CreateTemplateCard";
 import TemplateCard from "./TemplateCard";
+import { URLS } from "../../constants/urls";
 
 function TemplateLayout({ user }) {
   const [templateList, setTemplateList] = useState([]);
@@ -27,32 +27,22 @@ function TemplateLayout({ user }) {
     await httpService
       .get(`/api/template/${user.id}`)
       .then(({ data: response }) => {
-        if (response.status === 200) {
-          let filterData = response.data.filter((item) => item.status);
-
-          setTemplateList(filterData);
-        }
-        setLoading(false);
+        let filterData = response.data.filter((item) => item.status);
+        setTemplateList(filterData);
       })
-      .catch((err) => {
-        setLoading(false);
-        setTemplateList([]);
-      });
+      .catch(() => setTemplateList([]))
+      .finally(() => setLoading(false));
   }
+
   async function fetchDefaultTemplateList() {
     setDefaultTemplateList([]);
     await httpService
       .get(`/api/template/default_template`)
       .then(({ data: response }) => {
-        if (response.status === 200) {
-          let filterData = response.data.filter((item) => item.status);
-
-          setDefaultTemplateList(filterData);
-        }
+        let filterData = response.data.filter((item) => item.status);
+        setDefaultTemplateList(filterData);
       })
-      .catch((err) => {
-        setTemplateList([]);
-      });
+      .catch(() => setDefaultTemplateList([]));
   }
 
   async function deleteTemplate(id) {
@@ -64,15 +54,12 @@ function TemplateLayout({ user }) {
           },
         })
         .then(({ data: response }) => {
-          if (response.status === 200) {
-            fetchUserTemplateList();
-            openNotificationBox("success", response.message, 3);
-          }
+          fetchUserTemplateList();
+          openNotificationBox("success", response.message, 3);
         })
-        .catch((err) => {
-          console.error(err.response.data?.message);
-          openNotificationBox("error", err.response.data?.message);
-        });
+        .catch((err) =>
+          openNotificationBox("error", err.response.data?.message)
+        );
     }
   }
 
@@ -83,20 +70,13 @@ function TemplateLayout({ user }) {
 
   return (
     <div className="container mx-auto max-w-full">
-      <div className="flex flex-row items-center justify-between flex-wrap gap-4 mb-4 md:mb-6">
+      <div className="flex flex-row items-center justify-between flex-wrap gap-4  mb-2 xl:mb-4 ">
+        <p className="text-xl font-semibold mb-0">Templates</p>
         <ToggleButton
           arrayList={TemplateToggleList}
           handleToggle={(activeKey) => setChangeTemplateView(activeKey)}
           activeKey={changeTemplateView}
         />
-        {changeTemplateView === MY_TEMPLATE_KEY && (
-          <PrimaryButton
-            withLink={true}
-            className="md:hidden"
-            linkHref="/template/add"
-            title={"Create"}
-          />
-        )}
       </div>
 
       <div className="container mx-auto max-w-full">
@@ -110,7 +90,7 @@ function TemplateLayout({ user }) {
             <>
               <CreateTemplateCard />
               {loading
-                ? [...Array(3)].map((_, idx) => (
+                ? [1, 2, 3].map((_, idx) => (
                     <SkeletonTemplateCard
                       key={idx + "temp"}
                       index={idx + "temp"}
@@ -125,7 +105,7 @@ function TemplateLayout({ user }) {
                       description={template?.form_data?.description}
                       questionLength={template?.form_data?.questions?.length}
                       deleteTemplate={deleteTemplate}
-                      linkHref={`/template/edit/${template.id}`}
+                      linkHref={`${URLS.TEMPLATE_EDIT}/${template.id}`}
                       isDelete={true}
                     />
                   ))}
@@ -141,7 +121,6 @@ function TemplateLayout({ user }) {
                     description={template?.form_data?.description}
                     questionLength={template?.form_data?.questions?.length}
                     deleteTemplate={deleteTemplate}
-                    linkHref={`/template/preview/${template.id}`}
                     isDelete={false}
                   />
                 ))

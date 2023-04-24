@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
+import { URLS } from "../../constants/urls";
 import httpService from "../../lib/httpService";
 import NoRecordFound from "../common/NoRecordFound";
 import TemplateBuildComponent from "../Template/TemplateBuildComponent";
@@ -8,31 +9,24 @@ import EditiorTitlePageLoader from "./components/EditiorTitlePageLoader";
 function EditTemplateComponent({ user }) {
   const router = useRouter();
   const { template_id } = router.query;
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState(null);
   const [loading, setLoading] = useState(false);
 
   async function fetchTemplateData() {
     setLoading(true);
-    setFormData([]);
+    setFormData(null);
     await httpService
       .post(`/api/template/edit`, {
         template_id: template_id,
       })
       .then(({ data: response }) => {
-        if (response.status === 200) {
-          setFormData(response.data);
-          if (response.data.default_template) {
-            router.push(`/template/preview/${response.data.id}`);
-          } else {
-            setLoading(false);
-          }
+        setFormData(response.data);
+        if (response.data.default_template) {
+          router.push(`${URLS.TEMPLATE_PREVIEW}/${response.data.id}/review`);
         }
       })
-      .catch((err) => {
-        console.error(err.response.data?.message);
-        setFormData([]);
-        setLoading(false);
-      });
+      .catch(() => setFormData(null))
+      .finally(() => setLoading(false));
   }
 
   useEffect(() => {

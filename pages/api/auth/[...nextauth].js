@@ -3,7 +3,7 @@ import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { compareHashedPassword } from "../../../lib/auth";
 
-export default NextAuth({
+export const authOptions = {
   session: {
     strategy: "jwt",
     jwt: true,
@@ -77,4 +77,6 @@ export default NextAuth({
     },
   },
   secret: process.env.NEXTAUTH_SECRET,
-});
+};
+
+export default NextAuth(authOptions);

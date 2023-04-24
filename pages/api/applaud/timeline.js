@@ -1,27 +1,18 @@
+import { BadRequestException } from "../../../lib/BadRequestExcpetion";
 import { RequestHandler } from "../../../lib/RequestHandler";
 
-async function handle(req, res, prisma) {
-  const { date, userId } = req.body;
-  if (!userId) {
-    return res.status(401).json({ status: 401, message: "No User found" });
-  }
+async function handle(req, res, prisma, user) {
+  const { date } = req.body;
+  const { id: userId, organization_id } = user;
 
-  const userTableData = await prisma.user.findUnique({
-    where: { id: userId },
-  });
+  if (!userId) throw new BadRequestException("No User found");
 
   const allApplaudData = await prisma.userApplaud.findMany({
     orderBy: {
       created_date: "desc",
     },
-
     where: {
-      AND: [
-        { organization_id: userTableData.organization_id },
-        {
-          created_date: date,
-        },
-      ],
+      AND: [{ organization_id: organization_id }, { created_date: date }],
     },
     include: {
       user: {
@@ -42,12 +33,20 @@ async function handle(req, res, prisma) {
     },
   });
 
+  if (!allApplaudData) throw new BadRequestException("No Record found");
+
   return res.status(200).json({
-    status: 200,
     data: allApplaudData,
     message: "Applaud Data Received",
   });
 }
-const functionHandle = (req, res) => RequestHandler(req, res, handle, ["POST"]);
+const functionHandle = (req, res) =>
+  RequestHandler({
+    req,
+    res,
+    callback: handle,
+    allowedMethods: ["POST"],
+    protectedRoute: true,
+  });
 
 export default functionHandle;

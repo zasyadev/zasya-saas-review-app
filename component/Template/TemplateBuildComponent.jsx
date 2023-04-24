@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { openNotificationBox } from "../../component/common/notification";
-import isEmptyStr from "../../helpers/isEmptyStr";
+import { URLS } from "../../constants/urls";
 import httpService from "../../lib/httpService";
 import {
   CustomCheckbox,
@@ -12,32 +12,16 @@ import ErrorBox from "../common/ErrorBox";
 import StepFixedHeader from "../common/StepFixedHeader";
 import StepsBottomFixedBar from "../common/StepsBottomFixedBar";
 import {
+  defaultOption,
+  defaultQuestionConfig,
+  defaultScaleQuestion,
   MULTIPLE_CHOICE_TYPE,
   SCALE_TYPE,
 } from "../Form/questioncomponents/constants";
 import { TemplateStepsArray } from "./constants";
 import TemplateEditor from "./TemplateEditor";
 import { TemplatePreviewComponent } from "./TemplatePreviewComponent";
-
-const defaultOption = { optionText: "", error: "" };
-
-const defaultQuestionConfig = {
-  questionText: "",
-  options: [defaultOption],
-  open: true,
-  type: MULTIPLE_CHOICE_TYPE,
-  error: "",
-  active: true,
-};
-const defaultScaleQuestion = {
-  questionText: "",
-  options: [defaultOption, defaultOption],
-  lowerLabel: 0,
-  higherLabel: 5,
-  open: true,
-  type: SCALE_TYPE,
-  error: "",
-};
+import { isEmptyStr } from "../../helpers/utils";
 
 function TemplateBuildComponent({ user, editMode, editFormData }) {
   const router = useRouter();
@@ -185,7 +169,6 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
     let quesArray = questions.map((item) => ({ ...item, open: false }));
 
     let obj = {
-      user_id: user.id,
       form_data: {
         title: formTitle.value ?? "",
         description: formDes ?? "",
@@ -194,13 +177,14 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
       form_title: formTitle.value ?? "",
       form_description: formDes ?? "",
       status: true,
-      questions: quesArray,
       default_template: defaultTemplate,
     };
     setTemplateSaveLoading(true);
 
     editMode ? updateFormData(obj, id) : addNewForm(obj);
   }
+
+  const redirectToTemplate = () => router.push(URLS.TEMPLATE);
 
   async function updateFormData(obj, id) {
     if (id) {
@@ -209,13 +193,10 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
       await httpService
         .put(`/api/template`, obj)
         .then(({ data: response }) => {
-          if (response.status === 200) {
-            router.push("/template");
-            openNotificationBox("success", response.message, 3);
-          }
+          redirectToTemplate();
+          openNotificationBox("success", response.message, 3);
         })
         .catch((err) => {
-          console.error(err.response.data?.message);
           setTemplateSaveLoading(false);
           openNotificationBox("error", err.response.data?.message);
         });
@@ -226,13 +207,10 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
     await httpService
       .post(`/api/template`, obj)
       .then(({ data: response }) => {
-        if (response.status === 200) {
-          router.push("/template");
-          openNotificationBox("success", response.message, 3);
-        }
+        redirectToTemplate();
+        openNotificationBox("success", response.message, 3);
       })
       .catch((err) => {
-        console.error(err.response.data?.message);
         setTemplateSaveLoading(false);
         openNotificationBox("error", err.response.data?.message);
       });
@@ -339,15 +317,15 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
     <div className=" md:px-6 pb-16 pt-14 md:pt-20 md:pb-24 bg-white  md:bg-gray-100 min-h-screen">
       <StepFixedHeader
         title={`${editMode ? "Edit" : "Create"} Template`}
-        backUrl={"/template"}
+        backUrl={URLS.TEMPLATE}
       />
       {activeStepState === 0 && (
         <div className="w-full md:w-1/2 bg-white pb-2  md:px-5 md:pt-5 md:pb-6 xl:p-8 xl:pt-6 md:rounded-md mx-auto space-y-2 md:space-y-6">
-          <div className="text-primary text-base md:text-lg xl:text-xl font-bold md:border-b border-gray-200 px-4 py-3">
+          <div className="text-base md:text-lg xl:text-xl font-bold md:border-b border-gray-200 pb-3">
             Create a Custom Template
           </div>
           <div className="px-4 md:p-0 space-y-2">
-            <div className="text-primary text-base font-semibold">Title</div>
+            <div className="text-base font-semibold">Title</div>
 
             <CustomInput
               placeholder="E.g. Template Title"
@@ -361,9 +339,7 @@ function TemplateBuildComponent({ user, editMode, editFormData }) {
             <ErrorBox error={formTitle?.error} />
           </div>
           <div className="px-4 md:p-0">
-            <div className="text-primary text-base font-semibold mb-2">
-              Description
-            </div>
+            <div className="text-base font-semibold mb-2">Description</div>
 
             <CustomTextArea
               placeholder="E.g. Template Description"

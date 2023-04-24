@@ -6,46 +6,29 @@ import {
   SecondaryButton,
 } from "../../component/common/CustomButton";
 import { openNotificationBox } from "../../component/common/notification";
-import { ApplaudCategoryList } from "../../constants";
+import { ApplaudCategoryList } from "../../constants/applaudCategoryList";
+
 import httpService from "../../lib/httpService";
 import { CustomTextArea } from "../common/CustomFormFeilds";
 import CustomPopover from "../common/CustomPopover";
+import { useMember } from "../common/hooks/useMember";
 
 function AddApplaud({ user }) {
   const router = useRouter();
   const [applaudform] = Form.useForm();
-  const [membersList, setMembersList] = useState([]);
   const [applaudLimit, setApplaudLimit] = useState(0);
   const [loadingSubmitSpin, setLoadingSubmitSpin] = useState(false);
+  const { membersList } = useMember(user);
 
   const validateMessages = {
     required: "${label} is required!",
   };
 
-  async function fetchMember(user) {
+  async function fetchApplaudLimit() {
     await httpService
-      .get(`/api/team/${user.id}`)
+      .get(`/api/applaud/applaudlimit`)
       .then(({ data }) => {
-        if (data.status === 200) {
-          let filterData = data.data.filter((item) => item.user_id != user.id);
-          setMembersList(filterData);
-        }
-      })
-      .catch((err) => {
-        openNotificationBox("error", err.response.data?.message);
-        setMembersList([]);
-      });
-  }
-
-  async function fetchApplaudLimit(user) {
-    await httpService
-      .post(`/api/applaud/applaudlimit`, {
-        userId: user.id,
-      })
-      .then(({ data }) => {
-        if (data.status === 200) {
-          setApplaudLimit(data);
-        }
+        setApplaudLimit(data);
       })
       .catch((err) => {
         openNotificationBox("error", err.response.data?.message);
@@ -60,7 +43,6 @@ function AddApplaud({ user }) {
       let obj = {
         user_id: values.user_id,
         comment: values.comment,
-        created_by: user.id,
         category: values.category,
       };
       addApplaud(obj);
@@ -73,21 +55,17 @@ function AddApplaud({ user }) {
     await httpService
       .post("/api/applaud", obj)
       .then(({ data: response }) => {
-        if (response.status === 200) {
-          openNotificationBox("success", response.message, 3);
-          router.push("/applaud");
-        }
+        openNotificationBox("success", response.message, 3);
+        router.push("/applaud");
       })
       .catch((err) => {
-        console.error(err);
         openNotificationBox("error", err.response.data?.message);
         setLoadingSubmitSpin(false);
       });
   }
 
   useEffect(() => {
-    fetchMember(user);
-    fetchApplaudLimit(user);
+    fetchApplaudLimit();
   }, []);
 
   return (

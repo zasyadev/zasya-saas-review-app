@@ -5,6 +5,7 @@ import {
   SCALE_TYPE,
 } from "../Form/questioncomponents/constants";
 import { Tooltip } from "antd";
+import clsx from "clsx";
 
 function TemplateSidebarQuestionCard({
   isActive,
@@ -23,11 +24,11 @@ function TemplateSidebarQuestionCard({
 
   return (
     <div
-      className={`dragable-div question-section-wrapper cursor-pointer ${
-        isActive ? "border-l-primary border-l-2" : ""
-      }
-      ${isValidQuestion ? "border-x border-x-red-500 bg-red-50" : ""}
-    `}
+      className={clsx(
+        "dragable-div question-section-wrapper cursor-pointer",
+        { "border-l-primary-green border-l-2": isActive },
+        { "border-x border-x-red-500 bg-red-50": isValidQuestion }
+      )}
     >
       <div className="flex items-center">
         <div
@@ -44,11 +45,11 @@ function TemplateSidebarQuestionCard({
           onClick={() => handleSelect()}
         >
           <div className="flex space-x-2 items-center flex-1">
-            <p className=" rounded-full w-6 h-6 bg-primary text-white grid place-content-center mb-0">
+            <p className=" rounded-full w-6 h-6 bg-primary-green text-white grid place-content-center mb-0">
               {idx + 1}
             </p>
 
-            <p className="mb-0 flex-1 font-medium text-primary single-line-clamp">
+            <p className="mb-0 flex-1 font-medium  single-line-clamp">
               {question?.questionText}
             </p>
           </div>

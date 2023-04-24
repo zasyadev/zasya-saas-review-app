@@ -1,89 +1,84 @@
+import { BadRequestException } from "../../../lib/BadRequestExcpetion";
 import { RequestHandler } from "../../../lib/RequestHandler";
+import { TEMPLATE_SCHEMA } from "../../../yup-schema/template";
 
-async function handle(req, res, prisma) {
+async function handle(req, res, prisma, user) {
   if (req.method === "POST") {
     const resData = req.body;
+    const { id: userId } = user;
 
     const templateData = await prisma.reviewTemplate.create({
       data: {
-        user: { connect: { id: resData.user_id } },
-
+        user: { connect: { id: userId } },
         form_title: resData.form_title,
         form_description: resData.form_description,
         form_data: resData.form_data,
         status: resData.status,
         default_template: resData.default_template,
-        // questions: {
-        //   create: questionData,
-        // },
       },
     });
+    if (!templateData) throw new BadRequestException("Record not saved");
 
     return res.status(201).json({
-      message: "Saved  Successfully",
+      message: "Saved Successfully",
       data: templateData,
-      status: 200,
     });
   } else if (req.method === "GET") {
     const data = await prisma.reviewTemplate.findMany();
 
-    if (data) {
-      return res.status(200).json({
-        status: 200,
-        data: data,
-        message: "All Templates Retrieved",
-      });
-    }
+    if (!data) throw new BadRequestException("No record found");
 
-    return res.status(404).json({ status: 404, message: "No Record Found" });
+    return res.status(200).json({
+      data: data,
+      message: "All Templates Retrieved",
+    });
   } else if (req.method === "PUT") {
     const resData = req.body;
-
+    const { id: userId } = user;
     const templateData = await prisma.reviewTemplate.update({
       where: { id: resData.id },
       data: {
-        user: { connect: { id: resData.user_id } },
-
+        user: { connect: { id: userId } },
         form_title: resData.form_title,
         form_description: resData.form_description,
         form_data: resData.form_data,
         status: resData.status,
-        // questions: {
-        //   create: questionData,
-        // },
+        default_template: resData.default_template,
       },
     });
 
+    if (!templateData) throw new BadRequestException("Record not updated");
+
     return res.status(201).json({
-      message: "Updated   Successfully",
+      message: "Updated Successfully",
       data: templateData,
-      status: 200,
     });
   } else if (req.method === "DELETE") {
     const reqBody = req.body;
 
-    if (reqBody.id) {
-      const deletaData = await prisma.reviewTemplate.update({
-        where: { id: reqBody.id },
-        data: {
-          status: false,
-          delete_date: new Date(),
-        },
-      });
+    const deletaData = await prisma.reviewTemplate.update({
+      where: { id: reqBody.id },
+      data: {
+        status: false,
+        delete_date: new Date(),
+      },
+    });
 
-      if (deletaData) {
-        return res.status(200).json({
-          status: 200,
-          message: "Template Deleted Successfully.",
-        });
-      }
-      return res.status(400).json({
-        status: 400,
-        message: "Failed To Delete Record.",
-      });
-    }
+    if (!deletaData) throw new BadRequestException("Failed to delete record");
+
+    return res.status(200).json({
+      message: "Template Deleted Successfully.",
+    });
   }
 }
 const functionHandle = (req, res) =>
-  RequestHandler(req, res, handle, ["POST", "GET", "PUT", "DELETE"]);
+  RequestHandler({
+    req,
+    res,
+    callback: handle,
+    allowedMethods: ["POST", "GET", "PUT", "DELETE"],
+    protectedRoute: true,
+    schemaObj: TEMPLATE_SCHEMA,
+  });
+
 export default functionHandle;

@@ -1,140 +1,168 @@
+import moment from "moment";
 import { calculateMiliDuration } from "../../../helpers/momentHelper";
+import { BadRequestException } from "../../../lib/BadRequestExcpetion";
 import { RequestHandler } from "../../../lib/RequestHandler";
 
-async function handle(req, res, prisma) {
-  const { userId } = req.body;
+const currentYear = {
+  lte: moment().endOf("year").format(),
+  gte: moment().startOf("year").format(),
+};
 
-  if (!userId) {
-    return res.status(401).json({ status: 401, message: "No User found" });
-  }
-  const userTableData = await prisma.user.findUnique({
-    where: { id: userId },
-  });
-  const reviewCreated = await prisma.review.findMany({
-    where: {
-      AND: [
-        {
-          created_by: userId,
-        },
-        {
-          organization_id: userTableData.organization_id,
-        },
-      ],
-    },
-    include: {
-      created: true,
+async function handle(_, res, prisma, user) {
+  try {
+    const { id: userId, organization_id } = user;
 
-      form: {
-        include: {
-          questions: {
-            include: { options: true },
+    if (!userId) throw new BadRequestException("No user found");
+
+    let pendingGoals = 0;
+    let goalsProgress = 0;
+    let averageAnswerTime = 0;
+
+    const reviewCreated = await prisma.review.findMany({
+      where: {
+        AND: [
+          {
+            created_date: currentYear,
           },
-        },
-      },
-    },
-  });
-  const reviewRating = await prisma.review.findMany({
-    where: {
-      AND: [
-        {
-          created_by: userId,
-        },
-        {
-          organization_id: userTableData.organization_id,
-        },
-        {
-          review_type: "feedback",
-        },
-      ],
-    },
-    include: {
-      ReviewAssigneeAnswers: {
-        include: { ReviewAssigneeAnswerOption: true },
-      },
-    },
-  });
-
-  let reviewAnswered = await prisma.reviewAssigneeAnswers.findMany({
-    where: {
-      AND: [
-        {
-          user_id: userId,
-        },
-        {
-          review: {
-            is: { organization_id: userTableData.organization_id },
+          {
+            organization_id: organization_id,
           },
-        },
-      ],
-    },
-    include: {
-      review_assignee: true,
-    },
-  });
-
-  const userData = await prisma.userOraganizationGroups.findMany({
-    where: {
-      AND: [
-        { organization_id: userTableData.organization_id },
-        { status: true },
-      ],
-    },
-  });
-
-  const applaudData = await prisma.userApplaud.findMany({
-    where: {
-      AND: [
-        { user_id: userId },
-        { organization_id: userTableData.organization_id },
-      ],
-    },
-    include: {
-      user: true,
-    },
-  });
-
-  let filterApplaudData = [];
-  if (applaudData.length > 0) {
-    filterApplaudData = applaudData.filter((item) => {
-      delete item?.user?.password;
-      return true;
+          {
+            created_by: userId,
+          },
+        ],
+      },
     });
-  }
+    const reviewRating = await prisma.review.findMany({
+      where: {
+        AND: [
+          {
+            created_by: userId,
+          },
+          {
+            organization_id: organization_id,
+          },
+          {
+            review_type: "feedback",
+          },
+        ],
+      },
+      include: {
+        ReviewAssigneeAnswers: {
+          include: {
+            ReviewAssigneeAnswerOption: {
+              include: {
+                question: true,
+              },
+            },
+          },
+        },
+      },
+    });
 
-  let averageAnswerTime = 0;
-  if (reviewAnswered.length > 0) {
-    const totalMili = reviewAnswered.reduce((prev, curr) => {
-      let time = calculateMiliDuration({
-        from: curr.created_assignee_date,
-        to: curr.created_date,
-      });
+    const reviewAnswered = await prisma.reviewAssigneeAnswers.findMany({
+      where: {
+        AND: [
+          {
+            created_date: currentYear,
+          },
+          {
+            user_id: userId,
+          },
+          {
+            review: {
+              is: { organization_id: organization_id },
+            },
+          },
+        ],
+      },
+    });
 
-      return prev + time;
-    }, 0);
+    const applaudData = await prisma.userApplaud.findMany({
+      where: {
+        AND: [
+          { organization_id: organization_id },
+          {
+            created_by: userId,
+          },
+          {
+            created_date: currentYear,
+          },
+        ],
+      },
+    });
+    const goalsData = await prisma.goalAssignee.findMany({
+      where: {
+        AND: [
+          { assignee_id: userId },
+          {
+            goal: {
+              organization_id: organization_id,
+              is_archived: false,
+            },
+          },
+          {
+            created_date: currentYear,
+          },
+        ],
+      },
+      include: {
+        goal: true,
+      },
+    });
 
-    averageAnswerTime =
-      totalMili > 0 ? Math.round(totalMili / reviewAnswered.length) : 0;
-  }
+    if (reviewAnswered.length > 0) {
+      const totalMili = reviewAnswered.reduce((prev, curr) => {
+        let time = calculateMiliDuration({
+          from: curr.created_assignee_date,
+          to: curr.created_date,
+        });
 
-  let data = {
-    reviewCreatedCount: reviewCreated.length,
-    reviewAnsweredCount: reviewAnswered.length,
-    userCount: userData.length,
-    applaudCount: filterApplaudData.length,
-    reviewRating: reviewRating,
-    averageAnswerTime: averageAnswerTime,
-  };
+        return prev + time;
+      }, 0);
 
-  if (data) {
+      averageAnswerTime =
+        totalMili > 0 ? Math.round(totalMili / reviewAnswered.length) : 0;
+    }
+
+    if (Number(goalsData.length) > 0) {
+      let completedGoals = goalsData.filter(
+        (item) => item?.status === "Completed"
+      ).length;
+      pendingGoals = goalsData.length - completedGoals;
+      goalsProgress = Math.round(
+        Number(completedGoals / goalsData?.length) * 100
+      );
+    }
+
+    let data = {
+      totalReviews:
+        Number(reviewCreated.length) + Number(reviewAnswered.length),
+      totalApplauds: Number(applaudData.length),
+      totalGoals: Number(goalsData.length),
+      reviewRating: reviewRating,
+      averageAnswerTime: averageAnswerTime,
+      pendingGoals,
+      goalsProgress,
+    };
+
+    if (!data) throw new BadRequestException("No record found");
+
     return res.status(200).json({
-      status: 200,
       data: data,
       message: "Dashboard Data Received",
     });
+  } catch (error) {
+    throw new BadRequestException("Internal server error.");
   }
-
-  return res.status(404).json({ status: 404, message: "No Record Found" });
 }
-const functionHandle = (req, res) => RequestHandler(req, res, handle, ["POST"]);
+const functionHandle = (req, res) =>
+  RequestHandler({
+    req,
+    res,
+    callback: handle,
+    allowedMethods: ["GET"],
+    protectedRoute: true,
+  });
 
 export default functionHandle;
