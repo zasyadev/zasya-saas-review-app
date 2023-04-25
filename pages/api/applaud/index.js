@@ -53,38 +53,33 @@ async function handle(req, res, prisma, user) {
         },
       });
 
-      await prisma.userActivity.create({
-        data: {
-          user: { connect: { id: reqBody.user_id } },
-          type: ACTIVITY_TYPE_ENUM.APPLAUD,
-          title: activityTitle(
-            ACTIVITY_TYPE_ENUM.APPLAUD,
-            createdData.first_name
-          ),
-          description: data.comment,
-          link: notificationMessage.link,
-          type_id: data.id,
-          organization: {
-            connect: { id: userData.organization_id },
-          },
-        },
-      });
+      let activityData = {
+        type: ACTIVITY_TYPE_ENUM.APPLAUD,
+        description: data.comment,
+        link: notificationMessage.link,
+        type_id: data.id,
+        organization_id: userData.organization_id,
+      };
 
-      await prisma.userActivity.create({
-        data: {
-          user: { connect: { id: userId } },
-          type: ACTIVITY_TYPE_ENUM.APPLAUD,
-          title: activityTitle(
-            ACTIVITY_TYPE_ENUM.APPLAUDGIVEN,
-            userData.first_name
-          ),
-          description: data.comment,
-          link: notificationMessage.link,
-          type_id: data.id,
-          organization: {
-            connect: { id: userData.organization_id },
+      await prisma.userActivity.createMany({
+        data: [
+          {
+            ...activityData,
+            user_id: reqBody.user_id,
+            title: activityTitle(
+              ACTIVITY_TYPE_ENUM.APPLAUD,
+              createdData.first_name
+            ),
           },
-        },
+          {
+            ...activityData,
+            user_id: userId,
+            title: activityTitle(
+              ACTIVITY_TYPE_ENUM.APPLAUDGIVEN,
+              userData.first_name
+            ),
+          },
+        ],
       });
 
       if (
@@ -115,6 +110,7 @@ async function handle(req, res, prisma, user) {
       data: data,
     });
   } catch (error) {
+    console.log({ error });
     return res
       .status(500)
       .json({ error: error, message: "Internal Server Error" });
