@@ -2,6 +2,7 @@ import moment from "moment";
 import { calculateMiliDuration } from "../../../helpers/momentHelper";
 import { BadRequestException } from "../../../lib/BadRequestExcpetion";
 import { RequestHandler } from "../../../lib/RequestHandler";
+import { ratingHandler } from "../../../helpers/ratingCalculationHelper";
 
 const currentYear = {
   lte: moment().endOf("year").format(),
@@ -33,7 +34,7 @@ async function handle(_, res, prisma, user) {
         ],
       },
     });
-    const reviewRating = await prisma.review.findMany({
+    const reviewForRating = await prisma.review.findMany({
       where: {
         AND: [
           {
@@ -135,12 +136,14 @@ async function handle(_, res, prisma, user) {
       );
     }
 
+    const reviewRating = ratingHandler(reviewForRating);
+
     let data = {
       totalReviews:
         Number(reviewCreated.length) + Number(reviewAnswered.length),
       totalApplauds: Number(applaudData.length),
       totalGoals: Number(goalsData.length),
-      reviewRating: reviewRating,
+      reviewRating: Number(reviewRating),
       averageAnswerTime: averageAnswerTime,
       pendingGoals,
       goalsProgress,
