@@ -193,35 +193,30 @@ async function handle(req, res, prisma, user) {
               },
             });
 
-            await prisma.userActivity.create({
-              data: {
-                user: { connect: { id: assignee } },
-                type: ACTIVITY_TYPE_ENUM.GOAL,
-                title: activityTitle(ACTIVITY_TYPE_ENUM.GOAL, createdBy),
-                description: header.goal_title,
-                link: notificationMessage.link,
-                type_id: goalData.id,
-                organization: {
-                  connect: { id: organization_id },
-                },
-              },
-            });
+            let activityData = {
+              type: ACTIVITY_TYPE_ENUM.GOAL,
+              description: header.goal_title,
+              link: notificationMessage.link,
+              type_id: goalData.id,
+              organization_id: organization_id,
+            };
 
-            await prisma.userActivity.create({
-              data: {
-                user: { connect: { id: userId } },
-                type: ACTIVITY_TYPE_ENUM.GOAL,
-                title: activityTitle(
-                  ACTIVITY_TYPE_ENUM.GOALGIVEN,
-                  assignedUser.first_name
-                ),
-                description: header.goal_title,
-                link: notificationMessage.link,
-                type_id: goalData.id,
-                organization: {
-                  connect: { id: organization_id },
+            await prisma.userActivity.createMany({
+              data: [
+                {
+                  ...activityData,
+                  user_id: assignee,
+                  title: activityTitle(ACTIVITY_TYPE_ENUM.GOAL, createdBy),
                 },
-              },
+                {
+                  ...activityData,
+                  user_id: userId,
+                  title: activityTitle(
+                    ACTIVITY_TYPE_ENUM.GOALGIVEN,
+                    assignedUser.first_name
+                  ),
+                },
+              ],
             });
 
             if (

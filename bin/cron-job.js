@@ -18,9 +18,9 @@ async function cronJobStart() {
         password: CRON_PASSWORD,
       });
 
-      // await axios.post(`${BASE_URL}api/cronjobs/reviewfrequencycron`, {
-      //   password: CRON_PASSWORD,
-      // });
+      await axios.post(`${BASE_URL}api/cronjobs/reviewfrequencycron`, {
+        password: CRON_PASSWORD,
+      });
     });
     schedule.scheduleJob("weekly_schedule", "30 4 * * 1", async function () {
       await axios.post(`${BASE_URL}api/cronjobs/weeklycron`, {
