@@ -94,17 +94,22 @@ async function handle(req, res, prisma, user) {
     if (!data) throw new BadRequestException("No data found");
 
     return res.status(200).json({
-      status: 200,
       data: { ...data, goalData, relatedMeetings },
       message: "Meetings Details Retrieved",
     });
   } else if (req.method === "POST") {
     try {
       const { comment, assigneeId } = req.body;
+
       const meetingAssigneeData = await prisma.meetingAssignee.findFirst({
         where: {
           AND: [{ meeting_id: meeting_id }, { assignee_id: assigneeId }],
         },
+      });
+
+      await prisma.meetings.update({
+        where: { id: meeting_id },
+        data: { is_completed: true },
       });
 
       if (!meetingAssigneeData.id)
@@ -121,7 +126,6 @@ async function handle(req, res, prisma, user) {
       });
       if (!data) throw new BadRequestException("Meetings not updated");
       return res.status(200).json({
-        status: 200,
         data: data,
         message: "Meetings comment updated",
       });
