@@ -82,35 +82,23 @@ function DashBoard({ user }) {
     fetchMonthlyLeaderBoardData();
   }, []);
 
-  const sortGoalListByEndDate = useMemo(() => {
-    if (goalList?.length > 0) {
-      const latestUpcomingGoalsList = goalList
-        .filter(
-          (item) => moment(item?.goal?.end_date).diff(moment(), "days") >= 0
-        )
-        .sort((a, b) =>
-          moment(a?.goal?.end_date).diff(moment(b?.goal?.end_date))
-        );
+  const { sortGoalListByEndDate, sortMeetingListByDate } = useMemo(() => {
+    const latestUpcomingGoalsList = goalList
+      .filter(
+        (item) => moment(item?.goal?.end_date).diff(moment(), "days") >= 0
+      )
+      .sort((a, b) => moment(a?.goal?.end_date).diff(moment(b?.goal?.end_date)))
+      .slice(0, 3);
+    const latestMeetingList = meetingList
+      .filter((item) => moment(item?.meeting_at).diff(moment(), "minutes") >= 0)
+      .sort((a, b) => moment(a?.meeting_at).diff(moment(b?.meeting_at)))
+      .slice(0, 3);
 
-      if (latestUpcomingGoalsList.length < 3) return latestUpcomingGoalsList;
-
-      return latestUpcomingGoalsList.slice(0, 3);
-    } else return [];
-  }, [goalList]);
-
-  const sortMeetingListByDate = useMemo(() => {
-    if (meetingList?.length > 0) {
-      const latestMeetingList = meetingList
-        .filter(
-          (item) => moment(item?.meeting_at).diff(moment(), "minutes") >= 0
-        )
-        .sort((a, b) => moment(a?.meeting_at).diff(moment(b?.meeting_at)));
-
-      if (latestMeetingList.length < 3) return latestMeetingList;
-
-      return latestMeetingList.slice(0, 3);
-    } else return [];
-  }, [meetingList]);
+    return {
+      sortGoalListByEndDate: latestUpcomingGoalsList,
+      sortMeetingListByDate: latestMeetingList,
+    };
+  }, [goalList, meetingList]);
 
   return (
     <div className="grid grid-cols-7 gap-4 lg:gap-8 xl:gap:10 bg-brandGray-100 ">

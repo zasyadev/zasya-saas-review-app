@@ -14,5 +14,5 @@ export default function Home() {
         router.push("/auth/login");
       }
     }
-  }, [session, status]);
+  }, [session, status, router]);
 }
