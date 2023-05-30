@@ -82,7 +82,7 @@ async function handle(req, res, prisma, user) {
       await prisma.goalsTimeline.create({
         data: {
           ...objData,
-          comment: reqBody.value.comment,
+          comment: `${reqBody.value.status} : ${reqBody.value.comment}`,
           user: { connect: { id: userId } },
           goals: { connect: { id: goal_id } },
         },
