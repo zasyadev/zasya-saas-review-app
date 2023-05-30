@@ -2,7 +2,7 @@ import moment from "moment";
 import { calculateMiliDuration } from "../../../helpers/momentHelper";
 import { BadRequestException } from "../../../lib/BadRequestExcpetion";
 import { RequestHandler } from "../../../lib/RequestHandler";
-import { ratingHandler } from "../../../helpers/ratingCalculationHelper";
+import { getReviewRating } from "../../../helpers/ratingCalculationHelper";
 
 const currentYear = {
   lte: moment().endOf("year").format(),
@@ -136,7 +136,7 @@ async function handle(_, res, prisma, user) {
       );
     }
 
-    const reviewRating = ratingHandler(reviewForRating);
+    const reviewRating = getReviewRating(reviewForRating);
 
     let data = {
       totalReviews:

@@ -1,7 +1,7 @@
 import { SCALE_TYPE } from "../component/Form/questioncomponents/constants";
 import { REVIEW_RATING_QUESTION } from "../component/Review/constants";
 
-export const ratingHandler = (reviews) => {
+export const getReviewRating = (reviews) => {
   if (!reviews || reviews.length === 0) {
     return 0;
   }
