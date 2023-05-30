@@ -12,18 +12,10 @@ import CountHeaderCard from "../common/CountHeaderCard";
 import { PrimaryButton } from "../common/CustomButton";
 import NoRecordFound from "../common/NoRecordFound";
 import { useMember } from "../common/hooks/useMember";
-import { REVIEW_TYPE } from "./constants";
+import { REVIEW_TYPE, SORT_BY_TIME } from "./constants";
 import { MeetingCardWrapper, MeetingListSkeleton } from "./component";
 
 const currentTime = moment().format();
-
-const SORT_BY_TIME = {
-  TODAY: "today",
-  COMPLETED: "completed",
-  UPCOMING: "upcoming",
-  ALL: "all",
-};
-
 const startOfDay = startOfDate(moment());
 const endOfDay = endOfDate(moment());
 
@@ -36,7 +28,7 @@ const meetingFilterData = (list, type) => {
       case SORT_BY_TIME.UPCOMING:
         return meetingTime >= endOfDay;
       case SORT_BY_TIME.COMPLETED:
-        return meetingTime <= startOfDay;
+        return meetingTime <= startOfDay || record.is_completed;
       default:
         return record;
     }
@@ -224,6 +216,7 @@ function MeetingsList({ user }) {
                 list={filteredMeetingList}
                 user={user}
                 fetchMeetingList={fetchMeetingList}
+                filterType={filterType}
               />
             ) : (
               <NoRecordFound title="No Meetings Found" />

@@ -7,3 +7,10 @@ export const ONCE_FREQUENCY = "Once";
 export const CASUAL_MEETINGTYPE = "c";
 export const GOAL_MEETINGTYPE = "g";
 export const REVIEW_MEETINGTYPE = "r";
+
+export const SORT_BY_TIME = {
+  TODAY: "today",
+  COMPLETED: "completed",
+  UPCOMING: "upcoming",
+  ALL: "all",
+};
