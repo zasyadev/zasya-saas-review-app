@@ -7,9 +7,6 @@ import {
   FileLeftIcon,
   FileRightIcon,
 } from "../../assets/icons";
-
-import { SCALE_TYPE } from "../Form/questioncomponents/constants";
-import { REVIEW_RATING_QUESTION } from "../Review/constants";
 import DefaultImages from "../common/DefaultImages";
 import { useActivity } from "../common/hooks/useActivity";
 import { getFirstLetter, getRandomBgColor } from "../../helpers/utils";
@@ -17,52 +14,6 @@ import { getFirstLetter, getRandomBgColor } from "../../helpers/utils";
 const RadialBarChart = dynamic(() => import("../common/RadialBarChart"), {
   ssr: false,
 });
-
-const ratingHandler = (data) => {
-  if (data.length === 0) {
-    return 0;
-  }
-
-  let sum = 0;
-  let total = data.map((item) => {
-    if (item.ReviewAssigneeAnswers.length > 0) {
-      let totalrating = item.ReviewAssigneeAnswers.reduce((prev, curr) => {
-        if (curr.ReviewAssigneeAnswerOption?.length > 0) {
-          let ratingQuestion = curr.ReviewAssigneeAnswerOption.find(
-            (i) =>
-              i.question.questionText === REVIEW_RATING_QUESTION &&
-              i.question.type === SCALE_TYPE
-          );
-          if (!ratingQuestion) return 0;
-          if (isNaN(Number(ratingQuestion.option))) {
-            return 0;
-          } else {
-            return Number(prev) + Number(ratingQuestion.option);
-          }
-        } else return 0;
-      }, sum);
-
-      let averageRating =
-        Number(totalrating) / Number(item.ReviewAssigneeAnswers.length);
-
-      return averageRating;
-    } else return 0;
-  });
-  let avgSum = 0;
-
-  let avgRatingSum = total.reduce((prev, curr) => {
-    return Number(prev) + Number(curr);
-  }, avgSum);
-
-  let assigneAnswerLength = data.filter((item) =>
-    item?.ReviewAssigneeAnswers?.length > 0 ? item : null
-  );
-
-  let avgRating = 0;
-  if (avgRatingSum > 0) avgRating = avgRatingSum / assigneAnswerLength.length;
-
-  return Number(avgRating).toFixed(1);
-};
 
 function SiderRight({ dashBoardData, monthlyLeaderBoardData, userId }) {
   const { reviewRating, totalGoals, totalApplauds } = dashBoardData;
@@ -79,7 +30,7 @@ function SiderRight({ dashBoardData, monthlyLeaderBoardData, userId }) {
         <RadialBarChart
           totalGoals={totalGoals}
           totalApplauds={totalApplauds}
-          reviewRating={ratingHandler(reviewRating)}
+          reviewRating={reviewRating}
         />
       </div>
       <div className="space-y-2">

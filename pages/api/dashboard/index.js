@@ -2,6 +2,7 @@ import moment from "moment";
 import { calculateMiliDuration } from "../../../helpers/momentHelper";
 import { BadRequestException } from "../../../lib/BadRequestExcpetion";
 import { RequestHandler } from "../../../lib/RequestHandler";
+import { getReviewRating } from "../../../helpers/ratingCalculationHelper";
 
 const currentYear = {
   lte: moment().endOf("year").format(),
@@ -18,7 +19,7 @@ async function handle(_, res, prisma, user) {
     let goalsProgress = 0;
     let averageAnswerTime = 0;
 
-    const reviewCreated = await prisma.review.findMany({
+    const userReviews = await prisma.review.findMany({
       where: {
         AND: [
           {
@@ -33,7 +34,7 @@ async function handle(_, res, prisma, user) {
         ],
       },
     });
-    const reviewRating = await prisma.review.findMany({
+    const userReviewsRating = await prisma.review.findMany({
       where: {
         AND: [
           {
@@ -60,7 +61,7 @@ async function handle(_, res, prisma, user) {
       },
     });
 
-    const reviewAnswered = await prisma.reviewAssigneeAnswers.findMany({
+    const userReviewsAnswered = await prisma.reviewAssigneeAnswers.findMany({
       where: {
         AND: [
           {
@@ -78,7 +79,7 @@ async function handle(_, res, prisma, user) {
       },
     });
 
-    const applaudData = await prisma.userApplaud.findMany({
+    const userApplaudData = await prisma.userApplaud.findMany({
       where: {
         AND: [
           { organization_id: organization_id },
@@ -91,7 +92,7 @@ async function handle(_, res, prisma, user) {
         ],
       },
     });
-    const goalsData = await prisma.goalAssignee.findMany({
+    const userGoalData = await prisma.goalAssignee.findMany({
       where: {
         AND: [
           { assignee_id: userId },
@@ -101,9 +102,7 @@ async function handle(_, res, prisma, user) {
               is_archived: false,
             },
           },
-          {
-            created_date: currentYear,
-          },
+          { created_date: currentYear },
         ],
       },
       include: {
@@ -111,8 +110,8 @@ async function handle(_, res, prisma, user) {
       },
     });
 
-    if (reviewAnswered.length > 0) {
-      const totalMili = reviewAnswered.reduce((prev, curr) => {
+    if (userReviewsAnswered.length > 0) {
+      const totalMili = userReviewsAnswered.reduce((prev, curr) => {
         let time = calculateMiliDuration({
           from: curr.created_assignee_date,
           to: curr.created_date,
@@ -122,25 +121,27 @@ async function handle(_, res, prisma, user) {
       }, 0);
 
       averageAnswerTime =
-        totalMili > 0 ? Math.round(totalMili / reviewAnswered.length) : 0;
+        totalMili > 0 ? Math.round(totalMili / userReviewsAnswered.length) : 0;
     }
 
-    if (Number(goalsData.length) > 0) {
-      let completedGoals = goalsData.filter(
+    if (Number(userGoalData.length) > 0) {
+      let completedGoals = userGoalData.filter(
         (item) => item?.status === "Completed"
       ).length;
-      pendingGoals = goalsData.length - completedGoals;
+      pendingGoals = userGoalData.length - completedGoals;
       goalsProgress = Math.round(
-        Number(completedGoals / goalsData?.length) * 100
+        Number(completedGoals / userGoalData?.length) * 100
       );
     }
 
+    const reviewRating = getReviewRating(userReviewsRating);
+
     let data = {
       totalReviews:
-        Number(reviewCreated.length) + Number(reviewAnswered.length),
-      totalApplauds: Number(applaudData.length),
-      totalGoals: Number(goalsData.length),
-      reviewRating: reviewRating,
+        Number(userReviews.length) + Number(userReviewsAnswered.length),
+      totalApplauds: Number(userApplaudData.length),
+      totalGoals: Number(userGoalData.length),
+      reviewRating: Number(reviewRating),
       averageAnswerTime: averageAnswerTime,
       pendingGoals,
       goalsProgress,
