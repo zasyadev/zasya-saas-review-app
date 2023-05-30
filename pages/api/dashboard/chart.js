@@ -1,7 +1,7 @@
 import { BadRequestException } from "../../../lib/BadRequestExcpetion";
 import { RequestHandler } from "../../../lib/RequestHandler";
 
-const monthWiseDataHandle = (query) => {
+const getDashBoardChartActivity = (query) => {
   const data = [...Array(12)].map((_, indx) => {
     const checkMonth = query.find((i) => i.month == indx + 1);
     if (checkMonth) {
@@ -24,14 +24,14 @@ async function handle(_, res, prisma, user) {
       WHERE     YEAR(created_date) =  YEAR(CURDATE()) AND organization_id = ${organization_id}
       GROUP BY  MONTH(created_date)`;
 
-  const reviewChartData = monthWiseDataHandle(reviewQuery);
+  const reviewChartData = getDashBoardChartActivity(reviewQuery);
 
   const goalQuery =
     await prisma.$queryRaw`SELECT     COUNT(*) as count,MONTH( created_date) as month
       FROM      goals
       WHERE     YEAR(created_date) =  YEAR(CURDATE()) AND organization_id = ${organization_id}
       GROUP BY  MONTH(created_date)`;
-  const goalChartData = monthWiseDataHandle(goalQuery);
+  const goalChartData = getDashBoardChartActivity(goalQuery);
 
   const applaudQuery =
     await prisma.$queryRaw`SELECT     COUNT(*) as count,MONTH( created_date) as month
@@ -39,7 +39,7 @@ async function handle(_, res, prisma, user) {
     WHERE     YEAR(created_date) =  YEAR(CURDATE()) AND organization_id = ${organization_id}
     GROUP BY  MONTH(created_date)`;
 
-  const applaudChartData = monthWiseDataHandle(applaudQuery);
+  const applaudChartData = getDashBoardChartActivity(applaudQuery);
 
   if (
     reviewChartData.length &&
