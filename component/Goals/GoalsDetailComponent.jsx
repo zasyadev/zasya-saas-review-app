@@ -5,28 +5,42 @@ import moment from "moment";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useMemo, useState } from "react";
+import { URLS } from "../../constants/urls";
 import {
   MONTH_DATE_FORMAT,
   dateDayName,
   dateTime,
 } from "../../helpers/dateHelper";
+import {
+  getFirstLetter,
+  getRandomBgColor,
+  getStatusPillColor,
+} from "../../helpers/utils";
 import httpService from "../../lib/httpService";
 import { PulseLoader } from "../Loader/LoadingSpinner";
 import { GOAL_MEETINGTYPE } from "../Meetings/constants";
 import { PrimaryButton } from "../common/CustomButton";
+import CustomPopConfirm from "../common/CustomPopConfirm";
 import CustomTable from "../common/CustomTable";
 import NoRecordFound from "../common/NoRecordFound";
+import { openNotificationBox } from "../common/notification";
+import GoalStatusModal from "./GoalStatusModal";
 import { INDIVIDUAL_TYPE, TEAM_TYPE } from "./constants";
-import {
-  getStatusPillColor,
-  getRandomBgColor,
-  getFirstLetter,
-} from "../../helpers/utils";
+
+const initialModalVisible = {
+  visible: false,
+  id: "",
+  goal_title: "",
+  defaultValue: "",
+  goal_id: "",
+};
 
 function GoalsDetailComponent({ user }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [goalData, setGoalData] = useState(null);
+  const [editGoalModalVisible, setEditGoalModalVisible] =
+    useState(initialModalVisible);
 
   const fetchGoalData = async () => {
     setLoading(true);
@@ -48,7 +62,7 @@ function GoalsDetailComponent({ user }) {
     if (goalData && goalData?.GoalAssignee?.length > 0) {
       return goalData?.GoalAssignee.find(
         (item) => item.assignee_id === goalData?.created_by
-      )?.status;
+      );
     } else return "";
   }, [goalData]);
 
@@ -81,6 +95,39 @@ function GoalsDetailComponent({ user }) {
       ),
     },
   ];
+
+  const goalEditHandle = async ({ goal_id, id, value, type }) => {
+    setLoading(true);
+    await httpService
+      .put(`/api/goals/${goal_id}`, {
+        value,
+        type,
+        id,
+      })
+      .then(({ data: response }) => {
+        if (type === "forDelete") router.push(URLS.GOAL);
+        else fetchGoalData();
+        setEditGoalModalVisible(initialModalVisible);
+        openNotificationBox("success", response.message, 3);
+      })
+      .catch((err) => openNotificationBox("error", err.response.data?.message))
+      .finally(() => setLoading(false));
+  };
+
+  const showEditGoalModal = ({ record }) => {
+    if (goalStatus?.assignee_id)
+      setEditGoalModalVisible({
+        visible: true,
+        id: goalStatus.id,
+        goal_title: record.goal_title,
+        defaultValue: goalStatus.status,
+        goal_id: record.id,
+      });
+  };
+
+  const hideEditGoalModal = () => {
+    setEditGoalModalVisible(initialModalVisible);
+  };
 
   if (loading)
     return (
@@ -154,70 +201,125 @@ function GoalsDetailComponent({ user }) {
               )}
             </div>
           </div>
-          <div className="rounded-md shadow-brand border-2 border-brandGrey-100 divide-y h-fit">
-            <p className="p-4 font-semibold text-lg md:text-xl mb-0">Details</p>
+          <div className="space-y-4">
+            {goalData.created_by === user.id && (
+              <div className="flex justify-end items-center gap-3 flex-wrap">
+                <PrimaryButton
+                  withLink={true}
+                  linkHref={`${URLS.GOAL}/${goalData.id}/edit`}
+                  title={"Edit"}
+                />
+                <CustomPopConfirm
+                  title={`Are you sure to ${
+                    goalData.is_archived ? "unarchived" : "archived"
+                  } ${goalData.goal_title} ？`}
+                  onConfirm={() =>
+                    goalEditHandle({
+                      goal_id: goalData.id,
+                      id: goalData.id,
+                      value: goalData.is_archived ? false : true,
+                      type: "forArchived",
+                    })
+                  }
+                  className="px-4 py-1.5 border-2 border-primary-green rounded-md text-primary-green cursor-pointer"
+                  label={goalData.is_archived ? "UnArchive" : "Archive"}
+                />
 
-            <div className="divide-y">
-              <div className="p-4 space-y-1">
-                <p className="mb-0">Created By</p>
-                <p className="font-medium text-base mb-0">
-                  {goalData.created.first_name}
-                </p>
+                {goalData.is_archived && (
+                  <CustomPopConfirm
+                    title={`Are you sure to delete ${goalData.goal_title} ？`}
+                    onConfirm={() =>
+                      goalEditHandle({
+                        goal_id: goalData.id,
+                        id: goalData.id,
+                        value: goalData.is_archived ? false : true,
+                        type: "forDelete",
+                      })
+                    }
+                    className="px-4 py-1.5 border-2 border-brandRed-100 bg-brandRed-100 rounded-md text-white cursor-pointer"
+                    label="Delete"
+                  />
+                )}
               </div>
-              <div className="p-4 space-y-1">
-                <p className="mb-0">Goal Scope</p>
-                <p className="font-medium text-base capitalize mb-0">
-                  {goalData.frequency}
-                </p>
-              </div>
-              <div className="p-4 space-y-1">
-                <p className="mb-0">Status</p>
-                <p className="font-medium text-base mb-0">
-                  <span
-                    className={clsx(
-                      "px-2 py-1 font-medium text-xs md:text-sm mb-0 uppercase rounded-md",
-                      getStatusPillColor(goalStatus)
-                    )}
-                  >
-                    {goalStatus}
-                  </span>
-                </p>
-              </div>
-              <div className="p-4 space-y-1">
-                <p className="mb-0 z-20">End Date</p>
-                <p className="font-medium text-base mb-0">
-                  {moment(goalData.end_date).format(MONTH_DATE_FORMAT)}
-                </p>
-              </div>
+            )}
 
-              {goalData.GoalAssignee.length > 1 && (
+            <div className="rounded-md shadow-brand border-2 border-brandGrey-100 divide-y h-fit">
+              <p className="p-4 font-semibold text-lg md:text-xl mb-0">
+                Details
+              </p>
+
+              <div className="divide-y">
                 <div className="p-4 space-y-1">
-                  <p className="mb-0">Assignees</p>
-                  <div className="grid md:grid-cols-2 gap-2 max-h-40 overflow-auto custom-scrollbar space-y-2">
-                    {goalData.GoalAssignee.filter(
-                      (item) => item.assignee_id !== goalData.created_by
-                    ).map((item) => (
-                      <>
-                        <p
-                          className="text-gray-700 font-semibold text-base mb-0"
-                          key={item.id + "name"}
-                        >
-                          {item.assignee.first_name}
-                        </p>
-                        <span
-                          className={clsx(
-                            "lg:w-28 px-2 py-1 font-medium text-xs md:text-sm mb-0 text-center uppercase rounded-md h-fit",
-                            getStatusPillColor(item.status)
-                          )}
-                          key={item.id + "status"}
-                        >
-                          {item.status}
-                        </span>
-                      </>
-                    ))}
-                  </div>
+                  <p className="mb-0">Created By</p>
+                  <p className="font-medium text-base mb-0">
+                    {goalData.created.first_name}
+                  </p>
                 </div>
-              )}
+                <div className="p-4 space-y-1">
+                  <p className="mb-0">Goal Scope</p>
+                  <p className="font-medium text-base capitalize mb-0">
+                    {goalData.frequency}
+                  </p>
+                </div>
+                <div className="p-4 space-y-1">
+                  <p className="mb-0">Status</p>
+                  <p className="font-medium text-base mb-0">
+                    <span
+                      className={clsx(
+                        "px-2 py-1 font-medium text-xs md:text-sm mb-0 uppercase rounded-md cursor-pointer",
+                        getStatusPillColor(goalStatus?.status)
+                      )}
+                      onClick={() => {
+                        if (
+                          !goalData.is_archived &&
+                          goalData.created_by === user.id
+                        ) {
+                          showEditGoalModal({
+                            record: goalData,
+                          });
+                        }
+                      }}
+                    >
+                      {goalStatus?.status}
+                    </span>
+                  </p>
+                </div>
+                <div className="p-4 space-y-1">
+                  <p className="mb-0 z-20">End Date</p>
+                  <p className="font-medium text-base mb-0">
+                    {moment(goalData.end_date).format(MONTH_DATE_FORMAT)}
+                  </p>
+                </div>
+
+                {goalData.GoalAssignee.length > 1 && (
+                  <div className="p-4 space-y-1">
+                    <p className="mb-0">Assignees</p>
+                    <div className="grid md:grid-cols-2 gap-2 max-h-40 overflow-auto custom-scrollbar space-y-2">
+                      {goalData.GoalAssignee.filter(
+                        (item) => item.assignee_id !== goalData.created_by
+                      ).map((item) => (
+                        <>
+                          <p
+                            className="text-gray-700 font-semibold text-base mb-0"
+                            key={item.id + "name"}
+                          >
+                            {item.assignee.first_name}
+                          </p>
+                          <span
+                            className={clsx(
+                              "lg:w-28 px-2 py-1 font-medium text-xs md:text-sm mb-0 text-center uppercase rounded-md h-fit",
+                              getStatusPillColor(item.status)
+                            )}
+                            key={item.id + "status"}
+                          >
+                            {item.status}
+                          </span>
+                        </>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -246,6 +348,14 @@ function GoalsDetailComponent({ user }) {
             showHeader={false}
           />
         </div>
+      )}
+      {editGoalModalVisible?.visible && (
+        <GoalStatusModal
+          editGoalModalVisible={editGoalModalVisible}
+          hideEditGoalModal={hideEditGoalModal}
+          goalEditHandle={goalEditHandle}
+          loading={loading}
+        />
       )}
     </>
   );
