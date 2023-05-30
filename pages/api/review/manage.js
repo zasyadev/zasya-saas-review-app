@@ -144,38 +144,33 @@ async function handle(req, res, prisma) {
               },
             });
 
-            await prisma.userActivity.create({
-              data: {
-                user: { connect: { id: user.id } },
-                type: ACTIVITY_TYPE_ENUM.REVIEW,
-                title: activityTitle(
-                  ACTIVITY_TYPE_ENUM.REVIEW,
-                  assignedFromData.first_name
-                ),
-                description: resData.review_name,
-                link: `${BASE_URL}review`,
-                type_id: transactionData.savedData.id,
-                organization: {
-                  connect: { id: assignedFromData.organization_id },
-                },
-              },
-            });
+            let activityData = {
+              type: ACTIVITY_TYPE_ENUM.REVIEW,
+              description: resData.review_name,
+              link: `${BASE_URL}review`,
+              type_id: transactionData.savedData.id,
+              organization_id: assignedFromData.organization_id,
+            };
 
-            await prisma.userActivity.create({
-              data: {
-                user: { connect: { id: resData.created_by } },
-                type: ACTIVITY_TYPE_ENUM.REVIEW,
-                title: activityTitle(
-                  ACTIVITY_TYPE_ENUM.REVIEWGIVEN,
-                  user.first_name
-                ),
-                description: resData.review_name,
-                link: `${BASE_URL}review`,
-                type_id: transactionData.savedData.id,
-                organization: {
-                  connect: { id: assignedFromData.organization_id },
+            await prisma.userActivity.createMany({
+              data: [
+                {
+                  ...activityData,
+                  user_id: user.id,
+                  title: activityTitle(
+                    ACTIVITY_TYPE_ENUM.REVIEW,
+                    assignedFromData.first_name
+                  ),
                 },
-              },
+                {
+                  ...activityData,
+                  user_id: resData.created_by,
+                  title: activityTitle(
+                    ACTIVITY_TYPE_ENUM.REVIEWGIVEN,
+                    user.first_name
+                  ),
+                },
+              ],
             });
 
             if (Number(user?.UserDetails?.notification?.length) > 0) {

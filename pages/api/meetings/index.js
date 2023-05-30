@@ -166,7 +166,7 @@ async function handle(req, res, prisma, user) {
 
             let notificationMessage = {
               message: `${createdBy} has scheduled a meeting with you.`,
-              link: `${BASE_URL}meetings`,
+              link: `${BASE_URL}followups`,
             };
 
             await prisma.userNotification.create({
@@ -180,35 +180,30 @@ async function handle(req, res, prisma, user) {
               },
             });
 
-            await prisma.userActivity.create({
-              data: {
-                user: { connect: { id: assignee.assignee_id } },
-                type: ACTIVITY_TYPE_ENUM.FOLLOWUP,
-                title: activityTitle(ACTIVITY_TYPE_ENUM.FOLLOWUP, createdBy),
-                description: meetingData.meeting_title,
-                link: notificationMessage.link,
-                type_id: createData.id,
-                organization: {
-                  connect: { id: organization_id },
-                },
-              },
-            });
+            let activityData = {
+              type: ACTIVITY_TYPE_ENUM.FOLLOWUP,
+              description: meetingData.meeting_title,
+              link: notificationMessage.link,
+              type_id: createData.id,
+              organization_id: organization_id,
+            };
 
-            await prisma.userActivity.create({
-              data: {
-                user: { connect: { id: userId } },
-                type: ACTIVITY_TYPE_ENUM.FOLLOWUP,
-                title: activityTitle(
-                  ACTIVITY_TYPE_ENUM.FOLLOWUPGIVEN,
-                  assignedUser.first_name
-                ),
-                description: meetingData.meeting_title,
-                link: notificationMessage.link,
-                type_id: createData.id,
-                organization: {
-                  connect: { id: organization_id },
+            await prisma.userActivity.createMany({
+              data: [
+                {
+                  ...activityData,
+                  user_id: assignee.assignee_id,
+                  title: activityTitle(ACTIVITY_TYPE_ENUM.FOLLOWUP, createdBy),
                 },
-              },
+                {
+                  ...activityData,
+                  user_id: userId,
+                  title: activityTitle(
+                    ACTIVITY_TYPE_ENUM.FOLLOWUPGIVEN,
+                    assignedUser.first_name
+                  ),
+                },
+              ],
             });
 
             if (

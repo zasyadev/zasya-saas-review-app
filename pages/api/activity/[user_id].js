@@ -14,6 +14,7 @@ async function handle(req, res, prisma) {
     orderBy: {
       id: "desc",
     },
+    take: 100,
     where: {
       AND: [
         { user_id: user_id },
