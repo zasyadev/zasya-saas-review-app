@@ -166,7 +166,7 @@ async function handle(req, res, prisma, user) {
 
             let notificationMessage = {
               message: `${createdBy} has scheduled a meeting with you.`,
-              link: `${BASE_URL}meetings`,
+              link: `${BASE_URL}followups`,
             };
 
             await prisma.userNotification.create({
