@@ -4,10 +4,7 @@ import { RequestHandler } from "../../../lib/RequestHandler";
 const getDashboardChartActivity = (query) => {
   const data = [...Array(12)].map((_, indx) => {
     const checkMonth = query.find((i) => i.month == indx + 1);
-    if (checkMonth) {
-      return Number(checkMonth.count);
-    }
-    return 0;
+    return checkMonth ? Number(checkMonth.count) : 0;
   });
   return data;
 };
