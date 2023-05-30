@@ -1,48 +1,42 @@
 import { BadRequestException } from "../../../lib/BadRequestExcpetion";
 import { RequestHandler } from "../../../lib/RequestHandler";
 
-async function handle(_, res, prisma, user) {
-  const { id: userId } = user;
-
-  if (!userId) throw new BadRequestException("No user found");
-
-  const userTableData = await prisma.user.findUnique({
-    where: { id: userId },
+const getDashboardChartActivity = (query) => {
+  const data = [...Array(12)].map((_, indx) => {
+    const checkMonth = query.find((i) => i.month == indx + 1);
+    return checkMonth ? Number(checkMonth.count) : 0;
   });
+  return data;
+};
 
-  const monthWiseDataHandle = (query) => {
-    const data = [...Array(12)].map((_, indx) => {
-      const checkMonth = query.find((i) => i.month == indx + 1);
-      if (checkMonth) {
-        return Number(checkMonth.count);
-      }
-      return 0;
-    });
-    return data;
-  };
+async function handle(_, res, prisma, user) {
+  const { id: userId, organization_id } = user;
 
-  let reviewQuery =
-    await prisma.$queryRawUnsafe`SELECT     COUNT(*) as count,MONTH( created_date) as month 
-        FROM      review 
-        WHERE     YEAR(created_date) =  YEAR(CURDATE()) AND organization_id = ${userTableData.organization_id}
-        GROUP BY  MONTH(created_date)`;
+  if (!userId || !organization_id)
+    throw new BadRequestException("No user found");
 
-  const reviewChartData = monthWiseDataHandle(reviewQuery);
-
-  let goalQuery =
-    await prisma.$queryRawUnsafe`SELECT     COUNT(*) as count,MONTH( created_date) as month 
-      FROM      goals 
-      WHERE     YEAR(created_date) =  YEAR(CURDATE()) AND organization_id = ${userTableData.organization_id}
+  const reviewQuery =
+    await prisma.$queryRaw`SELECT     COUNT(*) as count,MONTH( created_date) as month
+      FROM      review
+      WHERE     YEAR(created_date) =  YEAR(CURDATE()) AND organization_id = ${organization_id}
       GROUP BY  MONTH(created_date)`;
-  const goalChartData = monthWiseDataHandle(goalQuery);
 
-  let applaudQuery =
-    await prisma.$queryRawUnsafe`SELECT     COUNT(*) as count,MONTH( created_date) as month 
-    FROM      user_applaud 
-    WHERE     YEAR(created_date) =  YEAR(CURDATE()) AND organization_id = ${userTableData.organization_id}
+  const reviewChartData = getDashboardChartActivity(reviewQuery);
+
+  const goalQuery =
+    await prisma.$queryRaw`SELECT     COUNT(*) as count,MONTH( created_date) as month
+      FROM      goals
+      WHERE     YEAR(created_date) =  YEAR(CURDATE()) AND organization_id = ${organization_id}
+      GROUP BY  MONTH(created_date)`;
+  const goalChartData = getDashboardChartActivity(goalQuery);
+
+  const applaudQuery =
+    await prisma.$queryRaw`SELECT     COUNT(*) as count,MONTH( created_date) as month
+    FROM      user_applaud
+    WHERE     YEAR(created_date) =  YEAR(CURDATE()) AND organization_id = ${organization_id}
     GROUP BY  MONTH(created_date)`;
 
-  const applaudChartData = monthWiseDataHandle(applaudQuery);
+  const applaudChartData = getDashboardChartActivity(applaudQuery);
 
   if (
     reviewChartData.length &&
