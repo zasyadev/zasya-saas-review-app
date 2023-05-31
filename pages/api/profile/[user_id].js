@@ -1,4 +1,3 @@
-import moment from "moment";
 import { RequestHandler } from "../../../lib/RequestHandler";
 import { UPDATE_PROFILE_SCHEMA } from "../../../yup-schema/user";
 import { BadRequestException } from "../../../lib/BadRequestExcpetion";
@@ -6,19 +5,12 @@ import { BadRequestException } from "../../../lib/BadRequestExcpetion";
 async function handle(req, res, prisma, user) {
   const { user_id } = req.query;
   const { organization_id } = user;
-  const currentMonth = {
-    lte: moment().endOf("month").format(),
-    gte: moment().startOf("month").format(),
-  };
 
   if (!user_id) throw new BadRequestException("No User found");
 
   if (req.method === "GET") {
-    const queryCondition = {
-      AND: [
-        { organization_id: organization_id },
-        { created_date: currentMonth },
-      ],
+    const activityStatsData = {
+      AND: [{ organization_id: organization_id }],
     };
 
     const userData = await prisma.userDetails.findUnique({
@@ -31,18 +23,13 @@ async function handle(req, res, prisma, user) {
             role: true,
             email: true,
             Goals: {
-              where: { AND: [...queryCondition.AND, { is_archived: false }] },
+              where: {
+                AND: [...activityStatsData.AND, { is_archived: false }],
+              },
             },
-            userCreated: {
-              where: queryCondition,
-            },
-
-            taskReviewBy: {
-              where: queryCondition,
-            },
-            Meetings: {
-              where: queryCondition,
-            },
+            userCreated: { where: activityStatsData },
+            taskReviewBy: { where: activityStatsData },
+            Meetings: { where: activityStatsData },
           },
         },
       },

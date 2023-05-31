@@ -9,7 +9,7 @@ import NoRecordFound from "../common/NoRecordFound";
 import { useGoal } from "../common/hooks/useGoal";
 import { openNotificationBox } from "../common/notification";
 
-import { CASUAL_MEETINGTYPE, GOAL_TYPE, REVIEW_TYPE } from "./constants";
+import { CASUAL_MEETING_TYPE, GOAL_TYPE, REVIEW_TYPE } from "./constants";
 import { MeetingForm } from "./component";
 
 function AddEditMeetingComponent({ user, editMode = false }) {
@@ -106,8 +106,7 @@ function AddEditMeetingComponent({ user, editMode = false }) {
       .get(`/api/user/organizationId`)
       .then(({ data: response }) => {
         let filterData = response.data.filter(
-          (item) =>
-            item.user.status && item.role_id !== 2 && item.user_id !== user.id
+          (item) => item.user.status && item.user_id !== user.id
         );
         setUserList(filterData);
       })
@@ -187,7 +186,7 @@ function AddEditMeetingComponent({ user, editMode = false }) {
   }, [filterUserList.length, editMode]);
 
   useEffect(() => {
-    if (editMode && meeting_id && meetingEditType === CASUAL_MEETINGTYPE) {
+    if (editMode && meeting_id && meetingEditType === CASUAL_MEETING_TYPE) {
       fetchMeetingData();
     }
     fetchReviewsList();

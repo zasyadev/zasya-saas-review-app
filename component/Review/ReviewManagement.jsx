@@ -15,7 +15,7 @@ import { openNotificationBox } from "../../component/common/notification";
 import { URLS } from "../../constants/urls";
 import httpService from "../../lib/httpService";
 import DateInfoCard from "../Goals/component/GoalsGroupList/components/DateInfoCard";
-import { REVIEW_MEETINGTYPE } from "../Meetings/constants";
+import { REVIEW_MEETING_TYPE } from "../Meetings/constants";
 import { useOrganizationUser } from "../common/hooks/useOrganizationUser";
 import AddMembersModal from "./AddMembersModal";
 import ReviewAssignessModal from "./ReviewAssignessModal";
@@ -306,7 +306,7 @@ function ReviewManagement({ user }) {
                           key={"call-follow-up"}
                         >
                           <Link
-                            href={`${URLS.FOLLOW_UP_CREATE}/${record.id}?tp=${REVIEW_MEETINGTYPE}`}
+                            href={`${URLS.FOLLOW_UP_CREATE}/${record.id}?tp=${REVIEW_MEETING_TYPE}`}
                           >
                             Add Follow up
                           </Link>

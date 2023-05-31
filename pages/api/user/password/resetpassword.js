@@ -40,10 +40,10 @@ async function handle(req, res, prisma) {
       let mailData = {
         from: SMTP_USER,
         to: userData.email,
-        subject: `${updateData.first_name} has accepted your Invitation to collaborate on Review App`,
+        subject: `${updateData.first_name} has accepted your Invitation to collaborate on Desk Chime`,
 
         html: mailTemplate({
-          body: `<b>${updateData.first_name}</b> has accepted your Invitation to collaborate on Review App.`,
+          body: `<b>${updateData.first_name}</b> has accepted your Invitation to collaborate on Desk Chime.`,
           name: userData.first_name,
         }),
       };

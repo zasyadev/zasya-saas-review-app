@@ -50,7 +50,7 @@ export function CustomizeSlackMessage({
   link,
   by = "",
   text = "",
-  btnText = "Review App",
+  btnText = "Desk Chime",
 }) {
   let customText = [
     {
@@ -119,7 +119,7 @@ export function CustomizeCronSlackMessage({ header, link }) {
           type: "button",
           text: {
             type: "plain_text",
-            text: "Review App",
+            text: "Desk Chime",
             emoji: true,
           },
           value: "details",
@@ -137,6 +137,8 @@ export function CustomizeMonthlyCronSlackMessage({
   applaudCount,
   reviewCreatedCount,
   reviewAnsweredCount,
+  goalsCount,
+  followUpCount,
 }) {
   let customText = [
     {
@@ -155,21 +157,33 @@ export function CustomizeMonthlyCronSlackMessage({
       fields: [
         {
           type: "mrkdwn",
-          text: `*Applaud Given* \n *${applaudCount}*`,
-        },
-      ],
-    },
-
-    {
-      type: "section",
-      fields: [
-        {
-          type: "mrkdwn",
           text: `*Review Assigned* \n *${reviewCreatedCount}*`,
         },
         {
           type: "mrkdwn",
           text: `*Review Answered* \n *${reviewAnsweredCount}*`,
+        },
+      ],
+    },
+    {
+      type: "section",
+      fields: [
+        {
+          type: "mrkdwn",
+          text: `*Applaud Given* \n *${applaudCount}*`,
+        },
+        {
+          type: "mrkdwn",
+          text: `*Goals Assigned* \n *${goalsCount}*`,
+        },
+      ],
+    },
+    {
+      type: "section",
+      fields: [
+        {
+          type: "mrkdwn",
+          text: `*Follow Ups Created* \n *${followUpCount}*`,
         },
       ],
     },

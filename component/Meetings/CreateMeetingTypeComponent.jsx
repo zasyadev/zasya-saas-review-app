@@ -8,9 +8,9 @@ import { useGoal } from "../common/hooks/useGoal";
 import { useOrganizationUser } from "../common/hooks/useOrganizationUser";
 import { openNotificationBox } from "../common/notification";
 import {
-  GOAL_MEETINGTYPE,
+  GOAL_MEETING_TYPE,
   GOAL_TYPE,
-  REVIEW_MEETINGTYPE,
+  REVIEW_MEETING_TYPE,
   REVIEW_TYPE,
 } from "./constants";
 import { MeetingForm } from "./component";
@@ -27,13 +27,13 @@ function CreateMeetingTypeComponent({ user }) {
   const { userList } = useOrganizationUser(user.id);
 
   const assigneeList = useMemo(() => {
-    if (meetingEditType === GOAL_MEETINGTYPE && goalList.length > 0) {
+    if (meetingEditType === GOAL_MEETING_TYPE && goalList.length > 0) {
       const goalData = goalList.find((item) => item.goal.id === type_id);
       return goalData?.goal?.GoalAssignee.map((i) => {
         return i.assignee_id;
       });
     } else if (
-      meetingEditType === REVIEW_MEETINGTYPE &&
+      meetingEditType === REVIEW_MEETING_TYPE &&
       reviewsList.length > 0
     ) {
       let list = [];
@@ -84,7 +84,7 @@ function CreateMeetingTypeComponent({ user }) {
 
   const handleMeetingData = (type_id, meetingEditType) => {
     if (type_id) {
-      if (meetingEditType === GOAL_MEETINGTYPE && goalList.length > 0) {
+      if (meetingEditType === GOAL_MEETING_TYPE && goalList.length > 0) {
         const goalData = goalList.find(
           (item) =>
             item.goal.id === type_id && item.goal.goal_type === INDIVIDUAL_TYPE
@@ -99,7 +99,7 @@ function CreateMeetingTypeComponent({ user }) {
           setMeetingData(goalData);
         }
       } else if (
-        meetingEditType === REVIEW_MEETINGTYPE &&
+        meetingEditType === REVIEW_MEETING_TYPE &&
         reviewsList.length > 0
       ) {
         const reviewData = reviewsList.find((item) => item.id === type_id);

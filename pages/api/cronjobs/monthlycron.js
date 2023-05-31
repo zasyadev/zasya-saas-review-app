@@ -62,11 +62,32 @@ async function handle(req, res) {
         ],
       },
     });
+    let goalCreated = await prisma.goals.findMany({
+      where: {
+        AND: [
+          { created_by: item.id },
+          { organization_id: item.organization_id },
+          { created_date: lastMonth },
+        ],
+      },
+    });
+    let followUpCreated = await prisma.meetings.findMany({
+      where: {
+        AND: [
+          { created_by: item.id },
+          { organization_id: item.organization_id },
+          { created_date: lastMonth },
+        ],
+      },
+    });
+
     if (item.UserDetails && item.UserDetails.slack_id) {
       let customText = CustomizeMonthlyCronSlackMessage({
         applaudCount: applaudCreated ? applaudCreated.length : 0,
         reviewCreatedCount: reviewCreated ? reviewCreated.length : 0,
         reviewAnsweredCount: reviewAnswered ? reviewAnswered.length : 0,
+        followUpCount: followUpCreated ? followUpCreated.length : 0,
+        goalsCount: goalCreated ? goalCreated.length : 0,
       });
       SlackPostMessage({
         channel: item.UserDetails.slack_id,
