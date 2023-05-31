@@ -63,21 +63,28 @@ function MeetingDetailComponent({ user }) {
   }
 
   const meetingTimeLinedata = useMemo(() => {
-    if (meetingData && meetingData.MeetingAssignee) {
-      let pastMeetingData = [];
-      if (
-        meetingData?.relatedMeetings &&
-        meetingData.relatedMeetings.length > 0
-      ) {
-        meetingData.relatedMeetings.map((item) => {
-          item.MeetingAssignee.map((i) => {
-            pastMeetingData.push(i);
-          });
-        });
-      } else pastMeetingData = [];
+    if (!meetingData || !meetingData.MeetingAssignee) {
+      return [];
+    }
 
-      return [...meetingData.MeetingAssignee, ...pastMeetingData];
-    } else return [];
+    const pastMeetingData =
+      meetingData.relatedMeetings?.flatMap((item) => item.MeetingAssignee) ||
+      [];
+
+    const meetingComments =
+      meetingData.MeetingAssignee.flatMap((item) =>
+        item.MeetingAssigneeComment.map((i) => ({
+          ...item,
+          comment: i.comment,
+          modified_date: i.modified_date,
+        }))
+      ) || [];
+
+    return [
+      ...meetingData.MeetingAssignee,
+      ...pastMeetingData,
+      ...meetingComments,
+    ].sort((a, b) => moment(b.modified_date) - moment(a.modified_date));
   }, [meetingData]);
 
   const hideMeetingModal = () => {
@@ -139,20 +146,18 @@ function MeetingDetailComponent({ user }) {
                 className="w-10 h-10"
               />
 
-              {userData?.assignee_id === user.id && !userData?.comment && (
-                <PrimaryButton
-                  withLink={false}
-                  title={"Add Comment"}
-                  onClick={() => {
-                    setMeetingModalData({
-                      meetingTitle: meetingData.meeting_title,
-                      meetingId: meetingData.id,
-                      isVisible: true,
-                      assigneeId: userData?.assignee_id,
-                    });
-                  }}
-                />
-              )}
+              <PrimaryButton
+                withLink={false}
+                title={"Add Comment"}
+                onClick={() => {
+                  setMeetingModalData({
+                    meetingTitle: meetingData.meeting_title,
+                    meetingId: meetingData.id,
+                    isVisible: true,
+                    assigneeId: userData?.assignee_id,
+                  });
+                }}
+              />
             </div>
           </div>
 
