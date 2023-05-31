@@ -43,7 +43,7 @@ async function handle(req, res, prisma) {
   let mailData = {
     from: SMTP_USER,
     to: email,
-    subject: `Review App Forgot Password`,
+    subject: `Desk Chime Forgot Password`,
     html: mailTemplate({
       body: `We recevied a request that you want to reset your password. To reset your password, click the button below.`,
       name: userData.first_name ?? email,

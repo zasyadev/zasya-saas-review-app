@@ -4,8 +4,8 @@ import React from "react";
 export function HeadersComponent() {
   return (
     <Head>
-      <title>Review App</title>
-      <meta name="description" content="Review App" />
+      <title>Desk Chime</title>
+      <meta name="description" content="Desk Chime" />
       <link rel="icon" href="/media/images/logos/review-small.png" />
     </Head>
   );

@@ -50,7 +50,7 @@ export function CustomizeSlackMessage({
   link,
   by = "",
   text = "",
-  btnText = "Review App",
+  btnText = "Desk Chime",
 }) {
   let customText = [
     {
@@ -119,7 +119,7 @@ export function CustomizeCronSlackMessage({ header, link }) {
           type: "button",
           text: {
             type: "plain_text",
-            text: "Review App",
+            text: "Desk Chime",
             emoji: true,
           },
           value: "details",
