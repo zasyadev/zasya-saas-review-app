@@ -18,7 +18,7 @@ import {
 } from "../../helpers/utils";
 import httpService from "../../lib/httpService";
 import { PulseLoader } from "../Loader/LoadingSpinner";
-import { GOAL_MEETINGTYPE } from "../Meetings/constants";
+import { GOAL_MEETING_TYPE } from "../Meetings/constants";
 import { PrimaryButton } from "../common/CustomButton";
 import CustomPopConfirm from "../common/CustomPopConfirm";
 import CustomTable from "../common/CustomTable";
@@ -329,7 +329,7 @@ function GoalsDetailComponent({ user }) {
             <div className="mb-2 flex justify-end mt-4">
               <PrimaryButton
                 withLink={true}
-                linkHref={`/followups/add/${router.query.goal_id}?tp=${GOAL_MEETINGTYPE}`}
+                linkHref={`/followups/add/${router.query.goal_id}?tp=${GOAL_MEETING_TYPE}`}
                 title={"Add Follow up"}
               />
             </div>

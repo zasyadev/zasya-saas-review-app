@@ -15,7 +15,12 @@ import httpService from "../../../lib/httpService";
 import { DateBox } from "../../DashBoard/component/helperComponent";
 import { ButtonGray } from "../../common/CustomButton";
 import { openNotificationBox } from "../../common/notification";
-import { CASUAL_MEETINGTYPE, GOAL_TYPE, REVIEW_TYPE } from "../constants";
+import {
+  CASUAL_MEETING_TYPE,
+  GOAL_TYPE,
+  REVIEW_TYPE,
+  SORT_BY_TIME,
+} from "../constants";
 
 const FILTER_NAME = {
   PENDING: "Pending",
@@ -27,7 +32,7 @@ const meetingCardVarient = {
   show: { y: 0, opacity: 1 },
 };
 
-export const MettingCard = ({ item, user, fetchMeetingList }) => {
+export const MettingCard = ({ item, user, fetchMeetingList, filterType }) => {
   async function handleOnDelete(id) {
     if (id) {
       await httpService
@@ -58,27 +63,32 @@ export const MettingCard = ({ item, user, fetchMeetingList }) => {
         trigger={"click"}
         overlay={
           <Menu className="divide-y">
-            <Menu.Item key={"call-edit"}>
-              <Link
-                href={`${URLS.FOLLOW_UP_EDIT}/${record.id}/?tp=${CASUAL_MEETINGTYPE}`}
-                passHref
-              >
-                Edit
-              </Link>
-            </Menu.Item>
-            <Menu.Item key={"call-update"}>
-              <Popconfirm
-                title={`Are you sure to change the Status？`}
-                okText="Yes"
-                cancelText="No"
-                onConfirm={() => handleIsCompleted(record)}
-                icon={false}
-              >
-                {!record.is_completed
-                  ? FILTER_NAME.COMPLETED
-                  : FILTER_NAME.PENDING}
-              </Popconfirm>
-            </Menu.Item>
+            {!record.is_completed && (
+              <Menu.Item key={"call-edit"}>
+                <Link
+                  href={`${URLS.FOLLOW_UP_EDIT}/${record.id}/?tp=${CASUAL_MEETING_TYPE}`}
+                  passHref
+                >
+                  Edit
+                </Link>
+              </Menu.Item>
+            )}
+            {filterType === SORT_BY_TIME.TODAY && !record.is_completed && (
+              <Menu.Item key={"call-update"}>
+                <Popconfirm
+                  title={`Are you sure to change the Status？`}
+                  okText="Yes"
+                  cancelText="No"
+                  onConfirm={() => handleIsCompleted(record)}
+                  icon={false}
+                >
+                  {!record.is_completed
+                    ? FILTER_NAME.COMPLETED
+                    : FILTER_NAME.PENDING}
+                </Popconfirm>
+              </Menu.Item>
+            )}
+
             <Menu.Item key={"call-delete"}>
               <Popconfirm
                 title={`Are you sure to delete ${record?.meeting_title}？`}
@@ -107,7 +117,7 @@ export const MettingCard = ({ item, user, fetchMeetingList }) => {
     <motion.div
       className={twMerge(
         clsx(
-          "flex items-start space-x-3 px-3 py-2 bg-white rounded-md shadow-md",
+          "flex items-center space-x-3 px-3 py-2 bg-white rounded-md shadow-md",
           { "bg-white/70": item.is_completed }
         )
       )}
@@ -125,10 +135,10 @@ export const MettingCard = ({ item, user, fetchMeetingList }) => {
         />
       </div>
 
-      <div className="flex-1">
-        <p className="flex justify-between items-start  mb-2 font-medium text-sm break-all single-line-clamp">
+      <div className="flex-1 space-y-2">
+        <p className="flex justify-between items-start  mb-2 font-medium text-sm break-all ">
           <Link href={`${URLS.FOLLOW_UP}/${item.id}`} passHref>
-            <span className="hover:underline cursor-pointer">
+            <span className="hover:underline cursor-pointer single-line-clamp">
               {item.meeting_title}
             </span>
           </Link>
@@ -139,6 +149,15 @@ export const MettingCard = ({ item, user, fetchMeetingList }) => {
             </span>
           )}
         </p>
+        <span
+          className={twMerge(
+            clsx("text-xs px-2 py-0.5 rounded-md text-blue-600 bg-blue-200", {
+              "text-green-600 bg-green-200": item.is_completed,
+            })
+          )}
+        >
+          {item.is_completed ? FILTER_NAME.COMPLETED : FILTER_NAME.PENDING}
+        </span>
         <div className="flex justify-between items-center">
           <span className="flex  items-center text-brandGray-600">
             <span className="leading-0 text-primary-green pr-1 text-sm">

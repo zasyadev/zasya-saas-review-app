@@ -20,6 +20,8 @@ import {
   getRandomBgColor,
   getFirstLetter,
 } from "../../helpers/utils";
+import { CASUAL_MEETING_TYPE } from "./constants";
+import CustomPopConfirm from "../common/CustomPopConfirm";
 
 const initialMeetingModalData = {
   meetingTitle: null,
@@ -85,6 +87,19 @@ function MeetingDetailComponent({ user }) {
   useEffect(() => {
     if (meeting_id) fetchMeetingData();
   }, [meeting_id]);
+
+  async function handleOnDelete(id) {
+    if (id) {
+      await httpService
+        .delete(`/api/meetings/${id}`, {})
+        .then(() => {
+          router.push(URLS.FOLLOW_UP);
+        })
+        .catch((err) => {
+          openNotificationBox("error", err.response.data?.message);
+        });
+    }
+  }
 
   if (loading)
     return (
@@ -175,54 +190,75 @@ function MeetingDetailComponent({ user }) {
             </div>
           )}
         </div>
-        <div className="rounded-md shadow-brand border-2 border-brandGrey-100 divide-y h-fit">
-          <p className="p-4 font-semibold text-lg md:text-xl">Related Goals</p>
+        <div className="space-y-4">
+          {user.id === meetingData.created_by && (
+            <div className="flex justify-end items-center gap-3 flex-wrap">
+              <PrimaryButton
+                withLink={true}
+                linkHref={`${URLS.FOLLOW_UP_EDIT}/${meetingData.id}/?tp=${CASUAL_MEETING_TYPE}`}
+                title={"Edit"}
+              />
 
-          <div className="divide-y max-h-96 overflow-auto custom-scrollbar">
-            {loading ? (
-              <div className="space-y-2 ">
-                <Skeleton />
-                <Skeleton />
-              </div>
-            ) : meetingData.goalData.length > 0 ? (
-              meetingData.goalData.map((item, idx) => {
-                return (
-                  <div
-                    className="flex items-center space-x-4  px-4 py-3"
-                    key={idx + item.id}
-                  >
-                    <div className="shrink-0">
-                      <DateBox
-                        date={item.goal.end_date}
-                        className={getStatusBackground(item.status)}
-                      />
-                    </div>
-                    <div className="flex-1">
-                      <Link
-                        href={`${URLS.GOAL}/${item.goal.id}/detail`}
-                        passHref
-                      >
-                        <p className="mb-2 font-medium text-base break-all single-line-clamp cursor-pointer hover:underline">
-                          {item.goal.goal_title}
-                        </p>
-                      </Link>
+              <CustomPopConfirm
+                title={`Are you sure to delete ${meetingData.meeting_title}？`}
+                onConfirm={() => handleOnDelete(meetingData.id)}
+                label="Delete"
+                className="px-4 py-1.5 border-2 border-brandRed-100 bg-brandRed-100 rounded-md text-white cursor-pointer"
+              />
+            </div>
+          )}
 
-                      <p className="flex justify-between items-center">
-                        <span
-                          className={`text-xs font-medium px-2 py-1 uppercase rounded-md ${getStatusPillColor(
-                            item.status
-                          )}`}
+          <div className="rounded-md shadow-brand border-2 border-brandGrey-100 divide-y h-fit">
+            <p className="p-4 font-semibold text-lg md:text-xl">
+              Related Goals
+            </p>
+
+            <div className="divide-y max-h-96 overflow-auto custom-scrollbar">
+              {loading ? (
+                <div className="space-y-2 ">
+                  <Skeleton />
+                  <Skeleton />
+                </div>
+              ) : meetingData.goalData.length > 0 ? (
+                meetingData.goalData.map((item, idx) => {
+                  return (
+                    <div
+                      className="flex items-center space-x-4  px-4 py-3"
+                      key={idx + item.id}
+                    >
+                      <div className="shrink-0">
+                        <DateBox
+                          date={item.goal.end_date}
+                          className={getStatusBackground(item.status)}
+                        />
+                      </div>
+                      <div className="flex-1">
+                        <Link
+                          href={`${URLS.GOAL}/${item.goal.id}/detail`}
+                          passHref
                         >
-                          {item.status}
-                        </span>
-                      </p>
+                          <p className="mb-2 font-medium text-base break-all single-line-clamp cursor-pointer hover:underline">
+                            {item.goal.goal_title}
+                          </p>
+                        </Link>
+
+                        <p className="flex justify-between items-center">
+                          <span
+                            className={`text-xs font-medium px-2 py-1 uppercase rounded-md ${getStatusPillColor(
+                              item.status
+                            )}`}
+                          >
+                            {item.status}
+                          </span>
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                );
-              })
-            ) : (
-              <NoRecordFound title="No Goals Found" />
-            )}
+                  );
+                })
+              ) : (
+                <NoRecordFound title="No Goals Found" />
+              )}
+            </div>
           </div>
         </div>
       </div>

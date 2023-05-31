@@ -3,7 +3,12 @@ import React from "react";
 import { DefaultMotionVarient } from "../../Template/constants";
 import { MettingCard } from "./MettingCard";
 
-export const MeetingCardWrapper = ({ list, user, fetchMeetingList }) => {
+export const MeetingCardWrapper = ({
+  list,
+  user,
+  fetchMeetingList,
+  filterType,
+}) => {
   if (!list.length) return null;
 
   return (
@@ -19,6 +24,7 @@ export const MeetingCardWrapper = ({ list, user, fetchMeetingList }) => {
           key={item.id}
           user={user}
           fetchMeetingList={fetchMeetingList}
+          filterType={filterType}
         />
       ))}
     </motion.div>
