@@ -20,7 +20,7 @@ import {
   getRandomBgColor,
   getFirstLetter,
 } from "../../helpers/utils";
-import { CASUAL_MEETINGTYPE } from "./constants";
+import { CASUAL_MEETING_TYPE } from "./constants";
 import CustomPopConfirm from "../common/CustomPopConfirm";
 
 const initialMeetingModalData = {
@@ -195,7 +195,7 @@ function MeetingDetailComponent({ user }) {
             <div className="flex justify-end items-center gap-3 flex-wrap">
               <PrimaryButton
                 withLink={true}
-                linkHref={`${URLS.FOLLOW_UP_EDIT}/${meetingData.id}/?tp=${CASUAL_MEETINGTYPE}`}
+                linkHref={`${URLS.FOLLOW_UP_EDIT}/${meetingData.id}/?tp=${CASUAL_MEETING_TYPE}`}
                 title={"Edit"}
               />
 

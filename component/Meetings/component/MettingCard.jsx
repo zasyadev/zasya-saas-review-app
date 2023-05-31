@@ -16,7 +16,7 @@ import { DateBox } from "../../DashBoard/component/helperComponent";
 import { ButtonGray } from "../../common/CustomButton";
 import { openNotificationBox } from "../../common/notification";
 import {
-  CASUAL_MEETINGTYPE,
+  CASUAL_MEETING_TYPE,
   GOAL_TYPE,
   REVIEW_TYPE,
   SORT_BY_TIME,
@@ -66,7 +66,7 @@ export const MettingCard = ({ item, user, fetchMeetingList, filterType }) => {
             {!record.is_completed && (
               <Menu.Item key={"call-edit"}>
                 <Link
-                  href={`${URLS.FOLLOW_UP_EDIT}/${record.id}/?tp=${CASUAL_MEETINGTYPE}`}
+                  href={`${URLS.FOLLOW_UP_EDIT}/${record.id}/?tp=${CASUAL_MEETING_TYPE}`}
                   passHref
                 >
                   Edit
