@@ -45,6 +45,7 @@ async function handle(req, res, prisma, user) {
                 },
               },
             },
+            MeetingAssigneeComment: true,
           },
         },
       },
@@ -85,6 +86,7 @@ async function handle(req, res, prisma, user) {
                   first_name: true,
                 },
               },
+              MeetingAssigneeComment: true,
             },
           },
         },
@@ -106,25 +108,23 @@ async function handle(req, res, prisma, user) {
           AND: [{ meeting_id: meeting_id }, { assignee_id: assigneeId }],
         },
       });
+      if (!meetingAssigneeData.id)
+        throw new BadRequestException("No record found");
+
+      const data = await prisma.meetingAssigneeComment.create({
+        data: {
+          meeting_assignee: { connect: { id: meetingAssigneeData.id } },
+          comment: comment,
+        },
+      });
 
       await prisma.meetings.update({
         where: { id: meeting_id },
         data: { is_completed: true },
       });
 
-      if (!meetingAssigneeData.id)
-        throw new BadRequestException("No record found");
-
-      const data = await prisma.meetingAssignee.update({
-        where: {
-          id: meetingAssigneeData.id,
-        },
-        data: {
-          comment: comment,
-          modified_date: new Date(),
-        },
-      });
       if (!data) throw new BadRequestException("Meetings not updated");
+
       return res.status(200).json({
         data: data,
         message: "Meetings comment updated",
