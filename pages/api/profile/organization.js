@@ -8,7 +8,8 @@ async function handle(req, res, prisma, user) {
       where: {
         id: userId,
       },
-      include: {
+      select: {
+        id: true,
         organization: true,
       },
     });

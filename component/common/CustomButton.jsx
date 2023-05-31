@@ -27,7 +27,7 @@ export function PrimaryButton({
   const isDisabled = disabled || loading;
 
   const btnClassName = twMerge(
-    `text-white text-center px-4 py-2 rounded-md  ${
+    `text-white text-center px-4 py-2 rounded-md border-2 border-primary-green  ${
       isDisabled ? "bg-primary-green/70" : "bg-primary-green"
     }`,
     className
