@@ -65,10 +65,10 @@ async function handle(req, res, prisma, user) {
           let mailData = {
             from: process.env.SMTP_USER,
             to: userData.email,
-            subject: `Successfully Registered on Review App`,
+            subject: `Successfully Registered on Desk Chime`,
 
             html: mailTemplate({
-              body: `You have successfully registered on Review App. Please login to get started.`,
+              body: `You have successfully registered on Desk Chime. Please login to get started.`,
               name: userData.first_name,
               btnLink: `${BASE_URL}/auth/login`,
               btnText: "Get Started",
@@ -109,10 +109,10 @@ async function handle(req, res, prisma, user) {
           let mailData = {
             from: process.env.SMTP_USER,
             to: userData.email,
-            subject: `Invitation to collaborate on Review App`,
+            subject: `Invitation to collaborate on Desk Chime`,
 
             html: mailTemplate({
-              body: `You have been invited to collaborate on the Review app.`,
+              body: `You have been invited to collaborate on the Desk Chime.`,
               name: userData.first_name,
               btnLink: `${BASE_URL}/resetpassword?passtoken=${passwordResetData.token}&email=${userData.email}`,
               btnText: "Get Started",

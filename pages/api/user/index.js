@@ -79,10 +79,10 @@ async function handle(req, res, prisma) {
     const mailData = {
       from: SMTP_USER,
       to: transactionData.savedData.email,
-      subject: `Successfully Registered on Review App`,
+      subject: `Successfully Registered on Desk Chime`,
 
       html: mailTemplate({
-        body: `You have successfully registered on Review App. Please login to get started.`,
+        body: `You have successfully registered on Desk Chime. Please login to get started.`,
         name: transactionData.savedData.first_name,
         btnLink: `${BASE_URL}/auth/login`,
         btnText: "Get Started",
